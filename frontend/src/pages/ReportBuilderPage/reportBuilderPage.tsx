@@ -104,6 +104,9 @@ interface ElementState {
   id: string; type: ElementType; label: string;
   x: number; y: number; width: number; height: number;
   visible: boolean; viewMode?: ViewMode; topN?: number;
+  // When true this is a "(Filtered)" duplicate that renders from the
+  // Path-Analysis-filtered segment subset instead of all loaded segments.
+  filtered?: boolean;
 }
 type BandDist = Record<number, number>;
 interface Distributions {
@@ -168,6 +171,92 @@ const DEFAULT_ELEMENTS: ElementState[] = [
   { id: "topRisk", type: "topRisk", label: "Top Risk Stretches", x: 20, y: 2463, width: 754, height: 730, visible: true, viewMode: "full-page", topN: 10 },
   { id: "treatmentSummary", type: "treatmentSummary", label: "Treatments", x: 20, y: 3213, width: 754, height: 360, visible: true },
 ];
+
+// ── Filtered duplicate sections ──────────────────────────────────────────────
+// A clone of every default section EXCEPT the title, flagged `filtered` so it
+// renders from the Path-Analysis-filtered subset. These are injected into the
+// `elements` array only when the user enables the "Include filtered sections"
+// toggle (and a filter actually exists). See `toggleIncludeFiltered`.
+const FILTERED_SUFFIX = "_filtered";
+const FILTERED_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
+  .filter((e) => e.id !== "title")
+  .map((e) => ({ ...e, id: `${e.id}${FILTERED_SUFFIX}`, label: `${e.label} (Filtered)`, filtered: true, visible: true }));
+
+// ── Report dataset bundle ────────────────────────────────────────────────────
+// All score-derived values a section needs. Computed once for the full segment
+// set and once for the filtered subset, so the same render code can serve both.
+interface ReportDataset {
+  rows: TopRiskRow[];
+  distributions: Distributions | null;
+  allBandMap: Map<string, number>;
+  totalSegments: number;
+  totalKm: number;
+  projectSegmentCounts: Record<string, number>;
+  projects: string[];               // loaded projects present in this dataset
+  topRiskRows: TopRiskRow[];        // top 10 by summed score
+  scoreStats: ScoreStats | null;
+  attributeFrequency: [string, number][];
+  treatmentSummaries: ProjectTreatmentSummary[];
+}
+
+// Pure derivation of every score-based value from a row set. `treatmentSummaries`
+// is added by the caller since it depends on async treatment state.
+function buildCoreDataset(
+  rows: TopRiskRow[],
+  loadedProjects: string[],
+): Omit<ReportDataset, "treatmentSummaries"> {
+  const projectSegmentCounts: Record<string, number> = {};
+  rows.forEach((r) => { projectSegmentCounts[r._project] = (projectSegmentCounts[r._project] || 0) + 1; });
+  const projects = loadedProjects.filter((p) => (projectSegmentCounts[p] ?? 0) > 0);
+  const totalSegments = rows.length;
+  const totalKm = totalSegments * 10 / 1000;
+
+  if (rows.length === 0) {
+    return { rows, distributions: null, allBandMap: new Map(), totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows: [], scoreStats: null, attributeFrequency: [] };
+  }
+
+  const dist: Distributions = {
+    VB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BB: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    SB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BP: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    Overall: { 1: 0, 2: 0, 3: 0, 4: 0 },
+  };
+  const bMap = new Map<string, number>();
+  rows.forEach((row) => {
+    if (row["VB Band"] >= 1 && row["VB Band"] <= 4) dist.VB[row["VB Band"]]++;
+    if (row["BB Band"] >= 1 && row["BB Band"] <= 4) dist.BB[row["BB Band"]]++;
+    if (row["SB Band"] >= 1 && row["SB Band"] <= 4) dist.SB[row["SB Band"]]++;
+    if (row["BP Band"] >= 1 && row["BP Band"] <= 4) dist.BP[row["BP Band"]]++;
+    const overall = row["Overall Risk Level Band"] ??
+      Math.max(row["VB Band"] || 0, row["BB Band"] || 0, row["SB Band"] || 0, row["BP Band"] || 0);
+    if (overall >= 1 && overall <= 4) { dist.Overall[overall]++; bMap.set(`${row._project}_${row._segIndex}`, overall); }
+  });
+
+  const topRiskRows = [...rows].sort((a, b) => b._sumScore - a._sumScore).slice(0, 10);
+
+  const stat = (vals: number[]): StatEntry => {
+    const sorted = [...vals].sort((a, b) => a - b);
+    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+    return { min: sorted[0].toFixed(1), max: sorted[sorted.length - 1].toFixed(1), avg: avg.toFixed(1) };
+  };
+  const scoreStats: ScoreStats = {
+    VB: stat(rows.map((r) => r.VB || 0)),
+    BB: stat(rows.map((r) => r.BB || 0)),
+    SB: stat(rows.map((r) => r.SB || 0)),
+    BP: stat(rows.map((r) => r.BP || 0)),
+    Overall: stat(rows.map((r) => r._sumScore || 0)),
+  };
+
+  const count = new Map<string, number>();
+  rows.forEach((row) => {
+    for (let i = 1; i <= 3; i++) {
+      const name = row[`Top ${i} Contributor` as keyof TopRiskRow] as string | undefined;
+      if (name) count.set(name, (count.get(name) || 0) + 1);
+    }
+  });
+  const attributeFrequency = [...count.entries()].sort(([, a], [, b]) => b - a).slice(0, 10) as [string, number][];
+
+  return { rows, distributions: dist, allBandMap: bMap, totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows, scoreStats, attributeFrequency };
+}
 
 // ── Shared table styles ──────────────────────────────────────────────────────
 const thStyle: React.CSSProperties = {
@@ -565,14 +654,20 @@ export default function ReportBuilderPage() {
   const [loadedProjects, setLoadedProjects] = useState<string[]>([]);
 
   // ── Score data ────────────────────────────────────────────────────────────
-  const [distributions, setDistributions] = useState<Distributions | null>(null);
-  const [totalSegments, setTotalSegments] = useState(0);
-  const [projectSegmentCounts, setProjectSegmentCounts] = useState<Record<string, number>>({});
-  const [topRiskRows, setTopRiskRows] = useState<TopRiskRow[]>([]);
+  // `allScoreRows` is the single source of truth; per-section derived values
+  // (distributions, top-risk, stats, …) are computed in `fullDataset` /
+  // `filteredDataset` below.
   const [allScoreRows, setAllScoreRows] = useState<TopRiskRow[]>([]);
-  const [allBandMap, setAllBandMap] = useState<Map<string, number>>(new Map());
   const [enrichedMap, setEnrichedMap] = useState<Map<string, EnrichedDetail>>(new Map());
   const [isLoadingScores, setIsLoadingScores] = useState(false);
+
+  // ── Path Analysis filtered subset ─────────────────────────────────────────
+  // Per-project 0-based segment indices the user filtered to on the Path
+  // Analysis map (null ⇒ no filter active ⇒ filtered sections unavailable).
+  const [filteredIdxByProject, setFilteredIdxByProject] = useState<Record<string, number[]> | null>(null);
+  const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
+    const l = _readSaved(); return l?.includeFiltered === true;
+  });
 
   // ── Treatment data ────────────────────────────────────────────────────────
   const [treatmentSummaries, setTreatmentSummaries] = useState<ProjectTreatmentSummary[]>([]);
@@ -606,14 +701,35 @@ export default function ReportBuilderPage() {
     const tr = sessionStorage.getItem("treatment_loadedProjects");
     const filters = sessionStorage.getItem("pathAnalysis_activeFilters");
     const catStatus = sessionStorage.getItem("pathAnalysis_categoryStatus");
+    const filteredSegs = sessionStorage.getItem("pathAnalysis_filteredSegments");
     const paP: string[] = pa ? JSON.parse(pa) : [];
     const trP: string[] = tr ? JSON.parse(tr) : [];
     const flt: string[] = filters ? JSON.parse(filters) : [];
     const cst: FilterCategoryStatus[] = catStatus ? JSON.parse(catStatus) : [];
+    const fidx: Record<string, number[]> | null = filteredSegs ? JSON.parse(filteredSegs) : null;
     const combined = [...new Set([...paP, ...trP])];
     setLoadedProjects(combined);
     setActiveFilterNames(flt);
     setActiveCategoryStatus(cst);
+    setFilteredIdxByProject(fidx);
+    // Reconcile a restored layout against the current filter: if no filter is
+    // active, strip any "(Filtered)" sections (they would have no data) and
+    // force the toggle off. Done here — with full knowledge of session state —
+    // to avoid a mount-time race that could wipe legitimately saved sections.
+    const hasFlt = !!fidx && flt.length > 0;
+    if (!hasFlt) {
+      setElements((prev) => (prev.some((e) => e.filtered) ? prev.filter((e) => !e.filtered) : prev));
+      setIncludeFiltered(false);
+    } else if (includeFiltered) {
+      // Saved layout wanted filtered sections and a filter is active — ensure
+      // they exist (e.g. layout saved before this feature added them).
+      setElements((prev) => {
+        if (prev.some((e) => e.filtered)) return prev;
+        const existing = new Set(prev.map((e) => e.id));
+        const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
+        return toAdd.length ? [...prev, ...toAdd] : prev;
+      });
+    }
     if (combined.length === 0) {
       setPickerLoading(true);
       fetch("/api/projects")
@@ -679,31 +795,8 @@ export default function ReportBuilderPage() {
             } catch { return { name, rows: [] as unknown[] }; }
           })
         );
-        const counts: Record<string, number> = {};
         const allRows: TopRiskRow[] = [];
-        results.forEach(({ name, rows }) => { counts[name] = (rows as TopRiskRow[]).length; allRows.push(...(rows as TopRiskRow[])); });
-        setProjectSegmentCounts(counts);
-        setTotalSegments(allRows.length);
-        if (allRows.length === 0) return;
-
-        const dist: Distributions = {
-          VB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BB: { 1: 0, 2: 0, 3: 0, 4: 0 },
-          SB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BP: { 1: 0, 2: 0, 3: 0, 4: 0 },
-          Overall: { 1: 0, 2: 0, 3: 0, 4: 0 },
-        };
-        const bMap = new Map<string, number>();
-        allRows.forEach((row) => {
-          if (row["VB Band"] >= 1 && row["VB Band"] <= 4) dist.VB[row["VB Band"]]++;
-          if (row["BB Band"] >= 1 && row["BB Band"] <= 4) dist.BB[row["BB Band"]]++;
-          if (row["SB Band"] >= 1 && row["SB Band"] <= 4) dist.SB[row["SB Band"]]++;
-          if (row["BP Band"] >= 1 && row["BP Band"] <= 4) dist.BP[row["BP Band"]]++;
-          // Overall band = max of the four individual bands (matches backend logic)
-          const overall = row["Overall Risk Level Band"] ??
-            Math.max(row["VB Band"] || 0, row["BB Band"] || 0, row["SB Band"] || 0, row["BP Band"] || 0);
-          if (overall >= 1 && overall <= 4) { dist.Overall[overall]++; bMap.set(`${row._project}_${row._segIndex}`, overall); }
-        });
-        setDistributions(dist);
-        setAllBandMap(bMap);
+        results.forEach(({ rows }) => { allRows.push(...(rows as TopRiskRow[])); });
 
         const withSum = allRows.map((row) => {
           const sumScore = (row["VB"] || 0) + (row["BB"] || 0) + (row["SB"] || 0) + (row["BP"] || 0);
@@ -713,7 +806,6 @@ export default function ReportBuilderPage() {
         }).sort((a, b) => b._sumScore - a._sumScore);
 
         setAllScoreRows(withSum);
-        setTopRiskRows(withSum.slice(0, 10));
       } finally {
         setIsLoadingScores(false);
       }
@@ -721,14 +813,59 @@ export default function ReportBuilderPage() {
     fetchAll();
   }, [loadedProjects]);
 
+  // ── Datasets: full vs. Path-Analysis-filtered subset ──────────────────────
+  // A filter is active iff Path Analysis persisted a filtered-segment map AND
+  // named active filters. The filtered rows are `allScoreRows` restricted to the
+  // persisted per-project 0-based indices (`_segIndex` is 1-based, hence -1).
+  const hasFilter = !!filteredIdxByProject && activeFilterNames.length > 0;
+
+  const filteredScoreRows = useMemo(() => {
+    if (!filteredIdxByProject) return [] as TopRiskRow[];
+    const sets: Record<string, Set<number>> = {};
+    Object.entries(filteredIdxByProject).forEach(([p, idxs]) => { sets[p] = new Set(idxs); });
+    return allScoreRows.filter((r) => sets[r._project]?.has(r._segIndex - 1));
+  }, [allScoreRows, filteredIdxByProject]);
+
+  const fullDataset = useMemo<ReportDataset>(() => ({
+    ...buildCoreDataset(allScoreRows, loadedProjects),
+    projects: loadedProjects, // keep 0-result projects visible (legacy behaviour)
+    treatmentSummaries,
+  }), [allScoreRows, loadedProjects, treatmentSummaries]);
+
+  const filteredDataset = useMemo<ReportDataset>(() => {
+    const core = buildCoreDataset(filteredScoreRows, loadedProjects);
+    // Treatments restricted to the filtered segments only.
+    const byProject = new Map<string, { treated: number; counts: Record<number, number> }>();
+    filteredScoreRows.forEach((r) => {
+      if (!byProject.has(r._project)) byProject.set(r._project, { treated: 0, counts: {} });
+      const ids = segmentTreatmentMap.get(`${r._project}_${r._segIndex}`);
+      if (ids && ids.length) {
+        const e = byProject.get(r._project)!;
+        e.treated++;
+        ids.forEach((id) => { e.counts[id] = (e.counts[id] || 0) + 1; });
+      }
+    });
+    const treatmentSummaries: ProjectTreatmentSummary[] = core.projects
+      .filter((p) => byProject.has(p))
+      .map((p) => { const v = byProject.get(p)!; return { project: p, treatedSegments: v.treated, treatmentCounts: v.counts }; });
+    return { ...core, treatmentSummaries };
+  }, [filteredScoreRows, loadedProjects, segmentTreatmentMap]);
+
+  // Segments needing image/attribute enrichment = union of both datasets' top rows.
+  const enrichTargets = useMemo(() => {
+    const map = new Map<string, TopRiskRow>();
+    [...fullDataset.topRiskRows, ...filteredDataset.topRiskRows].forEach((r) => map.set(`${r._project}_${r._segIndex}`, r));
+    return [...map.values()];
+  }, [fullDataset.topRiskRows, filteredDataset.topRiskRows]);
+
   // ── Enrichment fetch ──────────────────────────────────────────────────────
   useEffect(() => {
-    if (topRiskRows.length === 0) return;
+    if (enrichTargets.length === 0) return;
     const go = async () => {
       try {
         const res = await fetch("/api/report/segment-details", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ segments: topRiskRows.map((r) => ({ project: r._project, segIndex: r._segIndex })) }),
+          body: JSON.stringify({ segments: enrichTargets.map((r) => ({ project: r._project, segIndex: r._segIndex })) }),
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.details)) {
@@ -746,7 +883,7 @@ export default function ReportBuilderPage() {
       } catch (err) { console.error("Enrichment failed:", err); }
     };
     go();
-  }, [topRiskRows]);
+  }, [enrichTargets]);
 
   // ── Treatment fetch ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -778,43 +915,11 @@ export default function ReportBuilderPage() {
     go();
   }, [loadedProjects]);
 
-  // ── Derived / computed ────────────────────────────────────────────────────
-  const scoreStats = useMemo((): ScoreStats | null => {
-    if (allScoreRows.length === 0) return null;
-    const stat = (vals: number[]): StatEntry => {
-      const sorted = [...vals].sort((a, b) => a - b);
-      const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
-      return { min: sorted[0].toFixed(1), max: sorted[sorted.length - 1].toFixed(1), avg: avg.toFixed(1) };
-    };
-    return {
-      VB: stat(allScoreRows.map((r) => r.VB || 0)),
-      BB: stat(allScoreRows.map((r) => r.BB || 0)),
-      SB: stat(allScoreRows.map((r) => r.SB || 0)),
-      BP: stat(allScoreRows.map((r) => r.BP || 0)),
-      Overall: stat(allScoreRows.map((r) => r._sumScore || 0)),
-    };
-  }, [allScoreRows]);
-
-  const attributeFrequency = useMemo(() => {
-    const count = new Map<string, number>();
-    allScoreRows.forEach((row) => {
-      for (let i = 1; i <= 3; i++) {
-        const name = row[`Top ${i} Contributor` as keyof TopRiskRow] as string | undefined;
-        if (name) count.set(name, (count.get(name) || 0) + 1);
-      }
-    });
-    return [...count.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
-  }, [allScoreRows]);
-
-  // Total length = segments × 10 m per segment (CycleRAP standard segment length)
-  const totalKm = useMemo(
-    () => totalSegments * 10 / 1000,
-    [totalSegments]
-  );
-
   // ── Ideal height per element type (based on current data) ────────────────
   const computeIdealHeight = useCallback((el: ElementState): number => {
     const H = 30; // handle
+    const ds = el.filtered ? filteredDataset : fullDataset;
+    const { distributions, scoreStats, attributeFrequency, topRiskRows, treatmentSummaries, projects } = ds;
     switch (el.type) {
       case "title": {
         // The "Projects:" line wraps when many/long project names are listed;
@@ -857,12 +962,12 @@ export default function ReportBuilderPage() {
         return h + 16;
       }
       case "projectDetails": {
-        if (loadedProjects.length === 0) return H + 60;
+        if (projects.length === 0) return H + 60;
         // All projects render, chunked PROJ_PAGE_SIZE per PAGE_H-tall page. Each
         // non-final chunk occupies a full page; the section's total height is
         // (chunks-1) full pages + the natural height of the final chunk.
-        const numChunks = Math.ceil(loadedProjects.length / PROJ_PAGE_SIZE);
-        const lastCount = loadedProjects.length - (numChunks - 1) * PROJ_PAGE_SIZE;
+        const numChunks = Math.ceil(projects.length / PROJ_PAGE_SIZE);
+        const lastCount = projects.length - (numChunks - 1) * PROJ_PAGE_SIZE;
         const headerH = numChunks > 1 ? PROJ_CONT_HEADER_H : PROJ_HEADER_H;
         const lastChunkH = H + headerH + lastCount * PROJ_ROW_H + 16;
         return (numChunks - 1) * PAGE_H + lastChunkH;
@@ -881,7 +986,7 @@ export default function ReportBuilderPage() {
       case "segmentGallery": return H + 36 + Math.max(1, Math.ceil(topRiskRows.length / 6)) * 92 + 16;
       default: return el.height;
     }
-  }, [distributions, treatmentSummaries, loadedProjects, projectMeta, scoreStats, attributeFrequency, topRiskRows, activeFilterNames, activeCategoryStatus, projectNameOverrides]);
+  }, [fullDataset, filteredDataset, loadedProjects, projectMeta, activeFilterNames, activeCategoryStatus, projectNameOverrides]);
 
   // ── Auto-fit: snapshot ideal heights into state ───────────────────────────
   // Gap removal and page-break spacing are now automatic (see `layout` memo +
@@ -896,10 +1001,10 @@ export default function ReportBuilderPage() {
   // ── Auto-fit on first data load ───────────────────────────────────────────
   // Must come after autoFitElements is defined to avoid a TDZ crash.
   useEffect(() => {
-    if (!distributions || hasAutoFit.current) return;
+    if (!fullDataset.distributions || hasAutoFit.current) return;
     hasAutoFit.current = true;
     setTimeout(autoFitElements, 150);
-  }, [distributions, autoFitElements]);
+  }, [fullDataset.distributions, autoFitElements]);
 
   // ── Element helpers ───────────────────────────────────────────────────────
   const updateElement = useCallback((id: string, changes: Partial<ElementState>) => {
@@ -925,6 +1030,23 @@ export default function ReportBuilderPage() {
       return updated;
     });
   }, [computeIdealHeight]);
+
+  // ── Filtered sections: master toggle ──────────────────────────────────────
+  // ON  → append the "(Filtered)" duplicate of every non-title section that
+  //       isn't already present (after the existing sections).
+  // OFF → remove every filtered section.
+  const toggleIncludeFiltered = useCallback(() => {
+    setElements((prev) => {
+      if (prev.some((e) => e.filtered)) {
+        return prev.filter((e) => !e.filtered);
+      }
+      const existing = new Set(prev.map((e) => e.id));
+      const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
+      return [...prev, ...toAdd];
+    });
+    setIncludeFiltered((v) => !v);
+    setTimeout(autoFitElements, 50);
+  }, [autoFitElements]);
 
   // ── Drag end: reorder the elements array (dnd-kit drives ordering) ─────────
   const sensors = useSensors(
@@ -1033,14 +1155,14 @@ export default function ReportBuilderPage() {
     try {
       localStorage.setItem(LAYOUT_KEY, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, imageDate, projectNameOverrides, sectionTitles,
+        reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
       setHasSaved(true);
       setSaveToastVisible(true);
       if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
       saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
     } catch (e) { console.error("Save layout failed:", e); }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, imageDate, projectNameOverrides, sectionTitles]);
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered]);
 
   const restoreLayout = useCallback(() => {
     try {
@@ -1056,6 +1178,7 @@ export default function ReportBuilderPage() {
       if (l.imageDate !== undefined) setImageDate(l.imageDate);
       if (l.projectNameOverrides !== undefined) setProjectNameOverrides(l.projectNameOverrides);
       if (l.sectionTitles !== undefined) setSectionTitles(l.sectionTitles);
+      if (l.includeFiltered !== undefined) setIncludeFiltered(l.includeFiltered);
     } catch (e) { console.error("Restore layout failed:", e); }
   }, []);
 
@@ -1071,6 +1194,7 @@ export default function ReportBuilderPage() {
       setImageDate("");
       setProjectNameOverrides({});
       setSectionTitles({});
+      setIncludeFiltered(false);
       setHasSaved(false);
     }
   }, []);
@@ -1228,7 +1352,7 @@ export default function ReportBuilderPage() {
   const handleDownloadWord = async () => {
     setExporting("word");
     const topN = elements.find((e) => e.id === "topRisk")?.topN ?? 10;
-    const topRows = topRiskRows.slice(0, topN).map((row) => ({ ...row, _treatments: getSegmentTreatments(row) }));
+    const topRows = fullDataset.topRiskRows.slice(0, topN).map((row) => ({ ...row, _treatments: getSegmentTreatments(row) }));
 
     // Capture visual sections as images for Word embed
     const visibleIds = new Set(elements.filter((e) => e.visible).map((e) => e.id));
@@ -1242,10 +1366,10 @@ export default function ReportBuilderPage() {
         body: JSON.stringify({
           selectedProjects: loadedProjects,
           elements: elements.filter((el) => el.visible),
-          scoreData: distributions,
-          totalSegments,
+          scoreData: fullDataset.distributions,
+          totalSegments: fullDataset.totalSegments,
           topRiskRows: topRows,
-          treatmentSummaries,
+          treatmentSummaries: fullDataset.treatmentSummaries,
           treatmentNames: TREATMENT_NAMES,
           reportTitle,
           oicName,
@@ -1253,9 +1377,9 @@ export default function ReportBuilderPage() {
           reportDate,
           imageDate,
           recommendations,
-          scoreStats,
-          attributeFrequency: Object.fromEntries(attributeFrequency),
-          projectSegmentCounts,
+          scoreStats: fullDataset.scoreStats,
+          attributeFrequency: Object.fromEntries(fullDataset.attributeFrequency),
+          projectSegmentCounts: fullDataset.projectSegmentCounts,
           projectMeta,
           activeFilterNames,
           activeCategoryStatus,
@@ -1649,7 +1773,7 @@ export default function ReportBuilderPage() {
   );
 
   // ── Treatment Summary renderer ────────────────────────────────────────────
-  const renderTreatmentSummary = (summaries: ProjectTreatmentSummary[]) => {
+  const renderTreatmentSummary = (summaries: ProjectTreatmentSummary[], projectSegmentCounts: Record<string, number>) => {
     return (
       <div style={{ padding: "6px 12px" }}>
         {summaries.map((summary) => {
@@ -1706,6 +1830,13 @@ export default function ReportBuilderPage() {
 
   // ── Element content ───────────────────────────────────────────────────────
   const renderContent = (el: ElementState, orderIndex = 0) => {
+    // "(Filtered)" duplicates read from the filtered subset; all others from the
+    // full dataset. Editable text / images / project metadata stay shared.
+    const ds = el.filtered ? filteredDataset : fullDataset;
+    const {
+      distributions, allBandMap, totalSegments, totalKm, projectSegmentCounts,
+      projects, topRiskRows, scoreStats, attributeFrequency, treatmentSummaries,
+    } = ds;
     switch (el.type) {
 
       // ── Title ──────────────────────────────────────────────────────────────
@@ -1788,10 +1919,10 @@ export default function ReportBuilderPage() {
       case "map":
         return (
           <div style={{ height: "calc(100% - 30px)", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 4, margin: 2 }}>
-            {loadedProjects.length === 0
-              ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>No projects loaded</span></div>
-              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={loadedProjects} bandMap={allBandMap} orderIndex={orderIndex} /></div>}
-            {loadedProjects.length > 0 && (
+            {projects.length === 0
+              ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>{el.filtered ? "No segments match the filter" : "No projects loaded"}</span></div>
+              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={projects} bandMap={allBandMap} orderIndex={orderIndex} /></div>}
+            {projects.length > 0 && (
               <div style={{ display: "flex", gap: 18, padding: "4px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
                 <span style={{ fontSize: 11, color: "#555" }}>
                   <strong style={{ color: "#a020d0" }}>{totalSegments}</strong> segments
@@ -1802,7 +1933,7 @@ export default function ReportBuilderPage() {
                   </span>
                 )}
                 <span style={{ fontSize: 11, color: "#555" }}>
-                  {loadedProjects.length} project{loadedProjects.length !== 1 ? "s" : ""}
+                  {projects.length} project{projects.length !== 1 ? "s" : ""}
                 </span>
               </div>
             )}
@@ -1816,7 +1947,7 @@ export default function ReportBuilderPage() {
             <EditableText value={secTitle(el.id, "Summary")} onChange={(t) => setSecTitle(el.id, t)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e", display: "block", marginBottom: 10 }} />
             <div style={{ display: "flex", gap: 32, marginBottom: activeFilterNames.length > 0 ? 10 : 0 }}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: "#a020d0" }}>{loadedProjects.length}</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: "#a020d0" }}>{projects.length}</div>
                 <div style={{ fontSize: 11, color: "#666" }}>Projects</div>
               </div>
               <div style={{ textAlign: "center" }}>
@@ -2042,12 +2173,12 @@ export default function ReportBuilderPage() {
 
       // ── Treatment Summary ──────────────────────────────────────────────────
       case "treatmentSummary": {
-        if (loadedProjects.length === 0) {
+        if (projects.length === 0) {
           return (
             <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
               <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle="" />
               <div style={{ flex: 1, overflow: "hidden" }}>
-                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>No project data loaded.</div>
+                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No segments match the filter." : "No project data loaded."}</div>
               </div>
             </div>
           );
@@ -2055,9 +2186,9 @@ export default function ReportBuilderPage() {
         if (treatmentSummaries.length === 0) {
           return (
             <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-              <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`Data from: ${loadedProjects.map(dispName).join(", ")}`} />
+              <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`Data from: ${projects.map(dispName).join(", ")}`} />
               <div style={{ flex: 1, overflow: "hidden" }}>
-                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>Loading treatment data…</div>
+                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No treatments on filtered segments." : "Loading treatment data…"}</div>
               </div>
             </div>
           );
@@ -2095,7 +2226,7 @@ export default function ReportBuilderPage() {
                 <div key={i} style={{ height, boxSizing: "border-box", paddingBottom: isLast ? 0 : PAGE_GAP, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   <SectionHeader title={secTitle(el.id, "Treatment Summary") + (i > 0 ? " (Cont.)" : "")} onTitleChange={i === 0 ? (t) => setSecTitle(el.id, t) : undefined} subtitle={subtitle} />
                   <div style={{ flex: 1, overflow: "hidden" }}>
-                    {renderTreatmentSummary(chunk)}
+                    {renderTreatmentSummary(chunk, projectSegmentCounts)}
                   </div>
                 </div>
               );
@@ -2121,7 +2252,7 @@ export default function ReportBuilderPage() {
           const meta = projectMeta[name] ?? {};
           const count = projectSegmentCounts[name] ?? 0;
           const lenKm = (count * 10 / 1000).toFixed(1);
-          const projRows = allScoreRows.filter((r) => r._project === name);
+          const projRows = ds.rows.filter((r) => r._project === name);
           const projDist: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
           projRows.forEach((r) => { const b = r._maxBand; if (b >= 1 && b <= 4) projDist[b]++; });
           const projTotal = projRows.length || 1;
@@ -2158,25 +2289,25 @@ export default function ReportBuilderPage() {
             </div>
           );
         };
-        const numChunks = Math.max(1, Math.ceil(loadedProjects.length / PROJ_PAGE_SIZE));
+        const numChunks = Math.max(1, Math.ceil(projects.length / PROJ_PAGE_SIZE));
         return (
           // Each chunk (except the last) is exactly PAGE_H tall so its boundary
           // lands on the PDF page-break grid — a real page break between every
           // PROJ_PAGE_SIZE projects, not a click-to-paginate widget.
           <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            {loadedProjects.length === 0 ? (
+            {projects.length === 0 ? (
               <>
-                <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle="0 projects" />
-                <div style={{ padding: "8px 14px", color: "#888", fontSize: 12 }}>No projects loaded.</div>
+                <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={el.filtered ? "No segments match the filter" : "0 projects"} />
+                <div style={{ padding: "8px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No segments match the filter." : "No projects loaded."}</div>
               </>
             ) : (
               Array.from({ length: numChunks }).map((_, ci) => {
-                const chunkProjects = loadedProjects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
+                const chunkProjects = projects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
                 const isLastChunk = ci === numChunks - 1;
                 return (
                   <div key={ci} style={{ height: isLastChunk ? "auto" : PAGE_H, paddingBottom: isLastChunk ? 0 : PAGE_GAP, boxSizing: "border-box", flexShrink: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                     {ci === 0 ? (
-                      <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`${loadedProjects.length} project${loadedProjects.length !== 1 ? "s" : ""} · ${totalSegments} segments · ${totalKm.toFixed(1)} km total`} />
+                      <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`${projects.length} project${projects.length !== 1 ? "s" : ""} · ${totalSegments} segments · ${totalKm.toFixed(1)} km total`} />
                     ) : (
                       <div style={{ padding: "10px 14px 0", fontSize: 20, fontWeight: 600, color: "#1a1a2e" }}>
                         {secTitle(el.id, "Project Details")} <span style={{ color: "#aaa", fontWeight: 500 }}>(continued)</span>
@@ -2431,7 +2562,7 @@ export default function ReportBuilderPage() {
 
   // ── Checklist memo ────────────────────────────────────────────────────────
   const sectionChecklist = useMemo(() =>
-    elements.map((el) => ({ id: el.id, label: el.label, visible: el.visible })),
+    elements.map((el) => ({ id: el.id, label: el.label, visible: el.visible, filtered: !!el.filtered })),
     [elements]
   );
 
@@ -2532,22 +2663,57 @@ export default function ReportBuilderPage() {
               Drag <GripVertical size={11} style={{ verticalAlign: "-2px" }} /> to reorder · check to show / hide
             </span>
           </div>
+
+          {/* ── Master toggle: include Path-Analysis-filtered duplicates ─────── */}
+          <label
+            title={hasFilter
+              ? "Add a filtered copy of every section (except the title) reflecting the segments you filtered in Path Analysis"
+              : "Apply a filter in Path Analysis first"}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
+              margin: "0 0 4px", borderBottom: "1px solid #ede8f5",
+              cursor: hasFilter ? "pointer" : "not-allowed", opacity: hasFilter ? 1 : 0.5,
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={includeFiltered && hasFilter}
+              disabled={!hasFilter}
+              onChange={toggleIncludeFiltered}
+              style={{ accentColor: "#a020d0", cursor: hasFilter ? "pointer" : "not-allowed", flexShrink: 0 }}
+            />
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include filtered sections</span>
+          </label>
+          {!hasFilter && (
+            <div style={{ fontSize: 10, color: "#aa8", padding: "0 10px 8px", lineHeight: 1.4 }}>
+              Apply a filter on the Path Analysis page to enable a filtered copy of the report.
+            </div>
+          )}
+
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={sectionChecklist.map((s) => s.id)} strategy={verticalListSortingStrategy}>
               <div className="rb-reorder-list">
-                {sectionChecklist.map((sec) => {
+                {sectionChecklist.map((sec, idx) => {
                   const elState = elements.find((e) => e.id === sec.id);
+                  // Insert a group header before the first "(Filtered)" row.
+                  const showFilteredHeader = sec.filtered && (idx === 0 || !sectionChecklist[idx - 1].filtered);
                   return (
-                    <SortableSectionRow
-                      key={sec.id}
-                      id={sec.id}
-                      label={sec.label}
-                      visible={sec.visible}
-                      onToggle={() => (sec.visible ? hideElement(sec.id) : showElement(sec.id))}
-                      onSelect={() => scrollToSection(sec.id)}
-                    >
-                      {sec.id === "topRisk" && elState && sec.visible ? renderViewToggle(elState) : null}
-                    </SortableSectionRow>
+                    <div key={sec.id}>
+                      {showFilteredHeader && (
+                        <div style={{ padding: "8px 10px 4px", fontSize: 10, fontWeight: 700, color: "#a020d0", textTransform: "uppercase", letterSpacing: 0.5, borderTop: "1px dashed #d8c4f0", marginTop: 4 }}>
+                          Filtered sections
+                        </div>
+                      )}
+                      <SortableSectionRow
+                        id={sec.id}
+                        label={sec.label}
+                        visible={sec.visible}
+                        onToggle={() => (sec.visible ? hideElement(sec.id) : showElement(sec.id))}
+                        onSelect={() => scrollToSection(sec.id)}
+                      >
+                        {sec.id === "topRisk" && elState && sec.visible ? renderViewToggle(elState) : null}
+                      </SortableSectionRow>
+                    </div>
                   );
                 })}
               </div>

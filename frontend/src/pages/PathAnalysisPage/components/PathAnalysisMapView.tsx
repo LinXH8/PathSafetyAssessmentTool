@@ -1373,6 +1373,24 @@ export default function AttributeAnalysisMapView({
     return segments;
   }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText]);
 
+  // ── Persist the filtered segment set for the Report Builder ───────────────
+  // The Report Builder reads "pathAnalysis_filteredSegments" to render a second
+  // set of report sections reflecting exactly what the user filtered here.
+  // Filtering only narrows when activeFilters is non-empty, so an empty filter
+  // removes the key (which disables the Report Builder's filtered-sections
+  // toggle). Indices are 0-based, matching geoFeatures/attributes/scores order.
+  useEffect(() => {
+    if (activeFilters.length === 0) {
+      sessionStorage.removeItem("pathAnalysis_filteredSegments");
+      return;
+    }
+    const byProject: Record<string, number[]> = {};
+    visibleSegments.forEach((s) => {
+      (byProject[s.projectName] ??= []).push(s.idx);
+    });
+    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(byProject));
+  }, [visibleSegments, activeFilters]);
+
   const effectiveFocusAttribute = useMemo(() => {
     if (!primaryFocusAttribute) {
       return null;
