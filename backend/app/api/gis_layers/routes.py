@@ -246,7 +246,7 @@ def list_shapefiles():
             continue
         if any(part.startswith("temp") for part in p.parts):
             continue
-        if p.name.startswith("._"):
+        if p.name.startswith("."):
             continue
         
         info = _file_info(p, root)
