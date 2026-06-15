@@ -107,6 +107,9 @@ interface ElementState {
   // When true this is a "(Filtered)" duplicate that renders from the
   // Path-Analysis-filtered segment subset instead of all loaded segments.
   filtered?: boolean;
+  // Map sections only: which filter attribute to colour segments by (a name from
+  // the active Path Analysis filters). Undefined ⇒ default risk-band colouring.
+  colorBy?: string;
 }
 type BandDist = Record<number, number>;
 interface Distributions {
@@ -145,7 +148,8 @@ interface StatEntry { min: string; max: string; avg: string }
 interface ScoreStats {
   VB: StatEntry; BB: StatEntry; SB: StatEntry; BP: StatEntry; Overall: StatEntry;
 }
-interface FilterCategoryItem { category: string; isActive: boolean; color: string }
+interface FilterSubcategoryItem { name: string; isActive: boolean; color: string }
+interface FilterCategoryItem { category: string; isActive: boolean; color: string; subcategories?: FilterSubcategoryItem[] }
 interface FilterCategoryStatus {
   attribute: string;
   categories: FilterCategoryItem[];
@@ -177,6 +181,11 @@ const DEFAULT_ELEMENTS: ElementState[] = [
 // renders from the Path-Analysis-filtered subset. These are injected into the
 // `elements` array only when the user enables the "Include filtered sections"
 // toggle (and a filter actually exists). See `toggleIncludeFiltered`.
+//
+// TEMPORARY: set to false to hide the "Include filtered sections" toggle and
+// suppress all filtered sections from the report (logic kept intact). Flip back
+// to true to re-enable the feature.
+const FILTERED_SECTIONS_ENABLED = true;
 const FILTERED_SUFFIX = "_filtered";
 const FILTERED_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
   .filter((e) => e.id !== "title")
@@ -347,7 +356,7 @@ function FitAllBounds({ points }: { points: L.LatLngExpression[] }) {
   return null;
 }
 
-function ReportMiniMap({ projects, bandMap, orderIndex }: { projects: string[]; bandMap: Map<string, number>; orderIndex: number }) {
+function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: string[]; colorMap: Map<string, string>; orderIndex: number }) {
   const [geoEntries, setGeoEntries] = useState<GeoEntry[]>([]);
   // The MapContainer key combines a per-mount random base with the section's
   // position in the report (`orderIndex`). react-leaflet 5 creates the Leaflet
@@ -384,15 +393,16 @@ function ReportMiniMap({ projects, bandMap, orderIndex }: { projects: string[]; 
       data.features?.forEach((f, i) => {
         const g = f.geometry;
         if (g?.type !== "LineString" || !Array.isArray(g.coordinates) || g.coordinates.length === 0) return;
-        // Use array index (1-based) to look up band — consistent with how _segIndex is set in score rows
-        const band = bandMap.get(`${name}_${i + 1}`);
-        // Skip features with no scored band — eliminates connector/padding features
-        if (band === undefined) return;
-        out.push({ key: `${name}_${i}`, latlng: to4326(g.coordinates[0]), color: RISK_COLORS[band] });
+        // Use array index (1-based) to look up colour — consistent with how _segIndex is set in score rows
+        const color = colorMap.get(`${name}_${i + 1}`);
+        // Skip features absent from the colour map — eliminates connector/padding
+        // features and (in the filtered map) segments outside the filter.
+        if (color === undefined) return;
+        out.push({ key: `${name}_${i}`, latlng: to4326(g.coordinates[0]), color });
       });
     });
     return out;
-  }, [geoEntries, bandMap]);
+  }, [geoEntries, colorMap]);
   const latlngs = useMemo(() => points.map((p) => p.latlng), [points]);
 
   return (
@@ -665,6 +675,10 @@ export default function ReportBuilderPage() {
   // Per-project 0-based segment indices the user filtered to on the Path
   // Analysis map (null ⇒ no filter active ⇒ filtered sections unavailable).
   const [filteredIdxByProject, setFilteredIdxByProject] = useState<Record<string, number[]> | null>(null);
+  // Per project → per 0-based segment index → per filter attribute → category value.
+  // Drives the "Map (Filtered)" colour-by-attribute option (value → colour via
+  // activeCategoryStatus, so the map matches the on-report legend).
+  const [filteredSegValues, setFilteredSegValues] = useState<Record<string, Record<number, Record<string, string>>> | null>(null);
   const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
     const l = _readSaved(); return l?.includeFiltered === true;
   });
@@ -702,16 +716,19 @@ export default function ReportBuilderPage() {
     const filters = sessionStorage.getItem("pathAnalysis_activeFilters");
     const catStatus = sessionStorage.getItem("pathAnalysis_categoryStatus");
     const filteredSegs = sessionStorage.getItem("pathAnalysis_filteredSegments");
+    const filteredVals = sessionStorage.getItem("pathAnalysis_filteredSegmentValues");
     const paP: string[] = pa ? JSON.parse(pa) : [];
     const trP: string[] = tr ? JSON.parse(tr) : [];
     const flt: string[] = filters ? JSON.parse(filters) : [];
     const cst: FilterCategoryStatus[] = catStatus ? JSON.parse(catStatus) : [];
     const fidx: Record<string, number[]> | null = filteredSegs ? JSON.parse(filteredSegs) : null;
+    const fvals: Record<string, Record<number, Record<string, string>>> | null = filteredVals ? JSON.parse(filteredVals) : null;
     const combined = [...new Set([...paP, ...trP])];
     setLoadedProjects(combined);
     setActiveFilterNames(flt);
     setActiveCategoryStatus(cst);
     setFilteredIdxByProject(fidx);
+    setFilteredSegValues(fvals);
     // Reconcile a restored layout against the current filter: if no filter is
     // active, strip any "(Filtered)" sections (they would have no data) and
     // force the toggle off. Done here — with full knowledge of session state —
@@ -930,7 +947,7 @@ export default function ReportBuilderPage() {
         return H + 160 + projLines * 17;
       }
       case "riskBands": return H + (distributions ? 480 : 60);
-      case "map": return H + 350;
+      case "map": return H + 560 + (el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? 30 : 0);
       case "summary": {
         // The "Active Filters" panel grows one row per filter, and each row's
         // category chips wrap — a flat constant clips it once >1 filter is set.
@@ -1084,6 +1101,41 @@ export default function ReportBuilderPage() {
   const getSegmentTreatments = (row: TopRiskRow): number[] =>
     segmentTreatmentMap.get(`${row._project}_${row._segIndex}`) ?? [];
 
+  // ── Map colour map (key `project_segIndex` → hex) ─────────────────────────
+  // Risk-band colouring by default. A filtered map section may instead colour by
+  // one of the user's active filter attributes: each segment's persisted category
+  // value (`filteredSegValues`) is mapped to its colour via `activeCategoryStatus`
+  // — the same source as the report legend, so the map always matches it.
+  const buildMapColorMap = useCallback((ds: ReportDataset, el: ElementState): Map<string, string> => {
+    const m = new Map<string, string>();
+    const colorBy = el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : null;
+    if (el.filtered && colorBy) {
+      const cats = activeCategoryStatus.find((s) => s.attribute === colorBy)?.categories ?? [];
+      const parentColor = new Map(cats.map((c) => [c.category, c.color]));
+      // Mirror Path Analysis: when only one parent category remains active and it
+      // has sub-categories, colour by the secondary (Level-3) value instead.
+      const activeParents = cats.filter((c) => c.isActive);
+      const collapseParent = activeParents.length === 1 && (activeParents[0].subcategories?.length ?? 0) > 0
+        ? activeParents[0] : null;
+      const childColor = new Map((collapseParent?.subcategories ?? []).map((sc) => [sc.name, sc.color]));
+      ds.rows.forEach((row) => {
+        const segVals = filteredSegValues?.[row._project]?.[row._segIndex - 1];
+        const parentVal = segVals?.[colorBy];
+        let color: string | undefined;
+        if (collapseParent && parentVal === collapseParent.category) {
+          const childVal = segVals?.[`${colorBy}__child`];
+          color = (childVal && childColor.get(childVal)) || collapseParent.color;
+        } else if (parentVal) {
+          color = parentColor.get(parentVal);
+        }
+        m.set(`${row._project}_${row._segIndex}`, color ?? "#6B7280");
+      });
+    } else {
+      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? "#2563EB"));
+    }
+    return m;
+  }, [activeFilterNames, activeCategoryStatus, filteredSegValues]);
+
   // ── Post-treatment image upload ───────────────────────────────────────────
   const handleUploadTreatmentImageClick = (project: string, segIndex: number) => {
     setUploadingSegment({ project, segIndex });
@@ -1111,13 +1163,21 @@ export default function ReportBuilderPage() {
       });
       const detailsData = await detailsRes.json();
       if (detailsData.ok && Array.isArray(detailsData.details)) {
+        // The post-treatment image URL is a static path that does not change
+        // between uploads, so the browser keeps showing the previously-rendered
+        // bitmap. Append a cache-busting timestamp so the <img> src string
+        // changes and forces a fresh request.
+        const bust = Date.now();
         setEnrichedMap((prev) => {
           const next = new Map(prev);
           detailsData.details.forEach((d: { project: string; segIndex: number; imageUrl?: string; topAttributes?: { name: string; multiplier: number }[]; postImageUrl?: string; postScores?: any }) => {
+            const postUrl = d.postImageUrl
+              ? `${d.postImageUrl}${d.postImageUrl.includes("?") ? "&" : "?"}t=${bust}`
+              : undefined;
             next.set(`${d.project}_${d.segIndex}`, {
               imageUrl: d.imageUrl ?? undefined,
               topAttributes: d.topAttributes || [],
-              postImageUrl: d.postImageUrl ?? undefined,
+              postImageUrl: postUrl,
               postScores: d.postScores ?? undefined,
             });
           });
@@ -1289,8 +1349,23 @@ export default function ReportBuilderPage() {
           .map((img) => img.decode().catch(() => undefined)),
       );
 
+      // Clamp the capture scale so the rasterised canvas stays within the
+      // browser's hard limits. Browsers cap a <canvas> at ~32767px per dimension
+      // and ~268M px² total area; html2canvas silently returns a blank/zero-size
+      // canvas when exceeded (→ empty toDataURL → failed PDF). Tall reports —
+      // especially with the doubled "(Filtered)" sections — blow past this at the
+      // default scale of 2, so derive the largest safe scale instead.
+      const cssW = canvas.scrollWidth || canvas.offsetWidth || CANVAS_W;
+      const cssH = canvas.scrollHeight || canvas.offsetHeight || PAGE_H;
+      const MAX_DIM = 32000;                 // per-dimension cap, with margin
+      const MAX_AREA = 256 * 1024 * 1024;    // ~268M px² area cap, with margin
+      const captureScale = Math.max(
+        0.5,
+        Math.min(2, MAX_DIM / cssW, MAX_DIM / cssH, Math.sqrt(MAX_AREA / (cssW * cssH))),
+      );
+
       const captured = await html2canvas(canvas, {
-        scale: 2, useCORS: true, logging: false, backgroundColor: "#ffffff",
+        scale: captureScale, useCORS: true, logging: false, backgroundColor: "#ffffff",
         onclone: (doc) => {
           const cloneFields = Array.from(
             doc.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(".rb-canvas input, .rb-canvas textarea"),
@@ -1321,6 +1396,12 @@ export default function ReportBuilderPage() {
 
       restore.forEach((fn) => fn());
 
+      // A zero-size capture means the canvas still exceeded a browser limit —
+      // fail loudly instead of saving an empty PDF.
+      if (!captured.width || !captured.height) {
+        throw new Error(`html2canvas produced an empty canvas (${cssW}×${cssH}px @ ${captureScale.toFixed(2)}x). The report is too large to rasterise — hide some sections or reduce the number of Top Risk Stretches.`);
+      }
+
       const imgData = captured.toDataURL("image/png");
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pdfW = 210, pdfH = 297;
@@ -1330,7 +1411,10 @@ export default function ReportBuilderPage() {
       remaining -= pdfH;
       while (remaining > 0) { yPos -= pdfH; pdf.addPage(); pdf.addImage(imgData, "PNG", 0, yPos, pdfW, imgH); remaining -= pdfH; }
       pdf.save("PSAT_Report.pdf");
-    } catch (err) { console.error("PDF export failed:", err); }
+    } catch (err) {
+      console.error("PDF export failed:", err);
+      alert(`PDF export failed: ${err instanceof Error ? err.message : "unknown error"}`);
+    }
     finally { setExporting(null); }
   };
 
@@ -1365,7 +1449,7 @@ export default function ReportBuilderPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           selectedProjects: loadedProjects,
-          elements: elements.filter((el) => el.visible),
+          elements: elements.filter((el) => el.visible && (FILTERED_SECTIONS_ENABLED || !el.filtered)),
           scoreData: fullDataset.distributions,
           totalSegments: fullDataset.totalSegments,
           topRiskRows: topRows,
@@ -1482,6 +1566,29 @@ export default function ReportBuilderPage() {
             );
           })}
         </div>
+      </div>
+    );
+  };
+
+  // ── Map (Filtered) colour-by selector (sidebar) ──────────────────────────
+  const renderMapColorToggle = (el: ElementState) => {
+    const current = el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : "__risk__";
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderTop: "1px dashed #e0d8f0" }} onPointerDown={(e) => e.stopPropagation()}>
+        <span style={{ fontSize: 10, color: "#aaa", flexShrink: 0 }}>Color by:</span>
+        <select
+          value={current}
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const v = e.target.value;
+            updateElement(el.id, { colorBy: v === "__risk__" ? undefined : v });
+          }}
+          style={{ flex: 1, fontSize: 10, padding: "2px 4px", borderRadius: 4, border: "1px solid #ddd", color: "#555", background: "#fff", cursor: "pointer", minWidth: 0 }}
+        >
+          <option value="__risk__">Overall Risk Level (default)</option>
+          {activeFilterNames.map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
       </div>
     );
   };
@@ -1834,7 +1941,7 @@ export default function ReportBuilderPage() {
     // full dataset. Editable text / images / project metadata stay shared.
     const ds = el.filtered ? filteredDataset : fullDataset;
     const {
-      distributions, allBandMap, totalSegments, totalKm, projectSegmentCounts,
+      distributions, totalSegments, totalKm, projectSegmentCounts,
       projects, topRiskRows, scoreStats, attributeFrequency, treatmentSummaries,
     } = ds;
     switch (el.type) {
@@ -1916,12 +2023,34 @@ export default function ReportBuilderPage() {
         );
 
       // ── Map ────────────────────────────────────────────────────────────────
-      case "map":
+      case "map": {
+        const colorByAttr = el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : null;
+        // Legend mirrors the colouring: show secondary (sub-category) chips when
+        // the parent has collapsed to a single active category with sub-categories.
+        const colorByCats = colorByAttr
+          ? (activeCategoryStatus.find((s) => s.attribute === colorByAttr)?.categories.filter((c) => c.isActive) ?? [])
+          : [];
+        const collapseParent = colorByCats.length === 1 && (colorByCats[0].subcategories?.length ?? 0) > 0
+          ? colorByCats[0] : null;
+        const legendCats: { category: string; color: string }[] = collapseParent
+          ? (collapseParent.subcategories ?? []).filter((sc) => sc.isActive).map((sc) => ({ category: sc.name, color: sc.color }))
+          : colorByCats.map((c) => ({ category: c.category, color: c.color }));
         return (
           <div style={{ height: "calc(100% - 30px)", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 4, margin: 2 }}>
             {projects.length === 0
               ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>{el.filtered ? "No segments match the filter" : "No projects loaded"}</span></div>
-              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={projects} bandMap={allBandMap} orderIndex={orderIndex} /></div>}
+              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={projects} colorMap={buildMapColorMap(ds, el)} orderIndex={orderIndex} /></div>}
+            {projects.length > 0 && colorByAttr && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", padding: "5px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#a020d0", marginRight: 2 }}>{colorByAttr}:</span>
+                {legendCats.length > 0 ? legendCats.map((c) => (
+                  <span key={c.category} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: "#444" }}>
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: c.color, display: "inline-block" }} />
+                    {c.category}
+                  </span>
+                )) : <span style={{ fontSize: 10, color: "#999" }}>colored by attribute</span>}
+              </div>
+            )}
             {projects.length > 0 && (
               <div style={{ display: "flex", gap: 18, padding: "4px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
                 <span style={{ fontSize: 11, color: "#555" }}>
@@ -1939,6 +2068,7 @@ export default function ReportBuilderPage() {
             )}
           </div>
         );
+      }
 
       // ── Summary ────────────────────────────────────────────────────────────
       case "summary":
@@ -2541,7 +2671,10 @@ export default function ReportBuilderPage() {
   };
 
   // ── Flow layout (single source of truth for heights + page-break spacing) ──
-  const visibleElements = useMemo(() => elements.filter((e) => e.visible), [elements]);
+  const visibleElements = useMemo(
+    () => elements.filter((e) => e.visible && (FILTERED_SECTIONS_ENABLED || !e.filtered)),
+    [elements],
+  );
   const layout = useMemo(
     () => computeFlowLayout(visibleElements, computeIdealHeight),
     [visibleElements, computeIdealHeight],
@@ -2562,7 +2695,9 @@ export default function ReportBuilderPage() {
 
   // ── Checklist memo ────────────────────────────────────────────────────────
   const sectionChecklist = useMemo(() =>
-    elements.map((el) => ({ id: el.id, label: el.label, visible: el.visible, filtered: !!el.filtered })),
+    elements
+      .filter((el) => FILTERED_SECTIONS_ENABLED || !el.filtered)
+      .map((el) => ({ id: el.id, label: el.label, visible: el.visible, filtered: !!el.filtered })),
     [elements]
   );
 
@@ -2665,29 +2800,34 @@ export default function ReportBuilderPage() {
           </div>
 
           {/* ── Master toggle: include Path-Analysis-filtered duplicates ─────── */}
-          <label
-            title={hasFilter
-              ? "Add a filtered copy of every section (except the title) reflecting the segments you filtered in Path Analysis"
-              : "Apply a filter in Path Analysis first"}
-            style={{
-              display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
-              margin: "0 0 4px", borderBottom: "1px solid #ede8f5",
-              cursor: hasFilter ? "pointer" : "not-allowed", opacity: hasFilter ? 1 : 0.5,
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={includeFiltered && hasFilter}
-              disabled={!hasFilter}
-              onChange={toggleIncludeFiltered}
-              style={{ accentColor: "#a020d0", cursor: hasFilter ? "pointer" : "not-allowed", flexShrink: 0 }}
-            />
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include filtered sections</span>
-          </label>
-          {!hasFilter && (
-            <div style={{ fontSize: 10, color: "#aa8", padding: "0 10px 8px", lineHeight: 1.4 }}>
-              Apply a filter on the Path Analysis page to enable a filtered copy of the report.
-            </div>
+          {/* TEMPORARILY HIDDEN — gated by FILTERED_SECTIONS_ENABLED. */}
+          {FILTERED_SECTIONS_ENABLED && (
+            <>
+              <label
+                title={hasFilter
+                  ? "Add a filtered copy of every section (except the title) reflecting the segments you filtered in Path Analysis"
+                  : "Apply a filter in Path Analysis first"}
+                style={{
+                  display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
+                  margin: "0 0 4px", borderBottom: "1px solid #ede8f5",
+                  cursor: hasFilter ? "pointer" : "not-allowed", opacity: hasFilter ? 1 : 0.5,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={includeFiltered && hasFilter}
+                  disabled={!hasFilter}
+                  onChange={toggleIncludeFiltered}
+                  style={{ accentColor: "#a020d0", cursor: hasFilter ? "pointer" : "not-allowed", flexShrink: 0 }}
+                />
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include filtered sections</span>
+              </label>
+              {!hasFilter && (
+                <div style={{ fontSize: 10, color: "#aa8", padding: "0 10px 8px", lineHeight: 1.4 }}>
+                  Apply a filter on the Path Analysis page to enable a filtered copy of the report.
+                </div>
+              )}
+            </>
           )}
 
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -2711,7 +2851,13 @@ export default function ReportBuilderPage() {
                         onToggle={() => (sec.visible ? hideElement(sec.id) : showElement(sec.id))}
                         onSelect={() => scrollToSection(sec.id)}
                       >
-                        {sec.id === "topRisk" && elState && sec.visible ? renderViewToggle(elState) : null}
+                        {elState && sec.visible
+                          ? sec.id === "topRisk"
+                            ? renderViewToggle(elState)
+                            : (elState.type === "map" && elState.filtered)
+                              ? renderMapColorToggle(elState)
+                              : null
+                          : null}
                       </SortableSectionRow>
                     </div>
                   );

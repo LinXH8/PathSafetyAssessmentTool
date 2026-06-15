@@ -1382,14 +1382,35 @@ export default function AttributeAnalysisMapView({
   useEffect(() => {
     if (activeFilters.length === 0) {
       sessionStorage.removeItem("pathAnalysis_filteredSegments");
+      sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
       return;
     }
     const byProject: Record<string, number[]> = {};
+    // Per active-filter attribute, the resolved category VALUE for each filtered
+    // segment — so the Report Builder's "Map (Filtered)" can recolour by any of
+    // the user's filter attributes. The Report Builder maps each value to a
+    // colour via the same `categoryStatus` it already displays, guaranteeing the
+    // map matches the legend.
+    const valuesByProject: Record<string, Record<number, Record<string, string>>> = {};
     visibleSegments.forEach((s) => {
       (byProject[s.projectName] ??= []).push(s.idx);
+      const segVals: Record<string, string> = {};
+      activeFilters.forEach((attr) => {
+        segVals[attr] = attr === "Project" ? s.projectName : getFocusedAttributeValue(attr, s);
+        // Also capture the Level-3 (sub-category) value, so the Report Builder can
+        // colour by secondary categories (e.g. "FO Type" under "Fixed Obstacle on
+        // Facility") when the parent collapses to a single category.
+        const sub = SUBCATEGORY_MAP[attr];
+        if (sub) {
+          const childVal = getFocusedAttributeValue(sub.childAttr, s);
+          if (childVal && childVal !== "None") segVals[`${attr}__child`] = childVal;
+        }
+      });
+      (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
     sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(byProject));
-  }, [visibleSegments, activeFilters]);
+    sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
+  }, [visibleSegments, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
     if (!primaryFocusAttribute) {
