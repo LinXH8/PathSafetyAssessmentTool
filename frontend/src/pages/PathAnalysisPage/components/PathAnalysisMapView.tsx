@@ -1127,14 +1127,7 @@ export default function AttributeAnalysisMapView({
       return getCrossingFacilityFilterText(attributes);
     }
 
-    if (attributeName === "Delineation") {
-      const delineationType = getAttrText("Delineation Type", attributes["Delineation Type"]);
-      if (!delineationType || delineationType === "None") {
-        return "Not Present";
-      }
-      const rawDelineation = getAttrText("Delineation", attributes["Delineation"]);
-      return rawDelineation === "Not Present" ? rawDelineation : "Present";
-    }
+
 
     if (attributeName === "Delineation Type") {
       const delineationType = getAttrText("Delineation Type", attributes["Delineation Type"]);
@@ -1573,7 +1566,6 @@ export default function AttributeAnalysisMapView({
         "Cycling Path": "#2563EB",
         "Red Stripe": "#DC2626",
         "Signalised Crossing": "#EA580C",
-        "Traffic Crossing": "#0891B2",
         "Zebra Crossing": "#CA8A04",
       },
       "Facility Type": {

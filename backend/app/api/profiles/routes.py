@@ -149,6 +149,20 @@ def reset_profile_pin(profile_id: str):
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
 
 
+@bp.delete("/<profile_id>")
+def delete_profile(profile_id: str):
+    data = request.get_json(silent=True) or {}
+    try:
+        profile_store.delete_profile(profile_id, str(data.get("pin") or ""))
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), _profile_error_status(exc)
+    except PermissionError as exc:
+        return jsonify({"error": str(exc)}), 401
+
+    _invalidate_project_context()
+    return jsonify({"ok": True, "overview": profile_store.get_overview()})
+
+
 @bp.post("/migrate-legacy-projects")
 def migrate_legacy_projects():
     data = request.get_json(silent=True) or {}

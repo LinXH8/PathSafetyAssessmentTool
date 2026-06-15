@@ -17,6 +17,7 @@ import {
 import { LuCheck, LuCopy, LuImage, LuChevronDown } from "react-icons/lu";
 import { Switch } from "../../components/ui/switch";
 import { toaster } from "../../components/ui/toaster";
+import { Tooltip } from "../../components/ui/tooltip";
 
 import type { Feature, FeatureCollection, LineString } from "geojson";
 
@@ -37,6 +38,7 @@ import {
 
 import type { AttributeRow } from "../../api";
 import ImagePanel from "../CodingPage/components/ImagePanel";
+import PostTreatmentImageUpload from "./components/PostTreatmentImageUpload";
 import AttributesPanel, { resolveContributorTabGroup } from "../CodingPage/components/AttributesPanel";
 import GeoDataPanel from "../CodingPage/components/GeoDataPanel";
 import SegmentScoresCard from "../../components/visualization/scoreband/SegmentScoresCard";
@@ -304,6 +306,18 @@ const TREATMENT_COPY_LINES: Partial<Record<number, string>> = {
   22: "* Reconfigure/remove parking - Remove or relocate on-street parking lots, motorcycle bays, or loading/unloading zones that encroach on or are adjacent to the cycling or pedestrian facility. This includes HDB estate carpark aprons, street-side parking lots marked with yellow kerb lines, and illegally parked vehicles.",
 };
 
+const getTreatmentDescription = (t: Treatment): string => {
+  if (t.description) return t.description;
+  const copyLine = TREATMENT_COPY_LINES[t.id];
+  if (copyLine) {
+    const parts = copyLine.split(' - ');
+    if (parts.length > 1) {
+      return parts.slice(1).join(' - ');
+    }
+  }
+  return `Apply this intervention in a way that improves the safety and usability of the cycling or pedestrian facility shown.`;
+};
+
 const buildTreatmentCopyMessage = (treatmentIds: number[]): string => {
   const uniqueIds = Array.from(new Set(treatmentIds));
   const priorityIndex = new Map(TREATMENT_COPY_PRIORITY.map((id, index) => [id, index]));
@@ -554,6 +568,9 @@ const calculateBandDistributions = (scoreRows: any[]) => {
   return distributions;
 };
 
+// Sentinel for the "All Projects" tab — scopes the page to every loaded project.
+const ALL_PROJECTS = "__ALL__";
+
 export default function TreatmentDetailPage() {
   const { projectName } = useParams<{ projectName: string }>();
 
@@ -583,13 +600,40 @@ export default function TreatmentDetailPage() {
   const [attrs, setAttrs] = useState<AttributeRow[]>([]);
   const [accordionView, setAccordionView] = useState<"segment" | "treatment">("segment");
 
-  // Effectiveness = # of segments (across all loaded projects) whose Overall
-  // Risk Level Band improves when the treatment is applied in isolation.
-  // Keyed by treatment id; populated asynchronously from the backend once per
-  // project set, used to rank the "By Treatment" list top-down.
-  const [effectivenessCounts, setEffectivenessCounts] = useState<Record<number, number>>({});
-  const [applicableCounts, setApplicableCounts] = useState<Record<number, number>>({});
+  // Active tab — either a project name or ALL_PROJECTS. Drives the page-wide focus scope.
+  const [activeProject, setActiveProject] = useState<string>(ALL_PROJECTS);
+  // Monotonic counter bumped on tab switch to force the maps to recenter on the scope.
+  const [panKey, setPanKey] = useState<number>(0);
+
+  // Focus scope derived from the active tab. ALL_PROJECTS spans every segment;
+  // a project tab narrows to that project's global-index window. Every consumer
+  // (maps, treatment list, counts, donuts) reads from this.
+  const isAllScope = activeProject === ALL_PROJECTS;
+  const scope = useMemo(() => {
+    if (isAllScope) return { start: 0, count: attrs.length };
+    const p = projectMap.find((p) => p.name === activeProject);
+    return p ? { start: p.startIndex, count: p.count } : { start: 0, count: attrs.length };
+  }, [isAllScope, activeProject, projectMap, attrs.length]);
+
+  // Effectiveness = # of segments whose Overall Risk Level Band improves when the
+  // treatment is applied in isolation. Raw per-project counts are fetched once per
+  // project set; effectivenessCounts/applicableCounts below aggregate them per the
+  // active scope (all projects, or just the selected tab).
+  const [perProjectEff, setPerProjectEff] = useState<Record<string, { counts: Record<number, number>; applicable: Record<number, number> }>>({});
   const [effectivenessLoading, setEffectivenessLoading] = useState<boolean>(false);
+
+  const { effectivenessCounts, applicableCounts } = useMemo(() => {
+    const names = isAllScope ? Object.keys(perProjectEff) : [activeProject];
+    const counts: Record<number, number> = {};
+    const applicable: Record<number, number> = {};
+    for (const name of names) {
+      const r = perProjectEff[name];
+      if (!r) continue;
+      for (const [tidStr, c] of Object.entries(r.counts)) counts[+tidStr] = (counts[+tidStr] ?? 0) + (c ?? 0);
+      for (const [tidStr, c] of Object.entries(r.applicable)) applicable[+tidStr] = (applicable[+tidStr] ?? 0) + (c ?? 0);
+    }
+    return { effectivenessCounts: counts, applicableCounts: applicable };
+  }, [perProjectEff, isAllScope, activeProject]);
 
   // Score drop for each treatment applied in isolation on the currently viewed segment.
   // Keyed by treatment id; populated when accordionView === "segment" and currentIndex changes.
@@ -599,7 +643,10 @@ export default function TreatmentDetailPage() {
     if (!attrs || attrs.length === 0) return [];
 
     const uniqueMap = new Map<number, Treatment>();
-    attrs.forEach(row => {
+    // Only consider segments within the active focus scope.
+    for (let i = scope.start; i < scope.start + scope.count; i++) {
+      const row = attrs[i];
+      if (!row) continue;
       // getApplicableTreatments expects a dict. It's safe to cast row.
       const applicable = getApplicableTreatments(row as any);
       applicable.forEach(t => {
@@ -607,7 +654,7 @@ export default function TreatmentDetailPage() {
           uniqueMap.set(t.id, t);
         }
       });
-    });
+    }
 
     return Array.from(uniqueMap.values()).sort((a, b) => {
       const ea = effectivenessCounts[a.id] ?? 0;
@@ -615,7 +662,7 @@ export default function TreatmentDetailPage() {
       if (eb !== ea) return eb - ea;
       return a.id - b.id;
     });
-  }, [attrs, effectivenessCounts]);
+  }, [attrs, effectivenessCounts, scope]);
 
   const [geoFeatures, setGeoFeatures] = useState<Feature[]>([]);
   const [scores, setScores] = useState<Record<string, any>[]>([]);
@@ -623,8 +670,6 @@ export default function TreatmentDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedTreatments, setSelectedTreatments] = useState<Set<number>>(new Set());
 
-  // Active project for tab navigation - initialize to first project
-  const [activeProject, setActiveProject] = useState<string>(() => projectNames[0] ?? "");
   const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>({});
   const [showPostTreatment, setShowPostTreatment] = useState<boolean>(false);
   const [activeAttributeGroupTab, setActiveAttributeGroupTab] = useState<string | null>(null);
@@ -644,7 +689,7 @@ export default function TreatmentDetailPage() {
       let applicableCount = 0;
       let appliedCount = 0;
       
-      for (let i = 0; i < attrs.length; i++) {
+      for (let i = scope.start; i < scope.start + scope.count; i++) {
          const attr = attrs[i] as any;
          if (!attr) continue;
          const applicable = getApplicableTreatments(attr);
@@ -655,14 +700,14 @@ export default function TreatmentDetailPage() {
             }
          }
       }
-      
+
       if (applicableCount > 0 && applicableCount === appliedCount) {
          fullyApplied.add(t.id);
       }
     });
-    
+
     return fullyApplied;
-  }, [allApplicableTreatments, attrs, treatmentState]);
+  }, [allApplicableTreatments, attrs, treatmentState, scope]);
   const [applyLoading, setApplyLoading] = useState(false);
   const [openConfirmAlert, setOpenConfirmAlert] = useState(false);
   const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>("idle");
@@ -680,6 +725,16 @@ export default function TreatmentDetailPage() {
     () => Math.max(0, Math.min(len - 1, currentPage - 1)),
     [currentPage, len]
   );
+
+  // Safety net: if the current segment drifts outside the active scope window
+  // (e.g. projectMap resolves after navigation), snap back to the scope's first segment.
+  useEffect(() => {
+    if (isAllScope || scope.count === 0) return;
+    if (currentIndex < scope.start || currentIndex >= scope.start + scope.count) {
+      setCurrentPage(scope.start + 1);
+      setPageInput("1"); // scope-relative first page
+    }
+  }, [isAllScope, scope, currentIndex]);
 
   const handleContributorClick = useCallback((name: string) => {
     const targetGroup = resolveContributorTabGroup(name);
@@ -718,14 +773,15 @@ export default function TreatmentDetailPage() {
     return project?.startIndex ?? 0;
   }, [projectMap]);
 
-  // Calculate before treatment band distributions (all segments)
+  // Calculate before treatment band distributions (segments within the active scope)
   const beforeBandCounts = useMemo(() => {
-    return calculateBandDistributions(scores);
-  }, [scores]);
+    return calculateBandDistributions(scores.slice(scope.start, scope.start + scope.count));
+  }, [scores, scope]);
 
-  // Calculate after treatment band distributions (only treated segments)
+  // Calculate after treatment band distributions (segments within the active scope)
   const afterBandCounts = useMemo(() => {
-    const treatedSegments = scores.map((scoreRow, index) => {
+    const treatedSegments = scores.slice(scope.start, scope.start + scope.count).map((scoreRow, i) => {
+      const index = scope.start + i;
       const state = treatmentState[index];
       if (!state?.applied || !state.after_scores) {
         return scoreRow; // Not treated, return original
@@ -753,7 +809,7 @@ export default function TreatmentDetailPage() {
       };
     });
     return calculateBandDistributions(treatedSegments);
-  }, [scores, treatmentState]);
+  }, [scores, treatmentState, scope]);
 
   // Create after-treatment scores for map visualization
   const afterTreatmentScores = useMemo(() => {
@@ -910,8 +966,8 @@ export default function TreatmentDetailPage() {
     return () => { cancelled = true; };
   }, [projectNames, projectMap]);
 
-  // Fetch per-treatment effectiveness counts aggregated across loaded projects,
-  // used to rank the "By Treatment" list top-down by most segments improved.
+  // Fetch per-treatment effectiveness counts per project, stored raw so the
+  // active scope can aggregate them (all projects, or just the selected tab).
   useEffect(() => {
     if (projectMap.length === 0) return;
 
@@ -924,23 +980,23 @@ export default function TreatmentDetailPage() {
         );
         if (cancelled) return;
 
-        const aggregated: Record<number, number> = {};
-        const aggregatedApplicable: Record<number, number> = {};
-        for (const r of results) {
-          if (!r || !r.ok) continue;
+        const byProject: Record<string, { counts: Record<number, number>; applicable: Record<number, number> }> = {};
+        results.forEach((r, i) => {
+          const name = projectMap[i]?.name;
+          if (!name || !r || !r.ok) return;
+          const counts: Record<number, number> = {};
+          const applicable: Record<number, number> = {};
           for (const [tidStr, count] of Object.entries(r.counts)) {
             const tid = parseInt(tidStr, 10);
-            if (!Number.isFinite(tid)) continue;
-            aggregated[tid] = (aggregated[tid] ?? 0) + (count ?? 0);
+            if (Number.isFinite(tid)) counts[tid] = count ?? 0;
           }
           for (const [tidStr, count] of Object.entries(r.applicable_counts ?? {})) {
             const tid = parseInt(tidStr, 10);
-            if (!Number.isFinite(tid)) continue;
-            aggregatedApplicable[tid] = (aggregatedApplicable[tid] ?? 0) + (count ?? 0);
+            if (Number.isFinite(tid)) applicable[tid] = count ?? 0;
           }
-        }
-        setEffectivenessCounts(aggregated);
-        setApplicableCounts(aggregatedApplicable);
+          byProject[name] = { counts, applicable };
+        });
+        setPerProjectEff(byProject);
       } finally {
         if (!cancelled) setEffectivenessLoading(false);
       }
@@ -1144,8 +1200,10 @@ export default function TreatmentDetailPage() {
     setOpenConfirmAlert(false);
     try {
         const allDetails: any[] = [];
+        // Apply across every project (All Projects) or only the active tab's project.
+        const targets = isAllScope ? projectMap : projectMap.filter(p => p.name === activeProject);
         for (const id of Array.from(selectedTreatments)) {
-            for (const proj of projectMap) {
+            for (const proj of targets) {
                 const res = await applySpecificTreatment(proj.name, id);
                 if (res.details) {
                     res.details.forEach((d: any) => d.projectName = proj.name);
@@ -1256,18 +1314,25 @@ export default function TreatmentDetailPage() {
     [len]
   );
 
+  // Page number shown to the user — scope-relative (1..scope.count) when a project
+  // tab is active, global otherwise. currentPage/currentIndex stay global internally.
+  const scopePage = isAllScope ? currentPage : currentIndex - scope.start + 1;
+  const scopeTotal = isAllScope ? len : scope.count;
+
   useEffect(() => {
-    setPageInput(String(currentPage));
-  }, [currentPage]);
+    setPageInput(String(scopePage));
+  }, [scopePage]);
 
   const commitPage = useCallback(
     (valStr: string) => {
       const raw = Number(valStr);
       if (!Number.isFinite(raw)) return;
-      const clamped = Math.min(Math.max(1, len || 1), raw);
-      gotoPage(clamped);
+      // valStr is scope-relative; map back to a global page within the scope window.
+      const relClamped = Math.min(Math.max(1, raw), scope.count || 1);
+      const globalPage = isAllScope ? relClamped : scope.start + relClamped;
+      gotoPage(globalPage);
     },
-    [gotoPage, len]
+    [gotoPage, isAllScope, scope]
   );
 
   useEffect(() => {
@@ -1410,9 +1475,23 @@ export default function TreatmentDetailPage() {
       {/* DEBUG INFO */}
 
 
-      {/* Project Tabs - for navigating between loaded projects */}
+      {/* Project Tabs - scope the whole page to one project (or All Projects) */}
       {projectNames.length > 1 && (
         <Flex gap="2" mb="4" wrap="wrap">
+          {/* All Projects tab — aggregate view across every loaded project */}
+          <Button
+            onClick={() => {
+              setActiveProject(ALL_PROJECTS);
+              setCurrentPage(1);
+              setPageInput("1");
+              setPanKey((k) => k + 1);
+            }}
+            variant={isAllScope ? "solid" : "outline"}
+            colorPalette={isAllScope ? "blue" : "gray"}
+            size="md"
+          >
+            All Projects ({len})
+          </Button>
           {projectNames.map((proj) => {
             const isActive = activeProject === proj;
             const segmentCount = getProjectSegmentCount(proj);
@@ -1422,10 +1501,11 @@ export default function TreatmentDetailPage() {
                 key={proj}
                 onClick={() => {
                   setActiveProject(proj);
-                  // Navigate to first segment of this project
+                  // Narrow focus and jump to this project's first segment
                   const firstSegmentPage = getProjectFirstSegmentIndex(proj) + 1;
                   setCurrentPage(firstSegmentPage);
-                  setPageInput(String(firstSegmentPage));
+                  setPageInput("1"); // scope-relative first page
+                  setPanKey((k) => k + 1);
                 }}
                 variant={isActive ? "solid" : "outline"}
                 colorPalette={isActive ? "blue" : "gray"}
@@ -1451,14 +1531,14 @@ export default function TreatmentDetailPage() {
 
         <Flex align="center" gap="3">
           <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
-            {len > 0 ? `${currentPage} / ${len}` : "0 / 0"}
+            {scopeTotal > 0 ? `${scopePage} / ${scopeTotal}` : "0 / 0"}
           </Text>
 
           <NumberInput.Root
             maxW="120px"
             min={1}
-            max={len || 1}
-            defaultValue={String(currentPage)}
+            max={scopeTotal || 1}
+            defaultValue={String(scopePage)}
             value={pageInput}
             onValueChange={(e) => setPageInput(e.value)}
           >
@@ -1493,6 +1573,9 @@ export default function TreatmentDetailPage() {
             geoFeatures={geoFeatures as Feature<LineString, any>[]}
             startIndex={0}
             scores={scores as any}
+            scopeRange={isAllScope ? null : scope}
+            autoFitKey={panKey}
+            panKey={panKey}
           />
         </GridItem>
 
@@ -1512,6 +1595,9 @@ export default function TreatmentDetailPage() {
             subtitle="After Treatment"
             geoFeatures={geoFeatures as Feature<LineString, any>[]}
             startIndex={0}
+            scopeRange={isAllScope ? null : scope}
+            autoFitKey={panKey}
+            panKey={panKey}
           />
         </GridItem>
       </Grid>
@@ -1536,29 +1622,46 @@ export default function TreatmentDetailPage() {
             <Text fontSize="sm" fontWeight="bold" color="gray.700" _dark={{ color: "gray.200" }}>
               Treatment Options
             </Text>
-            <Box mt="2">
-              <select
-                value={accordionView}
-                onChange={(e) => {
-                  setAccordionView(e.target.value as "segment" | "treatment");
-                  setSelectedTreatments(new Set());
-                }}
-                style={{
-                  width: "100%",
-                  padding: "6px",
-                  borderRadius: "6px",
-                  border: "1px solid var(--chakra-colors-gray-300)",
-                  backgroundColor: "white",
-                  color: "inherit",
-                  fontSize: "14px",
-                  cursor: "pointer",
-                }}
-                className="theme-select"
-              >
-                <option value="segment">By Segment</option>
-                <option value="treatment">By Treatment</option>
-              </select>
-            </Box>
+            <Tooltip
+              content={
+                accordionView === "segment" ? (
+                  <Text>
+                    <b>By Segment:</b> View and apply treatments for the current segment only.
+                  </Text>
+                ) : (
+                  <Text>
+                    <b>By Treatment:</b> View and apply a single treatment across all applicable segments.
+                  </Text>
+                )
+              }
+              showArrow
+              openDelay={400}
+              contentProps={{ maxW: "250px" }}
+            >
+              <Box mt="2">
+                <select
+                  value={accordionView}
+                  onChange={(e) => {
+                    setAccordionView(e.target.value as "segment" | "treatment");
+                    setSelectedTreatments(new Set());
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "6px",
+                    borderRadius: "6px",
+                    border: "1px solid var(--chakra-colors-gray-300)",
+                    backgroundColor: "white",
+                    color: "inherit",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                  }}
+                  className="theme-select"
+                >
+                  <option value="segment">By Segment</option>
+                  <option value="treatment">By Treatment</option>
+                </select>
+              </Box>
+            </Tooltip>
           </Box>
 
           <Box flex="1" overflowY="auto" p="3">
@@ -1573,8 +1676,18 @@ export default function TreatmentDetailPage() {
                 displayTreatments = getApplicableTreatments(currentAttr)
                   .sort((a, b) => (segmentScoreDrops[b.id] ?? 0) - (segmentScoreDrops[a.id] ?? 0));
               } else {
+                if (effectivenessLoading) {
+                  return (
+                    <Flex direction="column" align="center" justify="center" gap="3" py="8">
+                      <Spinner size="sm" color="blue.500" />
+                      <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                        Ranking Treatment Options...
+                      </Text>
+                    </Flex>
+                  );
+                }
                 displayTreatments = allApplicableTreatments.filter(t =>
-                  effectivenessLoading || (effectivenessCounts[t.id] ?? 0) > 0
+                  (effectivenessCounts[t.id] ?? 0) > 0
                 );
               }
 
@@ -1662,17 +1775,15 @@ export default function TreatmentDetailPage() {
                           </Text>
                           {accordionView === "treatment" && (
                             <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
-                              {effectivenessLoading && effectivenessCounts[t.id] === undefined
-                                ? "Improves …%"
-                                : (() => {
-                                    const count = effectivenessCounts[t.id] ?? 0;
-                                    const applicable = applicableCounts[t.id] ?? 0;
-                                    const denominator = applicable > 0 ? applicable : attrs.length;
-                                    const pct = (denominator > 0 && count > 0) ? count / denominator * 100 : 0;
-                                    const display = count > 0 ? Math.max(0.1, pct).toFixed(1) : "0.0";
-                                    const scope = applicable > 0 ? "applicable segments" : "segments";
-                                    return `Improves ${display}% of ${scope}`;
-                                  })()}
+                              {(() => {
+                                const count = effectivenessCounts[t.id] ?? 0;
+                                const applicable = applicableCounts[t.id] ?? 0;
+                                const denominator = applicable > 0 ? applicable : attrs.length;
+                                const pct = (denominator > 0 && count > 0) ? count / denominator * 100 : 0;
+                                const display = count > 0 ? Math.max(0.1, pct).toFixed(1) : "0.0";
+                                const scope = applicable > 0 ? "applicable segments" : "segments";
+                                return `Improves ${display}% of ${scope}`;
+                              })()}
                             </Text>
                           )}
                           {accordionView === "segment" && segmentScoreDrops[t.id] !== undefined && (
@@ -1868,11 +1979,19 @@ export default function TreatmentDetailPage() {
             </Button>
           </Flex>
 
-          <Box flex="1 1 auto" minH={0}>
-            <ImagePanel
-              projectName={currentCtx?.name}
-              imageRef={imgRef}
-            />
+          <Box flex="1 1 auto" minH={0} display="flex" flexDirection="column">
+            <Box flex="1 1 50%" minH={0} display="flex" flexDirection="column">
+              <ImagePanel
+                projectName={currentCtx?.name}
+                imageRef={imgRef}
+              />
+            </Box>
+            <Box flex="1 1 50%" minH={0} display="flex" flexDirection="column">
+              <PostTreatmentImageUpload
+                projectName={currentCtx?.name || ""}
+                segmentIndex={currentIndex + 1}
+              />
+            </Box>
           </Box>
         </GridItem>
 
@@ -2023,10 +2142,10 @@ export default function TreatmentDetailPage() {
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>Apply Treatments to Project</Dialog.Title>
+                <Dialog.Title>Apply Treatments to {isAllScope ? "All Projects" : activeProject}</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                <p>Are you sure you want to apply the following treatments to all eligible segments across this project?</p>
+                <p>Are you sure you want to apply the following treatments to all eligible segments in {isAllScope ? "all loaded projects" : activeProject}?</p>
                 <ul style={{ marginTop: "0.5rem", paddingLeft: "1.25rem" }}>
                   {Array.from(selectedTreatments).map(id => {
                     const t = TREATMENTS.find(tr => tr.id === id);

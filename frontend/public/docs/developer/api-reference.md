@@ -191,8 +191,8 @@ All under `/api/admin`:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/admin/ctx-status` | Diagnostic endpoint checking configuration, directories, and database status |
-| `GET` | `/api/admin/stats` | Retrieve logins summary, date breakdown (7d-90d), and active profiles data |
+
+
 
 ---
 

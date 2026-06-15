@@ -92,17 +92,16 @@ export default function AttributeDistributionChart({
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    if (percent < 0.05) return null; // Don't show label for very small slices
+    if (percent < 0.03) return null; // Don't show label for small slices
 
     return (
       <text
         x={x}
         y={y}
         fill="black"
-        textAnchor={x > cx ? "start" : "end"}
+        textAnchor="middle"
         dominantBaseline="central"
-        fontSize="16"
-        fontWeight="bold"
+        style={{ fontSize: "14px", fontWeight: 700 }}
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>

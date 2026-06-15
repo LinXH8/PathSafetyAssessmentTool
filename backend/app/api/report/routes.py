@@ -166,7 +166,7 @@ def segment_details():
     """
     try:
         import pandas as pd
-        from app.services.project_manager import project_manager
+        from app.api.projects.routes import get_ctx
         from app.services.cyclerap_scoring import LOOKUP_TABLES
 
         data = request.json
@@ -204,7 +204,7 @@ def segment_details():
             'line_of_sight':          ("Line of Sight",                                       "Line of Sight",           1),
         }
 
-        pm = project_manager()
+        pm = get_ctx()["pm"]
         results = []
 
         for seg_ref in segments:
@@ -222,9 +222,25 @@ def segment_details():
 
                 row = attrs_df.iloc[seg_index]
 
-                # Try both capitalisation variants of the image reference column
-                image_ref = str(row.get("Image reference", "") or row.get("Image Reference", "") or "").strip()
-                image_url = f"/api/projects/{project_name}/images/{image_ref}" if image_ref else None
+                import urllib.parse
+                # Image Reference lives in geo_data (GeoDataFrame), not in
+                # attributes.  Fall back to attrs_df for legacy projects that
+                # may have it there.
+                geo_df = proj.geo_data.df
+                image_ref = ""
+                if geo_df is not None and seg_index < len(geo_df):
+                    geo_row = geo_df.iloc[seg_index]
+                    image_ref = str(
+                        geo_row.get("Image Reference", "") or
+                        geo_row.get("Image reference", "") or ""
+                    ).strip()
+                if not image_ref:
+                    # Fallback: some legacy projects store it in attributes
+                    image_ref = str(
+                        row.get("Image reference", "") or
+                        row.get("Image Reference", "") or ""
+                    ).strip()
+                image_url = f"/api/projects/{urllib.parse.quote(project_name)}/images/{urllib.parse.quote(image_ref)}" if image_ref else None
 
                 contributions = []
                 for attr_key, (field_name, display_name, default_val) in ATTR_MAP.items():

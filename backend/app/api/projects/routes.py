@@ -1553,6 +1553,54 @@ def get_project_image(project_name: str, filename: str):
 
     abort(404, description="Image not found")
 
+@bp.post("/<project_name>/segments/<int:segment_index>/post-treatment-image")
+def upload_post_treatment_image(project_name: str, segment_index: int):
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    
+    if "image" not in request.files:
+        abort(400, description="No image provided")
+        
+    file = request.files["image"]
+    if file.filename == "":
+        abort(400, description="No selected file")
+        
+    post_treatment_dir: Path = (pm.des_path / project_name / "post_treatment_images").resolve()
+    post_treatment_dir.mkdir(parents=True, exist_ok=True)
+    
+    file_path = post_treatment_dir / f"{segment_index}.png"
+    file.save(str(file_path))
+    
+    return jsonify({"message": "Success", "path": f"/api/projects/{urllib.parse.quote(project_name)}/segments/{segment_index}/post-treatment-image"}), 200
+
+@bp.get("/<project_name>/segments/<int:segment_index>/post-treatment-image")
+def get_post_treatment_image(project_name: str, segment_index: int):
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    
+    post_treatment_dir: Path = (pm.des_path / project_name / "post_treatment_images").resolve()
+    file_path = post_treatment_dir / f"{segment_index}.png"
+    
+    if not file_path.exists() or not file_path.is_file():
+        return jsonify({"exists": False, "message": "Image not found"}), 200
+        
+    resp = send_from_directory(post_treatment_dir, file_path.name, conditional=True)
+    resp.headers["Cache-Control"] = "public, max-age=86400"
+    return resp
+
+@bp.delete("/<project_name>/segments/<int:segment_index>/post-treatment-image")
+def delete_post_treatment_image(project_name: str, segment_index: int):
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    
+    post_treatment_dir: Path = (pm.des_path / project_name / "post_treatment_images").resolve()
+    file_path = post_treatment_dir / f"{segment_index}.png"
+    
+    if file_path.exists() and file_path.is_file():
+        file_path.unlink()
+        
+    return jsonify({"message": "Success"}), 200
+
 @bp.post("/download-images")
 def download_images():
     """

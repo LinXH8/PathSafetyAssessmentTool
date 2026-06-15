@@ -493,6 +493,27 @@ def move_legacy_projects_to_profile(profile_id: str, project_names: list[str] | 
         return {"moved": moved, "skipped": skipped, "missing": missing}
 
 
+def delete_profile(profile_id: str, pin: str) -> None:
+    global _ACTIVE_PROFILE_ID
+
+    with _STATE_LOCK:
+        state = _load_state()
+        profile = _require_profile(state, str(profile_id or ""))
+        if not _verify_pin(profile, pin):
+            raise PermissionError("Invalid PIN")
+
+        slug = str(profile.get("slug") or "")
+        state["profiles"] = [p for p in state.get("profiles", []) if str(p.get("id") or "") != profile_id]
+        _save_state(state)
+
+        if _ACTIVE_PROFILE_ID == profile_id:
+            _ACTIVE_PROFILE_ID = None
+
+        profile_dir = _profiles_root() / slug
+        if profile_dir.exists() and profile_dir.is_dir():
+            shutil.rmtree(profile_dir)
+
+
 def get_overview() -> dict:
     return {
         "profiles": list_profiles(),

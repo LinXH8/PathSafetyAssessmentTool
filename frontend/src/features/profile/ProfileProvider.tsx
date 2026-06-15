@@ -10,6 +10,7 @@ import {
 
 import {
   createProfile as apiCreateProfile,
+  deleteProfile as apiDeleteProfile,
   fetchProfilesOverview,
   loginProfile as apiLoginProfile,
   logoutProfile as apiLogoutProfile,
@@ -17,6 +18,7 @@ import {
   resetProfilePin as apiResetProfilePin,
   updateProfile as apiUpdateProfile,
   type CreateProfileResult,
+  type DeleteProfileResult,
   type LoginProfileResult,
   type MigrateLegacyProjectsResult,
   type ProfileSummary,
@@ -37,6 +39,7 @@ type ProfileContextValue = {
   logout: () => Promise<void>;
   updateProfile: (profileId: string, currentPin: string, name: string, division: string) => Promise<UpdateProfileResult>;
   resetProfilePin: (profileId: string, currentPin: string, newPin: string) => Promise<ResetProfilePinResult>;
+  deleteProfile: (profileId: string, pin: string) => Promise<DeleteProfileResult>;
   migrateLegacyProjects: (projectNames?: string[]) => Promise<MigrateLegacyProjectsResult>;
 };
 
@@ -112,6 +115,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return result;
   }, [applyOverview]);
 
+  const deleteProfile = useCallback(async (profileId: string, pin: string) => {
+    const result = await apiDeleteProfile(profileId, pin);
+    applyOverview(result.overview);
+    setError(null);
+    return result;
+  }, [applyOverview]);
+
   const migrateLegacyProjects = useCallback(async (projectNames?: string[]) => {
     const result = await apiMigrateLegacyProjects(projectNames);
     applyOverview(result.overview);
@@ -131,8 +141,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     logout,
     updateProfile,
     resetProfilePin,
+    deleteProfile,
     migrateLegacyProjects,
-  }), [overview, loading, error, refreshOverview, createProfile, login, logout, updateProfile, resetProfilePin, migrateLegacyProjects]);
+  }), [overview, loading, error, refreshOverview, createProfile, login, logout, updateProfile, resetProfilePin, deleteProfile, migrateLegacyProjects]);
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }

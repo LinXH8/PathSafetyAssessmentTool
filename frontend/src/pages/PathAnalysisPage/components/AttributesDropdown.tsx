@@ -359,7 +359,7 @@ const cyclerapAttributes: AttributeConfig[] = [
     name: "Delineation Type",
     label: "Delineation Type",
     group: "Facility surface conditions",
-    options: ["Not Selected", "Cycling Path", "Red Stripe", "Signalised Crossing", "Traffic Crossing", "Zebra Crossing"],
+    options: ["Not Selected", "Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
   },
   {
     name: "Loose or slippery surface",
@@ -508,7 +508,7 @@ export const SUBCATEGORY_MAP: Record<
   "Delineation": {
     childAttr: "Delineation Type",
     parentCategories: {
-      "Present": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Traffic Crossing", "Zebra Crossing"],
+      "Present": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
     },
   },
 };
@@ -639,7 +639,6 @@ export function getCategoryColor(attribute: string, category: string): string {
       "Cycling Path":     "#2563EB",
       "Red Stripe":       "#DC2626",
       "Signalised Crossing": "#EA580C",
-      "Traffic Crossing": "#0891B2",
       "Zebra Crossing":   "#CA8A04",
     },
     "Street Lighting": { "Present": "#16A34A", "Not Present": "#DC2626" },

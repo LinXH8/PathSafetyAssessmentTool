@@ -72,7 +72,7 @@ const FIELD_SUGGESTIONS: Record<string, string[]> = {
   "Issue Type (Slippery)": ["Algae", "Leaves", "Soil", "Sand"],
   "Facility Width Sub-category": ["≤1.5m", ">1.5–1.8m", ">1.8–<2m", "2–<3.5m", "3.5–4m", ">4m"],
   "Crossing Type": ["Bicycle Crossing", "Signalised Crossing", "Zebra Crossing"],
-  "Delineation Type": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Traffic Crossing", "Zebra Crossing"],
+  "Delineation Type": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
   "Curvature Sub-category": ["<6.5m", "<10m", "Path Junction", "10–18m", ">18m"],
 };
 

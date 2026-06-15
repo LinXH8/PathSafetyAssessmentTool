@@ -305,7 +305,7 @@ export default function AutocodeValidation({
                 { range: '85–89%', pct: 87 },
                 { range: '80–84%', pct: 82 },
                 { range: '75–79%', pct: 77 },
-                { range: '45–64%', pct: 55 },
+                { range: '<75%', pct: 55 },
               ].map(({ range, pct }) => (
                 <div key={range} className="al-legend-item">
                   <div 

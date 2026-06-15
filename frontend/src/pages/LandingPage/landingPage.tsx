@@ -20,6 +20,7 @@ export default function LandingPage() {
     login,
     resetProfilePin,
     updateProfile,
+    deleteProfile,
   } = useProfile();
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const [loginPin, setLoginPin] = useState("");
@@ -33,7 +34,9 @@ export default function LandingPage() {
   const [manageProfileDivision, setManageProfileDivision] = useState("");
   const [manageCurrentPin, setManageCurrentPin] = useState("");
   const [manageNewPin, setManageNewPin] = useState("");
-  const [busyAction, setBusyAction] = useState<"login" | "create" | "update" | "reset-pin" | null>(null);
+  const [busyAction, setBusyAction] = useState<"login" | "create" | "update" | "reset-pin" | "delete" | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletePin, setDeletePin] = useState("");
 
   useEffect(() => {
     if (selectedProfileId && profiles.some((profile) => profile.id === selectedProfileId)) {
@@ -121,10 +124,49 @@ export default function LandingPage() {
   };
 
   const closeManageDialog = () => {
-    if (busyAction === "update" || busyAction === "reset-pin") {
+    if (busyAction === "update" || busyAction === "reset-pin" || busyAction === "delete") {
       return;
     }
     resetManageDialog();
+  };
+
+  const openDeleteDialog = () => {
+    if (!selectedProfile) {
+      toaster.create({ description: "Select a profile first.", type: "warning" });
+      return;
+    }
+    setDeletePin("");
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    if (busyAction === "delete") return;
+    setDeleteDialogOpen(false);
+    setDeletePin("");
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selectedProfile) return;
+    try {
+      setBusyAction("delete");
+      await deleteProfile(selectedProfile.id, deletePin);
+      setDeleteDialogOpen(false);
+      setDeletePin("");
+      resetManageDialog();
+      toaster.create({
+        title: "Profile deleted",
+        description: `${selectedProfile.name} has been deleted.`,
+        type: "success",
+      });
+    } catch (nextError) {
+      toaster.create({
+        title: "Delete failed",
+        description: nextError instanceof Error ? nextError.message : "Failed to delete the profile.",
+        type: "error",
+      });
+    } finally {
+      setBusyAction(null);
+    }
   };
 
   const startPSAT = () => {
@@ -467,7 +509,7 @@ export default function LandingPage() {
         </Portal>
       </Dialog.Root>
 
-      <Dialog.Root open={manageDialogOpen} onOpenChange={(details) => !details.open && closeManageDialog()} size="sm" unmountOnExit>
+      <Dialog.Root open={manageDialogOpen} onOpenChange={(details) => !details.open && closeManageDialog()} size="lg" unmountOnExit>
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
@@ -539,6 +581,14 @@ export default function LandingPage() {
                   Cancel
                 </Button>
                 <Button
+                  colorPalette="red"
+                  variant="outline"
+                  onClick={openDeleteDialog}
+                  disabled={busyAction === "update" || busyAction === "reset-pin"}
+                >
+                  Delete Profile
+                </Button>
+                <Button
                   variant="outline"
                   onClick={() => void handleUpdateProfile()}
                   loading={busyAction === "update"}
@@ -575,6 +625,63 @@ export default function LandingPage() {
         </Portal>
       </Dialog.Root>
 
+
+      <Dialog.Root open={deleteDialogOpen} onOpenChange={(details) => !details.open && closeDeleteDialog()} size="sm" unmountOnExit>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Delete Profile</Dialog.Title>
+              </Dialog.Header>
+
+              <Dialog.Body>
+                <div className="landing-dialog-copy">
+                  This will permanently delete <strong>{selectedProfile?.name ?? "this profile"}</strong> and all its
+                  data. This action cannot be undone. Enter the profile PIN to confirm.
+                </div>
+                <div className="landing-dialog-form">
+                  <input
+                    id="deletePin"
+                    className="landing-dialog-input"
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={deletePin}
+                    onChange={(event) => setDeletePin(event.target.value)}
+                    placeholder="PIN"
+                    autoFocus
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && deletePin.trim().length > 0) {
+                        event.preventDefault();
+                        void handleDeleteProfile();
+                      }
+                    }}
+                  />
+                </div>
+              </Dialog.Body>
+
+              <Dialog.Footer>
+                <Button variant="outline" onClick={closeDeleteDialog} disabled={busyAction === "delete"}>
+                  Cancel
+                </Button>
+                <Button
+                  colorPalette="red"
+                  onClick={() => void handleDeleteProfile()}
+                  loading={busyAction === "delete"}
+                  disabled={deletePin.trim().length === 0 || busyAction === "delete"}
+                >
+                  {busyAction === "delete" ? "Deleting..." : "Delete Profile"}
+                </Button>
+              </Dialog.Footer>
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
 
       <footer className="landing-footer">
         <span className="version-info">v{APP_META.version} ({APP_META.buildDate})</span>

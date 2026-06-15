@@ -114,9 +114,9 @@ export default function PathAnalysisPage() {
         </Text>
       </Box>
 
-      {visibleProjects.length > 0 && (
+      {loadedProjects.length > 0 && (
         <Box mb="6">
-          <AggregatedScoreBandPanel selectedProjects={visibleProjects} />
+          <AggregatedScoreBandPanel selectedProjects={loadedProjects} />
         </Box>
       )}
 

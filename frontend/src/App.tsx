@@ -9,7 +9,6 @@ import TreatmentDetailPage from "./pages/TreatmentPage/treatmentDetailPage"
 import PathAnalysisPage from "./pages/PathAnalysisPage/pathAnalysisPage"
 import ReportBuilderPage from "./pages/ReportBuilderPage/reportBuilderPage"
 import GisLayersPage from "./pages/GisLayersPage/GisLayersPage"
-import AdminDashboard from "./pages/AdminDashboard/adminDashboard"
 
 import AppLayout from "./layouts/AppLayout";
 import HelpButton from "./components/common/HelpButton";
@@ -51,7 +50,6 @@ export default function App() {
 
         <Route path="/" element={<LandingPage />} />
         <Route path="/help" element={<HelpPage />} />
-        <Route path="/admin" element={<AdminDashboard />} />
 
         <Route element={<RequireProfile><AppLayout /></RequireProfile>}>
           <Route path="/home" element={<Home />} />

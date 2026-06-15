@@ -41,6 +41,8 @@ type Props = {
   verifiedByProject?: Record<string, number[]>; // project name → verified segment indices (in-memory review state)
   panToBounds?: L.LatLngBounds | null;       // When set, immediately flies map to these bounds (e.g. on project tab switch)
   panKey?: number;                           // Monotonic counter to force PanToBounds effect re-fire
+  scopeRange?: { start: number; count: number } | null; // In-focus global index window; out-of-scope segments are dimmed. null = no scoping
+  autoFitKey?: number;                       // Bump to refit the map to the in-scope segments (e.g. on project tab switch)
   curvData?: CurvatureVisualizationResponse | null;
   showCurvatureOverlay?: boolean;
   onToggleCurvatureOverlay?: () => void;
@@ -114,6 +116,25 @@ function PanToBounds({ bounds, panKey }: { bounds: L.LatLngBounds | null; panKey
     }, 0);
     return () => clearTimeout(timerId);
   }, [bounds, panKey, map]);
+  return null;
+}
+
+// Refits the map to a set of latlngs whenever `fitKey` changes (e.g. project tab
+// switch). Unlike FitBounds (which only fires once on initial load), this re-fires
+// on every token bump. Deferred by a tick so other effects from the same commit settle.
+function FitToFeatures({ latlngs, fitKey }: { latlngs: [number, number][]; fitKey: number }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!latlngs.length) return;
+    const timerId = setTimeout(() => {
+      map.invalidateSize();
+      map.stop();
+      map.fitBounds(L.latLngBounds(latlngs.map(([lat, lng]) => L.latLng(lat, lng))), { padding: [20, 20], maxZoom: 18 });
+    }, 0);
+    return () => clearTimeout(timerId);
+    // Intentionally only re-fire on fitKey change, not when latlngs reference updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitKey]);
   return null;
 }
 
@@ -320,7 +341,7 @@ function StatPill({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus }: Props) {
+export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus }: Props) {
   const navigate = useNavigate();
 
   const decodedName = useMemo(() => {
@@ -573,6 +594,17 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
   }, [fc, startIndex]);
 
   const allLatLngs = useMemo(() => points.map(p => p.latlng), [points]);
+
+  // When a focus scope is active, the map refits to just the in-scope segments;
+  // otherwise it fits all loaded segments.
+  const scopeLatLngs = useMemo(
+    () => (scopeRange
+      ? points
+          .filter(p => p.globalIdx >= scopeRange.start && p.globalIdx < scopeRange.start + scopeRange.count)
+          .map(p => p.latlng)
+      : allLatLngs),
+    [points, scopeRange, allLatLngs]
+  );
 
   // When a filter context is active, only show filtered segments + the current one.
   // localIdx equals the 0-based position in the project's geo features (= globalIdx when startIndex=0).
@@ -1206,6 +1238,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* Fly to specific project bounds when tab is clicked — MUST be last so it overrides MapAutoCenter */}
               <PanToBounds bounds={panToBounds ?? null} panKey={panKey} />
 
+              {/* Refit to the in-focus scope (e.g. selected project tab) on token bump */}
+              <FitToFeatures latlngs={scopeLatLngs} fitKey={autoFitKey} />
+
 
 
               {/* 搜索半径可视化 (200m) — follows current segment dot */}
@@ -1582,6 +1617,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                   const isActive = globalIdx === index;
                   // Hide segments outside the filter set (current segment always shown)
                   if (filterIndexSet && !filterIndexSet.has(localIdx) && !isActive) return null;
+                  // Dim segments outside the active focus scope (still shown for context).
+                  const inScope = !scopeRange || (globalIdx >= scopeRange.start && globalIdx < scopeRange.start + scopeRange.count);
+                  const dimmed = !inScope && !isActive;
                   const baseColor = getSegmentColor(globalIdx);
                   const color = isActive ? "#1E63D8" : baseColor;
                   const radius = isActive ? 9 : 5;
@@ -1601,7 +1639,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                       <CircleMarker
                         center={latlng}
                         radius={radius + 5}
-                        pathOptions={{ color: VERIFIED_HALO_COLOR, weight: 3, opacity: 0.95, fillColor: VERIFIED_HALO_COLOR, fillOpacity: 0.25 }}
+                        pathOptions={{ color: VERIFIED_HALO_COLOR, weight: 3, opacity: dimmed ? 0.25 : 0.95, fillColor: VERIFIED_HALO_COLOR, fillOpacity: dimmed ? 0.08 : 0.25 }}
                         pane="segmentsPane"
                         interactive={false}
                       />
@@ -1609,7 +1647,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                     <CircleMarker
                       center={latlng}
                       radius={radius}
-                      pathOptions={{ color, weight: isActive ? 4 : 1, opacity: 0.9, fillOpacity: isVerified ? 0.55 : (isActive ? 0.95 : 0.8) }}
+                      pathOptions={{ color, weight: isActive ? 4 : 1, opacity: dimmed ? 0.25 : 0.9, fillOpacity: dimmed ? 0.15 : (isVerified ? 0.55 : (isActive ? 0.95 : 0.8)) }}
                       pane="segmentsPane"
                       eventHandlers={{
                         click: (e) => {

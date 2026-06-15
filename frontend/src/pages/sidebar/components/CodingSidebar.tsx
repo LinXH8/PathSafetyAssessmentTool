@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Button, Flex, Spacer, Grid, GridItem } from "@chakra-ui/react";
+import { Button, Flex, Spacer, Grid, GridItem, Dialog, Portal, Box, Text } from "@chakra-ui/react";
+import { LuWandSparkles } from "react-icons/lu";
 import { GROUP_ORDER, GROUP_RULES, KEY_ALIASES, type AttributeGroup } from "../../../constants/autocodeAttributes";
 
 type CodingSidebarProps = {
@@ -28,6 +29,12 @@ const GROUP_SHORT: Record<AttributeGroup, string> = {
   "Flow & Speed": "Flow",
 };
 
+type PendingAction =
+  | { type: "one" }
+  | { type: "all" }
+  | { type: "allProjects" }
+  | { type: "byAttribute"; fields: string[] };
+
 export default function CodingSidebar({
   onSave,
   onExit,
@@ -38,10 +45,9 @@ export default function CodingSidebar({
 }: CodingSidebarProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<Set<string>>(
-    new Set(ALL_ITEMS.map((i) => i.displayName))
-  );
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const searchRef = useRef<HTMLInputElement>(null);
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   // Auto-focus search when panel opens
   useEffect(() => {
@@ -91,10 +97,30 @@ export default function CodingSidebar({
     const realKeys = [...selected].map((d) => KEY_ALIASES[d] ?? d);
     if (realKeys.length === 0) return;
     setOpen(false);
-    onAutoCodeByAttribute(realKeys);
+    setPendingAction({ type: "byAttribute", fields: realKeys });
   };
 
   const handleClose = () => setOpen(false);
+
+  const handleConfirm = () => {
+    if (!pendingAction) return;
+    setPendingAction(null);
+    if (pendingAction.type === "one") onAutoCodeOne();
+    else if (pendingAction.type === "all") onAutoCodeAll();
+    else if (pendingAction.type === "allProjects") onAutoCodeAllProjects();
+    else if (pendingAction.type === "byAttribute") onAutoCodeByAttribute(pendingAction.fields);
+  };
+
+  const confirmLabel =
+    pendingAction?.type === "one"
+      ? "Auto-code this segment?"
+      : pendingAction?.type === "all"
+      ? "Auto-code all segments in this project?"
+      : pendingAction?.type === "allProjects"
+      ? "Auto-code all segments across all projects?"
+      : pendingAction?.type === "byAttribute"
+      ? `Auto-code ${pendingAction.fields.length} attribute(s) for all segments?`
+      : "";
 
   return (
     <Flex direction="column" h="100%">
@@ -106,11 +132,11 @@ export default function CodingSidebar({
         rowGap={3}
         mt="auto"
       >
-        <Button onClick={onAutoCodeOne} w="100%" size="sm" variant="outline" colorPalette="gray">
+        <Button onClick={() => setPendingAction({ type: "one" })} w="100%" size="sm" variant="outline" colorPalette="gray">
           Auto-code
         </Button>
 
-        <Button onClick={onAutoCodeAll} w="100%" size="sm" variant="outline" colorPalette="gray">
+        <Button onClick={() => setPendingAction({ type: "all" })} w="100%" size="sm" variant="outline" colorPalette="gray">
           Auto-code all
         </Button>
 
@@ -121,7 +147,7 @@ export default function CodingSidebar({
         </GridItem>
 
         <GridItem colSpan={2}>
-          <Button onClick={onAutoCodeAllProjects} w="100%" size="sm" variant="outline" colorPalette="blue">
+          <Button onClick={() => setPendingAction({ type: "allProjects" })} w="100%" size="sm" variant="outline" colorPalette="blue">
             Autocode All Projects
           </Button>
         </GridItem>
@@ -148,6 +174,64 @@ export default function CodingSidebar({
           </Button>
         </GridItem>
       </Grid>
+
+      {/* Autocode Confirmation Modal */}
+      <Dialog.Root role="alertdialog" open={!!pendingAction} onOpenChange={(e) => !e.open && setPendingAction(null)} size="md">
+        <Portal>
+          <Dialog.Backdrop bg="blackAlpha.700" backdropFilter="blur(4px)" />
+          <Dialog.Positioner>
+            <Dialog.Content 
+              bg={{ base: "white", _dark: "gray.900" }} 
+              borderColor={{ base: "gray.200", _dark: "gray.800" }} 
+              borderWidth="1px"
+              boxShadow={{
+                base: "0 20px 40px -10px rgba(0,0,0,0.1), 0 0 20px rgba(42, 157, 143, 0.1)",
+                _dark: "0 20px 40px -10px rgba(0,0,0,0.8), 0 0 20px rgba(42, 157, 143, 0.15)"
+              }}
+              borderRadius="xl"
+            >
+              <Dialog.Header>
+                <Dialog.Title display="flex" alignItems="center" gap={2} fontSize="lg" fontWeight="bold">
+                  <Box color={{ base: "teal.600", _dark: "teal.400" }}><LuWandSparkles /></Box>
+                  Start Autocoding?
+                </Dialog.Title>
+                <Dialog.CloseTrigger />
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text color={{ base: "gray.800", _dark: "gray.300" }} fontSize="md">
+                  {confirmLabel}
+                </Text>
+                <Text color={{ base: "orange.600", _dark: "orange.400" }} fontSize="sm" mt={2} fontWeight="medium">
+                  Warning: Autocoding will overwrite any manually verified changes for these attributes. Are you sure you want to proceed?
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button variant="ghost" onClick={() => setPendingAction(null)} colorPalette="gray">
+                  Back to Coding Page
+                </Button>
+                <Button 
+                  colorPalette="teal" 
+                  onClick={handleConfirm}
+                  boxShadow={{
+                    base: "0 4px 14px 0 rgba(42, 157, 143, 0.2)",
+                    _dark: "0 4px 14px 0 rgba(42, 157, 143, 0.39)"
+                  }}
+                  _hover={{ 
+                    transform: "translateY(-1px)", 
+                    boxShadow: {
+                      base: "0 6px 20px rgba(42, 157, 143, 0.3)",
+                      _dark: "0 6px 20px rgba(42, 157, 143, 0.4)"
+                    }
+                  }}
+                  transition="all 0.2s"
+                >
+                  Start Autocoding
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
 
       {/* Attribute Combobox Panel */}
       {open && (
@@ -441,3 +525,5 @@ const disabledRunBtnStyle: React.CSSProperties = {
   color: "#666",
   cursor: "not-allowed",
 };
+
+

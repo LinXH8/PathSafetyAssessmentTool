@@ -217,6 +217,11 @@ export interface RecordProfileActivityResult {
   recorded: boolean;
 }
 
+export interface DeleteProfileResult {
+  ok: boolean;
+  overview: ProfilesOverview;
+}
+
 export interface MigrateLegacyProjectsResult {
   moved: string[];
   skipped: Array<{ name: string; reason: string }>;
@@ -301,6 +306,16 @@ export async function recordProfileActivity(
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as RecordProfileActivityResult;
+}
+
+export async function deleteProfile(profileId: string, pin: string): Promise<DeleteProfileResult> {
+  const res = await fetch(`/api/profiles/${encodeURIComponent(profileId)}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as DeleteProfileResult;
 }
 
 export async function migrateLegacyProjects(projectNames?: string[]): Promise<MigrateLegacyProjectsResult> {

@@ -265,8 +265,8 @@
 
 .landing-dialog-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
   justify-content: flex-end;
 }
 
