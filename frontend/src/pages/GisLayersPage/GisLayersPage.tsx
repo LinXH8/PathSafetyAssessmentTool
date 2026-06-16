@@ -77,6 +77,7 @@ export default function GisLayersPage() {
   const [confirmRevertPath, setConfirmRevertPath] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [filterText, setFilterText] = useState("");
 
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
 
@@ -371,7 +372,26 @@ export default function GisLayersPage() {
           borderColor={borderColor}
         >
           <Box p={4} borderBottom="1px solid" borderColor={panelHeaderBorder} bg={panelHeaderBg}>
-            <Text fontWeight="600" color={titleColor}>Available Shapefiles</Text>
+            <Flex align="center" justify="space-between" gap="3">
+              <Text fontWeight="600" color={titleColor} whiteSpace="nowrap">Available Shapefiles</Text>
+              <input
+                type="text"
+                placeholder="Filter shapefiles..."
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  padding: "4px 10px",
+                  borderRadius: "6px",
+                  border: "1px solid var(--chakra-colors-gray-300)",
+                  background: "transparent",
+                  color: "inherit",
+                  fontSize: "13px",
+                  outline: "none",
+                }}
+              />
+            </Flex>
           </Box>
           {actionError && (
             <Box px={3} py={2} bg="red.50" _dark={{ bg: "red.950", borderColor: "red.700" }} borderBottom="1px solid" borderColor="red.200">
@@ -391,9 +411,14 @@ export default function GisLayersPage() {
                  <Box p={4} color="red.500">{error}</Box>
             ) : shapefiles.length === 0 ? (
                  <Box p={4} color={emptyStateColor}>No shapefiles found.</Box>
-            ) : (
+            ) : (() => {
+              const filtered = shapefiles.filter(f => f.name.toLowerCase().includes(filterText.toLowerCase()));
+              return (
               <div className="layer-list-container">
-                {shapefiles.map(file => {
+                {filtered.length === 0 ? (
+                  <Box p={4} color={emptyStateColor}>No shapefiles match "{filterText}".</Box>
+                ) : null}
+                {filtered.map(file => {
                   const isSelected = selectedLayer?.path === file.path;
                   return (
                     <Box
@@ -539,7 +564,8 @@ export default function GisLayersPage() {
                   );
                 })}
               </div>
-            )}
+              );
+            })()}
           </Box>
         </Box>
 

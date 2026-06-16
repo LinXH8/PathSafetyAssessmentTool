@@ -73,6 +73,9 @@ From the GIS Layers page you can:
 
 - Browse all current GIS layers (sorted in alphabetical order)
 - View last updated date, required columns, and metadata for each layer
+- **Filter shapefiles** — type any keyword into the filter box beside the "Available Shapefiles" heading to instantly narrow the list to matching layers. This is useful when you have many layers and want to jump straight to the one you need (e.g. type `bus` to surface all bus-related layers)
+- **Rename a layer** — click **Edit** next to any shapefile to give it a custom display name that is meaningful to your team. The rename takes effect immediately across the dashboard
+- **Revert to original name** — if a layer has been renamed, click **Revert** to restore its original filename at any time
 - Using the **Update GIS Layer** button:
   - **Add** entirely new GIS layers for new categories
   - **Replace** an existing layer with an updated file
