@@ -11,6 +11,9 @@ PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context 
 - [8.3 Adding a New GIS Layer](#83-adding-a-new-gis-layer)
 - [8.4 Replacing an Existing GIS Layer](#84-replacing-an-existing-gis-layer)
 - [8.5 Updating GIS Layers](#85-updating-gis-layers)
+- [8.6 Filtering Shapefiles](#86-filtering-shapefiles)
+- [8.7 Renaming a Shapefile](#87-renaming-a-shapefile)
+- [8.8 Reverting a Shapefile to Its Original Name](#88-reverting-a-shapefile-to-its-original-name)
 
 ---
 
@@ -22,6 +25,8 @@ Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashb
 - View last updated date, required columns, and metadata for each layer
 - **Required Columns**: Inspect the mandatory column names needed for PSAT to process the layer. The number in parentheses, e.g., `LU_DESC (1)`, indicates the expected column index in the source data
 - Preview any layer on an interactive map by clicking it
+- **Filter** the list instantly by typing a keyword into the filter box (see [Section 8.6](#86-filtering-shapefiles))
+- **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 8.7](#87-renaming-a-shapefile) and [8.8](#88-reverting-a-shapefile-to-its-original-name))
 
 ## 8.2 All GIS Layers in PSAT
 
@@ -64,6 +69,23 @@ Use the **Add GIS Layer** workflow to upload entirely new datasets.
 - **File Upload**: Drag and drop your GIS files. For shapefiles, ensure you upload all companion files together (`.shp`, `.shx`, `.dbf`, `.prj`).
 - **Preview**: Once uploaded, you can preview the geometry on the map before finalising.
 
+### Before You Upload — Confirmation Prompt
+
+Before the file is accepted, PSAT displays a **"Before You Upload"** confirmation dialog. You must confirm that your shapefile meets **all** of the following requirements:
+
+| Requirement | Description |
+|---|---|
+| **Exact file name** | The file name must exactly match what the system expects. |
+| **Exact columns and numbers** | The shapefile must contain the correct number of columns, with no extras or omissions. |
+| **Exact attribute names** | Every column/attribute name must match exactly, including capitalisation. |
+| **Exact sequence** | The columns must appear in exactly the same order as specified. |
+
+> **Warning:** Uploading an incompatible shapefile may cause system errors or incorrect data rendering.
+
+If you are unsure of the expected format, refer to the existing shapefiles in the GIS Layers list as a reference before uploading.
+
+Click **Confirm & Upload** to proceed, or **Cancel** to go back and check your file.
+
 ## 8.4 Replacing an Existing GIS Layer
 
 Use the **Replace GIS Layer** workflow when you have updated data for an existing layer.
@@ -89,3 +111,52 @@ GIS layers should be updated whenever:
 5. Review the compatibility check results before confirming the replacement
 
 > For system-level GIS management (file paths, permissions, bulk updates), refer to the **Admin Guide**.
+
+## 8.6 Filtering Shapefiles
+
+When your system has many GIS layers, scrolling through the full list can be slow. The **filter box** at the top of the Available Shapefiles panel lets you narrow the list instantly.
+
+**How to use it:**
+
+1. Open the **GIS Layers** page from the sidebar
+2. Click the **Filter shapefiles…** input field beside the "Available Shapefiles" heading
+3. Type any keyword — the list updates in real time to show only layers whose name contains your search term (the search is case-insensitive)
+4. Clear the field to restore the full list
+
+**Examples:**
+
+| What you type | Layers shown |
+|---|---|
+| `bus` | bus_stop, bus_lane, bus_shelter … |
+| `path` | cycling_path, shared_path, footpath, CyclingPath_Jul2024 … |
+| `count` | AMGbeforeCount, AMGsensorCount … |
+
+> If no layers match your search term, the panel displays a "No shapefiles match …" message.
+
+## 8.7 Renaming a Shapefile
+
+You can give any shapefile a custom display name to make it easier to identify within your team's workflow. The rename only affects how the layer appears in the PSAT dashboard — the underlying file on disk is not moved or changed.
+
+**Steps:**
+
+1. Open the **GIS Layers** page from the sidebar
+2. Locate the shapefile you want to rename (use the filter box if needed)
+3. Click the **Edit** button on the right side of the layer row
+4. The layer name becomes an editable text field — type your new name
+5. Press **Enter** or click the **save (✓)** button to confirm
+6. Press **Escape** or click the **cancel (✕)** button to discard the change
+
+> Renamed layers retain all their original metadata, required columns, geometry, and category. Only the display name is updated.
+
+## 8.8 Reverting a Shapefile to Its Original Name
+
+If a layer has been renamed and you want to restore its original filename as the display name, use the **Revert** option.
+
+**Steps:**
+
+1. Open the **GIS Layers** page from the sidebar
+2. Locate the renamed shapefile (a **Revert** button will be visible next to **Edit**)
+3. Click **Revert**
+4. Confirm the action — the display name immediately reverts to the layer's original filename
+
+> The **Revert** button only appears on layers that have been given a custom name. Layers still showing their original name will not have this option.
