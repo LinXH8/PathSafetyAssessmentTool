@@ -67,7 +67,7 @@ const FIELD_EMPTY_CONFIRM_BODY: Record<string, string> = {
 };
 
 const FIELD_SUGGESTIONS: Record<string, string[]> = {
-  "FO Type": ["Lamp Post", "Traffic Light", "Pillar", "Bollards", "Fence", "Vegetation"],
+  "FO Type": ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Railing", "Vegetation", "Sign Pole"],
   "NFO Type": ["Barrier", "Bins", "Bicycle", "Cone"],
   "Issue Type (Slippery)": ["Algae", "Leaves", "Soil", "Sand"],
   "Facility Width Sub-category": ["≤1.5m", ">1.5–1.8m", ">1.8–<2m", "2–<3.5m", "3.5–4m", ">4m"],
@@ -142,7 +142,9 @@ export default function AttributeOptionsDialog({
   const effectiveSingleSelect = singleSelect || delineationNotPresent;
   const predefined = delineationNotPresent
     ? [...NOT_PRESENT_OPTIONS]
-    : (FIELD_SUGGESTIONS[fieldName] ?? []);
+    : // Combine hardcoded suggestions with project-wide custom values (e.g. "Utility Box")
+      // so previously-added options remain selectable instead of disappearing from the picker.
+      Array.from(new Set([...(FIELD_SUGGESTIONS[fieldName] ?? []), ...options]));
   const allChoices = [...predefined].sort();
   // Filter out values already in tags
   const availableChoices = allChoices.filter((c) => !localTags.includes(c));

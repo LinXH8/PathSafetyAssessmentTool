@@ -254,18 +254,79 @@ def segment_details():
                         contributions.append({'name': display_name, 'multiplier': round(risk, 2)})
 
                 contributions.sort(key=lambda x: -x['multiplier'])
+                
+                # Post-treatment image + scores are best-effort: a failure here
+                # must not null out imageUrl/topAttributes for the segment.
+                post_image_url = None
+                post_scores = None
+                try:
+                    post_treatment_dir = (pm.des_path / project_name / "post_treatment_images").resolve()
+                    post_img_file = post_treatment_dir / f"{seg_index_1based}.png"
+                    if post_img_file.exists() and post_img_file.is_file():
+                        post_image_url = f"/api/projects/{urllib.parse.quote(project_name)}/segments/{seg_index_1based}/post-treatment-image"
+
+                    treatment_df = ver.treatment.df
+                    if (
+                        treatment_df is not None
+                        and not treatment_df.empty
+                        and "Treatments Applied" in treatment_df.columns
+                        and seg_index < len(treatment_df)
+                    ):
+                        treat_row = treatment_df.iloc[seg_index]
+                        treatments_str = treat_row.get("Treatments Applied", "")
+                        if pd.notna(treatments_str) and str(treatments_str).strip():
+                            # treatments exist, modify row
+                            modified_row = row.copy()
+                            for col in attrs_df.columns:
+                                if col in treatment_df.columns and col != "Treatments Applied":
+                                    val = treat_row.get(col)
+                                    # CSV values may be strings; coerce like get_segment_treatments()
+                                    if pd.notna(val) and str(val).strip() != "":
+                                        try:
+                                            if hasattr(val, 'item'):
+                                                val = val.item()
+                                            if not isinstance(val, (int, float, bool)):
+                                                val = float(val)
+                                            modified_row[col] = val
+                                        except (ValueError, TypeError):
+                                            pass  # keep the original attribute value
+
+                            modified_df = pd.DataFrame([modified_row])
+                            from app.services.cyclerap_scoring import calculate_cyclerap_score_native
+                            after_scores_df = calculate_cyclerap_score_native(modified_df)
+
+                            post_scores = {
+                                "VB": float(after_scores_df["VB"].iloc[0]),
+                                "BB": float(after_scores_df["BB"].iloc[0]),
+                                "SB": float(after_scores_df["SB"].iloc[0]),
+                                "BP": float(after_scores_df["BP"].iloc[0]),
+                                "Overall": float(after_scores_df["Overall Risk Level"].iloc[0]),
+                                "VB_Band": int(after_scores_df["VB Band"].iloc[0]),
+                                "BB_Band": int(after_scores_df["BB Band"].iloc[0]),
+                                "SB_Band": int(after_scores_df["SB Band"].iloc[0]),
+                                "BP_Band": int(after_scores_df["BP Band"].iloc[0]),
+                                "Overall_Band": int(after_scores_df["Overall Risk Level Band"].iloc[0]),
+                            }
+                except Exception:
+                    traceback.print_exc()
+
                 results.append({
                     'project': project_name,
                     'segIndex': seg_index_1based,
                     'imageUrl': image_url,
                     'topAttributes': contributions[:3],
+                    'postImageUrl': post_image_url,
+                    'postScores': post_scores,
                 })
             except Exception:
+                traceback.print_exc()
                 results.append({
                     'project': project_name,
                     'segIndex': seg_index_1based,
                     'imageUrl': None,
                     'topAttributes': [],
+                    'postImageUrl': None,
+                    'postScores': None,
                 })
 
         return jsonify({"ok": True, "details": results})

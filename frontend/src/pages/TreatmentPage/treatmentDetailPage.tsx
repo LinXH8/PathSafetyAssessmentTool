@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -717,8 +717,12 @@ export default function TreatmentDetailPage() {
   const [previewScores, setPreviewScores] = useState<ScoreType | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
+  const [searchParams] = useSearchParams();
   const len = attrs.length;
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const initialSegment = searchParams.get("segment");
+  // Pending ?segment= navigation, consumed once data has loaded (see effect near gotoPage).
+  const pendingSegment = useRef<number | null>(initialSegment ? parseInt(initialSegment, 10) : null);
+  const [currentPage, setCurrentPage] = useState<number>(initialSegment ? parseInt(initialSegment, 10) : 1);
   const [pageInput, setPageInput] = useState(String(currentPage));
 
   const currentIndex = useMemo(
@@ -1314,6 +1318,14 @@ export default function TreatmentDetailPage() {
     [len]
   );
 
+  // Apply the ?segment= param once data is loaded — the useState initializer
+  // alone is racy against the debounced commitPage clamp below.
+  useEffect(() => {
+    if (pendingSegment.current === null || len === 0) return;
+    gotoPage(pendingSegment.current);
+    pendingSegment.current = null;
+  }, [len, gotoPage]);
+
   // Page number shown to the user — scope-relative (1..scope.count) when a project
   // tab is active, global otherwise. currentPage/currentIndex stay global internally.
   const scopePage = isAllScope ? currentPage : currentIndex - scope.start + 1;
@@ -1327,8 +1339,10 @@ export default function TreatmentDetailPage() {
     (valStr: string) => {
       const raw = Number(valStr);
       if (!Number.isFinite(raw)) return;
+      // Data not loaded yet — don't let the clamp below collapse the page to 1.
+      if (scope.count === 0) return;
       // valStr is scope-relative; map back to a global page within the scope window.
-      const relClamped = Math.min(Math.max(1, raw), scope.count || 1);
+      const relClamped = Math.min(Math.max(1, raw), scope.count);
       const globalPage = isAllScope ? relClamped : scope.start + relClamped;
       gotoPage(globalPage);
     },
@@ -1989,7 +2003,7 @@ export default function TreatmentDetailPage() {
             <Box flex="1 1 50%" minH={0} display="flex" flexDirection="column">
               <PostTreatmentImageUpload
                 projectName={currentCtx?.name || ""}
-                segmentIndex={currentIndex + 1}
+                segmentIndex={(currentCtx?.localIndex ?? currentIndex) + 1}
               />
             </Box>
           </Box>

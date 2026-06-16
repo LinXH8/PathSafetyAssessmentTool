@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchProjectList, ping, deleteProject as apiDeleteProject, type ProjectListItem } from "../../api";
+import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
 import { matchesProjectSearch } from "../../utils/projectSearch";
 import {
   Button,
@@ -53,7 +53,7 @@ function getTagColor(tag: string): string {
 }
 
 export default function Home() {
-  const { activeProfile, legacyProjects, migrateLegacyProjects } = useProfile();
+  const { profiles, activeProfile, legacyProjects, migrateLegacyProjects } = useProfile();
 
   // Status
   const [status, setStatus] = useState("checking...");
@@ -81,6 +81,11 @@ export default function Home() {
   // Delete dialog state
   const [openDelete, setOpenDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  // Share dialog state
+  const [openShare, setOpenShare] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shareTargetId, setShareTargetId] = useState<string>("");
 
   // Edit dialog state
   const [openEdit, setOpenEdit] = useState(false);
@@ -380,6 +385,49 @@ export default function Home() {
     }
   };
 
+  // Profiles a project can be shared into (everyone except the active profile)
+  const shareTargets = useMemo(
+    () => profiles.filter((p) => p.id !== activeProfile?.id),
+    [profiles, activeProfile],
+  );
+
+  // Open share dialog for selected projects
+  const askShare = () => {
+    if (selected.size === 0) return;
+    setShareTargetId(shareTargets[0]?.id ?? "");
+    setOpenShare(true);
+  };
+
+  // Share selected projects into the chosen profile
+  const confirmShare = async () => {
+    if (selected.size === 0 || !shareTargetId) return;
+    try {
+      setSharing(true);
+      const result = await apiShareProjects(shareTargetId, Array.from(selected));
+      const targetName = shareTargets.find((p) => p.id === shareTargetId)?.name ?? "the selected profile";
+      const skippedNote = result.skipped.length > 0
+        ? ` ${result.skipped.length} already existed there and ${result.skipped.length === 1 ? "was" : "were"} skipped.`
+        : "";
+      toaster.create({
+        title: result.shared.length > 0 ? "Projects shared" : "Nothing shared",
+        description: result.shared.length > 0
+          ? `${result.shared.length} project${result.shared.length === 1 ? "" : "s"} shared to ${targetName}.${skippedNote}`
+          : `No projects were shared to ${targetName}.${skippedNote}`,
+        type: result.shared.length > 0 ? "success" : "info",
+      });
+      setOpenShare(false);
+      setSelected(new Set());
+    } catch (nextError) {
+      toaster.create({
+        title: "Share failed",
+        description: nextError instanceof Error ? nextError.message : "Failed to share projects.",
+        type: "error",
+      });
+    } finally {
+      setSharing(false);
+    }
+  };
+
   // Remove tag from filter
   const removeTagFilter = (tagToRemove: string) => {
     setTagFilters(tagFilters.filter(tag => tag !== tagToRemove));
@@ -650,6 +698,14 @@ export default function Home() {
             <Button onClick={loadTreatment} colorPalette="green" disabled={!selected || selected.size === 0}>
               Treatment Application
             </Button>
+            <Button
+              onClick={askShare}
+              colorPalette="teal"
+              variant="outline"
+              disabled={!selected || selected.size === 0 || shareTargets.length === 0}
+            >
+              Share
+            </Button>
           </div>
         </div>
       </div>
@@ -862,6 +918,69 @@ export default function Home() {
                   loading={deleting}
                 >
                   Delete
+                </Button>
+              </Dialog.Footer>
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      {/* Share to profile Dialog */}
+      <Dialog.Root open={openShare} onOpenChange={(d) => setOpenShare(d.open)} unmountOnExit>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Share {selected.size} project(s)</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <div>Send a copy of the following projects to another profile:</div>
+                <ul style={{ margin: "12px 0", paddingLeft: "20px" }}>
+                  {Array.from(selected).map((name) => (
+                    <li key={name}><strong>{name}</strong></li>
+                  ))}
+                </ul>
+                <label htmlFor="shareTargetProfile" style={{ display: "block", fontWeight: 600, marginBottom: "6px" }}>
+                  Share to profile
+                </label>
+                <select
+                  id="shareTargetProfile"
+                  value={shareTargetId}
+                  onChange={(e) => setShareTargetId(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "8px 10px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--chakra-colors-border)",
+                    background: "var(--chakra-colors-bg)",
+                    color: "var(--chakra-colors-fg)",
+                  }}
+                >
+                  {shareTargets.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline" disabled={sharing}>
+                    Cancel
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="teal"
+                  onClick={confirmShare}
+                  loading={sharing}
+                  disabled={!shareTargetId}
+                >
+                  Share
                 </Button>
               </Dialog.Footer>
 

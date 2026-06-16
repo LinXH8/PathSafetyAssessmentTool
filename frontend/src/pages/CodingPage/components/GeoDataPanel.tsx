@@ -156,6 +156,23 @@ function ZoomToGIS({ center, anyLayerOn }: { center: [number, number] | null; an
   return null;
 }
 
+// Zooms to the curvature analysis 5m circle when the overlay is toggled on.
+function ZoomToCurvature({ showCurvatureOverlay, circleCoords }: { showCurvatureOverlay: boolean; circleCoords: [number, number][] | null }) {
+  const map = useMap();
+  const hasZoomedRef = useRef(false);
+  useEffect(() => {
+    if (!showCurvatureOverlay) {
+      hasZoomedRef.current = false;
+      return;
+    }
+    if (hasZoomedRef.current || !circleCoords || circleCoords.length === 0) return;
+    const bounds = L.latLngBounds(circleCoords.map(([lat, lng]) => L.latLng(lat, lng)));
+    map.fitBounds(bounds, { padding: [30, 30] });
+    hasZoomedRef.current = true;
+  }, [showCurvatureOverlay, circleCoords, map]);
+  return null;
+}
+
 // Path Defect marker — ⚠️ emoji used in the "Path Defects" overlay.
 const defectIcon = divIcon({
   className: "path-defect-marker",
@@ -377,9 +394,13 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   }, [projectName]);
   
   // GIS Layer toggles (matching curvature analysis colors)
-  const [showFootpath, setShowFootpath] = useState(cachedLayers.showFootpath ?? false);  // Blue
-  const [showCycling, setShowCycling] = useState(cachedLayers.showCycling ?? false);     // Red
-  const [showShared, setShowShared] = useState(cachedLayers.showShared ?? false);       // Orange
+  // If the overlay was on when the session ended (overlayEnabled !== false), the 3 path layers
+  // were in "overlay-managed" mode — reset them to false because the overlay always starts off.
+  // Treating a missing key (old localStorage entries) the same as true migrates stale data.
+  const overlayWasOn = cachedLayers.overlayEnabled !== false;
+  const [showFootpath, setShowFootpath] = useState(overlayWasOn ? false : (cachedLayers.showFootpath ?? false));  // Blue
+  const [showCycling, setShowCycling] = useState(overlayWasOn ? false : (cachedLayers.showCycling ?? false));     // Red
+  const [showShared, setShowShared] = useState(overlayWasOn ? false : (cachedLayers.showShared ?? false));       // Orange
   const [showRoadcrossing, setShowRoadcrossing] = useState(cachedLayers.showRoadcrossing ?? false);  // Red
   const [showMrtExit, setShowMrtExit] = useState(cachedLayers.showMrtExit ?? false);     // Cyan
   const [showBusStop, setShowBusStop] = useState(cachedLayers.showBusStop ?? false);     // Purple
@@ -393,14 +414,39 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   const [showLandPrivate, setShowLandPrivate] = useState(cachedLayers.showLandPrivate ?? false);
   const [showLandMinistry, setShowLandMinistry] = useState(cachedLayers.showLandMinistry ?? false);
 
-  // Update localStorage whenever these toggles change
+  // Update localStorage whenever these toggles change.
+  // overlayEnabled is persisted so the next session knows whether the 3 path layers were
+  // in "overlay-managed" mode and should be reset (rather than restored as stale trues).
   useEffect(() => {
     if (!projectName) return;
     localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
       showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects,
       showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
+      overlayEnabled: showCurvatureOverlay ?? false,
     }));
-  }, [showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, projectName]);
+  }, [showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, showCurvatureOverlay, projectName]);
+
+  // Sync GIS toggle states when the project changes. useState initializers only fire
+  // on first mount; without this effect, switching projects leaves stale toggle values
+  // from the previous project (e.g. footpath/cycling/shared left on by Analysis Overlay).
+  useEffect(() => {
+    const wasOn = cachedLayers.overlayEnabled !== false;
+    setShowFootpath(wasOn ? false : (cachedLayers.showFootpath ?? false));
+    setShowCycling(wasOn ? false : (cachedLayers.showCycling ?? false));
+    setShowShared(wasOn ? false : (cachedLayers.showShared ?? false));
+    setShowRoadcrossing(cachedLayers.showRoadcrossing ?? false);
+    setShowMrtExit(cachedLayers.showMrtExit ?? false);
+    setShowBusStop(cachedLayers.showBusStop ?? false);
+    setShowBusLane(cachedLayers.showBusLane ?? false);
+    setShowParkingLot(cachedLayers.showParkingLot ?? false);
+    setShowKerbLine(cachedLayers.showKerbLine ?? false);
+    setShowBicycleCrossing(cachedLayers.showBicycleCrossing ?? false);
+    setShowPathDefects(cachedLayers.showPathDefects ?? false);
+    setShowStateLand(cachedLayers.showStateLand ?? false);
+    setShowStatBoard(cachedLayers.showStatBoard ?? false);
+    setShowLandPrivate(cachedLayers.showLandPrivate ?? false);
+    setShowLandMinistry(cachedLayers.showLandMinistry ?? false);
+  }, [cachedLayers]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-enable path layers when Analysis Overlay is turned on; never auto-disable them
   useEffect(() => {
@@ -620,6 +666,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
 
   const filterIndexSet = useMemo(
     () => currentProjectFilterData ? new Set(currentProjectFilterData.filteredIndices) : null,
+    [currentProjectFilterData]
+  );
+
+  const filterColorMap = useMemo(
+    () => currentProjectFilterData
+      ? new Map(currentProjectFilterData.points.map(p => [p.idx, p.color]))
+      : null,
     [currentProjectFilterData]
   );
 
@@ -1228,6 +1281,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                 anyLayerOn={showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showPathDefects}
               />
 
+              {/* Zoom to the 5m curvature circle when the overlay is enabled */}
+              <ZoomToCurvature showCurvatureOverlay={showCurvatureOverlay ?? false} circleCoords={circleCoords} />
+
               {/* 自动跟随当前选中点 */}
               <MapAutoCenter
                 center={current?.latlng ?? null}
@@ -1620,7 +1676,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                   // Dim segments outside the active focus scope (still shown for context).
                   const inScope = !scopeRange || (globalIdx >= scopeRange.start && globalIdx < scopeRange.start + scopeRange.count);
                   const dimmed = !inScope && !isActive;
-                  const baseColor = getSegmentColor(globalIdx);
+                  const baseColor = filterColorMap?.get(localIdx) ?? getSegmentColor(globalIdx);
                   const color = isActive ? "#1E63D8" : baseColor;
                   const radius = isActive ? 9 : 5;
                   // Handle both new and old column names for backward compatibility

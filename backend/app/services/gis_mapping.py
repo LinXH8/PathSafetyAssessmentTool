@@ -47,11 +47,22 @@ CRS_METRIC = "EPSG:3414"
 CURVATURE_FINE_STEP_M = 0.5
 CURVATURE_DEDUP_TOLERANCE_M = 0.10
 CURVATURE_MIN_TRIPLET_LEG_M = 0.35
+# A circumradius is only a valid radius-of-curvature estimate when the two arms of
+# the triplet (A→B and B→C) are of comparable length. A long arm paired with a very
+# short arm collapses the circumradius toward the short arm and reports a phantom
+# sharp turn from a single noisy vertex jog. Skip triplets whose arms are more
+# lopsided than this ratio; genuine curves are still captured by the evenly-spaced
+# (densified) triplets where both arms are ~CURVATURE_FINE_STEP_M.
+CURVATURE_MAX_ARM_RATIO = 3.0
 CURVATURE_MIN_PLAUSIBLE_RADIUS_M = 1.0
 CURVATURE_MIN_KINK_LEG_M = 1.0
 CURVATURE_JUNCTION_SNAP_TOL_M = 0.75
 CURVATURE_MIN_JUNCTION_LEG_M = 1.2
-CURVATURE_MAX_SNAP_DISTANCE_M = 30.0
+# Maximum distance the analysis point may be snapped onto the path network. Coding
+# points sit within a couple of metres of their path (median ≈ 2 m); snapping much
+# farther reaches across the carriageway and analyses the path on the *wrong* side
+# of the road, fabricating curvature/junctions from an unrelated facility.
+CURVATURE_MAX_SNAP_DISTANCE_M = 6.0
 CURVATURE_TIGHT_RADIUS_BUCKET_M = 6.5
 CURVATURE_KINK_ANGLE_THRESHOLD_DEG = 45.0
 CURVATURE_JUNCTION_ANGLE_THRESHOLD_DEG = 25.0
@@ -1335,6 +1346,23 @@ class GIS:
                         "points": [coord_a, coord_b, coord_c],
                         "skipped": "degenerate",
                         "reason": "Side length too small",
+                    })
+                continue
+
+            # Arms a (A→B) and b (B→C) must be of comparable length for the
+            # circumradius to be a meaningful radius-of-curvature estimate. A lopsided
+            # long/short pair reports a phantom sharp turn from a single noisy vertex.
+            shorter_arm = min(a, b)
+            if max(a, b) > CURVATURE_MAX_ARM_RATIO * shorter_arm:
+                if return_details:
+                    all_triplets.append({
+                        "index": i,
+                        "points": [coord_a, coord_b, coord_c],
+                        "skipped": "unbalanced_arms",
+                        "reason": (
+                            f"Arms too lopsided (ratio {max(a, b) / shorter_arm:.1f} "
+                            f"> {CURVATURE_MAX_ARM_RATIO})"
+                        ),
                     })
                 continue
 

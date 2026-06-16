@@ -104,6 +104,12 @@ interface ElementState {
   id: string; type: ElementType; label: string;
   x: number; y: number; width: number; height: number;
   visible: boolean; viewMode?: ViewMode; topN?: number;
+  // When true this is a "(Filtered)" duplicate that renders from the
+  // Path-Analysis-filtered segment subset instead of all loaded segments.
+  filtered?: boolean;
+  // Map sections only: which filter attribute to colour segments by (a name from
+  // the active Path Analysis filters). Undefined ⇒ default risk-band colouring.
+  colorBy?: string;
 }
 type BandDist = Record<number, number>;
 interface Distributions {
@@ -123,6 +129,14 @@ interface TopRiskRow {
 interface EnrichedDetail {
   imageUrl?: string;
   topAttributes: { name: string; multiplier: number }[];
+  postImageUrl?: string;
+  postScores?: {
+    VB: number; VB_Band: number;
+    BB: number; BB_Band: number;
+    SB: number; SB_Band: number;
+    BP: number; BP_Band: number;
+    Overall: number; Overall_Band: number;
+  };
 }
 interface ProjectTreatmentSummary {
   project: string;
@@ -134,7 +148,8 @@ interface StatEntry { min: string; max: string; avg: string }
 interface ScoreStats {
   VB: StatEntry; BB: StatEntry; SB: StatEntry; BP: StatEntry; Overall: StatEntry;
 }
-interface FilterCategoryItem { category: string; isActive: boolean; color: string }
+interface FilterSubcategoryItem { name: string; isActive: boolean; color: string }
+interface FilterCategoryItem { category: string; isActive: boolean; color: string; subcategories?: FilterSubcategoryItem[] }
 interface FilterCategoryStatus {
   attribute: string;
   categories: FilterCategoryItem[];
@@ -160,6 +175,97 @@ const DEFAULT_ELEMENTS: ElementState[] = [
   { id: "topRisk", type: "topRisk", label: "Top Risk Stretches", x: 20, y: 2463, width: 754, height: 730, visible: true, viewMode: "full-page", topN: 10 },
   { id: "treatmentSummary", type: "treatmentSummary", label: "Treatments", x: 20, y: 3213, width: 754, height: 360, visible: true },
 ];
+
+// ── Filtered duplicate sections ──────────────────────────────────────────────
+// A clone of every default section EXCEPT the title, flagged `filtered` so it
+// renders from the Path-Analysis-filtered subset. These are injected into the
+// `elements` array only when the user enables the "Include filtered sections"
+// toggle (and a filter actually exists). See `toggleIncludeFiltered`.
+//
+// TEMPORARY: set to false to hide the "Include filtered sections" toggle and
+// suppress all filtered sections from the report (logic kept intact). Flip back
+// to true to re-enable the feature.
+const FILTERED_SECTIONS_ENABLED = true;
+const FILTERED_SUFFIX = "_filtered";
+const FILTERED_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
+  .filter((e) => e.id !== "title")
+  .map((e) => ({ ...e, id: `${e.id}${FILTERED_SUFFIX}`, label: `${e.label} (Filtered)`, filtered: true, visible: true }));
+
+// ── Report dataset bundle ────────────────────────────────────────────────────
+// All score-derived values a section needs. Computed once for the full segment
+// set and once for the filtered subset, so the same render code can serve both.
+interface ReportDataset {
+  rows: TopRiskRow[];
+  distributions: Distributions | null;
+  allBandMap: Map<string, number>;
+  totalSegments: number;
+  totalKm: number;
+  projectSegmentCounts: Record<string, number>;
+  projects: string[];               // loaded projects present in this dataset
+  topRiskRows: TopRiskRow[];        // top 10 by summed score
+  scoreStats: ScoreStats | null;
+  attributeFrequency: [string, number][];
+  treatmentSummaries: ProjectTreatmentSummary[];
+}
+
+// Pure derivation of every score-based value from a row set. `treatmentSummaries`
+// is added by the caller since it depends on async treatment state.
+function buildCoreDataset(
+  rows: TopRiskRow[],
+  loadedProjects: string[],
+): Omit<ReportDataset, "treatmentSummaries"> {
+  const projectSegmentCounts: Record<string, number> = {};
+  rows.forEach((r) => { projectSegmentCounts[r._project] = (projectSegmentCounts[r._project] || 0) + 1; });
+  const projects = loadedProjects.filter((p) => (projectSegmentCounts[p] ?? 0) > 0);
+  const totalSegments = rows.length;
+  const totalKm = totalSegments * 10 / 1000;
+
+  if (rows.length === 0) {
+    return { rows, distributions: null, allBandMap: new Map(), totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows: [], scoreStats: null, attributeFrequency: [] };
+  }
+
+  const dist: Distributions = {
+    VB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BB: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    SB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BP: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    Overall: { 1: 0, 2: 0, 3: 0, 4: 0 },
+  };
+  const bMap = new Map<string, number>();
+  rows.forEach((row) => {
+    if (row["VB Band"] >= 1 && row["VB Band"] <= 4) dist.VB[row["VB Band"]]++;
+    if (row["BB Band"] >= 1 && row["BB Band"] <= 4) dist.BB[row["BB Band"]]++;
+    if (row["SB Band"] >= 1 && row["SB Band"] <= 4) dist.SB[row["SB Band"]]++;
+    if (row["BP Band"] >= 1 && row["BP Band"] <= 4) dist.BP[row["BP Band"]]++;
+    const overall = row["Overall Risk Level Band"] ??
+      Math.max(row["VB Band"] || 0, row["BB Band"] || 0, row["SB Band"] || 0, row["BP Band"] || 0);
+    if (overall >= 1 && overall <= 4) { dist.Overall[overall]++; bMap.set(`${row._project}_${row._segIndex}`, overall); }
+  });
+
+  const topRiskRows = [...rows].sort((a, b) => b._sumScore - a._sumScore).slice(0, 10);
+
+  const stat = (vals: number[]): StatEntry => {
+    const sorted = [...vals].sort((a, b) => a - b);
+    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+    return { min: sorted[0].toFixed(1), max: sorted[sorted.length - 1].toFixed(1), avg: avg.toFixed(1) };
+  };
+  const scoreStats: ScoreStats = {
+    VB: stat(rows.map((r) => r.VB || 0)),
+    BB: stat(rows.map((r) => r.BB || 0)),
+    SB: stat(rows.map((r) => r.SB || 0)),
+    BP: stat(rows.map((r) => r.BP || 0)),
+    Overall: stat(rows.map((r) => r._sumScore || 0)),
+  };
+
+  const count = new Map<string, number>();
+  rows.forEach((row) => {
+    for (let i = 1; i <= 3; i++) {
+      const name = row[`Top ${i} Contributor` as keyof TopRiskRow] as string | undefined;
+      if (name) count.set(name, (count.get(name) || 0) + 1);
+    }
+  });
+  const attributeFrequency = [...count.entries()].sort(([, a], [, b]) => b - a).slice(0, 10) as [string, number][];
+
+  return { rows, distributions: dist, allBandMap: bMap, totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows, scoreStats, attributeFrequency };
+}
 
 // ── Shared table styles ──────────────────────────────────────────────────────
 const thStyle: React.CSSProperties = {
@@ -250,7 +356,7 @@ function FitAllBounds({ points }: { points: L.LatLngExpression[] }) {
   return null;
 }
 
-function ReportMiniMap({ projects, bandMap, orderIndex }: { projects: string[]; bandMap: Map<string, number>; orderIndex: number }) {
+function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: string[]; colorMap: Map<string, string>; orderIndex: number }) {
   const [geoEntries, setGeoEntries] = useState<GeoEntry[]>([]);
   // The MapContainer key combines a per-mount random base with the section's
   // position in the report (`orderIndex`). react-leaflet 5 creates the Leaflet
@@ -287,15 +393,16 @@ function ReportMiniMap({ projects, bandMap, orderIndex }: { projects: string[]; 
       data.features?.forEach((f, i) => {
         const g = f.geometry;
         if (g?.type !== "LineString" || !Array.isArray(g.coordinates) || g.coordinates.length === 0) return;
-        // Use array index (1-based) to look up band — consistent with how _segIndex is set in score rows
-        const band = bandMap.get(`${name}_${i + 1}`);
-        // Skip features with no scored band — eliminates connector/padding features
-        if (band === undefined) return;
-        out.push({ key: `${name}_${i}`, latlng: to4326(g.coordinates[0]), color: RISK_COLORS[band] });
+        // Use array index (1-based) to look up colour — consistent with how _segIndex is set in score rows
+        const color = colorMap.get(`${name}_${i + 1}`);
+        // Skip features absent from the colour map — eliminates connector/padding
+        // features and (in the filtered map) segments outside the filter.
+        if (color === undefined) return;
+        out.push({ key: `${name}_${i}`, latlng: to4326(g.coordinates[0]), color });
       });
     });
     return out;
-  }, [geoEntries, bandMap]);
+  }, [geoEntries, colorMap]);
   const latlngs = useMemo(() => points.map((p) => p.latlng), [points]);
 
   return (
@@ -505,6 +612,7 @@ export default function ReportBuilderPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const hasAutoFit = useRef(false);
+  const postTreatmentUploadRef = useRef<HTMLInputElement>(null);
 
   // ── State: auto-restored from localStorage if a saved layout exists ──────
   const [elements, setElements] = useState<ElementState[]>(() => {
@@ -556,18 +664,29 @@ export default function ReportBuilderPage() {
   const [loadedProjects, setLoadedProjects] = useState<string[]>([]);
 
   // ── Score data ────────────────────────────────────────────────────────────
-  const [distributions, setDistributions] = useState<Distributions | null>(null);
-  const [totalSegments, setTotalSegments] = useState(0);
-  const [projectSegmentCounts, setProjectSegmentCounts] = useState<Record<string, number>>({});
-  const [topRiskRows, setTopRiskRows] = useState<TopRiskRow[]>([]);
+  // `allScoreRows` is the single source of truth; per-section derived values
+  // (distributions, top-risk, stats, …) are computed in `fullDataset` /
+  // `filteredDataset` below.
   const [allScoreRows, setAllScoreRows] = useState<TopRiskRow[]>([]);
-  const [allBandMap, setAllBandMap] = useState<Map<string, number>>(new Map());
   const [enrichedMap, setEnrichedMap] = useState<Map<string, EnrichedDetail>>(new Map());
   const [isLoadingScores, setIsLoadingScores] = useState(false);
+
+  // ── Path Analysis filtered subset ─────────────────────────────────────────
+  // Per-project 0-based segment indices the user filtered to on the Path
+  // Analysis map (null ⇒ no filter active ⇒ filtered sections unavailable).
+  const [filteredIdxByProject, setFilteredIdxByProject] = useState<Record<string, number[]> | null>(null);
+  // Per project → per 0-based segment index → per filter attribute → category value.
+  // Drives the "Map (Filtered)" colour-by-attribute option (value → colour via
+  // activeCategoryStatus, so the map matches the on-report legend).
+  const [filteredSegValues, setFilteredSegValues] = useState<Record<string, Record<number, Record<string, string>>> | null>(null);
+  const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
+    const l = _readSaved(); return l?.includeFiltered === true;
+  });
 
   // ── Treatment data ────────────────────────────────────────────────────────
   const [treatmentSummaries, setTreatmentSummaries] = useState<ProjectTreatmentSummary[]>([]);
   const [segmentTreatmentMap, setSegmentTreatmentMap] = useState<Map<string, number[]>>(new Map());
+  const [uploadingSegment, setUploadingSegment] = useState<{ project: string; segIndex: number } | null>(null);
 
   // ── Project metadata (name, dates, length) ────────────────────────────────
   const [projectMeta, setProjectMeta] = useState<Record<string, { dateCreated?: string; lastUpdated?: string; lengthKm?: number }>>({});
@@ -596,14 +715,38 @@ export default function ReportBuilderPage() {
     const tr = sessionStorage.getItem("treatment_loadedProjects");
     const filters = sessionStorage.getItem("pathAnalysis_activeFilters");
     const catStatus = sessionStorage.getItem("pathAnalysis_categoryStatus");
+    const filteredSegs = sessionStorage.getItem("pathAnalysis_filteredSegments");
+    const filteredVals = sessionStorage.getItem("pathAnalysis_filteredSegmentValues");
     const paP: string[] = pa ? JSON.parse(pa) : [];
     const trP: string[] = tr ? JSON.parse(tr) : [];
     const flt: string[] = filters ? JSON.parse(filters) : [];
     const cst: FilterCategoryStatus[] = catStatus ? JSON.parse(catStatus) : [];
+    const fidx: Record<string, number[]> | null = filteredSegs ? JSON.parse(filteredSegs) : null;
+    const fvals: Record<string, Record<number, Record<string, string>>> | null = filteredVals ? JSON.parse(filteredVals) : null;
     const combined = [...new Set([...paP, ...trP])];
     setLoadedProjects(combined);
     setActiveFilterNames(flt);
     setActiveCategoryStatus(cst);
+    setFilteredIdxByProject(fidx);
+    setFilteredSegValues(fvals);
+    // Reconcile a restored layout against the current filter: if no filter is
+    // active, strip any "(Filtered)" sections (they would have no data) and
+    // force the toggle off. Done here — with full knowledge of session state —
+    // to avoid a mount-time race that could wipe legitimately saved sections.
+    const hasFlt = !!fidx && flt.length > 0;
+    if (!hasFlt) {
+      setElements((prev) => (prev.some((e) => e.filtered) ? prev.filter((e) => !e.filtered) : prev));
+      setIncludeFiltered(false);
+    } else if (includeFiltered) {
+      // Saved layout wanted filtered sections and a filter is active — ensure
+      // they exist (e.g. layout saved before this feature added them).
+      setElements((prev) => {
+        if (prev.some((e) => e.filtered)) return prev;
+        const existing = new Set(prev.map((e) => e.id));
+        const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
+        return toAdd.length ? [...prev, ...toAdd] : prev;
+      });
+    }
     if (combined.length === 0) {
       setPickerLoading(true);
       fetch("/api/projects")
@@ -669,31 +812,8 @@ export default function ReportBuilderPage() {
             } catch { return { name, rows: [] as unknown[] }; }
           })
         );
-        const counts: Record<string, number> = {};
         const allRows: TopRiskRow[] = [];
-        results.forEach(({ name, rows }) => { counts[name] = (rows as TopRiskRow[]).length; allRows.push(...(rows as TopRiskRow[])); });
-        setProjectSegmentCounts(counts);
-        setTotalSegments(allRows.length);
-        if (allRows.length === 0) return;
-
-        const dist: Distributions = {
-          VB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BB: { 1: 0, 2: 0, 3: 0, 4: 0 },
-          SB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BP: { 1: 0, 2: 0, 3: 0, 4: 0 },
-          Overall: { 1: 0, 2: 0, 3: 0, 4: 0 },
-        };
-        const bMap = new Map<string, number>();
-        allRows.forEach((row) => {
-          if (row["VB Band"] >= 1 && row["VB Band"] <= 4) dist.VB[row["VB Band"]]++;
-          if (row["BB Band"] >= 1 && row["BB Band"] <= 4) dist.BB[row["BB Band"]]++;
-          if (row["SB Band"] >= 1 && row["SB Band"] <= 4) dist.SB[row["SB Band"]]++;
-          if (row["BP Band"] >= 1 && row["BP Band"] <= 4) dist.BP[row["BP Band"]]++;
-          // Overall band = max of the four individual bands (matches backend logic)
-          const overall = row["Overall Risk Level Band"] ??
-            Math.max(row["VB Band"] || 0, row["BB Band"] || 0, row["SB Band"] || 0, row["BP Band"] || 0);
-          if (overall >= 1 && overall <= 4) { dist.Overall[overall]++; bMap.set(`${row._project}_${row._segIndex}`, overall); }
-        });
-        setDistributions(dist);
-        setAllBandMap(bMap);
+        results.forEach(({ rows }) => { allRows.push(...(rows as TopRiskRow[])); });
 
         const withSum = allRows.map((row) => {
           const sumScore = (row["VB"] || 0) + (row["BB"] || 0) + (row["SB"] || 0) + (row["BP"] || 0);
@@ -703,7 +823,6 @@ export default function ReportBuilderPage() {
         }).sort((a, b) => b._sumScore - a._sumScore);
 
         setAllScoreRows(withSum);
-        setTopRiskRows(withSum.slice(0, 10));
       } finally {
         setIsLoadingScores(false);
       }
@@ -711,27 +830,77 @@ export default function ReportBuilderPage() {
     fetchAll();
   }, [loadedProjects]);
 
+  // ── Datasets: full vs. Path-Analysis-filtered subset ──────────────────────
+  // A filter is active iff Path Analysis persisted a filtered-segment map AND
+  // named active filters. The filtered rows are `allScoreRows` restricted to the
+  // persisted per-project 0-based indices (`_segIndex` is 1-based, hence -1).
+  const hasFilter = !!filteredIdxByProject && activeFilterNames.length > 0;
+
+  const filteredScoreRows = useMemo(() => {
+    if (!filteredIdxByProject) return [] as TopRiskRow[];
+    const sets: Record<string, Set<number>> = {};
+    Object.entries(filteredIdxByProject).forEach(([p, idxs]) => { sets[p] = new Set(idxs); });
+    return allScoreRows.filter((r) => sets[r._project]?.has(r._segIndex - 1));
+  }, [allScoreRows, filteredIdxByProject]);
+
+  const fullDataset = useMemo<ReportDataset>(() => ({
+    ...buildCoreDataset(allScoreRows, loadedProjects),
+    projects: loadedProjects, // keep 0-result projects visible (legacy behaviour)
+    treatmentSummaries,
+  }), [allScoreRows, loadedProjects, treatmentSummaries]);
+
+  const filteredDataset = useMemo<ReportDataset>(() => {
+    const core = buildCoreDataset(filteredScoreRows, loadedProjects);
+    // Treatments restricted to the filtered segments only.
+    const byProject = new Map<string, { treated: number; counts: Record<number, number> }>();
+    filteredScoreRows.forEach((r) => {
+      if (!byProject.has(r._project)) byProject.set(r._project, { treated: 0, counts: {} });
+      const ids = segmentTreatmentMap.get(`${r._project}_${r._segIndex}`);
+      if (ids && ids.length) {
+        const e = byProject.get(r._project)!;
+        e.treated++;
+        ids.forEach((id) => { e.counts[id] = (e.counts[id] || 0) + 1; });
+      }
+    });
+    const treatmentSummaries: ProjectTreatmentSummary[] = core.projects
+      .filter((p) => byProject.has(p))
+      .map((p) => { const v = byProject.get(p)!; return { project: p, treatedSegments: v.treated, treatmentCounts: v.counts }; });
+    return { ...core, treatmentSummaries };
+  }, [filteredScoreRows, loadedProjects, segmentTreatmentMap]);
+
+  // Segments needing image/attribute enrichment = union of both datasets' top rows.
+  const enrichTargets = useMemo(() => {
+    const map = new Map<string, TopRiskRow>();
+    [...fullDataset.topRiskRows, ...filteredDataset.topRiskRows].forEach((r) => map.set(`${r._project}_${r._segIndex}`, r));
+    return [...map.values()];
+  }, [fullDataset.topRiskRows, filteredDataset.topRiskRows]);
+
   // ── Enrichment fetch ──────────────────────────────────────────────────────
   useEffect(() => {
-    if (topRiskRows.length === 0) return;
+    if (enrichTargets.length === 0) return;
     const go = async () => {
       try {
         const res = await fetch("/api/report/segment-details", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ segments: topRiskRows.map((r) => ({ project: r._project, segIndex: r._segIndex })) }),
+          body: JSON.stringify({ segments: enrichTargets.map((r) => ({ project: r._project, segIndex: r._segIndex })) }),
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.details)) {
           const map = new Map<string, EnrichedDetail>();
-          data.details.forEach((d: { project: string; segIndex: number; imageUrl?: string; topAttributes?: { name: string; multiplier: number }[] }) => {
-            map.set(`${d.project}_${d.segIndex}`, { imageUrl: d.imageUrl ?? undefined, topAttributes: d.topAttributes || [] });
+          data.details.forEach((d: { project: string; segIndex: number; imageUrl?: string; topAttributes?: { name: string; multiplier: number }[]; postImageUrl?: string; postScores?: any }) => {
+            map.set(`${d.project}_${d.segIndex}`, { 
+                imageUrl: d.imageUrl ?? undefined, 
+                topAttributes: d.topAttributes || [],
+                postImageUrl: d.postImageUrl ?? undefined,
+                postScores: d.postScores ?? undefined,
+            });
           });
           setEnrichedMap(map);
         }
       } catch (err) { console.error("Enrichment failed:", err); }
     };
     go();
-  }, [topRiskRows]);
+  }, [enrichTargets]);
 
   // ── Treatment fetch ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -763,43 +932,11 @@ export default function ReportBuilderPage() {
     go();
   }, [loadedProjects]);
 
-  // ── Derived / computed ────────────────────────────────────────────────────
-  const scoreStats = useMemo((): ScoreStats | null => {
-    if (allScoreRows.length === 0) return null;
-    const stat = (vals: number[]): StatEntry => {
-      const sorted = [...vals].sort((a, b) => a - b);
-      const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
-      return { min: sorted[0].toFixed(1), max: sorted[sorted.length - 1].toFixed(1), avg: avg.toFixed(1) };
-    };
-    return {
-      VB: stat(allScoreRows.map((r) => r.VB || 0)),
-      BB: stat(allScoreRows.map((r) => r.BB || 0)),
-      SB: stat(allScoreRows.map((r) => r.SB || 0)),
-      BP: stat(allScoreRows.map((r) => r.BP || 0)),
-      Overall: stat(allScoreRows.map((r) => r._sumScore || 0)),
-    };
-  }, [allScoreRows]);
-
-  const attributeFrequency = useMemo(() => {
-    const count = new Map<string, number>();
-    allScoreRows.forEach((row) => {
-      for (let i = 1; i <= 3; i++) {
-        const name = row[`Top ${i} Contributor` as keyof TopRiskRow] as string | undefined;
-        if (name) count.set(name, (count.get(name) || 0) + 1);
-      }
-    });
-    return [...count.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
-  }, [allScoreRows]);
-
-  // Total length = segments × 10 m per segment (CycleRAP standard segment length)
-  const totalKm = useMemo(
-    () => totalSegments * 10 / 1000,
-    [totalSegments]
-  );
-
   // ── Ideal height per element type (based on current data) ────────────────
   const computeIdealHeight = useCallback((el: ElementState): number => {
     const H = 30; // handle
+    const ds = el.filtered ? filteredDataset : fullDataset;
+    const { distributions, scoreStats, attributeFrequency, topRiskRows, treatmentSummaries, projects } = ds;
     switch (el.type) {
       case "title": {
         // The "Projects:" line wraps when many/long project names are listed;
@@ -810,7 +947,7 @@ export default function ReportBuilderPage() {
         return H + 160 + projLines * 17;
       }
       case "riskBands": return H + (distributions ? 480 : 60);
-      case "map": return H + 350;
+      case "map": return H + 560 + (el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? 30 : 0);
       case "summary": {
         // The "Active Filters" panel grows one row per filter, and each row's
         // category chips wrap — a flat constant clips it once >1 filter is set.
@@ -832,7 +969,7 @@ export default function ReportBuilderPage() {
           // Since the section itself includes a header (about 60px), we reserve n full pages.
           return n * PAGE_H;
         }
-        if (!el.viewMode || el.viewMode === "tabular") return H + header + thead + n * 52 + 24;
+        if (el.viewMode === "tabular") return H + header + thead + n * 52 + 24;
         return H + header + Math.ceil(n / 3) * 240 + 24; // grid
       }
       case "treatmentSummary": {
@@ -842,12 +979,12 @@ export default function ReportBuilderPage() {
         return h + 16;
       }
       case "projectDetails": {
-        if (loadedProjects.length === 0) return H + 60;
+        if (projects.length === 0) return H + 60;
         // All projects render, chunked PROJ_PAGE_SIZE per PAGE_H-tall page. Each
         // non-final chunk occupies a full page; the section's total height is
         // (chunks-1) full pages + the natural height of the final chunk.
-        const numChunks = Math.ceil(loadedProjects.length / PROJ_PAGE_SIZE);
-        const lastCount = loadedProjects.length - (numChunks - 1) * PROJ_PAGE_SIZE;
+        const numChunks = Math.ceil(projects.length / PROJ_PAGE_SIZE);
+        const lastCount = projects.length - (numChunks - 1) * PROJ_PAGE_SIZE;
         const headerH = numChunks > 1 ? PROJ_CONT_HEADER_H : PROJ_HEADER_H;
         const lastChunkH = H + headerH + lastCount * PROJ_ROW_H + 16;
         return (numChunks - 1) * PAGE_H + lastChunkH;
@@ -866,7 +1003,7 @@ export default function ReportBuilderPage() {
       case "segmentGallery": return H + 36 + Math.max(1, Math.ceil(topRiskRows.length / 6)) * 92 + 16;
       default: return el.height;
     }
-  }, [distributions, treatmentSummaries, loadedProjects, projectMeta, scoreStats, attributeFrequency, topRiskRows, activeFilterNames, activeCategoryStatus, projectNameOverrides]);
+  }, [fullDataset, filteredDataset, loadedProjects, projectMeta, activeFilterNames, activeCategoryStatus, projectNameOverrides]);
 
   // ── Auto-fit: snapshot ideal heights into state ───────────────────────────
   // Gap removal and page-break spacing are now automatic (see `layout` memo +
@@ -881,10 +1018,10 @@ export default function ReportBuilderPage() {
   // ── Auto-fit on first data load ───────────────────────────────────────────
   // Must come after autoFitElements is defined to avoid a TDZ crash.
   useEffect(() => {
-    if (!distributions || hasAutoFit.current) return;
+    if (!fullDataset.distributions || hasAutoFit.current) return;
     hasAutoFit.current = true;
     setTimeout(autoFitElements, 150);
-  }, [distributions, autoFitElements]);
+  }, [fullDataset.distributions, autoFitElements]);
 
   // ── Element helpers ───────────────────────────────────────────────────────
   const updateElement = useCallback((id: string, changes: Partial<ElementState>) => {
@@ -910,6 +1047,23 @@ export default function ReportBuilderPage() {
       return updated;
     });
   }, [computeIdealHeight]);
+
+  // ── Filtered sections: master toggle ──────────────────────────────────────
+  // ON  → append the "(Filtered)" duplicate of every non-title section that
+  //       isn't already present (after the existing sections).
+  // OFF → remove every filtered section.
+  const toggleIncludeFiltered = useCallback(() => {
+    setElements((prev) => {
+      if (prev.some((e) => e.filtered)) {
+        return prev.filter((e) => !e.filtered);
+      }
+      const existing = new Set(prev.map((e) => e.id));
+      const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
+      return [...prev, ...toAdd];
+    });
+    setIncludeFiltered((v) => !v);
+    setTimeout(autoFitElements, 50);
+  }, [autoFitElements]);
 
   // ── Drag end: reorder the elements array (dnd-kit drives ordering) ─────────
   const sensors = useSensors(
@@ -940,10 +1094,101 @@ export default function ReportBuilderPage() {
     return {
       imageUrl: fromMap?.imageUrl,
       topAttributes: topAttributes.length > 0 ? topAttributes : (fromMap?.topAttributes ?? []),
+      postImageUrl: fromMap?.postImageUrl,
+      postScores: fromMap?.postScores,
     };
   };
   const getSegmentTreatments = (row: TopRiskRow): number[] =>
     segmentTreatmentMap.get(`${row._project}_${row._segIndex}`) ?? [];
+
+  // ── Map colour map (key `project_segIndex` → hex) ─────────────────────────
+  // Risk-band colouring by default. A filtered map section may instead colour by
+  // one of the user's active filter attributes: each segment's persisted category
+  // value (`filteredSegValues`) is mapped to its colour via `activeCategoryStatus`
+  // — the same source as the report legend, so the map always matches it.
+  const buildMapColorMap = useCallback((ds: ReportDataset, el: ElementState): Map<string, string> => {
+    const m = new Map<string, string>();
+    const colorBy = el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : null;
+    if (el.filtered && colorBy) {
+      const cats = activeCategoryStatus.find((s) => s.attribute === colorBy)?.categories ?? [];
+      const parentColor = new Map(cats.map((c) => [c.category, c.color]));
+      // Mirror Path Analysis: when only one parent category remains active and it
+      // has sub-categories, colour by the secondary (Level-3) value instead.
+      const activeParents = cats.filter((c) => c.isActive);
+      const collapseParent = activeParents.length === 1 && (activeParents[0].subcategories?.length ?? 0) > 0
+        ? activeParents[0] : null;
+      const childColor = new Map((collapseParent?.subcategories ?? []).map((sc) => [sc.name, sc.color]));
+      ds.rows.forEach((row) => {
+        const segVals = filteredSegValues?.[row._project]?.[row._segIndex - 1];
+        const parentVal = segVals?.[colorBy];
+        let color: string | undefined;
+        if (collapseParent && parentVal === collapseParent.category) {
+          const childVal = segVals?.[`${colorBy}__child`];
+          color = (childVal && childColor.get(childVal)) || collapseParent.color;
+        } else if (parentVal) {
+          color = parentColor.get(parentVal);
+        }
+        m.set(`${row._project}_${row._segIndex}`, color ?? "#6B7280");
+      });
+    } else {
+      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? "#2563EB"));
+    }
+    return m;
+  }, [activeFilterNames, activeCategoryStatus, filteredSegValues]);
+
+  // ── Post-treatment image upload ───────────────────────────────────────────
+  const handleUploadTreatmentImageClick = (project: string, segIndex: number) => {
+    setUploadingSegment({ project, segIndex });
+    postTreatmentUploadRef.current?.click();
+  };
+
+  const handlePostTreatmentFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !uploadingSegment) return;
+    e.target.value = "";
+    const { project, segIndex } = uploadingSegment;
+    setUploadingSegment(null);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch(
+        `/api/projects/${encodeURIComponent(project)}/segments/${segIndex}/post-treatment-image`,
+        { method: "POST", body: formData }
+      );
+      if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+      // Refresh enriched map for this segment so the new image appears immediately
+      const detailsRes = await fetch("/api/report/segment-details", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ segments: [{ project, segIndex }] }),
+      });
+      const detailsData = await detailsRes.json();
+      if (detailsData.ok && Array.isArray(detailsData.details)) {
+        // The post-treatment image URL is a static path that does not change
+        // between uploads, so the browser keeps showing the previously-rendered
+        // bitmap. Append a cache-busting timestamp so the <img> src string
+        // changes and forces a fresh request.
+        const bust = Date.now();
+        setEnrichedMap((prev) => {
+          const next = new Map(prev);
+          detailsData.details.forEach((d: { project: string; segIndex: number; imageUrl?: string; topAttributes?: { name: string; multiplier: number }[]; postImageUrl?: string; postScores?: any }) => {
+            const postUrl = d.postImageUrl
+              ? `${d.postImageUrl}${d.postImageUrl.includes("?") ? "&" : "?"}t=${bust}`
+              : undefined;
+            next.set(`${d.project}_${d.segIndex}`, {
+              imageUrl: d.imageUrl ?? undefined,
+              topAttributes: d.topAttributes || [],
+              postImageUrl: postUrl,
+              postScores: d.postScores ?? undefined,
+            });
+          });
+          return next;
+        });
+      }
+    } catch (err) {
+      console.error("Post-treatment image upload failed:", err);
+      alert("Upload failed. Please try again.");
+    }
+  };
 
   // ── Display-name helpers ──────────────────────────────────────────────────
   const dispName = useCallback(
@@ -970,14 +1215,14 @@ export default function ReportBuilderPage() {
     try {
       localStorage.setItem(LAYOUT_KEY, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, imageDate, projectNameOverrides, sectionTitles,
+        reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
       setHasSaved(true);
       setSaveToastVisible(true);
       if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
       saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
     } catch (e) { console.error("Save layout failed:", e); }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, imageDate, projectNameOverrides, sectionTitles]);
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered]);
 
   const restoreLayout = useCallback(() => {
     try {
@@ -993,6 +1238,7 @@ export default function ReportBuilderPage() {
       if (l.imageDate !== undefined) setImageDate(l.imageDate);
       if (l.projectNameOverrides !== undefined) setProjectNameOverrides(l.projectNameOverrides);
       if (l.sectionTitles !== undefined) setSectionTitles(l.sectionTitles);
+      if (l.includeFiltered !== undefined) setIncludeFiltered(l.includeFiltered);
     } catch (e) { console.error("Restore layout failed:", e); }
   }, []);
 
@@ -1008,6 +1254,7 @@ export default function ReportBuilderPage() {
       setImageDate("");
       setProjectNameOverrides({});
       setSectionTitles({});
+      setIncludeFiltered(false);
       setHasSaved(false);
     }
   }, []);
@@ -1102,8 +1349,23 @@ export default function ReportBuilderPage() {
           .map((img) => img.decode().catch(() => undefined)),
       );
 
+      // Clamp the capture scale so the rasterised canvas stays within the
+      // browser's hard limits. Browsers cap a <canvas> at ~32767px per dimension
+      // and ~268M px² total area; html2canvas silently returns a blank/zero-size
+      // canvas when exceeded (→ empty toDataURL → failed PDF). Tall reports —
+      // especially with the doubled "(Filtered)" sections — blow past this at the
+      // default scale of 2, so derive the largest safe scale instead.
+      const cssW = canvas.scrollWidth || canvas.offsetWidth || CANVAS_W;
+      const cssH = canvas.scrollHeight || canvas.offsetHeight || PAGE_H;
+      const MAX_DIM = 32000;                 // per-dimension cap, with margin
+      const MAX_AREA = 256 * 1024 * 1024;    // ~268M px² area cap, with margin
+      const captureScale = Math.max(
+        0.5,
+        Math.min(2, MAX_DIM / cssW, MAX_DIM / cssH, Math.sqrt(MAX_AREA / (cssW * cssH))),
+      );
+
       const captured = await html2canvas(canvas, {
-        scale: 2, useCORS: true, logging: false, backgroundColor: "#ffffff",
+        scale: captureScale, useCORS: true, logging: false, backgroundColor: "#ffffff",
         onclone: (doc) => {
           const cloneFields = Array.from(
             doc.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(".rb-canvas input, .rb-canvas textarea"),
@@ -1134,6 +1396,12 @@ export default function ReportBuilderPage() {
 
       restore.forEach((fn) => fn());
 
+      // A zero-size capture means the canvas still exceeded a browser limit —
+      // fail loudly instead of saving an empty PDF.
+      if (!captured.width || !captured.height) {
+        throw new Error(`html2canvas produced an empty canvas (${cssW}×${cssH}px @ ${captureScale.toFixed(2)}x). The report is too large to rasterise — hide some sections or reduce the number of Top Risk Stretches.`);
+      }
+
       const imgData = captured.toDataURL("image/png");
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pdfW = 210, pdfH = 297;
@@ -1143,7 +1411,10 @@ export default function ReportBuilderPage() {
       remaining -= pdfH;
       while (remaining > 0) { yPos -= pdfH; pdf.addPage(); pdf.addImage(imgData, "PNG", 0, yPos, pdfW, imgH); remaining -= pdfH; }
       pdf.save("PSAT_Report.pdf");
-    } catch (err) { console.error("PDF export failed:", err); }
+    } catch (err) {
+      console.error("PDF export failed:", err);
+      alert(`PDF export failed: ${err instanceof Error ? err.message : "unknown error"}`);
+    }
     finally { setExporting(null); }
   };
 
@@ -1165,7 +1436,7 @@ export default function ReportBuilderPage() {
   const handleDownloadWord = async () => {
     setExporting("word");
     const topN = elements.find((e) => e.id === "topRisk")?.topN ?? 10;
-    const topRows = topRiskRows.slice(0, topN).map((row) => ({ ...row, _treatments: getSegmentTreatments(row) }));
+    const topRows = fullDataset.topRiskRows.slice(0, topN).map((row) => ({ ...row, _treatments: getSegmentTreatments(row) }));
 
     // Capture visual sections as images for Word embed
     const visibleIds = new Set(elements.filter((e) => e.visible).map((e) => e.id));
@@ -1178,11 +1449,11 @@ export default function ReportBuilderPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           selectedProjects: loadedProjects,
-          elements: elements.filter((el) => el.visible),
-          scoreData: distributions,
-          totalSegments,
+          elements: elements.filter((el) => el.visible && (FILTERED_SECTIONS_ENABLED || !el.filtered)),
+          scoreData: fullDataset.distributions,
+          totalSegments: fullDataset.totalSegments,
           topRiskRows: topRows,
-          treatmentSummaries,
+          treatmentSummaries: fullDataset.treatmentSummaries,
           treatmentNames: TREATMENT_NAMES,
           reportTitle,
           oicName,
@@ -1190,9 +1461,9 @@ export default function ReportBuilderPage() {
           reportDate,
           imageDate,
           recommendations,
-          scoreStats,
-          attributeFrequency: Object.fromEntries(attributeFrequency),
-          projectSegmentCounts,
+          scoreStats: fullDataset.scoreStats,
+          attributeFrequency: Object.fromEntries(fullDataset.attributeFrequency),
+          projectSegmentCounts: fullDataset.projectSegmentCounts,
           projectMeta,
           activeFilterNames,
           activeCategoryStatus,
@@ -1283,22 +1554,8 @@ export default function ReportBuilderPage() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "8px 10px 8px", borderTop: "1px dashed #e0d8f0", background: "transparent" }} onPointerDown={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 10, color: "#aaa", marginRight: 2, width: 30 }}>View:</span>
-          {(["grid", "tabular", "full-page"] as ViewMode[]).map((mode) => {
-            const active = (el.viewMode || "tabular") === mode;
-            return (
-              <button key={mode}
-                style={{ padding: "2px 9px", borderRadius: 10, border: `1px solid ${active ? "#a020d0" : "#ddd"}`, background: active ? "#f0e4f8" : "#fff", color: active ? "#a020d0" : "#777", cursor: "pointer", fontSize: 10, fontWeight: active ? 700 : 400 }}
-                onClick={(e) => { e.stopPropagation(); updateElement(el.id, { viewMode: mode }); setTimeout(autoFitElements, 50); }}
-                onMouseDown={(e) => e.stopPropagation()}>
-                {mode === "grid" ? "Grid" : mode === "tabular" ? "Tabular" : "Full Page"}
-              </button>
-            );
-          })}
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
           <span style={{ fontSize: 10, color: "#aaa", marginRight: 2, width: 30 }}>Top:</span>
-          {[3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
+          {[3, 5, 10].map((n) => {
             const active = topN === n;
             return (
               <button key={n}
@@ -1309,6 +1566,29 @@ export default function ReportBuilderPage() {
             );
           })}
         </div>
+      </div>
+    );
+  };
+
+  // ── Map (Filtered) colour-by selector (sidebar) ──────────────────────────
+  const renderMapColorToggle = (el: ElementState) => {
+    const current = el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : "__risk__";
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderTop: "1px dashed #e0d8f0" }} onPointerDown={(e) => e.stopPropagation()}>
+        <span style={{ fontSize: 10, color: "#aaa", flexShrink: 0 }}>Color by:</span>
+        <select
+          value={current}
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const v = e.target.value;
+            updateElement(el.id, { colorBy: v === "__risk__" ? undefined : v });
+          }}
+          style={{ flex: 1, fontSize: 10, padding: "2px 4px", borderRadius: 4, border: "1px solid #ddd", color: "#555", background: "#fff", cursor: "pointer", minWidth: 0 }}
+        >
+          <option value="__risk__">Overall Risk Level (default)</option>
+          {activeFilterNames.map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
       </div>
     );
   };
@@ -1329,96 +1609,181 @@ export default function ReportBuilderPage() {
         return (
           <div key={i} style={{ height, boxSizing: "border-box", paddingBottom: isLast ? 0 : PAGE_GAP, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {isFirst ? (
-              <div style={{ padding: "8px 12px 12px", flexShrink: 0 }}>
-                <EditableText value={secTitle(elId, "Top Risk Stretches")} onChange={(val) => setSecTitle(elId, val)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e" }} />
-                <div style={{ fontSize: 10, color: "#999" }}>Ranked highest to lowest · Before risk factors & after treatments applied</div>
+              <div style={{ padding: "8px 12px 12px", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                    <EditableText value={secTitle(elId, "Top Risk Stretches")} onChange={(val) => setSecTitle(elId, val)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e" }} />
+                    <div style={{ color: "#ddd", fontSize: 20 }}>|</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: "#1a1a2e" }}>
+                      {dispName(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 10, color: "#999" }}>Ranked highest to lowest · Before risk factors & after treatments applied</div>
+                </div>
               </div>
             ) : (
-              <div style={{ padding: "10px 14px 12px", flexShrink: 0, fontSize: 20, fontWeight: 600, color: "#1a1a2e" }}>
-                {secTitle(elId, "Top Risk Stretches")} <span style={{ color: "#aaa", fontWeight: 500 }}>(#{i + 1})</span>
+              <div style={{ padding: "10px 14px 12px", flexShrink: 0, display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e" }}>
+                  {secTitle(elId, "Top Risk Stretches")} <span style={{ color: "#aaa", fontWeight: 500 }}>(#{i + 1})</span>
+                </div>
+                <div style={{ color: "#ddd", fontSize: 20 }}>|</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "#1a1a2e" }}>
+                  {dispName(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
+                </div>
               </div>
             )}
 
             <div style={{ flex: 1, background: "#fff", border: `2px solid ${RISK_COLORS[row._maxBand] || "#ddd"}`, borderRadius: 8, margin: "0 14px", display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}>
-              {/* Image Section */}
-              <div style={{ height: 360, position: "relative", flexShrink: 0 }}>
-                <SegmentImage src={e.imageUrl} width="100%" height="100%" />
-                {/* Ranking Badge */}
-                <div style={{ position: "absolute", top: 16, left: 16, background: RISK_COLORS[row._maxBand] || "#333", color: "#fff", width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: "bold", boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}>
-                  {i + 1}
+              {/* Top Row: Original */}
+              <div style={{ flex: "1 1 50%", borderBottom: "1px solid #ddd", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                {/* Image Section */}
+                <div style={{ flex: 1, position: "relative", flexShrink: 1, minHeight: 0 }}>
+                  <div style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", color: "#fff", padding: "4px 12px", borderRadius: 16, fontSize: 12, zIndex: 10 }}>Original</div>
+                  <SegmentImage src={e.imageUrl} width="100%" height="100%" />
+                  {/* Ranking Badge */}
+                  <div style={{ position: "absolute", top: 16, left: 16, background: RISK_COLORS[row._maxBand] || "#333", color: "#fff", width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: "bold", boxShadow: "0 4px 12px rgba(0,0,0,0.3)", zIndex: 10 }}>
+                    {i + 1}
+                  </div>
+                </div>
+
+                {/* Content Section */}
+                <div style={{ padding: "16px 24px", display: "flex", flexDirection: "column", gap: 12, overflow: "hidden", flexShrink: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 24 }}>
+                    {/* Main Factors */}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#a020d0", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 6 }}>Top Contributing Attribute</div>
+                      {e.topAttributes.length > 0 ? (
+                        <div style={{ fontSize: 16, color: "#333", fontWeight: 500, display: "flex", alignItems: "center" }}>
+                          <span style={{ marginRight: 8, color: "#cc2200" }}>⚠️</span>
+                          {e.topAttributes[0].name}
+                          <span style={{ marginLeft: 12, fontSize: 12, color: "#cc2200", fontWeight: 700, background: "#fdeded", padding: "2px 8px", borderRadius: 12 }}>+{e.topAttributes[0].multiplier.toFixed(1)}</span>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 14, color: "#bbb", fontStyle: "italic" }}>No contributing factors identified</div>
+                      )}
+
+                      {e.topAttributes.length > 1 && (
+                        <div style={{ marginTop: 8 }}>
+                          <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>Other significant factors:</div>
+                          <ul style={{ margin: 0, paddingLeft: 18, color: "#555", fontSize: 12, lineHeight: 1.4 }}>
+                            {e.topAttributes.slice(1).map((a, j) => (
+                              <li key={j}>{a.name} <span style={{ color: "#cc2200", fontWeight: 600 }}>(+{a.multiplier.toFixed(1)})</span></li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                    {/* Header: Score */}
+                    <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ fontSize: 32, fontWeight: 800, color: RISK_COLORS[row._maxBand] || "#222", lineHeight: 1 }}>{row._sumScore.toFixed(1)}</div>
+                      </div>
+                      <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: 1, marginTop: 4 }}>Original Risk Score</div>
+                    </div>
+                  </div>
+
+                  <div style={{ flex: 1, minHeight: 8 }} /> {/* Spacer */}
+
+                  {/* Crash Type Scores */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, background: "#faf8fd", padding: "8px 12px", borderRadius: 8, border: "1px solid #ede8f5", flexShrink: 0 }}>
+                    {(["VB", "BB", "SB", "BP"] as const).map((ct) => {
+                      const band = row[`${ct} Band` as keyof TopRiskRow] as number;
+                      const score = row[ct as keyof TopRiskRow] as number;
+                      return (
+                        <div key={ct} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: "#555", whiteSpace: "nowrap" }}>{CRASH_TYPE_LABELS[ct] || ct}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, width: "100%", justifyContent: "center" }}>
+                            <div style={{ fontSize: 18, fontWeight: 700, color: RISK_COLORS[band] || "#333", minWidth: 32, textAlign: "right" }}>{score.toFixed(1)}</div>
+                            <div style={{ padding: "2px 6px", borderRadius: 8, background: RISK_COLORS[band] || "#eee", color: band === 2 ? "#333" : "#fff", fontSize: 9, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", minWidth: 50, textAlign: "center", whiteSpace: "nowrap" }}>
+                              {RISK_LABELS[band] || "None"}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
-              {/* Content Section */}
-              <div style={{ flex: 1, padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20, overflow: "auto" }}>
-                {/* Header: Project & Segment & Score */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "1px solid #eee", paddingBottom: 16 }}>
-                  <div>
-                    <div style={{ fontSize: 24, fontWeight: 700, color: "#1a1a2e", marginBottom: 4 }}>{dispName(row._project)}</div>
-                    <div style={{ fontSize: 16, color: "#666" }}>Segment {row._segIndex}</div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 36, fontWeight: 800, color: RISK_COLORS[row._maxBand] || "#222", lineHeight: 1 }}>{row._sumScore.toFixed(1)}</div>
-                    <div style={{ fontSize: 12, color: "#888", textTransform: "uppercase", letterSpacing: 1, marginTop: 4 }}>Risk Score</div>
-                  </div>
+              {/* Bottom Row: Post Treatment */}
+              <div style={{ flex: "1 1 50%", display: "flex", flexDirection: "column", background: "#fcfcfc", overflow: "hidden" }}>
+                {/* Image Section */}
+                <div style={{ flex: 1, position: "relative", flexShrink: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#f9f9f9" }}>
+                  {e.postImageUrl ? (
+                    <>
+                      <div style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.6)", color: "#fff", padding: "4px 12px", borderRadius: 16, fontSize: 12, zIndex: 10 }}>Post Treatment</div>
+                      <SegmentImage src={e.postImageUrl} width="100%" height="100%" />
+                      <button 
+                        data-html2canvas-ignore="true"
+                        onClick={() => handleUploadTreatmentImageClick(row._project, row._segIndex)} 
+                        style={{ position: "absolute", bottom: 16, right: 16, background: "rgba(160, 32, 208, 0.9)", color: "#fff", border: "none", padding: "6px 12px", borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: "pointer", zIndex: 10, boxShadow: "0 2px 6px rgba(0,0,0,0.2)" }}
+                      >
+                        Change Image
+                      </button>
+                    </>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", color: "#888", gap: 12 }}>
+                      <div style={{ fontSize: 14 }}>Post treatment photo missing</div>
+                      <button data-html2canvas-ignore="true" onClick={() => handleUploadTreatmentImageClick(row._project, row._segIndex)} style={{ padding: "8px 16px", background: "#a020d0", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontWeight: 600 }}>
+                        Upload Treatment Image
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                {/* Main Factors */}
-                <div style={{ display: "flex", gap: 40 }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#a020d0", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 12 }}>Top Contributing Attribute</div>
-                    {e.topAttributes.length > 0 ? (
-                      <div style={{ fontSize: 18, color: "#333", fontWeight: 500, display: "flex", alignItems: "center" }}>
-                        <span style={{ marginRight: 8, color: "#cc2200" }}>⚠️</span>
-                        {e.topAttributes[0].name}
-                        <span style={{ marginLeft: 12, fontSize: 14, color: "#cc2200", fontWeight: 700, background: "#fdeded", padding: "2px 8px", borderRadius: 12 }}>+{e.topAttributes[0].multiplier.toFixed(1)}</span>
-                      </div>
-                    ) : (
-                      <div style={{ fontSize: 16, color: "#bbb", fontStyle: "italic" }}>No contributing factors identified</div>
-                    )}
-
-                    {e.topAttributes.length > 1 && (
-                      <div style={{ marginTop: 16 }}>
-                        <div style={{ fontSize: 11, color: "#888", marginBottom: 6 }}>Other significant factors:</div>
-                        <ul style={{ margin: 0, paddingLeft: 18, color: "#555", fontSize: 13, lineHeight: 1.6 }}>
-                          {e.topAttributes.slice(1).map((a, j) => (
-                            <li key={j}>{a.name} <span style={{ color: "#cc2200", fontWeight: 600 }}>(+{a.multiplier.toFixed(1)})</span></li>
-                          ))}
+                {/* Content Section */}
+                <div style={{ padding: "16px 24px", display: "flex", flexDirection: "column", gap: 12, overflow: "hidden", flexShrink: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 24 }}>
+                    {/* Applied Treatments */}
+                    <div style={{ flex: 1, background: "#f5fbf6", padding: "10px 14px", borderRadius: 8, border: "1px solid #c8e8d0" }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#27ae60", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 6 }}>Applied Treatments</div>
+                      {t.length > 0 ? (
+                        <ul style={{ margin: 0, paddingLeft: 16, color: "#226633", fontSize: 11, lineHeight: 1.4 }}>
+                          {t.map(id => <li key={id}>{TREATMENT_NAMES[id] ?? `Treatment ${id}`}</li>)}
                         </ul>
+                      ) : (
+                        <div style={{ fontSize: 11, color: "#88ca99", fontStyle: "italic" }}>No treatments applied</div>
+                      )}
+                    </div>
+                    {/* Header: Score */}
+                    <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        {t.length > 0 && e.postScores ? (
+                          <div style={{ fontSize: 32, fontWeight: 800, color: RISK_COLORS[e.postScores.Overall_Band] || "#222", lineHeight: 1 }}>{e.postScores.Overall.toFixed(1)}</div>
+                        ) : (
+                          <div style={{ fontSize: 32, fontWeight: 800, color: "#ccc", lineHeight: 1 }}>—</div>
+                        )}
                       </div>
-                    )}
+                      <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: 1, marginTop: 4 }}>Post Treatment Score</div>
+                    </div>
                   </div>
 
-                  {/* Applied Treatments */}
-                  <div style={{ width: 280, flexShrink: 0, background: "#f5fbf6", padding: 16, borderRadius: 8, border: "1px solid #c8e8d0" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#27ae60", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 10 }}>Applied Treatments</div>
-                    {t.length > 0 ? (
-                      <ul style={{ margin: 0, paddingLeft: 16, color: "#226633", fontSize: 12, lineHeight: 1.5 }}>
-                        {t.map(id => <li key={id}>{TREATMENT_NAMES[id] ?? `Treatment ${id}`}</li>)}
-                      </ul>
-                    ) : (
-                      <div style={{ fontSize: 12, color: "#88ca99", fontStyle: "italic" }}>No treatments applied</div>
-                    )}
-                  </div>
-                </div>
+                  <div style={{ flex: 1, minHeight: 8 }} /> {/* Spacer */}
 
-                <div style={{ flex: 1, minHeight: 20 }} /> {/* Spacer */}
-
-                {/* Crash Type Scores */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, background: "#faf8fd", padding: 16, borderRadius: 8, border: "1px solid #ede8f5", flexShrink: 0 }}>
-                  {(["VB", "BB", "SB", "BP"] as const).map((ct) => {
-                    const band = row[`${ct} Band` as keyof TopRiskRow] as number;
-                    const score = row[ct as keyof TopRiskRow] as number;
-                    return (
-                      <div key={ct} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: "#555" }}>{CRASH_TYPE_LABELS[ct] || ct}</div>
-                        <div style={{ fontSize: 24, fontWeight: 700, color: RISK_COLORS[band] || "#333" }}>{score.toFixed(1)}</div>
-                        <div style={{ padding: "4px 12px", borderRadius: 12, background: RISK_COLORS[band] || "#eee", color: band === 2 ? "#333" : "#fff", fontSize: 11, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>
-                          {RISK_LABELS[band] || "None"}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {/* Crash Type Scores */}
+                  {t.length > 0 && e.postScores ? (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, background: "#faf8fd", padding: "8px 12px", borderRadius: 8, border: "1px solid #ede8f5", flexShrink: 0 }}>
+                      {(["VB", "BB", "SB", "BP"] as const).map((ct) => {
+                        const band = e.postScores![`${ct}_Band` as keyof typeof e.postScores] as number;
+                        const score = e.postScores![ct as keyof typeof e.postScores] as number;
+                        return (
+                          <div key={ct} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: "#555", whiteSpace: "nowrap" }}>{CRASH_TYPE_LABELS[ct] || ct}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 4, width: "100%", justifyContent: "center" }}>
+                              <div style={{ fontSize: 18, fontWeight: 700, color: RISK_COLORS[band] || "#333", minWidth: 32, textAlign: "right" }}>{score.toFixed(1)}</div>
+                              <div style={{ padding: "2px 6px", borderRadius: 8, background: RISK_COLORS[band] || "#eee", color: band === 2 ? "#333" : "#fff", fontSize: 9, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", minWidth: 50, textAlign: "center", whiteSpace: "nowrap" }}>
+                                {RISK_LABELS[band] || "None"}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#fcfcfc", padding: 16, borderRadius: 8, border: "1px dashed #e0e0e0", flexShrink: 0, height: 104 }}>
+                      <div style={{ fontSize: 14, color: "#aaa" }}>No post-treatment scores available</div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1515,7 +1880,7 @@ export default function ReportBuilderPage() {
   );
 
   // ── Treatment Summary renderer ────────────────────────────────────────────
-  const renderTreatmentSummary = (summaries: ProjectTreatmentSummary[]) => {
+  const renderTreatmentSummary = (summaries: ProjectTreatmentSummary[], projectSegmentCounts: Record<string, number>) => {
     return (
       <div style={{ padding: "6px 12px" }}>
         {summaries.map((summary) => {
@@ -1572,6 +1937,13 @@ export default function ReportBuilderPage() {
 
   // ── Element content ───────────────────────────────────────────────────────
   const renderContent = (el: ElementState, orderIndex = 0) => {
+    // "(Filtered)" duplicates read from the filtered subset; all others from the
+    // full dataset. Editable text / images / project metadata stay shared.
+    const ds = el.filtered ? filteredDataset : fullDataset;
+    const {
+      distributions, totalSegments, totalKm, projectSegmentCounts,
+      projects, topRiskRows, scoreStats, attributeFrequency, treatmentSummaries,
+    } = ds;
     switch (el.type) {
 
       // ── Title ──────────────────────────────────────────────────────────────
@@ -1651,13 +2023,35 @@ export default function ReportBuilderPage() {
         );
 
       // ── Map ────────────────────────────────────────────────────────────────
-      case "map":
+      case "map": {
+        const colorByAttr = el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : null;
+        // Legend mirrors the colouring: show secondary (sub-category) chips when
+        // the parent has collapsed to a single active category with sub-categories.
+        const colorByCats = colorByAttr
+          ? (activeCategoryStatus.find((s) => s.attribute === colorByAttr)?.categories.filter((c) => c.isActive) ?? [])
+          : [];
+        const collapseParent = colorByCats.length === 1 && (colorByCats[0].subcategories?.length ?? 0) > 0
+          ? colorByCats[0] : null;
+        const legendCats: { category: string; color: string }[] = collapseParent
+          ? (collapseParent.subcategories ?? []).filter((sc) => sc.isActive).map((sc) => ({ category: sc.name, color: sc.color }))
+          : colorByCats.map((c) => ({ category: c.category, color: c.color }));
         return (
           <div style={{ height: "calc(100% - 30px)", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 4, margin: 2 }}>
-            {loadedProjects.length === 0
-              ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>No projects loaded</span></div>
-              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={loadedProjects} bandMap={allBandMap} orderIndex={orderIndex} /></div>}
-            {loadedProjects.length > 0 && (
+            {projects.length === 0
+              ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>{el.filtered ? "No segments match the filter" : "No projects loaded"}</span></div>
+              : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={projects} colorMap={buildMapColorMap(ds, el)} orderIndex={orderIndex} /></div>}
+            {projects.length > 0 && colorByAttr && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", padding: "5px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#a020d0", marginRight: 2 }}>{colorByAttr}:</span>
+                {legendCats.length > 0 ? legendCats.map((c) => (
+                  <span key={c.category} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: "#444" }}>
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: c.color, display: "inline-block" }} />
+                    {c.category}
+                  </span>
+                )) : <span style={{ fontSize: 10, color: "#999" }}>colored by attribute</span>}
+              </div>
+            )}
+            {projects.length > 0 && (
               <div style={{ display: "flex", gap: 18, padding: "4px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
                 <span style={{ fontSize: 11, color: "#555" }}>
                   <strong style={{ color: "#a020d0" }}>{totalSegments}</strong> segments
@@ -1668,12 +2062,13 @@ export default function ReportBuilderPage() {
                   </span>
                 )}
                 <span style={{ fontSize: 11, color: "#555" }}>
-                  {loadedProjects.length} project{loadedProjects.length !== 1 ? "s" : ""}
+                  {projects.length} project{projects.length !== 1 ? "s" : ""}
                 </span>
               </div>
             )}
           </div>
         );
+      }
 
       // ── Summary ────────────────────────────────────────────────────────────
       case "summary":
@@ -1682,7 +2077,7 @@ export default function ReportBuilderPage() {
             <EditableText value={secTitle(el.id, "Summary")} onChange={(t) => setSecTitle(el.id, t)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e", display: "block", marginBottom: 10 }} />
             <div style={{ display: "flex", gap: 32, marginBottom: activeFilterNames.length > 0 ? 10 : 0 }}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: "#a020d0" }}>{loadedProjects.length}</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: "#a020d0" }}>{projects.length}</div>
                 <div style={{ fontSize: 11, color: "#666" }}>Projects</div>
               </div>
               <div style={{ textAlign: "center" }}>
@@ -1859,7 +2254,7 @@ export default function ReportBuilderPage() {
 
       // ── Top Risk Stretches ─────────────────────────────────────────────────
       case "topRisk": {
-        const viewMode = el.viewMode || "tabular";
+        const viewMode = el.viewMode || "full-page";
         const displayRows = topRiskRows.slice(0, el.topN ?? 10);
 
         if (viewMode === "full-page") {
@@ -1908,12 +2303,12 @@ export default function ReportBuilderPage() {
 
       // ── Treatment Summary ──────────────────────────────────────────────────
       case "treatmentSummary": {
-        if (loadedProjects.length === 0) {
+        if (projects.length === 0) {
           return (
             <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
               <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle="" />
               <div style={{ flex: 1, overflow: "hidden" }}>
-                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>No project data loaded.</div>
+                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No segments match the filter." : "No project data loaded."}</div>
               </div>
             </div>
           );
@@ -1921,9 +2316,9 @@ export default function ReportBuilderPage() {
         if (treatmentSummaries.length === 0) {
           return (
             <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-              <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`Data from: ${loadedProjects.map(dispName).join(", ")}`} />
+              <SectionHeader title={secTitle(el.id, "Treatment Summary")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`Data from: ${projects.map(dispName).join(", ")}`} />
               <div style={{ flex: 1, overflow: "hidden" }}>
-                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>Loading treatment data…</div>
+                <div style={{ padding: "12px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No treatments on filtered segments." : "Loading treatment data…"}</div>
               </div>
             </div>
           );
@@ -1961,7 +2356,7 @@ export default function ReportBuilderPage() {
                 <div key={i} style={{ height, boxSizing: "border-box", paddingBottom: isLast ? 0 : PAGE_GAP, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   <SectionHeader title={secTitle(el.id, "Treatment Summary") + (i > 0 ? " (Cont.)" : "")} onTitleChange={i === 0 ? (t) => setSecTitle(el.id, t) : undefined} subtitle={subtitle} />
                   <div style={{ flex: 1, overflow: "hidden" }}>
-                    {renderTreatmentSummary(chunk)}
+                    {renderTreatmentSummary(chunk, projectSegmentCounts)}
                   </div>
                 </div>
               );
@@ -1987,7 +2382,7 @@ export default function ReportBuilderPage() {
           const meta = projectMeta[name] ?? {};
           const count = projectSegmentCounts[name] ?? 0;
           const lenKm = (count * 10 / 1000).toFixed(1);
-          const projRows = allScoreRows.filter((r) => r._project === name);
+          const projRows = ds.rows.filter((r) => r._project === name);
           const projDist: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
           projRows.forEach((r) => { const b = r._maxBand; if (b >= 1 && b <= 4) projDist[b]++; });
           const projTotal = projRows.length || 1;
@@ -2024,25 +2419,25 @@ export default function ReportBuilderPage() {
             </div>
           );
         };
-        const numChunks = Math.max(1, Math.ceil(loadedProjects.length / PROJ_PAGE_SIZE));
+        const numChunks = Math.max(1, Math.ceil(projects.length / PROJ_PAGE_SIZE));
         return (
           // Each chunk (except the last) is exactly PAGE_H tall so its boundary
           // lands on the PDF page-break grid — a real page break between every
           // PROJ_PAGE_SIZE projects, not a click-to-paginate widget.
           <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            {loadedProjects.length === 0 ? (
+            {projects.length === 0 ? (
               <>
-                <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle="0 projects" />
-                <div style={{ padding: "8px 14px", color: "#888", fontSize: 12 }}>No projects loaded.</div>
+                <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={el.filtered ? "No segments match the filter" : "0 projects"} />
+                <div style={{ padding: "8px 14px", color: "#888", fontSize: 12 }}>{el.filtered ? "No segments match the filter." : "No projects loaded."}</div>
               </>
             ) : (
               Array.from({ length: numChunks }).map((_, ci) => {
-                const chunkProjects = loadedProjects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
+                const chunkProjects = projects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
                 const isLastChunk = ci === numChunks - 1;
                 return (
                   <div key={ci} style={{ height: isLastChunk ? "auto" : PAGE_H, paddingBottom: isLastChunk ? 0 : PAGE_GAP, boxSizing: "border-box", flexShrink: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                     {ci === 0 ? (
-                      <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`${loadedProjects.length} project${loadedProjects.length !== 1 ? "s" : ""} · ${totalSegments} segments · ${totalKm.toFixed(1)} km total`} />
+                      <SectionHeader title={secTitle(el.id, "Project Details")} onTitleChange={(t) => setSecTitle(el.id, t)} subtitle={`${projects.length} project${projects.length !== 1 ? "s" : ""} · ${totalSegments} segments · ${totalKm.toFixed(1)} km total`} />
                     ) : (
                       <div style={{ padding: "10px 14px 0", fontSize: 20, fontWeight: 600, color: "#1a1a2e" }}>
                         {secTitle(el.id, "Project Details")} <span style={{ color: "#aaa", fontWeight: 500 }}>(continued)</span>
@@ -2276,7 +2671,10 @@ export default function ReportBuilderPage() {
   };
 
   // ── Flow layout (single source of truth for heights + page-break spacing) ──
-  const visibleElements = useMemo(() => elements.filter((e) => e.visible), [elements]);
+  const visibleElements = useMemo(
+    () => elements.filter((e) => e.visible && (FILTERED_SECTIONS_ENABLED || !e.filtered)),
+    [elements],
+  );
   const layout = useMemo(
     () => computeFlowLayout(visibleElements, computeIdealHeight),
     [visibleElements, computeIdealHeight],
@@ -2297,13 +2695,22 @@ export default function ReportBuilderPage() {
 
   // ── Checklist memo ────────────────────────────────────────────────────────
   const sectionChecklist = useMemo(() =>
-    elements.map((el) => ({ id: el.id, label: el.label, visible: el.visible })),
+    elements
+      .filter((el) => FILTERED_SECTIONS_ENABLED || !el.filtered)
+      .map((el) => ({ id: el.id, label: el.label, visible: el.visible, filtered: !!el.filtered })),
     [elements]
   );
 
   // ── Page ──────────────────────────────────────────────────────────────────
   return (
     <div className="rb-page">
+      <input
+        ref={postTreatmentUploadRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handlePostTreatmentFileChange}
+      />
       <div className="rb-toolbar">
         <button className="rb-btn rb-btn-secondary" onClick={() => navigate(-1)}>← Back</button>
         <button className="rb-btn rb-btn-secondary" onClick={() => navigate("/analysis/path")} title="Go to Path Analysis to download table or image exports">↗ Path Analysis</button>
@@ -2391,22 +2798,68 @@ export default function ReportBuilderPage() {
               Drag <GripVertical size={11} style={{ verticalAlign: "-2px" }} /> to reorder · check to show / hide
             </span>
           </div>
+
+          {/* ── Master toggle: include Path-Analysis-filtered duplicates ─────── */}
+          {/* TEMPORARILY HIDDEN — gated by FILTERED_SECTIONS_ENABLED. */}
+          {FILTERED_SECTIONS_ENABLED && (
+            <>
+              <label
+                title={hasFilter
+                  ? "Add a filtered copy of every section (except the title) reflecting the segments you filtered in Path Analysis"
+                  : "Apply a filter in Path Analysis first"}
+                style={{
+                  display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
+                  margin: "0 0 4px", borderBottom: "1px solid #ede8f5",
+                  cursor: hasFilter ? "pointer" : "not-allowed", opacity: hasFilter ? 1 : 0.5,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={includeFiltered && hasFilter}
+                  disabled={!hasFilter}
+                  onChange={toggleIncludeFiltered}
+                  style={{ accentColor: "#a020d0", cursor: hasFilter ? "pointer" : "not-allowed", flexShrink: 0 }}
+                />
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include filtered sections</span>
+              </label>
+              {!hasFilter && (
+                <div style={{ fontSize: 10, color: "#aa8", padding: "0 10px 8px", lineHeight: 1.4 }}>
+                  Apply a filter on the Path Analysis page to enable a filtered copy of the report.
+                </div>
+              )}
+            </>
+          )}
+
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={sectionChecklist.map((s) => s.id)} strategy={verticalListSortingStrategy}>
               <div className="rb-reorder-list">
-                {sectionChecklist.map((sec) => {
+                {sectionChecklist.map((sec, idx) => {
                   const elState = elements.find((e) => e.id === sec.id);
+                  // Insert a group header before the first "(Filtered)" row.
+                  const showFilteredHeader = sec.filtered && (idx === 0 || !sectionChecklist[idx - 1].filtered);
                   return (
-                    <SortableSectionRow
-                      key={sec.id}
-                      id={sec.id}
-                      label={sec.label}
-                      visible={sec.visible}
-                      onToggle={() => (sec.visible ? hideElement(sec.id) : showElement(sec.id))}
-                      onSelect={() => scrollToSection(sec.id)}
-                    >
-                      {sec.id === "topRisk" && elState && sec.visible ? renderViewToggle(elState) : null}
-                    </SortableSectionRow>
+                    <div key={sec.id}>
+                      {showFilteredHeader && (
+                        <div style={{ padding: "8px 10px 4px", fontSize: 10, fontWeight: 700, color: "#a020d0", textTransform: "uppercase", letterSpacing: 0.5, borderTop: "1px dashed #d8c4f0", marginTop: 4 }}>
+                          Filtered sections
+                        </div>
+                      )}
+                      <SortableSectionRow
+                        id={sec.id}
+                        label={sec.label}
+                        visible={sec.visible}
+                        onToggle={() => (sec.visible ? hideElement(sec.id) : showElement(sec.id))}
+                        onSelect={() => scrollToSection(sec.id)}
+                      >
+                        {elState && sec.visible
+                          ? sec.id === "topRisk"
+                            ? renderViewToggle(elState)
+                            : (elState.type === "map" && elState.filtered)
+                              ? renderMapColorToggle(elState)
+                              : null
+                          : null}
+                      </SortableSectionRow>
+                    </div>
                   );
                 })}
               </div>

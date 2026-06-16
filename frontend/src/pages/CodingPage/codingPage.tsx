@@ -97,8 +97,36 @@ const projectDataCache: Record<string, ProjectDataState> = {};
 const savedAttrsSnapshot: Record<string, AttributeRow[]> = {};
 
 const DELINEATION_PRESENT_SUGGESTIONS = ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"];
-const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Pillar", "Bollards", "Fence", "Vegetation"];
+const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Railing", "Vegetation", "Sign Pole"];
 const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bins", "Bicycle", "Cone"];
+
+// Renamed FO Type finer-attribute labels. Applied to every project's rows as they
+// load from the backend so existing data — including projects created on other
+// devices that still store the old labels — displays the new names. FO Type is a
+// comma-separated multi-select, so each token is migrated independently.
+const FO_TYPE_RENAMES: Record<string, string> = {
+  "Pillar": "Covered Linkway Pole",
+  "Fence": "Railing",
+};
+
+function migrateFoTypeValue(value: unknown): unknown {
+  if (typeof value !== "string" || value.trim() === "") return value;
+  return value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((tok) => FO_TYPE_RENAMES[tok] ?? tok)
+    .join(", ");
+}
+
+/** Rewrite legacy FO Type labels in a set of attribute rows (idempotent). */
+function migrateAttrRows(rows: AttributeRow[]): AttributeRow[] {
+  return rows.map((row) => {
+    if (!("FO Type" in row)) return row;
+    const migrated = migrateFoTypeValue(row["FO Type"]);
+    return migrated === row["FO Type"] ? row : { ...row, "FO Type": migrated as AttributeRow[string] };
+  });
+}
 const SLIPPERY_ISSUE_TYPE_SUGGESTIONS = ["Algae", "Leaves", "Soil", "Sand"];
 
 const FACILITY_WIDTH_SUBCATEGORY_MAP: Record<string, string[]> = {
@@ -608,7 +636,7 @@ export default function CodingPage() {
         fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/autocode-metadata`).then(r => r.ok ? r.json() : null).catch(() => null),
       ]);
 
-      const attributes = a?.rows ?? [];
+      const attributes = migrateAttrRows(a?.rows ?? []);
 
       savedAttrsSnapshot[currentProjectName] = attributes;
       updateProjectData(currentProjectName, {
@@ -1094,7 +1122,7 @@ export default function CodingPage() {
         // After all segments processed, fetch updated attributes and recalculate scores
         setProgress(85);
         try {
-          const rows = ("updated_attributes" in r && r.updated_attributes) ? r.updated_attributes : null;
+          const rows = ("updated_attributes" in r && r.updated_attributes) ? migrateAttrRows(r.updated_attributes) : null;
           if (rows) {
             const prevChanged = projectDataCache[currentProjectName]?.changedFieldsByRow ?? {};
             const prevSources = projectDataCache[currentProjectName]?.fieldSourcesByRow ?? {};
@@ -1213,7 +1241,7 @@ export default function CodingPage() {
         setProgress(85);
         try {
           // Use updated_attributes returned by the batch call — avoids an extra fetchProjectAttributes round trip
-          const rows = ("updated_attributes" in r && r.updated_attributes) ? r.updated_attributes : null;
+          const rows = ("updated_attributes" in r && r.updated_attributes) ? migrateAttrRows(r.updated_attributes) : null;
           if (rows) {
             const prevChanged = projectDataCache[currentProjectName]?.changedFieldsByRow ?? {};
             const prevSources = projectDataCache[currentProjectName]?.fieldSourcesByRow ?? {};
@@ -1371,7 +1399,7 @@ export default function CodingPage() {
 
             // After all segments of this project are processed, use the returned in-memory rows
             try {
-              const rows = ("updated_attributes" in r && r.updated_attributes) ? r.updated_attributes : null;
+              const rows = ("updated_attributes" in r && r.updated_attributes) ? migrateAttrRows(r.updated_attributes) : null;
               if (rows) {
                 const prevChanged = projectDataCache[projectName]?.changedFieldsByRow ?? {};
                 const prevSources = projectDataCache[projectName]?.fieldSourcesByRow ?? {};
@@ -1502,7 +1530,7 @@ export default function CodingPage() {
         if (cancelled) return;
 
 
-        const attributes = a?.rows ?? [];
+        const attributes = migrateAttrRows(a?.rows ?? []);
 
         // Store original autocode values (baseline) for validation tracking
         // This is version 0 of the baseline - created when project is first loaded
@@ -1626,7 +1654,7 @@ export default function CodingPage() {
         }
         const data = await res.json();
         if (!cancelled) {
-          setBaselineRows(data.rows || []);
+          setBaselineRows(migrateAttrRows(data.rows || []));
         }
       } catch (e) {
         setBaselineRows([]);

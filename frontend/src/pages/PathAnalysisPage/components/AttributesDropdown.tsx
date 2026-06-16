@@ -319,7 +319,7 @@ const cyclerapAttributes: AttributeConfig[] = [
     name: "FO Type",
     label: "Fixed Obstacle Type",
     group: "Facility clear width",
-    options: ["Not Selected", "Lamp Post", "Traffic Light", "Pillar", "Bollards", "Billboards", "Sign Poles", "Fence", "Vegetation", "Others"],
+    options: ["Not Selected", "Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Billboards", "Sign Pole", "Sign Poles", "Railing", "Vegetation", "Others"],
   },
   {
     name: "Non-Fixed Obstacle on Facility",
@@ -475,7 +475,7 @@ export const SUBCATEGORY_MAP: Record<
   "Fixed Obstacle on Facility": {
     childAttr: "FO Type",
     parentCategories: {
-      "Present": ["Lamp Post", "Traffic Light", "Pillar", "Bollards", "Billboards", "Sign Poles", "Fence", "Vegetation", "Others"],
+      "Present": ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Billboards", "Sign Pole", "Sign Poles", "Railing", "Vegetation", "Others"],
     },
   },
   "Non-Fixed Obstacle on Facility": {
@@ -610,13 +610,13 @@ export function getCategoryColor(attribute: string, category: string): string {
     "FO Type": {
       "Lamp Post": "#DC2626",
       "Traffic Light": "#EA580C",
-      "Pillar": "#F59E0B",
+      "Covered Linkway Pole": "#F59E0B",
       "Bollards": "#CA8A04",
       "Billboards": "#7C3AED",
       "Billboard": "#7C3AED",
       "Sign Poles": "#0284C7",
       "Sign Pole": "#0284C7",
-      "Fence": "#0891B2",
+      "Railing": "#0891B2",
       "Vegetation": "#16A34A",
       "Others": "#6B7280",
     },

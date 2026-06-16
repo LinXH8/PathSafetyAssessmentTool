@@ -18,6 +18,13 @@ FIXED_OBSTACLE_CLASSES = {
 }
 NON_FIXED_OBSTACLE_CLASSES = {"Cone", "Bins", "Bicycle", "Pot", "Barrier"}
 
+# Detector class names are fixed by the trained model; map them to the current
+# FO Type finer-attribute labels so freshly autocoded values match the UI vocabulary.
+_FO_TYPE_LABEL_RENAMES = {
+    "Pillar": "Covered Linkway Pole",
+    "Fence": "Railing",
+}
+
 
 class CycleRAP_Coding_Helper:
     path_segmentation_model = None
@@ -559,7 +566,7 @@ class CycleRAP_Coding_Helper:
         elif cls.obstacle_detector_model is not None:
             detections = cls._detect_obstacles(image_path, cls.obstacle_detector_model, CONF_THRESH)
             fixed_obs, non_fixed_obs, confirmed_fixed, confirmed_non_fixed = cls._compute_obstacle_presence(detections, combined_path_mask)
-            fo_type_str  = ", ".join(sorted({d["class_name"] for d in confirmed_fixed}))     or None
+            fo_type_str  = ", ".join(sorted({_FO_TYPE_LABEL_RENAMES.get(d["class_name"], d["class_name"]) for d in confirmed_fixed}))     or None
             nfo_type_str = ", ".join(sorted({d["class_name"] for d in confirmed_non_fixed})) or None
             all_confirmed = confirmed_fixed + confirmed_non_fixed
         else:

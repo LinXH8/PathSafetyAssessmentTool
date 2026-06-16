@@ -229,6 +229,13 @@ export interface MigrateLegacyProjectsResult {
   overview: ProfilesOverview;
 }
 
+export interface ShareProjectsResult {
+  shared: string[];
+  skipped: Array<{ name: string; reason: string }>;
+  missing: string[];
+  overview: ProfilesOverview;
+}
+
 export async function fetchProfilesOverview(): Promise<ProfilesOverview> {
   const res = await fetch("/api/profiles");
   if (!res.ok) throw new Error(await readError(res));
@@ -326,6 +333,19 @@ export async function migrateLegacyProjects(projectNames?: string[]): Promise<Mi
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as MigrateLegacyProjectsResult;
+}
+
+export async function shareProjects(
+  targetProfileId: string,
+  projectNames: string[],
+): Promise<ShareProjectsResult> {
+  const res = await fetch("/api/profiles/share-projects", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ target_profile_id: targetProfileId, project_names: projectNames }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as ShareProjectsResult;
 }
 
 export async function pickLocalSourceFolder() {

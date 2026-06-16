@@ -163,6 +163,32 @@ def delete_profile(profile_id: str):
     return jsonify({"ok": True, "overview": profile_store.get_overview()})
 
 
+@bp.post("/share-projects")
+def share_projects():
+    data = request.get_json(silent=True) or {}
+
+    target_profile_id = str(data.get("target_profile_id") or "").strip()
+    if not target_profile_id:
+        return jsonify({"error": "A target profile is required"}), 400
+
+    raw_project_names = data.get("project_names")
+    if not isinstance(raw_project_names, list) or not raw_project_names:
+        return jsonify({"error": "project_names must be a non-empty array"}), 400
+
+    source_profile_id = str(data.get("source_profile_id") or "").strip() or None
+
+    try:
+        result = profile_store.share_projects_to_profile(
+            target_profile_id,
+            raw_project_names,
+            source_profile_id,
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), _profile_error_status(exc)
+
+    return jsonify({**result, "overview": profile_store.get_overview()})
+
+
 @bp.post("/migrate-legacy-projects")
 def migrate_legacy_projects():
     data = request.get_json(silent=True) or {}

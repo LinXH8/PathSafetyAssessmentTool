@@ -16,9 +16,12 @@ import L, { divIcon } from "leaflet";
 import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
 import { fetchProjectAttributes, fetchProjectGeoJSON, fetchAttributeMappings, calculateScore, fetchProjectResults, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
-import { getSegmentRiskBandColor } from "../../../components/visualization/scoreband/colorConstants";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
+
+// Radius (metres) around each loaded segment within which GIS overlay features are
+// fetched. Matches the Coding page's single-point query radius.
+const GIS_SEGMENT_RADIUS_M = 200;
 
 // Attributes whose missing/blank value defaults to "Adequate" (code 1) per
 // backend/src/CycleRAP/defaults.json. Scoring applies the same default
@@ -211,6 +214,18 @@ function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBound
     moveend: (e) => cbRef.current(e.target.getBounds()),
     zoomend: (e) => cbRef.current(e.target.getBounds()),
   });
+  return null;
+}
+
+// Forces Leaflet to recalculate the container size after mount.
+// Necessary when the map is inside a flex/scroll container that applies
+// its final height after Leaflet has already initialised.
+function MapInvalidateSize() {
+  const map = useMap();
+  useEffect(() => {
+    const id = setTimeout(() => { map.invalidateSize(); map.fire('moveend'); }, 0);
+    return () => clearTimeout(id);
+  }, [map]);
   return null;
 }
 
@@ -439,6 +454,11 @@ export default function AttributeAnalysisMapView({
   // SVG DOM elements and dramatically reduces paint time with large project sets.
   const canvasRenderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
 
+  // Separate canvas renderer for GIS overlay layers. Large padding (0.5 = 50% on each
+  // side) prevents features near the viewport edge from disappearing during pan/zoom
+  // when the canvas has not yet re-rendered for the new position.
+  const gisCanvasRenderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
+
   // Track live map viewport so we can cull off-screen markers before React touches them.
   const [mapViewportBounds, setMapViewportBounds] = useState<L.LatLngBounds | null>(null);
   const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>({});
@@ -592,58 +612,8 @@ export default function AttributeAnalysisMapView({
     land_private: "#6366F1", land_ministry: "#EC4899",
   } as const;
 
-  // Viewport-based GIS layer fetch — re-fires (debounced) on pan/zoom or toggle change
-  useEffect(() => {
-    const anyOn = showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit ||
-      showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing ||
-      showStateLand || showStatBoard || showLandPrivate || showLandMinistry;
-
-    if (!anyOn || !mapViewportBounds) {
-      setGisLayers(null);
-      return;
-    }
-
-    if (gisTimerRef.current) clearTimeout(gisTimerRef.current);
-    gisTimerRef.current = setTimeout(async () => {
-      if (gisAbortRef.current) gisAbortRef.current.abort();
-      const controller = new AbortController();
-      gisAbortRef.current = controller;
-
-      try {
-        const sw = mapViewportBounds.getSouthWest();
-        const ne = mapViewportBounds.getNorthEast();
-        const layers: string[] = [];
-        if (showCycling) layers.push('cycling');
-        if (showShared) layers.push('shared');
-        if (showFootpath) layers.push('footpath');
-        if (showRoadcrossing) layers.push('roadcrossing');
-        if (showMrtExit) layers.push('mrt_exit');
-        if (showBicycleCrossing) layers.push('bicycle_crossing');
-        if (showBusStop) layers.push('bus_stop');
-        if (showBusLane) layers.push('bus_lane');
-        if (showParkingLot) layers.push('parking_lot');
-        if (showKerbLine) layers.push('kerb_line');
-        if (showStateLand) layers.push('state_land');
-        if (showStatBoard) layers.push('stat_board');
-        if (showLandPrivate) layers.push('land_private');
-        if (showLandMinistry) layers.push('land_ministry');
-
-        const res = await fetch('/api/projects/gis/viewport', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bbox: [sw.lng, sw.lat, ne.lng, ne.lat], layers }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setGisLayers(data.layers);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') console.error('[GIS Viewport] Fetch error:', e);
-      }
-    }, 500);
-
-    return () => { if (gisTimerRef.current) clearTimeout(gisTimerRef.current); };
-  }, [mapViewportBounds, showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showStateLand, showStatBoard, showLandPrivate, showLandMinistry]);
+  // GIS overlay fetch is data-driven (within a radius of every loaded segment) rather
+  // than viewport-driven; see the effect defined after `allPoints` is computed.
 
   // Viewport-center-based path defects fetch
   useEffect(() => {
@@ -1403,6 +1373,45 @@ export default function AttributeAnalysisMapView({
     return segments;
   }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText]);
 
+  // ── Persist the filtered segment set for the Report Builder ───────────────
+  // The Report Builder reads "pathAnalysis_filteredSegments" to render a second
+  // set of report sections reflecting exactly what the user filtered here.
+  // Filtering only narrows when activeFilters is non-empty, so an empty filter
+  // removes the key (which disables the Report Builder's filtered-sections
+  // toggle). Indices are 0-based, matching geoFeatures/attributes/scores order.
+  useEffect(() => {
+    if (activeFilters.length === 0) {
+      sessionStorage.removeItem("pathAnalysis_filteredSegments");
+      sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
+      return;
+    }
+    const byProject: Record<string, number[]> = {};
+    // Per active-filter attribute, the resolved category VALUE for each filtered
+    // segment — so the Report Builder's "Map (Filtered)" can recolour by any of
+    // the user's filter attributes. The Report Builder maps each value to a
+    // colour via the same `categoryStatus` it already displays, guaranteeing the
+    // map matches the legend.
+    const valuesByProject: Record<string, Record<number, Record<string, string>>> = {};
+    visibleSegments.forEach((s) => {
+      (byProject[s.projectName] ??= []).push(s.idx);
+      const segVals: Record<string, string> = {};
+      activeFilters.forEach((attr) => {
+        segVals[attr] = attr === "Project" ? s.projectName : getFocusedAttributeValue(attr, s);
+        // Also capture the Level-3 (sub-category) value, so the Report Builder can
+        // colour by secondary categories (e.g. "FO Type" under "Fixed Obstacle on
+        // Facility") when the parent collapses to a single category.
+        const sub = SUBCATEGORY_MAP[attr];
+        if (sub) {
+          const childVal = getFocusedAttributeValue(sub.childAttr, s);
+          if (childVal && childVal !== "None") segVals[`${attr}__child`] = childVal;
+        }
+      });
+      (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
+    });
+    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(byProject));
+    sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
+  }, [visibleSegments, activeFilters, getFocusedAttributeValue]);
+
   const effectiveFocusAttribute = useMemo(() => {
     if (!primaryFocusAttribute) {
       return null;
@@ -1478,13 +1487,13 @@ export default function AttributeAnalysisMapView({
       "FO Type": {
         "Lamp Post": "#DC2626",
         "Traffic Light": "#EA580C",
-        "Pillar": "#F59E0B",
+        "Covered Linkway Pole": "#F59E0B",
         "Bollards": "#CA8A04",
         "Billboards": "#7C3AED",
         "Billboard": "#7C3AED",
         "Sign Poles": "#0284C7",
         "Sign Pole": "#0284C7",
-        "Fence": "#0891B2",
+        "Railing": "#0891B2",
         "Vegetation": "#16A34A",
         "Others": "#6B7280",
       },
@@ -1631,6 +1640,77 @@ export default function AttributeAnalysisMapView({
   }, [effectiveFocusAttribute, getFocusedAttributeValue, visibleSegments]);
 
   const allLatLngs = useMemo(() => allPoints.map(p => p.latlng), [allPoints]);
+
+  // Unique, thinned segment coordinates ([lon, lat]) used as the centres for the GIS
+  // proximity query. Snapping to a ~110 m grid and de-duplicating keeps a dense project
+  // from sending tens of thousands of essentially-overlapping query points; the 200 m
+  // buffer around each kept point still covers everything in between.
+  const gisQueryPoints = useMemo(() => {
+    const seen = new Set<string>();
+    const pts: [number, number][] = [];
+    for (const { latlng } of allPoints) {
+      const [lat, lng] = latlng;
+      const key = `${lat.toFixed(3)},${lng.toFixed(3)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      pts.push([lng, lat]); // API expects [lon, lat]
+    }
+    return pts;
+  }, [allPoints]);
+
+  // Data-driven GIS overlay fetch: one request pulls every enabled layer within
+  // GIS_SEGMENT_RADIUS_M of any loaded segment. Because it doesn't depend on the
+  // viewport, the overlays are fetched once per layer/project change and stay put while
+  // panning and zooming — Leaflet's canvas renderer culls off-screen geometry for free.
+  useEffect(() => {
+    const layers: string[] = [];
+    if (showCycling) layers.push('cycling');
+    if (showShared) layers.push('shared');
+    if (showFootpath) layers.push('footpath');
+    if (showRoadcrossing) layers.push('roadcrossing');
+    if (showMrtExit) layers.push('mrt_exit');
+    if (showBicycleCrossing) layers.push('bicycle_crossing');
+    if (showBusStop) layers.push('bus_stop');
+    if (showBusLane) layers.push('bus_lane');
+    if (showParkingLot) layers.push('parking_lot');
+    if (showKerbLine) layers.push('kerb_line');
+    if (showStateLand) layers.push('state_land');
+    if (showStatBoard) layers.push('stat_board');
+    if (showLandPrivate) layers.push('land_private');
+    if (showLandMinistry) layers.push('land_ministry');
+
+    if (layers.length === 0 || gisQueryPoints.length === 0) {
+      setGisLayers(null);
+      return;
+    }
+
+    if (gisTimerRef.current) clearTimeout(gisTimerRef.current);
+    gisTimerRef.current = setTimeout(async () => {
+      if (gisAbortRef.current) gisAbortRef.current.abort();
+      const controller = new AbortController();
+      gisAbortRef.current = controller;
+      try {
+        const res = await fetch('/api/projects/gis/near-segments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            points: gisQueryPoints,
+            radius: GIS_SEGMENT_RADIUS_M,
+            layers,
+            simplify_tol: 1.0,
+          }),
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
+        const data = await res.json();
+        if (data.ok) setGisLayers(data.layers);
+      } catch (e: any) {
+        if (e.name !== 'AbortError') console.error('[GIS NearSegments] Fetch error:', e);
+      }
+    }, 150);
+
+    return () => { if (gisTimerRef.current) clearTimeout(gisTimerRef.current); };
+  }, [gisQueryPoints, showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showStateLand, showStatBoard, showLandPrivate, showLandMinistry]);
 
   // Cull off-screen markers before React renders them. A 20% padding around the
   // viewport keeps markers visible during small pans without mounting them all.
@@ -2963,6 +3043,11 @@ export default function AttributeAnalysisMapView({
                   {/* Track viewport for marker culling */}
                   <ViewportWatcher onBoundsChange={setMapViewportBounds} />
 
+                  {/* Force Leaflet to recalculate its container size after mount so
+                      getBounds() reflects the real rendered height, not a zero/partial
+                      height from before CSS layout has settled. */}
+                  <MapInvalidateSize />
+
                   {/* Render visible points in a dedicated pane above any overlay layers.
                       Uses a shared canvas renderer (vs. per-marker SVG) and viewport
                       culling to stay fast with 15+ projects loaded. */}
@@ -3015,18 +3100,18 @@ export default function AttributeAnalysisMapView({
                               if (activeFilters.length > 0) {
                                 // Group visible non-hidden segments by project
                                 const projectMap = new Map<string, FilteredProjectData>();
-                                visibleSegments
-                                  .filter(s => !hiddenProjects.includes(s.projectName))
-                                  .forEach(s => {
-                                    if (!projectMap.has(s.projectName)) {
-                                      projectMap.set(s.projectName, { projectName: s.projectName, filteredIndices: [], points: [] });
+                                allPoints
+                                  .filter(pt => !hiddenProjects.includes(pt.projectName))
+                                  .forEach(pt => {
+                                    if (!projectMap.has(pt.projectName)) {
+                                      projectMap.set(pt.projectName, { projectName: pt.projectName, filteredIndices: [], points: [] });
                                     }
-                                    const entry = projectMap.get(s.projectName)!;
-                                    entry.filteredIndices.push(s.idx);
+                                    const entry = projectMap.get(pt.projectName)!;
+                                    entry.filteredIndices.push(pt.idx);
                                     entry.points.push({
-                                      latlng: s.latlng,
-                                      color: getSegmentRiskBandColor(s.scores),
-                                      idx: s.idx,
+                                      latlng: pt.latlng,
+                                      color: pt.color,
+                                      idx: pt.idx,
                                     });
                                   });
                                 filterContext = { projects: Array.from(projectMap.values()) };
@@ -3064,56 +3149,58 @@ export default function AttributeAnalysisMapView({
                     })}
                   </Pane>
 
-                  {/* GIS Layers — rendered below segments pane (zIndex < 450) */}
+                  {/* GIS Layers — rendered below segments pane (zIndex < 450).
+                      gisCanvasRenderer provides 50% padding so lines near the viewport
+                      edge stay visible during pan/zoom without flickering. */}
                   {gisLayers && showFootpath && gisLayers.footpath?.map((f, i) => (
-                    <LeafletPolyline key={`fp-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.footpath, weight: 3, opacity: 0.8 }} />
+                    <LeafletPolyline key={`fp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.footpath, weight: 3, opacity: 0.8 }} />
                   ))}
                   {gisLayers && showCycling && gisLayers.cycling?.map((f, i) => (
-                    <LeafletPolyline key={`cy-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.cycling, weight: 3, opacity: 0.8 }} />
+                    <LeafletPolyline key={`cy-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.cycling, weight: 3, opacity: 0.8 }} />
                   ))}
                   {gisLayers && showShared && gisLayers.shared?.map((f, i) => (
-                    <LeafletPolyline key={`sh-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.shared, weight: 3, opacity: 0.8 }} />
+                    <LeafletPolyline key={`sh-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.shared, weight: 3, opacity: 0.8 }} />
                   ))}
                   {gisLayers && showRoadcrossing && gisLayers.roadcrossing?.map((f, i) => (
-                    <LeafletPolyline key={`rc-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.roadcrossing, weight: 3, opacity: 0.8 }} />
+                    <LeafletPolyline key={`rc-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.roadcrossing, weight: 3, opacity: 0.8 }} />
                   ))}
                   {gisLayers && showKerbLine && gisLayers.kerb_line?.map((f, i) => (
-                    <LeafletPolyline key={`kl-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.kerb_line, weight: 2, opacity: 0.8 }} />
+                    <LeafletPolyline key={`kl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.kerb_line, weight: 2, opacity: 0.8 }} />
                   ))}
                   {gisLayers && showBusLane && gisLayers.bus_lane?.map((f, i) => {
                     const isMulti = Array.isArray(f.coordinates[0]) && Array.isArray(f.coordinates[0][0]);
                     if (isMulti) return (f.coordinates as any).map((line: any, j: number) => (
-                      <LeafletPolyline key={`bl-${i}-${j}`} positions={line.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>
+                      <LeafletPolyline key={`bl-${i}-${j}`} renderer={gisCanvasRenderer} positions={line.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>
                     ));
-                    return <LeafletPolyline key={`bl-${i}`} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>;
+                    return <LeafletPolyline key={`bl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>;
                   })}
                   {gisLayers && showMrtExit && gisLayers.mrt_exit?.map((f, i) => (
-                    <CircleMarker key={`mrt-${i}`} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.mrt_exit, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>MRT Exit</Tooltip></CircleMarker>
+                    <CircleMarker key={`mrt-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.mrt_exit, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>MRT Exit</Tooltip></CircleMarker>
                   ))}
                   {gisLayers && showBicycleCrossing && gisLayers.bicycle_crossing?.map((f, i) => (
-                    <CircleMarker key={`bc-${i}`} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bicycle_crossing, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bicycle Crossing</Tooltip></CircleMarker>
+                    <CircleMarker key={`bc-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bicycle_crossing, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bicycle Crossing</Tooltip></CircleMarker>
                   ))}
                   {gisLayers && showBusStop && gisLayers.bus_stop?.map((f, i) =>
                     f.geometry_type === "point"
-                      ? <CircleMarker key={`bs-${i}`} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bus_stop, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bus Stop</Tooltip></CircleMarker>
-                      : <LeafletPolyline key={`bs-${i}`} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_stop, weight: 4, opacity: 0.8 }}><Tooltip>Bus Shelter</Tooltip></LeafletPolyline>
+                      ? <CircleMarker key={`bs-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bus_stop, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bus Stop</Tooltip></CircleMarker>
+                      : <LeafletPolyline key={`bs-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_stop, weight: 4, opacity: 0.8 }}><Tooltip>Bus Shelter</Tooltip></LeafletPolyline>
                   )}
                   {gisLayers && showParkingLot && gisLayers.parking_lot?.map((f, i) =>
                     f.geometry_type === "polygon"
-                      ? <LeafletPolygon key={`pk-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.8, fillOpacity: 0.3 }}><Tooltip>Parking Lot</Tooltip></LeafletPolygon>
-                      : <CircleMarker key={`pk-${i}`} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Parking Lot</Tooltip></CircleMarker>
+                      ? <LeafletPolygon key={`pk-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.8, fillOpacity: 0.3 }}><Tooltip>Parking Lot</Tooltip></LeafletPolygon>
+                      : <CircleMarker key={`pk-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Parking Lot</Tooltip></CircleMarker>
                   )}
                   {gisLayers && showStateLand && gisLayers.state_land?.map((f, i) => (
-                    <LeafletPolygon key={`sl-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.state_land, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "State Land"}</Tooltip></LeafletPolygon>
+                    <LeafletPolygon key={`sl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.state_land, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "State Land"}</Tooltip></LeafletPolygon>
                   ))}
                   {gisLayers && showStatBoard && gisLayers.stat_board?.map((f, i) => (
-                    <LeafletPolygon key={`sb-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.stat_board, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Stat Board"}</Tooltip></LeafletPolygon>
+                    <LeafletPolygon key={`sb-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.stat_board, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Stat Board"}</Tooltip></LeafletPolygon>
                   ))}
                   {gisLayers && showLandPrivate && gisLayers.land_private?.map((f, i) => (
-                    <LeafletPolygon key={`lp-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_private, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Private Land"}</Tooltip></LeafletPolygon>
+                    <LeafletPolygon key={`lp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_private, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Private Land"}</Tooltip></LeafletPolygon>
                   ))}
                   {gisLayers && showLandMinistry && gisLayers.land_ministry?.map((f, i) => (
-                    <LeafletPolygon key={`lm-${i}`} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
+                    <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
                   ))}
                   {showPathDefects && pathDefects?.map((d, i) => (
                     <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: "#EF4444", weight: 2, opacity: 1, fillOpacity: 0.8 }}>

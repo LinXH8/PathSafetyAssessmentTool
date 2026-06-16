@@ -4,6 +4,7 @@ import datetime as dt
 import hashlib
 import hmac
 import json
+import os
 import re
 import secrets
 import shutil
@@ -491,6 +492,57 @@ def move_legacy_projects_to_profile(profile_id: str, project_names: list[str] | 
             moved.append(project_name)
 
         return {"moved": moved, "skipped": skipped, "missing": missing}
+
+
+def _copy_or_link(src: str, dst: str) -> None:
+    """Hardlink files when possible (same volume) to avoid duplicating large image
+    folders, falling back to a full copy across volumes or when linking is unsupported."""
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copy2(src, dst)
+
+
+def share_projects_to_profile(
+    target_profile_id: str,
+    project_names: list[str],
+    source_profile_id: str | None = None,
+) -> dict:
+    """Copy projects from a source profile (the active profile by default) into a target
+    profile's project area, leaving the originals untouched."""
+    with _STATE_LOCK:
+        state = _load_state()
+        target = _require_profile(state, str(target_profile_id or ""))
+
+        resolved_source_id = str(source_profile_id or get_active_profile_id() or "")
+        if not resolved_source_id:
+            raise ValueError("A source profile must be active before sharing projects")
+        if resolved_source_id == str(target.get("id") or ""):
+            raise ValueError("Cannot share a project to the profile it already belongs to")
+
+        source = _require_profile(state, resolved_source_id)
+        source_root = _ensure_profile_project_root(source)
+        destination_root = _ensure_profile_project_root(target)
+
+        requested_names = [str(name or "").strip() for name in project_names if str(name or "").strip()]
+
+        shared: list[str] = []
+        skipped: list[dict[str, str]] = []
+        missing: list[str] = []
+
+        for project_name in requested_names:
+            source_dir = source_root / project_name
+            if not source_dir.is_dir():
+                missing.append(project_name)
+                continue
+            destination = destination_root / project_name
+            if destination.exists():
+                skipped.append({"name": project_name, "reason": "already_exists"})
+                continue
+            shutil.copytree(source_dir, destination, copy_function=_copy_or_link)
+            shared.append(project_name)
+
+        return {"shared": shared, "skipped": skipped, "missing": missing}
 
 
 def delete_profile(profile_id: str, pin: str) -> None:
