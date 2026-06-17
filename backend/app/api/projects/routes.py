@@ -4855,7 +4855,7 @@ def autocode_gis(project_name: str):
         # Defect-based surface condition checks
         _DEFORM = "Major Surface Deformation or Drain Opening"
         _SLIP = "Loose or slippery surface"
-        if _needs(_DEFORM, _SLIP):
+        if _needs(_DEFORM, _SLIP, "Delineation", "Delineation Type"):
             try:
                 from shapely.geometry import LineString as _LineString
                 import geopandas as _gpd
@@ -4869,16 +4869,22 @@ def autocode_gis(project_name: str):
                 nearby = get_defects_store().query_near_line(line_metric, 5.0)
                 has_deform = False
                 has_slip = False
+                has_faded_marking = False
                 for d in nearby:
                     dt = d["type_of_defect"].strip().lower()
                     if dt == "algae":
                         has_slip = True
-                    elif dt != "faded marking":
+                    elif dt == "faded marking":
+                        has_faded_marking = True
+                    else:
                         has_deform = True
                 if has_deform and _needs(_DEFORM):
                     updates[_DEFORM] = 1
                 if has_slip and _needs(_SLIP):
                     updates[_SLIP] = 1
+                if has_faded_marking and _needs("Delineation", "Delineation Type"):
+                    updates["Delineation"] = 2  # Not Present
+                    updates["Delineation Type"] = "Faded Marking"
             except FileNotFoundError:
                 pass
             except Exception:

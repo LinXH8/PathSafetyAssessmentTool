@@ -1576,6 +1576,7 @@ export default function AttributeAnalysisMapView({
         "Red Stripe": "#DC2626",
         "Signalised Crossing": "#EA580C",
         "Zebra Crossing": "#CA8A04",
+        "Faded Marking": "#9CA3AF",
       },
       "Facility Type": {
         "Sidewalk": "#2563EB",

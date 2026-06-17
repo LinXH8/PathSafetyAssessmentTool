@@ -1707,7 +1707,7 @@ export default function CodingPage() {
           if (!v) return [];
           return String(v).split(",").map((s) => s.trim()).filter(Boolean);
         })
-    )).filter((v) => v !== "Absent" && v !== "In Poor Condition");
+    )).filter((v) => v !== "Absent" && v !== "In Poor Condition" && v !== "Faded Marking");
     return Array.from(new Set([...DELINEATION_PRESENT_SUGGESTIONS, ...projectValues])).sort();
   }, [projectData]);
 

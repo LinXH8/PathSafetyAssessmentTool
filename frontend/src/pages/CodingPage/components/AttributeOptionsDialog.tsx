@@ -87,7 +87,7 @@ function joinTags(tags: string[]): string | null {
   return tags.length > 0 ? tags.join(", ") : null;
 }
 
-const NOT_PRESENT_OPTIONS = ["Absent", "In Poor Condition"] as const;
+const NOT_PRESENT_OPTIONS = ["Absent", "In Poor Condition", "Faded Marking"] as const;
 
 export default function AttributeOptionsDialog({
   open,
