@@ -18,6 +18,7 @@ The Coding page is the main review workspace. It can open one or more selected p
 - [2.7 Save and Progress Tracking](#27-save-and-progress-tracking)
 - [2.8 CycleRAP Reference](#28-cyclerap-reference)
 - [2.9 Hover Tips — Safety Scores & Attributes](#29-hover-tips--safety-scores--attributes)
+- [2.10 Attribute Logic Checks on Verification](#210-attribute-logic-checks-on-verification)
 
 ---
 
@@ -45,50 +46,50 @@ When a segment is first created and no auto-code has been run, PSAT assigns the 
 
 | # | Attribute | Default Value | Reason |
 |---|---|---|---|
-| 1 | Area Type | Suburban | GIS fallback when no urban/industrial/rural polygon match |
-| 2 | Facility Type | Sidewalk | Most common facility type |
-| 3 | Adjacent Sidewalk 0–1m | Present | Assumed adjacent sidewalk in urban context |
-| 4 | Adjacent Sidewalk 1–3m | Not Present | — |
-| 5 | Adjacent Road Lane 0–1m | See image logic | Derived from CV image analysis |
-| 6 | Adjacent Road Lane 1–3m | See image logic | Derived from CV image analysis |
-| 7 | Adjacent Vehicle Parking 0–1m | Not Present | Most common |
-| 8 | Adjacent Vehicle Parking 1–3m | Not Present | Most common |
-| 9 | Adjacent Object/Level Change 0–1m | Mirrors Adj. Road 0–1m | Co-occurs with adjacent road |
-| 10 | Adjacent Object/Level Change 1–3m | Mirrors Adj. Road 1–3m | Co-occurs with adjacent road |
-| 11 | Facility Access | Adequate | Most common |
-| 12 | Light Segregation | Present | Assumed when path is detected |
-| 13 | Fixed Obstacle on Facility | Not Present | Most common |
-| 14 | Non-Fixed Obstacle on Facility | Not Present | Most common |
-| 15 | Facility Width per Direction | Narrow | GIS-derived; default when no width data available |
-| 16 | Width Restriction | Not Present | Most common |
-| 17 | Adjacent Severe Hazard 0–1m | Not Present | Most common |
-| 18 | Adjacent Severe Hazard 1–3m | Not Present | Most common |
-| 19 | Line of Sight | Not coded | Not yet in scoring specification |
-| 20 | Delineation | Not Present | Default; overridden by CV if markers detected |
-| 21 | Major Surface Deformation or Drain Opening | Not Present | Most common |
-| 22 | Loose or Slippery Surface | Not Present | Most common |
-| 23 | Grade | < 5 Degrees | Most paths in Singapore are flat |
-| 24 | Curvature | No Sharp Turn | Most common |
-| 25 | Tram or Train Rails | Not Present | Most common |
-| 26 | Street Lighting | Present | Most urban paths have lighting |
-| 27 | Intersection Approach | Separate/NA | Most common |
-| 28 | Intersection or Road Crossing | Not Present | Most common |
-| 29 | Crossing Facility | Not Present | Default; overridden by CV |
-| 30 | Property Access | Not Present | Most common |
-| 31 | Pedestrian Crossing | Not Present | Most common |
-| 32 | Intersecting Bicycle Facility | Not Present | Most common |
-| 33 | Number of Lanes – Adjacent Road | 1 per Direction/NA | Most common |
-| 34 | Number of Lanes – Intersecting Road | 1 per Direction/NA | Default from image logic |
-| 35 | Flow Direction | One Way | Most common for Singapore paths |
-| 36 | Peak Pedestrian Flow | Low | GIS-derived; default when no count data |
-| 37 | Peak Bicycle/LV Traffic Flow | Low | GIS-derived; default when no count data |
-| 38 | Observed Proportion of Cargo Bikes | Low | Most common |
-| 39 | Heavy Vehicle Flow | Low | Most paths away from heavy traffic |
-| 40 | Bicycle/LV Speed – Average | < 20 km/h | Most common cycling speed |
-| 41 | Bicycle/LV Speed Differential | < 10 km/h | Most common |
-| 42 | Road AADT | — | Must be coded manually; no GIS auto-code path |
-| 43 | Road Operating Speed (mean) | — | GIS-derived from LinkID layer |
-| 44 | Road Speed Limit | — | GIS-derived from speed limit layer |
+| 1 | Area Type | Suburban | GIS fallback using LTA parking zone and URA land use layers; default when no urban/industrial/recreational polygon match |
+| 2 | Facility Type | Sidewalk | Most common facility type; overridden by CV image analysis |
+| 3 | Facility Access | Adequate | Most common; code Inadequate only when congestion or blockages force users onto alternative routes |
+| 4 | Loose or Slippery Surface | Not Present | Most common; GIS-assisted via PATH defects layer (algae); CV detection not yet ready |
+| 5 | Tram or Train Rails | Not Present | No tram or train rail paths/roads exist in Singapore |
+| 6 | Major Surface Deformation or Drain Opening | Not Present | Most common; GIS-assisted via PATH defects layer (tile cracks, tactile tile cracks, uneven pavement) |
+| 7 | Fixed Obstacle on Facility | Not Present | Most common; overridden by CV image analysis |
+| 8 | Non-Fixed Obstacle on Facility | Not Present | Most common; overridden by CV image analysis |
+| 9 | Line of Sight | Not coded | Not yet in scoring specification; requires manual assessment of visibility along the path |
+| 10 | Delineation | Not Present | Default not present; CV codes first, then overwritten if PATH provides faded marking data |
+| 11 | Light Segregation | Present | All off-road paths are expected to have kerb segregation; confirmed by CV and logic rules |
+| 12 | Facility Width per Direction | Narrow | GIS-derived from LiDAR path width data; default when no width data available |
+| 13 | Flow Direction | One Way | Most on-road cycling lanes are one-way; all off-road paths default to two-way |
+| 14 | Width Restriction | Not Present | Most common; logic rule sets Present when a fixed or non-fixed obstacle is detected |
+| 15 | Adjacent Road Lane 0–1m | See image logic | CV-derived; present when path edge is ≤1m from road kerb with no protective barrier |
+| 16 | Adjacent Vehicle Parking 0–1m | Not Present | Most common; GIS-derived from URA car park lot layer and GDM lane markings |
+| 17 | Adjacent Severe Hazard 0–1m | Not Present | Rare in Singapore; requires manual assessment when waterways or drops >60cm are present with no barrier |
+| 18 | Adjacent Object/Level Change 0–1m | Mirrors Adj. Road 0–1m | Co-occurs with adjacent road lane; inferred by CV and logic rules |
+| 19 | Adjacent Sidewalk 0–1m | Present | Assumed present in urban context; derived by CV and logic rules |
+| 20 | Adjacent Road Lane 1–3m | See image logic | CV-derived; present when road is 1–3m from path with no protective barrier |
+| 21 | Adjacent Vehicle Parking 1–3m | Not Present | Most common; GIS-derived from URA car park lot layer |
+| 22 | Adjacent Severe Hazard 1–3m | Not Present | Rare in Singapore; requires manual assessment when severe hazards are 1–3m from path |
+| 23 | Adjacent Object/Level Change 1–3m | Mirrors Adj. Road 1–3m | Co-occurs with adjacent road lane; inferred by CV and logic rules |
+| 24 | Adjacent Sidewalk 1–3m | Not Present | Not present by default; CV and logic rules detect when split paths with >1m green verge are present |
+| 25 | Grade | < 5 Degrees | Most paths in Singapore are flat; GIS-derived from LiDAR 3D point cloud data |
+| 26 | Curvature | No Sharp Turn | Most common; GIS-derived using path geometry and curvature radius calculation |
+| 27 | Street Lighting | Present | Most urban paths in Singapore have adequate street lighting |
+| 28 | Pedestrian Crossing | Not Present | Most common; GIS-derived from MRT exit and bus stop layers; manual coding where needed |
+| 29 | Intersecting Bicycle Facility | Not Present | Most common; GIS-derived using pedestrian crossing layer within 5m radius |
+| 30 | Intersection Approach | Separate/NA | Most off-road cycling paths remain separate from traffic at intersections |
+| 31 | Intersection or Road Crossing | Not Present | Most common; overridden by CV when crossings are detected |
+| 32 | Crossing Facility | Not Present | Most common; overridden by CV when zebra crossings or bicycle crossings are detected |
+| 33 | Number of Lanes – Adjacent Road | 1 per Direction/NA | Most common; GIS-derived from LiDAR kerbline layer |
+| 34 | Number of Lanes – Intersecting Road | 1 per Direction/NA | Default when no intersection is present; GIS-derived from LiDAR kerbline layer when intersection exists |
+| 35 | Property Access | Not Present | Most common; CV and GIS auto-coding pending |
+| 36 | Peak Pedestrian Flow | Low | GIS-derived from MRT exit, bus stop, and AMG sensor count layers; default when no count data available |
+| 37 | Peak Bicycle/LV Traffic Flow | Low | GIS-derived from AMG 24/7 sensor count data; default when no count data available |
+| 38 | Observed Proportion of Cargo Bikes | Low | Most common; ePMD and PAB in Singapore are under 20kg, classifying them as low cargo proportion |
+| 39 | Bicycle/LV Speed – Average | < 20 km/h | Most common cycling speed on Singapore shared paths and CPNs |
+| 40 | Bicycle/LV Speed Differential | < 10 km/h | Most common; low speed variation typical on Singapore shared paths |
+| 41 | Road AADT | — | Must be coded manually; no GIS auto-code path; ERP2 data integration pending |
+| 42 | Heavy Vehicle Flow | Low | Most paths are away from heavy traffic; GIS-derived from bus lane marking layer (GDM) |
+| 43 | Road Speed Limit | — | GIS-derived from GDM speed limit layer; used for analysis only and does not affect risk scores |
+| 44 | Road Operating Speed (mean) | — | GIS-derived from LinkID layer and ERP2 speed data; required when adjacent road or road crossing is present |
 
 ### 2.4 Auto-Code Options
 
@@ -280,3 +281,52 @@ On the **Coding Page**, every coding attribute that has a description shows a sm
 | Crash Type Score cards (BB/BP/SB/VB) | Risk banding thresholds for that crash type |
 | Risk Score card | Full banding summary for all crash types |
 | Attribute ⓘ icons (Coding Page) | Plain-English description of the attribute and scoring impact |
+
+---
+
+### 2.10 Attribute Logic Checks on Verification
+
+When you mark a segment as **Verified**, PSAT checks the coded attributes for contradictory or impossible combinations. There are two categories of checks.
+
+#### Hard Rules
+
+Hard rules flag combinations that cannot coexist. Resolve all hard-rule conflicts before marking a segment as Verified.
+
+| # | If | Then |
+|---|---|---|
+| 1 | Adjacent Road Lane 1–3m = Present | Adjacent Road Lane 0–1m = Not Present |
+| 2 | Adjacent Vehicle Parking 1–3m = Present | Adjacent Vehicle Parking 0–1m = Not Present |
+| 3 | Adjacent Severe Hazard 1–3m = Present | Adjacent Severe Hazard 0–1m = Not Present |
+| 4 | Adjacent Object or Level Change 1–3m = Present | Adjacent Object or Level Change 0–1m = Not Present |
+| 5 | Adjacent Sidewalk 1–3m = Present | Adjacent Sidewalk 0–1m = Not Present |
+| 6 | Facility Type = Sidewalk | Adjacent Sidewalk 0–1m = Not Present |
+| 7 | Facility Type = Mixed Traffic Road Lane | Adjacent Road Lane 0–1m = Present **and** Adjacent Road Lane 1–3m = Not Present |
+| 8 | Facility Type = Sidewalk, Multi-Use Path, or Off-Road Bicycle Path | Adjacent Object or Level Change = Present |
+| 9 | Width Restriction = Present | Fixed Obstacle on Facility = Present **or** Non-Fixed Obstacle on Facility = Present (or both) |
+| 10 | Facility Type = Sidewalk, Multi-Use Path, or Off-Road Bicycle Path | Light Segregation = Present |
+| 11 | Property Access = Present | Intersection or Road Crossing = Present |
+| 12 | Facility Type = On-Road Bicycle Lane | Adjacent Road Lane 0–1m = Present |
+| 13 | Adjacent Road Lane 0–1m = Present | Road AADT ≠ 0 |
+| 14 | Adjacent Road Lane 0–1m = Present | Road Operating Speed (mean) ≠ 0 |
+| 15 | Adjacent Road Lane 1–3m = Present | Road AADT ≠ 0 |
+| 16 | Adjacent Road Lane 1–3m = Present | Road Operating Speed (mean) ≠ 0 |
+| 17 | Intersection or Road Crossing = Present | Road AADT ≠ 0 |
+| 18 | Intersection or Road Crossing = Present | Road Operating Speed (mean) ≠ 0 |
+| 19 | Facility Type = Mixed Traffic Road Lane | Road AADT ≠ 0 |
+| 20 | Facility Type = Mixed Traffic Road Lane | Road Operating Speed (mean) ≠ 0 |
+| 21 | Facility Type = Road Shoulder | Adjacent Road Lane 0–1m = Present |
+
+> **Rules 1–5** reflect the spatial logic that if a hazard exists in the outer band (1–3m) it cannot simultaneously exist in the inner band (0–1m) for the same feature type.
+
+> **Rules 13–20** reflect that Road AADT and Road Operating Speed must have non-zero values whenever an adjacent road lane or road crossing is present, or when the facility itself is on a road.
+
+#### Warnings
+
+Warnings flag unusual combinations that are not always wrong. Review the segment image carefully before confirming.
+
+| # | If | Expected |
+|---|---|---|
+| 1 | Facility Type = Off-Road Bicycle Path | Adjacent Sidewalk 0–1m **or** 1–3m = Present |
+| 2 | Facility Type = Mixed Traffic Road Lane | Intersection or Road Crossing = Present |
+
+> **Note:** Warning behaviour (how warnings are displayed and how a coder acknowledges them) is subject to review. This section will be updated once the display approach is confirmed.
