@@ -30,34 +30,36 @@ Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashb
 
 ## 8.2 All GIS Layers in PSAT
 
-The table below lists all GIS layers currently defined in PSAT, the PSAT attribute they affect, and the required columns:
+The table below lists every shapefile currently loaded in PSAT, the PSAT attribute it affects, and the required columns. Layer names match the display names shown on the GIS Layers page.
 
 | Layer Name | Category | Geometry | PSAT Attribute Affected | Required Columns |
 |---|---|---|---|---|
-| `area_type` | Area Type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `LanduseRural2026` | Area Type | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `LanduseRecre2026` | Area Type | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `rural` | Area Type | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `recreation` | Area Type | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `Mrt_exit` | Transit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
-| `bus_stop` | Transit | Point | Pedestrian Crossing, Peak Flow | `BUS_STOP_N (1)`, `LOC_DESC (3)` |
-| `bus_lane` | Traffic | LineString | Heavy Vehicle Flow | `TYP_CD (1)`, `TYP_NAM (2)` |
-| `parking_lot` | Parking | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
-| `roadcrossinglayer` | Crossings | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
-| `AMG_BC2025_shp` | Crossings | LineString / Point | Intersection or Road Crossing, Crossing Facility | `UNIQUE_ID (1)` |
-| `path` | Path Width | LineString | Facility Width per Direction, Curvature | `WIDTH (1)` |
-| `cycling_path` | Path Width | LineString | Facility Width per Direction, Curvature | `WIDTH (1)` |
-| `shared_path` | Path Width | LineString | Facility Width per Direction, Curvature | `WIDTH (1)` |
-| `footpath` | Path Width | LineString | Facility Width per Direction, Curvature | `WIDTH (1)` |
-| `CyclingPath_Jul2024` | Path Width | LineString | Facility Width per Direction, Curvature | `path_width (1)`, `path_type (2)` |
-| `FootPath_Mar2025` | Path Width | LineString | Facility Width per Direction, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
-| `LinkID_Shape_File` | Road Data | LineString | Road Operating Speed (mean) | `LK_ID_NUM (1)` |
-| `Speed_limit` | Road Data | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
-| `kerb_line` | Road Data | LineString | Number of Lanes – Adjacent Road | `LANES (1)`, `LOCATION (2)`, `DIRECTION (3)` |
-| `AMGbeforeCount` | Flow Data | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `DataType (1)`, `DateTime (2)`, `Count_Data (3)` |
-| `AMGsensorCount` | Flow Data | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `Pivot_user (1)`, `Datetime_p (2)`, `Count (3)` |
-| `Planning_area` | Reference | Polygon | Area-based reporting | `PLN_AREA_N (1)` |
-| `Road_name` | Reference | LineString | Road name reference | `RD_TYP_CD (1)` |
+| `Centralmb2025` | area_type | Polygon | Area Type (Urban) | `PARKING_ZO (1)`, `STATION_NA (2)` |
+| `Landuseindustrial2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserural2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserecre2026` | LanduseRecre2026 | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserural2026` | LanduseRural2026 | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Mrt Exits` | Mrt_exit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
+| `Busstop` | bus_stop | Point | Pedestrian Crossing, Peak Flow | `BUS_STOP_N (1)`, `LOC_DESC (3)` |
+| `Busshelter` | bus_stop | LineString | Pedestrian Crossing, Peak Flow | `BUS_ROOF_N (1)`, `LOC_DESC (2)` |
+| `Bus Lanes` | bus_lane | LineString | Heavy Vehicle Flow; Extracted Type: A1, A6, A7, L, Q, Q1, Q2, Y | `TYP_CD (1)`, `TYP_NAM (2)` |
+| `Hdb Car Park Lots` | parking_lot | Point / Polygon | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |
+| `Ura Parking Lot` | parking_lot | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
+| `Roadcrossing` | roadcrossinglayer | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
+| `Cyclingpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Footpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Sharedpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Facility Width, Curvature | `path_width (1)`, `path_type (2)` |
+| `Cyclingpathgazette` | CyclingPath_Jul2024 | LineString | Planning Area Reference | `PLANNING_A (1)`, `PLANNING_1 (2)` |
+| `Footpath` | FootPath_Mar2025 | LineString | Facility Width, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
+| `31Oct24 Link Ful` | LinkID_Shape_File | LineString | Road Operating Speed (mean) | `LK_ID_NUM (1)` |
+| `31Oct24 Node Ful` | LinkID_Shape_File | Point | Road Network Node Reference | `NODE_ID_NU (1)`, `RD_TYP_CD (2)` |
+| `Roadattributeline Speedlimits` | Speed_limit | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
+| `Kerbline` | kerb_line | LineString | Number of Lanes – Adjacent Road | `LANES (1)`, `LOCATION (2)`, `DIRECTION (3)` |
+| `Roadnetworkline` | Road_name | LineString | Road Name Reference | None |
+| `Amgbeforecount Export` | AMGbeforeCount | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `DataType (1)`, `DateTime (2)`, `Count_Data (3)` |
+| `Amgsensorcount Export` | AMGsensorCount | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `Pivot_user (1)`, `Datetime_p (2)`, `Count (3)` |
+| `Dgp 27Oct14` | Planning_area | Polygon | Area-based Reporting | `PLN_AREA_N (1)` |
 
 > **Column index numbers** in parentheses indicate the column position (1-based) expected in the source shapefile. These are used during validation when uploading replacement layers.
 

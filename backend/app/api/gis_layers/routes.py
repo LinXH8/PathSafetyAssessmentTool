@@ -195,6 +195,26 @@ def _file_info(shp_path: Path, root: Path) -> dict:
             ld_key = "shared_path"
         elif "foot" in fname_lower:
             ld_key = "footpath"
+    elif category == "area_type":
+        fname_lower = shp_path.name.lower()
+        if "central" in fname_lower:
+            ld_key = "Centralmb2025"
+    elif category == "LinkID_Shape_File":
+        fname_lower = shp_path.name.lower()
+        if "node" in fname_lower:
+            ld_key = "LinkID_Node"
+    elif category == "CyclingPath_Jul2024":
+        fname_lower = shp_path.name.lower()
+        if "gazette" in fname_lower:
+            ld_key = "CyclingPathGazette"
+    elif category == "parking_lot":
+        fname_lower = shp_path.name.lower()
+        if "hdb" in fname_lower:
+            ld_key = "HDB_CAR_PARK_LOTS"
+    elif category == "bus_stop":
+        fname_lower = shp_path.name.lower()
+        if "shelter" in fname_lower:
+            ld_key = "BusShelter"
     
     ld = get_layer_definition(ld_key)
     req_cols = ", ".join(ld.required_columns) if ld and ld.required_columns else "None"

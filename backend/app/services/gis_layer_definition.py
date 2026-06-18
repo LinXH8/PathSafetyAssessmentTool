@@ -52,6 +52,14 @@ class LayerDefinition:
 # Define all layers and their requirements
 LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     # --- Area Type Layers (Polygon containment queries) ---
+    "Centralmb2025": LayerDefinition(
+        name="Centralmb2025",
+        geometry_types=["Polygon", "MultiPolygon"],
+        required_columns=["PARKING_ZO (1)", "STATION_NA (2)"],
+        query_type="poly",
+        description="Area type (Urban)",
+        default_buffer_m=20.0,
+    ),
     "area_type": LayerDefinition(
         name="area_type",
         geometry_types=["Polygon", "MultiPolygon"],
@@ -120,6 +128,14 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
             "BUS_STOP_N": ["BUS_STOP_N", "BUS_STOP_NO", "BUS_STOP_C", "BUS_STOP_CODE", "CODE", "NAME", "LOC_DESC"]
         },
     ),
+    "BusShelter": LayerDefinition(
+        name="BusShelter",
+        geometry_types=["LineString", "MultiLineString"],
+        required_columns=["BUS_ROOF_N (1)", "LOC_DESC (2)"],
+        query_type="near",
+        description="Pedestrian Crossing, Peak Flow",
+        default_buffer_m=20.0,
+    ),
     "bus_lane": LayerDefinition(
         name="bus_lane",
         geometry_types=["LineString", "MultiLineString"],
@@ -156,6 +172,14 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
         name="parking_lot",
         geometry_types=["Polygon", "MultiPolygon"],
         required_columns=["PP_CODE (1)", "LOT_NO (2)", "TYPE (3)"],
+        query_type="near",
+        description="Adjacent Vehicle Parking",
+        default_buffer_m=20.0,
+    ),
+    "HDB_CAR_PARK_LOTS": LayerDefinition(
+        name="HDB_CAR_PARK_LOTS",
+        geometry_types=["Point", "MultiPoint", "Polygon", "MultiPolygon"],
+        required_columns=["CARPARKNO (1)", "NOOFCARLOT (2)"],
         query_type="near",
         description="Adjacent Vehicle Parking",
         default_buffer_m=20.0,
@@ -225,6 +249,14 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
             "path_width": ["path_width", "WIDTH", "width", "W_WIDTH", "Width_m", "WIDTH_M"]
         },
     ),
+    "CyclingPathGazette": LayerDefinition(
+        name="CyclingPathGazette",
+        geometry_types=["LineString", "MultiLineString"],
+        required_columns=["PLANNING_A (1)", "PLANNING_1 (2)"],
+        query_type="near",
+        description="Planning Area Reference",
+        default_buffer_m=5.0,
+    ),
     "FootPath_Mar2025": LayerDefinition(
         name="FootPath_Mar2025",
         geometry_types=["LineString", "MultiLineString"],
@@ -241,13 +273,21 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     "LinkID_Shape_File": LayerDefinition(
         name="LinkID_Shape_File",
         geometry_types=["LineString", "MultiLineString"],
-        required_columns=["LK_ID_NUM (1)", "SPEED (2)"],
+        required_columns=["LK_ID_NUM (1)"],
         query_type="nearest_with_lookup",
         description="Road operating speed (mean)",
         default_buffer_m=20.0,
         column_aliases={
             "LK_ID_NUM": ["LK_ID_NUM", "LINKID", "LINK_ID", "LinkID", "ID", "link_id"]
         },
+    ),
+    "LinkID_Node": LayerDefinition(
+        name="LinkID_Node",
+        geometry_types=["Point", "MultiPoint"],
+        required_columns=["NODE_ID_NU (1)", "RD_TYP_CD (2)"],
+        query_type="near",
+        description="Road Network Node Reference",
+        default_buffer_m=20.0,
     ),
     "Speed_limit": LayerDefinition(
         name="Speed_limit",
@@ -302,7 +342,7 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     "Road_name": LayerDefinition(
         name="Road_name",
         geometry_types=["LineString", "MultiLineString"],
-        required_columns=["RD_TYP_CD (1)"],
+        required_columns=[],
         query_type="near",
         description="Road name reference",
         default_buffer_m=10.0,

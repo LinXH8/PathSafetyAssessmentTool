@@ -7,10 +7,11 @@ Welcome to PSAT. The tool helps you create projects from geotagged survey images
 ## Table of Contents
 
 - [1.1 Using the Help Guide](#11-using-the-help-guide)
-- [1.2 Open the Project List](#12-open-the-project-list)
-- [1.3 Create a Project](#13-create-a-project)
-- [1.4 Navigate Between Workflows](#14-navigate-between-workflows)
-- [1.5 Viewing and Updating GIS Layers](#15-viewing-and-updating-gis-layers)
+- [1.2 User Login](#12-user-login)
+- [1.3 Open the Project List](#13-open-the-project-list)
+- [1.4 Create a Project](#14-create-a-project)
+- [1.5 Navigate Between Workflows](#15-navigate-between-workflows)
+- [1.6 Viewing and Updating GIS Layers](#16-viewing-and-updating-gis-layers)
 
 ---
 
@@ -24,7 +25,22 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 - **Admin Guide** — system deployment, model management, and infrastructure
 - **Developer Guide** — technical architecture, API reference, and scoring logic
 
-### 1.2 Open the Project List
+### 1.2 User Login
+
+When you open PSAT, the **Landing Page** lists every profile registered on this device.
+
+1. Click your profile card — it highlights in green to show it is selected.
+2. Click **Start As \<Name\>**. A PIN prompt appears if this is not the currently active session.
+3. Enter your 4–12 digit numeric PIN and confirm.
+4. You are now logged in and taken to your **Projects** page.
+
+To create a new profile, click **Create Profile**, enter your LTA Employee Email, Division, and a 4–12 digit numeric PIN, then click **Create Profile**.
+
+To switch accounts, click **Log Out** in the left-hand sidebar and select a different profile on the Landing Page.
+
+> For full login and account management instructions, see [Section 2: User Login & Account Management](#2-user-login--account-management).
+
+### 1.3 Open the Project List
 
 Use the **Home** page to browse all projects. You can:
 
@@ -33,7 +49,7 @@ Use the **Home** page to browse all projects. You can:
 - sort by project name, verification progress, distance verified, autocode progress, and last modified time
 - select one or more projects for deletion, coding, path analysis, or treatment work
 
-### 1.3 Create a Project
+### 1.4 Create a Project
 
 Use **Create Project** when you want to build a new project from the source image folders in `in/`.
 
@@ -54,7 +70,7 @@ When creating a project:
 
 When you select a source folder in the Single Folder workflow, PSAT reads the road name from the folder and automatically **highlights the matching road on the map in amber/orange**. The map also pans and zooms to that road so you can visually confirm you are creating the project from the correct location before proceeding.
 
-### 1.4 Navigate Between Workflows
+### 1.5 Navigate Between Workflows
 
 From the project list, you can send selected projects for the following:
 
@@ -65,7 +81,7 @@ From the project list, you can send selected projects for the following:
 | **Analyse Projects** | Multi-project filtering, charts, generate reports and export data, images, shp files |
 | **Treatment Application** | Before/after scenario testing |
 
-### 1.5 Viewing and Updating GIS Layers
+### 1.6 Viewing and Updating GIS Layers
 
 Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard.
 

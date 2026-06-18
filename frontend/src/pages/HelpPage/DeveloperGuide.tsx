@@ -143,9 +143,13 @@ function MarkdownContent({ content }: { content: string }) {
         {children}
       </pre>
     ),
-    table: ({ children }: any) => <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1.5rem" }}>{children}</table>,
-    th: ({ children }: any) => <th style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", textAlign: "left", background: colors.tableHeaderBg, color: colors.fg, fontWeight: 600 }}>{children}</th>,
-    td: ({ children }: any) => <td style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", color: colors.fgMuted }}>{children}</td>,
+    table: ({ children }: any) => (
+      <div style={{ overflowX: "auto", width: "100%", marginBottom: "1.5rem" }}>
+        <table style={{ minWidth: "700px", width: "100%", borderCollapse: "collapse" }}>{children}</table>
+      </div>
+    ),
+    th: ({ children }: any) => <th style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", textAlign: "left", background: colors.tableHeaderBg, color: colors.fg, fontWeight: 600, whiteSpace: "nowrap" }}>{children}</th>,
+    td: ({ children }: any) => <td style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", color: colors.fgMuted, minWidth: "80px" }}>{children}</td>,
   };
 
   return (
