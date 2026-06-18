@@ -1,23 +1,23 @@
-# 2. User Login & Account Management
+# 1.2 User Login & Account Management
+
+## Creating a New Profile
+
+1. On the Landing Page, click **Create Profile**.
+2. Enter your **LTA Employee Email** (e.g. `user@lta.gov.sg`), your **Division**, and a **4–12 digit numeric PIN** (numbers only).
+3. Click **Create Profile**. The profile is saved and you are automatically logged in.
+
+> **Tip:** Choose a PIN you will remember — there is no PIN reset flow. If you forget your PIN, contact your system administrator.
+
+---
 
 ## Signing In
 
 When you open PSAT, the **Landing Page** lists every profile registered on this device.
 
 1. Click your profile card — it highlights in green to show it is selected.
-2. Click **Start As &lt;Name&gt;**. A PIN prompt appears if this is not the currently active session.
+2. Click **Start As \<Name\>**. A PIN prompt appears if this is not the currently active session.
 3. Enter your 4–12 digit numeric PIN and confirm.
 4. You are now logged in and taken to your **Projects** page. All previously saved projects are immediately available.
-
----
-
-## Creating a New Profile
-
-1. On the Landing Page, click **Create Profile**.
-2. Enter your **LTA Employee Email**, your **Division**, and a **4–12 digit numeric PIN** (numbers only).
-3. Click **Create Profile**. The profile is saved and you are automatically logged in.
-
-> **Tip:** Choose a PIN you will remember — there is no PIN reset flow. If you forget your PIN, contact your system administrator.
 
 ---
 
@@ -25,7 +25,7 @@ When you open PSAT, the **Landing Page** lists every profile registered on this 
 
 - Click **Log Out** in the left-hand sidebar at any time.
 - You are returned to the Landing Page.
-- Select a different profile, click **Start As &lt;Name&gt;**, and enter that profile's PIN.
+- Select a different profile (identified by your LTA Employee Email, e.g. `user@lta.gov.sg`), click **Start As \<Name\>**, and enter that profile's PIN.
 
 ---
 

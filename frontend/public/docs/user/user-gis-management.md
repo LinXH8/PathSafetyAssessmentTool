@@ -1,4 +1,4 @@
-# 8. GIS Layer Management
+# 7. GIS Layer Management
 
 PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context for path coding and risk analysis. Use the **GIS Layer Management** tool to keep these datasets up to date.
 
@@ -6,18 +6,18 @@ PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context 
 
 ## Table of Contents
 
-- [8.1 Viewing GIS Layers](#81-viewing-gis-layers)
-- [8.2 All GIS Layers in PSAT](#82-all-gis-layers-in-psat)
-- [8.3 Adding a New GIS Layer](#83-adding-a-new-gis-layer)
-- [8.4 Replacing an Existing GIS Layer](#84-replacing-an-existing-gis-layer)
-- [8.5 Updating GIS Layers](#85-updating-gis-layers)
-- [8.6 Filtering Shapefiles](#86-filtering-shapefiles)
-- [8.7 Renaming a Shapefile](#87-renaming-a-shapefile)
-- [8.8 Reverting a Shapefile to Its Original Name](#88-reverting-a-shapefile-to-its-original-name)
+- [7.1 Viewing GIS Layers](#71-viewing-gis-layers)
+- [7.2 All GIS Layers in PSAT](#72-all-gis-layers-in-psat)
+- [7.3 Adding a New GIS Layer](#73-adding-a-new-gis-layer)
+- [7.4 Replacing an Existing GIS Layer](#74-replacing-an-existing-gis-layer)
+- [7.5 Updating GIS Layers](#75-updating-gis-layers)
+- [7.6 Filtering Shapefiles](#76-filtering-shapefiles)
+- [7.7 Renaming a Shapefile](#77-renaming-a-shapefile)
+- [7.8 Reverting a Shapefile to Its Original Name](#78-reverting-a-shapefile-to-its-original-name)
 
 ---
 
-## 8.1 Viewing GIS Layers
+## 7.1 Viewing GIS Layers
 
 Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashboard. Here you can:
 
@@ -25,45 +25,45 @@ Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashb
 - View last updated date, required columns, and metadata for each layer
 - **Required Columns**: Inspect the mandatory column names needed for PSAT to process the layer. The number in parentheses, e.g., `LU_DESC (1)`, indicates the expected column index in the source data
 - Preview any layer on an interactive map by clicking it
-- **Filter** the list instantly by typing a keyword into the filter box (see [Section 8.6](#86-filtering-shapefiles))
-- **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 8.7](#87-renaming-a-shapefile) and [8.8](#88-reverting-a-shapefile-to-its-original-name))
+- **Filter** the list instantly by typing a keyword into the filter box (see [Section 7.6](#76-filtering-shapefiles))
+- **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 7.7](#77-renaming-a-shapefile) and [7.8](#78-reverting-a-shapefile-to-its-original-name))
 
-## 8.2 All GIS Layers in PSAT
+## 7.2 All GIS Layers in PSAT
 
 The table below lists every shapefile currently loaded in PSAT, the PSAT attribute it affects, and the required columns. Layer names match the display names shown on the GIS Layers page.
 
 | Layer Name | Category | Geometry | PSAT Attribute Affected | Required Columns |
 |---|---|---|---|---|
-| `Centralmb2025` | area_type | Polygon | Area Type (Urban) | `PARKING_ZO (1)`, `STATION_NA (2)` |
-| `Landuseindustrial2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `Landuserural2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `Landuserecre2026` | LanduseRecre2026 | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `Landuserural2026` | LanduseRural2026 | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
-| `Mrt Exits` | Mrt_exit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
-| `Busstop` | bus_stop | Point | Pedestrian Crossing, Peak Flow | `BUS_STOP_N (1)`, `LOC_DESC (3)` |
-| `Busshelter` | bus_stop | LineString | Pedestrian Crossing, Peak Flow | `BUS_ROOF_N (1)`, `LOC_DESC (2)` |
-| `Bus Lanes` | bus_lane | LineString | Heavy Vehicle Flow; Extracted Type: A1, A6, A7, L, Q, Q1, Q2, Y | `TYP_CD (1)`, `TYP_NAM (2)` |
-| `Hdb Car Park Lots` | parking_lot | Point / Polygon | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |
-| `Ura Parking Lot` | parking_lot | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
-| `Roadcrossing` | roadcrossinglayer | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
-| `Cyclingpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
-| `Footpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
-| `Sharedpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
-| `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Facility Width, Curvature | `path_width (1)`, `path_type (2)` |
-| `Cyclingpathgazette` | CyclingPath_Jul2024 | LineString | Planning Area Reference | `PLANNING_A (1)`, `PLANNING_1 (2)` |
-| `Footpath` | FootPath_Mar2025 | LineString | Facility Width, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
 | `31Oct24 Link Ful` | LinkID_Shape_File | LineString | Road Operating Speed (mean) | `LK_ID_NUM (1)` |
 | `31Oct24 Node Ful` | LinkID_Shape_File | Point | Road Network Node Reference | `NODE_ID_NU (1)`, `RD_TYP_CD (2)` |
-| `Roadattributeline Speedlimits` | Speed_limit | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
-| `Kerbline` | kerb_line | LineString | Number of Lanes – Adjacent Road | `LANES (1)`, `LOCATION (2)`, `DIRECTION (3)` |
-| `Roadnetworkline` | Road_name | LineString | Road Name Reference | None |
 | `Amgbeforecount Export` | AMGbeforeCount | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `DataType (1)`, `DateTime (2)`, `Count_Data (3)` |
 | `Amgsensorcount Export` | AMGsensorCount | Point | Peak Pedestrian Flow, Peak Bicycle Traffic Flow | `Pivot_user (1)`, `Datetime_p (2)`, `Count (3)` |
+| `Bus Lanes` | bus_lane | LineString | Heavy Vehicle Flow; Extracted Type: A1, A6, A7, L, Q, Q1, Q2, Y | `TYP_CD (1)`, `TYP_NAM (2)` |
+| `Busshelter` | bus_stop | LineString | Pedestrian Crossing, Peak Flow | `BUS_ROOF_N (1)`, `LOC_DESC (2)` |
+| `Busstop` | bus_stop | Point | Pedestrian Crossing, Peak Flow | `BUS_STOP_N (1)`, `LOC_DESC (3)` |
+| `Centralmb2025` | area_type | Polygon | Area Type (Urban) | `PARKING_ZO (1)`, `STATION_NA (2)` |
+| `Cyclingpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Cyclingpathgazette` | CyclingPath_Jul2024 | LineString | Planning Area Reference | `PLANNING_A (1)`, `PLANNING_1 (2)` |
 | `Dgp 27Oct14` | Planning_area | Polygon | Area-based Reporting | `PLN_AREA_N (1)` |
+| `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Facility Width, Curvature | `path_width (1)`, `path_type (2)` |
+| `Footpath` | FootPath_Mar2025 | LineString | Facility Width, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
+| `Footpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Hdb Car Park Lots` | parking_lot | Point / Polygon | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |
+| `Kerbline` | kerb_line | LineString | Number of Lanes – Adjacent Road | `LANES (1)`, `LOCATION (2)`, `DIRECTION (3)` |
+| `Landuseindustrial2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserecre2026` | LanduseRecre2026 | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserural2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Landuserural2026` | LanduseRural2026 | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
+| `Mrt Exits` | Mrt_exit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
+| `Roadattributeline Speedlimits` | Speed_limit | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
+| `Roadcrossing` | roadcrossinglayer | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
+| `Roadnetworkline` | Road_name | LineString | Road Name Reference | None |
+| `Sharedpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
+| `Ura Parking Lot` | parking_lot | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
 
 > **Column index numbers** in parentheses indicate the column position (1-based) expected in the source shapefile. These are used during validation when uploading replacement layers.
 
-## 8.3 Adding a New GIS Layer
+## 7.3 Adding a New GIS Layer
 
 Use the **Add GIS Layer** workflow to upload entirely new datasets.
 
@@ -88,7 +88,7 @@ If you are unsure of the expected format, refer to the existing shapefiles in th
 
 Click **Confirm & Upload** to proceed, or **Cancel** to go back and check your file.
 
-## 8.4 Replacing an Existing GIS Layer
+## 7.4 Replacing an Existing GIS Layer
 
 Use the **Replace GIS Layer** workflow when you have updated data for an existing layer.
 
@@ -96,7 +96,7 @@ Use the **Replace GIS Layer** workflow when you have updated data for an existin
 - **Safety Checks**: PSAT performs compatibility checks to ensure the new file has the same required columns as the original.
 - **Warnings**: If differences are found in the column structure, the system will warn you before overwriting the old data.
 
-## 8.5 Updating GIS Layers
+## 7.5 Updating GIS Layers
 
 GIS layers should be updated whenever:
 
@@ -114,7 +114,7 @@ GIS layers should be updated whenever:
 
 > For system-level GIS management (file paths, permissions, bulk updates), refer to the **Admin Guide**.
 
-## 8.6 Filtering Shapefiles
+## 7.6 Filtering Shapefiles
 
 When your system has many GIS layers, scrolling through the full list can be slow. The **filter box** at the top of the Available Shapefiles panel lets you narrow the list instantly.
 
@@ -135,7 +135,7 @@ When your system has many GIS layers, scrolling through the full list can be slo
 
 > If no layers match your search term, the panel displays a "No shapefiles match …" message.
 
-## 8.7 Renaming a Shapefile
+## 7.7 Renaming a Shapefile
 
 You can give any shapefile a custom display name to make it easier to identify within your team's workflow. The rename only affects how the layer appears in the PSAT dashboard — the underlying file on disk is not moved or changed.
 
@@ -150,7 +150,7 @@ You can give any shapefile a custom display name to make it easier to identify w
 
 > Renamed layers retain all their original metadata, required columns, geometry, and category. Only the display name is updated.
 
-## 8.8 Reverting a Shapefile to Its Original Name
+## 7.8 Reverting a Shapefile to Its Original Name
 
 If a layer has been renamed and you want to restore its original filename as the display name, use the **Revert** option.
 

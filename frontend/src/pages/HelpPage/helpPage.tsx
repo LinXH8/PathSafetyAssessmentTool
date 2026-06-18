@@ -13,9 +13,9 @@ export default function HelpPage() {
   const [activeTab, setActiveTab] = useState<"user" | "developer" | "admin">("user");
 
   return (
-    <Box minH="100vh" bg="gray.100" _dark={{ bg: "gray.900" }} p="8" fontFamily="inherit">
+    <Box minH="100vh" bg="gray.100" _dark={{ bg: "gray.900" }} p={{ base: "4", md: "6" }} fontFamily="inherit">
       <Box
-        maxW="1000px"
+        maxW="1400px"
         mx="auto"
         bg="white"
         _dark={{ bg: "gray.800" }}

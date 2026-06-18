@@ -1,4 +1,4 @@
-## 3. Coding Page
+## 2. Coding Page
 
 The Coding page is the main review workspace. It can open one or more selected projects in a combined session.
 
@@ -6,22 +6,22 @@ The Coding page is the main review workspace. It can open one or more selected p
 
 ## Table of Contents
 
-- [3.1 Main Layout](#31-main-layout)
-- [3.2 Navigating Segments](#32-navigating-segments)
-- [3.3 Attribute Default Values](#33-attribute-default-values)
-- [3.4 Auto-Code Options](#34-auto-code-options)
-  - [3.4.1 Attributes Coded by CV (Image Analysis)](#341-attributes-coded-by-cv-image-analysis)
-  - [3.4.2 Attributes Coded by GIS Layer Mapping](#342-attributes-coded-by-gis-layer-mapping)
-  - [3.4.3 Attributes Coded by Logic Rules](#343-attributes-coded-by-logic-rules)
-- [3.5 Manual Review](#35-manual-review)
-- [3.6 Details and GIS Context](#36-details-and-gis-context)
-- [3.7 Save and Progress Tracking](#37-save-and-progress-tracking)
-- [3.8 CycleRAP Reference](#38-cyclerap-reference)
-- [3.9 Hover Tips — Safety Scores & Attributes](#39-hover-tips--safety-scores--attributes)
+- [2.1 Main Layout](#21-main-layout)
+- [2.2 Navigating Segments](#22-navigating-segments)
+- [2.3 Attribute Default Values](#23-attribute-default-values)
+- [2.4 Auto-Code Options](#24-auto-code-options)
+  - [2.4.1 Attributes Coded by CV (Image Analysis)](#241-attributes-coded-by-cv-image-analysis)
+  - [2.4.2 Attributes Coded by GIS Layer Mapping](#242-attributes-coded-by-gis-layer-mapping)
+  - [2.4.3 Attributes Coded by Logic Rules](#243-attributes-coded-by-logic-rules)
+- [2.5 Manual Review](#25-manual-review)
+- [2.6 Details and GIS Context](#26-details-and-gis-context)
+- [2.7 Save and Progress Tracking](#27-save-and-progress-tracking)
+- [2.8 CycleRAP Reference](#28-cyclerap-reference)
+- [2.9 Hover Tips — Safety Scores & Attributes](#29-hover-tips--safety-scores--attributes)
 
 ---
 
-### 3.1 Main Layout
+### 2.1 Main Layout
 
 The page keeps three views in sync:
 
@@ -31,7 +31,7 @@ The page keeps three views in sync:
 
 Selecting a segment in one area automatically updates the others.
 
-### 3.2 Navigating Segments
+### 2.2 Navigating Segments
 
 You can navigate through segments in three ways:
 
@@ -39,7 +39,7 @@ You can navigate through segments in three ways:
 - Click **Next** or **Back** to move one segment at a time
 - Click a point on the segment map to select it
 
-### 3.3 Attribute Default Values
+### 2.3 Attribute Default Values
 
 When a segment is first created and no auto-code has been run, PSAT assigns the following default values. These represent the most common parameters for paths in Singapore.
 
@@ -90,7 +90,7 @@ When a segment is first created and no auto-code has been run, PSAT assigns the 
 | 43 | Road Operating Speed (mean) | — | GIS-derived from LinkID layer |
 | 44 | Road Speed Limit | — | GIS-derived from speed limit layer |
 
-### 3.4 Auto-Code Options
+### 2.4 Auto-Code Options
 
 PSAT supports five auto-code methods that can be run individually or in combination:
 
@@ -102,7 +102,7 @@ PSAT supports five auto-code methods that can be run individually or in combinat
 
 Autocode progress is tracked in the project listing as **Percentage Segments Autocoded**.
 
-#### 3.4.1 Attributes Coded by CV (Image Analysis)
+#### 2.4.1 Attributes Coded by CV (Image Analysis)
 
 The following attributes are automatically inferred from street-level photographs using YOLO computer vision models:
 
@@ -119,7 +119,7 @@ The following attributes are automatically inferred from street-level photograph
 | Non-Fixed Obstacle on Facility | Fixed obstacle segmentation (label 9 = non-fixed) |
 | Delineation | Delineation classifier model |
 
-#### 3.4.2 Attributes Coded by GIS Layer Mapping
+#### 2.4.2 Attributes Coded by GIS Layer Mapping
 
 The following attributes are automatically derived from the GIS shapefiles stored in the system:
 
@@ -144,7 +144,7 @@ The following attributes are automatically derived from the GIS shapefiles store
 
 > **Note:** Road AADT has no GIS auto-coding path — it must be coded manually.
 
-#### 3.4.3 Attributes Coded by Logic Rules
+#### 2.4.3 Attributes Coded by Logic Rules
 
 Logic rules apply a **cascade system** based on what surface types the CV model detects in the image. Each step overrides the previous if its trigger condition is met:
 
@@ -157,7 +157,7 @@ Logic rules apply a **cascade system** based on what surface types the CV model 
 | **Step 5 — Zebra Crossing** | Zebra crossing ≥ 80% of bottom 10% | Same as Step 4, but Lanes on Intersecting Road = 1 |
 | **Step 6 — Road Surface** | Road pixels ≥ 80% of bottom 10% | Facility Type = Mixed Traffic, Light Seg. = Not Present, Adj. Road 0–1m = Present |
 
-### 3.5 Manual Review
+### 2.5 Manual Review
 
 You can override any coded value directly in the table. The page also shows:
 
@@ -166,7 +166,7 @@ You can override any coded value directly in the table. The page also shows:
 - a **validation summary table** comparing the percentage of attributes overwritten against the stored autocoded baseline
 - **field-source provenance** showing whether each value came from CV, GIS, logic rules, or manual entry
 
-### 3.6 Details and GIS Context
+### 2.6 Details and GIS Context
 
 For supported attributes, the page can show extra spatial detail within a **5m radius** of the current segment:
 
@@ -183,14 +183,14 @@ When you turn on the **Analysis Overlay** toggle on the coding page map, PSAT au
 
 If you navigate to the Coding page directly from Path Analysis (by clicking a segment on the Path Analysis map), the coding page map will show **only the segments that were visible in your active filter**. The currently selected segment is always shown regardless of the filter. This makes it easier to focus on a specific subset while coding without losing your analysis context.
 
-### 3.7 Save and Progress Tracking
+### 2.7 Save and Progress Tracking
 
 After review:
 
 - save your attribute edits to persist them and recalculate risk scores
 - update the **Segments Verified Percentage** counter as you complete manual checks
 
-### 3.8 CycleRAP Reference
+### 2.8 CycleRAP Reference
 
 The **CycleRAP** button (next to Coding Guide in the top tab bar) opens the official iRAP CycleRAP page at [irap.org/cyclerap](https://irap.org/cyclerap/) in a new browser tab. Use it to look up attribute definitions, scoring rationale, or the full CycleRAP methodology while you are coding.
 
@@ -231,7 +231,7 @@ Once the page opens, you will find four downloadable or interactive resources:
 
 ---
 
-### 3.9 Hover Tips — Safety Scores & Attributes
+### 2.9 Hover Tips — Safety Scores & Attributes
 
 PSAT surfaces contextual help through hover tooltips throughout the interface.
 

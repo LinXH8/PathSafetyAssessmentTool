@@ -140,7 +140,7 @@ function MarkdownContent({ content }: { content: string }) {
     ),
     table: ({ children }: any) => (
       <div style={{ overflowX: "auto", width: "100%", marginBottom: "1.5rem" }}>
-        <table style={{ minWidth: "700px", width: "100%", borderCollapse: "collapse" }}>{children}</table>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>{children}</table>
       </div>
     ),
     th: ({ children }: any) => <th style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", textAlign: "left", background: colors.tableHeaderBg, color: colors.fg, fontWeight: 600, whiteSpace: "nowrap" }}>{children}</th>,

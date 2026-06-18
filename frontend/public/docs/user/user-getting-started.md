@@ -7,7 +7,7 @@ Welcome to PSAT. The tool helps you create projects from geotagged survey images
 ## Table of Contents
 
 - [1.1 Using the Help Guide](#11-using-the-help-guide)
-- [1.2 User Login](#12-user-login)
+- [1.2 User Login & Account Management](#12-user-login--account-management)
 - [1.3 Open the Project List](#13-open-the-project-list)
 - [1.4 Create a Project](#14-create-a-project)
 - [1.5 Navigate Between Workflows](#15-navigate-between-workflows)
@@ -25,20 +25,23 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 - **Admin Guide** — system deployment, model management, and infrastructure
 - **Developer Guide** — technical architecture, API reference, and scoring logic
 
-### 1.2 User Login
+### 1.2 User Login & Account Management
 
-When you open PSAT, the **Landing Page** lists every profile registered on this device.
+**Creating a new profile** — click **Create Profile** on the Landing Page, enter your **LTA Employee Email** (e.g. `user@lta.gov.sg`), your **Division**, and a 4–12 digit numeric PIN, then click **Create Profile**.
 
-1. Click your profile card — it highlights in green to show it is selected.
-2. Click **Start As \<Name\>**. A PIN prompt appears if this is not the currently active session.
-3. Enter your 4–12 digit numeric PIN and confirm.
-4. You are now logged in and taken to your **Projects** page.
+**Signing in** — click your profile card on the Landing Page, click **Start As \<LTA Email Address\>**, enter your PIN, and you are taken to your **Projects** page.
 
-To create a new profile, click **Create Profile**, enter your LTA Employee Email, Division, and a 4–12 digit numeric PIN, then click **Create Profile**.
+**Switching accounts** — click **Log Out** in the left-hand sidebar at any time and select a different profile (identified by your LTA Employee Email, e.g. `user@lta.gov.sg`) on the Landing Page.
 
-To switch accounts, click **Log Out** in the left-hand sidebar and select a different profile on the Landing Page.
+**Session Behaviour**
 
-> For full login and account management instructions, see [Section 2: User Login & Account Management](#2-user-login--account-management).
+- Sessions are **device-local**. All browser tabs open on the same device share the same active profile.
+- Logging out from one tab logs you out everywhere on that device.
+- Your projects, images, and results persist on disk — logging out does not delete any data.
+
+**Forgotten PIN**
+
+PINs are stored locally and there is no self-service reset. Ask your administrator to delete and recreate the profile if the PIN is irrecoverable. Note that deleting a profile removes all projects associated with it.
 
 ### 1.3 Open the Project List
 

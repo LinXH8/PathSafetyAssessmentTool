@@ -6,13 +6,12 @@ import remarkGfm from "remark-gfm";
 
 const DOCS_LIST = [
   { id: "getting-started",      title: "1. Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Jun 2026" },
-  { id: "login",                title: "2. User Login",                path: "/docs/user/user-login.md",                  updatedDate: "Jun 2026" },
-  { id: "coding-page",          title: "3. Coding Page",               path: "/docs/user/user-coding-page.md",            updatedDate: "Jun 2026" },
-  { id: "map-view",             title: "4. Map View & Analysis",       path: "/docs/user/user-map-view.md",               updatedDate: "Jun 2026" },
-  { id: "path-analysis",        title: "5. Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
-  { id: "treatment-application",title: "6. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
-  { id: "report-generation",    title: "7. Report Generation",         path: "/docs/user/user-report-generation.md",      updatedDate: "Jun 2026" },
-  { id: "gis-management",       title: "8. GIS Layer Management",      path: "/docs/user/user-gis-management.md",         updatedDate: "Jun 2026" },
+{ id: "coding-page",          title: "2. Coding Page",               path: "/docs/user/user-coding-page.md",            updatedDate: "Jun 2026" },
+  { id: "map-view",             title: "3. Map View & Analysis",       path: "/docs/user/user-map-view.md",               updatedDate: "Jun 2026" },
+  { id: "path-analysis",        title: "4. Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
+  { id: "treatment-application",title: "5. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
+  { id: "report-generation",    title: "6. Report Generation",         path: "/docs/user/user-report-generation.md",      updatedDate: "Jun 2026" },
+  { id: "gis-management",       title: "7. GIS Layer Management",      path: "/docs/user/user-gis-management.md",         updatedDate: "Jun 2026" },
 ];
 
 export default function UserGuide() {
@@ -159,7 +158,7 @@ function MarkdownContent({ content }: { content: string }) {
     ),
     table: ({ children }: any) => (
       <div style={{ overflowX: "auto", width: "100%", marginBottom: "1.5rem" }}>
-        <table style={{ minWidth: "700px", width: "100%", borderCollapse: "collapse" }}>{children}</table>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>{children}</table>
       </div>
     ),
     th: ({ children }: any) => <th style={{ border: `1px solid ${colors.border}`, padding: "0.75rem", textAlign: "left", background: colors.tableHeaderBg, color: colors.fg, fontWeight: 600, whiteSpace: "nowrap" }}>{children}</th>,
