@@ -57,7 +57,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Adjacent Vehicle Parking 1–3m | Present; Not Present | — |
 | Facility Width per Direction **❖** | Very Narrow; Narrow; Wide | Very Narrow: ≤1.5m; >1.5–1.8m; >1.8–<2m · Narrow: 2–<3.5m; 3.5–4m · Wide: >4m |
 | Flow Direction | One Way; Two Way | — |
-| Grade | ≤2% (1:25); 2.9% (1:20); 3.8% (1:15); 4.7% (1:12); ≥5% | — |
+| Grade | ≤2° (1:25); 2.9° (1:20); 3.8° (1:15); 4.7° (1:12); ≥5° | — |
 | Curvature **❖** | Sharp Turn Present; No Sharp Turn Present | Sharp Turn: <6.5m; 6.5–<10m; Path Junction · No Sharp Turn: 10–18m; >18m |
 | Street Lighting | Present; Not Present | — |
 | Delineation **❖** | Present; Not Present | When "Present": Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing |

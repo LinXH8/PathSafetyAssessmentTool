@@ -62,11 +62,11 @@ All other attributes use standard single-level filtering.
 
 | Grade Value | Meaning |
 |---|---|
-| ≤2% (1:25) | Gradient up to 2% — very gentle slope |
-| 2.9% (1:20) | Gradient up to 2.9% |
-| 3.8% (1:15) | Gradient up to 3.8% |
-| 4.7% (1:12) | Gradient up to 4.7% |
-| ≥5% | 5% gradient or steeper — steepest category |
+| ≤2° (1:25) | Slope up to 2° — very gentle |
+| 2.9° (1:20) | Slope up to 2.9° |
+| 3.8° (1:15) | Slope up to 3.8° |
+| 4.7° (1:12) | Slope up to 4.7° |
+| ≥5° | 5° or steeper — steepest category |
 
 **Road Speed Limit** filter values (0, 10, 20, 100, 110, 120 km/h removed — not applicable to Singapore cycling paths):
 
