@@ -52,6 +52,12 @@ const PROJ_ROW_H = 188; // est. height of one project's detail block
 const PROJ_HEADER_H = 66;  // full section header (first chunk)
 const PROJ_CONT_HEADER_H = 30; // "(continued)" header (later chunks)
 
+// ── Quarter utilities ────────────────────────────────────────────────────────
+function dateToQuarterLabel(iso: string): string {
+  const [year, month] = iso.split("-").map(Number);
+  return `Q${Math.ceil(month / 3)} ${year}`;
+}
+
 const RISK_COLORS: Record<number, string> = {
   1: "#87C424", 2: "#FFCC1A", 3: "#FF5B1A", 4: "#CD1AFF",
 };
@@ -656,10 +662,6 @@ export default function ReportBuilderPage() {
   const [reportDate, setReportDate] = useState(() => {
     const l = _readSaved(); return typeof l?.reportDate === "string" ? l.reportDate : new Date().toISOString().split("T")[0];
   });
-  const [imageDate, setImageDate] = useState(() => {
-    const l = _readSaved(); return typeof l?.imageDate === "string" ? l.imageDate : "";
-  });
-
   // ── Projects ─────────────────────────────────────────────────────────────
   const [loadedProjects, setLoadedProjects] = useState<string[]>([]);
 
@@ -690,6 +692,9 @@ export default function ReportBuilderPage() {
 
   // ── Project metadata (name, dates, length) ────────────────────────────────
   const [projectMeta, setProjectMeta] = useState<Record<string, { dateCreated?: string; lastUpdated?: string; lengthKm?: number }>>({});
+  // ── Image date ranges (earliest/latest image date per project from actual files) ─
+  const [projectImageDates, setProjectImageDates] = useState<Record<string, { earliest: string; latest: string }>>({});
+  const [imageDatesLoading, setImageDatesLoading] = useState(false);
 
   // ── Path Analysis filter sync ─────────────────────────────────────────────
   const [activeFilterNames, setActiveFilterNames] = useState<string[]>([]);
@@ -786,15 +791,49 @@ export default function ReportBuilderPage() {
     fetchMeta();
   }, [loadedProjects]);
 
-  // ── Auto-populate Image Date from the earliest project survey date ────────
+  // ── Image date ranges fetched from actual image files ────────────────────
   useEffect(() => {
-    const dates = Object.values(projectMeta)
-      .map((m) => m.dateCreated)
-      .filter(Boolean) as string[];
-    if (dates.length === 0) return;
-    const earliest = dates.sort()[0].split("T")[0]; // YYYY-MM-DD
-    setImageDate(earliest);
-  }, [projectMeta]);
+    if (loadedProjects.length === 0) return;
+    const fetchImageDates = async () => {
+      setImageDatesLoading(true);
+      const entries = await Promise.all(
+        loadedProjects.map(async (name) => {
+          try {
+            const res = await fetch(`/api/projects/${encodeURIComponent(name)}/image-date-range`);
+            const data = await res.json();
+            if (data.earliest && data.latest) return { name, earliest: data.earliest as string, latest: data.latest as string };
+          } catch { /* skip */ }
+          return null;
+        })
+      );
+      const map: Record<string, { earliest: string; latest: string }> = {};
+      entries.forEach((e) => { if (e) map[e.name] = { earliest: e.earliest, latest: e.latest }; });
+      setProjectImageDates(map);
+      setImageDatesLoading(false);
+    };
+    fetchImageDates();
+  }, [loadedProjects]);
+
+  // ── Quarter data derived from image capture dates ────────────────────────
+  const quarterData = useMemo(() => {
+    const map: Record<string, { earliest: string; latest: string; projects: string[] }> = {};
+    Object.entries(projectImageDates).forEach(([name, range]) => {
+      const label = dateToQuarterLabel(range.earliest);
+      if (!map[label]) map[label] = { earliest: range.earliest, latest: range.latest, projects: [] };
+      if (range.earliest < map[label].earliest) map[label].earliest = range.earliest;
+      if (range.latest > map[label].latest) map[label].latest = range.latest;
+      map[label].projects.push(name);
+    });
+    return Object.entries(map)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([label, v]) => ({ label, ...v }));
+  }, [projectImageDates]);
+
+  const projectQuarterLabel = useMemo(() => {
+    const out: Record<string, string> = {};
+    quarterData.forEach(({ label, projects }) => projects.forEach((p) => { out[p] = label; }));
+    return out;
+  }, [quarterData]);
 
   // ── Score data fetch ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -1195,6 +1234,13 @@ export default function ReportBuilderPage() {
     (name: string) => projectNameOverrides[name] ?? name,
     [projectNameOverrides]
   );
+  const dispNameWithQuarter = useCallback(
+    (name: string) => {
+      const q = projectQuarterLabel[name];
+      return q ? `${dispName(name)} (${q})` : dispName(name);
+    },
+    [dispName, projectQuarterLabel]
+  );
   const setProjectName = useCallback(
     (orig: string, display: string) =>
       setProjectNameOverrides((prev) => ({ ...prev, [orig]: display })),
@@ -1215,14 +1261,14 @@ export default function ReportBuilderPage() {
     try {
       localStorage.setItem(LAYOUT_KEY, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered,
+        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
       setHasSaved(true);
       setSaveToastVisible(true);
       if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
       saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
     } catch (e) { console.error("Save layout failed:", e); }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, imageDate, projectNameOverrides, sectionTitles, includeFiltered]);
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
 
   const restoreLayout = useCallback(() => {
     try {
@@ -1235,7 +1281,6 @@ export default function ReportBuilderPage() {
       if (l.purpose !== undefined) setPurpose(l.purpose);
       if (l.recommendations !== undefined) setRecommendations(l.recommendations);
       if (l.reportDate !== undefined) setReportDate(l.reportDate);
-      if (l.imageDate !== undefined) setImageDate(l.imageDate);
       if (l.projectNameOverrides !== undefined) setProjectNameOverrides(l.projectNameOverrides);
       if (l.sectionTitles !== undefined) setSectionTitles(l.sectionTitles);
       if (l.includeFiltered !== undefined) setIncludeFiltered(l.includeFiltered);
@@ -1251,7 +1296,6 @@ export default function ReportBuilderPage() {
       setPurpose("");
       setRecommendations("");
       setReportDate(new Date().toISOString().split("T")[0]);
-      setImageDate("");
       setProjectNameOverrides({});
       setSectionTitles({});
       setIncludeFiltered(false);
@@ -1459,7 +1503,7 @@ export default function ReportBuilderPage() {
           oicName,
           purpose,
           reportDate,
-          imageDate,
+          quarterRanges: quarterData.map(({ label, earliest, latest, projects }) => ({ label, earliest, latest, projects })),
           recommendations,
           scoreStats: fullDataset.scoreStats,
           attributeFrequency: Object.fromEntries(fullDataset.attributeFrequency),
@@ -1615,7 +1659,7 @@ export default function ReportBuilderPage() {
                     <EditableText value={secTitle(elId, "Top Risk Stretches")} onChange={(val) => setSecTitle(elId, val)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e" }} />
                     <div style={{ color: "#ddd", fontSize: 20 }}>|</div>
                     <div style={{ fontSize: 20, fontWeight: 700, color: "#1a1a2e" }}>
-                      {dispName(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
+                      {dispNameWithQuarter(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
                     </div>
                   </div>
                   <div style={{ fontSize: 10, color: "#999" }}>Ranked highest to lowest · Before risk factors & after treatments applied</div>
@@ -1628,7 +1672,7 @@ export default function ReportBuilderPage() {
                 </div>
                 <div style={{ color: "#ddd", fontSize: 20 }}>|</div>
                 <div style={{ fontSize: 20, fontWeight: 700, color: "#1a1a2e" }}>
-                  {dispName(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
+                  {dispNameWithQuarter(row._project)} <span style={{ color: "#666", fontWeight: 400, fontSize: 18 }}>Segment {row._segIndex}</span>
                 </div>
               </div>
             )}
@@ -1802,7 +1846,7 @@ export default function ReportBuilderPage() {
             <SegmentImage src={e.imageUrl} width={999} height={85} />
             <div style={{ padding: "7px 9px" }}>
               <div style={{ fontSize: 9, color: "#bbb" }}>Rank #{i + 1}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#222", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{dispName(row._project)}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#222", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{dispNameWithQuarter(row._project)}</div>
               <div style={{ fontSize: 10, color: "#777", marginBottom: 4 }}>Segment {row._segIndex}</div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
                 <span style={{ fontSize: 17, fontWeight: 700, color: "#222" }}>{row._sumScore.toFixed(1)}</span>
@@ -1854,7 +1898,7 @@ export default function ReportBuilderPage() {
               <tr key={i} style={{ borderBottom: "1px solid #f0f0f0", background: i % 2 === 0 ? "#fff" : "#fafafa" }}>
                 <td style={{ ...tdStyle, fontWeight: 700, color: "#888" }}>{i + 1}</td>
                 <td style={{ padding: "4px 6px" }}><SegmentImage src={e.imageUrl} width={55} height={38} /></td>
-                <td style={{ ...tdStyle, maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{dispName(row._project)}</td>
+                <td style={{ ...tdStyle, maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{dispNameWithQuarter(row._project)}</td>
                 <td style={tdStyle}>{row._segIndex}</td>
                 <td style={{ ...tdStyle, fontWeight: 700, fontSize: 12 }}>{row._sumScore.toFixed(1)}</td>
                 <td style={{ ...tdStyle, maxWidth: 160 }}>
@@ -1889,8 +1933,11 @@ export default function ReportBuilderPage() {
           return (
             <div key={summary.project} style={{ marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid #ede8f5" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
                   <EditableText value={dispName(summary.project)} onChange={(v) => setProjectName(summary.project, v)} style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e" }} />
+                  {projectQuarterLabel[summary.project] && (
+                    <span style={{ fontSize: 11, color: "#a020d0", fontWeight: 600 }}>({projectQuarterLabel[summary.project]})</span>
+                  )}
                 </div>
                 <div style={{ fontSize: 11, color: "#a020d0", fontWeight: 600, background: "#f0e4f8", padding: "2px 8px", borderRadius: 10 }}>
                   {summary.treatedSegments} / {total || "?"} segments treated
@@ -1963,6 +2010,9 @@ export default function ReportBuilderPage() {
                       style={{ fontSize: 12, color: "#555" }}
                       placeholder={name}
                     />
+                    {projectQuarterLabel[name] && (
+                      <span style={{ fontSize: 11, color: "#a020d0", fontWeight: 600, marginLeft: 3 }}>({projectQuarterLabel[name]})</span>
+                    )}
                   </span>
                 ))
                 : "—"}
@@ -1990,11 +2040,20 @@ export default function ReportBuilderPage() {
               <div>
                 <div style={{ fontSize: 10, fontWeight: 600, color: "#a020d0", marginBottom: 3, textTransform: "uppercase", letterSpacing: 0.4 }}>
                   Image Date
-                  <span style={{ marginLeft: 5, fontSize: 9, fontWeight: 400, color: "#27ae60", textTransform: "none", letterSpacing: 0 }}>auto</span>
                 </div>
-                <input type="date" value={imageDate} onChange={(e) => setImageDate(e.target.value)}
-                  onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}
-                  style={{ width: "100%", padding: "4px 8px", borderRadius: 4, border: "1px solid #c8e8d0", fontSize: 11, color: "#222", background: "#f5fbf6", boxSizing: "border-box" }} />
+                {imageDatesLoading
+                  ? <span style={{ fontSize: 11, color: "#aaa" }}>Loading...</span>
+                  : quarterData.length === 0
+                  ? <span style={{ fontSize: 11, color: "#aaa" }}>No survey dates available</span>
+                  : quarterData.map(({ label, earliest, latest }) => {
+                    const fmt = (iso: string) => { try { const d = new Date(iso); return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`; } catch { return iso; } };
+                    return (
+                      <div key={label} style={{ fontSize: 11, color: "#222", marginBottom: 2, background: "#f5fbf6", borderRadius: 4, padding: "3px 8px", border: "1px solid #c8e8d0" }}>
+                        <strong>{label}:</strong> {fmt(earliest)}{earliest !== latest ? ` – ${fmt(latest)}` : ""}
+                      </div>
+                    );
+                  })
+                }
               </div>
             </div>
           </div>
@@ -2369,7 +2428,7 @@ export default function ReportBuilderPage() {
       case "projectDetails": {
         const fmtDate = (iso?: string) => {
           if (!iso) return "—";
-          try { return new Date(iso).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" }); }
+          try { const d = new Date(iso); return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`; }
           catch { return iso; }
         };
         const detailRow = (label: string, value: string) => (
@@ -2390,12 +2449,19 @@ export default function ReportBuilderPage() {
             <div key={name} style={{ marginBottom: isLastInChunk ? 0 : 16, paddingBottom: isLastInChunk ? 0 : 14, borderBottom: isLastInChunk ? "none" : "1px solid #ede8f5" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                 <EditableText value={dispName(name)} onChange={(v) => setProjectName(name, v)} style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", flex: 1 }} />
+                {projectQuarterLabel[name] && (
+                  <span style={{ fontSize: 11, color: "#a020d0", fontWeight: 600, background: "#f0e4f8", padding: "2px 7px", borderRadius: 8, whiteSpace: "nowrap" }}>{projectQuarterLabel[name]}</span>
+                )}
                 {projRows.length > 0 && renderBandBadge(Math.round(Object.entries(projDist).sort(([, a], [, b]) => b - a)[0][0] as unknown as number))}
               </div>
               <div style={{ marginBottom: 6 }}>
                 {detailRow("Segments", `${count}`)}
                 {detailRow("Length", `${lenKm} km`)}
-                {detailRow("Survey", fmtDate(meta.dateCreated))}
+                {detailRow("Survey", (() => {
+                  const imgRange = projectImageDates[name];
+                  if (imgRange) return imgRange.earliest === imgRange.latest ? fmtDate(imgRange.earliest) : `${fmtDate(imgRange.earliest)} – ${fmtDate(imgRange.latest)}`;
+                  return fmtDate(meta.lastUpdated);
+                })())}
                 {detailRow("Analysis", fmtDate(meta.lastUpdated))}
               </div>
               {projRows.length > 0 && (
@@ -2655,7 +2721,7 @@ export default function ReportBuilderPage() {
                             )}
                           </div>
                           <div style={{ fontSize: 8, color: "#666", textAlign: "center", maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {dispName(row._project)} · S{row._segIndex}
+                            {dispNameWithQuarter(row._project)} · S{row._segIndex}
                           </div>
                         </div>
                       );

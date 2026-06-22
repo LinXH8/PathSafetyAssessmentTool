@@ -1018,6 +1018,93 @@ def _log_incoming():
     except Exception as exc:
         return jsonify({"error": f"Backend initialisation failed: {exc}"}), 500
 
+_IMAGE_DATE_RE = re.compile(r'_(\d{8})[_.]')
+_IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.webp'}
+# EXIF tag IDs for capture date
+_EXIF_DATE_TAGS = (36867, 36868, 306)  # DateTimeOriginal, DateTimeDigitized, DateTime
+
+
+def _exif_date(path: Path) -> "datetime.date | None":
+    """Return the capture date from image EXIF, or None if unavailable."""
+    try:
+        from PIL import Image
+        with Image.open(path) as img:
+            exif = img._getexif()
+            if exif:
+                for tag in _EXIF_DATE_TAGS:
+                    val = exif.get(tag)
+                    if val and len(val) >= 10:
+                        try:
+                            return datetime.datetime.strptime(val[:10], "%Y:%m:%d").date()
+                        except ValueError:
+                            pass
+    except Exception:
+        pass
+    return None
+
+
+def _get_image_date_range(proj: "Project", pm=None) -> "dict | None":
+    """Return {"earliest": "YYYY-MM-DD", "latest": "YYYY-MM-DD"} from actual image files.
+
+    Priority order per image file:
+    1. EXIF DateTimeOriginal / DateTimeDigitized / DateTime
+    2. File modification time (mtime) fallback
+
+    For newer projects without an images/ folder, resolves files from in/ via geo_data
+    Image Reference column (requires pm).
+    """
+    dates: list[datetime.date] = []
+
+    images_dir = proj.project_path / "images"
+    if images_dir.is_dir():
+        for f in images_dir.iterdir():
+            if not f.is_file() or f.suffix.lower() not in _IMAGE_EXTENSIONS:
+                continue
+            d = _exif_date(f)
+            if d is None:
+                try:
+                    d = datetime.datetime.fromtimestamp(f.stat().st_mtime).date()
+                except Exception:
+                    pass
+            if d:
+                dates.append(d)
+    elif pm is not None:
+        # Newer projects: images live in in/<source_folder>/, referenced from geo_data
+        try:
+            geo_df = proj.geo_data.df
+            if geo_df is not None and "Image Reference" in geo_df.columns:
+                seen: set[str] = set()
+                for ref in geo_df["Image Reference"].dropna().astype(str):
+                    ref = ref.strip()
+                    if not ref or ref in seen:
+                        continue
+                    seen.add(ref)
+                    file_path = _resolve_image_from_in(pm, proj.name, ref)
+                    if file_path is None or not file_path.is_file():
+                        continue
+                    d = _exif_date(file_path)
+                    if d is None:
+                        try:
+                            d = datetime.datetime.fromtimestamp(file_path.stat().st_mtime).date()
+                        except Exception:
+                            pass
+                    if d:
+                        dates.append(d)
+        except Exception:
+            pass
+
+    if not dates:
+        return None
+    # Group by calendar quarter; use the quarter with the most images
+    from collections import Counter
+    def _qkey(d: datetime.date) -> tuple:
+        return (d.year, (d.month - 1) // 3 + 1)
+    quarter_counts: Counter = Counter(_qkey(d) for d in dates)
+    dominant = quarter_counts.most_common(1)[0][0]
+    dominant_dates = [d for d in dates if _qkey(d) == dominant]
+    return {"earliest": min(dominant_dates).isoformat(), "latest": max(dominant_dates).isoformat()}
+
+
 @bp.get("")
 def list_projects():
     """List projects with metadata including tags, date_created, last_updated, and verification segment counts."""
@@ -1304,8 +1391,26 @@ def get_project_metadata(project_name: str):
         "autocoded_segment_count": getattr(proj.metadata, 'autocoded_segment_count', 0),
         "path_key": getattr(proj.metadata, 'path_key', None),
         "date_created": proj.metadata.date_created.isoformat() if hasattr(proj.metadata, 'date_created') and proj.metadata.date_created else None,
-        "last_updated": proj.metadata.last_updated.isoformat() if hasattr(proj.metadata, 'last_updated') and proj.metadata.last_updated else None
+        "last_updated": proj.metadata.last_updated.isoformat() if hasattr(proj.metadata, 'last_updated') and proj.metadata.last_updated else None,
     })
+
+
+@bp.get("/<project_name>/image-date-range")
+def get_image_date_range(project_name: str):
+    """Return the earliest and latest image capture dates for a project.
+
+    Reads EXIF DateTimeOriginal from each image; falls back to file mtime when
+    EXIF is absent. Covers both images/ folder (legacy) and in/ source folders
+    (newer projects referenced via geo_data Image Reference column).
+    """
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    proj: Project = pm.project(project_name)
+    result = _get_image_date_range(proj, pm)
+    if result is None:
+        return jsonify({"earliest": None, "latest": None})
+    return jsonify(result)
+
 
 # Retired FO Type finer-attribute labels → current names. Applied at read time so
 # existing projects (including those created before the rename, on any device) always
