@@ -353,10 +353,35 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     "Road_network_line": LayerDefinition(
         name="Road_network_line",
         geometry_types=["LineString", "MultiLineString"],
-        required_columns=["RD_TYP_CD (1)"],
+        required_columns=["RD_CD_DESC (1)"],
         query_type="near",
         description="Road name reference",
         default_buffer_m=10.0,
+        column_aliases={
+            "RD_CD_DESC": ["RD_CD_DESC", "RD_NAM", "RD_NAME", "ROAD_NAME", "NAME"]
+        },
+    ),
+    # --- Land Use (standalone landuse category folder) ---
+    "landuse": LayerDefinition(
+        name="landuse",
+        geometry_types=["Polygon", "MultiPolygon"],
+        required_columns=["LU_DESC (1)", "LU_TEXT (2)"],
+        query_type="contains",
+        description="Land Use Type",
+        default_buffer_m=0.0,
+        column_aliases={
+            "LU_DESC": ["LU_DESC", "DESC", "NAME"],
+            "LU_TEXT": ["LU_TEXT", "LU_DESC", "DESC", "NAME"],
+        },
+    ),
+    # --- URA Parking Lot (standalone URA_parking_lot category folder) ---
+    "URA_parking_lot": LayerDefinition(
+        name="URA_parking_lot",
+        geometry_types=["Polygon", "MultiPolygon"],
+        required_columns=["PP_CODE (1)", "LOT_NO (2)", "TYPE (3)"],
+        query_type="near",
+        description="Adjacent Vehicle Parking",
+        default_buffer_m=20.0,
     ),
 }
 
