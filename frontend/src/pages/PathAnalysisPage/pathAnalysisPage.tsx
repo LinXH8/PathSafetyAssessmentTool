@@ -104,7 +104,7 @@ export default function PathAnalysisPage() {
   }, [loadedProjects]);
 
   return (
-    <Box w="100%" h="100vh" overflowY="auto" p="6" className="path-analysis-container">
+    <Box w="100%" p="6" className="path-analysis-container">
       <Box mb="6">
         <Text fontSize="2xl" fontWeight="bold" mb="2">
           Path Analysis

@@ -2648,8 +2648,8 @@ export default function AttributeAnalysisMapView({
                 }}
                 variant="line"
               >
-                <Box overflowX="auto">
-                  <Tabs.List px="4" minW="max-content">
+                <Box>
+                  <Tabs.List px="4" flexWrap="wrap">
                     <Tabs.Trigger value="project" fontSize="sm" whiteSpace="nowrap">
                       1. Projects
                     </Tabs.Trigger>

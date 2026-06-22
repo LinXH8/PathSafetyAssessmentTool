@@ -18,7 +18,7 @@ import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { useNavigate } from "react-router-dom";
 
 
-import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, useMapEvents, Marker, Circle, Pane } from "react-leaflet";
+import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, useMapEvents, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
 import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -1265,7 +1265,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               maxZoom={22}
               style={{ width: "100%", height: "100%" }}
               scrollWheelZoom
+              zoomControl={false}
             >
+              <ZoomControl position="topright" />
               <MapCursorController
                 mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
               />

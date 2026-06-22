@@ -99,8 +99,8 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange }: Fi
           )}
 
           <Tabs.Root defaultValue={GROUP_ORDER[0]} variant="line">
-            <Box overflowX="auto">
-              <Tabs.List px="4" minW="max-content">
+            <Box>
+              <Tabs.List px="4" flexWrap="wrap">
                 {GROUP_ORDER.map(group => {
                   const activeInGroup = (attrsByGroup[group] ?? []).filter(a => activeFilters.includes(a.name)).length;
                   return (

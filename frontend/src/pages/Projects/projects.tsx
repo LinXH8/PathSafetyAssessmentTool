@@ -310,7 +310,9 @@ export default function Home() {
     // Convert set to array and encode as query params
     const projectNames = Array.from(selected);
     const encodedNames = projectNames.map(name => encodeURIComponent(name));
-    navigate(`/coding/${encodedNames.join(',')}`);
+    // Clear any stale Path Analysis filter context so direct loads show
+    // normal risk-band colors instead of leftover filter colors.
+    navigate(`/coding/${encodedNames.join(',')}`, { state: { filterContext: null } });
   };
 
   // Load treatment application for selected projects
