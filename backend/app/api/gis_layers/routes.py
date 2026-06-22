@@ -35,6 +35,7 @@ import fiona
 from pyproj import Transformer, CRS
 from shapely.geometry import shape, mapping
 from flask import Blueprint, jsonify, request
+from werkzeug.utils import secure_filename
 
 from app.services.shapefile_validator import ShapefileValidator
 
@@ -500,7 +501,8 @@ def preview_upload():
     tmp_dir = Path(tempfile.mkdtemp(dir=_temp_root()))
     try:
         for f in files:
-            tmp_path = tmp_dir / f.filename
+            safe_name = secure_filename(f.filename) or "upload_file"
+            tmp_path = tmp_dir / safe_name
             f.save(str(tmp_path))
 
             if tmp_path.suffix.lower() == ".zip":
@@ -546,7 +548,8 @@ def upload_shapefiles():
 
     try:
         for f in files:
-            tmp_path = tmp_dir / f.filename
+            safe_name = secure_filename(f.filename) or "upload_file"
+            tmp_path = tmp_dir / safe_name
             f.save(str(tmp_path))
 
             if tmp_path.suffix.lower() == ".zip":
@@ -559,10 +562,10 @@ def upload_shapefiles():
                 except Exception as e:
                     errors.append(f"{f.filename}: {e}")
             else:
-                dest = dest_dir / f.filename
+                dest = dest_dir / safe_name
                 shutil.copy2(str(tmp_path), str(dest))
                 if tmp_path.suffix.lower() in [".shp", ".geojson", ".kml", ".kmz", ".gml", ".gpx", ".json"]:
-                    uploaded.append({"name": tmp_path.stem, "category": category, "path": (category + "/" + f.filename)})
+                    uploaded.append({"name": tmp_path.stem, "category": category, "path": (category + "/" + safe_name)})
     finally:
         shutil.rmtree(str(tmp_dir), ignore_errors=True)
 

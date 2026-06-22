@@ -94,7 +94,8 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
   async function fetchPreview(files: File[]) {
     const hasShp = files.some(f => f.name.toLowerCase().endsWith(".shp"));
-    if (!hasShp) {
+    const hasZip = files.some(f => f.name.toLowerCase().endsWith(".zip"));
+    if (!hasShp && !hasZip) {
       resetPreviewState();
       return;
     }
@@ -208,21 +209,18 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
   }
 
   function addFiles(newFiles: File[]) {
-    // Accept all GIS file types, but NO zip files
-    const gisExtensions = ['.shp', '.shx', '.dbf', '.prj', '.cpg', '.sbn', '.sbx',
+    // Accept ZIP files (containing shapefile components) AND individual GIS files
+    const gisExtensions = ['.zip', '.shp', '.shx', '.dbf', '.prj', '.cpg', '.sbn', '.sbx',
       '.geojson', '.kml', '.kmz', '.gml', '.gpx', '.json'];
 
     const validFiles = newFiles.filter((f) => {
       const fileName = f.name.toLowerCase();
-      // Reject zip files
-      if (fileName.endsWith('.zip')) return false;
-      // Accept any GIS file type
       return gisExtensions.some(ext => fileName.endsWith(ext));
     });
 
     if (validFiles.length === 0) {
       toaster.create({
-        description: "Please upload GIS layer files (.shp, .geojson, .kml, .gpx, etc.). ZIP files are not accepted.",
+        description: "Please upload a ZIP file containing shapefile components, or individual GIS files (.shp + companions, .geojson, .kml, .gpx, etc.).",
         type: "warning",
       });
       return;
@@ -323,18 +321,8 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
   }
 
   function validateAndSetReplaceFiles(files: File[]) {
-    // Reject zip files
-    const hasZip = files.some(f => f.name.toLowerCase().endsWith('.zip'));
-    if (hasZip) {
-      toaster.create({
-        description: "ZIP files are not accepted. Please upload GIS layer files directly (all companion files for shapefiles).",
-        type: "warning",
-      });
-      return;
-    }
-
-    // Validate all files are GIS files
-    const gisExtensions = ['.shp', '.shx', '.dbf', '.prj', '.cpg', '.sbn', '.sbx',
+    // Accept ZIP files (containing shapefile components) AND individual GIS files
+    const gisExtensions = ['.zip', '.shp', '.shx', '.dbf', '.prj', '.cpg', '.sbn', '.sbx',
       '.geojson', '.kml', '.kmz', '.gml', '.gpx', '.json'];
 
     const invalidFiles = files.filter(f => {
@@ -344,7 +332,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
     if (invalidFiles.length > 0) {
       toaster.create({
-        description: `Invalid file(s): ${invalidFiles.map(f => f.name).join(', ')}. Please upload only GIS layer files.`,
+        description: `Invalid file(s): ${invalidFiles.map(f => f.name).join(', ')}. Please upload a ZIP file containing shapefile components, or individual GIS files.`,
         type: "warning",
       });
       return;
@@ -575,13 +563,13 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                       or click to browse
                     </Text>
                     <Text fontSize="xs" color="fg.muted">
-                      Accepts GIS layer files (.shp, .geojson, .kml, .gpx, etc.)
+                      Accepts a ZIP file (recommended) or individual GIS layer files (.shp + companions, .geojson, .kml, .gpx, etc.)
                     </Text>
                     <input
                       ref={fileInputRef}
                       type="file"
                       multiple
-                      accept=".shp,.shx,.dbf,.prj,.cpg,.sbn,.sbx,.geojson,.kml,.kmz,.gml,.gpx,.json"
+                      accept=".zip,.shp,.shx,.dbf,.prj,.cpg,.sbn,.sbx,.geojson,.kml,.kmz,.gml,.gpx,.json"
                       style={{ display: "none" }}
                       onChange={handleFileSelect}
                     />
@@ -699,16 +687,16 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                       or click to browse
                     </Text>
                     <Text fontSize="xs" color="fg.muted">
-                      Accepts GIS layer files (.shp, .geojson, .kml, .gpx, etc.)
+                      Accepts a ZIP file (recommended) or individual GIS layer files (.shp + companions, .geojson, .kml, .gpx, etc.)
                     </Text>
                     <Text fontSize="xs" color="orange.500" mt={1}>
-                      For shapefiles: Upload ALL companion files (.shp, .shx, .dbf, .prj, etc.) together
+                      For individual shapefiles: Upload ALL companion files (.shp, .shx, .dbf, .prj, etc.) together
                     </Text>
                     <input
                       ref={replaceFileInputRef}
                       type="file"
                       multiple
-                      accept=".shp,.shx,.dbf,.prj,.cpg,.sbn,.sbx,.geojson,.kml,.kmz,.gml,.gpx,.json"
+                      accept=".zip,.shp,.shx,.dbf,.prj,.cpg,.sbn,.sbx,.geojson,.kml,.kmz,.gml,.gpx,.json"
                       style={{ display: "none" }}
                       onChange={handleReplaceFileSelect}
                     />
