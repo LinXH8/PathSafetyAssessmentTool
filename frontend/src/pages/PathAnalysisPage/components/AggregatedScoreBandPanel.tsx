@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { getCachedResults, invalidateAllOfNamespace } from "../../../api/projectDataCache";
 import ScoreBandPieChart from "../../../components/visualization/scoreband/ScoreBandPieChart";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
 import "../../../components/visualization/scoreband/ScoreBandDistributionPanel.css";
@@ -32,11 +33,6 @@ interface ScoreResultRow {
   "Overall Risk Level Band"?: number;
   "CycleRAP score"?: number; // Backward compatibility for existing projects
   "CycleRAP score Band"?: number; // Backward compatibility for existing projects
-}
-
-interface ScoreResultsResponse {
-  ok: boolean;
-  result_rows: ScoreResultRow[];
 }
 
 const CRASH_TYPE_LABELS: Record<string, string> = {
@@ -93,7 +89,7 @@ export function AggregatedScoreBandPanel({
   );
 
   // Fetch results from all projects and aggregate
-  const fetchAndAggregateResults = useCallback(async () => {
+  const fetchAndAggregateResults = useCallback(async (force = false) => {
     if (selectedProjects.length === 0) {
       setDistributions(null);
       setTotalSegments(0);
@@ -101,24 +97,22 @@ export function AggregatedScoreBandPanel({
       return;
     }
 
+    // A manual refresh bypasses the cache by evicting the results namespace first.
+    if (force) invalidateAllOfNamespace("results");
+
     try {
       setLoading(true);
       setErrors([]);
 
-      // Fetch all projects in parallel
+      // Fetch all projects in parallel (served from the shared session cache)
       const allResults = await Promise.all(
         selectedProjects.map(async (name) => {
           try {
-            const res = await fetch(
-              `/api/projects/${encodeURIComponent(name)}/results`
-            );
-            if (!res.ok) throw new Error("Failed to load results");
-
-            const data: ScoreResultsResponse = await res.json();
+            const data = await getCachedResults(name);
             if (!data.ok || !Array.isArray(data.result_rows)) {
               throw new Error("Invalid response format");
             }
-            return { project: name, data: data.result_rows, error: null };
+            return { project: name, data: data.result_rows as ScoreResultRow[], error: null };
           } catch (e: any) {
             return {
               project: name,
@@ -251,7 +245,7 @@ export function AggregatedScoreBandPanel({
                 </div>
               )}
               <button
-                onClick={fetchAndAggregateResults}
+                onClick={() => fetchAndAggregateResults(true)}
                 style={{
                   marginTop: "12px",
                   padding: "6px 12px",

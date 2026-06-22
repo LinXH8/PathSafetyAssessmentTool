@@ -15,7 +15,8 @@ import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
 import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
-import { fetchProjectAttributes, fetchProjectGeoJSON, fetchAttributeMappings, calculateScore, fetchProjectResults, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { fetchAttributeMappings, calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -746,6 +747,10 @@ export default function AttributeAnalysisMapView({
 
       toaster.create({ title: "Batch Delete Successful", description: `Deleted ${segmentsToDelete.length} segments.`, type: "success" });
 
+      // Drop cached geodata/attributes/results for the edited projects so the
+      // forced reload below fetches fresh data instead of the pre-delete cache.
+      Object.keys(byProject).forEach((project) => invalidateProject(project));
+
       // Cleanup UI
       setSegmentsToDelete([]);
       setPolygonPoints([]);
@@ -776,6 +781,8 @@ export default function AttributeAnalysisMapView({
     try {
       await deleteSegment(segmentToDelete.projectName, segmentToDelete.index);
       toaster.create({ title: "Segment Deleted", type: "success" });
+      // Drop cached data for the edited project so the reload fetches fresh data.
+      invalidateProject(segmentToDelete.projectName);
       setSegmentToDelete(null);
       setDeleteConfirmationOpen(false);
       setRefreshTrigger(prev => prev + 1);
@@ -1156,19 +1163,20 @@ export default function AttributeAnalysisMapView({
         setErr(null);
 
         const promises = selectedProjects.map(async (projectName) => {
-          // Fetch geodata and attributes (required)
+          // Fetch geodata and attributes (required). Served from the shared
+          // session cache so back-navigation from the Coding page is instant.
           const [geoJson, attrResponse] = await Promise.all([
-            fetchProjectGeoJSON(projectName),
-            fetchProjectAttributes(projectName),
+            getCachedGeoJSON(projectName),
+            getCachedAttributes(projectName),
           ]);
 
           // Fetch scores (optional - if fails, continue with empty scores).
-          // Prefer the read-only GET /results (no recompute, no disk write).
+          // Prefer the cached read-only GET /results (no recompute, no disk write).
           // Only fall back to POST /score (which computes + persists) when the
           // project has never been scored yet.
           let scores: Record<string, any>[] = [];
           try {
-            const resultsResponse = await fetchProjectResults(projectName);
+            const resultsResponse = await getCachedResults(projectName);
             scores = resultsResponse.result_rows || [];
           } catch (e) {
           }
@@ -3467,6 +3475,10 @@ export default function AttributeAnalysisMapView({
           // Reset mode
           setIsPolygonAddMode(false);
           setPolygonPoints([]);
+          // Copying segments mutates the target project's stored data. Clear the
+          // shared cache so the next load/remount fetches fresh data rather than
+          // serving the pre-copy cache.
+          invalidateAll();
           // Show success toast is inside the dialog
         }}
       />

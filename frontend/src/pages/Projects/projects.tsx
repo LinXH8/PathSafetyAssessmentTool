@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
+import { invalidateAll } from "../../api/projectDataCache";
 import { matchesProjectSearch } from "../../utils/projectSearch";
 import {
   Button,
@@ -330,6 +331,9 @@ export default function Home() {
     const projectNames = Array.from(selected);
     sessionStorage.setItem("pathAnalysis_selectedProjects", JSON.stringify(projectNames));
     sessionStorage.setItem("pathAnalysis_loadedProjects", JSON.stringify(projectNames));
+    // Deliberate "start over" reset point: loading a project set into Path
+    // Analysis always fetches fresh data, never the cached session data.
+    invalidateAll();
     navigate("/analysis/path");
   };
 
