@@ -60,7 +60,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Grade | ≤2° (1:25); 2.9° (1:20); 3.8° (1:15); 4.7° (1:12); ≥5° | — |
 | Curvature **❖** | Sharp Turn Present; No Sharp Turn Present | Sharp Turn: <6.5m; 6.5–<10m; Path Junction · No Sharp Turn: 10–18m; >18m |
 | Street Lighting | Present; Not Present | — |
-| Delineation **❖** | Present; Not Present | When "Present": Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing |
+| Delineation **❖** | Present; Not Present | When "Present": Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing <br> When "Not Present": Faded Marking |
 | Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others |
 | Non-Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Barrier; Bins; Bicycle; Cone; Others |
 | Light Segregation | Present; Not Present | — |
@@ -68,7 +68,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Crossing Facility **❖** | Present; Not Present | When "Present": Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
 | Property Access | Present; Not Present | — |
 | Tram or Train Rails | Present; Not Present | — |
-| Major Surface Deformation or Drain Opening | Present; Not Present | — |
+| Major Surface Deformation or Drain Opening **❖** | Present; Not Present | When "Present": Footpath crack; Footpath uneven; Footpath Uneven IMU |
 | Peak Pedestrian Flow | None; Low; Moderate to High | — |
 | Peak Bicycle/LV Traffic Flow | Low; Moderate to High | — |
 | Observed Proportion of Cargo Bikes | Low; Moderate to High | — |
@@ -91,7 +91,9 @@ Selecting a top-level filter value for any attribute marked **❖** reveals a se
 | Fixed Obstacle on Facility | Present | Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others |
 | Non-Fixed Obstacle on Facility | Present | Barrier; Bins; Bicycle; Cone; Others |
 | Delineation | Present | Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing |
+| Delineation | Not Present | Faded Marking |
 | Crossing Facility | Present | Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack; Footpath uneven; Footpath Uneven IMU |
 
 **How to use finer filtering:**
 
@@ -140,8 +142,9 @@ Attributes that support finer filtering are marked **❖** in the filter panel.
 | **Curvature** ❖ | Sharp Turn Present; No Sharp Turn Present | 5 radius ranges |
 | **Fixed Obstacle on Facility** ❖ | Present; Not Present | 7 obstacle types |
 | **Non-Fixed Obstacle on Facility** ❖ | Present; Not Present | 5 obstacle types |
-| **Delineation** ❖ | Present; Not Present | 5 delineation types |
+| **Delineation** ❖ | Present; Not Present | 5 delineation types when Present; 1 type when Not Present |
 | **Crossing Facility** ❖ | Present; Not Present | 5 crossing types |
+| **Major Surface Deformation or Drain Opening** ❖ | Present; Not Present | 3 deformation types |
 
 All other attributes use standard single-level filtering.
 
@@ -167,7 +170,9 @@ All other attributes use standard single-level filtering.
 | Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Pillar · Bollards · Fence · Vegetation · Others | Unique colour per type |
 | Non-Fixed Obstacle on Facility | Present | Barrier · Bins · Bicycle · Cone · Others | Unique colour per type |
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
+| Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack · Footpath uneven · Footpath Uneven IMU | Unique colour per type |
 
 #### Correcting Wrong Sub-category Colours
 

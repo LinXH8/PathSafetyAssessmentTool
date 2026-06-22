@@ -45,7 +45,7 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 | `Cyclingpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
 | `Cyclingpathgazette` | CyclingPath_Jul2024 | LineString | Planning Area Reference | `PLANNING_A (1)`, `PLANNING_1 (2)` |
 | `Dgp 27Oct14` | Planning_area | Polygon | Area-based Reporting | `PLN_AREA_N (1)` |
-| `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Facility Width, Curvature | `path_width (1)`, `path_type (2)` |
+| `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Cycling Path Type Reference | `path_type (1)` |
 | `Footpath` | FootPath_Mar2025 | LineString | Facility Width, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
 | `Footpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
 | `Hdb Car Park Lots` | parking_lot | Point / Polygon | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |

@@ -25,8 +25,9 @@ The following attributes currently have finer filtering enabled:
 | **Curvature** ❖ | Sharp Turn Present; No Sharp Turn Present | 5 radius ranges |
 | **Fixed Obstacle on Facility** ❖ | Present; Not Present | 7 obstacle types |
 | **Non-Fixed Obstacle on Facility** ❖ | Present; Not Present | 5 obstacle types |
-| **Delineation** ❖ | Present; Not Present | 5 delineation types |
+| **Delineation** ❖ | Present; Not Present | 5 delineation types when Present; 1 type when Not Present |
 | **Crossing Facility** ❖ | Present; Not Present | 5 crossing types |
+| **Major Surface Deformation or Drain Opening** ❖ | Present; Not Present | 3 deformation types |
 
 All other attributes use standard single-level filtering.
 
@@ -56,7 +57,9 @@ All other attributes use standard single-level filtering.
 | Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Pillar · Bollards · Fence · Vegetation · Others | Unique colour per type |
 | Non-Fixed Obstacle on Facility | Present | Barrier · Bins · Bicycle · Cone · Others | Unique colour per type |
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
+| Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack · Footpath uneven · Footpath Uneven IMU | Unique colour per type |
 
 **Grade filter values** (no finer filtering, but updated options):
 

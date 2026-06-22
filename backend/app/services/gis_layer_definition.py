@@ -241,13 +241,10 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     "CyclingPath_Jul2024": LayerDefinition(
         name="CyclingPath_Jul2024",
         geometry_types=["LineString", "MultiLineString"],
-        required_columns=["path_width (1)", "path_type (2)"],
+        required_columns=["path_type (1)"],
         query_type="near",
-        description="Facility Width, Curvature",
+        description="Cycling Path Type Reference",
         default_buffer_m=5.0,
-        column_aliases={
-            "path_width": ["path_width", "WIDTH", "width", "W_WIDTH", "Width_m", "WIDTH_M"]
-        },
     ),
     "CyclingPathGazette": LayerDefinition(
         name="CyclingPathGazette",
