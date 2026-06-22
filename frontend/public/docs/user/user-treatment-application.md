@@ -36,10 +36,10 @@ Project selection is done from the **Projects page**. Select one or more project
 
 After loading, the workspace is divided into several areas:
 
-- **Project tabs** (shown at the top when you loaded more than one project) — click a tab to jump to the first segment of that project.
+- **Project tabs** (shown at the top when you load more than one project) — By default, the workspace starts on the **All Projects** tab to show all loaded projects together. Clicking a specific project tab will focus on that project, jumping to its first segment. On the maps, segments from all other projects will automatically grey out, highlighting only the active project.
 - **Before Treatment** and **After Treatment maps** — a side-by-side pair of maps at the top of the page, showing all loaded segments colour-coded by risk level. The right map updates in real time as you apply treatments.
 - **A three-column panel** below the maps — Treatment Options on the left, the segment street-level image in the middle, and the Scores & Attributes panel on the right.
-- **An Overall Treatment Analysis section** at the bottom with pie charts comparing the project-wide risk band distribution before and after your treatments.
+- **An Overall Treatment Analysis section** at the bottom with pie charts comparing the risk band distributions before and after your treatments. The charts and percentages dynamically update based on your active tab — showing aggregate data for "All Projects" or specific data for a selected project, updating in real time as treatments are applied.
 
 The **page number** shown at the top right (e.g. `3 / 120`) tells you which segment you are currently viewing out of the total. Use the **Previous** and **Next** buttons, or type a page number directly, to jump to any segment.
 
@@ -60,9 +60,12 @@ The **Treatment Options** panel on the left has a dropdown that lets you switch 
 
 Tick the checkbox next to one or more treatments to select them. Selected treatments are highlighted in the panel.
 
-As soon as you tick a treatment, the **Scores card** on the right will show a **live preview** of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
+> [!IMPORTANT]
+> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live preview of the post-treatment risk scores and attribute changes. If this is toggled off, only the original (pre-treatment) scores will be displayed.
 
-The attributes panel also has a **Show Post-Treatment** toggle. Switch this on to see exactly which attribute values would change if the selected treatments were applied, so you can understand the reasoning behind the score change.
+Once the **Show Post-Treatment** toggle is enabled, selecting a treatment will show a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
+
+With the toggle on, the attributes panel also updates to display exactly which attribute values would change if the selected treatments were applied, so you can understand the reasoning behind the score change.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click Apply.
 
@@ -164,9 +167,10 @@ When treatments are selected:
 
 #### Previewing Before You Apply
 
-Tick any treatment checkbox to see the **live score preview** for the current segment. The scores update automatically as you change your selection — you do not need to click Apply.
+> [!IMPORTANT]
+> The **Show Post-Treatment** toggle must be switched **on** in the Attributes panel header to see the live score preview and attribute modifications. If it is toggled off, the score cards and attribute fields will continue showing the original pre-treatment values.
 
-Toggle **Show Post-Treatment** in the Attributes panel to see exactly which attribute values would change.
+With the toggle enabled, tick any treatment checkbox to see the **live score preview** for the current segment. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click **Apply**.
 

@@ -57,7 +57,7 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 | `Mrt Exits` | Mrt_exit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
 | `Roadattributeline Speedlimits` | Speed_limit | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
 | `Roadcrossing` | roadcrossinglayer | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
-| `Roadnetworkline` | Road_name | LineString | Road Name Reference | None |
+| `Roadnetworkline` | Road_name | LineString | Road Name Reference | `RD_CD_DESC (1)` |
 | `Sharedpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
 | `Ura Parking Lot` | parking_lot | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
 

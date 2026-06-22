@@ -11,7 +11,7 @@ The comparison is visible in the **Crash Type Scores** panel on the right-hand s
 ## How the Before / After Comparison Works
 
 1. **Before score** — the original crash type scores (BB, BP, SB, VB, Risk Score) computed from the coded attributes.
-2. **Treatment selected** — ticking a treatment checkbox immediately previews the effect on the current segment's scores.
+2. **Treatment selected** — ticking a treatment checkbox prepares the preview. *(Note: You must toggle "Show Post-Treatment" on in the Attributes panel header to see this preview update).*
 3. **After score** — PSAT re-runs the CycleRAP scoring formula with the updated attribute values to produce a predicted post-treatment score.
 
 The difference (reduction) is shown as a **↓ value** beneath each crash type score card. A green indicator confirms improvement; no arrow means the treatment did not affect that crash type.
@@ -30,9 +30,10 @@ When treatments are selected:
 
 ## Previewing Before You Apply
 
-Tick any treatment checkbox in the Treatment Options panel to see a **live score preview** for the current segment in real time. The scores update automatically as you change your selection — you do not need to click Apply.
+> [!IMPORTANT]
+> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live score preview. If it is toggled off, only the original pre-treatment scores will be displayed.
 
-Toggle **Show Post-Treatment** in the Attributes panel to see exactly which attribute values would change.
+With the toggle enabled, tick any treatment checkbox in the Treatment Options panel to see a **live score preview** for the current segment in real time. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click **Apply**.
 

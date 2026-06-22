@@ -17,7 +17,7 @@ PSAT uses a local profile system. Each user creates a named profile secured by a
 
 1. Open PSAT. The **Landing Page** lists all profiles registered on this device.
 2. Click the desired profile to select it (highlighted in green).
-3. Click **Start As \<Name\>**. A PIN prompt appears if this is not the currently active session.
+3. Click **Start As \<LTA Email Address\>**. A PIN prompt appears if this is not the currently active session.
 4. Enter the PIN and confirm. The user is now logged in and taken to their Projects page.
 5. All previously saved projects for that profile are immediately available.
 

@@ -342,10 +342,13 @@ LAYER_DEFINITIONS: Dict[str, LayerDefinition] = {
     "Road_name": LayerDefinition(
         name="Road_name",
         geometry_types=["LineString", "MultiLineString"],
-        required_columns=[],
+        required_columns=["RD_CD_DESC (1)"],
         query_type="near",
         description="Road name reference",
         default_buffer_m=10.0,
+        column_aliases={
+            "RD_CD_DESC": ["RD_CD_DESC", "RD_NAM", "RD_NAME", "ROAD_NAME", "NAME"]
+        },
     ),
     "Road_network_line": LayerDefinition(
         name="Road_network_line",
