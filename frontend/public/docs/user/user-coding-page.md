@@ -12,6 +12,8 @@ The Coding page is the main review workspace. It can open one or more selected p
 - [2.4 Auto-Code Options](#24-auto-code-options)
   - [2.4.1 Attributes Coded by CV (Image Analysis)](#241-attributes-coded-by-cv-image-analysis)
   - [2.4.2 Attributes Coded by GIS Layer Mapping](#242-attributes-coded-by-gis-layer-mapping)
+    - [2.4.2.1 Grade](#2421-grade)
+    - [2.4.2.2 Curvature](#2422-curvature)
   - [2.4.3 Attributes Coded by Logic Rules](#243-attributes-coded-by-logic-rules)
 - [2.5 Manual Review](#25-manual-review)
 - [2.6 Details and GIS Context](#26-details-and-gis-context)
@@ -144,6 +146,71 @@ The following attributes are automatically derived from the GIS shapefiles store
 | Heavy Vehicle Flow | `bus_lane` proximity | Within 20 m buffer |
 
 > **Note:** Road AADT has no GIS auto-coding path — it must be coded manually.
+
+##### 2.4.2.1 Grade
+
+- Verify LiDAR points for gaps or corrupted files.
+- Remove any points without elevation value
+- Remove points below -10m and +65m (Bukit Timah Hill still lies below this point so there's no reason for 170m)
+
+![LiDAR elevation range filter](/docs/user/img/grade-curvature/image1.png)
+
+- Obtain all LiDAR points within 3m of identified GPS point
+- Assign these LiDAR points a fixed score multiplier based on distance from point
+- Score in relation to distance is calculated using this sigmund curve modified to accept a parameter for number of points
+
+Confidence level is not a strict cut off point but instead a point at which the score begins to diminish rapidly, seen by the first curve of the sigmoid below. A higher confidence inversely affects the severity of the curve, resulting in a flatter score distribution and thus more evenly weighted across all distance, i.e. a high confidence of 100 will effectively cause points at 0m and 3m to have identical weightage. The confidence level of 2.87 is determined to be the highest accuracy based on comparisons to testing with personal equipment in my neighborhood (smartwatch's baro altimeter). This value can 100% be refined further, but the largest point of error now isn't my equipment accuracy but much more so the LiDAR accuracy.
+
+![Sigmoid curve for point score calculation](/docs/user/img/grade-curvature/image2.png)
+
+- Plot all points on a 3d graph such that Y = elevation, X = distance and Z = score
+
+Very hard to give typical range due to the incredible amount of inaccuracy in the LiDAR data, i.e. an average elevation of 50m because the equipment happened to scan a flock of birds. Within Singapore, the expected range is 0m to 15m. Unable to give a picture example of said graph because this is purely computational and for auditing. This graph is not used in final calculations.
+
+- Determine elevation using simple weighted aggregation
+
+Points closer to 0m have higher weightage in regards to elevation, based on computed score given the sigmoid function above. To be more specific, I used the inverse distance weighting formula below where E-hat is the resulting estimated elevation (the hat signifies estimated, wi being the weight of point i, and ei being the elevation of point i. Further clarification: weight = score, the number calculted from the sigmoid curve above.
+
+![Inverse distance weighting formula](/docs/user/img/grade-curvature/image3.png)
+
+**REASONING**
+
+- 3m search radius balances spatial specificity against the risk of insufficient point density in any single capture
+- inverse distance weighting is an established spatial interpolation technique that preserves the intuition that nearer measurements are more representative of a target location
+- logistic function is used to model confidence as a function of point count because density exhibits diminishing returns on estimate reliability i.e the difference between 1 and 10 points is significant, while the difference between 100 and 110 is negligible
+- Weighted aggregation over distance-scaled scores produces a single elevation estimate that is robust to outlier points at the periphery of the search radius
+
+##### 2.4.2.2 Curvature
+
+- Path is snapped to nearest GIS path centreline; uses the facility under priority cycling>shared>footpath, i.e. if side by side cycling path/footpath, curvature will always use cycling path
+- Buffer of 5m radius to prevent across the road problems
+
+![5m buffer zone diagram](/docs/user/img/grade-curvature/image4.png)
+
+**ALONG PATH**
+
+- Within 5m (this is the radius we see) the path line found previously is densified to 0.5m spaced points and slides in consecutive triplet points (as in 0m is point A, 0.5m is point B, etc), one area can have many of these triplets
+- The algorithm fits a circle that passes through any 3 points using this: R = (a * b * c) / (4 / Area) where area is derived from Heron's formula
+- Passes through these rejection criteria: Nearly straight (collinear) abc points skipped (straight), micro-triangle abc points under 0.35m each side is skipped (inaccurate), lopsided abc (one long side one short side etc) skipped (inaccurate). Exact numbers are if long end is 3x the short end
+
+Points ABC form lines AB and BC. Lopsided 3x signifies that AB:BC > 1:3 or vice versa.
+
+![Triplet lopsided rejection diagram](/docs/user/img/grade-curvature/image5.png)
+
+- Now we have a few non-rejected abc triplets, use the worst case (minimum radius)
+
+**PATH INTERSECTION**
+
+- If no sharp turn, run this, so if got sharp turn + path intersection, always will show sharp turn
+- Any vertex deflection angle > 45 deg
+- Must have >1m arm lengths (to account for drawing error)
+
+![Path intersection deflection angle diagram](/docs/user/img/grade-curvature/image6.jpeg)
+
+**EXACT NUMBER JUSTIFICATIONS**
+
+- 0.5m densify spacing: any smaller, detection becomes too sensitive. Any higher, not enough points. Each triplet here spans roughly 1m and 5-6deg arc of a 10m circle
+- 0.35m min triplet leg: GIS data shows this to be the breaking point where any smaller, centreline noise/inaccuracy starts to take ove
 
 #### 2.4.3 Attributes Coded by Logic Rules
 
