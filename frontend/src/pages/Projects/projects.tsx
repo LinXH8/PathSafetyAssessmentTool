@@ -332,8 +332,10 @@ export default function Home() {
     sessionStorage.setItem("pathAnalysis_selectedProjects", JSON.stringify(projectNames));
     sessionStorage.setItem("pathAnalysis_loadedProjects", JSON.stringify(projectNames));
     // Deliberate "start over" reset point: loading a project set into Path
-    // Analysis always fetches fresh data, never the cached session data.
+    // Analysis always fetches fresh data, never the cached session data, and
+    // re-fits the map to the new set rather than restoring the old viewport.
     invalidateAll();
+    sessionStorage.removeItem("pathAnalysisMap_viewport");
     navigate("/analysis/path");
   };
 

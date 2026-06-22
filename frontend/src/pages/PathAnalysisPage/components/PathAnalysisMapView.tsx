@@ -15,8 +15,8 @@ import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
 import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
-import { fetchAttributeMappings, calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
-import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -215,6 +215,28 @@ function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBound
     moveend: (e) => cbRef.current(e.target.getBounds()),
     zoomend: (e) => cbRef.current(e.target.getBounds()),
   });
+  return null;
+}
+
+// sessionStorage key + shape for the persisted map viewport (center + zoom).
+const VIEWPORT_KEY = "pathAnalysisMap_viewport";
+type SavedViewport = { center: [number, number]; zoom: number };
+
+// Persists the live map center/zoom on every pan/zoom so returning from the
+// Coding page lands on the exact view the user left (rather than re-fitting to
+// all points). Cleared on a deliberate Projects-page reselect.
+function ViewportPersister() {
+  const map = useMap();
+  const save = () => {
+    try {
+      const c = map.getCenter();
+      sessionStorage.setItem(
+        VIEWPORT_KEY,
+        JSON.stringify({ center: [c.lat, c.lng], zoom: map.getZoom() } as SavedViewport)
+      );
+    } catch { /* sessionStorage unavailable — ignore */ }
+  };
+  useMapEvents({ moveend: save, zoomend: save });
   return null;
 }
 
@@ -462,7 +484,9 @@ export default function AttributeAnalysisMapView({
 
   // Track live map viewport so we can cull off-screen markers before React touches them.
   const [mapViewportBounds, setMapViewportBounds] = useState<L.LatLngBounds | null>(null);
-  const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>({});
+  const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>(
+    () => getCachedAttributeMappingsSync() ?? {}
+  );
 
   // Category toggle states — tracks per-attribute per-value visibility
   const [categoryToggles, setCategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
@@ -804,7 +828,10 @@ export default function AttributeAnalysisMapView({
   // Auto-focus the newest filter when one is added; revert coloring when the focused
   // filter is removed (otherwise primaryFocusAttribute goes stale and the map keeps
   // coloring by a filter that is no longer active).
-  const prevFiltersRef = useRef<string[]>([]);
+  // Seed with the mount-time filters (restored from sessionStorage) so a remount
+  // does not treat already-active filters as "newly added" and snap focus to the
+  // first one — that would clobber the restored primaryFocusAttribute/index.
+  const prevFiltersRef = useRef<string[]>(selectedAttributes);
   useEffect(() => {
     const prev = prevFiltersRef.current;
     const added = activeFilters.find(f => !prev.includes(f));
@@ -834,14 +861,12 @@ export default function AttributeAnalysisMapView({
     }
   }, [activeFilters.length, categoryFilterAttributeIndex]);
 
-  // Load attribute mappings on mount
+  // Load attribute mappings on mount. Served from the shared cache (adequacy
+  // augmentation applied inside the loader) so a remount initialises the state
+  // synchronously above and avoids the "all segments then filtered" flash.
   useEffect(() => {
-    fetchAttributeMappings()
+    getCachedAttributeMappings()
       .then(mappings => {
-        // Ensure adequacy-mapped attributes are always present (backend may omit them)
-        const adequacyMap: Record<string, string> = { "1": "Adequate", "2": "Inadequate" };
-        if (!mappings["Line of Sight"]) mappings["Line of Sight"] = adequacyMap;
-        if (!mappings["Facility access"]) mappings["Facility access"] = adequacyMap;
         setAttrMappings(mappings);
       })
       .catch(() => {
@@ -1201,10 +1226,13 @@ export default function AttributeAnalysisMapView({
         const results = await Promise.all(promises);
         if (!aborted) {
           setProjectsData(results);
-          // Enable auto-fit when new projects are loaded
-          setShouldAutoFit(true);
-          // Reset after a short delay to allow the fit to happen
-          setTimeout(() => setShouldAutoFit(false), 500);
+          // Auto-fit only on a fresh load. When returning from the Coding page a
+          // saved viewport exists, so keep the user's previous pan/zoom instead.
+          if (!savedViewport.current) {
+            setShouldAutoFit(true);
+            // Reset after a short delay to allow the fit to happen
+            setTimeout(() => setShouldAutoFit(false), 500);
+          }
         }
       } catch (e: any) {
         if (!aborted) setErr(e?.message ?? "Failed to load data");
@@ -1978,7 +2006,19 @@ export default function AttributeAnalysisMapView({
   };
 
   // Default center (Singapore)
-  const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
+  // Read the persisted viewport once at mount. When present (returning from the
+  // Coding page) the map opens there and skips the auto-fit; when absent (fresh
+  // Projects-page load) it falls back to the Singapore default and auto-fits.
+  const savedViewport = useRef<SavedViewport | null>(
+    (() => {
+      try {
+        const s = sessionStorage.getItem(VIEWPORT_KEY);
+        return s ? (JSON.parse(s) as SavedViewport) : null;
+      } catch { return null; }
+    })()
+  );
+  const initialCenter = useRef<[number, number]>(savedViewport.current?.center ?? [1.3521, 103.8198]);
+  const initialZoom = useRef<number>(savedViewport.current?.zoom ?? 13);
 
   // Calculate bounds for each project based on actual geodata
   const projectBounds = useMemo(() => {
@@ -3018,7 +3058,7 @@ export default function AttributeAnalysisMapView({
                 />
                 <MapContainer
                   center={initialCenter.current}
-                  zoom={13}
+                  zoom={initialZoom.current}
                   maxZoom={22}
                   style={{ width: "100%", height: "100%" }}
                   scrollWheelZoom
@@ -3053,6 +3093,9 @@ export default function AttributeAnalysisMapView({
 
                   {/* Track viewport for marker culling */}
                   <ViewportWatcher onBoundsChange={setMapViewportBounds} />
+
+                  {/* Persist center/zoom so back-navigation restores this view */}
+                  <ViewportPersister />
 
                   {/* Force Leaflet to recalculate its container size after mount so
                       getBounds() reflects the real rendered height, not a zero/partial

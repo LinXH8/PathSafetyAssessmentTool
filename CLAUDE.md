@@ -66,6 +66,74 @@ in-memory state and the stale sessionStorage entry in one step (no manual key im
 - `frontend/src/pages/CodingPage/codingPage.tsx` — `resolveFilterContext()`: the priority-1 / fallback logic
 - `frontend/src/pages/PathAnalysisPage/components/PathAnalysisMapView.tsx` — writes/removes `codingFilterContext` on segment click
 
+### PathAnalysisPage: Slow Reload + Flash + Lost View On Return From Coding (2026-06-23)
+
+**Symptom:** Apply filters in PathAnalysisPage, click a segment (navigates to the Coding
+page), then navigate **back**. Three problems: (1) the whole page — especially the map —
+took a long time to reload; (2) all segments flashed on screen for ~0.5s before collapsing
+to the filtered set; (3) the map re-fit to all points and the colour/focus attribute reset
+to the first filter, instead of restoring the user's previous pan/zoom and focus.
+
+**Root causes:**
+
+1. **Full remount, no caching.** `/analysis/path` is a plain `<Route element={...}>`, so
+   navigating to Coding unmounts PathAnalysisPage and returning remounts it, re-running
+   every fetch. Worse, three sibling components each fetched per-project `/results`
+   independently (`AggregatedScoreBandPanel`, `AggregatedTopContributorsPanel`,
+   `PathAnalysisMapView`) plus geodata and attributes — so each return fired ~3N
+   `/results` requests and ~2N geodata/attribute requests, all uncached, gating the map
+   behind the slowest.
+2. **Flash:** `visibleSegments` filtering calls `getFilterAttributeText`, which converts
+   numeric attribute codes → text labels via `attrMappings`. `attrMappings` was fetched
+   async on every mount and started `{}`; while empty, every segment's label fails to
+   match the (restored) `categoryToggles` keys → all segments pass the filter until the
+   mappings resolve.
+3. **Lost viewport:** map mounted at a fixed center/zoom and the data-load effect always
+   `setShouldAutoFit(true)`; the live viewport was never persisted.
+4. **Lost focus:** `primaryFocusAttribute` / `categoryFilterAttributeIndex` ARE restored
+   from sessionStorage, but the auto-focus effect seeded `prevFiltersRef` to `[]`, so on
+   remount every active filter looked "newly added" → focus snapped to the first filter.
+
+**Fix:**
+
+- **Shared session cache** — new `frontend/src/api/projectDataCache.ts` wraps the read
+  endpoints with a module-level promise cache (caches the *promise* so concurrent callers
+  de-dup; evicts on rejection for retry). Makes back-navigation a pure cache hit and
+  collapses the 3× `/results` fetches into one per project. Namespaces: `geodata`,
+  `attributes`, `results`. **Invalidation:** auto on `psat:scores:updated` (evicts
+  `results`); `invalidateProject(name)` on segment delete; `invalidateAll()` on add-segment
+  success and — the explicit "start over" reset — in `projects.tsx::loadPathAnalysis()`.
+  The three consumers use `getCachedGeoJSON/Attributes/Results`; the panels' Refresh
+  buttons force-bypass via `invalidateAllOfNamespace("results")`.
+- **Flash** — the cache also holds attribute mappings with a SYNCHRONOUS getter
+  (`getCachedAttributeMappingsSync()`) plus `getCachedAttributeMappings()` (adequacy
+  augmentation moved into the loader). `PathAnalysisMapView` initialises its `attrMappings`
+  state from the sync value, so filtering is correct on the first render after a remount.
+- **Viewport** — `ViewportPersister` (a `useMap()`/`useMapEvents` child) writes
+  `{center, zoom}` to sessionStorage key `pathAnalysisMap_viewport` on moveend/zoomend. On
+  mount, `savedViewport`/`initialCenter`/`initialZoom` refs seed `<MapContainer>` and the
+  data-load effect skips `setShouldAutoFit(true)` when a saved viewport exists.
+  `loadPathAnalysis()` clears the key so a fresh reselect re-fits.
+- **Focus** — `prevFiltersRef` is seeded with the mount-time `selectedAttributes`, so no
+  filter is treated as "added" on remount and the restored focus is preserved.
+
+**Gotcha:** The cache lives for the SPA session only (module memory) — a hard reload (F5)
+clears it. The only full reset in normal flow is a Projects-page reselect; everything else
+is targeted/automatic. First-EVER load (cold cache) may still briefly flash; the fix
+targets back-navigation specifically.
+
+**Key files:**
+
+- `frontend/src/api/projectDataCache.ts` — the cache (per-project read endpoints + sync
+  attribute-mappings); `invalidate*` helpers
+- `frontend/src/pages/PathAnalysisPage/components/PathAnalysisMapView.tsx` — cached fetches,
+  sync `attrMappings` init, `ViewportPersister`, `initialCenter`/`initialZoom` + auto-fit
+  guard, `prevFiltersRef` seed, `invalidateProject`/`invalidateAll` on mutations
+- `frontend/src/pages/PathAnalysisPage/components/AggregatedScoreBandPanel.tsx` &
+  `AggregatedTopContributorsPanel.tsx` — `getCachedResults`; Refresh buttons force-bypass
+- `frontend/src/pages/Projects/projects.tsx` — `loadPathAnalysis()`: `invalidateAll()` +
+  clears `pathAnalysisMap_viewport`
+
 ### Chakra UI Dialog: Blocking Interaction After Close
 
 **Symptom:** After closing a `Dialog` (e.g. EditProjectModal), the page beneath becomes unresponsive — mouse wheel scroll and clicks on rows are blocked. Only the native scrollbar thumb drag still works.

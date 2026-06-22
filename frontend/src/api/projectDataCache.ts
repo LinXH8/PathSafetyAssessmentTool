@@ -3,8 +3,10 @@ import {
   fetchProjectGeoJSON,
   fetchProjectAttributes,
   fetchProjectResults,
+  fetchAttributeMappings,
   type AttributesResponse,
   type CalculateScoreResult,
+  type AttrMappings,
 } from "./index";
 
 /**
@@ -89,4 +91,44 @@ export function invalidateAll(): void {
 // then differ from what we cached, so evict the results namespace globally.
 if (typeof window !== "undefined") {
   window.addEventListener("psat:scores:updated", () => invalidateAllOfNamespace("results"));
+}
+
+// ── Attribute mappings (global, not per-project) ──────────────────────────────
+// Path Analysis needs these to turn numeric attribute codes into the text labels
+// its category filters match against. Fetched async on every mount, they start
+// empty and let every segment pass the filter until they resolve — the "all
+// segments then filtered" flash on back-navigation. Caching the resolved value
+// in a module variable lets the page initialise its state synchronously on
+// remount, so filtering is correct from the first render.
+
+let resolvedMappings: AttrMappings | null = null;
+let mappingsPromise: Promise<AttrMappings> | null = null;
+
+// Backend may omit the adequacy-coded attributes; mirror the augmentation the
+// Path Analysis page previously did inline so the cached value is complete.
+function augmentMappings(m: AttrMappings): AttrMappings {
+  const adequacyMap: Record<string, string> = { "1": "Adequate", "2": "Inadequate" };
+  if (!m["Line of Sight"]) m["Line of Sight"] = adequacyMap;
+  if (!m["Facility access"]) m["Facility access"] = adequacyMap;
+  return m;
+}
+
+/** Last resolved (augmented) attribute mappings, or null if never fetched. */
+export function getCachedAttributeMappingsSync(): AttrMappings | null {
+  return resolvedMappings;
+}
+
+/** Promise-deduped fetch of the augmented attribute mappings. */
+export function getCachedAttributeMappings(): Promise<AttrMappings> {
+  if (mappingsPromise) return mappingsPromise;
+  mappingsPromise = fetchAttributeMappings()
+    .then((m) => {
+      resolvedMappings = augmentMappings(m);
+      return resolvedMappings;
+    })
+    .catch((err) => {
+      mappingsPromise = null; // allow a later mount to retry
+      throw err;
+    });
+  return mappingsPromise;
 }
