@@ -640,6 +640,7 @@ export function getCategoryColor(attribute: string, category: string): string {
       "Red Stripe":       "#DC2626",
       "Signalised Crossing": "#EA580C",
       "Zebra Crossing":   "#CA8A04",
+      "Faded Marking":    "#9CA3AF",
     },
     "Street Lighting": { "Present": "#16A34A", "Not Present": "#DC2626" },
     "Grade": {

@@ -4,16 +4,12 @@ import {
   aggregateTopContributors,
   type TopContributor,
 } from "../../../utils/aggregateTopContributors";
+import { getCachedResults, invalidateAllOfNamespace } from "../../../api/projectDataCache";
 import "../../../components/visualization/scoreband/ScoreBandDistributionPanel.css";
 import "./AggregatedScoreBandPanel.css";
 
 interface AggregatedTopContributorsPanelProps {
   selectedProjects: string[];
-}
-
-interface ScoreResultsResponse {
-  ok: boolean;
-  result_rows: Array<Record<string, unknown>>;
 }
 
 export function AggregatedTopContributorsPanel({
@@ -28,13 +24,16 @@ export function AggregatedTopContributorsPanel({
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<"combined" | "byProject">("combined");
 
-  const fetchAndAggregate = useCallback(async () => {
+  const fetchAndAggregate = useCallback(async (force = false) => {
     if (selectedProjects.length === 0) {
       setCombinedContributors([]);
       setPerProjectContributors([]);
       setLoading(false);
       return;
     }
+
+    // A manual refresh bypasses the cache by evicting the results namespace first.
+    if (force) invalidateAllOfNamespace("results");
 
     try {
       setLoading(true);
@@ -43,11 +42,7 @@ export function AggregatedTopContributorsPanel({
       const allResults = await Promise.all(
         selectedProjects.map(async (name) => {
           try {
-            const res = await fetch(
-              `/api/projects/${encodeURIComponent(name)}/results`
-            );
-            if (!res.ok) throw new Error("Failed to load results");
-            const data: ScoreResultsResponse = await res.json();
+            const data = await getCachedResults(name);
             if (!data.ok || !Array.isArray(data.result_rows)) {
               throw new Error("Invalid response format");
             }
@@ -157,7 +152,7 @@ export function AggregatedTopContributorsPanel({
             <div className="score-band-error">
               <p>⚠️ {errors[0]}</p>
               <button
-                onClick={fetchAndAggregate}
+                onClick={() => fetchAndAggregate(true)}
                 style={{
                   marginTop: "12px",
                   padding: "6px 12px",

@@ -73,8 +73,7 @@ generate-summary-*.xlsx
 # Documentation and explanations
 *.md
 !README.md
-# Local-only agent guidance; recovered from history, kept out of the repo
-CLAUDE.md
+!CLAUDE.md
 *.lnk
 CycleRAP_User_Guide.pdf
 !frontend/public/docs/**

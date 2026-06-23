@@ -353,7 +353,7 @@ def generate_docx():
         oic_name = data.get("oicName", "")
         purpose = data.get("purpose", "")
         report_date = data.get("reportDate", "")
-        image_date = data.get("imageDate", "")
+        quarter_ranges = data.get("quarterRanges", [])
         audit_date = data.get("auditDate", "")
         recommendations_text = data.get("recommendations", "")
         score_stats = data.get("scoreStats") or {}
@@ -371,6 +371,17 @@ def generate_docx():
 
         def disp(name):
             return project_display_names.get(name, name)
+
+        # Build project → quarter label lookup from quarterRanges payload
+        _project_quarter = {}
+        for _qr in quarter_ranges:
+            for _pname in _qr.get("projects", []):
+                _project_quarter[_pname] = _qr.get("label", "")
+
+        def disp_with_quarter(name):
+            q = _project_quarter.get(name, "")
+            base = disp(name)
+            return f"{base} ({q})" if q else base
 
         def sec_title(el_id, default_title):
             return section_titles.get(el_id, default_title)
@@ -416,7 +427,7 @@ def generate_docx():
                 h = doc.add_heading(report_title, level=1)
                 h.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 if selected_projects:
-                    p = doc.add_paragraph(f"Projects: {', '.join(selected_projects)}")
+                    p = doc.add_paragraph(f"Projects: {', '.join(disp_with_quarter(n) for n in selected_projects)}")
                     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 if oic_name:
                     p_oic = doc.add_paragraph()
@@ -440,10 +451,15 @@ def generate_docx():
                     p_rd = doc.add_paragraph()
                     p_rd.add_run("Report Date: ").bold = True
                     p_rd.add_run(fmt_iso_date(report_date))
-                if image_date:
+                if quarter_ranges:
                     p_id = doc.add_paragraph()
-                    p_id.add_run("Image Date: ").bold = True
-                    p_id.add_run(fmt_iso_date(image_date))
+                    p_id.add_run("Image Date:").bold = True
+                    for qr in quarter_ranges:
+                        p_qr = doc.add_paragraph(style="List Bullet")
+                        p_qr.add_run(f"{qr.get('label', '')}: ").bold = True
+                        earliest = fmt_iso_date(qr.get("earliest", ""))
+                        latest = fmt_iso_date(qr.get("latest", ""))
+                        p_qr.add_run(f"{earliest}{' – ' + latest if earliest != latest else ''}")
                 if audit_date:
                     p_ad = doc.add_paragraph()
                     p_ad.add_run("Audit Date: ").bold = True
@@ -517,7 +533,7 @@ def generate_docx():
                     for rank, row in enumerate(top_risk_rows, start=1):
                         cells = table.add_row().cells
                         cells[0].text = str(rank)
-                        cells[1].text = disp(str(row.get("_project", "")))
+                        cells[1].text = disp_with_quarter(str(row.get("_project", "")))
                         cells[2].text = str(row.get("_segIndex", ""))
                         max_score = row.get("_maxScore", 0)
                         cells[3].text = f"{float(max_score):.1f}" if max_score else "—"
@@ -557,7 +573,7 @@ def generate_docx():
                         treated_segs = summary.get("treatedSegments", 0)
                         treatment_counts = summary.get("treatmentCounts", {})
 
-                        doc.add_heading(disp(project_name), level=3)
+                        doc.add_heading(disp_with_quarter(project_name), level=3)
 
                         p = doc.add_paragraph()
                         p.add_run("Treated Segments: ").bold = True
@@ -593,7 +609,7 @@ def generate_docx():
                 doc.add_heading(sec_title(el.get("id",""), "Project Details"), level=2)
                 if selected_projects:
                     for proj_name in selected_projects:
-                        doc.add_heading(disp(proj_name), level=3)
+                        doc.add_heading(disp_with_quarter(proj_name), level=3)
                         meta = project_meta_map.get(proj_name, {})
                         seg_count = project_segment_counts.get(proj_name, 0)
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
+import { invalidateAll } from "../../api/projectDataCache";
 import { matchesProjectSearch } from "../../utils/projectSearch";
 import {
   Button,
@@ -310,7 +311,9 @@ export default function Home() {
     // Convert set to array and encode as query params
     const projectNames = Array.from(selected);
     const encodedNames = projectNames.map(name => encodeURIComponent(name));
-    navigate(`/coding/${encodedNames.join(',')}`);
+    // Clear any stale Path Analysis filter context so direct loads show
+    // normal risk-band colors instead of leftover filter colors.
+    navigate(`/coding/${encodedNames.join(',')}`, { state: { filterContext: null } });
   };
 
   // Load treatment application for selected projects
@@ -328,6 +331,11 @@ export default function Home() {
     const projectNames = Array.from(selected);
     sessionStorage.setItem("pathAnalysis_selectedProjects", JSON.stringify(projectNames));
     sessionStorage.setItem("pathAnalysis_loadedProjects", JSON.stringify(projectNames));
+    // Deliberate "start over" reset point: loading a project set into Path
+    // Analysis always fetches fresh data, never the cached session data, and
+    // re-fits the map to the new set rather than restoring the old viewport.
+    invalidateAll();
+    sessionStorage.removeItem("pathAnalysisMap_viewport");
     navigate("/analysis/path");
   };
 
