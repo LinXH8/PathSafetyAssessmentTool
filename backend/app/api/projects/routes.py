@@ -1079,7 +1079,7 @@ def _get_image_date_range(proj: "Project", pm=None) -> "dict | None":
                     if not ref or ref in seen:
                         continue
                     seen.add(ref)
-                    file_path = _resolve_image_from_in(pm, proj.name, ref)
+                    file_path = _resolve_image_from_in(pm, proj.metadata.project_name, ref)
                     if file_path is None or not file_path.is_file():
                         continue
                     d = _exif_date(file_path)
