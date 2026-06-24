@@ -2137,7 +2137,7 @@ export default function ReportBuilderPage() {
         return (
           <div style={{ padding: "12px 18px" }}>
             <EditableText value={secTitle(el.id, "Summary")} onChange={(t) => setSecTitle(el.id, t)} style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e", display: "block", marginBottom: 10 }} />
-            <div style={{ display: "flex", gap: 32, marginBottom: activeFilterNames.length > 0 ? 10 : 0 }}>
+            <div style={{ display: "flex", gap: 32, marginBottom: el.filtered && activeFilterNames.length > 0 ? 10 : 0 }}>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 28, fontWeight: 700, color: "#a020d0" }}>{projects.length}</div>
                 <div style={{ fontSize: 11, color: "#666" }}>Projects</div>
@@ -2153,7 +2153,7 @@ export default function ReportBuilderPage() {
                 </div>
               )}
             </div>
-            {activeFilterNames.length > 0 && (
+            {el.filtered && activeFilterNames.length > 0 && (
               <div style={{ padding: "8px 10px", background: "#f5f0fa", borderRadius: 6, border: "1px solid #e8d8f8" }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: "#a020d0", textTransform: "uppercase", letterSpacing: 0.4, display: "block", marginBottom: 6 }}>Active Filters:</span>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
