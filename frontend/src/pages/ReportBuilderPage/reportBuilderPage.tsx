@@ -2113,6 +2113,17 @@ export default function ReportBuilderPage() {
                 )) : <span style={{ fontSize: 10, color: "#999" }}>colored by attribute</span>}
               </div>
             )}
+            {projects.length > 0 && !colorByAttr && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", padding: "5px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#555", marginRight: 2 }}>Risk Band:</span>
+                {([1, 2, 3, 4] as const).map((band) => (
+                  <span key={band} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: "#444" }}>
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: RISK_COLORS[band], display: "inline-block" }} />
+                    {RISK_LABELS[band]}
+                  </span>
+                ))}
+              </div>
+            )}
             {projects.length > 0 && (
               <div style={{ display: "flex", gap: 18, padding: "4px 10px", background: "#faf8fd", borderTop: "1px solid #ede8f5", flexShrink: 0, alignItems: "center" }}>
                 <span style={{ fontSize: 11, color: "#555" }}>
