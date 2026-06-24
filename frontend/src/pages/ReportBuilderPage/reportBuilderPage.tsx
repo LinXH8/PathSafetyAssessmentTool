@@ -824,8 +824,9 @@ export default function ReportBuilderPage() {
       if (range.latest > map[label].latest) map[label].latest = range.latest;
       map[label].projects.push(name);
     });
+    const parseLabel = (l: string) => { const m = l.match(/Q(\d)\s+(\d{4})/); return m ? [+m[2], +m[1]] : [0, 0]; };
     return Object.entries(map)
-      .sort(([a], [b]) => a.localeCompare(b))
+      .sort(([a], [b]) => { const [ay, aq] = parseLabel(a), [by, bq] = parseLabel(b); return ay !== by ? ay - by : aq - bq; })
       .map(([label, v]) => ({ label, ...v }));
   }, [projectImageDates]);
 
@@ -983,7 +984,9 @@ export default function ReportBuilderPage() {
         // for this the fixed-height body (overflow:hidden) clips the bottom rows.
         const projChars = loadedProjects.reduce((s, n) => s + (projectNameOverrides[n] ?? n).length + 2, 9 /* "Projects: " */);
         const projLines = Math.max(1, Math.ceil(projChars / 80)); // ~80 chars/line at fontSize 12 across 754px
-        return H + 160 + projLines * 17;
+        // Each image date entry (quarter) is ~26px tall; base height assumes 1 entry.
+        const extraQuarterH = Math.max(0, quarterData.length - 1) * 26;
+        return H + 160 + projLines * 17 + extraQuarterH;
       }
       case "riskBands": return H + (distributions ? 480 : 60);
       case "map": return H + 560 + (el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? 30 : 0);
@@ -1042,7 +1045,7 @@ export default function ReportBuilderPage() {
       case "segmentGallery": return H + 36 + Math.max(1, Math.ceil(topRiskRows.length / 6)) * 92 + 16;
       default: return el.height;
     }
-  }, [fullDataset, filteredDataset, loadedProjects, projectMeta, activeFilterNames, activeCategoryStatus, projectNameOverrides]);
+  }, [fullDataset, filteredDataset, loadedProjects, projectMeta, activeFilterNames, activeCategoryStatus, projectNameOverrides, quarterData]);
 
   // ── Auto-fit: snapshot ideal heights into state ───────────────────────────
   // Gap removal and page-break spacing are now automatic (see `layout` memo +
