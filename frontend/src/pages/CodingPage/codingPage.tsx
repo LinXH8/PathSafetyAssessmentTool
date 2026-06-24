@@ -26,7 +26,6 @@ import {
   fetchProjectDetail,
   fetchProjectAttributes,
   fetchProjectGeoJSON,
-  fetchAttributeMappings,
   fetchCustomAttrOptions,
   calculateScore,
   calculateScoreForRow,
@@ -43,6 +42,7 @@ import AttributeOptionsDialog from "./components/AttributeOptionsDialog";
 import GeoDataPanel from "./components/GeoDataPanel";
 import { saveAttributes } from "../../api";
 import "../../components/visualization/AnalysisPanel.css";
+import { getCachedAttributeMappingsSync, getCachedAttributeMappings } from "../../api/projectDataCache";
 import { fetchWidthVisualization } from "../../api/widthVisualization";
 import type { WidthVisualizationResponse } from "../../api/widthVisualization";
 import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
@@ -491,7 +491,12 @@ export default function CodingPage() {
   const [autoCodeMsg, setAutoCodeMsg] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [projectProgress, setProjectProgress] = useState<Record<string, { processed: number; total: number }>>({});
-  const [attrMappings, setAttrMappings] = useState<AttrMappings>({});
+  // Seed synchronously from the shared cache so attribute values render as text
+  // labels (not raw numeric codes) on the very first render after a remount /
+  // navigation — avoids the numeric-code flash. (Cold cache returns null → {}.)
+  const [attrMappings, setAttrMappings] = useState<AttrMappings>(
+    () => getCachedAttributeMappingsSync() ?? {}
+  );
   const [customAttrOptions, setCustomAttrOptions] = useState<Record<string, string[]>>({});
   const [editingOptions, setEditingOptions] = useState<{ field: string; currentValue: string | null; delineationNotPresent?: boolean } | null>(null);
   const [pendingPresentDelineationChange, setPendingPresentDelineationChange] = useState(false);
@@ -1846,10 +1851,13 @@ export default function CodingPage() {
     let cancelled = false;
     (async () => {
       try {
-        const [map, customOpts] = await Promise.all([
-          fetchAttributeMappings(),
+        const [cachedMap, customOpts] = await Promise.all([
+          getCachedAttributeMappings(),
           fetchCustomAttrOptions().catch(() => ({} as Record<string, string[]>)),
         ]);
+        // Clone so per-page augmentation (custom options below) doesn't mutate the
+        // shared cached object.
+        const map: AttrMappings = { ...cachedMap };
         // Ensure "Line of Sight" always has a dropdown even if the backend hasn't been restarted
         if (!map["Line of Sight"]) {
           map["Line of Sight"] = { "1": "Adequate", "2": "Inadequate" };
