@@ -261,14 +261,14 @@ class cycleRAP_interface:
         # Build default attribute dict
         default_attrs = {
             Attributes.Fields.AREA_TYPE_STR                     : 2,
-            Attributes.Fields.FACILITY_TYPE_STR                 : 2,
+            Attributes.Fields.FACILITY_TYPE_STR                 : 1,
             Attributes.Fields.FACILITY_ACCESS_STR               : 1,
             Attributes.Fields.LOOSE_SLIPPERY_SURFACE_STR        : 2,
             Attributes.Fields.TRAM_TRAIN_RAIL_STR               : 2,
             Attributes.Fields.DEFORMATION_DRAIN_STR             : 2,
             Attributes.Fields.FIXED_OBSTACLE_STR                : 2,
             Attributes.Fields.NON_FIXED_OBSTACLE_STR            : 2,
-            Attributes.Fields.DELINEATION_STR                   : 1,
+            Attributes.Fields.DELINEATION_STR                   : 2,
             Attributes.Fields.LIGHT_SEGREGATION_STR             : 1,
             Attributes.Fields.FACILITY_WIDTH_STR                : 2,
             Attributes.Fields.FLOW_DIR_STR                      : 2,

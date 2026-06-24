@@ -1,14 +1,14 @@
 {
     "attribute_default": {
         "Area type": 2,
-        "Facility Type": 2,
+        "Facility Type": 1,
         "Facility access": 1,
         "Loose or slippery surface": 2,
         "Tram or Train Rails": 2,
         "Major Surface Deformation or Drain Opening": 2,
         "Fixed Obstacle on Facility": 2,
         "Non-Fixed Obstacle on Facility": 2,
-        "Delineation": 1,
+        "Delineation": 2,
         "Light Segregation": 1,
         "Facility Width per Direction": 2,
         "Flow Direction": 2,
