@@ -92,6 +92,27 @@ def _get_planning_areas_gdf() -> gpd.GeoDataFrame:
     _PLANNING_AREAS_GDF = gdf
     return _PLANNING_AREAS_GDF
 
+
+def _available_road_names(in_path: Path) -> set:
+    """Return the set of road name bases available in the download folder.
+
+    Folder names carry optional suffixes separated by underscores
+    (e.g. ``AMK AVE 1_1Q2026``). Singapore road names never contain
+    underscores, so the base is everything before the first ``_``,
+    uppercased. Checking membership in this set is the correct
+    availability test for roads whose names come from a reference
+    CSV or shapefile (which only carry the clean road name).
+    """
+    if not in_path.exists():
+        return set()
+    result: set = set()
+    for entry in in_path.iterdir():
+        if entry.is_dir():
+            base = entry.name.split("_")[0].strip().upper()
+            if base:
+                result.add(base)
+    return result
+
 def _get_gis() -> "gis.GIS":
     global _GIS_INSTANCE
     if _GIS_INSTANCE is not None:
@@ -4068,6 +4089,12 @@ def roads_in_polygon():
     in_path: Path = pm.in_path
     backend_root = Path(__file__).resolve().parents[3]
 
+    # Build once: set of road name bases (uppercased, suffix-stripped) that exist
+    # as subdirectories in in_path.  Folder names carry quarter/segment suffixes
+    # (e.g. "AMK AVE 1_1Q2026") that are absent from the CSV/shapefile road names,
+    # so a direct (in_path / name).is_dir() check always fails for suffixed folders.
+    avail_names = _available_road_names(in_path)
+
     # Merged result: roads from shapefile with exists flag from CSV + folder check
     all_road_names: dict[str, dict] = {}  # { "ROAD NAME": { "points": count, "exists": bool } }
 
@@ -4102,7 +4129,7 @@ def roads_in_polygon():
             print(f"[roads-in-polygon] CSV lookup failed: {e}", flush=True)
 
     for name in csv_roads:
-        all_road_names[name]["exists"] = in_path.exists() and (in_path / name).is_dir()
+        all_road_names[name]["exists"] = name.upper() in avail_names
 
     # Attempt 2: road sections shapefile — reuse the cached, already-reprojected
     # GeoDataFrame that roads-in-bounds uses so CRS handling is identical.
@@ -4130,7 +4157,7 @@ def roads_in_polygon():
                 if name not in all_road_names:
                     all_road_names[name] = {
                         "points": count,
-                        "exists": in_path.exists() and (in_path / name).is_dir(),
+                        "exists": name.upper() in avail_names,
                     }
                 else:
                     all_road_names[name]["points"] += count
@@ -4211,6 +4238,7 @@ def roads_in_bounds():
         ctx = get_ctx()
         pm = ctx["pm"]
         in_path: Path = pm.in_path
+        avail_names = _available_road_names(in_path)
 
         roads = []
         for _, row in view.iterrows():
@@ -4224,7 +4252,7 @@ def roads_in_bounds():
                 if candidate:
                     road_name = candidate
 
-            exists = in_path.exists() and (in_path / road_name).is_dir()
+            exists = road_name.upper() in avail_names
 
             if geom.geom_type == "LineString":
                 coords = [[lat, lng] for lng, lat in list(geom.coords)]
