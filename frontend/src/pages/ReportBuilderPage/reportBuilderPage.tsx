@@ -2499,6 +2499,16 @@ export default function ReportBuilderPage() {
             </div>
           );
         };
+        const projectRiskScores = Object.fromEntries(
+          projects.map((name) => {
+            const projRows = ds.rows.filter((r) => r._project === name);
+            const dist: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            projRows.forEach((r) => { const b = r._maxBand; if (b >= 1 && b <= 4) dist[b]++; });
+            const total = projRows.length || 1;
+            return [name, (dist[4] * 8 + dist[3] * 4 + dist[2] * 2 + dist[1] * 1) / total];
+          })
+        );
+        const sortedProjects = [...projects].sort((a, b) => projectRiskScores[b] - projectRiskScores[a]);
         const numChunks = Math.max(1, Math.ceil(projects.length / PROJ_PAGE_SIZE));
         return (
           // Each chunk (except the last) is exactly PAGE_H tall so its boundary
@@ -2512,7 +2522,7 @@ export default function ReportBuilderPage() {
               </>
             ) : (
               Array.from({ length: numChunks }).map((_, ci) => {
-                const chunkProjects = projects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
+                const chunkProjects = sortedProjects.slice(ci * PROJ_PAGE_SIZE, (ci + 1) * PROJ_PAGE_SIZE);
                 const isLastChunk = ci === numChunks - 1;
                 return (
                   <div key={ci} style={{ height: isLastChunk ? "auto" : PAGE_H, paddingBottom: isLastChunk ? 0 : PAGE_GAP, boxSizing: "border-box", flexShrink: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
