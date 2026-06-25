@@ -751,6 +751,8 @@ export default function TreatmentDetailPage() {
     return treatmentState[currentIndex]?.treatment_ids ?? [];
   }, [currentIndex, treatmentState]);
 
+  const segmentHasTreatments = treatmentState[currentIndex]?.applied === true;
+
   const combinedTreatmentIds = useMemo(() => {
     return [...new Set([...appliedTreatmentIds, ...Array.from(selectedTreatments)])];
   }, [appliedTreatmentIds, selectedTreatments]);
@@ -1142,11 +1144,11 @@ export default function TreatmentDetailPage() {
                 : null,
             },
           }));
-          // Pre-select treatments that were applied
           setSelectedTreatments(new Set());
+          setShowPostTreatment(true);
         } else {
-          // Clear selection for segments without treatments
           setSelectedTreatments(new Set());
+          setShowPostTreatment(false);
         }
       } catch (e) {
 
@@ -1191,6 +1193,7 @@ export default function TreatmentDetailPage() {
       setSelectedTreatments(new Set());
       setPreviewScores(null);
       setPreviewLoading(false);
+      setShowPostTreatment(true);
 
     } catch (e: any) {
     } finally {
@@ -1295,8 +1298,9 @@ export default function TreatmentDetailPage() {
       });
 
       setSelectedTreatments(new Set());
-      setPreviewScores(null); // Clear preview
+      setPreviewScores(null);
       setPreviewLoading(false);
+      setShowPostTreatment(false);
     } catch (e: any) {
     } finally {
       setApplyLoading(false);
@@ -2110,10 +2114,13 @@ export default function TreatmentDetailPage() {
                 Attributes
               </Text>
               <Flex align="center" gap="2">
-                <Text fontSize="xs">Show Post-Treatment</Text>
+                <Text fontSize="xs" color={segmentHasTreatments ? undefined : "gray.400"}>
+                  Show Pre-Treatment
+                </Text>
                 <Switch
-                  checked={showPostTreatment}
-                  onCheckedChange={(e: any) => setShowPostTreatment(e.checked)}
+                  checked={!showPostTreatment}
+                  disabled={!segmentHasTreatments}
+                  onCheckedChange={(e: any) => setShowPostTreatment(!e.checked)}
                 />
               </Flex>
             </Flex>
