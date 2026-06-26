@@ -7,11 +7,10 @@ import remarkGfm from "remark-gfm";
 const DOCS_LIST = [
   { id: "getting-started",      title: "1. Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Jun 2026" },
 { id: "coding-page",          title: "2. Coding Page",               path: "/docs/user/user-coding-page.md",            updatedDate: "Jun 2026" },
-  { id: "map-view",             title: "3. Map View & Analysis",       path: "/docs/user/user-map-view.md",               updatedDate: "Jun 2026" },
-  { id: "path-analysis",        title: "4. Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
-  { id: "treatment-application",title: "5. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
-  { id: "report-generation",    title: "6. Report Generation",         path: "/docs/user/user-report-generation.md",      updatedDate: "Jun 2026" },
-  { id: "gis-management",       title: "7. GIS Layer Management",      path: "/docs/user/user-gis-management.md",         updatedDate: "Jun 2026" },
+  { id: "path-analysis",        title: "3. Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
+  { id: "treatment-application",title: "4. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
+  { id: "report-generation",    title: "5. Report Generation",         path: "/docs/user/user-report-generation.md",      updatedDate: "Jun 2026" },
+  { id: "gis-management",       title: "6. GIS Layer Management",      path: "/docs/user/user-gis-management.md",         updatedDate: "Jun 2026" },
 ];
 
 export default function UserGuide() {

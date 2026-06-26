@@ -1,4 +1,4 @@
-# Path Safety Assessment Tool (PSAT) User Guide
+﻿# Path Safety Assessment Tool (PSAT) User Guide
 
 Welcome to PSAT. The tool helps you create projects from geotagged survey images, review coded path segments, calculate safety risk scores, analyse safety hazards and test treatments.
 
@@ -118,4 +118,4 @@ From the project list, you can send selected projects for the following:
 
 Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard, where you can browse, filter, rename, and update the spatial data layers that power PSAT's auto-coding.
 
-> For full instructions on adding, replacing, filtering, and renaming layers, see [Section 7: GIS Layer Management](#7-gis-layer-management).
+> For full instructions on adding, replacing, filtering, and renaming layers, see [Section 6: GIS Layer Management](#6-gis-layer-management).

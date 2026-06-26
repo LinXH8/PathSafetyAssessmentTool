@@ -1,4 +1,4 @@
-## 5. Treatment Application
+﻿## 4. Treatment Application
 
 The Treatment Application page lets you test safety improvements on one or more cycling path projects. You can explore which interventions apply to each segment, preview how they would change risk scores, apply them, and compare before-and-after risk distributions — all without permanently altering the underlying survey data until you are ready.
 
@@ -16,7 +16,7 @@ The Treatment Application page lets you test safety improvements on one or more 
 - [Step 8: Generate AI visualisations of proposed improvements](#step-8-generate-ai-visualisations-of-proposed-improvements)
 - [Step 9: Review the Overall Treatment Analysis](#step-9-review-the-overall-treatment-analysis)
 - [Tips and common workflows](#tips-and-common-workflows)
-- [5.10 AI Score Preview — Before & After Treatment](#510-ai-score-preview--before--after-treatment)
+- [4.10 AI Score Preview — Before & After Treatment](#410-ai-score-preview--before--after-treatment)
 
 ---
 
@@ -145,7 +145,7 @@ Use these charts to get a quick sense of whether the treatments you have applied
 
 ---
 
-### 5.10 AI Score Preview — Before & After Treatment
+### 4.10 AI Score Preview — Before & After Treatment
 
 When you select treatments in the Treatment Options panel, PSAT calculates a **predicted score** for the current segment in real time. This before/after comparison lets you evaluate the safety impact of a treatment before committing to it.
 

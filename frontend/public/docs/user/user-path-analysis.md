@@ -1,4 +1,4 @@
-## 4. Path Analysis
+﻿## 3. Path Analysis
 
 The Path Analysis page is the multi-project analysis workspace.
 
@@ -6,22 +6,22 @@ The Path Analysis page is the multi-project analysis workspace.
 
 ## Table of Contents
 
-- [4.1 Select Projects](#41-select-projects)
-- [4.2 Filter Before Loading](#42-filter-before-loading)
-- [4.3 Analyse Loaded Data](#43-analyse-loaded-data)
-  - [4.3.1 Attribute Filters and Finer Filtering](#431-attribute-filters-and-finer-filtering)
-  - [4.3.2 Finer Filtering — Sub-category Options](#432-finer-filtering--sub-category-options)
-- [4.4 Export](#44-export)
-- [4.5 Session Continuity](#45-session-continuity)
-- [4.6 Finer Filtering Reference](#46-finer-filtering-reference)
+- [3.1 Select Projects](#31-select-projects)
+- [3.2 Filter Before Loading](#32-filter-before-loading)
+- [3.3 Analyse Loaded Data](#33-analyse-loaded-data)
+  - [3.3.1 Attribute Filters and Finer Filtering](#331-attribute-filters-and-finer-filtering)
+  - [3.3.2 Finer Filtering — Sub-category Options](#332-finer-filtering--sub-category-options)
+- [3.4 Export](#34-export)
+- [3.5 Session Continuity](#35-session-continuity)
+- [3.6 Finer Filtering Reference](#36-finer-filtering-reference)
 
 ---
 
-### 4.1 Select Projects
+### 3.1 Select Projects
 
 You can select one or more projects to analyse together. The search box matches both **project names** and **source road names**, so you can find projects even when the project title and road name differ.
 
-### 4.2 Filter Before Loading
+### 3.2 Filter Before Loading
 
 Before loading projects, you can filter by:
 
@@ -32,7 +32,7 @@ Before loading projects, you can filter by:
 | Date created range | Filter projects created within a date window |
 | Last updated range | Filter projects updated within a date window |
 
-### 4.3 Analyse Loaded Data
+### 3.3 Analyse Loaded Data
 
 After loading projects, you can:
 
@@ -43,7 +43,7 @@ After loading projects, you can:
 - click a segment to navigate to the Coding page to make edits
 - click **Back to Analysis** to return and continue
 
-#### 4.3.1 Attribute Filters and Finer Filtering
+#### 3.3.1 Attribute Filters and Finer Filtering
 
 When you select an attribute for analysis, you can filter segments by its coded values. Attributes marked **❖** also support **finer filtering** — selecting a specific value (e.g. *Present* for Fixed Obstacle on Facility) reveals a secondary sub-category dropdown so you can pinpoint exact sub-types. The map updates to show distinct colours for each sub-category once a sub-type is selected.
 
@@ -77,7 +77,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Road Speed Limit | NA; 30 km/h; 40 km/h; 50 km/h; 60 km/h; 70 km/h; 80 km/h; 90 km/h | — |
 | Overall Risk Level Band | 1 (Low); 2 (Medium); 3 (High); 4 (Extreme) | — |
 
-#### 4.3.2 Finer Filtering — Sub-category Options
+#### 3.3.2 Finer Filtering — Sub-category Options
 
 Selecting a top-level filter value for any attribute marked **❖** reveals a secondary sub-category dropdown. Each sub-category is shown with a distinct colour on the map.
 
@@ -110,7 +110,7 @@ Selecting a top-level filter value for any attribute marked **❖** reveals a se
 > 3. Save the segment, then click **Back to Analysis** to return.
 > 4. Re-apply the filter — the updated colour will now be reflected on the map.
 
-### 4.4 Export
+### 3.4 Export
 
 The page supports three exports:
 
@@ -122,13 +122,19 @@ The page supports three exports:
 
 **Download Shapefile** exports the currently visible filtered segments as a standard GIS shapefile package (`.zip`). The file is named `shapefile_export_YYYY-MM-DD.zip` and can be opened in QGIS, ArcGIS, or any other GIS application. Only segments that have a valid image reference are included.
 
-### 4.5 Session Continuity
+### 3.5 Session Continuity
 
 Your selections and filters are kept for the browser session, so navigating away (e.g. to edit a segment in Coding) and returning does not immediately clear the analysis setup.
 
+#### Filtered Segments from Path Analysis
+
+If you click a segment on the Path Analysis map to open it in the Coding page, the coding page map will show **only the segments that were visible in your active filter**. The currently selected segment is always shown regardless of the filter. This makes it easier to focus on a specific subset while coding without losing your analysis context.
+
+Click **Back to Analysis** in the sidebar to return to Path Analysis with your filters intact.
+
 ---
 
-### 4.6 Finer Filtering Reference
+### 3.6 Finer Filtering Reference
 
 Finer filtering lets you narrow a segment filter down to a specific **sub-type** within a parent category. When an attribute supports it, selecting a top-level value reveals a second dropdown — and the map immediately updates to colour only the segments that match your exact sub-type.
 
