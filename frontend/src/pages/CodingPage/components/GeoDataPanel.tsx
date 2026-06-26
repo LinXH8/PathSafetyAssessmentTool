@@ -414,17 +414,68 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   const [showLandPrivate, setShowLandPrivate] = useState(cachedLayers.showLandPrivate ?? false);
   const [showLandMinistry, setShowLandMinistry] = useState(cachedLayers.showLandMinistry ?? false);
 
+  // Cross-panel GIS layer sync: when two panels show the same project (e.g. the
+  // Treatment page's Before/After maps), toggling a layer on either mirrors to both.
+  // A stable per-instance id lets a panel ignore its own broadcasts, and the last
+  // persisted toggle snapshot lets it skip no-op events (preventing feedback loops).
+  const layerSyncIdRef = useRef(Math.random().toString(36).slice(2));
+  const layerTogglesRef = useRef<Record<string, boolean>>({});
+
   // Update localStorage whenever these toggles change.
   // overlayEnabled is persisted so the next session knows whether the 3 path layers were
   // in "overlay-managed" mode and should be reset (rather than restored as stale trues).
   useEffect(() => {
     if (!projectName) return;
-    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+    const toggles: Record<string, boolean> = {
       showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects,
       showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
+    };
+    layerTogglesRef.current = toggles;
+    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+      ...toggles,
       overlayEnabled: showCurvatureOverlay ?? false,
     }));
+    // Broadcast to any sibling panel showing the same project so its toggles mirror.
+    window.dispatchEvent(new CustomEvent("psat:gisLayers:sync", {
+      detail: { projectName, source: layerSyncIdRef.current, toggles },
+    }));
   }, [showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, showCurvatureOverlay, projectName]);
+
+  // Mirror GIS layer toggles broadcast by a sibling panel for the same project.
+  // The source-id and equality checks make this self-terminating: a panel ignores
+  // its own events and any event whose toggles already match its current state.
+  useEffect(() => {
+    if (!projectName) return;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent).detail as
+        | { projectName?: string; source?: string; toggles?: Record<string, boolean> }
+        | undefined;
+      if (!detail || detail.projectName !== projectName) return;
+      if (detail.source === layerSyncIdRef.current) return;
+      const incoming = detail.toggles;
+      if (!incoming) return;
+      const current = layerTogglesRef.current;
+      if (!Object.keys(incoming).some((key) => incoming[key] !== current[key])) return;
+      layerTogglesRef.current = { ...current, ...incoming };
+      setShowFootpath(!!incoming.showFootpath);
+      setShowCycling(!!incoming.showCycling);
+      setShowShared(!!incoming.showShared);
+      setShowRoadcrossing(!!incoming.showRoadcrossing);
+      setShowMrtExit(!!incoming.showMrtExit);
+      setShowBusStop(!!incoming.showBusStop);
+      setShowBusLane(!!incoming.showBusLane);
+      setShowParkingLot(!!incoming.showParkingLot);
+      setShowKerbLine(!!incoming.showKerbLine);
+      setShowBicycleCrossing(!!incoming.showBicycleCrossing);
+      setShowPathDefects(!!incoming.showPathDefects);
+      setShowStateLand(!!incoming.showStateLand);
+      setShowStatBoard(!!incoming.showStatBoard);
+      setShowLandPrivate(!!incoming.showLandPrivate);
+      setShowLandMinistry(!!incoming.showLandMinistry);
+    };
+    window.addEventListener("psat:gisLayers:sync", handler);
+    return () => window.removeEventListener("psat:gisLayers:sync", handler);
+  }, [projectName]);
 
   // Sync GIS toggle states when the project changes. useState initializers only fire
   // on first mount; without this effect, switching projects leaves stale toggle values
