@@ -68,10 +68,19 @@ export type FilteredProjectData = {
   points: FilteredSegmentPoint[];  // one entry per filtered segment (for map rendering + click nav)
 };
 
+export type FilterLegendEntry = {
+  category: string;
+  color: string;
+};
+
 // All filtered projects share the same context object so navigating across projects
 // preserves the full filter picture without re-deriving it.
 export type CodingFilterContext = {
   projects: FilteredProjectData[];
+  legend?: {
+    attribute: string;
+    entries: FilterLegendEntry[];
+  };
 };
 
 export const CODING_FILTER_CONTEXT_KEY = 'codingFilterContext';
@@ -1481,4 +1490,30 @@ export async function exportShapefile(payload: { projects: Record<string, string
   }
 
   return res.blob();
+}
+
+// Generated Reports
+export interface GeneratedReportInfo {
+  name: string;
+  size: number;
+  created: string;
+}
+
+export async function listGeneratedReports(): Promise<GeneratedReportInfo[]> {
+  const res = await fetch("/api/generated-reports/");
+  if (!res.ok) throw new Error(await readError(res));
+  return res.json();
+}
+
+export async function saveGeneratedReport(blob: Blob, filename: string): Promise<void> {
+  const formData = new FormData();
+  formData.append("file", blob, filename);
+  formData.append("filename", filename);
+  const res = await fetch("/api/generated-reports/save", { method: "POST", body: formData });
+  if (!res.ok) throw new Error(await readError(res));
+}
+
+export async function deleteGeneratedReport(filename: string): Promise<void> {
+  const res = await fetch(`/api/generated-reports/${encodeURIComponent(filename)}`, { method: "DELETE" });
+  if (!res.ok) throw new Error(await readError(res));
 }

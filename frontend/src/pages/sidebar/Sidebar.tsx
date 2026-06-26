@@ -489,6 +489,9 @@ export default function Sidebar() {
       {/* Projects Page - Show GIS layer management + Admin buttons */}
       {pathname === "/home" && (
         <div className="psat-side-bottom" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Button onClick={() => navigateSidebar("/generated-reports")} colorPalette="teal" variant="surface" size="sm" width="100%">
+            View Generated Reports
+          </Button>
           <Button onClick={() => navigateSidebar("/gis-layers")} colorPalette="teal" variant="surface" size="sm" width="100%">
             View GIS Layers
           </Button>

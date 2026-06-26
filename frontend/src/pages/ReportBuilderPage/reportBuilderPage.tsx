@@ -24,6 +24,7 @@ import proj4 from "proj4";
 import type { FeatureCollection, Position } from "geojson";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
+import { saveGeneratedReport } from "../../api";
 
 // ── SVY21 (EPSG:3414) → WGS84 ───────────────────────────────────────────────
 proj4.defs(
@@ -989,7 +990,7 @@ export default function ReportBuilderPage() {
         return H + 160 + projLines * 17 + extraQuarterH;
       }
       case "riskBands": return H + (distributions ? 480 : 60);
-      case "map": return H + 560 + (el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? 30 : 0);
+      case "map": return H + 612 + (el.filtered && el.colorBy && activeFilterNames.includes(el.colorBy) ? 30 : 0);
       case "summary": {
         // The "Active Filters" panel grows one row per filter, and each row's
         // category chips wrap — a flat constant clips it once >1 filter is set.
@@ -1458,6 +1459,17 @@ export default function ReportBuilderPage() {
       remaining -= pdfH;
       while (remaining > 0) { yPos -= pdfH; pdf.addPage(); pdf.addImage(imgData, "PNG", 0, yPos, pdfW, imgH); remaining -= pdfH; }
       pdf.save("PSAT_Report.pdf");
+
+      // Silently persist a copy to the server's Generated Reports folder.
+      // Failure here must not interrupt the user's browser download.
+      try {
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, "-");
+        const serverFilename = `PSAT_Report_${timestamp}.pdf`;
+        const pdfBlob = pdf.output("blob");
+        await saveGeneratedReport(pdfBlob, serverFilename);
+      } catch (saveErr) {
+        console.error("Failed to save report to Generated Reports folder:", saveErr);
+      }
     } catch (err) {
       console.error("PDF export failed:", err);
       alert(`PDF export failed: ${err instanceof Error ? err.message : "unknown error"}`);
@@ -2098,7 +2110,24 @@ export default function ReportBuilderPage() {
           ? (collapseParent.subcategories ?? []).filter((sc) => sc.isActive).map((sc) => ({ category: sc.name, color: sc.color }))
           : colorByCats.map((c) => ({ category: c.category, color: c.color }));
         return (
-          <div style={{ height: "calc(100% - 30px)", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 4, margin: 2 }}>
+          <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ padding: "5px 10px 6px", flexShrink: 0, borderBottom: "1px solid #ede8f5" }}>
+              <EditableText
+                value={secTitle(el.id, "Map Overview")}
+                onChange={(t) => setSecTitle(el.id, t)}
+                style={{ fontSize: 14, fontWeight: 600, color: "#1a1a2e" }}
+              />
+              {projects.length > 0 && (
+                <div style={{ fontSize: 10, color: "#666", marginTop: 2, display: "flex", flexWrap: "wrap", gap: "3px 12px" }}>
+                  <span><strong style={{ color: "#a020d0" }}>Projects:</strong>{" "}{loadedProjects.map(dispName).join(", ")}</span>
+                  <span><strong style={{ color: "#a020d0" }}>Colored by:</strong>{" "}{colorByAttr ?? "Risk Band"}</span>
+                  {el.filtered && activeFilterNames.length > 0 && (
+                    <span><strong style={{ color: "#a020d0" }}>Filters:</strong>{" "}{activeFilterNames.join(", ")}</span>
+                  )}
+                </div>
+              )}
+            </div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 4, margin: 2 }}>
             {projects.length === 0
               ? <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1, background: "#f7f7f7", border: "2px dashed #ccc", borderRadius: 4 }}><span style={{ fontSize: 12, color: "#aaa" }}>{el.filtered ? "No segments match the filter" : "No projects loaded"}</span></div>
               : <div style={{ flex: 1, overflow: "hidden" }}><ReportMiniMap projects={projects} colorMap={buildMapColorMap(ds, el)} orderIndex={orderIndex} /></div>}
@@ -2139,6 +2168,7 @@ export default function ReportBuilderPage() {
                 </span>
               </div>
             )}
+            </div>
           </div>
         );
       }
