@@ -1439,6 +1439,13 @@ def get_image_date_range(project_name: str):
 _FO_TYPE_RENAMES = {
     "Pillar": "Covered Linkway Pole",
     "Fence": "Railing",
+    "Bollards": "Bollard",
+    "Billboards": "Billboard",
+    "Sign Poles": "Sign Pole",
+}
+
+_NFO_TYPE_RENAMES = {
+    "Bins": "Bin",
 }
 
 
@@ -1449,6 +1456,15 @@ def _normalize_fo_type(value):
         return value
     parts = [p.strip() for p in value.split(",") if p.strip()]
     return ", ".join(_FO_TYPE_RENAMES.get(p, p) for p in parts)
+
+
+def _normalize_nfo_type(value):
+    """Rewrite legacy NFO Type labels. NFO Type is a comma-separated multi-select,
+    so each token is migrated independently. Non-string/empty values pass through."""
+    if not isinstance(value, str) or not value.strip():
+        return value
+    parts = [p.strip() for p in value.split(",") if p.strip()]
+    return ", ".join(_NFO_TYPE_RENAMES.get(p, p) for p in parts)
 
 
 @bp.get("/<project_name>/versions/latest/attributes")
@@ -1505,12 +1521,18 @@ def get_latest_attributes(project_name: str):
                 stale_status = pd.Series(True, index=attrs_df.index)
             attrs_df.loc[no_grade & stale_status, GRADIENT_STATUS_FIELD] = GRADIENT_STATUS_NO_LIDAR_RESULT
 
-    # Migrate retired FO Type labels (e.g. "Pillar" → "Covered Linkway Pole") for all consumers.
+    # Migrate retired FO/NFO Type labels for all consumers.
     if "FO Type" in attrs_df.columns:
         if not attrs_copied:
             attrs_df = attrs_df.copy()
             attrs_copied = True
         attrs_df["FO Type"] = attrs_df["FO Type"].map(_normalize_fo_type)
+
+    if "NFO Type" in attrs_df.columns:
+        if not attrs_copied:
+            attrs_df = attrs_df.copy()
+            attrs_copied = True
+        attrs_df["NFO Type"] = attrs_df["NFO Type"].map(_normalize_nfo_type)
 
     return jsonify({"rows": df_to_records(attrs_df)})
 

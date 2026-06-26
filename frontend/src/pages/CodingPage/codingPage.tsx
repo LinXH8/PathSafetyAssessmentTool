@@ -42,7 +42,7 @@ import AttributeOptionsDialog from "./components/AttributeOptionsDialog";
 import GeoDataPanel from "./components/GeoDataPanel";
 import { saveAttributes } from "../../api";
 import "../../components/visualization/AnalysisPanel.css";
-import { getCachedAttributeMappingsSync, getCachedAttributeMappings } from "../../api/projectDataCache";
+import { getCachedAttributeMappingsSync, getCachedAttributeMappings, invalidateProject } from "../../api/projectDataCache";
 import { fetchWidthVisualization } from "../../api/widthVisualization";
 import type { WidthVisualizationResponse } from "../../api/widthVisualization";
 import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
@@ -97,8 +97,8 @@ const projectDataCache: Record<string, ProjectDataState> = {};
 const savedAttrsSnapshot: Record<string, AttributeRow[]> = {};
 
 const DELINEATION_PRESENT_SUGGESTIONS = ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"];
-const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Railing", "Vegetation", "Sign Pole"];
-const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bins", "Bicycle", "Cone"];
+const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollard", "Billboard", "Sign Pole", "Railing", "Utility Box", "Vegetation", "Others"];
+const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bin", "Bicycle", "Cone", "Others"];
 
 // Renamed FO Type finer-attribute labels. Applied to every project's rows as they
 // load from the backend so existing data — including projects created on other
@@ -107,6 +107,14 @@ const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bins", "Bicycle", "Cone"];
 const FO_TYPE_RENAMES: Record<string, string> = {
   "Pillar": "Covered Linkway Pole",
   "Fence": "Railing",
+  "Bollards": "Bollard",
+  "Billboards": "Billboard",
+  "Sign Poles": "Sign Pole",
+  "Sign pole": "Sign Pole",
+};
+
+const NFO_TYPE_RENAMES: Record<string, string> = {
+  "Bins": "Bin",
 };
 
 function migrateFoTypeValue(value: unknown): unknown {
@@ -119,12 +127,29 @@ function migrateFoTypeValue(value: unknown): unknown {
     .join(", ");
 }
 
-/** Rewrite legacy FO Type labels in a set of attribute rows (idempotent). */
+function migrateNfoTypeValue(value: unknown): unknown {
+  if (typeof value !== "string" || value.trim() === "") return value;
+  return value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((tok) => NFO_TYPE_RENAMES[tok] ?? tok)
+    .join(", ");
+}
+
+/** Rewrite legacy FO/NFO Type labels in a set of attribute rows (idempotent). */
 function migrateAttrRows(rows: AttributeRow[]): AttributeRow[] {
   return rows.map((row) => {
-    if (!("FO Type" in row)) return row;
-    const migrated = migrateFoTypeValue(row["FO Type"]);
-    return migrated === row["FO Type"] ? row : { ...row, "FO Type": migrated as AttributeRow[string] };
+    let updated = row;
+    if ("FO Type" in row) {
+      const migrated = migrateFoTypeValue(row["FO Type"]);
+      if (migrated !== row["FO Type"]) updated = { ...updated, "FO Type": migrated as AttributeRow[string] };
+    }
+    if ("NFO Type" in row) {
+      const migrated = migrateNfoTypeValue(row["NFO Type"]);
+      if (migrated !== row["NFO Type"]) updated = { ...updated, "NFO Type": migrated as AttributeRow[string] };
+    }
+    return updated;
   });
 }
 const SLIPPERY_ISSUE_TYPE_SUGGESTIONS = ["Algae", "Leaves", "Soil", "Sand"];
@@ -1913,6 +1938,9 @@ export default function CodingPage() {
 
         await Promise.all(savePromises);
 
+        // Invalidate PathAnalysis cache so back-navigation sees fresh attributes/results
+        dirtyProjects.forEach(projName => invalidateProject(projName));
+
         // Mark saved projects as clean
         dirtyProjects.forEach(projName => {
           updateProjectData(projName, { isDirty: false });
@@ -2849,6 +2877,36 @@ export default function CodingPage() {
           />
         </GridItem>
 
+        {filterContext?.legend && (
+          <GridItem colSpan={{ base: 1, md: 2 }}>
+            <Flex
+              align="center"
+              gap="3"
+              px="3"
+              py="2"
+              bg="gray.50"
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="gray.200"
+              flexWrap="wrap"
+              _dark={{ bg: "gray.800", borderColor: "gray.600" }}
+            >
+              <Text fontSize="xs" fontWeight="semibold" color="gray.500" flexShrink={0} _dark={{ color: "gray.400" }}>
+                Filter:
+              </Text>
+              <Text fontSize="xs" fontWeight="medium" color="gray.700" flexShrink={0} _dark={{ color: "gray.200" }}>
+                {filterContext.legend.attribute}
+              </Text>
+              {filterContext.legend.entries.map(({ category, color }) => (
+                <Flex key={category} align="center" gap="1.5">
+                  <Box w="10px" h="10px" borderRadius="full" flexShrink={0} style={{ backgroundColor: color }} />
+                  <Text fontSize="xs" color="gray.700" _dark={{ color: "gray.300" }}>{category}</Text>
+                </Flex>
+              ))}
+            </Flex>
+          </GridItem>
+        )}
+
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <AutocodeValidation
             projectName={currentProjectName!}
@@ -2899,18 +2957,21 @@ export default function CodingPage() {
           editCurrentAttr(editingOptions.field, val);
         }}
         options={editingOptions
-          ? Array.from(
-            new Set(
-              Object.values(projectData)
-                .flatMap((pd) => pd?.attrs ?? [])
-                .flatMap((row) => {
-                  const v = row[editingOptions.field];
-                  if (v == null || String(v).trim() === "") return [];
-                  // Split by comma to get individual values, not combined permutations
-                  return String(v).split(",").map((s) => s.trim()).filter(Boolean);
-                })
-            )
-          ).sort()
+          ? (() => {
+            const field = editingOptions.field;
+            // Seed with predefined suggestions so FO/NFO Type edits always show the full list
+            const seeds = field === "FO Type" ? FO_TYPE_SUGGESTIONS
+              : field === "NFO Type" ? NFO_TYPE_SUGGESTIONS
+              : [];
+            const projectVals = Object.values(projectData)
+              .flatMap((pd) => pd?.attrs ?? [])
+              .flatMap((row) => {
+                const v = row[field];
+                if (v == null || String(v).trim() === "") return [];
+                return String(v).split(",").map((s) => s.trim()).filter(Boolean);
+              });
+            return Array.from(new Set([...seeds, ...projectVals])).sort();
+          })()
           : []}
         onSave={handleSaveOptions}
         onSetParentNotPresent={

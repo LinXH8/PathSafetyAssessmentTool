@@ -1148,7 +1148,11 @@ export default function AttributeAnalysisMapView({
     if (MULTI_VALUE_ATTRS.has(attributeName) && valueText.includes(", ")) {
       const parts = valueText.split(", ").map((part) => part.trim()).filter(Boolean);
       const toggles = subcategoryToggles[attributeName];
-      return parts.find((part) => toggles?.[part] !== false) ?? parts[0] ?? "";
+      return parts.find((part) => {
+        // Unknown values (not in the predefined toggle set) proxy through "Others"
+        const effectiveVal = (toggles && part in toggles) ? toggles[part] : toggles?.["Others"];
+        return effectiveVal !== false;
+      }) ?? parts[0] ?? "";
     }
 
     return valueText;
@@ -1372,16 +1376,25 @@ export default function AttributeAnalysisMapView({
                 if (childOptions && subcategoryToggles[subcatConfig.childAttr]) {
                   const childValue = getFilterAttributeText(subcatConfig.childAttr, projectData.projectName, attributes, segmentScores);
                   if (childValue) {
+                    const childToggles = subcategoryToggles[subcatConfig.childAttr];
                     if (MULTI_VALUE_ATTRS.has(subcatConfig.childAttr) && childValue.includes(", ")) {
                       const parts = childValue.split(", ").map((s: string) => s.trim());
-                      const anyEnabled = parts.some((part: string) => subcategoryToggles[subcatConfig.childAttr][part] !== false);
+                      // Unknown values (not in predefined toggle set) proxy through "Others"
+                      const anyEnabled = parts.some((part: string) => {
+                        const effectiveVal = part in childToggles ? childToggles[part] : childToggles["Others"];
+                        return effectiveVal !== false;
+                      });
                       if (!anyEnabled) {
                         matchesAllFilters = false;
                         break;
                       }
-                    } else if (subcategoryToggles[subcatConfig.childAttr][childValue] === false) {
-                      matchesAllFilters = false;
-                      break;
+                    } else {
+                      // Unknown single value proxies through "Others"
+                      const effectiveVal = childValue in childToggles ? childToggles[childValue] : childToggles["Others"];
+                      if (effectiveVal === false) {
+                        matchesAllFilters = false;
+                        break;
+                      }
                     }
                   }
                 }
@@ -1524,18 +1537,21 @@ export default function AttributeAnalysisMapView({
         "Lamp Post": "#DC2626",
         "Traffic Light": "#EA580C",
         "Covered Linkway Pole": "#F59E0B",
+        "Bollard": "#CA8A04",
         "Bollards": "#CA8A04",
-        "Billboards": "#7C3AED",
         "Billboard": "#7C3AED",
-        "Sign Poles": "#0284C7",
+        "Billboards": "#7C3AED",
         "Sign Pole": "#0284C7",
+        "Sign Poles": "#0284C7",
         "Railing": "#0891B2",
+        "Utility Box": "#EC4899",
         "Vegetation": "#16A34A",
         "Others": "#6B7280",
       },
       "Non-Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
       "NFO Type": {
         "Barrier": "#DC2626",
+        "Bin": "#EA580C",
         "Bins": "#EA580C",
         "Bicycle": "#F59E0B",
         "Cone": "#CA8A04",
@@ -3154,9 +3170,8 @@ export default function AttributeAnalysisMapView({
                               if (activeFilters.length > 0) {
                                 // Group visible non-hidden segments by project
                                 const projectMap = new Map<string, FilteredProjectData>();
-                                allPoints
-                                  .filter(pt => !hiddenProjects.includes(pt.projectName))
-                                  .forEach(pt => {
+                                const visiblePoints = allPoints.filter(pt => !hiddenProjects.includes(pt.projectName));
+                                visiblePoints.forEach(pt => {
                                     if (!projectMap.has(pt.projectName)) {
                                       projectMap.set(pt.projectName, { projectName: pt.projectName, filteredIndices: [], points: [] });
                                     }
@@ -3168,7 +3183,32 @@ export default function AttributeAnalysisMapView({
                                       idx: pt.idx,
                                     });
                                   });
-                                filterContext = { projects: Array.from(projectMap.values()) };
+
+                                // Build color legend from visible points
+                                let legend: CodingFilterContext['legend'] | undefined;
+                                if (effectiveFocusAttribute && effectiveFocusAttribute !== "Project") {
+                                  const seen = new Map<string, string>();
+                                  visiblePoints.forEach(pt => {
+                                    const val = pt.attributeValue;
+                                    if (val && val !== "None" && val !== "Not Selected" && !seen.has(val)) {
+                                      seen.set(val, pt.color);
+                                    }
+                                  });
+                                  const canonical = ATTRIBUTE_OPTIONS[effectiveFocusAttribute] ?? [];
+                                  const entries = Array.from(seen.entries())
+                                    .map(([category, color]) => ({ category, color }))
+                                    .sort((a, b) => {
+                                      const ai = canonical.indexOf(a.category);
+                                      const bi = canonical.indexOf(b.category);
+                                      if (ai === -1 && bi === -1) return a.category.localeCompare(b.category);
+                                      if (ai === -1) return 1;
+                                      if (bi === -1) return -1;
+                                      return ai - bi;
+                                    });
+                                  if (entries.length > 0) legend = { attribute: effectiveFocusAttribute, entries };
+                                }
+
+                                filterContext = { projects: Array.from(projectMap.values()), ...(legend ? { legend } : {}) };
                                 sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
                               } else {
                                 sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);

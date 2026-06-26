@@ -23,6 +23,11 @@ NON_FIXED_OBSTACLE_CLASSES = {"Cone", "Bins", "Bicycle", "Pot", "Barrier"}
 _FO_TYPE_LABEL_RENAMES = {
     "Pillar": "Covered Linkway Pole",
     "Fence": "Railing",
+    "Bollards": "Bollard",
+}
+
+_NFO_TYPE_LABEL_RENAMES = {
+    "Bins": "Bin",
 }
 
 
@@ -569,7 +574,7 @@ class CycleRAP_Coding_Helper:
             detections = cls._detect_obstacles(image_path, cls.obstacle_detector_model, CONF_THRESH)
             fixed_obs, non_fixed_obs, confirmed_fixed, confirmed_non_fixed = cls._compute_obstacle_presence(detections, combined_path_mask)
             fo_type_str  = ", ".join(sorted({_FO_TYPE_LABEL_RENAMES.get(d["class_name"], d["class_name"]) for d in confirmed_fixed}))     or None
-            nfo_type_str = ", ".join(sorted({d["class_name"] for d in confirmed_non_fixed})) or None
+            nfo_type_str = ", ".join(sorted({_NFO_TYPE_LABEL_RENAMES.get(d["class_name"], d["class_name"]) for d in confirmed_non_fixed})) or None
             all_confirmed = confirmed_fixed + confirmed_non_fixed
         else:
             fixed_obs = non_fixed_obs = "Not Present"

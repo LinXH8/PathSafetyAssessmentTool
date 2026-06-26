@@ -319,7 +319,7 @@ const cyclerapAttributes: AttributeConfig[] = [
     name: "FO Type",
     label: "Fixed Obstacle Type",
     group: "Facility clear width",
-    options: ["Not Selected", "Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Billboards", "Sign Pole", "Sign Poles", "Railing", "Vegetation", "Others"],
+    options: ["Not Selected", "Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollard", "Billboard", "Sign Pole", "Railing", "Utility Box", "Vegetation", "Others"],
   },
   {
     name: "Non-Fixed Obstacle on Facility",
@@ -330,7 +330,7 @@ const cyclerapAttributes: AttributeConfig[] = [
     name: "NFO Type",
     label: "Non-Fixed Obstacle Type",
     group: "Facility clear width",
-    options: ["Not Selected", "Barrier", "Bins", "Bicycle", "Cone", "Others"],
+    options: ["Not Selected", "Barrier", "Bin", "Bicycle", "Cone", "Others"],
   },
   {
     name: "Width Restriction",
@@ -475,13 +475,13 @@ export const SUBCATEGORY_MAP: Record<
   "Fixed Obstacle on Facility": {
     childAttr: "FO Type",
     parentCategories: {
-      "Present": ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollards", "Billboards", "Sign Pole", "Sign Poles", "Railing", "Vegetation", "Others"],
+      "Present": ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollard", "Billboard", "Sign Pole", "Railing", "Utility Box", "Vegetation", "Others"],
     },
   },
   "Non-Fixed Obstacle on Facility": {
     childAttr: "NFO Type",
     parentCategories: {
-      "Present": ["Barrier", "Bins", "Bicycle", "Cone", "Others"],
+      "Present": ["Barrier", "Bin", "Bicycle", "Cone", "Others"],
     },
   },
   "Facility Width per Direction": {
@@ -611,18 +611,21 @@ export function getCategoryColor(attribute: string, category: string): string {
       "Lamp Post": "#DC2626",
       "Traffic Light": "#EA580C",
       "Covered Linkway Pole": "#F59E0B",
+      "Bollard": "#CA8A04",
       "Bollards": "#CA8A04",
-      "Billboards": "#7C3AED",
       "Billboard": "#7C3AED",
-      "Sign Poles": "#0284C7",
+      "Billboards": "#7C3AED",
       "Sign Pole": "#0284C7",
+      "Sign Poles": "#0284C7",
       "Railing": "#0891B2",
+      "Utility Box": "#EC4899",
       "Vegetation": "#16A34A",
       "Others": "#6B7280",
     },
     "Non-Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
     "NFO Type": {
       "Barrier": "#DC2626",
+      "Bin": "#EA580C",
       "Bins": "#EA580C",
       "Bicycle": "#F59E0B",
       "Cone": "#CA8A04",
