@@ -61,7 +61,7 @@ The **Treatment Options** panel on the left has a dropdown that lets you switch 
 Tick the checkbox next to one or more treatments to select them. Selected treatments are highlighted in the panel.
 
 > [!IMPORTANT]
-> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live preview of the post-treatment risk scores and attribute changes. If this is toggled off, only the original (pre-treatment) scores will be displayed.
+> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live preview of the post-treatment risk scores and attribute changes. Switching it back to **Show Pre-Treatment** correctly restores the original (pre-treatment) scores and attributes — the score display refreshes automatically in both directions.
 
 Once the **Show Post-Treatment** toggle is enabled, selecting a treatment will show a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
 
@@ -102,19 +102,21 @@ The two maps at the top of the page give you a project-wide view of how treatmen
 
 Click any segment on either map to jump directly to that segment's page in the panel below.
 
+> **Linked map panels** — toggling the visibility or layer state on one map panel automatically applies the same change to the other. Both maps always stay in sync so you are always comparing like with like.
+
 ---
 
 ### Step 8: Generate AI visualisations of proposed improvements
 
-The Treatment Options panel includes two clipboard buttons that help you create visual representations of proposed improvements using external AI image tools:
+The Treatment Options panel has **two separate buttons** — one for the prompt and one for the image — so each can be copied independently and pasted into AI tools that accept text and image inputs separately (e.g. Gemini, ChatGPT, DALL·E):
 
-- **Copy prompt** — copies a ready-to-use text prompt describing treatments in plain language. This button has a dropdown with two options:
+- **Copy prompt** — copies a ready-to-use text prompt describing treatments in plain language. The prompt templates have been updated to produce clearer, more accurate visualisation instructions. This button has a dropdown with two options:
   - **Copy Applied** — copies a prompt based on the treatments already **applied and saved** for this segment.
   - **Copy Selected** — copies a prompt based on the treatments currently **ticked/selected** in the panel (even if not yet applied).
-  
-  Paste the prompt into an AI image generation tool (such as ChatGPT or DALL·E) to generate a visual mock-up of what the improved path might look like.
 
-- **Copy image** — copies the current segment photograph directly to your clipboard. Paste it into the same AI tool alongside the prompt so the tool has the actual scene to work from.
+- **Copy image** — copies the current segment photograph directly to your clipboard as a standalone action. Paste it into the AI tool separately from the prompt so the tool has the actual scene to work from.
+
+> Prompt and image are copied separately because pasting both simultaneously into tools like Gemini is not supported — copy the prompt first, paste it, then copy and attach the image.
 
 Use **Copy Selected** when you are exploring options and want to preview the AI image before committing. Use **Copy Applied** when you have already applied treatments and want to generate the final before-and-after visualisation.
 
@@ -168,7 +170,7 @@ When treatments are selected:
 #### Previewing Before You Apply
 
 > [!IMPORTANT]
-> The **Show Post-Treatment** toggle must be switched **on** in the Attributes panel header to see the live score preview and attribute modifications. If it is toggled off, the score cards and attribute fields will continue showing the original pre-treatment values.
+> The **Show Post-Treatment** toggle must be switched **on** in the Attributes panel header to see the live score preview and attribute modifications. Switching it back to **Show Pre-Treatment** correctly restores the original pre-treatment scores — the display refreshes automatically in both directions.
 
 With the toggle enabled, tick any treatment checkbox to see the **live score preview** for the current segment. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
 
@@ -176,14 +178,12 @@ With the toggle enabled, tick any treatment checkbox to see the **live score pre
 
 #### AI-Assisted Visualisation (Prompt & Image Copy)
 
-Two clipboard buttons help you create visual representations of proposed improvements:
+There are **two separate buttons** — one for the prompt and one for the image — because pasting both simultaneously into tools such as Gemini is not supported. Copy and paste each independently:
 
-- **Copy prompt** — copies a ready-to-use text prompt describing the selected or applied treatments. Use the dropdown to choose:
+- **Copy prompt** — copies a ready-to-use text prompt describing the selected or applied treatments. Prompt templates have been updated for clearer, more accurate visualisation instructions. Use the dropdown to choose:
   - **Copy Applied** — prompt based on treatments already **applied and saved** for this segment.
   - **Copy Selected** — prompt based on treatments currently **ticked/selected** in the panel.
 
-  Paste the prompt into an AI image generation tool (such as ChatGPT or DALL·E) to generate a mock-up of what the improved path might look like.
-
-- **Copy image** — copies the current segment photograph directly to your clipboard. Paste it alongside the prompt so the AI tool has the actual scene to work from.
+- **Copy image** — copies the current segment photograph to your clipboard as a standalone action. Attach it to the AI tool separately from the prompt.
 
 Use **Copy Selected** when exploring options before committing. Use **Copy Applied** when generating the final before-and-after visualisation.

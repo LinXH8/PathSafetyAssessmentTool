@@ -43,6 +43,8 @@ After loading projects, you can:
 - click a segment to navigate to the Coding page to make edits
 - click **Back to Analysis** to return and continue
 
+**Top Risk Contributors** — the panel showing the attributes contributing most to risk scores is **reactive to your active filters**. As you apply or change segment filters, the Top Risk Contributors list updates automatically to reflect only the filtered subset of segments, so the contributors you see always match the segments currently visible on the map and in the table.
+
 #### 3.3.1 Attribute Filters and Finer Filtering
 
 When you select an attribute for analysis, you can filter segments by its coded values. Attributes marked **❖** also support **finer filtering** — selecting a specific value (e.g. *Present* for Fixed Obstacle on Facility) reveals a secondary sub-category dropdown so you can pinpoint exact sub-types. The map updates to show distinct colours for each sub-category once a sub-type is selected.
@@ -61,8 +63,8 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Curvature **❖** | Sharp Turn Present; No Sharp Turn Present | Sharp Turn: <6.5m; 6.5–<10m; Path Junction · No Sharp Turn: 10–18m; >18m |
 | Street Lighting | Present; Not Present | — |
 | Delineation **❖** | Present; Not Present | When "Present": Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing <br> When "Not Present": Faded Marking |
-| Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others |
-| Non-Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Barrier; Bins; Bicycle; Cone; Others |
+| Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others (any obstacle not matching a preset type is standardised to *Others*) |
+| Non-Fixed Obstacle on Facility **❖** | Present; Not Present | When "Present": Barrier; Bins; Bicycle; Cone; Others (any obstacle not matching a preset type is standardised to *Others*) |
 | Light Segregation | Present; Not Present | — |
 | Intersection or Road Crossing | Present; Not Present | — |
 | Crossing Facility **❖** | Present; Not Present | When "Present": Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
@@ -88,8 +90,8 @@ Selecting a top-level filter value for any attribute marked **❖** reveals a se
 | Facility Width per Direction | Wide | >4 m |
 | Curvature | Sharp Turn Present | <6.5 m (footpath threshold); 6.5–<10 m; Path Junction |
 | Curvature | No Sharp Turn Present | 10–18 m; >18 m (cycling path threshold ≥18 m) |
-| Fixed Obstacle on Facility | Present | Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others |
-| Non-Fixed Obstacle on Facility | Present | Barrier; Bins; Bicycle; Cone; Others |
+| Fixed Obstacle on Facility | Present | Lamp Post; Traffic Light; Pillar; Bollards; Fence; Vegetation; Others (standardised fallback for any unrecognised type) |
+| Non-Fixed Obstacle on Facility | Present | Barrier; Bins; Bicycle; Cone; Others (standardised fallback for any unrecognised type) |
 | Delineation | Present | Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing |
 | Delineation | Not Present | Faded Marking |
 | Crossing Facility | Present | Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
@@ -122,6 +124,8 @@ The page supports three exports:
 
 **Download Shapefile** exports the currently visible filtered segments as a standard GIS shapefile package (`.zip`). The file is named `shapefile_export_YYYY-MM-DD.zip` and can be opened in QGIS, ArcGIS, or any other GIS application. Only segments that have a valid image reference are included.
 
+> **Project names in exports** — the project name shown in the CSV and shapefile exports matches exactly what is displayed in the Path Analysis page, ensuring consistency when cross-referencing exported data against the on-screen analysis.
+
 ### 3.5 Session Continuity
 
 Your selections and filters are kept for the browser session, so navigating away (e.g. to edit a segment in Coding) and returning does not immediately clear the analysis setup.
@@ -130,7 +134,7 @@ Your selections and filters are kept for the browser session, so navigating away
 
 If you click a segment on the Path Analysis map to open it in the Coding page, the coding page map will show **only the segments that were visible in your active filter**. The currently selected segment is always shown regardless of the filter. This makes it easier to focus on a specific subset while coding without losing your analysis context.
 
-Click **Back to Analysis** in the sidebar to return to Path Analysis with your filters intact.
+Click **Back to Analysis** in the sidebar to return to Path Analysis with your filters intact. Secondary attribute (finer filter) colours on the map are **automatically refreshed** when you return — changes you made to obstacle types or other sub-category attributes in the Coding page will be reflected immediately without needing to re-apply the filter.
 
 ---
 
@@ -173,8 +177,8 @@ All other attributes use standard single-level filtering.
 | Facility Width per Direction | Wide | >4 m | Blue |
 | Curvature | Sharp Turn Present | <6.5 m (footpath threshold) · 6.5–<10 m · Path Junction | Red · Orange · Purple |
 | Curvature | No Sharp Turn Present | 10–18 m · >18 m (cycling path threshold ≥18 m) | Green · Blue |
-| Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Pillar · Bollards · Fence · Vegetation · Others | Unique colour per type |
-| Non-Fixed Obstacle on Facility | Present | Barrier · Bins · Bicycle · Cone · Others | Unique colour per type |
+| Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Pillar · Bollards · Fence · Vegetation · Others | Unique colour per type; unrecognised types standardised to *Others* |
+| Non-Fixed Obstacle on Facility | Present | Barrier · Bins · Bicycle · Cone · Others | Unique colour per type; unrecognised types standardised to *Others* |
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
 | Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |

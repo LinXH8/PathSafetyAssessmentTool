@@ -14,7 +14,7 @@ Access it from the **sidebar** on the Path Analysis or Treatment page.
 - [5.2 Report Sections Panel](#52-report-sections-panel)
 - [5.3 Include Filtered Sections](#53-include-filtered-sections)
 - [5.4 Report Section Reference](#54-report-section-reference)
-  - [5.4.1 Title](#541-title)
+  - [5.4.1 Title and Report Name](#541-title-and-report-name)
   - [5.4.2 Summary](#542-summary)
   - [5.4.3 Map](#543-map)
   - [5.4.4 Risk Bands](#544-risk-bands)
@@ -24,7 +24,8 @@ Access it from the **sidebar** on the Path Analysis or Treatment page.
   - [5.4.8 Benchmarking Stats](#548-benchmarking-stats)
   - [5.4.9 Treatments](#549-treatments)
 - [5.5 Saving, Exporting and Reusing Your Report](#55-saving-exporting-and-reusing-your-report)
-- [5.6 Quick-start Steps](#56-quick-start-steps)
+- [5.6 Saved Reports](#56-saved-reports)
+- [5.7 Quick-start Steps](#57-quick-start-steps)
 
 ---
 
@@ -82,7 +83,7 @@ Leave this unchecked (default) to include all loaded segments.
 
 ## 5.4 Report Section Reference
 
-### 5.4.1 Title
+### 5.4.1 Title and Report Name
 
 The title page includes:
 
@@ -92,6 +93,8 @@ The title page includes:
 - **PURPOSE** — brief statement of why the assessment was conducted
 - **REPORT DATE** — defaults to today; click to change via the date picker
 - **IMAGE DATE** — the date the survey images were captured; populated automatically from project data where available
+
+**Report Name (auto-generated):** When you generate a report, the system assigns an automatic report name based on the **default risk score band** of the loaded project(s) (e.g. "High Risk Assessment — Ang Mo Kio"). If you have an active filter applied in the Path Analysis page, the report name will instead reflect the **filtered selection** — the filtered name takes precedence over the default risk score label. You can always click the heading to override the name manually.
 
 ### 5.4.2 Summary
 
@@ -114,6 +117,8 @@ A live route map showing every segment as a colour-coded dot, coloured by **Over
 
 The map zooms to fit all loaded segments. It is interactive in the preview but captured as a static image in PDF/Word exports.
 
+A **legend** is displayed alongside the map, showing the colour coding for each risk band so that readers of the exported report can interpret the segment colours without additional context.
+
 ### 5.4.4 Risk Bands
 
 Shows the distribution of segments across risk bands for all four crash types: **BB, BP, SB, VB**, and **Overall Risk**.
@@ -126,7 +131,7 @@ Shows which attributes are contributing most to risk scores across the loaded se
 
 ### 5.4.6 Project Details
 
-Displays project-level metadata including project name, source road, creation and update dates, and other administrative details for each loaded project.
+Displays project-level metadata including project name, source road, creation and update dates, and other administrative details for each loaded project. **Entries are sorted by severity — projects with the highest overall risk scores appear first**, making it easy to prioritise which projects require the most urgent attention.
 
 ### 5.4.7 Top Risk Stretches
 
@@ -184,19 +189,35 @@ Treatments must be applied first in the **Treatment Page** before they appear he
 | Action | How |
 |---|---|
 | **Save layout** | Click **Save layout** in the toolbar to persist section order, visibility, and field values to the browser |
+| **Hard Save** | Use **Save Report** to permanently save the report to the system — it will persist across sessions and can be revisited at any time |
 | **Reset layout** | Click **Reset layout** to restore the default section order and visibility |
 | **Export as PDF** | Click **↓ PDF** — renders the current preview sliced into pages |
 | **Export as Word** | Click **↓ Word** — generates a `.docx` file suitable for editing in Microsoft Word |
 
+> **Hard Save vs. Layout Save:** *Save layout* stores your preferences locally in the browser only (cleared if you clear browser data). *Hard Save* writes the report to the server so you can return to it from any device or session.
+
 ---
 
-## 5.6 Quick-start Steps
+## 5.6 Saved Reports
+
+A **Saved Reports** list shows all reports that have been hard-saved for your projects. From this list you can:
+
+- **Browse** previously saved reports, shown with their report name, associated project(s), and the date last saved
+- **Open** any saved report to reload it in the Report Builder — your section layout, field values, and visibility settings are restored exactly as saved
+- **Re-export** a revisited report to PDF or Word without rebuilding it from scratch
+- **Delete** a saved report you no longer need
+
+> Saved reports capture a snapshot of the data at the time of saving. If you update project data or re-code segments after saving, re-open the report and save again to refresh it.
+
+---
+
+## 5.7 Quick-start Steps
 
 1. Load your projects in the **Path Analysis** page; apply any filters you need.
 2. Open **Report Builder** from the sidebar.
-3. Fill in the **Title** fields: report title (click heading to edit), OIC IN-CHARGE, PURPOSE, REPORT DATE, IMAGE DATE.
+3. Fill in the **Title** fields: report title (click heading to edit), OIC IN-CHARGE, PURPOSE, REPORT DATE, IMAGE DATE. The report name is auto-generated from the risk score band; if a filter is active, the filtered name takes precedence.
 4. In the **Report Sections** panel, check/uncheck sections and drag to reorder as needed.
 5. Set **Top Risk Stretches** to your preferred Top N (3, 5, or 10).
 6. (Optional) Check **Include filtered sections** if you want a filtered-subset report.
 7. (Optional) Paste AI-generated after images into top-risk segment image areas.
-8. Click **↓ PDF** or **↓ Word** to export.
+8. Click **Save Report** (hard save) to persist the report for future revisiting, or go straight to **↓ PDF** / **↓ Word** to export.

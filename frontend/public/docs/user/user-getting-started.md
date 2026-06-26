@@ -42,11 +42,18 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 
 ### 1.2 User Login & Account Management
 
-**Creating a new profile** — click **Create Profile** on the Landing Page, enter your **LTA Employee Email** (e.g. `user@lta.gov.sg`), your **Division**, and a 4–12 digit numeric PIN, then click **Create Profile**.
+**Creating a new profile** — click **Create Profile** on the Landing Page and fill in the following:
 
-**Signing in** — click your profile card on the Landing Page, click **Start As \<LTA Email Address\>**, enter your PIN, and you are taken to your **Projects** page.
+- **Username** — a display name for your profile (shown on the landing page and in session headers)
+- **LTA Employee Email** (e.g. `user@lta.gov.sg`) — this is your **private-facing email**, used only for identity verification and password/PIN recovery; it is not displayed publicly
+- **Division** — your organisational division
+- **4–12 digit numeric PIN** — your login credential
 
-**Switching accounts** — click **Log Out** in the left-hand sidebar at any time and select a different profile (identified by your LTA Employee Email, e.g. `user@lta.gov.sg`) on the Landing Page.
+Then click **Create Profile** to complete setup.
+
+**Signing in** — click your profile card on the Landing Page, click **Start As \<Username\>**, enter your PIN, and you are taken to your **Projects** page.
+
+**Switching accounts** — click **Log Out** in the left-hand sidebar at any time and select a different profile on the Landing Page.
 
 **Session Behaviour**
 
@@ -54,9 +61,15 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 - Logging out from one tab logs you out everywhere on that device.
 - Your projects, images, and results persist on disk — logging out does not delete any data.
 
-**Forgotten PIN**
+**Forgotten PIN / Restore Password**
 
-PINs are stored locally and there is no self-service reset. Ask your administrator to delete and recreate the profile if the PIN is irrecoverable. Note that deleting a profile removes all projects associated with it.
+If you have forgotten your PIN, you can restore access using your registered **private-facing email**:
+
+1. On the Landing Page, click **Forgot PIN?** (or the equivalent restore option) below the sign-in prompt.
+2. Enter the **email address** you provided when creating your profile.
+3. Follow the verification instructions sent to that email to reset your PIN.
+
+> If you no longer have access to your registered email, ask your administrator to delete and recreate the profile. Note that deleting a profile removes all projects associated with it.
 
 ### 1.3 Open the Project List
 
