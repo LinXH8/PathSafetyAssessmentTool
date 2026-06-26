@@ -12,9 +12,8 @@ import {
   Dialog,
   Portal,
   CloseButton,
-  Menu,
 } from "@chakra-ui/react";
-import { LuCheck, LuCopy, LuImage, LuChevronDown } from "react-icons/lu";
+import { LuCheck, LuCopy, LuImage } from "react-icons/lu";
 import { Switch } from "../../components/ui/switch";
 import { toaster } from "../../components/ui/toaster";
 import { Tooltip } from "../../components/ui/tooltip";
@@ -56,7 +55,6 @@ type ScoreType = {
 };
 
 type CopyButtonState = "idle" | "copying" | "copied" | "error";
-type ImageCopyButtonState = "idle" | "copying" | "copied" | "error";
 
 const PANEL_HEIGHT = 400;
 const CONTROLS_H = 32;
@@ -711,7 +709,7 @@ export default function TreatmentDetailPage() {
   const [applyLoading, setApplyLoading] = useState(false);
   const [openConfirmAlert, setOpenConfirmAlert] = useState(false);
   const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>("idle");
-  const [imageCopyButtonState, setImageCopyButtonState] = useState<ImageCopyButtonState>("idle");
+  const [imageCopyButtonState, setImageCopyButtonState] = useState<CopyButtonState>("idle");
 
   // Preview state
   const [previewScores, setPreviewScores] = useState<ScoreType | null>(null);
@@ -1220,6 +1218,7 @@ export default function TreatmentDetailPage() {
         }
         window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
         setSelectedTreatments(new Set());
+        setShowPostTreatment(true);
     } catch (e: any) {
         console.error("Apply specific failed:", e);
         alert(e.message || "Failed to apply treatment");
@@ -1389,14 +1388,14 @@ export default function TreatmentDetailPage() {
       setCopyButtonState("copied");
       toaster.create({
         title: "Prompt copied",
-        description: "The current treatment prompt is ready to paste.",
+        description: "The treatment prompt is ready to paste.",
         type: "success",
       });
     } catch (error) {
       setCopyButtonState("error");
       toaster.create({
         title: "Copy failed",
-        description: error instanceof Error ? error.message : "Failed to copy the current treatment prompt.",
+        description: error instanceof Error ? error.message : "Failed to copy the treatment prompt.",
         type: "error",
       });
     }
@@ -1411,29 +1410,25 @@ export default function TreatmentDetailPage() {
       setImageCopyButtonState("copied");
       toaster.create({
         title: "Image copied",
-        description: "The current segment image is ready to paste.",
+        description: "The segment image is ready to paste.",
         type: "success",
       });
     } catch (error) {
       setImageCopyButtonState("error");
       toaster.create({
         title: "Image copy failed",
-        description: error instanceof Error ? error.message : "Failed to copy the current image.",
+        description: error instanceof Error ? error.message : "Failed to copy the image.",
         type: "error",
       });
     }
   }, [currentImageUrl]);
 
   useEffect(() => {
-    const hasTransientCopyState =
-      copyButtonState === "copied" ||
-      copyButtonState === "error" ||
-      imageCopyButtonState === "copied" ||
-      imageCopyButtonState === "error";
+    const hasTransient =
+      copyButtonState === "copied" || copyButtonState === "error" ||
+      imageCopyButtonState === "copied" || imageCopyButtonState === "error";
 
-    if (!hasTransientCopyState) {
-      return;
-    }
+    if (!hasTransient) return;
 
     const timeout = window.setTimeout(() => {
       setCopyButtonState("idle");
@@ -1450,19 +1445,19 @@ export default function TreatmentDetailPage() {
         ? "Copied!"
         : copyButtonState === "error"
           ? "Copy failed"
-          : "Copy prompt";
-
-  const hasApplied = appliedTreatmentIds.length > 0;
-  const hasSelected = selectedTreatments.size > 0;
+          : "Copy Prompt";
 
   const imageCopyButtonLabel =
     imageCopyButtonState === "copying"
       ? "Copying..."
       : imageCopyButtonState === "copied"
-        ? "Image copied!"
+        ? "Copied!"
         : imageCopyButtonState === "error"
           ? "Copy failed"
-          : "Copy image";
+          : "Copy Image";
+
+  const hasApplied = appliedTreatmentIds.length > 0;
+  const hasSelected = selectedTreatments.size > 0;
 
   if (projectNames.length === 0) {
     return (
@@ -1878,53 +1873,29 @@ export default function TreatmentDetailPage() {
               </Flex>
 
               <Flex width="full" gap="2" align="stretch" wrap="wrap">
-                <Menu.Root positioning={{ placement: "bottom-start", strategy: "fixed" }}>
-                  <Menu.Trigger asChild>
-                    <Button
-                      size="sm"
-                      minW="118px"
-                      variant="outline"
-                      aria-label="Copy treatment prompt"
-                      disabled={!hasApplied && !hasSelected}
-                      loading={copyButtonState === "copying"}
-                      gap="1"
-                    >
-                      {copyButtonState === "copied" ? <LuCheck /> : <LuCopy />}
-                      <span>{copyButtonLabel}</span>
-                      <LuChevronDown />
-                    </Button>
-                  </Menu.Trigger>
-                  <Menu.Positioner>
-                    <Menu.Content zIndex={1500}>
-                      <Menu.Item
-                        value="copy-applied"
-                        disabled={!hasApplied}
-                        onClick={() => { void handleCopyTreatmentPrompt(appliedTreatmentIds); }}
-                      >
-                        Copy Applied
-                      </Menu.Item>
-                      <Menu.Item
-                        value="copy-selected"
-                        disabled={!hasSelected}
-                        onClick={() => { void handleCopyTreatmentPrompt(Array.from(selectedTreatments)); }}
-                      >
-                        Copy Selected
-                      </Menu.Item>
-                    </Menu.Content>
-                  </Menu.Positioner>
-                </Menu.Root>
                 <Button
                   size="sm"
-                  minW="108px"
+                  variant="outline"
+                  aria-label="Copy treatment prompt"
+                  disabled={!hasApplied && !hasSelected}
+                  loading={copyButtonState === "copying"}
+                  gap="1"
+                  onClick={() => {
+                    const ids = hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments);
+                    void handleCopyTreatmentPrompt(ids);
+                  }}
+                >
+                  {copyButtonState === "copied" ? <LuCheck /> : <LuCopy />}
+                  <span>{copyButtonLabel}</span>
+                </Button>
+                <Button
+                  size="sm"
                   variant="outline"
                   aria-label="Copy current image"
-                  title="Copy current image"
                   disabled={!currentImageUrl}
                   loading={imageCopyButtonState === "copying"}
                   gap="1"
-                  onClick={() => {
-                    void handleCopyCurrentImage();
-                  }}
+                  onClick={() => { void handleCopyCurrentImage(); }}
                 >
                   {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
                   <span>{imageCopyButtonLabel}</span>
