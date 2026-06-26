@@ -73,7 +73,6 @@ generate-summary-*.xlsx
 # Documentation and explanations
 *.md
 !README.md
-!CLAUDE.md
 *.lnk
 CycleRAP_User_Guide.pdf
 !frontend/public/docs/**
