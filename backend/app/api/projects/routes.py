@@ -6098,7 +6098,10 @@ def autocode_all(project_name: str):
             # Save to disk (runs only when the loop completes; skipped on generator abandon/disconnect)
             if save and ok_count > 0:
                 print(f"[Autocode] Bulk complete: {ok_count}/{total_count} OK, {len(errors)} failed. Saving...", flush=True)
-                ver.save_all()
+                # df.at[] writes bypass the BaseTable.df setter so df_dirty is never set.
+                # Force it True before saving so ver.save_all() actually serializes attributes.
+                ver.attributes.df_dirty = True
+                proj.save_all()
                 proj.metadata.last_updated = datetime.datetime.now()
                 proj.metadata.serialize(proj.project_path)
 
