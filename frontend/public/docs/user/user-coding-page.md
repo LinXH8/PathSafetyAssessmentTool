@@ -9,6 +9,7 @@ The Coding page is the main review workspace. It can open one or more selected p
 - [2.1 Main Layout](#21-main-layout)
 - [2.2 Navigating Segments](#22-navigating-segments)
 - [2.3 Attribute Default Values](#23-attribute-default-values)
+  - [2.3.1 Attribute Panel Groups](#231-attribute-panel-groups)
 - [2.4 Auto-Code Options](#24-auto-code-options)
   - [2.4.1 Attributes Coded by CV (Image Analysis)](#241-attributes-coded-by-cv-image-analysis)
   - [2.4.2 Attributes Coded by GIS Layer Mapping](#242-attributes-coded-by-gis-layer-mapping)
@@ -44,12 +45,28 @@ You can navigate through segments in three ways:
 
 ### 2.3 Attribute Default Values
 
+#### 2.3.1 Attribute Panel Groups
+
+The attributes panel organises all 44 coding attributes into **5 tabs** (groups). Click any tab to view only the attributes in that category:
+
+| Tab | Attributes Included |
+|---|---|
+| **Facility Configuration** | Area Type; Facility Type; Adjacent Sidewalk 0–1m & 1–3m; Adjacent Road Lane 0–1m & 1–3m; Adjacent Vehicle Parking 0–1m & 1–3m; Adjacent Object or Level Change 0–1m & 1–3m |
+| **Facility Clear Width** | Facility Access; Light Segregation; Fixed Obstacle on Facility; Non-Fixed Obstacle on Facility; Facility Width per Direction; Width Restriction; Adjacent Severe Hazard 0–1m & 1–3m; Line of Sight |
+| **Facility Surface Conditions** | Delineation; Major Surface Deformation or Drain Opening; Loose or Slippery Surface; Grade; Curvature; Tram or Train Rails; Street Lighting |
+| **Intersection** | Intersection Approach; Intersection or Road Crossing; Crossing Facility; Property Access; Pedestrian Crossing; Intersecting Bicycle Facility; Number of Lanes – Adjacent Road; Number of Lanes – Intersecting Road |
+| **Flow & Speed** | Flow Direction; Peak Pedestrian Flow; Peak Bicycle/LV Traffic Flow; Observed Proportion of Cargo Bikes; Heavy Vehicle Flow; Bicycle/LV Speed – Average; Bicycle/LV Speed Differential; Road AADT; Road Operating Speed (mean); Road Speed Limit |
+
+This grouping makes it easier to focus on related attributes — for example, all width and obstacle fields together in **Facility Clear Width**, or all speed and traffic fields in **Flow & Speed**.
+
+---
+
 When a segment is first created and no auto-code has been run, PSAT assigns the following default values. These represent the most common parameters for paths in Singapore.
 
 | # | Attribute | Default Value | Reason |
 |---|---|---|---|
 | 1 | Area Type | Suburban | GIS fallback using LTA parking zone and URA land use layers; default when no urban/industrial/recreational polygon match |
-| 2 | Facility Type | Multi-Use Path | Most common facility type; overridden by CV image analysis |
+| 2 | Facility Type | Sidewalk | Most common facility type in Singapore; overridden by CV image analysis |
 | 3 | Facility Access | Adequate | Most common; code Inadequate only when congestion or blockages force users onto alternative routes |
 | 4 | Loose or Slippery Surface | Not Present | Most common; GIS-assisted via PATH defects layer (algae); CV detection not yet ready |
 | 5 | Tram or Train Rails | Not Present | No tram or train rail paths/roads exist in Singapore |
@@ -57,7 +74,7 @@ When a segment is first created and no auto-code has been run, PSAT assigns the 
 | 7 | Fixed Obstacle on Facility | Not Present | Most common; overridden by CV image analysis |
 | 8 | Non-Fixed Obstacle on Facility | Not Present | Most common; overridden by CV image analysis |
 | 9 | Line of Sight | Adequate | Not yet in scoring specification; requires manual assessment of visibility along the path |
-| 10 | Delineation | Present | Default not present; CV codes first, then overwritten if PATH provides faded marking data |
+| 10 | Delineation | Not Present | Default is Not Present because the default Facility Type is Sidewalk (sidewalks are not delineated); CV codes first, then overwritten if PATH provides faded marking data |
 | 11 | Light Segregation | Present | All off-road paths are expected to have kerb segregation; confirmed by CV and logic rules |
 | 12 | Facility Width per Direction | Narrow | GIS-derived from LiDAR path width data; default when no width data available |
 | 13 | Flow Direction | Two Way | Most on-road cycling lanes are one-way; all off-road paths default to two-way |
@@ -65,8 +82,8 @@ When a segment is first created and no auto-code has been run, PSAT assigns the 
 | 15 | Adjacent Road Lane 0–1m | Not Present | CV-derived; present when path edge is ≤1m from road kerb with no protective barrier |
 | 16 | Adjacent Vehicle Parking 0–1m | Not Present | Most common; GIS-derived from URA car park lot layer and GDM lane markings |
 | 17 | Adjacent Severe Hazard 0–1m | Not Present | Rare in Singapore; requires manual assessment when waterways or drops >60cm are present with no barrier |
-| 18 | Adjacent Object/Level Change 0–1m | Not Present | Co-occurs with adjacent road lane; inferred by CV and logic rules |
-| 19 | Adjacent Sidewalk 0–1m | Not Present | Assumed present in urban context; derived by CV and logic rules |
+| 18 | Adjacent Object/Level Change 0–1m | Not Present | May be present when a road carriageway is within 1m of the path edge with no protective barrier; inferred by CV and logic rules — not always present even on off-road paths |
+| 19 | Adjacent Sidewalk 0–1m | Not Present | Present when a separate pedestrian footpath runs parallel within 1m of the cycling path (e.g. split paths); detected by CV using multi-path classification and refined by logic rules |
 | 20 | Adjacent Road Lane 1–3m | Not Present | CV-derived; present when road is 1–3m from path with no protective barrier |
 | 21 | Adjacent Vehicle Parking 1–3m | Not Present | Most common; GIS-derived from URA car park lot layer |
 | 22 | Adjacent Severe Hazard 1–3m | Not Present | Rare in Singapore; requires manual assessment when severe hazards are 1–3m from path |
@@ -95,13 +112,14 @@ When a segment is first created and no auto-code has been run, PSAT assigns the 
 
 ### 2.4 Auto-Code Options
 
-PSAT supports five auto-code methods that can be run individually or in combination:
+PSAT supports six auto-code methods that can be run individually or in combination:
 
 - **CV auto-code** — reads the segment image using computer vision models
 - **GIS auto-code** — reads GIS shapefiles for the segment location
 - **Logic rules** — applies cascade rules based on detected surface types
-- **Bulk auto-code** — runs across all selected rows or the full project
-- **Per-attribute auto-code** — targets only certain attributes
+- **Auto-code (by segment)** — auto-codes all attributes for the currently selected segment
+- **Bulk auto-code** — runs across all selected rows or the full project (use **Autocode All Projects** to run across all loaded projects)
+- **Per-attribute auto-code** — targets only certain attributes across selected project(s)
 
 Autocode progress is tracked in the project listing as **Percentage Segments Autocoded**.
 
@@ -119,7 +137,7 @@ The following attributes are automatically inferred from street-level photograph
 | Adjacent Object/Level Change 1–3m | Inferred from Adjacent Road Lane 1–3m result |
 | Adjacent Sidewalk 0–1m | Multi-path detection (multiple path segments visible) |
 | Fixed Obstacle on Facility | Fixed obstacle segmentation model |
-| Non-Fixed Obstacle on Facility | Fixed obstacle segmentation (label 9 = non-fixed) |
+| Non-Fixed Obstacle on Facility | Fixed obstacle segmentation model — class label 9 in the YOLO model corresponds to non-fixed obstacles (temporary items such as bins, cones, and bicycles parked on the path) |
 | Delineation | Delineation classifier model |
 
 #### 2.4.2 Attributes Coded by GIS Layer Mapping
@@ -144,6 +162,8 @@ The following attributes are automatically derived from the GIS shapefiles store
 | Crossing Facility | `AMG_BC2025_shp` | Within 2 m buffer |
 | Pedestrian Crossing proximity | `Mrt_exit` / `bus_stop` | Within 20 m buffer |
 | Heavy Vehicle Flow | `bus_lane` proximity | Within 20 m buffer |
+| Grade | LiDAR 3D point cloud (elevation data) | Weighted elevation interpolation within 3 m radius (see §2.4.2.1) |
+| Curvature | `path` / `CyclingPath_Jul2024` / `FootPath_Mar2025` centreline | Path centreline geometry analysis within 5 m radius (see §2.4.2.2) |
 
 > **Note:** Road AADT has no GIS auto-coding path — it must be coded manually.
 

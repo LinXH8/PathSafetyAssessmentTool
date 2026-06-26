@@ -6,6 +6,7 @@ Welcome to PSAT. The tool helps you create projects from geotagged survey images
 
 ## Table of Contents
 
+- [1.0 How to Install PSAT](#10-how-to-install-psat)
 - [1.1 Using the Help Guide](#11-using-the-help-guide)
 - [1.2 User Login & Account Management](#12-user-login--account-management)
 - [1.3 Open the Project List](#13-open-the-project-list)
@@ -16,6 +17,20 @@ Welcome to PSAT. The tool helps you create projects from geotagged survey images
 ---
 
 ## 1. Getting Started
+
+### 1.0 How to Install PSAT
+
+> **Note:** This section is a placeholder. Full installation instructions will be added once the installation package is finalised by the development team.
+
+The PSAT installation folder contains everything needed to run the tool on your machine. Key items in the folder include:
+
+- **run.PSAT** — the main launcher executable to start the application
+- **GIS layers** — all shapefiles required for auto-coding and spatial analysis
+- **Latest survey images** — pre-loaded images (e.g. 1Q26) for initial project setup
+
+Contact your administrator for the latest installation package and setup instructions.
+
+---
 
 ### 1.1 Using the Help Guide
 
@@ -73,6 +88,21 @@ When creating a project:
 
 When you select a source folder in the Single Folder workflow, PSAT reads the road name from the folder and automatically **highlights the matching road on the map in amber/orange**. The map also pans and zooms to that road so you can visually confirm you are creating the project from the correct location before proceeding.
 
+#### The `in/` Import Folder
+
+The `in/` folder is the staging area for all survey images. Before you can create a project, images must be placed in a named sub-folder inside `in/`.
+
+**Where to get the images:**  
+Survey images are captured using the LTA survey vehicle. The raw image files are provided by the survey team and must be copied into a named sub-folder under `in/` on the PSAT machine.
+
+**How images are auto-named:**  
+Images are automatically associated with a project and quarter based on two things:
+
+- **Project folder name** — the sub-folder name inside `in/` becomes the road name shown in PSAT (e.g. a folder named `AMK AVE 8` creates a project called **AMK AVE 8**)
+- **Survey quarter** — the date embedded in each image file determines its quarter label automatically (e.g. images taken in January–March 2026 are tagged as **1Q26**)
+
+> **Tip:** Do not use underscores in folder names — use spaces or dashes instead (e.g. `AMK AVE 8`, not `AMK_AVE_8`).
+
 ### 1.5 Navigate Between Workflows
 
 From the project list, you can send selected projects for the following:
@@ -86,18 +116,6 @@ From the project list, you can send selected projects for the following:
 
 ### 1.6 Viewing and Updating GIS Layers
 
-Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard.
+Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard, where you can browse, filter, rename, and update the spatial data layers that power PSAT's auto-coding.
 
-From the GIS Layers page you can:
-
-- Browse all current GIS layers (sorted in alphabetical order)
-- View last updated date, required columns, and metadata for each layer
-- **Filter shapefiles** — type any keyword into the filter box beside the "Available Shapefiles" heading to instantly narrow the list to matching layers. This is useful when you have many layers and want to jump straight to the one you need (e.g. type `bus` to surface all bus-related layers)
-- **Rename a layer** — click **Edit** next to any shapefile to give it a custom display name that is meaningful to your team. The rename takes effect immediately across the dashboard
-- **Revert to original name** — if a layer has been renamed, click **Revert** to restore its original filename at any time
-- Using the **Update GIS Layer** button:
-  - **Add** entirely new GIS layers for new categories
-  - **Replace** an existing layer with an updated file
-  - **Delete** a layer that is no longer needed
-
-> For full GIS layer management instructions, see [Section 8: GIS Layer Management](#8-gis-layer-management).
+> For full instructions on adding, replacing, filtering, and renaming layers, see [Section 7: GIS Layer Management](#7-gis-layer-management).
