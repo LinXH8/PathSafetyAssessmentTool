@@ -289,8 +289,8 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
                       direction="row"
                       align="center"
                       justify="center"
-                      bg={improved && showPreviewBackground ? "gray.50" : getLightBgColor(type.score, type.key)}
-                      _dark={{ bg: improved && showPreviewBackground ? "gray.900" : getDarkBgColor(type.score, type.key) }}
+                      bg={getLightBgColor(type.score, type.key)}
+                      _dark={{ bg: getDarkBgColor(type.score, type.key) }}
                       borderRadius="sm"
                       p="1"
                       gap="4" // Controls spacing between logo and crash type scores
@@ -348,8 +348,7 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
                       direction="column"
                       align="center"
                       justify="center"
-                      bg={totalImproved && showPreviewBackground ? "gray.50" : getCycleRAPScoreColor}
-                      _dark={{ bg: totalImproved && showPreviewBackground ? "gray.900" : undefined }}
+                      bg={getCycleRAPScoreColor}
                       borderRadius="sm"
                       p="1"
                       gap="0"

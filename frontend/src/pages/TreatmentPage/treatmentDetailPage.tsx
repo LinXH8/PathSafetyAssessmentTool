@@ -1347,9 +1347,12 @@ export default function TreatmentDetailPage() {
       // valStr is scope-relative; map back to a global page within the scope window.
       const relClamped = Math.min(Math.max(1, raw), scope.count);
       const globalPage = isAllScope ? relClamped : scope.start + relClamped;
+      // Skip if the page hasn't actually changed — prevents spurious gotoPage calls
+      // (which reset segmentScoreDrops) when scope/gotoPage are recreated on data load.
+      if (globalPage === currentPage) return;
       gotoPage(globalPage);
     },
-    [gotoPage, isAllScope, scope]
+    [gotoPage, isAllScope, scope, currentPage]
   );
 
   useEffect(() => {
@@ -2013,17 +2016,11 @@ export default function TreatmentDetailPage() {
                   } as any
                   : originalScores;
 
-                if (!showPostTreatment) {
-                  // Pre-treatment: always show original scores
-                  return originalScores;
-                }
-
+                // Show preview scores whenever treatments are selected, regardless of showPostTreatment toggle
                 if (selectedTreatments.size > 0) {
-                  // Treatments are selected: show preview scores once loaded.
                   if (previewLoading || !previewScores) {
                     return appliedScoreRow;
                   }
-
                   return {
                     ...scores[currentIndex],
                     BB: previewScores.BB,
@@ -2034,16 +2031,18 @@ export default function TreatmentDetailPage() {
                   } as any;
                 }
 
+                if (!showPostTreatment) {
+                  return originalScores;
+                }
+
                 if (appliedAfterScores) {
-                  // Treatments have been applied: show real after-treatment scores.
                   return appliedScoreRow;
                 }
 
-                // No treatments selected or applied: show original scores
                 return originalScores;
               })()}
               beforeScores={
-                showPostTreatment && (treatmentState[currentIndex]?.applied || selectedTreatments.size > 0)
+                (selectedTreatments.size > 0 || (showPostTreatment && treatmentState[currentIndex]?.applied))
                   ? {
                     BB: scores[currentIndex]?.["BB"] ?? 0,
                     BP: scores[currentIndex]?.["BP"] ?? 0,
@@ -2053,9 +2052,7 @@ export default function TreatmentDetailPage() {
                   }
                   : undefined
               }
-              showPreviewBackground={
-                showPostTreatment && selectedTreatments.size > 0
-              }
+              showPreviewBackground={selectedTreatments.size > 0}
               projectContributors={projectContributors}
               onContributorClick={handleContributorClick}
             />
