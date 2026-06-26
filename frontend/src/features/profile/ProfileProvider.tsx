@@ -15,6 +15,7 @@ import {
   loginProfile as apiLoginProfile,
   logoutProfile as apiLogoutProfile,
   migrateLegacyProjects as apiMigrateLegacyProjects,
+  recoverProfilePin as apiRecoverProfilePin,
   resetProfilePin as apiResetProfilePin,
   updateProfile as apiUpdateProfile,
   type CreateProfileResult,
@@ -23,6 +24,7 @@ import {
   type MigrateLegacyProjectsResult,
   type ProfileSummary,
   type ProfilesOverview,
+  type RecoverProfilePinResult,
   type ResetProfilePinResult,
   type UpdateProfileResult,
 } from "../../api";
@@ -34,11 +36,12 @@ type ProfileContextValue = {
   loading: boolean;
   error: string | null;
   refreshOverview: () => Promise<ProfilesOverview | null>;
-  createProfile: (name: string, pin: string, division: string) => Promise<CreateProfileResult>;
+  createProfile: (username: string, email: string, pin: string, division: string) => Promise<CreateProfileResult>;
   login: (profileId: string, pin: string) => Promise<LoginProfileResult>;
   logout: () => Promise<void>;
-  updateProfile: (profileId: string, currentPin: string, name: string, division: string) => Promise<UpdateProfileResult>;
+  updateProfile: (profileId: string, currentPin: string, username: string, division: string, email?: string) => Promise<UpdateProfileResult>;
   resetProfilePin: (profileId: string, currentPin: string, newPin: string) => Promise<ResetProfilePinResult>;
+  recoverProfilePin: (profileId: string, email: string, newPin: string) => Promise<RecoverProfilePinResult>;
   deleteProfile: (profileId: string, pin: string) => Promise<DeleteProfileResult>;
   migrateLegacyProjects: (projectNames?: string[]) => Promise<MigrateLegacyProjectsResult>;
 };
@@ -81,8 +84,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     void refreshOverview();
   }, [refreshOverview]);
 
-  const createProfile = useCallback(async (name: string, pin: string, division: string) => {
-    const result = await apiCreateProfile(name, pin, division);
+  const createProfile = useCallback(async (username: string, email: string, pin: string, division: string) => {
+    const result = await apiCreateProfile(username, email, pin, division);
     applyOverview(result.overview);
     setError(null);
     return result;
@@ -101,8 +104,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setError(null);
   }, [applyOverview]);
 
-  const updateProfile = useCallback(async (profileId: string, currentPin: string, name: string, division: string) => {
-    const result = await apiUpdateProfile(profileId, currentPin, name, division);
+  const updateProfile = useCallback(async (profileId: string, currentPin: string, username: string, division: string, email?: string) => {
+    const result = await apiUpdateProfile(profileId, currentPin, username, division, email);
     applyOverview(result.overview);
     setError(null);
     return result;
@@ -110,6 +113,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const resetProfilePin = useCallback(async (profileId: string, currentPin: string, newPin: string) => {
     const result = await apiResetProfilePin(profileId, currentPin, newPin);
+    applyOverview(result.overview);
+    setError(null);
+    return result;
+  }, [applyOverview]);
+
+  const recoverProfilePin = useCallback(async (profileId: string, email: string, newPin: string) => {
+    const result = await apiRecoverProfilePin(profileId, email, newPin);
     applyOverview(result.overview);
     setError(null);
     return result;
@@ -141,9 +151,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     logout,
     updateProfile,
     resetProfilePin,
+    recoverProfilePin,
     deleteProfile,
     migrateLegacyProjects,
-  }), [overview, loading, error, refreshOverview, createProfile, login, logout, updateProfile, resetProfilePin, deleteProfile, migrateLegacyProjects]);
+  }), [overview, loading, error, refreshOverview, createProfile, login, logout, updateProfile, resetProfilePin, recoverProfilePin, deleteProfile, migrateLegacyProjects]);
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }

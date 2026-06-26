@@ -17,6 +17,7 @@ from app.services.cycleRAP_VA import get_full_path
 _STATE_LOCK = threading.RLock()
 _ACTIVE_PROFILE_ID: str | None = None
 _PIN_RE = re.compile(r"^\d{4,12}$")
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _LEGACY_DIVISION = "Unassigned"
 _REGISTRY_BACKUP_DIRNAME = "_registry_backups"
 _LATEST_REGISTRY_BACKUP_FILENAME = "profiles.latest.json"
@@ -65,6 +66,15 @@ def _normalize_state(state: dict) -> dict:
     for profile in state.get("profiles", []):
         profile["division"] = _clean_division(profile.get("division"), allow_default=True)
         profile.setdefault("last_active_at", None)
+        # Backward-compat: legacy profiles stored a single "name" field that held
+        # the LTA email and doubled as the display label. Split it into a public
+        # username + a private recovery email so existing accounts keep working
+        # and immediately gain PIN recovery (both seeded from the old name).
+        legacy_name = str(profile.get("name") or "").strip()
+        if not str(profile.get("username") or "").strip():
+            profile["username"] = legacy_name
+        if not str(profile.get("email") or "").strip():
+            profile["email"] = legacy_name
     return state
 
 
@@ -166,7 +176,18 @@ def _clean_profile_name(name: str | None) -> str:
     clean_name = " ".join(str(name or "").split())
     if clean_name:
         return clean_name
-    raise ValueError("Profile name is required")
+    raise ValueError("Username is required")
+
+
+def _clean_email(email: str | None, *, required: bool = True) -> str:
+    clean_email = str(email or "").strip()
+    if not clean_email:
+        if required:
+            raise ValueError("Email is required")
+        return ""
+    if not _EMAIL_RE.fullmatch(clean_email):
+        raise ValueError("Enter a valid email address")
+    return clean_email
 
 
 def _ensure_unique_profile_name(
@@ -268,6 +289,14 @@ def _verify_pin(profile: dict, pin: str) -> bool:
     return hmac.compare_digest(expected, actual)
 
 
+def _verify_email(profile: dict, email: str) -> bool:
+    expected = str(profile.get("email") or "").strip().casefold()
+    actual = str(email or "").strip().casefold()
+    if not expected:
+        return False
+    return hmac.compare_digest(expected, actual)
+
+
 def _project_root_for_slug(slug: str) -> Path:
     return _profiles_root() / slug / "projects"
 
@@ -286,15 +315,21 @@ def _count_projects(profile: dict) -> int:
 
 
 def _serialize_profile(profile: dict) -> dict:
+    username = str(profile.get("username") or profile.get("name") or "")
     return {
         "id": str(profile.get("id") or ""),
-        "name": str(profile.get("name") or ""),
+        # `name` mirrors `username` for backward compatibility with older clients.
+        "name": str(profile.get("name") or username),
+        "username": username,
         "slug": str(profile.get("slug") or ""),
         "division": _clean_division(profile.get("division"), allow_default=True),
         "created_at": str(profile.get("created_at") or ""),
         "last_active_at": str(profile.get("last_active_at") or "") or None,
         "project_count": _count_projects(profile),
         "has_pin": True,
+        # The recovery email itself stays private (never serialized); we only
+        # expose whether one is on file so the UI can offer PIN recovery.
+        "has_email": bool(str(profile.get("email") or "").strip()),
     }
 
 
@@ -326,8 +361,9 @@ def list_legacy_projects() -> list[str]:
     return sorted(child.name for child in legacy_root.iterdir() if child.is_dir())
 
 
-def create_profile(name: str, pin: str, division: str) -> dict:
-    clean_name = _clean_profile_name(name)
+def create_profile(username: str, email: str, pin: str, division: str) -> dict:
+    clean_name = _clean_profile_name(username)
+    clean_email = _clean_email(email)
     if not _PIN_RE.fullmatch(str(pin or "")):
         raise ValueError("PIN must be 4 to 12 digits")
     clean_division = _clean_division(division)
@@ -339,7 +375,10 @@ def create_profile(name: str, pin: str, division: str) -> dict:
         pin_hash, pin_salt = _hash_pin(pin)
         profile = {
             "id": secrets.token_hex(8),
+            # `name` mirrors `username` so older clients keep working.
             "name": clean_name,
+            "username": clean_name,
+            "email": clean_email,
             "slug": _make_unique_slug(clean_name, state.get("profiles", [])),
             "division": clean_division,
             "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -414,9 +453,18 @@ def touch_profile_activity(profile_id: str, when: dt.datetime | str | None = Non
         return _serialize_profile(profile)
 
 
-def update_profile(profile_id: str, current_pin: str, name: str, division: str) -> dict:
-    clean_name = _clean_profile_name(name)
+def update_profile(
+    profile_id: str,
+    current_pin: str,
+    username: str,
+    division: str,
+    email: str | None = None,
+) -> dict:
+    clean_name = _clean_profile_name(username)
     clean_division = _clean_division(division)
+    # `email` is optional on update: omit (None) to leave the recovery email
+    # untouched; pass a non-empty value to change it (validated for format).
+    clean_email = _clean_email(email, required=False) if email is not None else None
 
     with _STATE_LOCK:
         state = _load_state()
@@ -430,7 +478,10 @@ def update_profile(profile_id: str, current_pin: str, name: str, division: str) 
             exclude_profile_id=str(profile.get("id") or ""),
         )
         profile["name"] = clean_name
+        profile["username"] = clean_name
         profile["division"] = clean_division
+        if clean_email:
+            profile["email"] = clean_email
         _save_state(state)
         return _serialize_profile(profile)
 
@@ -444,6 +495,28 @@ def reset_profile_pin(profile_id: str, current_pin: str, new_pin: str) -> dict:
         profile = _require_profile(state, str(profile_id or ""))
         if not _verify_pin(profile, current_pin):
             raise PermissionError("Invalid current PIN")
+
+        pin_hash, pin_salt = _hash_pin(new_pin)
+        profile["pin_hash"] = pin_hash
+        profile["pin_salt"] = pin_salt
+        _save_state(state)
+        return _serialize_profile(profile)
+
+
+def recover_profile_pin(profile_id: str, email: str, new_pin: str) -> dict:
+    """Reset a forgotten PIN after verifying the profile's private recovery email.
+
+    Unlike ``reset_profile_pin`` (which requires the current PIN), this proves
+    identity via the registered private email, then sets a new PIN directly.
+    """
+    if not _PIN_RE.fullmatch(str(new_pin or "")):
+        raise ValueError("PIN must be 4 to 12 digits")
+
+    with _STATE_LOCK:
+        state = _load_state()
+        profile = _require_profile(state, str(profile_id or ""))
+        if not _verify_email(profile, email):
+            raise PermissionError("Email does not match the one on record")
 
         pin_hash, pin_salt = _hash_pin(new_pin)
         profile["pin_hash"] = pin_hash

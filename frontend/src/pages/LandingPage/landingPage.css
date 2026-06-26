@@ -250,6 +250,28 @@
   color: #365b42;
 }
 
+.landing-dialog-link {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2f7d4f;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.landing-dialog-link:hover:not(:disabled) {
+  color: #1f5b39;
+}
+
+.landing-dialog-link:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .landing-dialog-section {
   display: flex;
   flex-direction: column;

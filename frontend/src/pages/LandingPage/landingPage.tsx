@@ -19,6 +19,7 @@ export default function LandingPage() {
     createProfile,
     login,
     resetProfilePin,
+    recoverProfilePin,
     updateProfile,
     deleteProfile,
   } = useProfile();
@@ -27,16 +28,21 @@ export default function LandingPage() {
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [manageDialogOpen, setManageDialogOpen] = useState(false);
-  const [newProfileName, setNewProfileName] = useState("");
+  const [newProfileUsername, setNewProfileUsername] = useState("");
+  const [newProfileEmail, setNewProfileEmail] = useState("");
   const [newProfileDivision, setNewProfileDivision] = useState("");
   const [newProfilePin, setNewProfilePin] = useState("");
-  const [manageProfileName, setManageProfileName] = useState("");
+  const [manageProfileUsername, setManageProfileUsername] = useState("");
+  const [manageProfileEmail, setManageProfileEmail] = useState("");
   const [manageProfileDivision, setManageProfileDivision] = useState("");
   const [manageCurrentPin, setManageCurrentPin] = useState("");
   const [manageNewPin, setManageNewPin] = useState("");
-  const [busyAction, setBusyAction] = useState<"login" | "create" | "update" | "reset-pin" | "delete" | null>(null);
+  const [busyAction, setBusyAction] = useState<"login" | "create" | "update" | "reset-pin" | "recover" | "delete" | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletePin, setDeletePin] = useState("");
+  const [recoverDialogOpen, setRecoverDialogOpen] = useState(false);
+  const [recoverEmail, setRecoverEmail] = useState("");
+  const [recoverNewPin, setRecoverNewPin] = useState("");
 
   useEffect(() => {
     if (selectedProfileId && profiles.some((profile) => profile.id === selectedProfileId)) {
@@ -62,6 +68,8 @@ export default function LandingPage() {
     [profiles, selectedProfileId],
   );
 
+  const selectedProfileLabel = selectedProfile?.username || selectedProfile?.name || "";
+
   const selectedProfileLastActive = useMemo(() => {
     if (!selectedProfile?.last_active_at) {
       return "No activity recorded yet.";
@@ -74,7 +82,7 @@ export default function LandingPage() {
   const canManageSelectedProfile = Boolean(selectedProfile && busyAction === null && !loading);
   const canUseStartButton = Boolean((selectedProfile || canOpenFirstProfileSetup) && busyAction === null && !loading);
   const startButtonLabel = selectedProfile
-    ? `START AS ${selectedProfile.name}`
+    ? `START AS ${selectedProfileLabel}`
     : profiles.length === 0
       ? "CREATE FIRST PROFILE"
       : "SELECT A PROFILE";
@@ -98,14 +106,16 @@ export default function LandingPage() {
       return;
     }
     setCreateDialogOpen(false);
-    setNewProfileName("");
+    setNewProfileUsername("");
+    setNewProfileEmail("");
     setNewProfileDivision("");
     setNewProfilePin("");
   };
 
   const resetManageDialog = () => {
     setManageDialogOpen(false);
-    setManageProfileName("");
+    setManageProfileUsername("");
+    setManageProfileEmail("");
     setManageProfileDivision("");
     setManageCurrentPin("");
     setManageNewPin("");
@@ -116,7 +126,10 @@ export default function LandingPage() {
       toaster.create({ description: "Select a profile first.", type: "warning" });
       return;
     }
-    setManageProfileName(selectedProfile.name);
+    setManageProfileUsername(selectedProfile.username || selectedProfile.name);
+    // The recovery email is private and never returned by the API; leave the
+    // field blank so the user can optionally set a new one.
+    setManageProfileEmail("");
     setManageProfileDivision(selectedProfile.division);
     setManageCurrentPin("");
     setManageNewPin("");
@@ -145,6 +158,56 @@ export default function LandingPage() {
     setDeletePin("");
   };
 
+  const openRecoverDialog = () => {
+    if (!selectedProfile) {
+      toaster.create({ description: "Select a profile first.", type: "warning" });
+      return;
+    }
+    if (!selectedProfile.has_email) {
+      toaster.create({
+        description: "This profile has no recovery email on file. Reset the PIN from Manage Selected instead.",
+        type: "warning",
+      });
+      return;
+    }
+    setRecoverEmail("");
+    setRecoverNewPin("");
+    setPinDialogOpen(false);
+    setRecoverDialogOpen(true);
+  };
+
+  const closeRecoverDialog = () => {
+    if (busyAction === "recover") return;
+    setRecoverDialogOpen(false);
+    setRecoverEmail("");
+    setRecoverNewPin("");
+  };
+
+  const handleRecoverPin = async () => {
+    if (!selectedProfile) {
+      toaster.create({ description: "Select a profile first.", type: "warning" });
+      return;
+    }
+    try {
+      setBusyAction("recover");
+      await recoverProfilePin(selectedProfile.id, recoverEmail, recoverNewPin);
+      closeRecoverDialog();
+      toaster.create({
+        title: "PIN reset",
+        description: `PIN updated for ${selectedProfileLabel}. You can now start with your new PIN.`,
+        type: "success",
+      });
+    } catch (nextError) {
+      toaster.create({
+        title: "PIN recovery failed",
+        description: nextError instanceof Error ? nextError.message : "Failed to verify the recovery email.",
+        type: "error",
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  };
+
   const handleDeleteProfile = async () => {
     if (!selectedProfile) return;
     try {
@@ -155,7 +218,7 @@ export default function LandingPage() {
       resetManageDialog();
       toaster.create({
         title: "Profile deleted",
-        description: `${selectedProfile.name} has been deleted.`,
+        description: `${selectedProfileLabel} has been deleted.`,
         type: "success",
       });
     } catch (nextError) {
@@ -191,7 +254,7 @@ export default function LandingPage() {
       closePinDialog();
       toaster.create({
         title: "Profile ready",
-        description: `Logged in as ${selectedProfile.name}.`,
+        description: `Logged in as ${selectedProfileLabel}.`,
         type: "success",
       });
       navigate("/home");
@@ -209,16 +272,17 @@ export default function LandingPage() {
   const handleCreate = async () => {
     try {
       setBusyAction("create");
-      const created = await createProfile(newProfileName, newProfilePin, newProfileDivision);
+      const created = await createProfile(newProfileUsername, newProfileEmail, newProfilePin, newProfileDivision);
       await login(created.profile.id, newProfilePin);
       setSelectedProfileId(created.profile.id);
       setCreateDialogOpen(false);
-      setNewProfileName("");
+      setNewProfileUsername("");
+      setNewProfileEmail("");
       setNewProfileDivision("");
       setNewProfilePin("");
       toaster.create({
         title: "Profile created",
-        description: `${created.profile.name} is ready to use.`,
+        description: `${created.profile.username || created.profile.name} is ready to use.`,
         type: "success",
       });
     } catch (nextError) {
@@ -239,17 +303,20 @@ export default function LandingPage() {
     }
     try {
       setBusyAction("update");
+      const trimmedEmail = manageProfileEmail.trim();
       const result = await updateProfile(
         selectedProfile.id,
         manageCurrentPin,
-        manageProfileName,
+        manageProfileUsername,
         manageProfileDivision,
+        // Only send email when the user typed one (otherwise leave it untouched).
+        trimmedEmail.length > 0 ? trimmedEmail : undefined,
       );
       setSelectedProfileId(result.profile.id);
       resetManageDialog();
       toaster.create({
         title: "Profile updated",
-        description: `${result.profile.name} has been updated.`,
+        description: `${result.profile.username || result.profile.name} has been updated.`,
         type: "success",
       });
     } catch (nextError) {
@@ -275,7 +342,7 @@ export default function LandingPage() {
       resetManageDialog();
       toaster.create({
         title: "PIN updated",
-        description: `PIN updated for ${result.profile.name}.`,
+        description: `PIN updated for ${result.profile.username || result.profile.name}.`,
         type: "success",
       });
     } catch (nextError) {
@@ -352,7 +419,7 @@ export default function LandingPage() {
                           className={`profile-option${isSelected ? " is-selected" : ""}${isActive ? " is-active" : ""}`}
                           onClick={() => setSelectedProfileId(profile.id)}
                         >
-                          <span className="profile-option-name">{profile.name}</span>
+                          <span className="profile-option-name">{profile.username || profile.name}</span>
                           <span className="profile-option-meta">
                             {profile.division} • {" "}
                             {profile.project_count} project{profile.project_count === 1 ? "" : "s"}
@@ -392,7 +459,7 @@ export default function LandingPage() {
 
               <Dialog.Body>
                 <div className="landing-dialog-copy">
-                  Enter the PIN for <strong>{selectedProfile?.name ?? "the selected profile"}</strong> to continue.
+                  Enter the PIN for <strong>{selectedProfileLabel || "the selected profile"}</strong> to continue.
                 </div>
                 <div className="landing-dialog-form">
                   <input
@@ -412,6 +479,16 @@ export default function LandingPage() {
                       }
                     }}
                   />
+                  {selectedProfile?.has_email && (
+                    <button
+                      type="button"
+                      className="landing-dialog-link"
+                      onClick={openRecoverDialog}
+                      disabled={busyAction === "login"}
+                    >
+                      Forgot PIN?
+                    </button>
+                  )}
                 </div>
               </Dialog.Body>
 
@@ -425,7 +502,7 @@ export default function LandingPage() {
                   loading={busyAction === "login"}
                   disabled={loginPin.trim().length === 0 || busyAction === "login"}
                 >
-                  {busyAction === "login" ? "Starting..." : `Start As ${selectedProfile?.name ?? "Profile"}`}
+                  {busyAction === "login" ? "Starting..." : `Start As ${selectedProfileLabel || "Profile"}`}
                 </Button>
               </Dialog.Footer>
 
@@ -448,17 +525,26 @@ export default function LandingPage() {
 
               <Dialog.Body>
                 <div className="landing-dialog-copy">
-                  Create a local profile for this device. The profile name stays readable, while the PIN is stored in obfuscated form.
+                  Create a local profile for this device. Your username is the display name shown here, while your
+                  email stays private and is only used to reset a forgotten PIN. The PIN is stored in obfuscated form.
                 </div>
                 <div className="landing-dialog-form">
                   <input
-                    id="newProfileName"
+                    id="newProfileUsername"
                     className="landing-dialog-input"
                     type="text"
-                    value={newProfileName}
-                    onChange={(event) => setNewProfileName(event.target.value)}
-                    placeholder="LTA Employee Email"
+                    value={newProfileUsername}
+                    onChange={(event) => setNewProfileUsername(event.target.value)}
+                    placeholder="Username"
                     autoFocus
+                  />
+                  <input
+                    id="newProfileEmail"
+                    className="landing-dialog-input"
+                    type="email"
+                    value={newProfileEmail}
+                    onChange={(event) => setNewProfileEmail(event.target.value)}
+                    placeholder="LTA Employee Email (private, for PIN recovery)"
                   />
                   <input
                     id="newProfileDivision"
@@ -495,7 +581,7 @@ export default function LandingPage() {
                   colorPalette="green"
                   onClick={() => void handleCreate()}
                   loading={busyAction === "create"}
-                  disabled={busyAction === "create" || newProfileName.trim().length === 0 || newProfileDivision.trim().length === 0 || newProfilePin.trim().length === 0}
+                  disabled={busyAction === "create" || newProfileUsername.trim().length === 0 || newProfileEmail.trim().length === 0 || newProfileDivision.trim().length === 0 || newProfilePin.trim().length === 0}
                 >
                   {busyAction === "create" ? "Creating..." : "Create Profile"}
                 </Button>
@@ -521,19 +607,28 @@ export default function LandingPage() {
               <Dialog.Body>
                 <div className="landing-dialog-copy">
                   Update the selected profile details or rotate the PIN. The current PIN is required for both actions.
+                  Leave the recovery email blank to keep the current one.
                 </div>
                 <div className="landing-dialog-status">Last active: {selectedProfileLastActive}</div>
                 <div className="landing-dialog-form">
                   <div className="landing-dialog-section">
                     <div className="landing-dialog-section-title">Profile details</div>
                     <input
-                      id="manageProfileName"
+                      id="manageProfileUsername"
                       className="landing-dialog-input"
                       type="text"
-                      value={manageProfileName}
-                      onChange={(event) => setManageProfileName(event.target.value)}
-                      placeholder="LTA Employee Email"
+                      value={manageProfileUsername}
+                      onChange={(event) => setManageProfileUsername(event.target.value)}
+                      placeholder="Username"
                       autoFocus
+                    />
+                    <input
+                      id="manageProfileEmail"
+                      className="landing-dialog-input"
+                      type="email"
+                      value={manageProfileEmail}
+                      onChange={(event) => setManageProfileEmail(event.target.value)}
+                      placeholder={selectedProfile?.has_email ? "New recovery email (leave blank to keep current)" : "Recovery email (private, for PIN recovery)"}
                     />
                     <input
                       id="manageProfileDivision"
@@ -595,7 +690,7 @@ export default function LandingPage() {
                   disabled={
                     busyAction === "update"
                     || busyAction === "reset-pin"
-                    || manageProfileName.trim().length === 0
+                    || manageProfileUsername.trim().length === 0
                     || manageProfileDivision.trim().length === 0
                     || manageCurrentPin.trim().length === 0
                   }
@@ -637,7 +732,7 @@ export default function LandingPage() {
 
               <Dialog.Body>
                 <div className="landing-dialog-copy">
-                  This will permanently delete <strong>{selectedProfile?.name ?? "this profile"}</strong> and all its
+                  This will permanently delete <strong>{selectedProfileLabel || "this profile"}</strong> and all its
                   data. This action cannot be undone. Enter the profile PIN to confirm.
                 </div>
                 <div className="landing-dialog-form">
@@ -672,6 +767,71 @@ export default function LandingPage() {
                   disabled={deletePin.trim().length === 0 || busyAction === "delete"}
                 >
                   {busyAction === "delete" ? "Deleting..." : "Delete Profile"}
+                </Button>
+              </Dialog.Footer>
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      <Dialog.Root open={recoverDialogOpen} onOpenChange={(details) => !details.open && closeRecoverDialog()} size="sm" unmountOnExit>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Reset Forgotten PIN</Dialog.Title>
+              </Dialog.Header>
+
+              <Dialog.Body>
+                <div className="landing-dialog-copy">
+                  Verify your identity for <strong>{selectedProfileLabel || "the selected profile"}</strong> by entering
+                  the private recovery email on file, then choose a new PIN.
+                </div>
+                <div className="landing-dialog-form">
+                  <input
+                    id="recoverEmail"
+                    className="landing-dialog-input"
+                    type="email"
+                    value={recoverEmail}
+                    onChange={(event) => setRecoverEmail(event.target.value)}
+                    placeholder="Recovery email"
+                    autoFocus
+                  />
+                  <input
+                    id="recoverNewPin"
+                    className="landing-dialog-input"
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={recoverNewPin}
+                    onChange={(event) => setRecoverNewPin(event.target.value)}
+                    placeholder="New 4 to 12 digit PIN"
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && recoverEmail.trim().length > 0 && recoverNewPin.trim().length > 0) {
+                        event.preventDefault();
+                        void handleRecoverPin();
+                      }
+                    }}
+                  />
+                </div>
+              </Dialog.Body>
+
+              <Dialog.Footer>
+                <Button variant="outline" onClick={closeRecoverDialog} disabled={busyAction === "recover"}>
+                  Cancel
+                </Button>
+                <Button
+                  colorPalette="green"
+                  onClick={() => void handleRecoverPin()}
+                  loading={busyAction === "recover"}
+                  disabled={recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover"}
+                >
+                  {busyAction === "recover" ? "Resetting..." : "Reset PIN"}
                 </Button>
               </Dialog.Footer>
 
