@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import {
   aggregateTopContributors,
@@ -8,26 +8,33 @@ import { getCachedResults, invalidateAllOfNamespace } from "../../../api/project
 import "../../../components/visualization/scoreband/ScoreBandDistributionPanel.css";
 import "./AggregatedScoreBandPanel.css";
 
+type ResultRow = Record<string, unknown>;
+
 interface AggregatedTopContributorsPanelProps {
   selectedProjects: string[];
+  // Per-project visible (filtered) segment indices reported by the map view. When
+  // provided, contributors are aggregated only over the surviving segments. `null`
+  // (before the map first reports) falls back to aggregating all segments.
+  visibleSegmentsByProject?: Record<string, number[]> | null;
 }
 
 export function AggregatedTopContributorsPanel({
   selectedProjects,
+  visibleSegmentsByProject,
 }: AggregatedTopContributorsPanelProps) {
-  const [combinedContributors, setCombinedContributors] = useState<TopContributor[]>([]);
-  const [perProjectContributors, setPerProjectContributors] = useState<
-    Array<{ projectName: string; contributors: TopContributor[] }>
-  >([]);
+  // Raw /results rows per project, fetched once per project set. Aggregation (and
+  // filter-driven narrowing) happens reactively in the memos below — so toggling a
+  // filter re-aggregates instantly without re-fetching or flashing the spinner.
+  const [rawResultsByProject, setRawResultsByProject] = useState<Record<string, ResultRow[]>>({});
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<"combined" | "byProject">("combined");
 
-  const fetchAndAggregate = useCallback(async (force = false) => {
+  const fetchResults = useCallback(async (force = false) => {
     if (selectedProjects.length === 0) {
-      setCombinedContributors([]);
-      setPerProjectContributors([]);
+      setRawResultsByProject({});
+      setErrors([]);
       setLoading(false);
       return;
     }
@@ -46,19 +53,18 @@ export function AggregatedTopContributorsPanel({
             if (!data.ok || !Array.isArray(data.result_rows)) {
               throw new Error("Invalid response format");
             }
-            return { project: name, data: data.result_rows, error: null as string | null };
+            return { project: name, data: data.result_rows as ResultRow[], error: null as string | null };
           } catch (e: any) {
             return {
               project: name,
-              data: null as Array<Record<string, unknown>> | null,
+              data: null as ResultRow[] | null,
               error: e?.message ?? "Unknown error",
             };
           }
         })
       );
 
-      const allRows: Array<Record<string, unknown>> = [];
-      const projectContribs: Array<{ projectName: string; contributors: TopContributor[] }> = [];
+      const byProject: Record<string, ResultRow[]> = {};
       const errorMessages: string[] = [];
       let successCount = 0;
 
@@ -66,17 +72,12 @@ export function AggregatedTopContributorsPanel({
         if (error) {
           errorMessages.push(`${project}: ${error}`);
         } else if (data && Array.isArray(data)) {
-          allRows.push(...data);
+          byProject[project] = data;
           successCount++;
-          projectContribs.push({
-            projectName: project,
-            contributors: aggregateTopContributors(data),
-          });
         }
       });
 
-      setPerProjectContributors(projectContribs);
-      setCombinedContributors(aggregateTopContributors(allRows));
+      setRawResultsByProject(byProject);
 
       if (successCount === 0) {
         setErrors([
@@ -87,23 +88,55 @@ export function AggregatedTopContributorsPanel({
       }
     } catch (e: any) {
       setErrors([e?.message ?? "Failed to load contributors"]);
-      setCombinedContributors([]);
-      setPerProjectContributors([]);
+      setRawResultsByProject({});
     } finally {
       setLoading(false);
     }
   }, [selectedProjects]);
 
   useEffect(() => {
-    fetchAndAggregate();
-  }, [fetchAndAggregate]);
+    fetchResults();
+  }, [fetchResults]);
 
   useEffect(() => {
-    const handleScoresUpdated = () => fetchAndAggregate();
+    const handleScoresUpdated = () => fetchResults();
     window.addEventListener("psat:scores:updated", handleScoresUpdated);
     return () =>
       window.removeEventListener("psat:scores:updated", handleScoresUpdated);
-  }, [fetchAndAggregate]);
+  }, [fetchResults]);
+
+  // Narrow a project's rows to its visible (filtered) segments. When the map hasn't
+  // reported yet (`null`), aggregate all rows; once it has, a missing key means the
+  // project has zero surviving segments.
+  const filterRows = useCallback(
+    (name: string, rows: ResultRow[]): ResultRow[] => {
+      if (!visibleSegmentsByProject) return rows;
+      const indices = visibleSegmentsByProject[name];
+      if (!indices) return [];
+      return indices.map((i) => rows[i]).filter(Boolean) as ResultRow[];
+    },
+    [visibleSegmentsByProject],
+  );
+
+  const perProjectContributors = useMemo(
+    () =>
+      selectedProjects
+        .filter((name) => rawResultsByProject[name])
+        .map((name) => ({
+          projectName: name,
+          contributors: aggregateTopContributors(filterRows(name, rawResultsByProject[name])),
+        })),
+    [selectedProjects, rawResultsByProject, filterRows],
+  );
+
+  const combinedContributors = useMemo(() => {
+    const allRows: ResultRow[] = [];
+    selectedProjects.forEach((name) => {
+      const rows = rawResultsByProject[name];
+      if (rows) allRows.push(...filterRows(name, rows));
+    });
+    return aggregateTopContributors(allRows);
+  }, [selectedProjects, rawResultsByProject, filterRows]);
 
   const totalContribCount = combinedContributors.length;
 
@@ -152,7 +185,7 @@ export function AggregatedTopContributorsPanel({
             <div className="score-band-error">
               <p>⚠️ {errors[0]}</p>
               <button
-                onClick={() => fetchAndAggregate(true)}
+                onClick={() => fetchResults(true)}
                 style={{
                   marginTop: "12px",
                   padding: "6px 12px",

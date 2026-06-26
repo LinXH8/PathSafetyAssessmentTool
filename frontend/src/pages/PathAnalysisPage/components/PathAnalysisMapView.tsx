@@ -433,6 +433,7 @@ interface AttributeAnalysisMapViewProps {
     totalSegmentsLoaded: number;
     totalSegmentsViewed: number;
   }) => void;
+  onVisibleSegmentsChange?: (byProject: Record<string, number[]>) => void;
   loadedProjects: string[];
   hiddenProjects: string[];
   onHiddenProjectsChange: (hidden: string[]) => void;
@@ -461,6 +462,7 @@ export default function AttributeAnalysisMapView({
   selectedProjects,
   selectedAttributes,
   onChartDataUpdate,
+  onVisibleSegmentsChange,
   loadedProjects,
   hiddenProjects,
   onHiddenProjectsChange,
@@ -1422,6 +1424,23 @@ export default function AttributeAnalysisMapView({
     return segments;
   }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText]);
 
+  // Per-project map of visible (filtered) segment indices. Indices are 0-based and
+  // match geoFeatures/attributes/scores order, so the Top Risk Contributors panel can
+  // slice /results result_rows by these indices to aggregate only surviving segments.
+  const visibleSegmentIndicesByProject = useMemo(() => {
+    const byProject: Record<string, number[]> = {};
+    visibleSegments.forEach((s) => {
+      (byProject[s.projectName] ??= []).push(s.idx);
+    });
+    return byProject;
+  }, [visibleSegments]);
+
+  // Lift the visible-segment index map up to the parent so sibling panels (Top Risk
+  // Contributors) can react to filters.
+  useEffect(() => {
+    onVisibleSegmentsChange?.(visibleSegmentIndicesByProject);
+  }, [visibleSegmentIndicesByProject, onVisibleSegmentsChange]);
+
   // ── Persist the filtered segment set for the Report Builder ───────────────
   // The Report Builder reads "pathAnalysis_filteredSegments" to render a second
   // set of report sections reflecting exactly what the user filtered here.
@@ -1434,7 +1453,6 @@ export default function AttributeAnalysisMapView({
       sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
       return;
     }
-    const byProject: Record<string, number[]> = {};
     // Per active-filter attribute, the resolved category VALUE for each filtered
     // segment — so the Report Builder's "Map (Filtered)" can recolour by any of
     // the user's filter attributes. The Report Builder maps each value to a
@@ -1442,7 +1460,6 @@ export default function AttributeAnalysisMapView({
     // map matches the legend.
     const valuesByProject: Record<string, Record<number, Record<string, string>>> = {};
     visibleSegments.forEach((s) => {
-      (byProject[s.projectName] ??= []).push(s.idx);
       const segVals: Record<string, string> = {};
       activeFilters.forEach((attr) => {
         segVals[attr] = attr === "Project" ? s.projectName : getFocusedAttributeValue(attr, s);
@@ -1457,9 +1474,9 @@ export default function AttributeAnalysisMapView({
       });
       (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
-    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(byProject));
+    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(visibleSegmentIndicesByProject));
     sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
-  }, [visibleSegments, activeFilters, getFocusedAttributeValue]);
+  }, [visibleSegments, visibleSegmentIndicesByProject, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
     if (!primaryFocusAttribute) {

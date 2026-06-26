@@ -42,6 +42,13 @@ export default function PathAnalysisPage() {
     loadState("hiddenProjects", [])
   );
 
+  // Per-project visible (filtered) segment indices, reported by the map view so the
+  // Top Risk Contributors panel can react to the active filters. `null` until the map
+  // first reports (panel then falls back to aggregating all segments).
+  const [visibleSegmentsByProject, setVisibleSegmentsByProject] = useState<
+    Record<string, number[]> | null
+  >(null);
+
   const visibleProjects = useMemo(
     () => loadedProjects.filter((projectName) => !hiddenProjects.includes(projectName)),
     [loadedProjects, hiddenProjects]
@@ -122,7 +129,10 @@ export default function PathAnalysisPage() {
 
       {visibleProjects.length > 0 && (
         <Box mb="6">
-          <AggregatedTopContributorsPanel selectedProjects={visibleProjects} />
+          <AggregatedTopContributorsPanel
+            selectedProjects={visibleProjects}
+            visibleSegmentsByProject={visibleSegmentsByProject}
+          />
         </Box>
       )}
 
@@ -138,6 +148,7 @@ export default function PathAnalysisPage() {
           selectedProjects={visibleProjects}
           selectedAttributes={activeFilters}
           onChartDataUpdate={setChartData}
+          onVisibleSegmentsChange={setVisibleSegmentsByProject}
           loadedProjects={loadedProjects}
           hiddenProjects={hiddenProjects}
           onHiddenProjectsChange={setHiddenProjects}
