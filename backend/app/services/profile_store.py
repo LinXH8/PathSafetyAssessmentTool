@@ -36,6 +36,49 @@ def _registry_path() -> Path:
     return _profiles_root() / "profiles.json"
 
 
+def _active_state_path() -> Path:
+    return _profiles_root() / "active_profile.json"
+
+
+def _read_persisted_active_id() -> str | None:
+    """Read the persisted active profile id from disk.
+
+    The active profile must survive Flask's auto-reloader (use_reloader=True),
+    which resets all in-memory module globals on every .py change. Persisting it
+    to disk means the next request after a reload still resolves the correct
+    profile-projects root instead of falling back to the empty legacy directory.
+    """
+    path = _active_state_path()
+    if not path.exists():
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+        active_id = str(data.get("active_profile_id") or "").strip()
+        return active_id or None
+    except Exception:
+        return None
+
+
+def _write_persisted_active_id(active_id: str | None) -> None:
+    path = _active_state_path()
+    try:
+        if not active_id:
+            if path.exists():
+                path.unlink()
+            return
+        _write_state_file(path, {"active_profile_id": active_id})
+    except Exception as exc:
+        print(f"[Profiles] Failed to persist active profile id: {exc}", flush=True)
+
+
+def _set_active_profile_id(active_id: str | None) -> None:
+    """Set the active profile both in memory and on disk."""
+    global _ACTIVE_PROFILE_ID
+    _ACTIVE_PROFILE_ID = active_id or None
+    _write_persisted_active_id(_ACTIVE_PROFILE_ID)
+
+
 def _registry_backups_root() -> Path:
     return _profiles_root() / _REGISTRY_BACKUP_DIRNAME
 
@@ -393,6 +436,24 @@ def create_profile(username: str, email: str, pin: str, division: str) -> dict:
 
 
 def get_active_profile_id() -> str | None:
+    global _ACTIVE_PROFILE_ID
+    if _ACTIVE_PROFILE_ID is not None:
+        return _ACTIVE_PROFILE_ID
+
+    # In-memory global was reset (fresh process / Flask reload). Restore the
+    # last active profile from disk so project resolution keeps working.
+    persisted = _read_persisted_active_id()
+    if not persisted:
+        return None
+
+    # Drop the persisted id if that profile no longer exists in the registry.
+    with _STATE_LOCK:
+        state = _load_state()
+        if _find_profile(state, persisted) is None:
+            _write_persisted_active_id(None)
+            return None
+
+    _ACTIVE_PROFILE_ID = persisted
     return _ACTIVE_PROFILE_ID
 
 
@@ -422,13 +483,12 @@ def login_profile(profile_id: str, pin: str) -> dict:
         _ensure_profile_project_root(profile)
         profile["last_active_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
         _save_state(state)
-        _ACTIVE_PROFILE_ID = str(profile.get("id") or "")
+        _set_active_profile_id(str(profile.get("id") or ""))
         return _serialize_profile(profile)
 
 
 def logout_profile() -> None:
-    global _ACTIVE_PROFILE_ID
-    _ACTIVE_PROFILE_ID = None
+    _set_active_profile_id(None)
 
 
 def get_profile_projects_root(profile_id: str) -> Path:
@@ -632,7 +692,7 @@ def delete_profile(profile_id: str, pin: str) -> None:
         _save_state(state)
 
         if _ACTIVE_PROFILE_ID == profile_id:
-            _ACTIVE_PROFILE_ID = None
+            _set_active_profile_id(None)
 
         profile_dir = _profiles_root() / slug
         if profile_dir.exists() and profile_dir.is_dir():
