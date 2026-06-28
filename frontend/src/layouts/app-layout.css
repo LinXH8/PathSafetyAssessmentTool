@@ -19,6 +19,17 @@
   /* Removed max-width to allow full-width layouts */
 }
 
+/* ── v2 shell: light canvas, full-bleed content (pages own their padding) ── */
+.app-shell--v2 {
+  background: #f7fafc;
+}
+
+.app-main--v2 {
+  background: #f7fafc;
+  padding: 0;
+  min-height: 100vh;
+}
+
 /* Exclude sidebar and interactive controls in printed report layouts */
 @media print {
   .psat-sidebar {

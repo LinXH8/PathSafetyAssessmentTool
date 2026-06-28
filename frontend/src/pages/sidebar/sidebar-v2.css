@@ -1,0 +1,22 @@
+/* v2 sidebar — light-only, Inter. Overrides the v1 .psat-sidebar chrome while
+   keeping its fixed 280px positioning so .app-main's margin still applies. */
+.psat-sidebar--v2 {
+  background: #fff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  padding: 32px 16px !important;
+  gap: 0 !important;
+  font-family: Inter, sans-serif !important;
+  color: #2d3748 !important;
+}
+
+.psat-v2-ghost:not(:disabled):hover {
+  background: #f7fafc !important;
+}
+
+.psat-v2-qs-item:hover {
+  background: #f7fafc;
+}
+
+.psat-v2-scroll {
+  scrollbar-width: thin;
+}
