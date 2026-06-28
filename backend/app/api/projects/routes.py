@@ -4421,7 +4421,6 @@ def create_project_from_folder():
     project_name = (data.get("project_name") or "").strip()
     folder_name = data.get("folder_name")
     folder_names = data.get("folder_names")
-    polygon_coords = data.get("polygon")
     tags = data.get("tags", [])
 
     if not project_name:
@@ -4452,8 +4451,36 @@ def create_project_from_folder():
     if not normalized_folder_names:
         return fail("folder_name or folder_names is required", 400)
 
+    # Parse optional selection geometry: GeoJSON "selection_geometry" (sent by frontend)
+    # or legacy flat "polygon" list-of-coords.  No geometry = no spatial filter.
     selection_polygon = None
-    if polygon_coords is not None:
+    sel = data.get("selection_geometry")
+    polygon_coords = data.get("polygon")
+    if sel:
+        try:
+            geom_type = sel.get("type", "")
+            coords = sel.get("coordinates", [])
+            if geom_type == "Polygon":
+                selection_polygon = Polygon(coords[0]).buffer(0)
+            elif geom_type == "MultiPolygon":
+                from shapely.ops import unary_union as _unary_union
+                parts = [Polygon(ring[0]).buffer(0) for ring in coords]
+                selection_polygon = _unary_union(parts)
+            elif geom_type in ("LineString", "MultiLineString"):
+                from shapely.geometry import LineString as _Line
+                from shapely.ops import unary_union as _unary_union
+                if geom_type == "LineString":
+                    selection_polygon = _Line(coords).buffer(0.0005)
+                else:
+                    lines = [_Line(line) for line in coords]
+                    selection_polygon = _unary_union(lines).buffer(0.0005)
+            else:
+                return fail(f"Unsupported selection_geometry type: {geom_type}", 400)
+            if not selection_polygon.is_valid:
+                selection_polygon = selection_polygon.buffer(0)
+        except Exception as e:
+            return fail(f"Invalid selection_geometry: {e}", 400)
+    elif polygon_coords is not None:
         if not isinstance(polygon_coords, list) or len(polygon_coords) < 3:
             return fail("polygon must have at least 3 vertices", 400)
         try:
@@ -4515,13 +4542,17 @@ def create_project_from_folder():
     )
 
     dataset_name = normalized_folder_names[0] if len(normalized_folder_names) == 1 else "MULTI_FOLDER_SELECTION"
-    pm.create_project(
-        project_name,
-        combined_geo_data,
-        dataset_name,
-        tags=tags,
-        source_folders=normalized_folder_names,
-    )
+    try:
+        pm.create_project(
+            project_name,
+            combined_geo_data,
+            dataset_name,
+            tags=tags,
+            source_folders=normalized_folder_names,
+        )
+    except Exception as e:
+        shutil.rmtree(project_path, ignore_errors=True)
+        return fail(f"Failed to initialise project: {e}", 500)
 
     return ok({
         "ok": True,
