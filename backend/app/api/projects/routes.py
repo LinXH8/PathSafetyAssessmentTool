@@ -146,6 +146,15 @@ def warmup_gis() -> None:
             g = _get_gis()
             # Pre-load all registered layers so the first toggle is instant
             g.store.reload()
+            # Pre-build the prepared (2D, validity-filtered) path layers + spatial
+            # indexes so the first curvature autocode doesn't pay that cost on the
+            # request thread. Without this, the first bulk curvature run stalls while
+            # the ~180k-feature footpath layer is z-stripped and indexed.
+            for _store_key in ("cycling_path", "shared_path", "footpath"):
+                try:
+                    g._load_path_layer(_store_key)
+                except Exception:
+                    pass
         except Exception as exc:  # pragma: no cover
             import logging
             logging.getLogger(__name__).warning("GIS warmup failed: %s", exc)
@@ -4836,48 +4845,53 @@ def update_project_metadata(project_name: str):
         traceback.print_exc()
         return fail(f"Update failed: {e}", 500)
 
+def _cv_autocode_core(pm, project_name: str, image_ref: str, skip_obstacles: bool = False) -> dict:
+    """Resolve image path and run YOLO CV inference. Returns updates dict.
+    Caller must call _ensure_models_ready() first.
+    Does NOT call _inject_grade (caller's responsibility to avoid double-injection in bulk).
+    Raises FileNotFoundError if image is missing, or any model exception on failure.
+    """
+    legacy_path = (pm.des_path / project_name / global_var.PROJECT_IMAGES_FOLDER / image_ref).resolve()
+    if legacy_path.is_file():
+        img_path = legacy_path
+    else:
+        img_path = _resolve_image_from_in(pm, project_name, image_ref)
+    if img_path is None or not img_path.exists():
+        raise FileNotFoundError(f"image not found: {image_ref}")
+
+    global _INFERENCE_DEPTH
+    _INFERENCE_DEPTH += 1
+    try:
+        updates = cv_pred.CycleRAP_Coding_Helper.autocode(img_path, skip_obstacles=skip_obstacles) or {}
+    finally:
+        _INFERENCE_DEPTH -= 1
+    return {k: v for k, v in updates.items() if v is not None}
+
+
 @bp.post("/<project_name>/autocode/image")
 def autocode_image(project_name: str):
     print(f"[Autocode] >>> autocode_image called for project='{project_name}'", flush=True)
     try:
         _ensure_models_ready()
-
         ctx = get_ctx()
         pm = ctx["pm"]
         payload = request.get_json(force=True, silent=True) or {}
         image_ref = payload.get("imageRef")
         if not image_ref:
             return fail("imageRef is required", 400)
-
-        legacy_path = (pm.des_path / project_name / global_var.PROJECT_IMAGES_FOLDER / image_ref).resolve()
-        if legacy_path.is_file():
-            img_path = legacy_path
-        else:
-            img_path = _resolve_image_from_in(pm, project_name, image_ref)
-        if img_path is None or not img_path.exists():
-            return fail(f"image not found: {image_ref}", 404)
-
         skip_obstacles = bool(payload.get("skipObstacles", False))
         print(f"[Autocode] CV inference: {image_ref} (skip_obstacles={skip_obstacles})", flush=True)
-        global _INFERENCE_DEPTH
-        _INFERENCE_DEPTH += 1
-        try:
-            updates = cv_pred.CycleRAP_Coding_Helper.autocode(img_path, skip_obstacles=skip_obstacles) or {}
-        finally:
-            _INFERENCE_DEPTH -= 1
-        updates = {k: v for k, v in updates.items() if v is not None}
+        updates = _cv_autocode_core(pm, project_name, image_ref, skip_obstacles)
         print(f"[Autocode] CV done: {image_ref} → {len(updates)} field(s) set", flush=True)
 
-        # Inject Grade from pre-computed LAZ gradient lookup (no-op if not available)
         gradient_pct = _inject_grade(image_ref, updates, project_name=project_name)
-
-        # Return both updates and changed_fields for change tracking/highlighting in UI
-        # changed_fields: list of field names that were updated by CV model
         resp: dict = {"updates": updates, "changed_fields": list(updates.keys())}
         if gradient_pct is not None:
             resp["gradient_pct"] = round(gradient_pct, 3)
         return ok(resp)
 
+    except FileNotFoundError as e:
+        return fail(str(e), 404)
     except ServiceUnavailable as e:
         return fail(str(e), 503)
     except Exception as e:
@@ -4906,180 +4920,147 @@ def _get_segment_midpoint(coords):
         return Point(lon, lat)
 
 
+def _gis_autocode_core(coords, fields_filter=None) -> dict:
+    """Run all spatial GIS queries for a single segment. Returns updates dict.
+    Raises ValueError if coords is missing/malformed, ServiceUnavailable if GIS
+    layer is not loaded, or any other exception on spatial query failure.
+    """
+    if not coords or not isinstance(coords, list) or not isinstance(coords[0], list):
+        raise ValueError("coords (LineString) is required")
+
+    start_lon, start_lat = coords[0]
+    from shapely.geometry import Point
+    pt = Point(start_lon, start_lat)
+    curvature_pt = _get_segment_midpoint(coords)
+
+    _needs = lambda *flds: not fields_filter or any(f in fields_filter for f in flds)
+    _gis = _get_gis()
+
+    updates: dict = {}
+
+    if _needs("Peak pedestrian flow along or across facility") and _gis.is_mrt(pt):
+        updates["Peak pedestrian flow along or across facility"] = 3
+    if _needs("Heavy vehicle flow") and _gis.is_bus_lane(pt):
+        updates["Heavy vehicle flow"] = 2
+    if _needs("Adjacent Vehicle Parking 0-1m") and _gis.is_parking(pt):
+        updates["Adjacent Vehicle Parking 0-1m"] = 1
+    if _needs("Peak pedestrian flow along or across facility") and _gis.is_bus_stop(pt):
+        updates["Peak pedestrian flow along or across facility"] = 2
+
+    if _needs("Pedestrian Crossing") and (
+        _gis.is_bus_stop(pt, dist=10)
+        or _gis.is_road_crossing(pt, dist=10)
+        or _gis.is_mrt(pt, dist=10)
+    ):
+        updates["Pedestrian Crossing"] = 1
+
+    if _needs("Crossing Facility", "Crossing Type") and _gis.is_bicycle_crossing(pt, dist=2):
+        updates["Crossing Facility"] = 1
+        updates["Crossing Type"] = "Bicycle Crossing"
+
+    if _needs("Intersecting Bicycle Facility"):
+        if _gis.is_road_crossing(pt, dist=5):
+            updates["Intersecting Bicycle Facility"] = 1
+        else:
+            updates["Intersecting Bicycle Facility"] = 2
+
+    if _needs("Area type"):
+        updates["Area type"] = int(_gis.get_area_type(pt))
+
+    if _needs("Road AADT"):
+        updates["Road AADT"] = 6000
+
+    if _needs("Peak bicycle/LV traffic flow", "Peak pedestrian flow along or across facility"):
+        res = _gis.get_peak_pedestrian_flow(pt, dist=10)
+        bpks = (res or {}).get("before_peaks")
+        spks = (res or {}).get("sensor_peaks")
+
+        def _apply_peak(peaks):
+            if not peaks:
+                return
+            if int(peaks.get("MICROMOBILITY", 0)) > 50:
+                updates["Peak bicycle/LV traffic flow"] = 2
+            if int(peaks.get("OTHER", 0)) > 50:
+                updates["Peak pedestrian flow along or across facility"] = 3
+
+        if spks:
+            _apply_peak(spks)
+        elif bpks:
+            _apply_peak(bpks)
+
+    if _needs("Road operating speed (mean)"):
+        updates["Road operating speed (mean)"] = _gis.get_road_operating_speed(pt, buffer_dist=20, max_dist=30, default_speed=30.0)
+
+    if _needs("Road speed limit"):
+        updates["Road speed limit"] = _gis.get_road_speed_limit(pt, buffer_dist=20, max_dist=30, default_limit=10)
+
+    if _needs("Heavy vehicle flow"):
+        updates["Heavy vehicle flow"] = _gis.get_heavy_vehicle_flow(pt, buffer_dist=15, max_dist=15, default_value=1)
+
+    if _needs("Curvature", "Curvature Sub-category"):
+        curvature, curvature_subcat = _gis.get_curvature(curvature_pt, sharp_turn_threshold=10.0, default_value=2)
+        updates["Curvature"] = curvature
+        if curvature_subcat is not None:
+            updates["Curvature Sub-category"] = curvature_subcat
+
+    if _needs("Facility Width per Direction", "Facility Width Sub-category"):
+        facility_width, width_subcat = _gis.get_facility_width(pt, start_radius=2.0, max_radius=10.0, step_size=2.0, default_value=2)
+        updates["Facility Width per Direction"] = facility_width
+        if width_subcat is not None:
+            updates["Facility Width Sub-category"] = width_subcat
+
+    if _needs("Number of lanes – adjacent road"):
+        nol = _gis.get_number_of_lane(pt, dist=20)
+        if nol is not None:
+            updates["Number of lanes – adjacent road"] = nol
+
+    _DEFORM = "Major Surface Deformation or Drain Opening"
+    _SLIP = "Loose or slippery surface"
+    if _needs(_DEFORM, _SLIP, "Delineation", "Delineation Type"):
+        try:
+            from shapely.geometry import LineString as _LineString
+            import geopandas as _gpd
+            from app.services.defects_store import get_defects_store
+            line_raw = _LineString(coords)
+            if coords[0][0] < 180:
+                line_metric = _gpd.GeoSeries([line_raw], crs="EPSG:4326").to_crs("EPSG:3414").iloc[0]
+            else:
+                line_metric = line_raw
+            nearby = get_defects_store().query_near_line(line_metric, 5.0)
+            has_deform = has_slip = has_faded_marking = False
+            for d in nearby:
+                dt = d["type_of_defect"].strip().lower()
+                if dt == "algae":
+                    has_slip = True
+                elif dt == "faded marking":
+                    has_faded_marking = True
+                else:
+                    has_deform = True
+            if has_deform and _needs(_DEFORM):
+                updates[_DEFORM] = 1
+            if has_slip and _needs(_SLIP):
+                updates[_SLIP] = 1
+            if has_faded_marking and _needs("Delineation", "Delineation Type"):
+                updates["Delineation"] = 2
+                updates["Delineation Type"] = "Faded Marking"
+        except FileNotFoundError:
+            pass
+        except Exception:
+            pass
+
+    return updates
+
+
 @bp.post("/<project_name>/autocode/gis")
 def autocode_gis(project_name: str):
     try:
         payload = request.get_json(force=True, silent=True) or {}
-        coords = payload.get("coords")  # [[lon, lat], ...]
-
-        if not coords or not isinstance(coords, list) or not isinstance(coords[0], list):
-            return fail("coords (LineString) is required", 400)
-
-        # Most GIS attributes remain anchored to the segment start point.
-        start_lon, start_lat = coords[0]
-        from shapely.geometry import Point
-        pt = Point(start_lon, start_lat)
-        curvature_pt = _get_segment_midpoint(coords)
-
-        # Optional field filter: when provided (bulk per-attribute mode), skip GIS queries
-        # whose output field is not in the set. None means run everything (full autocode,
-        # single-segment manual button from the frontend).
+        coords = payload.get("coords")
         fields_filter = payload.get("fields")
         if fields_filter and not isinstance(fields_filter, list):
             fields_filter = None
-        _needs = lambda *flds: not fields_filter or any(f in fields_filter for f in flds)
-
-        _gis = _get_gis()
-
-        updates: dict[str, int | float] = {}
-
-        # Rules
-        if _needs("Peak pedestrian flow along or across facility") and _gis.is_mrt(pt):
-            updates["Peak pedestrian flow along or across facility"] = 3
-        if _needs("Heavy vehicle flow") and _gis.is_bus_lane(pt):
-            updates["Heavy vehicle flow"] = 2
-        if _needs("Adjacent Vehicle Parking 0-1m") and _gis.is_parking(pt):
-            updates["Adjacent Vehicle Parking 0-1m"] = 1
-        if _needs("Peak pedestrian flow along or across facility") and _gis.is_bus_stop(pt):
-            # overrides 3 → 2
-            updates["Peak pedestrian flow along or across facility"] = 2
-
-        # Pedestrian Crossing Detection
-        # Set to Present (1) if within 5m of bus stop OR road crossing
-        if _needs("Pedestrian Crossing") and (
-            _gis.is_bus_stop(pt, dist=10)
-            or _gis.is_road_crossing(pt, dist=10)
-            or _gis.is_mrt(pt, dist=10)
-        ):
-            updates["Pedestrian Crossing"] = 1  # 1 = Present
-
-        # Bicycle Crossing Facility Detection
-        # Set Crossing Facility = Present (1) and Crossing Type = "Bicycle Crossing"
-        # if within 2m of a known bicycle crossing point (AMG_BC2025_shp)
-        if _needs("Crossing Facility", "Crossing Type") and _gis.is_bicycle_crossing(pt, dist=2):
-            updates["Crossing Facility"] = 1          # 1 = Present
-            updates["Crossing Type"] = "Bicycle Crossing"
-
-        # Intersecting Bicycle Facility Detection
-        # Present (1) if within 5m of a road crossing; Not Present (2) otherwise.
-        # CV will override to Not Present (2) if a dominant traffic/zebra crossing mask is detected.
-        if _needs("Intersecting Bicycle Facility"):
-            if _gis.is_road_crossing(pt, dist=5):
-                updates["Intersecting Bicycle Facility"] = 1  # 1 = Present
-            else:
-                updates["Intersecting Bicycle Facility"] = 2  # 2 = Not Present
-
-        if _needs("Area type"):
-            area = _gis.get_area_type(pt)
-            updates["Area type"] = int(area)
-
-        if _needs("Road AADT"):
-            updates["Road AADT"] = 6000
-
-        if _needs("Peak bicycle/LV traffic flow", "Peak pedestrian flow along or across facility"):
-            res = _gis.get_peak_pedestrian_flow(pt, dist=10)
-            bpks = (res or {}).get("before_peaks")
-            spks = (res or {}).get("sensor_peaks")
-
-            def apply_peak(peaks):
-                if not peaks:
-                    return
-                if int(peaks.get("MICROMOBILITY", 0)) > 50:
-                    updates["Peak bicycle/LV traffic flow"] = 2
-                if int(peaks.get("OTHER", 0)) > 50:
-                    updates["Peak pedestrian flow along or across facility"] = 3
-
-            if spks:
-                apply_peak(spks)
-            elif bpks:
-                apply_peak(bpks)
-
-        # Added for Road Operating Speed (mean)
-        # Calculate road operating speed based on nearest road link
-        if _needs("Road operating speed (mean)"):
-            road_speed = _gis.get_road_operating_speed(pt, buffer_dist=20, max_dist=30, default_speed=30.0)
-            updates["Road operating speed (mean)"] = road_speed
-
-        # Added for Road Speed Limit
-        # Calculate road speed limit based on nearest speed limit segment
-        if _needs("Road speed limit"):
-            speed_limit = _gis.get_road_speed_limit(pt, buffer_dist=20, max_dist=30, default_limit=10)
-            updates["Road speed limit"] = speed_limit
-
-        # Added for Heavy Vehicle Flow
-        # Calculate heavy vehicle flow based on proximity to bus lanes
-        if _needs("Heavy vehicle flow"):
-            heavy_vehicle_flow = _gis.get_heavy_vehicle_flow(pt, buffer_dist=15, max_dist=15, default_value=1)
-            updates["Heavy vehicle flow"] = heavy_vehicle_flow
-
-        # Added for Curvature
-        # Calculate curvature using actual path centerline shapefiles
-        # Uses two-stage process from original PathAssignmentTool:
-        #   Stage 1: Expanding ring (1m→5m) to find nearest path
-        #   Stage 2: Fixed 5m window to calculate curvature from that path
-        if _needs("Curvature", "Curvature Sub-category"):
-            curvature, curvature_subcat = _gis.get_curvature(curvature_pt, sharp_turn_threshold=10.0, default_value=2)
-            updates["Curvature"] = curvature
-            if curvature_subcat is not None:
-                updates["Curvature Sub-category"] = curvature_subcat
-
-        # Added for Facility Width per Direction
-        # Calculate facility width using expanding ring search on path centerline shapefiles
-        if _needs("Facility Width per Direction", "Facility Width Sub-category"):
-            facility_width, width_subcat = _gis.get_facility_width(pt, start_radius=2.0, max_radius=10.0, step_size=2.0, default_value=2)
-            updates["Facility Width per Direction"] = facility_width
-            if width_subcat is not None:
-                updates["Facility Width Sub-category"] = width_subcat
-
-        # Added for Number of lanes – adjacent road
-        # Look up the LANES attribute from the nearest kerb line within 20 m
-        if _needs("Number of lanes – adjacent road"):
-            nol = _gis.get_number_of_lane(pt, dist=20)
-            if nol is not None:
-                updates["Number of lanes – adjacent road"] = nol
-
-        # Defect-based surface condition checks
-        _DEFORM = "Major Surface Deformation or Drain Opening"
-        _SLIP = "Loose or slippery surface"
-        if _needs(_DEFORM, _SLIP, "Delineation", "Delineation Type"):
-            try:
-                from shapely.geometry import LineString as _LineString
-                import geopandas as _gpd
-                from app.services.defects_store import get_defects_store
-                line_raw = _LineString(coords)
-                # Auto-detect CRS: EPSG:3414 easting > 180; WGS84 lon ≈ 103–104
-                if coords[0][0] < 180:
-                    line_metric = _gpd.GeoSeries([line_raw], crs="EPSG:4326").to_crs("EPSG:3414").iloc[0]
-                else:
-                    line_metric = line_raw
-                nearby = get_defects_store().query_near_line(line_metric, 5.0)
-                has_deform = False
-                has_slip = False
-                has_faded_marking = False
-                for d in nearby:
-                    dt = d["type_of_defect"].strip().lower()
-                    if dt == "algae":
-                        has_slip = True
-                    elif dt == "faded marking":
-                        has_faded_marking = True
-                    else:
-                        has_deform = True
-                if has_deform and _needs(_DEFORM):
-                    updates[_DEFORM] = 1
-                if has_slip and _needs(_SLIP):
-                    updates[_SLIP] = 1
-                if has_faded_marking and _needs("Delineation", "Delineation Type"):
-                    updates["Delineation"] = 2  # Not Present
-                    updates["Delineation Type"] = "Faded Marking"
-            except FileNotFoundError:
-                pass
-            except Exception:
-                pass
-
-        # Return both updates and changed_fields for change tracking/highlighting in UI
-        # changed_fields: list of field names that were updated by GIS rules
+        updates = _gis_autocode_core(coords, fields_filter)
         return ok({"updates": updates, "changed_fields": list(updates.keys())})
-
     except ServiceUnavailable as e:
         return fail(str(e), 503)
     except Exception as e:
@@ -5817,45 +5798,24 @@ def autocode_all(project_name: str):
         def _call_autocode_pair(image_ref: str, coords, skip_cv: bool = False, skip_gis: bool = False, skip_obstacles: bool = False, fields_filter: "list | None" = None):
             """
             Call CV and/or GIS autocoding for a single image and merge results.
+            Calls _cv_autocode_core / _gis_autocode_core directly (no HTTP round-trip),
+            eliminating the ~2.5 s/seg test_request_context overhead in bulk mode.
 
-            This function orchestrates the complete auto-coding process:
-            1. Calls autocode_image (CV model) to analyze the photo   [skippable]
-            2. Calls autocode_gis (GIS rules) to analyze the location [skippable]
-            3. Merges updates (GIS overrides CV if both set the same field)
-            4. Tracks the source (CV or GIS) for each updated field
-
-            Args:
-                image_ref: Image filename (e.g., "ProjectName_IMG_001.jpg")
-                coords: LineString coordinates as [[lon, lat], ...] for GIS analysis
-                skip_cv: If True, skip CV inference entirely (safe when all requested
-                         fields are in _GIS_ONLY_FIELDS — CV never produces them)
-                skip_gis: If True, skip GIS queries entirely
-                skip_obstacles: If True, skip the obstacle detector model (second YOLO
-                         pass) — safe when no obstacle-related fields are requested
-
-            Returns:
-                tuple: (merged_updates, sources, error)
-                    - merged_updates: dict of {field_name: code_value}
-                    - sources: dict of {field_name: "CV" or "GIS"}
-                    - error: None if success, error message string if failed
+            Returns: (merged_updates, sources, error_or_None)
             """
             img_updates: dict = {}
             if not skip_cv:
-                # Call CV auto-coding endpoint
-                with current_app.test_request_context(method="POST", json={"imageRef": image_ref, "skipObstacles": skip_obstacles}):
-                    img_resp, img_code = autocode_image(project_name)
-                if img_code >= 400:
-                    return None, None, img_resp.get_json().get("error", f"/image {img_code}")
-                img_updates = (img_resp.get_json() or {}).get("updates", {})
+                try:
+                    img_updates = _cv_autocode_core(pm, project_name, image_ref, skip_obstacles)
+                except Exception as e:
+                    return None, None, str(e)
 
             gis_updates: dict = {}
             if not skip_gis:
-                # Call GIS auto-coding endpoint
-                with current_app.test_request_context(method="POST", json={"coords": coords, "fields": fields_filter}):
-                    gis_resp, gis_code = autocode_gis(project_name)
-                if gis_code >= 400:
-                    return None, None, gis_resp.get_json().get("error", f"/gis {gis_code}")
-                gis_updates = (gis_resp.get_json() or {}).get("updates", {})
+                try:
+                    gis_updates = _gis_autocode_core(coords, fields_filter)
+                except Exception as e:
+                    return None, None, str(e)
 
             # Merge updates: GIS overrides CV if both set the same field
             # Example: If CV sets "Area type"=2 and GIS sets "Area type"=1, final value is 1
