@@ -1,4 +1,4 @@
-# 7. GIS Layer Management
+﻿# 6. GIS Layer Management
 
 PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context for path coding and risk analysis. Use the **GIS Layer Management** tool to keep these datasets up to date.
 
@@ -6,18 +6,18 @@ PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context 
 
 ## Table of Contents
 
-- [7.1 Viewing GIS Layers](#71-viewing-gis-layers)
-- [7.2 All GIS Layers in PSAT](#72-all-gis-layers-in-psat)
-- [7.3 Adding a New GIS Layer](#73-adding-a-new-gis-layer)
-- [7.4 Replacing an Existing GIS Layer](#74-replacing-an-existing-gis-layer)
-- [7.5 Updating GIS Layers](#75-updating-gis-layers)
-- [7.6 Filtering Shapefiles](#76-filtering-shapefiles)
-- [7.7 Renaming a Shapefile](#77-renaming-a-shapefile)
-- [7.8 Reverting a Shapefile to Its Original Name](#78-reverting-a-shapefile-to-its-original-name)
+- [6.1 Viewing GIS Layers](#61-viewing-gis-layers)
+- [6.2 All GIS Layers in PSAT](#62-all-gis-layers-in-psat)
+- [6.3 Adding a New GIS Layer](#63-adding-a-new-gis-layer)
+- [6.4 Replacing an Existing GIS Layer](#64-replacing-an-existing-gis-layer)
+- [6.5 Updating GIS Layers](#65-updating-gis-layers)
+- [6.6 Filtering Shapefiles](#66-filtering-shapefiles)
+- [6.7 Renaming a Shapefile](#67-renaming-a-shapefile)
+- [6.8 Reverting a Shapefile to Its Original Name](#68-reverting-a-shapefile-to-its-original-name)
 
 ---
 
-## 7.1 Viewing GIS Layers
+## 6.1 Viewing GIS Layers
 
 Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashboard. Here you can:
 
@@ -25,10 +25,10 @@ Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashb
 - View last updated date, required columns, and metadata for each layer
 - **Required Columns**: Inspect the mandatory column names needed for PSAT to process the layer. The number in parentheses, e.g., `LU_DESC (1)`, indicates the expected column index in the source data
 - Preview any layer on an interactive map by clicking it
-- **Filter** the list instantly by typing a keyword into the filter box (see [Section 7.6](#76-filtering-shapefiles))
-- **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 7.7](#77-renaming-a-shapefile) and [7.8](#78-reverting-a-shapefile-to-its-original-name))
+- **Filter** the list instantly by typing a keyword into the filter box (see [Section 6.6](#66-filtering-shapefiles))
+- **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 6.7](#67-renaming-a-shapefile) and [6.8](#68-reverting-a-shapefile-to-its-original-name))
 
-## 7.2 All GIS Layers in PSAT
+## 6.2 All GIS Layers in PSAT
 
 The table below lists every shapefile currently loaded in PSAT, the PSAT attribute it affects, and the required columns. Layer names match the display names shown on the GIS Layers page.
 
@@ -63,7 +63,7 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 
 > **Column index numbers** in parentheses indicate the column position (1-based) expected in the source shapefile. These are used during validation when uploading replacement layers.
 
-## 7.3 Adding a New GIS Layer
+## 6.3 Adding a New GIS Layer
 
 Use the **Add GIS Layer** workflow to upload entirely new datasets.
 
@@ -88,7 +88,7 @@ If you are unsure of the expected format, refer to the existing shapefiles in th
 
 Click **Confirm & Upload** to proceed, or **Cancel** to go back and check your file.
 
-## 7.4 Replacing an Existing GIS Layer
+## 6.4 Replacing an Existing GIS Layer
 
 Use the **Replace GIS Layer** workflow when you have updated data for an existing layer.
 
@@ -96,7 +96,7 @@ Use the **Replace GIS Layer** workflow when you have updated data for an existin
 - **Safety Checks**: PSAT performs compatibility checks to ensure the new file has the same required columns as the original.
 - **Warnings**: If differences are found in the column structure, the system will warn you before overwriting the old data.
 
-## 7.5 Updating GIS Layers
+## 6.5 Updating GIS Layers
 
 GIS layers should be updated whenever:
 
@@ -114,7 +114,7 @@ GIS layers should be updated whenever:
 
 > For system-level GIS management (file paths, permissions, bulk updates), refer to the **Admin Guide**.
 
-## 7.6 Filtering Shapefiles
+## 6.6 Filtering Shapefiles
 
 When your system has many GIS layers, scrolling through the full list can be slow. The **filter box** at the top of the Available Shapefiles panel lets you narrow the list instantly.
 
@@ -135,7 +135,7 @@ When your system has many GIS layers, scrolling through the full list can be slo
 
 > If no layers match your search term, the panel displays a "No shapefiles match …" message.
 
-## 7.7 Renaming a Shapefile
+## 6.7 Renaming a Shapefile
 
 You can give any shapefile a custom display name to make it easier to identify within your team's workflow. The rename only affects how the layer appears in the PSAT dashboard — the underlying file on disk is not moved or changed.
 
@@ -150,7 +150,7 @@ You can give any shapefile a custom display name to make it easier to identify w
 
 > Renamed layers retain all their original metadata, required columns, geometry, and category. Only the display name is updated.
 
-## 7.8 Reverting a Shapefile to Its Original Name
+## 6.8 Reverting a Shapefile to Its Original Name
 
 If a layer has been renamed and you want to restore its original filename as the display name, use the **Revert** option.
 
