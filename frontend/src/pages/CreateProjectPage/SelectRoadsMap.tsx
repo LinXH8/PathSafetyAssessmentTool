@@ -17,6 +17,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { FaDrawPolygon, FaFileImport, FaMapMarkedAlt, FaRoad, FaTrash } from "react-icons/fa";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import ThemeAwareTileLayer from "../../components/common/ThemeAwareTileLayer";
 import { MapCursorController } from "../../components/common/MapCursorController";
 import {
@@ -304,6 +305,24 @@ function MapBoundsFitter({
   return null;
 }
 
+// Re-measure the map once layout settles and on container resize. In the v2
+// layout the map fills a flex cell whose height can finalize after Leaflet
+// inits, which otherwise leaves a half-grey tile area.
+function MapAutosize() {
+  const map = useMap();
+  useEffect(() => {
+    const fix = () => map.invalidateSize();
+    const t = window.setTimeout(fix, 200);
+    let ro: ResizeObserver | null = null;
+    try {
+      ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(map.getContainer());
+    } catch { /* ResizeObserver unsupported — the timeout still covers mount */ }
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  }, [map]);
+  return null;
+}
+
 // ── Polygon overlay ────────────────────────────────────────────────
 function PolygonOverlay({
   points,
@@ -349,7 +368,7 @@ interface SelectRoadsMapProps {
 
 export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryChange, refreshKey = 0, focusRoadName, variant = "v1" }: SelectRoadsMapProps) {
   // v2-only: the Layer View side panel can be collapsed via the map's edge rail.
-  const [layerPanelOpen, setLayerPanelOpen] = useState(true);
+  const [layerPanelOpen, setLayerPanelOpen] = useState(false);
   // Polygon state
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
   const [polygonSource, setPolygonSource] = useState<PolygonSource>(null);
@@ -750,6 +769,7 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
       scrollWheelZoom
     >
       <ThemeAwareTileLayer />
+      <MapAutosize />
       <MapCursorController mode={isDrawing ? "add" : "default"} />
       <MapClickHandler active={isDrawing} onPoint={addPoint} />
       <MapViewportWatcher onViewportChange={setViewportState} />
@@ -926,14 +946,14 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
           {/* Map well */}
           <div style={{ flex: 1, minWidth: 0, position: "relative", overflow: "hidden", background: COLOR.gray100 }}>
             {renderMap()}
-            {/* Collapse rail */}
-            <div
+            {/* Collapse / expand tab — small rounded handle (same as v1). */}
+            <button
               onClick={() => setLayerPanelOpen((v) => !v)}
               title={layerPanelOpen ? "Collapse Layer View" : "Expand Layer View"}
-              style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 18, display: "flex", alignItems: "center", justifyContent: "center", background: COLOR.white, borderRight: `1px solid ${COLOR.border}`, cursor: "pointer", zIndex: 500 }}
+              style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", width: 24, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: COLOR.white, border: `1px solid ${COLOR.border}`, borderLeft: "none", borderTopRightRadius: 6, borderBottomRightRadius: 6, boxShadow: "0 1px 4px rgba(0,0,0,0.16)", color: COLOR.gray600, cursor: "pointer", padding: 0, zIndex: 500 }}
             >
-              <span style={{ fontSize: 12, color: COLOR.gray400 }}>{layerPanelOpen ? "‹" : "›"}</span>
-            </div>
+              {layerPanelOpen ? <FiChevronsLeft size={14} /> : <FiChevronsRight size={14} />}
+            </button>
             {/* Floating tool cluster (Draw Polygon + Clear) */}
             <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: 5, background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: 6, padding: 4, zIndex: 500 }}>
               <button

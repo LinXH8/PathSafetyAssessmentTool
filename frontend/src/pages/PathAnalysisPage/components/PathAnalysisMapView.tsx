@@ -17,6 +17,7 @@ import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
+import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS } from "../../../constants/mapColors";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -631,13 +632,8 @@ export default function AttributeAnalysisMapView({
     setImportedBoundaryError(null);
   }, []);
 
-  const gisLayerColors = {
-    footpath: "#1E90FF", cycling: "#B91C1C", shared: "#A855F7",
-    roadcrossing: "#10B981", mrt_exit: "#06B6D4", bicycle_crossing: "#F97316",
-    bus_stop: "#8B5CF6", bus_lane: "#EAB308", parking_lot: "#D97706",
-    kerb_line: "#D946EF", state_land: "#14B8A6", stat_board: "#F59E0B",
-    land_private: "#6366F1", land_ministry: "#EC4899",
-  } as const;
+  // gisLayerColors / PROJECT_POINT_COLORS now live in constants/mapColors.ts
+  // (imported above) — single source shared with AnalysisSidebar.
 
   // GIS overlay fetch is data-driven (within a radius of every loaded segment) rather
   // than viewport-driven; see the effect defined after `allPoints` is computed.
@@ -1163,16 +1159,7 @@ export default function AttributeAnalysisMapView({
 
   // Generate distinct colors for each project
   const projectColors = useMemo(() => {
-    const colors = [
-      "#2563EB", // Blue
-      "#DC2626", // Red
-      "#16A34A", // Green
-      "#CA8A04", // Yellow
-      "#9333EA", // Purple
-      "#EA580C", // Orange
-      "#0891B2", // Cyan
-      "#DB2777", // Pink
-    ];
+    const colors = PROJECT_POINT_COLORS;
     const colorMap: Record<string, string> = {};
     loadedProjects.forEach((proj, idx) => {
       colorMap[proj] = colors[idx % colors.length];
@@ -3314,7 +3301,7 @@ export default function AttributeAnalysisMapView({
                     <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
                   ))}
                   {showPathDefects && pathDefects?.map((d, i) => (
-                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: "#EF4444", weight: 2, opacity: 1, fillOpacity: 0.8 }}>
+                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: gisLayerColors.path_defects, weight: 2, opacity: 1, fillOpacity: 0.8 }}>
                       <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
                     </CircleMarker>
                   ))}

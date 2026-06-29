@@ -7,6 +7,7 @@ import { MapContainer, Polyline, CircleMarker, Polygon as LeafletPolygon, Toolti
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useColorModeValue } from "../../components/ui/color-mode";
+import { GIS_VIEWER_GEOMETRY_COLORS } from "../../constants/mapColors";
 const getLayerMetadata = (fileName: string) => {
   const name = fileName.toLowerCase();
   
@@ -599,10 +600,10 @@ export default function GisLayersPage() {
                 key={`poly-${i}`}
                 positions={poly.positions}
                 pathOptions={{
-                  color: "#9333EA",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.polygon,
                   weight: 2,
                   opacity: 0.8,
-                  fillColor: "#9333EA",
+                  fillColor: GIS_VIEWER_GEOMETRY_COLORS.polygon,
                   fillOpacity: 0.2
                 }}
               >
@@ -616,7 +617,7 @@ export default function GisLayersPage() {
                 key={`line-${i}`}
                 positions={line.positions}
                 pathOptions={{
-                  color: "#2563eb",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.line,
                   weight: 3,
                   opacity: 0.8
                 }}
@@ -632,11 +633,11 @@ export default function GisLayersPage() {
                 center={pt.latlng}
                 radius={5}
                 pathOptions={{
-                  color: "#DC2626",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.pointStroke,
                   weight: 1,
                   opacity: 0.9,
                   fillOpacity: 0.7,
-                  fillColor: "#EF4444"
+                  fillColor: GIS_VIEWER_GEOMETRY_COLORS.pointFill
                 }}
               >
                 {renderTooltip(pt.props)}

@@ -376,17 +376,10 @@ export default function Sidebar() {
           onNavigate={navigateSidebar}
           pathname={pathname}
         >
-          {inCoding && projectName && (
-            <CodingSidebar
-              projectName={projectName}
-              onSave={onSave}
-              onExit={onExit}
-              onAutoCodeOne={onAutoCodeOne}
-              onAutoCodeAll={onAutoCodeAll}
-              onAutoCodeAllProjects={onAutoCodeAllProjects}
-              onAutoCodeByAttribute={onAutoCodeByAttribute}
-            />
-          )}
+          {/* Coding is migrated to v2: its route-specific controls (Auto-code,
+              Save, segment counters) now live on-canvas in CodingLayoutV2, so the
+              v1 CodingSidebar panel is intentionally NOT embedded here. Treatment
+              is not yet migrated, so its sidebar still passes through. */}
           {onTreatmentDetail && projectName && (
             <div className="psat-side-bottom">
               <TreatmentSidebar
