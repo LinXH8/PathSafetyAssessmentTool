@@ -113,6 +113,42 @@ def _available_road_names(in_path: Path) -> set:
                 result.add(base)
     return result
 
+
+def _available_road_folders(in_path: Path) -> dict:
+    """Map each road-name base to the actual download folder(s) that provide it.
+
+    Folder names carry optional quarter/segment suffixes
+    (e.g. ``TPY Lor 4_1Q2026``) that are absent from the clean road names in the
+    reference CSV / shapefile. This returns
+    ``{ "TPY LOR 4": ["TPY Lor 4_1Q2026", ...] }`` keyed by the uppercased base
+    (everything before the first ``_``) so a road can be resolved to its real,
+    createable folder name(s) — possibly several when multiple survey quarters
+    have been downloaded.
+    """
+    result: dict[str, list[str]] = {}
+    if not in_path.exists():
+        return result
+    for entry in sorted(in_path.iterdir(), key=lambda p: p.name):
+        if entry.is_dir():
+            base = entry.name.split("_")[0].strip().upper()
+            if base:
+                result.setdefault(base, []).append(entry.name)
+    return result
+
+
+def _pretty_folder_label(folder_name: str) -> str:
+    """Render a download folder name for display, turning a trailing quarter
+    suffix (``TPY Lor 4_1Q2026``) into a parenthesised label
+    (``TPY Lor 4 (1Q2026)``). Folders without a quarter suffix are returned
+    unchanged.
+    """
+    match = _QUARTER_SUFFIX_RE.search(folder_name)
+    if not match:
+        return folder_name
+    base = folder_name[: match.start()].rstrip(" _-")
+    suffix = match.group(0).lstrip(" _-")
+    return f"{base} ({suffix})" if base and suffix else folder_name
+
 def _get_gis() -> "gis.GIS":
     global _GIS_INSTANCE
     if _GIS_INSTANCE is not None:
@@ -4120,14 +4156,16 @@ def roads_in_polygon():
     in_path: Path = pm.in_path
     backend_root = Path(__file__).resolve().parents[3]
 
-    # Build once: set of road name bases (uppercased, suffix-stripped) that exist
-    # as subdirectories in in_path.  Folder names carry quarter/segment suffixes
-    # (e.g. "AMK AVE 1_1Q2026") that are absent from the CSV/shapefile road names,
-    # so a direct (in_path / name).is_dir() check always fails for suffixed folders.
-    avail_names = _available_road_names(in_path)
+    # Build once: map each road-name base (uppercased, suffix-stripped) to the
+    # actual download folder(s) under in_path. Folder names carry quarter/segment
+    # suffixes (e.g. "AMK AVE 1_1Q2026") that are absent from the CSV/shapefile
+    # road names, so a direct (in_path / name).is_dir() check always fails for
+    # suffixed folders. Resolving to the real folder name lets project creation
+    # succeed and surfaces one row per downloaded survey quarter.
+    avail_folders = _available_road_folders(in_path)
 
-    # Merged result: roads from shapefile with exists flag from CSV + folder check
-    all_road_names: dict[str, dict] = {}  # { "ROAD NAME": { "points": count, "exists": bool } }
+    # Merged result: roads from shapefile/CSV with their captured-point count.
+    all_road_names: dict[str, dict] = {}  # { "ROAD NAME": { "points": count } }
 
     # Attempt 1: reference CSV — marks which roads have captured images.
     # Uses the same encoding fix (utf-8-sig) as the rest of the codebase so
@@ -4152,15 +4190,12 @@ def roads_in_polygon():
                                 continue
                             csv_roads.add(name)
                             if name not in all_road_names:
-                                all_road_names[name] = {"points": 0, "exists": False}
+                                all_road_names[name] = {"points": 0}
                             all_road_names[name]["points"] += 1
                     except (KeyError, ValueError):
                         continue
         except Exception as e:
             print(f"[roads-in-polygon] CSV lookup failed: {e}", flush=True)
-
-    for name in csv_roads:
-        all_road_names[name]["exists"] = name.upper() in avail_names
 
     # Attempt 2: road sections shapefile — reuse the cached, already-reprojected
     # GeoDataFrame that roads-in-bounds uses so CRS handling is identical.
@@ -4186,24 +4221,37 @@ def roads_in_polygon():
 
             for name, count in road_counts.items():
                 if name not in all_road_names:
-                    all_road_names[name] = {
-                        "points": count,
-                        "exists": name.upper() in avail_names,
-                    }
+                    all_road_names[name] = {"points": count}
                 else:
                     all_road_names[name]["points"] += count
     except Exception as e:
         print(f"[roads-in-polygon] shapefile lookup failed: {type(e).__name__}: {e}", flush=True)
 
-    # If we have any road data (CSV or shapefile), return it
+    # If we have any road data (CSV or shapefile), return it.
+    # Roads whose images have been downloaded are emitted as one row per actual
+    # folder (e.g. per survey quarter) using the real, createable folder name —
+    # so project creation no longer fails on the bare road name. Roads with no
+    # downloaded folder keep the clean road name and the "not downloaded" chip.
     if all_road_names:
         roads = []
         for name in sorted(all_road_names):
-            roads.append({
-                "name": name,
-                "points": all_road_names[name]["points"],
-                "exists": all_road_names[name]["exists"],
-            })
+            points = all_road_names[name]["points"]
+            folders = avail_folders.get(name.upper(), [])
+            if folders:
+                for folder in folders:
+                    roads.append({
+                        "name": folder,
+                        "label": _pretty_folder_label(folder),
+                        "points": points,
+                        "exists": True,
+                    })
+            else:
+                roads.append({
+                    "name": name,
+                    "label": name,
+                    "points": points,
+                    "exists": False,
+                })
         print(f"[DEBUG] Returning {len(roads)} merged roads (fallback=False)")
         return ok({"roads": roads, "fallback": False})
 

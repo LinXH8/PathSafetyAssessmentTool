@@ -424,7 +424,10 @@ export async function copyLocalImagesToSourceFolder(
 }
 
 export interface RoadInPolygon {
+  /** The real, createable source-folder name (carries quarter suffix when downloaded). */
   name: string;
+  /** Human-friendly display label, e.g. "TPY Lor 4 (1Q2026)". Falls back to `name`. */
+  label?: string;
   points: number;
   exists: boolean;
 }

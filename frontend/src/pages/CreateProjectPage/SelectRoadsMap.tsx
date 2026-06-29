@@ -329,7 +329,10 @@ function PolygonOverlay({
 
 // ── Main component ─────────────────────────────────────────────────
 export interface SelectedRoad {
+  /** The real, createable source-folder name (carries quarter suffix when downloaded). */
   name: string;
+  /** Human-friendly display label, e.g. "TPY Lor 4 (1Q2026)". Falls back to `name`. */
+  label?: string;
   points: number;
   exists: boolean;
   selected: boolean;
@@ -993,8 +996,8 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                 >
                   <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center", minWidth: 0 }}>
                     <div onClick={(e) => { e.stopPropagation(); toggleRoad(road.name); }} style={v2Checkbox(road.selected)}>{road.selected && v2Check}</div>
-                    <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: road.exists ? COLOR.text : COLOR.gray500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={road.exists ? road.name : `${road.name} — not downloaded`}>
-                      {road.name}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
+                    <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: road.exists ? COLOR.text : COLOR.gray500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={road.exists ? (road.label ?? road.name) : `${road.label ?? road.name} — not downloaded`}>
+                      {road.label ?? road.name}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
                     </span>
                   </div>
                   <span style={{ width: 120, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{road.points}</span>
@@ -1150,7 +1153,7 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                     onChange={() => toggleRoad(road.name)}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <Text fontSize="sm">{road.name}</Text>
+                  <Text fontSize="sm">{road.label ?? road.name}</Text>
                 </HStack>
                 <HStack gap={2}>
                   <Text fontSize="xs" color="gray.500">
