@@ -513,6 +513,11 @@ export default function AttributeAnalysisMapView({
 }: AttributeAnalysisMapViewProps) {
   const isV2 = variant === "v2";
   const navigate = useNavigate();
+  // v2: the polygon / single-select tools move off the top bar into a floating
+  // cluster over the map (mirrors Coding). This host is that overlay; the tools
+  // portal into it. Null until it mounts (then they simply aren't shown).
+  const [toolsHost, setToolsHost] = useState<HTMLElement | null>(null);
+  const toolsHostRef = useCallback((n: HTMLDivElement | null) => setToolsHost(n), []);
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<string>("map");
   const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
@@ -2598,8 +2603,9 @@ export default function AttributeAnalysisMapView({
             )}
 
             {allPoints.length > 0 && (
+              <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
               <>
-                <HStack gap="0" mr="2">
+                <HStack gap="0">
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
                       <IconButton
@@ -2736,6 +2742,7 @@ export default function AttributeAnalysisMapView({
                   </Button>
                 )}
               </>
+              </MaybePortal>
             )}
           </HStack>
 
@@ -2790,7 +2797,7 @@ export default function AttributeAnalysisMapView({
         </Flex>
 
         {/* Map Tab Content */}
-        <Tabs.Content value="map" {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+        <Tabs.Content value="map" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
           {/* Project Navigation Buttons and Legend */}
           {selectedProjects.length > 0 && (
             <Box p="4" borderBottom="1px solid" borderColor="gray.200" flexShrink={0}>
@@ -3193,6 +3200,28 @@ export default function AttributeAnalysisMapView({
 
             {!loading && !err && (
               <>
+                {/* v2: floating tool cluster (polygon / single-select), top-right
+                    over the map — same treatment as Coding's floating map controls.
+                    The header tools portal into here via MaybePortal. */}
+                {isV2 && allPoints.length > 0 && (
+                  <Box
+                    ref={toolsHostRef}
+                    position="absolute"
+                    top="12px"
+                    right="12px"
+                    zIndex={1000}
+                    bg="white"
+                    borderWidth="1px"
+                    borderColor={COLOR.border}
+                    borderRadius="6px"
+                    boxShadow="sm"
+                    p="1.5"
+                    display="flex"
+                    flexDirection="column"
+                    gap="2"
+                    alignItems="stretch"
+                  />
+                )}
                 <AnalysisSidebar
                   variant={variant}
                   isOpen={isGisSidebarOpen}
@@ -3476,7 +3505,7 @@ export default function AttributeAnalysisMapView({
         </Tabs.Content>
 
         {/* Table Tab Content */}
-        <Tabs.Content value="table" {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
           <Box {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
             {selectedProjects.length > 0 && allPoints.length > 0 && (
               <Box p="4" borderBottom="1px solid" borderColor="gray.200">
@@ -3584,19 +3613,32 @@ export default function AttributeAnalysisMapView({
                                 top: 0,
                                 zIndex: isV2 ? 2 : 1,
                                 backgroundColor: isV2 ? "#fff" : "var(--chakra-colors-bg-subtle)",
+                                whiteSpace: isV2 ? "nowrap" : undefined,
                                 ...v2StickyStyle(col.key, true),
                               }}
                               onClick={() => handleHeaderClick(col.key)}
                             >
-                              <Flex align="center" gap="2" mb="1">
-                                <Text fontWeight={isV2 ? "700" : "600"} fontSize={isV2 ? "16px" : "sm"} fontFamily={isV2 ? FONT : undefined}>
+                              <Flex align="center" gap="2" mb="1" flexWrap="nowrap">
+                                <Text fontWeight={isV2 ? "700" : "600"} fontSize={isV2 ? "16px" : "sm"} fontFamily={isV2 ? FONT : undefined} whiteSpace={isV2 ? "nowrap" : undefined}>
                                   {col.label}
                                 </Text>
-                                {sortDirection && (
-                                  <Text fontSize="xs" color="blue.600">
-                                    {sortDirection === 'asc' ? '↑' : '↓'}
-                                    {sortIndex > 0 && <sup>{sortIndex + 1}</sup>}
-                                  </Text>
+                                {isV2 ? (
+                                  // Home/Create-style sort glyph: ↕ when unsorted, ▲/▼ (+priority) when sorted.
+                                  sortDirection ? (
+                                    <span style={{ fontSize: 12, color: "#4A5568", display: "inline-flex", alignItems: "center", gap: 2 }}>
+                                      {sortDirection === "asc" ? "▲" : "▼"}
+                                      {sortConfig.length > 1 && <span style={{ fontSize: 10, fontWeight: 700 }}>{sortIndex + 1}</span>}
+                                    </span>
+                                  ) : (
+                                    <span style={{ fontSize: 12, color: "#A0AEC0" }}>↕</span>
+                                  )
+                                ) : (
+                                  sortDirection && (
+                                    <Text fontSize="xs" color="blue.600">
+                                      {sortDirection === 'asc' ? '↑' : '↓'}
+                                      {sortIndex > 0 && <sup>{sortIndex + 1}</sup>}
+                                    </Text>
+                                  )
                                 )}
                               </Flex>
                               {/* Per-column filter input */}

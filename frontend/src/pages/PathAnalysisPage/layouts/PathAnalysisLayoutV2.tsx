@@ -77,7 +77,7 @@ export default function PathAnalysisLayoutV2({
           Fixed height that fits the viewport (so the bottom padding isn't clipped)
           with a true 50-50 split; both cards fill it and scroll internally, so
           opening accordions never grows the card or unbalances the grid. */}
-      <div style={{ display: "flex", flexDirection: "row", gap: 32, alignItems: "stretch", height: "clamp(520px, calc(100vh - 152px), 900px)", minHeight: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, height: "clamp(520px, calc(100vh - 152px), 900px)", minHeight: 0 }}>
         {/* Left — Analysis accordion card (50%) */}
         <div
           style={v2CardStyle({
@@ -135,9 +135,9 @@ export default function PathAnalysisLayoutV2({
       </div>
 
       {/* ── Row 2: Distribution of Project (left) + Overall Risk Level (right) ──
-          Same flex basis as Row 1 (1 1 0, no wrap) so all four cards are provably
-          equal halves and the two rows align column-for-column. */}
-      <div style={{ display: "flex", flexDirection: "row", gap: 32, alignItems: "stretch", minHeight: 0 }}>
+          Same grid as Row 1 (1fr 1fr) so all four cards are provably equal halves
+          and the two rows align column-for-column. */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, minHeight: 0 }}>
         <div
           style={v2CardStyle({
             flex: "1 1 0",
