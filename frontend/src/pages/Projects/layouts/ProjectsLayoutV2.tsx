@@ -59,6 +59,8 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     tagSuggestionsOpen,
     setTagSuggestionsOpen,
     filteredTagOptions,
+    hasActiveFilters,
+    clearAllFilters,
     projects,
     filtered,
     selected,
@@ -238,6 +240,35 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                     placeholder={tagFilters.length === 0 ? "Type or click to select tags…" : "Add more tags…"}
                     style={{ flex: 1, minWidth: 120, border: "none", outline: "none", fontFamily: FONT, fontSize: 16, background: "transparent", color: COLOR.text }}
                   />
+                  {/* Clear all filters (name + tags). Replaces v1's separate "Clear
+                      filters" row — a single big X at the end of the tag bar. */}
+                  {hasActiveFilters && (
+                    <button
+                      type="button"
+                      aria-label="Clear all filters"
+                      title="Clear all filters"
+                      onClick={clearAllFilters}
+                      style={{
+                        flexShrink: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 24,
+                        height: 24,
+                        marginLeft: 4,
+                        background: "transparent",
+                        border: "none",
+                        borderRadius: 4,
+                        color: COLOR.gray500,
+                        cursor: "pointer",
+                        fontSize: 22,
+                        lineHeight: 1,
+                        padding: 0,
+                      }}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
                 {tagSuggestionsOpen && filteredTagOptions.length > 0 && (
                   <div

@@ -10,8 +10,12 @@ interface SidebarV2Props {
   activeProfile: ProfileSummary | null;
   onLogout: () => void;
   isLoggingOut: boolean;
-  /** Guarded navigation (honours coding/treatment unsaved-change prompts). */
-  onNavigate: (to: string) => void;
+  /**
+   * Runs a navigation action, first showing the exit-without-saving dialog if the
+   * current page has unsaved changes. ALL sidebar nav routes through this so any
+   * button honours the prompt.
+   */
+  onGuardedAction: (action: () => void) => void;
   pathname: string;
   /** Route-specific panels (CodingSidebar etc.) for not-yet-migrated pages. */
   children?: ReactNode;
@@ -81,11 +85,13 @@ export default function SidebarV2({
   activeProfile,
   onLogout,
   isLoggingOut,
-  onNavigate,
+  onGuardedAction,
   pathname,
   children,
 }: SidebarV2Props) {
   const navigate = useNavigate();
+  // Every nav button runs through the unsaved-changes guard.
+  const go = (to: string) => onGuardedAction(() => navigate(to));
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
   const [qsSelected, setQsSelected] = useState<Set<string>>(new Set());
   const [qsOpen, setQsOpen] = useState(false);
@@ -147,7 +153,7 @@ export default function SidebarV2({
           style={{ width: 196, height: "auto", alignSelf: "center", marginBottom: 6, objectFit: "contain" }}
         />
 
-        {navButton("Home", () => onNavigate("/home"))}
+        {navButton("Home", () => go("/home"))}
 
         {/* Quick Select */}
         <div style={{ width: "100%" }}>
@@ -247,19 +253,19 @@ export default function SidebarV2({
           )}
         </div>
 
-        {navButton("Coding", () => openCoding(navigate, selectedNames), { disabled: !hasSelection })}
-        {navButton("Path Analysis", () => openPathAnalysis(navigate, selectedNames), { disabled: !hasSelection })}
-        {navButton("Treatment Application", () => openTreatment(navigate, selectedNames), { disabled: !hasSelection })}
+        {navButton("Coding", () => onGuardedAction(() => openCoding(navigate, selectedNames)), { disabled: !hasSelection })}
+        {navButton("Path Analysis", () => onGuardedAction(() => openPathAnalysis(navigate, selectedNames)), { disabled: !hasSelection })}
+        {navButton("Treatment Application", () => onGuardedAction(() => openTreatment(navigate, selectedNames)), { disabled: !hasSelection })}
 
-        {isHome && navButton("Generated Reports", () => onNavigate("/generated-reports"))}
+        {isHome && navButton("Generated Reports", () => go("/generated-reports"))}
 
         {/* Route-specific panels for pages not yet migrated to v2. */}
         {children}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 14 }}>
-        {isHome && navButton("GIS Layers", () => onNavigate("/gis-layers"))}
-        {navButton("User Guide", () => onNavigate("/help"))}
+        {isHome && navButton("GIS Layers", () => go("/gis-layers"))}
+        {navButton("User Guide", () => go("/help"))}
         {activeProfile && (
           <div
             style={{

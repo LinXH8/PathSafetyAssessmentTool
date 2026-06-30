@@ -513,6 +513,11 @@ export default function AttributeAnalysisMapView({
 }: AttributeAnalysisMapViewProps) {
   const isV2 = variant === "v2";
   const navigate = useNavigate();
+  // v2: a "Generate Report" button sits beside the Download dropdown (ported from
+  // the v1 sidebar). The label flips to "Continue Report" when a saved layout exists.
+  const hasSavedReport = useMemo(() => {
+    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+  }, []);
   // v2: the polygon / single-select tools move off the top bar into a floating
   // cluster over the map (mirrors Coding). This host is that overlay; the tools
   // portal into it. Null until it mounts (then they simply aren't shown).
@@ -2748,24 +2753,37 @@ export default function AttributeAnalysisMapView({
 
           {allPoints.length > 0 && (
             isV2 ? (
-              // v2: a single dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
-              <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                <Menu.Trigger asChild>
-                  <Button
-                    size="sm"
-                    style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                  >
-                    Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
-                  </Button>
-                </Menu.Trigger>
-                <Menu.Positioner>
-                  <Menu.Content zIndex={2000}>
-                    <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
-                    <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
-                    <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Menu.Root>
+              // v2: a teal "Generate Report" button (global scope, §4) beside a single
+              // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
+              <HStack gap="2">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    sessionStorage.removeItem("treatment_loadedProjects");
+                    navigate("/analysis/report");
+                  }}
+                  style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                >
+                  {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                </Button>
+                <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
+                  <Menu.Trigger asChild>
+                    <Button
+                      size="sm"
+                      style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                    >
+                      Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
+                    </Button>
+                  </Menu.Trigger>
+                  <Menu.Positioner>
+                    <Menu.Content zIndex={2000}>
+                      <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
+                      <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
+                      <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
+                    </Menu.Content>
+                  </Menu.Positioner>
+                </Menu.Root>
+              </HStack>
             ) : (
               <HStack gap="2">
                 <Button

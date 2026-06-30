@@ -1,24 +1,7 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Spinner,
-  NumberInput,
-  Button,
-  Dialog,
-  Portal,
-  CloseButton,
-} from "@chakra-ui/react";
-import { LuCheck, LuCopy, LuImage } from "react-icons/lu";
-import { Switch } from "../../components/ui/switch";
-import { toaster } from "../../components/ui/toaster";
-import { Tooltip } from "../../components/ui/tooltip";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
-import type { Feature, FeatureCollection, LineString } from "geojson";
+import type { Feature, FeatureCollection } from "geojson";
 
 import {
   fetchProjectDetail,
@@ -33,544 +16,40 @@ import {
   getTreatmentEffectiveness,
   getTreatmentSegmentEffectiveness,
   calculateScore,
+  resetAllTreatments,
+  saveTreatments,
 } from "../../api";
 
 import type { AttributeRow } from "../../api";
-import ImagePanel from "../CodingPage/components/ImagePanel";
-import PostTreatmentImageUpload from "./components/PostTreatmentImageUpload";
-import AttributesPanel, { resolveContributorTabGroup } from "../CodingPage/components/AttributesPanel";
-import GeoDataPanel from "../CodingPage/components/GeoDataPanel";
-import SegmentScoresCard from "../../components/visualization/scoreband/SegmentScoresCard";
+import { resolveContributorTabGroup } from "../CodingPage/components/AttributesPanel";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
-import OverallTreatmentAnalysis from "../../components/visualization/scoreband/OverallTreatmentAnalysis";
+import { toaster } from "../../components/ui/toaster";
+import { useUiVersion } from "../../features/ui/useUiVersion";
 
-type ProjectDetail = { name: string; versions: string[]; latest: string };
-type AttributesResponse = { rows: AttributeRow[] };
-type ScoreType = {
-  BB: number;
-  BP: number;
-  SB: number;
-  VB: number;
-  total: number;
-};
-
-type CopyButtonState = "idle" | "copying" | "copied" | "error";
-
-const PANEL_HEIGHT = 400;
-const CONTROLS_H = 32;
-const MAP_HEIGHT = 500;
-
-// Treatment definitions using application's native attribute names
-type Treatment = {
-  id: number;
-  name: string;
-  description?: string;
-  // Attributes to check if treatment is applicable
-  triggers: Record<string, number[]>[];
-  // Attribute changes to apply when treatment is selected
-  effects: Record<string, number>;
-};
-
-const TREATMENTS: Treatment[] = [
-  {
-    id: 1,
-    name: "Upgrade to on-road bicycle lane with light segregation",
-    triggers: [
-      { "Facility Type": [5], "Light Segregation": [2] },
-      { "Facility Type": [6], "Light Segregation": [2] },
-      { "Facility Type": [1, 2], "Number of lanes – adjacent road": [1], "Peak pedestrian flow along or across facility": [3] },
-      { "Facility Type": [1, 2], "Number of lanes – adjacent road": [1] },
-    ],
-    effects: { "Facility Type": 4, "Light Segregation": 1, "Facility access": 1 },
-  },
-  {
-    id: 2,
-    name: "Safety barrier (Adjacent road 0-1m)",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Curvature": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2] },
-    ],
-    effects: { "Adjacent Road Lane 0-1m": 2, "Facility access": 1 },
-  },
-  {
-    id: 3,
-    name: "Safety barrier (Adjacent road 1-3m)",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2] },
-    ],
-    effects: { "Adjacent Road Lane 1-3m": 2, "Facility access": 1 },
-  },
-  {
-    id: 4,
-    name: "Upgrade to cycling-priority street",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility access": 1 },
-  },
-  {
-    id: 5,
-    name: "Upgrade to multi-use path",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility Type": 2, "Facility Width per Direction": 3, "Facility access": 1 },
-  },
-  {
-    id: 6,
-    name: "Upgrade to off-road bicycle path",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility Type": 3, "Facility access": 1 },
-  },
-  {
-    id: 7,
-    name: "Convert to one-way facility",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Flow Direction": [2] },
-    ],
-    effects: { "Flow Direction": 1, "Facility access": 1 },
-  },
-  {
-    id: 8,
-    name: "Improve surface conditions",
-    triggers: [
-      { "Loose or slippery surface": [1] },
-    ],
-    effects: { "Loose or slippery surface": 2, "Major Surface Deformation or Drain Opening": 2 },
-  },
-  {
-    id: 9,
-    name: "Install light segregation",
-    triggers: [
-      { "Light Segregation": [2] },
-    ],
-    effects: { "Light Segregation": 1 },
-  },
-  {
-    id: 10,
-    name: "Install street lighting",
-    triggers: [
-      { "Street Lighting": [2] },
-    ],
-    effects: { "Street Lighting": 1 },
-  },
-  {
-    id: 11,
-    name: "Remove fixed obstacles",
-    triggers: [
-      { "Fixed Obstacle on Facility": [1] },
-    ],
-    effects: { "Fixed Obstacle on Facility": 2 },
-  },
-  {
-    id: 12,
-    name: "Remove non-fixed obstacles",
-    triggers: [
-      { "Non-Fixed Obstacle on Facility": [1] },
-    ],
-    effects: { "Non-Fixed Obstacle on Facility": 2 },
-  },
-  {
-    id: 13,
-    name: "Remove width restriction",
-    triggers: [
-      { "Width Restriction": [1] },
-    ],
-    effects: { "Width Restriction": 2 },
-  },
-  {
-    id: 14,
-    name: "Improve facility access",
-    triggers: [
-      { "Facility access": [2] },
-    ],
-    effects: { "Facility access": 1 },
-  },
-  {
-    id: 15,
-    name: "Redesign sharp curves",
-    triggers: [
-      { "Curvature": [1] },
-    ],
-    effects: { "Curvature": 2 },
-  },
-  {
-    id: 16,
-    name: "Widen the facility",
-    triggers: [
-      { "Facility Width per Direction": [1, 2] },
-    ],
-    effects: { "Facility Width per Direction": 3 },
-  },
-  {
-    id: 17,
-    name: "Install protective barrier",
-    triggers: [
-      { "Adjacent Severe Hazard 0-1m": [1] },
-    ],
-    effects: { "Adjacent Severe Hazard 0-1m": 2 },
-  },
-  {
-    id: 18,
-    name: "Improve delineation",
-    triggers: [
-      { "Delineation": [2] },
-    ],
-    effects: { "Delineation": 1 },
-  },
-  {
-    id: 19,
-    name: "Review intersection approach",
-    triggers: [
-      { "Intersection Approach": [1] },
-    ],
-    effects: { "Intersection Approach": 2 },
-  },
-  {
-    id: 20,
-    name: "Improve crossing facility",
-    triggers: [
-      { "Crossing Facility": [2] },
-      { "Property Access": [1], "Crossing Facility": [2] },
-    ],
-    effects: { "Crossing Facility": 1 },
-  },
-  {
-    id: 21,
-    name: "Evaluate grade separation",
-    triggers: [
-      { "Intersection or Road Crossing": [1] },
-    ],
-    effects: { "Intersection or Road Crossing": 2 },
-  },
-  {
-    id: 22,
-    name: "Reconfigure/remove parking",
-    triggers: [
-      { "Adjacent Vehicle Parking 0-1m": [1] },
-    ],
-    effects: { "Adjacent Vehicle Parking 0-1m": 2 },
-  },
-  {
-    id: 23,
-    name: "Review tram/train rails",
-    triggers: [
-      { "Tram or Train Rails": [1] },
-    ],
-    effects: { "Tram or Train Rails": 2 },
-  },
-  {
-    id: 24,
-    name: "Install traffic calming",
-    triggers: [
-      { "Facility Type": [4], "Intersection or Road Crossing": [2], "Adjacent Road Lane 0-1m": [1] },
-    ],
-    effects: {},
-  },
-  {
-    id: 25,
-    name: "Bicycle speed control",
-    triggers: [
-      { "Bicycle/LV speed – average": [2] },
-    ],
-    effects: { "Bicycle/LV speed – average": 1 },
-  },
-];
-
-const TREATMENT_COPY_BASE_PROMPT =
-  "Using this image, create an image with the following recommendations to improve the cycling or pedestrian facility shown, but do not change the original structure of the facility, such that renovations can be done quickly and efficiently. Important markings and delineation marks on the pathways and roads should be preserved. Use Singapore context of cycling path red markings and shared path dashed red lines where appropriate:";
-
-const TREATMENT_COPY_PRIORITY = [16, 22, 18, 15, 7, 5, 11, 21, 1, 4, 6, 9, 12, 13, 20];
-
-const TREATMENT_COPY_LINES: Partial<Record<number, string>> = {
-  1: "* Upgrade to on-road bicycle lane with light segregation - Convert one lane of the road space into a dedicated on-road bicycle lane, separated from moving traffic using light segregation measures. In the Singapore context, this includes flexible delineator posts, kerb or low-profile armadillo kerbs.",
-  4: "* Upgrade to cycling-priority street - Redesign the road to give cyclists primary right of way, with motor vehicles as guests. Apply surface treatments, signage, and traffic calming measures consistent with a cycling-priority or bicycle street layout, referencing overseas's low-traffic, low speed neighbourhood concepts e.g. in Netherlands, UK.",
-  5: "* Upgrade to multi-use path - Convert the existing facility into a clearly designated shared path for both cyclists and pedestrians. Apply shared path markings, the standard cyclist-and-pedestrian dual-symbol signage used on Singapore LTA cycling shared paths, and appropriate surface treatments.",
-  6: "* Upgrade to off-road bicycle path - Physically separate the cycling facility from motor traffic by constructing a dedicated off-road path. This may involve a new alignment set back from the road, kerb separation, or a fully independent corridor consistent with Singapore's Park Connector Network or Cycling Path Network standards.",
-  7: "* Convert to one-way facility - Redesign the facility to carry cyclists in a single direction only. Apply appropriate one-way signage, directional road markings, and physical channelling for one-way cycling paths.",
-  9: "* Install light segregation - Add low-profile physical separators between the cycling facility and adjacent motor traffic or pedestrian zones. In the Singapore context, this includes flexible delineator posts, painted islands, kerb segments, vegetation planting.",
-  11: "* Remove fixed obstacles - Remove permanently installed objects that obstruct or reduce the usable width of the path or road. In the Singapore context, this includes lamp posts, traffic signal poles, bollards, fire hydrant boxes, bus shelter pillars, sheltered walkway columns, utility cabinets, and permanently anchored signage poles.",
-  12: "* Remove non-fixed obstacles - Clear temporary or moveable objects that are obstructing the path or road. This includes traffic cones, water-filled barriers, bicycles, PMDs or motorcycles parked across the path, food cart trolleys, potted plants, rubbish bins, construction hoarding or construction equipment that has not been permanently installed.",
-  13: "* Remove width restrictions - Eliminate physical pinch points that artificially narrow the usable width of the facility. In the Singapore context, this includes swing gates, narrow cattle-grid barriers at park connector entry points, and overgrown vegetation or signage encroaching on path edges. At bus stop, bypass path can be created behind the bus stops for cyclists to pass by instead of cycling in front of the bus stop.",
-  15: "* Redesign sharp curves - Smooth out tight bends or acute-angle turns in the path or road. In the Singapore context, this applies to 90 degree path connections, underpass entry/exit curves, and path corners near road crossings that create blind spots or force cyclists to slow sharply.",
-  16: "* Widen the facility - Increase the width of the existing path, track, or road shown in this image. In the Singapore context, this may involve extending footpath edges, expanding shared paths along LTA cycling paths or park connectors, or widening cycling strips adjacent to roads.",
-  18: "* Improve delineation - Add or refresh visual markings that separate cyclists from pedestrians or vehicles. This includes painted centrelines, shared path symbols, directional arrows, colour-differentiated surfaces (e.g. red), zebra crossing markings, dashed white lines for signalised crossings and tactile guidance strips commonly found on Singapore cycling paths and footpaths.",
-  20: "* Improve crossing facility - Upgrade the provision for cyclists or pedestrians to cross a road or junction. In the Singapore context, this includes adding demarcated crossings, extending crossing times at signalised junctions, adding kerb cut ramps, or introducing a dedicated cycling crossing at signalised intersections. Can consider more advance feature like adaptive signals for pedestrian/cyclist crossing, or scramble walk crossing, if there is already existing crossing.",
-  21: "* Evaluate grade separation - Assess the feasibility of introducing a dedicated cycling overpass or underpass to eliminate at-grade conflicts between cyclists/pedestrians and motor vehicles. Reference existing Singapore examples such as underpasses, overhead cycling bridges.",
-  22: "* Reconfigure/remove parking - Remove or relocate on-street parking lots, motorcycle bays, or loading/unloading zones that encroach on or are adjacent to the cycling or pedestrian facility. This includes HDB estate carpark aprons, street-side parking lots marked with yellow kerb lines, and illegally parked vehicles.",
-};
-
-const getTreatmentDescription = (t: Treatment): string => {
-  if (t.description) return t.description;
-  const copyLine = TREATMENT_COPY_LINES[t.id];
-  if (copyLine) {
-    const parts = copyLine.split(' - ');
-    if (parts.length > 1) {
-      return parts.slice(1).join(' - ');
-    }
-  }
-  return `Apply this intervention in a way that improves the safety and usability of the cycling or pedestrian facility shown.`;
-};
-
-const buildTreatmentCopyMessage = (treatmentIds: number[]): string => {
-  const uniqueIds = Array.from(new Set(treatmentIds));
-  const priorityIndex = new Map(TREATMENT_COPY_PRIORITY.map((id, index) => [id, index]));
-  const treatmentIndex = new Map(TREATMENTS.map((treatment, index) => [treatment.id, index]));
-
-  const sortedIds = uniqueIds.sort((left, right) => {
-    const leftRank = priorityIndex.has(left)
-      ? priorityIndex.get(left)!
-      : TREATMENT_COPY_PRIORITY.length + (treatmentIndex.get(left) ?? Number.MAX_SAFE_INTEGER);
-    const rightRank = priorityIndex.has(right)
-      ? priorityIndex.get(right)!
-      : TREATMENT_COPY_PRIORITY.length + (treatmentIndex.get(right) ?? Number.MAX_SAFE_INTEGER);
-    return leftRank - rightRank;
-  });
-
-  const lines = sortedIds.map((id) => {
-    const predefinedLine = TREATMENT_COPY_LINES[id];
-    if (predefinedLine) {
-      return predefinedLine;
-    }
-
-    const treatment = TREATMENTS.find((item) => item.id === id);
-    if (!treatment) {
-      return `* Treatment ${id} - Apply this intervention in a way that improves the safety and usability of the facility shown.`;
-    }
-
-    return `* ${treatment.name} - Apply this intervention in a way that improves the safety and usability of the cycling or pedestrian facility shown.`;
-  });
-
-  if (lines.length === 0) {
-    return TREATMENT_COPY_BASE_PROMPT;
-  }
-
-  return [TREATMENT_COPY_BASE_PROMPT, "", ...lines].join("\n");
-};
-
-const buildProjectImageUrl = (projectName: string, imageRef: string): string =>
-  `/api/projects/${encodeURIComponent(projectName)}/images/${encodeURIComponent(imageRef)}`;
-
-const copyTextToClipboard = async (text: string): Promise<void> => {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.setAttribute("readonly", "true");
-  textArea.style.position = "fixed";
-  textArea.style.opacity = "0";
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textArea);
-};
-
-const convertImageBlobToPng = async (blob: Blob): Promise<Blob> => {
-  if (blob.type === "image/png") {
-    return blob;
-  }
-
-  const objectUrl = URL.createObjectURL(blob);
-  try {
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const element = new window.Image();
-      element.onload = () => resolve(element);
-      element.onerror = () => reject(new Error("Failed to decode the current image."));
-      element.src = objectUrl;
-    });
-
-    const canvas = document.createElement("canvas");
-    canvas.width = image.naturalWidth || image.width;
-    canvas.height = image.naturalHeight || image.height;
-
-    const context = canvas.getContext("2d");
-    if (!context) {
-      throw new Error("Failed to prepare the current image for clipboard copy.");
-    }
-
-    context.drawImage(image, 0, 0);
-
-    const pngBlob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob(resolve, "image/png");
-    });
-
-    if (!pngBlob) {
-      throw new Error("Failed to convert the current image for clipboard copy.");
-    }
-
-    return pngBlob;
-  } finally {
-    URL.revokeObjectURL(objectUrl);
-  }
-};
-
-const fetchClipboardImageBlob = async (imageUrl: string): Promise<Blob> => {
-  const response = await fetch(imageUrl, { credentials: "same-origin" });
-  if (!response.ok) {
-    throw new Error("Failed to load the current image.");
-  }
-
-  const blob = await response.blob();
-  if (!blob.type.startsWith("image/")) {
-    throw new Error("The current file is not an image.");
-  }
-
-  return convertImageBlobToPng(blob);
-};
-
-const copyRichContentToClipboard = async ({
-  text,
-  imageUrl,
-  imageOnly = false,
-}: {
-  text?: string;
-  imageUrl?: string | null;
-  imageOnly?: boolean;
-}): Promise<"both" | "image" | "text"> => {
-  const trimmedText = text?.trim() ?? "";
-
-  if (imageUrl && navigator.clipboard?.write && typeof ClipboardItem !== "undefined") {
-    const imageBlob = await fetchClipboardImageBlob(imageUrl);
-    const clipboardItemData: Record<string, Blob> = {
-      "image/png": imageBlob,
-    };
-
-    if (!imageOnly && trimmedText) {
-      clipboardItemData["text/plain"] = new Blob([trimmedText], { type: "text/plain" });
-    }
-
-    await navigator.clipboard.write([new ClipboardItem(clipboardItemData)]);
-    return imageOnly ? "image" : trimmedText ? "both" : "image";
-  }
-
-  if (imageOnly) {
-    throw new Error("Image copy is not supported in this browser.");
-  }
-
-  if (trimmedText) {
-    await copyTextToClipboard(trimmedText);
-    return "text";
-  }
-
-  throw new Error("Nothing to copy.");
-};
-
-// Helper to check if treatment is applicable based on current attributes
-const isTreatmentApplicable = (treatment: Treatment, attrs: Record<string, any>): boolean => {
-  if (!treatment.triggers || treatment.triggers.length === 0) return false;
-  // OR between trigger sets: at least one set must match
-  return treatment.triggers.some(set =>
-    // AND within a set: all attributes in the set must match
-    Object.entries(set).every(([attrName, validValues]) => {
-      const attrValue = attrs[attrName];
-      // Convert to number if it's a string
-      const numValue = typeof attrValue === 'string' ? parseInt(attrValue, 10) : attrValue;
-      return validValues.includes(numValue);
-    })
-  );
-};
-
-// Helper to get all applicable treatments for current segment
-const getApplicableTreatments = (attrs: Record<string, any>): Treatment[] => {
-  return TREATMENTS.filter(t => isTreatmentApplicable(t, attrs));
-};
-
-// Apply treatment effects to attributes
-const applyTreatmentEffects = (
-  attrs: Record<string, any>,
-  treatmentIds: number[]
-): { modifiedRow: Record<string, any>; changedAttributes: Set<string> } => {
-  const modified = { ...attrs };
-  const changed = new Set<string>();
-
-  treatmentIds.forEach((treatmentId) => {
-    const treatment = TREATMENTS.find((t) => t.id === treatmentId);
-    if (treatment) {
-      Object.entries(treatment.effects).forEach(([attrName, newValue]) => {
-        if (modified[attrName] !== newValue) {
-          modified[attrName] = newValue;
-          changed.add(attrName);
-        }
-      });
-    }
-  });
-
-  return { modifiedRow: modified, changedAttributes: changed };
-};
-
-// extractScores REMOVED - unused
-
-// calculatePreviewScores REMOVED - using backend previewTreatments API instead
-
-// Convert score to band (1-4) based on crash type
-const calculateBandFromScore = (score: number, type: 'BB' | 'BP' | 'SB' | 'VB' = 'VB'): number => {
-  // BB, BP, SB thresholds: 5, 10, 20
-  if (type === 'BB' || type === 'BP' || type === 'SB') {
-    if (score < 5) return 1;
-    if (score <= 10) return 2;
-    if (score <= 20) return 3;
-    return 4;
-  }
-
-  // VB and default thresholds: 10, 25, 60
-  if (score < 10) return 1;
-  if (score <= 25) return 2;
-  if (score <= 60) return 3;
-  return 4;
-};
-
-// Calculate band distributions for pie charts
-const calculateBandDistributions = (scoreRows: any[]) => {
-  const distributions = {
-    VB: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-    BB: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-    SB: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-    BP: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-    Overall: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-  };
-
-  scoreRows.forEach((row) => {
-    const vbBand = row["VB Band"];
-    const bbBand = row["BB Band"];
-    const sbBand = row["SB Band"];
-    const bpBand = row["BP Band"];
-
-    // Overall might be stored as "Overall Risk Level Band" or calculated from "Overall Risk Level"
-    let overallBand = row["Overall Risk Level Band"];
-    if (!overallBand && row["Overall Risk Level"] !== undefined) {
-      // Fallback if band is missing (should verify if this fallback logic is even needed or correct usually)
-      // Actually, if we lack bands, we can't reliably calculate Overall Band without recalculating all components.
-      // But assuming row usually has bands.
-      // If we strictly need to recalc:
-      const bb = calculateBandFromScore(row["BB"], 'BB');
-      const bp = calculateBandFromScore(row["BP"], 'BP');
-      const sb = calculateBandFromScore(row["SB"], 'SB');
-      const vb = calculateBandFromScore(row["VB"], 'VB');
-      overallBand = Math.max(bb, bp, sb, vb);
-    }
-
-    if (vbBand >= 1 && vbBand <= 4) distributions.VB[vbBand as keyof typeof distributions.VB]++;
-    if (bbBand >= 1 && bbBand <= 4) distributions.BB[bbBand as keyof typeof distributions.BB]++;
-    if (sbBand >= 1 && sbBand <= 4) distributions.SB[sbBand as keyof typeof distributions.SB]++;
-    if (bpBand >= 1 && bpBand <= 4) distributions.BP[bpBand as keyof typeof distributions.BP]++;
-    if (overallBand >= 1 && overallBand <= 4) distributions.Overall[overallBand as keyof typeof distributions.Overall]++;
-  });
-
-  return distributions;
-};
-
-// Sentinel for the "All Projects" tab — scopes the page to every loaded project.
-const ALL_PROJECTS = "__ALL__";
+import {
+  ALL_PROJECTS,
+  getApplicableTreatments,
+  applyTreatmentEffects,
+  calculateBandFromScore,
+  calculateBandDistributions,
+  buildProjectImageUrl,
+  buildTreatmentCopyMessage,
+  copyTextToClipboard,
+  copyRichContentToClipboard,
+  type ProjectDetail,
+  type AttributesResponse,
+  type ScoreType,
+  type Treatment,
+  type CopyButtonState,
+} from "./treatmentConstants";
+import type { TreatmentViewModel } from "./layouts/TreatmentViewModel";
+import TreatmentDetailLayoutV1 from "./layouts/TreatmentDetailLayoutV1";
+import TreatmentDetailLayoutV2 from "./layouts/TreatmentDetailLayoutV2";
 
 export default function TreatmentDetailPage() {
   const { projectName } = useParams<{ projectName: string }>();
+  const navigate = useNavigate();
+  const ui = useUiVersion();
 
   // Parse project names
   const projectNames = useMemo(() => {
@@ -645,7 +124,6 @@ export default function TreatmentDetailPage() {
     for (let i = scope.start; i < scope.start + scope.count; i++) {
       const row = attrs[i];
       if (!row) continue;
-      // getApplicableTreatments expects a dict. It's safe to cast row.
       const applicable = getApplicableTreatments(row as any);
       applicable.forEach(t => {
         if (!uniqueMap.has(t.id)) {
@@ -682,11 +160,11 @@ export default function TreatmentDetailPage() {
 
   const fullyAppliedTreatments = useMemo(() => {
     const fullyApplied = new Set<number>();
-    
+
     allApplicableTreatments.forEach(t => {
       let applicableCount = 0;
       let appliedCount = 0;
-      
+
       for (let i = scope.start; i < scope.start + scope.count; i++) {
          const attr = attrs[i] as any;
          if (!attr) continue;
@@ -714,6 +192,14 @@ export default function TreatmentDetailPage() {
   // Preview state
   const [previewScores, setPreviewScores] = useState<ScoreType | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+
+  // v2 page-level action loading states
+  const [isSavingAll, setIsSavingAll] = useState(false);
+  const [resetAllConfirmOpen, setResetAllConfirmOpen] = useState(false);
+  const [isResettingAll, setIsResettingAll] = useState(false);
+  const hasSavedReport = useMemo(() => {
+    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+  }, []);
 
   const [searchParams] = useSearchParams();
   const len = attrs.length;
@@ -813,6 +299,32 @@ export default function TreatmentDetailPage() {
       };
     });
     return calculateBandDistributions(treatedSegments);
+  }, [scores, treatmentState, scope]);
+
+  // Effectiveness — % AND count of in-scope segments whose Overall Risk Level band
+  // improved (dropped) after the applied treatments. Drives the v2 top row.
+  const { effectivenessLabel, improvedSegmentCount } = useMemo(() => {
+    if (scope.count === 0) return { effectivenessLabel: "0%", improvedSegmentCount: 0 };
+    let improved = 0;
+    for (let i = scope.start; i < scope.start + scope.count; i++) {
+      const orig = scores[i];
+      const state = treatmentState[i];
+      if (!orig || !state?.applied || !state.after_scores) continue;
+      const beforeOverall = Math.max(
+        calculateBandFromScore(orig["BB"], "BB"),
+        calculateBandFromScore(orig["BP"], "BP"),
+        calculateBandFromScore(orig["SB"], "SB"),
+        calculateBandFromScore(orig["VB"], "VB"),
+      );
+      const afterOverall = Math.max(
+        calculateBandFromScore(state.after_scores.BB, "BB"),
+        calculateBandFromScore(state.after_scores.BP, "BP"),
+        calculateBandFromScore(state.after_scores.SB, "SB"),
+        calculateBandFromScore(state.after_scores.VB, "VB"),
+      );
+      if (afterOverall < beforeOverall) improved++;
+    }
+    return { effectivenessLabel: `${Math.round((improved / scope.count) * 100)}%`, improvedSegmentCount: improved };
   }, [scores, treatmentState, scope]);
 
   // Create after-treatment scores for map visualization
@@ -1199,7 +711,10 @@ export default function TreatmentDetailPage() {
     }
   }, [resolveIndex, currentIndex, selectedTreatments, imgRef, treatmentState]);
 
-  const handleConfirmApplyToAll = async () => {
+  // Resolve current project name for UI display
+  const currentCtx = resolveIndex(currentIndex);
+
+  const handleConfirmApplyToAll = useCallback(async () => {
     if (selectedTreatments.size === 0 || !currentCtx) return;
     setApplyLoading(true);
     setOpenConfirmAlert(false);
@@ -1225,7 +740,7 @@ export default function TreatmentDetailPage() {
     } finally {
         setApplyLoading(false);
     }
-  };
+  }, [selectedTreatments, currentCtx, isAllScope, projectMap, activeProject]);
 
   // Fetch preview scores when selection changes
   useEffect(() => {
@@ -1360,9 +875,6 @@ export default function TreatmentDetailPage() {
     return () => clearTimeout(t);
   }, [pageInput, commitPage]);
 
-  // Resolve current project name for UI display
-  const currentCtx = resolveIndex(currentIndex);
-
   const projectContributors = useMemo(() => {
     if (!currentCtx?.name) return null;
     const entry = projectMap.find((p) => p.name === currentCtx.name);
@@ -1373,6 +885,7 @@ export default function TreatmentDetailPage() {
       contributors: aggregateTopContributors(slice),
     };
   }, [scores, projectMap, currentCtx?.name]);
+
   const currentImageUrl = useMemo(() => {
     if (!currentCtx?.name || !imgRef) {
       return null;
@@ -1462,704 +975,120 @@ export default function TreatmentDetailPage() {
   const hasApplied = appliedTreatmentIds.length > 0;
   const hasSelected = selectedTreatments.size > 0;
 
-  if (projectNames.length === 0) {
-    return (
-      <Box p="4">
-        <Text color="red.500">Invalid project name.</Text>
-      </Box>
-    );
-  }
+  // ════════ v2 page-level actions (on-canvas; v1 routes these via the sidebar) ════════
+  const onConfirmResetAll = useCallback(async () => {
+    const targets = isAllScope ? projectNames : [activeProject];
+    setIsResettingAll(true);
+    try {
+      let totalReset = 0;
+      const errors: string[] = [];
+      for (const proj of targets) {
+        try {
+          const result = await resetAllTreatments(proj);
+          if (result.ok) totalReset += result.segments_reset;
+        } catch {
+          errors.push(`${proj}: Failed`);
+        }
+      }
+      toaster.create({
+        title: "Treatments Reset",
+        description: `Reset ${totalReset} segments across ${targets.length} project(s).`,
+        type: "success",
+      });
+      window.dispatchEvent(new CustomEvent("psat:reset:all:completed"));
+      setResetAllConfirmOpen(false);
+      if (errors.length > 0) {
+        toaster.create({ description: `Errors: ${errors.join("; ")}`, type: "error" });
+      }
+    } catch (error) {
+      toaster.create({
+        description: error instanceof Error ? error.message : "Failed to reset treatments",
+        type: "error",
+      });
+    } finally {
+      setIsResettingAll(false);
+    }
+  }, [isAllScope, projectNames, activeProject]);
 
-  if (loading) {
-    return (
-      <Flex align="center" justify="center" h="60vh">
-        <Spinner size="lg" />
-      </Flex>
-    );
-  }
+  const onSaveAll = useCallback(async () => {
+    setIsSavingAll(true);
+    try {
+      const errors: string[] = [];
+      for (const proj of projectNames) {
+        try {
+          await saveTreatments(proj);
+        } catch {
+          errors.push(`${proj}: Failed`);
+        }
+      }
+      if (errors.length === 0) {
+        toaster.create({
+          title: "Treatments Saved",
+          description: `Saved all changes for ${projectNames.length} project(s).`,
+          type: "success",
+        });
+      } else {
+        toaster.create({ description: `Saved with some errors: ${errors.join("; ")}`, type: "error" });
+      }
+    } finally {
+      setIsSavingAll(false);
+    }
+  }, [projectNames]);
 
-  if (error) {
-    return (
-      <Box p="4">
-        <Text color="red.500">Error: {error}</Text>
-      </Box>
-    );
-  }
+  const onGenerateReport = useCallback(() => {
+    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(projectNames));
+    sessionStorage.removeItem("pathAnalysis_loadedProjects");
+    navigate("/analysis/report");
+  }, [projectNames, navigate]);
 
-  return (
-    <Box p="4">
-      {/* DEBUG INFO */}
+  const vm: TreatmentViewModel = {
+    projectNames, loading, error,
+    attrs, geoFeatures, scores, afterTreatmentScores, len,
+    activeProject, isAllScope, scope, panKey, currentCtx,
+    onSelectAllProjects: () => {
+      setActiveProject(ALL_PROJECTS);
+      setCurrentPage(1);
+      setPageInput("1");
+      setPanKey((k) => k + 1);
+    },
+    onSelectProject: (name) => {
+      setActiveProject(name);
+      const firstSegmentPage = getProjectFirstSegmentIndex(name) + 1;
+      setCurrentPage(firstSegmentPage);
+      setPageInput("1");
+      setPanKey((k) => k + 1);
+    },
+    getProjectSegmentCount,
+    currentIndex, currentPage, scopePage, scopeTotal, pageInput, setPageInput, commitPage, gotoPage,
+    imgRef, currentImageUrl,
+    accordionView, setAccordionView, effectivenessLoading, allApplicableTreatments,
+    effectivenessCounts, applicableCounts, segmentScoreDrops, fullyAppliedTreatments,
+    selectedTreatments, setSelectedTreatments, treatmentState, applyLoading,
+    hasApplied, hasSelected, appliedTreatmentIds,
+    onApplyTreatments: handleApplyTreatments,
+    onResetTreatments: handleResetTreatments,
+    copyButtonState, copyButtonLabel, imageCopyButtonState, imageCopyButtonLabel,
+    onCopyTreatmentPrompt: handleCopyTreatmentPrompt,
+    onCopyCurrentImage: handleCopyCurrentImage,
+    showPostTreatment, setShowPostTreatment, segmentHasTreatments,
+    modifiedAttrs, changedAttributes, changedFieldSources, attrMappings, activeAttributeGroupTab,
+    onContributorClick: handleContributorClick,
+    previewScores, previewLoading, projectContributors,
+    beforeBandCounts, afterBandCounts,
+    openConfirmAlert, setOpenConfirmAlert, onConfirmApplyToAll: handleConfirmApplyToAll,
+    // v2-only
+    effectivenessLabel,
+    improvedSegmentCount,
+    onResetAll: () => setResetAllConfirmOpen(true),
+    onSaveAll,
+    onGenerateReport,
+    hasSavedReport,
+    isSavingAll,
+    resetAllConfirmOpen,
+    onConfirmResetAll,
+    onCancelResetAll: () => setResetAllConfirmOpen(false),
+    isResettingAll,
+  };
 
-
-      {/* Project Tabs - scope the whole page to one project (or All Projects) */}
-      {projectNames.length > 1 && (
-        <Flex gap="2" mb="4" wrap="wrap">
-          {/* All Projects tab — aggregate view across every loaded project */}
-          <Button
-            onClick={() => {
-              setActiveProject(ALL_PROJECTS);
-              setCurrentPage(1);
-              setPageInput("1");
-              setPanKey((k) => k + 1);
-            }}
-            variant={isAllScope ? "solid" : "outline"}
-            colorPalette={isAllScope ? "blue" : "gray"}
-            size="md"
-          >
-            All Projects ({len})
-          </Button>
-          {projectNames.map((proj) => {
-            const isActive = activeProject === proj;
-            const segmentCount = getProjectSegmentCount(proj);
-            if (segmentCount === 0) return null;
-            return (
-              <Button
-                key={proj}
-                onClick={() => {
-                  setActiveProject(proj);
-                  // Narrow focus and jump to this project's first segment
-                  const firstSegmentPage = getProjectFirstSegmentIndex(proj) + 1;
-                  setCurrentPage(firstSegmentPage);
-                  setPageInput("1"); // scope-relative first page
-                  setPanKey((k) => k + 1);
-                }}
-                variant={isActive ? "solid" : "outline"}
-                colorPalette={isActive ? "blue" : "gray"}
-                size="md"
-              >
-                {proj} ({segmentCount})
-              </Button>
-            );
-          })}
-        </Flex>
-      )}
-
-      {/* Header with project info and pagination */}
-      <Flex justify="space-between" align="center" mb="3">
-        <Box>
-          <Text fontSize="lg" fontWeight="bold" color="gray.900" _dark={{ color: "white" }}>
-            {currentCtx ? currentCtx.name : "Unknown Project"}
-          </Text>
-          <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
-            Loaded: {projectNames.length} project{projectNames.length > 1 ? 's' : ''}
-          </Text>
-        </Box>
-
-        <Flex align="center" gap="3">
-          <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
-            {scopeTotal > 0 ? `${scopePage} / ${scopeTotal}` : "0 / 0"}
-          </Text>
-
-          <NumberInput.Root
-            maxW="120px"
-            min={1}
-            max={scopeTotal || 1}
-            defaultValue={String(scopePage)}
-            value={pageInput}
-            onValueChange={(e) => setPageInput(e.value)}
-          >
-            <NumberInput.Control />
-            <NumberInput.Input
-              onBlur={() => commitPage(pageInput)}
-              onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
-                  ev.currentTarget.blur();
-                }
-              }}
-            />
-          </NumberInput.Root>
-        </Flex>
-      </Flex>
-
-      {/* Map Previews: Before and After Treatment - Side by Side */}
-      <Grid templateColumns={{ base: "1fr", lg: "repeat(2, minmax(0, 1fr))" }} gap="16px" mb="6" w="100%">
-        {/* Before Treatment Map */}
-        <GridItem minW="0" w="100%">
-          <GeoDataPanel
-            projectName={currentCtx ? currentCtx.name : ""}
-            feature={
-              geoFeatures[currentIndex]?.geometry?.type === "LineString"
-                ? (geoFeatures[currentIndex] as any)
-                : null
-            }
-            index={currentIndex}
-            onJump={(i) => setCurrentPage(i + 1)}
-            containerHeight={MAP_HEIGHT}
-            subtitle="Before Treatment"
-            geoFeatures={geoFeatures as Feature<LineString, any>[]}
-            startIndex={0}
-            scores={scores as any}
-            scopeRange={isAllScope ? null : scope}
-            autoFitKey={panKey}
-            panKey={panKey}
-          />
-        </GridItem>
-
-        {/* After Treatment Map */}
-        <GridItem minW="0" w="100%">
-          <GeoDataPanel
-            projectName={currentCtx ? currentCtx.name : ""}
-            feature={
-              geoFeatures[currentIndex]?.geometry?.type === "LineString"
-                ? (geoFeatures[currentIndex] as any)
-                : null
-            }
-            index={currentIndex}
-            onJump={(i) => setCurrentPage(i + 1)}
-            containerHeight={MAP_HEIGHT}
-            scores={afterTreatmentScores as any}
-            subtitle="After Treatment"
-            geoFeatures={geoFeatures as Feature<LineString, any>[]}
-            startIndex={0}
-            scopeRange={isAllScope ? null : scope}
-            autoFitKey={panKey}
-            panKey={panKey}
-          />
-        </GridItem>
-      </Grid>
-
-      {/* Main layout: 3 Columns - Image | Treatments | Scores+Attributes */}
-      <Grid templateColumns={{ base: "1fr", lg: "0.5fr 1.5fr 1.5fr" }} gap="16px" mb="6">
-        {/* Left: Recommended Treatments (Vertical, Scrollable) */}
-        <GridItem position="relative" minH={{ base: "400px", lg: "0" }}>
-          <Box
-            position={{ base: "relative", lg: "absolute" }}
-            top="0" bottom="0" left="0" right="0"
-            display="flex"
-            flexDirection="column"
-            bg="gray.50"
-            _dark={{ bg: "gray.800" }}
-            borderWidth="1px"
-            borderColor="gray.200"
-            borderRadius="md"
-            overflow="hidden"
-          >
-          <Box p="3" borderBottomWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.700" _dark={{ color: "gray.200" }}>
-              Treatment Options
-            </Text>
-            <Tooltip
-              content={
-                accordionView === "segment" ? (
-                  <Text>
-                    <b>By Segment:</b> View and apply treatments for the current segment only.
-                  </Text>
-                ) : (
-                  <Text>
-                    <b>By Treatment:</b> View and apply a single treatment across all applicable segments.
-                  </Text>
-                )
-              }
-              showArrow
-              openDelay={400}
-              contentProps={{ maxW: "250px" }}
-            >
-              <Box mt="2">
-                <select
-                  value={accordionView}
-                  onChange={(e) => {
-                    setAccordionView(e.target.value as "segment" | "treatment");
-                    setSelectedTreatments(new Set());
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "6px",
-                    borderRadius: "6px",
-                    border: "1px solid var(--chakra-colors-gray-300)",
-                    backgroundColor: "white",
-                    color: "inherit",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                  className="theme-select"
-                >
-                  <option value="segment">By Segment</option>
-                  <option value="treatment">By Treatment</option>
-                </select>
-              </Box>
-            </Tooltip>
-          </Box>
-
-          <Box flex="1" overflowY="auto" p="3">
-            {(() => {
-              let displayTreatments: Treatment[] = [];
-              const currentAttr = attrs[currentIndex] as any;
-              
-              if (accordionView === "segment") {
-                if (!currentAttr) {
-                  return <Text fontSize="xs" color="gray.400">No segment data</Text>;
-                }
-                displayTreatments = getApplicableTreatments(currentAttr)
-                  .sort((a, b) => (segmentScoreDrops[b.id] ?? 0) - (segmentScoreDrops[a.id] ?? 0));
-              } else {
-                if (effectivenessLoading) {
-                  return (
-                    <Flex direction="column" align="center" justify="center" gap="3" py="8">
-                      <Spinner size="sm" color="blue.500" />
-                      <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
-                        Ranking Treatment Options...
-                      </Text>
-                    </Flex>
-                  );
-                }
-                displayTreatments = allApplicableTreatments.filter(t =>
-                  (effectivenessCounts[t.id] ?? 0) > 0
-                );
-              }
-
-              if (displayTreatments.length === 0) {
-                return (
-                  <Text fontSize="xs" color="gray.400" _dark={{ color: "gray.500" }}>
-                    {accordionView === "segment" ? "No treatments applicable" : "No treatments applicable in whole project"}
-                  </Text>
-                );
-              }
-
-              return (
-                <Flex direction="column" gap="2">
-                  {displayTreatments.map((t) => {
-                    const isApplied = accordionView === "segment" 
-                      ? (treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
-                      : fullyAppliedTreatments.has(t.id);
-                      
-                    const isDisabled = isApplied;
-
-                    return (
-                      <Flex
-                        key={t.id}
-                        gap="2"
-                        align="flex-start"
-                        p="2"
-                        borderRadius="md"
-                        bg={
-                          isApplied
-                            ? "green.50"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.50"
-                              : "white"
-                        }
-                        borderWidth="1px"
-                        borderColor={
-                          isApplied
-                            ? "green.200"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.200"
-                              : "gray.200"
-                        }
-                        cursor={isDisabled ? "not-allowed" : "pointer"}
-                        opacity={isDisabled ? 0.6 : 1}
-                        transition="all 0.2s"
-                        _hover={{
-                          borderColor: isDisabled ? undefined : "blue.300",
-                          shadow: isDisabled ? undefined : "sm"
-                        }}
-                        _dark={{
-                          bg: isApplied
-                            ? "green.900"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.900"
-                              : "gray.700",
-                          borderColor: isApplied
-                            ? "green.700"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.700"
-                              : "gray.600",
-                        }}
-                        onClick={() => {
-                          if (isDisabled) return;
-                          const newSelected = new Set(selectedTreatments);
-                          if (newSelected.has(t.id)) {
-                            newSelected.delete(t.id);
-                          } else {
-                            newSelected.add(t.id);
-                          }
-                          setSelectedTreatments(newSelected);
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isApplied || selectedTreatments.has(t.id)}
-                          disabled={isDisabled}
-                          onChange={() => { }}
-                          style={{ marginTop: '3px', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                          aria-label={`Select treatment: ${t.name}`}
-                        />
-                        <Box flex="1">
-                          <Text fontSize="xs" fontWeight="medium" color="gray.900" _dark={{ color: "white" }} lineHeight="1.2">
-                            {t.name}
-                            {isApplied && " ✓"}
-                          </Text>
-                          {accordionView === "treatment" && (
-                            <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
-                              {(() => {
-                                const count = effectivenessCounts[t.id] ?? 0;
-                                const applicable = applicableCounts[t.id] ?? 0;
-                                const denominator = applicable > 0 ? applicable : attrs.length;
-                                const pct = (denominator > 0 && count > 0) ? count / denominator * 100 : 0;
-                                const display = count > 0 ? Math.max(0.1, pct).toFixed(1) : "0.0";
-                                const scope = applicable > 0 ? "applicable segments" : "segments";
-                                return `Improves ${display}% of ${scope}`;
-                              })()}
-                            </Text>
-                          )}
-                          {accordionView === "segment" && segmentScoreDrops[t.id] !== undefined && (
-                            <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
-                              {`Score drop: ${segmentScoreDrops[t.id].toFixed(1)}`}
-                            </Text>
-                          )}
-                          {t.description && (
-                            <Text fontSize="2xs" color="gray.500" _dark={{ color: "gray.400" }} mt="1">
-                              {t.description}
-                            </Text>
-                          )}
-                        </Box>
-                      </Flex>
-                    );
-                  })}
-                </Flex>
-              );
-            })()}
-          </Box>
-
-          {/* Action Buttons Footer */}
-          <Box p="3" borderTopWidth="1px" borderColor="gray.200" bg="white" _dark={{ borderColor: "gray.700", bg: "gray.800" }}>
-            <Flex direction="column" gap="2">
-              <Flex gap="2">
-                <Button
-                  flex="1"
-                  size="xs"
-                  variant="outline"
-                  colorScheme={selectedTreatments.size > 0 ? "red" : "blue"}
-                  disabled={
-                    (() => {
-                      if (accordionView === "segment") {
-                        const currentAttr = attrs[currentIndex] as any;
-                        if (!currentAttr) return true;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        return applicable.every(t => appliedIds.includes(t.id));
-                      } else {
-                        return allApplicableTreatments.length === 0;
-                      }
-                    })()
-                  }
-                  onClick={() => {
-                    if (selectedTreatments.size > 0) {
-                      setSelectedTreatments(new Set());
-                    } else {
-                      if (accordionView === "segment") {
-                        const currentAttr = attrs[currentIndex] as any;
-                        if (!currentAttr) return;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        setSelectedTreatments(new Set(applicable.filter(t => !appliedIds.includes(t.id)).map(t => t.id)));
-                      } else {
-                        setSelectedTreatments(new Set(allApplicableTreatments.map(t => t.id)));
-                      }
-                    }
-                  }}
-                >
-                  {selectedTreatments.size > 0 ? "Clear" : "All"}
-                </Button>
-                {accordionView === "segment" && treatmentState[currentIndex]?.applied && (
-                  <Button
-                    flex="1"
-                    size="xs"
-                    variant="ghost"
-                    colorScheme="red"
-                    loading={applyLoading}
-                    onClick={handleResetTreatments}
-                  >
-                    Reset
-                  </Button>
-                )}
-              </Flex>
-
-              <Flex width="full" gap="2" align="stretch" wrap="wrap">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  aria-label="Copy treatment prompt"
-                  disabled={!hasApplied && !hasSelected}
-                  loading={copyButtonState === "copying"}
-                  gap="1"
-                  onClick={() => {
-                    const ids = hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments);
-                    void handleCopyTreatmentPrompt(ids);
-                  }}
-                >
-                  {copyButtonState === "copied" ? <LuCheck /> : <LuCopy />}
-                  <span>{copyButtonLabel}</span>
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  aria-label="Copy current image"
-                  disabled={!currentImageUrl}
-                  loading={imageCopyButtonState === "copying"}
-                  gap="1"
-                  onClick={() => { void handleCopyCurrentImage(); }}
-                >
-                  {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
-                  <span>{imageCopyButtonLabel}</span>
-                </Button>
-                <Button
-                  size="sm"
-                  flex="1"
-                  variant="solid"
-                  colorScheme={accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0 ? "green" : "blue"}
-                  disabled={selectedTreatments.size === 0 || applyLoading}
-                  loading={applyLoading}
-                  onClick={async () => {
-                    if (accordionView === "segment") {
-                      handleApplyTreatments();
-                    } else {
-                       if (selectedTreatments.size === 0 || !currentCtx) return;
-                       setOpenConfirmAlert(true);
-                    }
-                  }}
-                >
-                  {accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0
-                    ? "Applied ✓"
-                    : `Apply (${selectedTreatments.size})`}
-                </Button>
-              </Flex>
-            </Flex>
-          </Box>
-          </Box>
-        </GridItem>
-
-        {/* Middle: Image Panel + Navigation Controls */}
-        <GridItem
-          display="flex"
-          flexDirection="column"
-          minH={`${PANEL_HEIGHT}px`}
-        >
-          {/* Navigation Controls */}
-          <Flex
-            flex="0 0 auto"
-            h={`${CONTROLS_H}px`}
-            w="100%"
-            minW={0}
-            align="center"
-            gap="2"
-            mb="4"
-            position="relative"
-            zIndex={1}
-            bg="bg"
-          >
-            <Button
-              flex="1"
-              minW={0}
-              size="sm"
-              variant="outline"
-              onClick={() => gotoPage(currentPage - 1)}
-              disabled={currentPage <= 1}
-            >
-              Previous
-            </Button>
-
-            <Button
-              flex="1"
-              minW={0}
-              size="sm"
-              variant="solid"
-              onClick={() => gotoPage(currentPage + 1)}
-              disabled={currentPage >= len}
-            >
-              Next
-            </Button>
-          </Flex>
-
-          <Box flex="1 1 auto" minH={0} display="flex" flexDirection="column">
-            <Box flex="1 1 50%" minH={0} display="flex" flexDirection="column">
-              <ImagePanel
-                projectName={currentCtx?.name}
-                imageRef={imgRef}
-              />
-            </Box>
-            <Box flex="1 1 50%" minH={0} display="flex" flexDirection="column">
-              <PostTreatmentImageUpload
-                projectName={currentCtx?.name || ""}
-                segmentIndex={(currentCtx?.localIndex ?? currentIndex) + 1}
-              />
-            </Box>
-          </Box>
-        </GridItem>
-
-        {/* Right: Crash Type Scores + Attributes Panel */}
-        <GridItem
-          display="flex"
-          flexDirection="column"
-          gap="4"
-        >
-          <Box
-            bg="white"
-            borderRadius="md"
-            p="1"
-            borderWidth="1px"
-            borderColor="gray.200"
-            _dark={{ bg: "gray.800", borderColor: "gray.600" }}
-          >
-            <SegmentScoresCard
-              scores={(() => {
-                const originalScores = scores[currentIndex] as any || null;
-                const appliedAfterScores = treatmentState[currentIndex]?.after_scores;
-                const appliedScoreRow = appliedAfterScores
-                  ? {
-                    ...scores[currentIndex],
-                    BB: appliedAfterScores.BB,
-                    BP: appliedAfterScores.BP,
-                    SB: appliedAfterScores.SB,
-                    VB: appliedAfterScores.VB,
-                    "Overall Risk Level": appliedAfterScores.total,
-                  } as any
-                  : originalScores;
-
-                // Show preview scores whenever treatments are selected, regardless of showPostTreatment toggle
-                if (selectedTreatments.size > 0) {
-                  if (previewLoading || !previewScores) {
-                    return appliedScoreRow;
-                  }
-                  return {
-                    ...scores[currentIndex],
-                    BB: previewScores.BB,
-                    BP: previewScores.BP,
-                    SB: previewScores.SB,
-                    VB: previewScores.VB,
-                    "Overall Risk Level": previewScores.total
-                  } as any;
-                }
-
-                if (!showPostTreatment) {
-                  return originalScores;
-                }
-
-                if (appliedAfterScores) {
-                  return appliedScoreRow;
-                }
-
-                return originalScores;
-              })()}
-              beforeScores={
-                (selectedTreatments.size > 0 || (showPostTreatment && treatmentState[currentIndex]?.applied))
-                  ? {
-                    BB: scores[currentIndex]?.["BB"] ?? 0,
-                    BP: scores[currentIndex]?.["BP"] ?? 0,
-                    SB: scores[currentIndex]?.["SB"] ?? 0,
-                    VB: scores[currentIndex]?.["VB"] ?? 0,
-                    "Overall Risk Level": scores[currentIndex]?.["Overall Risk Level"] ?? 0,
-                  }
-                  : undefined
-              }
-              showPreviewBackground={selectedTreatments.size > 0}
-              projectContributors={projectContributors}
-              onContributorClick={handleContributorClick}
-            />
-          </Box>
-
-          <Box
-            flex="1"
-            minH="0"
-            overflow="hidden"
-            bg="white"
-            borderRadius="md"
-            borderWidth="1px"
-            borderColor="gray.200"
-            _dark={{ bg: "gray.800", borderColor: "gray.600" }}
-            display="flex"
-            flexDirection="column"
-          >
-            <Flex
-              p="2"
-              borderBottomWidth="1px"
-              borderColor="gray.200"
-              _dark={{ borderColor: "gray.700" }}
-              align="center"
-              justify="space-between"
-            >
-              <Text fontSize="sm" fontWeight="bold">
-                Attributes
-              </Text>
-              <Flex align="center" gap="2">
-                <Text fontSize="xs" color={segmentHasTreatments ? undefined : "gray.400"}>
-                  Show Pre-Treatment
-                </Text>
-                <Switch
-                  checked={!showPostTreatment}
-                  disabled={!segmentHasTreatments}
-                  onCheckedChange={(e: any) => setShowPostTreatment(!e.checked)}
-                />
-              </Flex>
-            </Flex>
-            <Box flex="1" minH="0">
-              <AttributesPanel
-                row={
-                  showPostTreatment && (treatmentState[currentIndex]?.applied || selectedTreatments.size > 0)
-                    ? modifiedAttrs
-                    : attrs[currentIndex]
-                }
-                mappings={attrMappings}
-                changedFields={
-                  showPostTreatment ? Array.from(changedAttributes) : []
-                }
-                // changedFieldSources prop name was redundant? AttributesPanel accepts fieldSources
-                fieldSources={
-                  showPostTreatment ? changedFieldSources : {}
-                }
-                highlightMessage="Modified by treatment"
-                activeGroupTab={activeAttributeGroupTab}
-                readOnly={true}
-              />
-            </Box>
-          </Box>
-        </GridItem>
-      </Grid>
-
-      {/* Overall Analysis Footer */}
-      <Box mt="6">
-        <OverallTreatmentAnalysis
-          beforeBandCounts={beforeBandCounts}
-          afterBandCounts={afterBandCounts}
-        />
-      </Box>
-
-      {/* Confirm Apply All Dialog */}
-      <Dialog.Root open={openConfirmAlert} onOpenChange={(d) => setOpenConfirmAlert(d.open)}>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Apply Treatments to {isAllScope ? "All Projects" : activeProject}</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <p>Are you sure you want to apply the following treatments to all eligible segments in {isAllScope ? "all loaded projects" : activeProject}?</p>
-                <ul style={{ marginTop: "0.5rem", paddingLeft: "1.25rem" }}>
-                  {Array.from(selectedTreatments).map(id => {
-                    const t = TREATMENTS.find(tr => tr.id === id);
-                    return <li key={id}><strong>{t ? t.name : `Treatment ${id}`}</strong></li>;
-                  })}
-                </ul>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" disabled={applyLoading}>
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button colorPalette="blue" onClick={handleConfirmApplyToAll} loading={applyLoading}>
-                  Confirm
-                </Button>
-              </Dialog.Footer>
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-
-    </Box>
-  );
+  return ui === "v2" ? <TreatmentDetailLayoutV2 {...vm} /> : <TreatmentDetailLayoutV1 {...vm} />;
 }
