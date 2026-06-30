@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -22,8 +22,6 @@ import type { Feature, FeatureCollection, LineString } from "geojson";
 
 import {
   fetchProjectDetail,
-  fetchProjectAttributes,
-  fetchProjectGeoJSON,
   applyTreatments,
   getSegmentTreatments,
   getAllTreatments,
@@ -35,7 +33,8 @@ import {
   calculateScore,
 } from "../../api";
 
-import type { AttributeRow } from "../../api";
+import type { AttributeRow, CodingFilterContext } from "../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults } from "../../api/projectDataCache";
 import ImagePanel from "../CodingPage/components/ImagePanel";
 import PostTreatmentImageUpload from "./components/PostTreatmentImageUpload";
 import AttributesPanel, { resolveContributorTabGroup } from "../CodingPage/components/AttributesPanel";
@@ -588,6 +587,25 @@ export default function TreatmentDetailPage() {
     }
   }, [projectName]);
 
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Filter mode: opened from the Path Analysis page's "Treat Filtered Segments" button.
+  // The ?filtered=1 query param is the authoritative switch — only when present do we honor
+  // the (possibly stale) treatment_filterContext sessionStorage key. This restricts the page
+  // to the filtered subset (pagination, both maps, treatment counts) without dropping segments
+  // from the aggregated arrays (which would break the global→local index mapping).
+  const filterMode = searchParams.get("filtered") === "1";
+  const filterContext = useMemo<CodingFilterContext | null>(() => {
+    if (!filterMode) return null;
+    try {
+      const raw = sessionStorage.getItem("treatment_filterContext");
+      return raw ? (JSON.parse(raw) as CodingFilterContext) : null;
+    } catch {
+      return null;
+    }
+  }, [filterMode]);
+
   const [projectMap, setProjectMap] = useState<Array<{
     name: string;
     startIndex: number;
@@ -612,6 +630,39 @@ export default function TreatmentDetailPage() {
     const p = projectMap.find((p) => p.name === activeProject);
     return p ? { start: p.startIndex, count: p.count } : { start: 0, count: attrs.length };
   }, [isAllScope, activeProject, projectMap, attrs.length]);
+
+  // Ordered list of global indices the user can navigate / that should render. In filter
+  // mode this is the filtered subset (mapped from each project's local indices via its
+  // startIndex window); otherwise it is the full contiguous range. `pageIndices` is further
+  // narrowed to the active project scope. Arrays (attrs/geoFeatures/scores) stay full, so the
+  // global→local mapping used for treatment application is unaffected.
+  const filteredGlobalIndices = useMemo<number[]>(() => {
+    if (!filterContext) return [];
+    const out: number[] = [];
+    for (const p of projectMap) {
+      const fp = filterContext.projects.find((x) => x.projectName === p.name);
+      if (!fp) continue;
+      for (const localIdx of [...fp.filteredIndices].sort((a, b) => a - b)) {
+        if (localIdx >= 0 && localIdx < p.count) out.push(p.startIndex + localIdx);
+      }
+    }
+    return out;
+  }, [filterContext, projectMap]);
+
+  const filteredGlobalIndexSet = useMemo(
+    () => new Set(filteredGlobalIndices),
+    [filteredGlobalIndices]
+  );
+
+  // The ordered global indices the pager walks for the current scope.
+  const pageIndices = useMemo<number[]>(() => {
+    if (filterMode) {
+      return filteredGlobalIndices.filter(
+        (gi) => gi >= scope.start && gi < scope.start + scope.count
+      );
+    }
+    return Array.from({ length: scope.count }, (_, i) => scope.start + i);
+  }, [filterMode, filteredGlobalIndices, scope]);
 
   // Effectiveness = # of segments whose Overall Risk Level Band improves when the
   // treatment is applied in isolation. Raw per-project counts are fetched once per
@@ -641,8 +692,10 @@ export default function TreatmentDetailPage() {
     if (!attrs || attrs.length === 0) return [];
 
     const uniqueMap = new Map<number, Treatment>();
-    // Only consider segments within the active focus scope.
+    // Only consider segments within the active focus scope (and, in filter mode, the
+    // filtered subset).
     for (let i = scope.start; i < scope.start + scope.count; i++) {
+      if (filterMode && !filteredGlobalIndexSet.has(i)) continue;
       const row = attrs[i];
       if (!row) continue;
       // getApplicableTreatments expects a dict. It's safe to cast row.
@@ -660,7 +713,7 @@ export default function TreatmentDetailPage() {
       if (eb !== ea) return eb - ea;
       return a.id - b.id;
     });
-  }, [attrs, effectivenessCounts, scope]);
+  }, [attrs, effectivenessCounts, scope, filterMode, filteredGlobalIndexSet]);
 
   const [geoFeatures, setGeoFeatures] = useState<Feature[]>([]);
   const [scores, setScores] = useState<Record<string, any>[]>([]);
@@ -682,40 +735,75 @@ export default function TreatmentDetailPage() {
 
   const fullyAppliedTreatments = useMemo(() => {
     const fullyApplied = new Set<number>();
-    
+
     allApplicableTreatments.forEach(t => {
       let applicableCount = 0;
       let appliedCount = 0;
-      
+
       for (let i = scope.start; i < scope.start + scope.count; i++) {
-         const attr = attrs[i] as any;
-         if (!attr) continue;
-         const applicable = getApplicableTreatments(attr);
-         if (applicable.some(x => x.id === t.id)) {
-            applicableCount++;
-            if (treatmentState[i]?.applied && treatmentState[i]?.treatment_ids?.includes(t.id)) {
-               appliedCount++;
-            }
-         }
+        if (filterMode && !filteredGlobalIndexSet.has(i)) continue;
+        const attr = attrs[i] as any;
+        if (!attr) continue;
+        const applicable = getApplicableTreatments(attr);
+        if (applicable.some(x => x.id === t.id)) {
+          applicableCount++;
+          if (treatmentState[i]?.applied && treatmentState[i]?.treatment_ids?.includes(t.id)) {
+            appliedCount++;
+          }
+        }
       }
 
       if (applicableCount > 0 && applicableCount === appliedCount) {
-         fullyApplied.add(t.id);
+        fullyApplied.add(t.id);
       }
     });
 
     return fullyApplied;
-  }, [allApplicableTreatments, attrs, treatmentState, scope]);
+  }, [allApplicableTreatments, attrs, treatmentState, scope, filterMode, filteredGlobalIndexSet]);
   const [applyLoading, setApplyLoading] = useState(false);
   const [openConfirmAlert, setOpenConfirmAlert] = useState(false);
   const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>("idle");
+
+  // The "Confirm Apply All" Chakra/Zag Dialog locks page scroll while open by
+  // setting `data-scroll-locked` + inline `overflow: hidden` / `pointer-events: none`
+  // on <html>/<body>. If the page unmounts (e.g. clicking "Generate Report" →
+  // navigating to the Report Builder) before Zag restores those styles, the lock
+  // leaks and the window can no longer scroll when the user navigates back.
+  // Clear the lock whenever the dialog closes, and on unmount, so the page is
+  // always scrollable again. See CLAUDE.md "Chakra UI Dialog: Blocking Interaction".
+  const clearScrollLock = useCallback(() => {
+    const body = document.body;
+    const html = document.documentElement;
+    body.style.overflow = "";
+    html.style.overflow = "";
+    body.style.pointerEvents = "";
+    html.style.pointerEvents = "";
+    body.removeAttribute("data-scroll-locked");
+    html.removeAttribute("data-scroll-locked");
+  }, []);
+
+  useEffect(() => {
+    if (!openConfirmAlert) {
+      // Delay past Zag's close animation/cleanup so we win the race.
+      const t = setTimeout(clearScrollLock, 400);
+      return () => clearTimeout(t);
+    }
+  }, [openConfirmAlert, clearScrollLock]);
+
+  // Safety net: clear any leftover lock on unmount (navigation away) and on mount
+  // (returning from the Report Builder) so the treatment page is never stuck.
+  useEffect(() => {
+    clearScrollLock();
+    return () => clearScrollLock();
+  }, [clearScrollLock]);
+
+
   const [imageCopyButtonState, setImageCopyButtonState] = useState<CopyButtonState>("idle");
 
   // Preview state
   const [previewScores, setPreviewScores] = useState<ScoreType | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
-  const [searchParams] = useSearchParams();
   const len = attrs.length;
   const initialSegment = searchParams.get("segment");
   // Pending ?segment= navigation, consumed once data has loaded (see effect near gotoPage).
@@ -728,15 +816,15 @@ export default function TreatmentDetailPage() {
     [currentPage, len]
   );
 
-  // Safety net: if the current segment drifts outside the active scope window
-  // (e.g. projectMap resolves after navigation), snap back to the scope's first segment.
+  // Safety net: if the current segment isn't in the navigable list (e.g. projectMap
+  // resolves after navigation, a scope/tab switch, or — in filter mode — an initial page
+  // that isn't part of the filtered subset), snap to the first navigable segment.
   useEffect(() => {
-    if (isAllScope || scope.count === 0) return;
-    if (currentIndex < scope.start || currentIndex >= scope.start + scope.count) {
-      setCurrentPage(scope.start + 1);
-      setPageInput("1"); // scope-relative first page
+    if (pageIndices.length === 0) return;
+    if (!pageIndices.includes(currentIndex)) {
+      setCurrentPage(pageIndices[0] + 1);
     }
-  }, [isAllScope, scope, currentIndex]);
+  }, [pageIndices, currentIndex]);
 
   const handleContributorClick = useCallback((name: string) => {
     const targetGroup = resolveContributorTabGroup(name);
@@ -768,24 +856,40 @@ export default function TreatmentDetailPage() {
   // Get segment count for a specific project
   const getProjectSegmentCount = useCallback((projectName: string): number => {
     const project = projectMap.find(p => p.name === projectName);
-    return project?.count ?? 0;
-  }, [projectMap]);
+    if (!project) return 0;
+    if (filterMode) {
+      return filteredGlobalIndices.filter(
+        gi => gi >= project.startIndex && gi < project.startIndex + project.count
+      ).length;
+    }
+    return project.count;
+  }, [projectMap, filterMode, filteredGlobalIndices]);
 
-  // Get the first segment index for a specific project
+  // Get the first (navigable) global segment index for a specific project — in filter mode
+  // the first filtered segment, otherwise the project's first segment.
   const getProjectFirstSegmentIndex = useCallback((projectName: string): number => {
     const project = projectMap.find(p => p.name === projectName);
-    return project?.startIndex ?? 0;
-  }, [projectMap]);
+    if (!project) return 0;
+    if (filterMode) {
+      const first = filteredGlobalIndices.find(
+        gi => gi >= project.startIndex && gi < project.startIndex + project.count
+      );
+      return first ?? project.startIndex;
+    }
+    return project.startIndex;
+  }, [projectMap, filterMode, filteredGlobalIndices]);
 
-  // Calculate before treatment band distributions (segments within the active scope)
+  // Calculate before treatment band distributions (navigable segments within the active
+  // scope — the filtered subset in filter mode, otherwise the whole scope window).
   const beforeBandCounts = useMemo(() => {
-    return calculateBandDistributions(scores.slice(scope.start, scope.start + scope.count));
-  }, [scores, scope]);
+    return calculateBandDistributions(pageIndices.map(gi => scores[gi]).filter(Boolean));
+  }, [scores, pageIndices]);
 
-  // Calculate after treatment band distributions (segments within the active scope)
+  // Calculate after treatment band distributions (navigable segments within the active scope)
   const afterBandCounts = useMemo(() => {
-    const treatedSegments = scores.slice(scope.start, scope.start + scope.count).map((scoreRow, i) => {
-      const index = scope.start + i;
+    const treatedSegments = pageIndices.map((index) => {
+      const scoreRow = scores[index];
+      if (!scoreRow) return null;
       const state = treatmentState[index];
       if (!state?.applied || !state.after_scores) {
         return scoreRow; // Not treated, return original
@@ -812,8 +916,8 @@ export default function TreatmentDetailPage() {
         "Overall Risk Level Band": overallBand,
       };
     });
-    return calculateBandDistributions(treatedSegments);
-  }, [scores, treatmentState, scope]);
+    return calculateBandDistributions(treatedSegments.filter(Boolean) as Record<string, any>[]);
+  }, [scores, treatmentState, pageIndices]);
 
   // Create after-treatment scores for map visualization
   const afterTreatmentScores = useMemo(() => {
@@ -877,18 +981,17 @@ export default function TreatmentDetailPage() {
     if (projectNames.length === 0) return;
     setLoading(true);
     setError(null);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60_000);
     try {
+      // Read endpoints go through the shared projectDataCache (the same cache the Path
+      // Analysis page warms). Opening Treatment from Analysis's "Open in Treatment" button —
+      // and navigating back and forth — is then a cache hit instead of a full re-fetch.
       const results = await Promise.all(projectNames.map(async (name) => {
-        const sig = controller.signal;
         const [d, a, gjson, resultsRes] = await Promise.all([
           fetchProjectDetail(name),
-          fetchProjectAttributes(name) as Promise<AttributesResponse>,
-          fetchProjectGeoJSON(name) as Promise<FeatureCollection>,
-          fetch(`/api/projects/${encodeURIComponent(name)}/results`, { signal: sig })
-            .then(async res => {
-              const data = res.ok ? await res.json() : { result_rows: [] };
+          getCachedAttributes(name),
+          getCachedGeoJSON(name),
+          getCachedResults(name)
+            .then(async data => {
               if (!data.result_rows || data.result_rows.length === 0) {
                 const calc = await calculateScore(name);
                 return calc.ok ? calc : { result_rows: [] };
@@ -925,7 +1028,6 @@ export default function TreatmentDetailPage() {
     } catch (e: any) {
       setError(e?.message ?? "Unknown error");
     } finally {
-      clearTimeout(timeout);
       setLoading(false);
     }
   }, [projectNames]);
@@ -1204,26 +1306,26 @@ export default function TreatmentDetailPage() {
     setApplyLoading(true);
     setOpenConfirmAlert(false);
     try {
-        const allDetails: any[] = [];
-        // Apply across every project (All Projects) or only the active tab's project.
-        const targets = isAllScope ? projectMap : projectMap.filter(p => p.name === activeProject);
-        for (const id of Array.from(selectedTreatments)) {
-            for (const proj of targets) {
-                const res = await applySpecificTreatment(proj.name, id);
-                if (res.details) {
-                    res.details.forEach((d: any) => d.projectName = proj.name);
-                    allDetails.push(...res.details);
-                }
-            }
+      const allDetails: any[] = [];
+      // Apply across every project (All Projects) or only the active tab's project.
+      const targets = isAllScope ? projectMap : projectMap.filter(p => p.name === activeProject);
+      for (const id of Array.from(selectedTreatments)) {
+        for (const proj of targets) {
+          const res = await applySpecificTreatment(proj.name, id);
+          if (res.details) {
+            res.details.forEach((d: any) => d.projectName = proj.name);
+            allDetails.push(...res.details);
+          }
         }
-        window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
-        setSelectedTreatments(new Set());
-        setShowPostTreatment(true);
+      }
+      window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
+      setSelectedTreatments(new Set());
+      setShowPostTreatment(true);
     } catch (e: any) {
-        console.error("Apply specific failed:", e);
-        alert(e.message || "Failed to apply treatment");
+      console.error("Apply specific failed:", e);
+      alert(e.message || "Failed to apply treatment");
     } finally {
-        setApplyLoading(false);
+      setApplyLoading(false);
     }
   };
 
@@ -1329,10 +1431,11 @@ export default function TreatmentDetailPage() {
     pendingSegment.current = null;
   }, [len, gotoPage]);
 
-  // Page number shown to the user — scope-relative (1..scope.count) when a project
-  // tab is active, global otherwise. currentPage/currentIndex stay global internally.
-  const scopePage = isAllScope ? currentPage : currentIndex - scope.start + 1;
-  const scopeTotal = isAllScope ? len : scope.count;
+  // Page number shown to the user — the position of the current segment within the
+  // navigable list (`pageIndices`), which already accounts for project scope and (in
+  // filter mode) the filtered subset. currentPage/currentIndex stay global internally.
+  const scopePage = Math.max(1, pageIndices.indexOf(currentIndex) + 1);
+  const scopeTotal = pageIndices.length;
 
   useEffect(() => {
     setPageInput(String(scopePage));
@@ -1343,16 +1446,16 @@ export default function TreatmentDetailPage() {
       const raw = Number(valStr);
       if (!Number.isFinite(raw)) return;
       // Data not loaded yet — don't let the clamp below collapse the page to 1.
-      if (scope.count === 0) return;
-      // valStr is scope-relative; map back to a global page within the scope window.
-      const relClamped = Math.min(Math.max(1, raw), scope.count);
-      const globalPage = isAllScope ? relClamped : scope.start + relClamped;
+      if (pageIndices.length === 0) return;
+      // valStr is a 1-based position within the navigable list; map back to a global index.
+      const relClamped = Math.min(Math.max(1, raw), pageIndices.length);
+      const targetGlobal = pageIndices[relClamped - 1];
       // Skip if the page hasn't actually changed — prevents spurious gotoPage calls
       // (which reset segmentScoreDrops) when scope/gotoPage are recreated on data load.
-      if (globalPage === currentPage) return;
-      gotoPage(globalPage);
+      if (targetGlobal === undefined || targetGlobal === currentIndex) return;
+      gotoPage(targetGlobal + 1);
     },
-    [gotoPage, isAllScope, scope, currentPage]
+    [gotoPage, pageIndices, currentIndex]
   );
 
   useEffect(() => {
@@ -1362,6 +1465,19 @@ export default function TreatmentDetailPage() {
 
   // Resolve current project name for UI display
   const currentCtx = resolveIndex(currentIndex);
+
+  // Filter context for the before/after maps. The maps receive ALL aggregated features with
+  // startIndex=0, so GeoDataPanel's localIdx === global index. We therefore build a SINGLE
+  // entry keyed to the active project name (the only one GeoDataPanel reads) whose
+  // filteredIndices are the GLOBAL indices to show (the filtered subset within the active
+  // scope = pageIndices). `points` is left empty so the maps keep their risk-band / after-
+  // treatment colors (filterColorMap falls back to the score-based color).
+  const mapFilterContext = useMemo<CodingFilterContext | null>(() => {
+    if (!filterMode || !filterContext || !currentCtx) return null;
+    return {
+      projects: [{ projectName: currentCtx.name, filteredIndices: pageIndices, points: [] }],
+    };
+  }, [filterMode, filterContext, currentCtx, pageIndices]);
 
   const projectContributors = useMemo(() => {
     if (!currentCtx?.name) return null;
@@ -1488,8 +1604,18 @@ export default function TreatmentDetailPage() {
 
   return (
     <Box p="4">
-      {/* DEBUG INFO */}
-
+      {/* Back to the Path Analysis page. Analysis restores its loaded projects + filters
+          from sessionStorage (and the shared projectDataCache), so its state is preserved. */}
+      <Flex mb="3">
+        <Button
+          variant="outline"
+          colorPalette="gray"
+          size="sm"
+          onClick={() => navigate("/analysis/path")}
+        >
+          ← Back to Analysis
+        </Button>
+      </Flex>
 
       {/* Project Tabs - scope the whole page to one project (or All Projects) */}
       {projectNames.length > 1 && (
@@ -1498,7 +1624,7 @@ export default function TreatmentDetailPage() {
           <Button
             onClick={() => {
               setActiveProject(ALL_PROJECTS);
-              setCurrentPage(1);
+              setCurrentPage((filterMode ? (filteredGlobalIndices[0] ?? 0) : 0) + 1);
               setPageInput("1");
               setPanKey((k) => k + 1);
             }}
@@ -1506,7 +1632,7 @@ export default function TreatmentDetailPage() {
             colorPalette={isAllScope ? "blue" : "gray"}
             size="md"
           >
-            All Projects ({len})
+            All Projects ({filterMode ? filteredGlobalIndices.length : len})
           </Button>
           {projectNames.map((proj) => {
             const isActive = activeProject === proj;
@@ -1590,6 +1716,7 @@ export default function TreatmentDetailPage() {
             startIndex={0}
             scores={scores as any}
             scopeRange={isAllScope ? null : scope}
+            filterContext={mapFilterContext}
             autoFitKey={panKey}
             panKey={panKey}
           />
@@ -1612,6 +1739,7 @@ export default function TreatmentDetailPage() {
             geoFeatures={geoFeatures as Feature<LineString, any>[]}
             startIndex={0}
             scopeRange={isAllScope ? null : scope}
+            filterContext={mapFilterContext}
             autoFitKey={panKey}
             panKey={panKey}
           />
@@ -1634,298 +1762,298 @@ export default function TreatmentDetailPage() {
             borderRadius="md"
             overflow="hidden"
           >
-          <Box p="3" borderBottomWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.700" _dark={{ color: "gray.200" }}>
-              Treatment Options
-            </Text>
-            <Tooltip
-              content={
-                accordionView === "segment" ? (
-                  <Text>
-                    <b>By Segment:</b> View and apply treatments for the current segment only.
-                  </Text>
-                ) : (
-                  <Text>
-                    <b>By Treatment:</b> View and apply a single treatment across all applicable segments.
-                  </Text>
-                )
-              }
-              showArrow
-              openDelay={400}
-              contentProps={{ maxW: "250px" }}
-            >
-              <Box mt="2">
-                <select
-                  value={accordionView}
-                  onChange={(e) => {
-                    setAccordionView(e.target.value as "segment" | "treatment");
-                    setSelectedTreatments(new Set());
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "6px",
-                    borderRadius: "6px",
-                    border: "1px solid var(--chakra-colors-gray-300)",
-                    backgroundColor: "white",
-                    color: "inherit",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                  className="theme-select"
-                >
-                  <option value="segment">By Segment</option>
-                  <option value="treatment">By Treatment</option>
-                </select>
-              </Box>
-            </Tooltip>
-          </Box>
-
-          <Box flex="1" overflowY="auto" p="3">
-            {(() => {
-              let displayTreatments: Treatment[] = [];
-              const currentAttr = attrs[currentIndex] as any;
-              
-              if (accordionView === "segment") {
-                if (!currentAttr) {
-                  return <Text fontSize="xs" color="gray.400">No segment data</Text>;
+            <Box p="3" borderBottomWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
+              <Text fontSize="sm" fontWeight="bold" color="gray.700" _dark={{ color: "gray.200" }}>
+                Treatment Options
+              </Text>
+              <Tooltip
+                content={
+                  accordionView === "segment" ? (
+                    <Text>
+                      <b>By Segment:</b> View and apply treatments for the current segment only.
+                    </Text>
+                  ) : (
+                    <Text>
+                      <b>By Treatment:</b> View and apply a single treatment across all applicable segments.
+                    </Text>
+                  )
                 }
-                displayTreatments = getApplicableTreatments(currentAttr)
-                  .sort((a, b) => (segmentScoreDrops[b.id] ?? 0) - (segmentScoreDrops[a.id] ?? 0));
-              } else {
-                if (effectivenessLoading) {
-                  return (
-                    <Flex direction="column" align="center" justify="center" gap="3" py="8">
-                      <Spinner size="sm" color="blue.500" />
-                      <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
-                        Ranking Treatment Options...
-                      </Text>
-                    </Flex>
-                  );
-                }
-                displayTreatments = allApplicableTreatments.filter(t =>
-                  (effectivenessCounts[t.id] ?? 0) > 0
-                );
-              }
+                showArrow
+                openDelay={400}
+                contentProps={{ maxW: "250px" }}
+              >
+                <Box mt="2">
+                  <select
+                    value={accordionView}
+                    onChange={(e) => {
+                      setAccordionView(e.target.value as "segment" | "treatment");
+                      setSelectedTreatments(new Set());
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "6px",
+                      borderRadius: "6px",
+                      border: "1px solid var(--chakra-colors-gray-300)",
+                      backgroundColor: "white",
+                      color: "inherit",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                    className="theme-select"
+                  >
+                    <option value="segment">By Segment</option>
+                    <option value="treatment">By Treatment</option>
+                  </select>
+                </Box>
+              </Tooltip>
+            </Box>
 
-              if (displayTreatments.length === 0) {
-                return (
-                  <Text fontSize="xs" color="gray.400" _dark={{ color: "gray.500" }}>
-                    {accordionView === "segment" ? "No treatments applicable" : "No treatments applicable in whole project"}
-                  </Text>
-                );
-              }
+            <Box flex="1" overflowY="auto" p="3">
+              {(() => {
+                let displayTreatments: Treatment[] = [];
+                const currentAttr = attrs[currentIndex] as any;
 
-              return (
-                <Flex direction="column" gap="2">
-                  {displayTreatments.map((t) => {
-                    const isApplied = accordionView === "segment" 
-                      ? (treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
-                      : fullyAppliedTreatments.has(t.id);
-                      
-                    const isDisabled = isApplied;
-
+                if (accordionView === "segment") {
+                  if (!currentAttr) {
+                    return <Text fontSize="xs" color="gray.400">No segment data</Text>;
+                  }
+                  displayTreatments = getApplicableTreatments(currentAttr)
+                    .sort((a, b) => (segmentScoreDrops[b.id] ?? 0) - (segmentScoreDrops[a.id] ?? 0));
+                } else {
+                  if (effectivenessLoading) {
                     return (
-                      <Flex
-                        key={t.id}
-                        gap="2"
-                        align="flex-start"
-                        p="2"
-                        borderRadius="md"
-                        bg={
-                          isApplied
-                            ? "green.50"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.50"
-                              : "white"
-                        }
-                        borderWidth="1px"
-                        borderColor={
-                          isApplied
-                            ? "green.200"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.200"
-                              : "gray.200"
-                        }
-                        cursor={isDisabled ? "not-allowed" : "pointer"}
-                        opacity={isDisabled ? 0.6 : 1}
-                        transition="all 0.2s"
-                        _hover={{
-                          borderColor: isDisabled ? undefined : "blue.300",
-                          shadow: isDisabled ? undefined : "sm"
-                        }}
-                        _dark={{
-                          bg: isApplied
-                            ? "green.900"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.900"
-                              : "gray.700",
-                          borderColor: isApplied
-                            ? "green.700"
-                            : selectedTreatments.has(t.id)
-                              ? "blue.700"
-                              : "gray.600",
-                        }}
-                        onClick={() => {
-                          if (isDisabled) return;
-                          const newSelected = new Set(selectedTreatments);
-                          if (newSelected.has(t.id)) {
-                            newSelected.delete(t.id);
-                          } else {
-                            newSelected.add(t.id);
-                          }
-                          setSelectedTreatments(newSelected);
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isApplied || selectedTreatments.has(t.id)}
-                          disabled={isDisabled}
-                          onChange={() => { }}
-                          style={{ marginTop: '3px', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                          aria-label={`Select treatment: ${t.name}`}
-                        />
-                        <Box flex="1">
-                          <Text fontSize="xs" fontWeight="medium" color="gray.900" _dark={{ color: "white" }} lineHeight="1.2">
-                            {t.name}
-                            {isApplied && " ✓"}
-                          </Text>
-                          {accordionView === "treatment" && (
-                            <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
-                              {(() => {
-                                const count = effectivenessCounts[t.id] ?? 0;
-                                const applicable = applicableCounts[t.id] ?? 0;
-                                const denominator = applicable > 0 ? applicable : attrs.length;
-                                const pct = (denominator > 0 && count > 0) ? count / denominator * 100 : 0;
-                                const display = count > 0 ? Math.max(0.1, pct).toFixed(1) : "0.0";
-                                const scope = applicable > 0 ? "applicable segments" : "segments";
-                                return `Improves ${display}% of ${scope}`;
-                              })()}
-                            </Text>
-                          )}
-                          {accordionView === "segment" && segmentScoreDrops[t.id] !== undefined && (
-                            <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
-                              {`Score drop: ${segmentScoreDrops[t.id].toFixed(1)}`}
-                            </Text>
-                          )}
-                          {t.description && (
-                            <Text fontSize="2xs" color="gray.500" _dark={{ color: "gray.400" }} mt="1">
-                              {t.description}
-                            </Text>
-                          )}
-                        </Box>
+                      <Flex direction="column" align="center" justify="center" gap="3" py="8">
+                        <Spinner size="sm" color="blue.500" />
+                        <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                          Ranking Treatment Options...
+                        </Text>
                       </Flex>
                     );
-                  })}
-                </Flex>
-              );
-            })()}
-          </Box>
-
-          {/* Action Buttons Footer */}
-          <Box p="3" borderTopWidth="1px" borderColor="gray.200" bg="white" _dark={{ borderColor: "gray.700", bg: "gray.800" }}>
-            <Flex direction="column" gap="2">
-              <Flex gap="2">
-                <Button
-                  flex="1"
-                  size="xs"
-                  variant="outline"
-                  colorScheme={selectedTreatments.size > 0 ? "red" : "blue"}
-                  disabled={
-                    (() => {
-                      if (accordionView === "segment") {
-                        const currentAttr = attrs[currentIndex] as any;
-                        if (!currentAttr) return true;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        return applicable.every(t => appliedIds.includes(t.id));
-                      } else {
-                        return allApplicableTreatments.length === 0;
-                      }
-                    })()
                   }
-                  onClick={() => {
-                    if (selectedTreatments.size > 0) {
-                      setSelectedTreatments(new Set());
-                    } else {
-                      if (accordionView === "segment") {
-                        const currentAttr = attrs[currentIndex] as any;
-                        if (!currentAttr) return;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        setSelectedTreatments(new Set(applicable.filter(t => !appliedIds.includes(t.id)).map(t => t.id)));
-                      } else {
-                        setSelectedTreatments(new Set(allApplicableTreatments.map(t => t.id)));
-                      }
-                    }
-                  }}
-                >
-                  {selectedTreatments.size > 0 ? "Clear" : "All"}
-                </Button>
-                {accordionView === "segment" && treatmentState[currentIndex]?.applied && (
+                  displayTreatments = allApplicableTreatments.filter(t =>
+                    (effectivenessCounts[t.id] ?? 0) > 0
+                  );
+                }
+
+                if (displayTreatments.length === 0) {
+                  return (
+                    <Text fontSize="xs" color="gray.400" _dark={{ color: "gray.500" }}>
+                      {accordionView === "segment" ? "No treatments applicable" : "No treatments applicable in whole project"}
+                    </Text>
+                  );
+                }
+
+                return (
+                  <Flex direction="column" gap="2">
+                    {displayTreatments.map((t) => {
+                      const isApplied = accordionView === "segment"
+                        ? (treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
+                        : fullyAppliedTreatments.has(t.id);
+
+                      const isDisabled = isApplied;
+
+                      return (
+                        <Flex
+                          key={t.id}
+                          gap="2"
+                          align="flex-start"
+                          p="2"
+                          borderRadius="md"
+                          bg={
+                            isApplied
+                              ? "green.50"
+                              : selectedTreatments.has(t.id)
+                                ? "blue.50"
+                                : "white"
+                          }
+                          borderWidth="1px"
+                          borderColor={
+                            isApplied
+                              ? "green.200"
+                              : selectedTreatments.has(t.id)
+                                ? "blue.200"
+                                : "gray.200"
+                          }
+                          cursor={isDisabled ? "not-allowed" : "pointer"}
+                          opacity={isDisabled ? 0.6 : 1}
+                          transition="all 0.2s"
+                          _hover={{
+                            borderColor: isDisabled ? undefined : "blue.300",
+                            shadow: isDisabled ? undefined : "sm"
+                          }}
+                          _dark={{
+                            bg: isApplied
+                              ? "green.900"
+                              : selectedTreatments.has(t.id)
+                                ? "blue.900"
+                                : "gray.700",
+                            borderColor: isApplied
+                              ? "green.700"
+                              : selectedTreatments.has(t.id)
+                                ? "blue.700"
+                                : "gray.600",
+                          }}
+                          onClick={() => {
+                            if (isDisabled) return;
+                            const newSelected = new Set(selectedTreatments);
+                            if (newSelected.has(t.id)) {
+                              newSelected.delete(t.id);
+                            } else {
+                              newSelected.add(t.id);
+                            }
+                            setSelectedTreatments(newSelected);
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isApplied || selectedTreatments.has(t.id)}
+                            disabled={isDisabled}
+                            onChange={() => { }}
+                            style={{ marginTop: '3px', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                            aria-label={`Select treatment: ${t.name}`}
+                          />
+                          <Box flex="1">
+                            <Text fontSize="xs" fontWeight="medium" color="gray.900" _dark={{ color: "white" }} lineHeight="1.2">
+                              {t.name}
+                              {isApplied && " ✓"}
+                            </Text>
+                            {accordionView === "treatment" && (
+                              <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
+                                {(() => {
+                                  const count = effectivenessCounts[t.id] ?? 0;
+                                  const applicable = applicableCounts[t.id] ?? 0;
+                                  const denominator = applicable > 0 ? applicable : attrs.length;
+                                  const pct = (denominator > 0 && count > 0) ? count / denominator * 100 : 0;
+                                  const display = count > 0 ? Math.max(0.1, pct).toFixed(1) : "0.0";
+                                  const scope = applicable > 0 ? "applicable segments" : "segments";
+                                  return `Improves ${display}% of ${scope}`;
+                                })()}
+                              </Text>
+                            )}
+                            {accordionView === "segment" && segmentScoreDrops[t.id] !== undefined && (
+                              <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
+                                {`Score drop: ${segmentScoreDrops[t.id].toFixed(1)}`}
+                              </Text>
+                            )}
+                            {t.description && (
+                              <Text fontSize="2xs" color="gray.500" _dark={{ color: "gray.400" }} mt="1">
+                                {t.description}
+                              </Text>
+                            )}
+                          </Box>
+                        </Flex>
+                      );
+                    })}
+                  </Flex>
+                );
+              })()}
+            </Box>
+
+            {/* Action Buttons Footer */}
+            <Box p="3" borderTopWidth="1px" borderColor="gray.200" bg="white" _dark={{ borderColor: "gray.700", bg: "gray.800" }}>
+              <Flex direction="column" gap="2">
+                <Flex gap="2">
                   <Button
                     flex="1"
                     size="xs"
-                    variant="ghost"
-                    colorScheme="red"
-                    loading={applyLoading}
-                    onClick={handleResetTreatments}
-                  >
-                    Reset
-                  </Button>
-                )}
-              </Flex>
-
-              <Flex width="full" gap="2" align="stretch" wrap="wrap">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  aria-label="Copy treatment prompt"
-                  disabled={!hasApplied && !hasSelected}
-                  loading={copyButtonState === "copying"}
-                  gap="1"
-                  onClick={() => {
-                    const ids = hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments);
-                    void handleCopyTreatmentPrompt(ids);
-                  }}
-                >
-                  {copyButtonState === "copied" ? <LuCheck /> : <LuCopy />}
-                  <span>{copyButtonLabel}</span>
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  aria-label="Copy current image"
-                  disabled={!currentImageUrl}
-                  loading={imageCopyButtonState === "copying"}
-                  gap="1"
-                  onClick={() => { void handleCopyCurrentImage(); }}
-                >
-                  {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
-                  <span>{imageCopyButtonLabel}</span>
-                </Button>
-                <Button
-                  size="sm"
-                  flex="1"
-                  variant="solid"
-                  colorScheme={accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0 ? "green" : "blue"}
-                  disabled={selectedTreatments.size === 0 || applyLoading}
-                  loading={applyLoading}
-                  onClick={async () => {
-                    if (accordionView === "segment") {
-                      handleApplyTreatments();
-                    } else {
-                       if (selectedTreatments.size === 0 || !currentCtx) return;
-                       setOpenConfirmAlert(true);
+                    variant="outline"
+                    colorScheme={selectedTreatments.size > 0 ? "red" : "blue"}
+                    disabled={
+                      (() => {
+                        if (accordionView === "segment") {
+                          const currentAttr = attrs[currentIndex] as any;
+                          if (!currentAttr) return true;
+                          const applicable = getApplicableTreatments(currentAttr);
+                          const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
+                          return applicable.every(t => appliedIds.includes(t.id));
+                        } else {
+                          return allApplicableTreatments.length === 0;
+                        }
+                      })()
                     }
-                  }}
-                >
-                  {accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0
-                    ? "Applied ✓"
-                    : `Apply (${selectedTreatments.size})`}
-                </Button>
+                    onClick={() => {
+                      if (selectedTreatments.size > 0) {
+                        setSelectedTreatments(new Set());
+                      } else {
+                        if (accordionView === "segment") {
+                          const currentAttr = attrs[currentIndex] as any;
+                          if (!currentAttr) return;
+                          const applicable = getApplicableTreatments(currentAttr);
+                          const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
+                          setSelectedTreatments(new Set(applicable.filter(t => !appliedIds.includes(t.id)).map(t => t.id)));
+                        } else {
+                          setSelectedTreatments(new Set(allApplicableTreatments.map(t => t.id)));
+                        }
+                      }
+                    }}
+                  >
+                    {selectedTreatments.size > 0 ? "Clear" : "All"}
+                  </Button>
+                  {accordionView === "segment" && treatmentState[currentIndex]?.applied && (
+                    <Button
+                      flex="1"
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="red"
+                      loading={applyLoading}
+                      onClick={handleResetTreatments}
+                    >
+                      Reset
+                    </Button>
+                  )}
+                </Flex>
+
+                <Flex width="full" gap="2" align="stretch" wrap="wrap">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    aria-label="Copy treatment prompt"
+                    disabled={!hasApplied && !hasSelected}
+                    loading={copyButtonState === "copying"}
+                    gap="1"
+                    onClick={() => {
+                      const ids = hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments);
+                      void handleCopyTreatmentPrompt(ids);
+                    }}
+                  >
+                    {copyButtonState === "copied" ? <LuCheck /> : <LuCopy />}
+                    <span>{copyButtonLabel}</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    aria-label="Copy current image"
+                    disabled={!currentImageUrl}
+                    loading={imageCopyButtonState === "copying"}
+                    gap="1"
+                    onClick={() => { void handleCopyCurrentImage(); }}
+                  >
+                    {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
+                    <span>{imageCopyButtonLabel}</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    flex="1"
+                    variant="solid"
+                    colorScheme={accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0 ? "green" : "blue"}
+                    disabled={selectedTreatments.size === 0 || applyLoading}
+                    loading={applyLoading}
+                    onClick={async () => {
+                      if (accordionView === "segment") {
+                        handleApplyTreatments();
+                      } else {
+                        if (selectedTreatments.size === 0 || !currentCtx) return;
+                        setOpenConfirmAlert(true);
+                      }
+                    }}
+                  >
+                    {accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0
+                      ? "Applied ✓"
+                      : `Apply (${selectedTreatments.size})`}
+                  </Button>
+                </Flex>
               </Flex>
-            </Flex>
-          </Box>
+            </Box>
           </Box>
         </GridItem>
 
