@@ -60,4 +60,4 @@ Use **Copy Selected** when exploring options and want to preview before committi
 - The score preview updates instantly on checkbox selection — use it to compare multiple treatment combinations before applying.
 - If a treatment does not produce a score improvement, check whether the relevant attributes are already at their best value for that segment.
 - Treatments are applied per segment in **By Segment** mode, or across all eligible segments in **By Treatment** mode.
-- For pasting AI-generated images into the report, see [Section 7: Report Generation](../user/user-report-generation.md).
+- For pasting AI-generated images into the report, see [Section 5: Report Generation](../user/user-report-generation.md).

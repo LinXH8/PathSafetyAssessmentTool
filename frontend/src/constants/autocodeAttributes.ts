@@ -10,6 +10,19 @@ export const GROUP_ORDER = [
 
 export type AttributeGroup = (typeof GROUP_ORDER)[number];
 
+/**
+ * Shortened group tab labels for the v2 UI (the "Facility" prefix is dropped so the
+ * attribute/validation tab rows stay compact). Keys are the canonical GROUP_ORDER
+ * names; the underlying grouping logic still uses the full names.
+ */
+export const V2_GROUP_TAB_LABELS: Record<string, string> = {
+  "Facility configuration": "Configuration",
+  "Facility clear width": "Clear Width",
+  "Facility surface conditions": "Surface Conditions",
+  "Intersection": "Intersection",
+  "Flow & Speed": "Flow & Speed",
+};
+
 /** Display fields under each group */
 export const GROUP_RULES: Record<AttributeGroup, string[]> = {
   "Facility configuration": [

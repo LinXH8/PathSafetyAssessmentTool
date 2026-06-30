@@ -3,6 +3,8 @@ import { Box, Button, IconButton, Text, Flex } from '@chakra-ui/react';
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import { FaFileImport, FaTrash } from 'react-icons/fa';
 import { Switch } from '../ui/switch';
+import { FONT, COLOR } from '../../features/ui/designTokens';
+import { GIS_LAYER_COLORS } from '../../constants/mapColors';
 import './AnalysisPanel.css';
 
 interface GISLayerToggle {
@@ -47,12 +49,16 @@ interface AnalysisSidebarProps {
   setShowLandPrivate: (v: boolean) => void;
   showLandMinistry: boolean;
   setShowLandMinistry: (v: boolean) => void;
-  onFilesSelected: (files: File[]) => void;
-  importedShapefileHasData: boolean;
-  importedShapefileLoading: boolean;
-  importedShapefileError: string | null;
-  importedShapefileName: string | null;
-  onClearImportedShapefile: () => void;
+  // Import-shapefile props are optional: PathAnalysisMapView wires them; GeoDataPanel
+  // (Coding) does not use the import feature and omits them.
+  onFilesSelected?: (files: File[]) => void;
+  importedShapefileHasData?: boolean;
+  importedShapefileLoading?: boolean;
+  importedShapefileError?: string | null;
+  importedShapefileName?: string | null;
+  onClearImportedShapefile?: () => void;
+  /** "v1" (default) = slide-in overlay panel; "v2" = static 340px Layer View panel (Home.dc.html FRAME 4 / DESIGN_GUIDE §13). */
+  variant?: "v1" | "v2";
 }
 
 export function AnalysisSidebar({
@@ -79,25 +85,123 @@ export function AnalysisSidebar({
   importedShapefileError,
   importedShapefileName,
   onClearImportedShapefile,
+  variant = "v1",
 }: AnalysisSidebarProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const layers: GISLayerToggle[] = [
-    { key: 'footpath',          label: 'Footpath',          color: '#1E90FF', colorPalette: 'blue',   value: showFootpath,          onChange: setShowFootpath },
-    { key: 'cycling',           label: 'Cycling Path',      color: '#B91C1C', colorPalette: 'red',    value: showCycling,           onChange: setShowCycling },
-    { key: 'shared',            label: 'Shared Path',       color: '#A855F7', colorPalette: 'purple', value: showShared,            onChange: setShowShared },
-    { key: 'roadcrossing',      label: 'Road Crossing',     color: '#10B981', colorPalette: 'green',  value: showRoadcrossing,      onChange: setShowRoadcrossing },
-    { key: 'bicycle_crossing',  label: 'Bicycle Crossing',  color: '#F97316', colorPalette: 'orange', value: showBicycleCrossing,   onChange: setShowBicycleCrossing },
-    { key: 'mrt_exit',          label: 'MRT Exit',          color: '#06B6D4', colorPalette: 'cyan',   value: showMrtExit,           onChange: setShowMrtExit },
-    { key: 'bus_stop',          label: 'Bus Stop',          color: '#8B5CF6', colorPalette: 'purple', value: showBusStop,           onChange: setShowBusStop },
-    { key: 'bus_lane',          label: 'Bus Lane',          color: '#EAB308', colorPalette: 'yellow', value: showBusLane,           onChange: setShowBusLane },
-    { key: 'parking_lot',       label: 'Parking Lot',       color: '#D97706', colorPalette: 'orange', value: showParkingLot,        onChange: setShowParkingLot },
-    { key: 'kerb_line',         label: 'Kerb Line',         color: '#D946EF', colorPalette: 'pink',   value: showKerbLine,          onChange: setShowKerbLine },
-    { key: 'path_defects',      label: 'Path Defects',      color: '#EF4444', colorPalette: 'red',    value: showPathDefects,       onChange: setShowPathDefects },
-    { key: 'state_land',        label: 'State Land',         color: '#14B8A6', colorPalette: 'teal',   value: showStateLand,         onChange: setShowStateLand },
-    { key: 'stat_board',        label: 'Stat Board',         color: '#F59E0B', colorPalette: 'yellow', value: showStatBoard,         onChange: setShowStatBoard },
-    { key: 'land_private',      label: 'Private Land',       color: '#6366F1', colorPalette: 'purple', value: showLandPrivate,       onChange: setShowLandPrivate },
-    { key: 'land_ministry',     label: 'Ministry Land',      color: '#EC4899', colorPalette: 'pink',   value: showLandMinistry,      onChange: setShowLandMinistry },
+    { key: 'footpath',          label: 'Footpath',          color: GIS_LAYER_COLORS.footpath,         colorPalette: 'blue',   value: showFootpath,          onChange: setShowFootpath },
+    { key: 'cycling',           label: 'Cycling Path',      color: GIS_LAYER_COLORS.cycling,          colorPalette: 'red',    value: showCycling,           onChange: setShowCycling },
+    { key: 'shared',            label: 'Shared Path',       color: GIS_LAYER_COLORS.shared,           colorPalette: 'purple', value: showShared,            onChange: setShowShared },
+    { key: 'roadcrossing',      label: 'Road Crossing',     color: GIS_LAYER_COLORS.roadcrossing,     colorPalette: 'green',  value: showRoadcrossing,      onChange: setShowRoadcrossing },
+    { key: 'bicycle_crossing',  label: 'Bicycle Crossing',  color: GIS_LAYER_COLORS.bicycle_crossing, colorPalette: 'orange', value: showBicycleCrossing,   onChange: setShowBicycleCrossing },
+    { key: 'mrt_exit',          label: 'MRT Exit',          color: GIS_LAYER_COLORS.mrt_exit,         colorPalette: 'cyan',   value: showMrtExit,           onChange: setShowMrtExit },
+    { key: 'bus_stop',          label: 'Bus Stop',          color: GIS_LAYER_COLORS.bus_stop,         colorPalette: 'purple', value: showBusStop,           onChange: setShowBusStop },
+    { key: 'bus_lane',          label: 'Bus Lane',          color: GIS_LAYER_COLORS.bus_lane,         colorPalette: 'yellow', value: showBusLane,           onChange: setShowBusLane },
+    { key: 'parking_lot',       label: 'Parking Lot',       color: GIS_LAYER_COLORS.parking_lot,      colorPalette: 'orange', value: showParkingLot,        onChange: setShowParkingLot },
+    { key: 'kerb_line',         label: 'Kerb Line',         color: GIS_LAYER_COLORS.kerb_line,        colorPalette: 'pink',   value: showKerbLine,          onChange: setShowKerbLine },
+    { key: 'path_defects',      label: 'Path Defects',      color: GIS_LAYER_COLORS.path_defects,     colorPalette: 'red',    value: showPathDefects,       onChange: setShowPathDefects },
+    { key: 'state_land',        label: 'State Land',         color: GIS_LAYER_COLORS.state_land,       colorPalette: 'teal',   value: showStateLand,         onChange: setShowStateLand },
+    { key: 'stat_board',        label: 'Stat Board',         color: GIS_LAYER_COLORS.stat_board,       colorPalette: 'yellow', value: showStatBoard,         onChange: setShowStatBoard },
+    { key: 'land_private',      label: 'Private Land',       color: GIS_LAYER_COLORS.land_private,     colorPalette: 'purple', value: showLandPrivate,       onChange: setShowLandPrivate },
+    { key: 'land_ministry',     label: 'Ministry Land',      color: GIS_LAYER_COLORS.land_ministry,    colorPalette: 'pink',   value: showLandMinistry,      onChange: setShowLandMinistry },
   ];
+
+  // ── v2 render — 340px Layer View panel (Home.dc.html FRAME 4 / DESIGN_GUIDE §13).
+  // Collapsible via the edge rail (uses the same isOpen/onToggle as v1). Carries the
+  // full v1 contents: GIS-layer switches + the Import Shapefile section. ──
+  if (variant === "v2") {
+    return (
+      <>
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          bottom="0"
+          w={isOpen ? "340px" : "0"}
+          overflow="hidden"
+          zIndex={900}
+          bg="white"
+          transition="width 0.2s ease"
+          style={{ borderRight: isOpen ? `1px solid ${COLOR.rowDivider}` : "none" }}
+        >
+          <div style={{ width: 340, height: "100%", overflowY: "auto", padding: "10px 14px", boxSizing: "border-box", display: "flex", flexDirection: "column" }}>
+            <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 16 }}>Layer View</div>
+            {layers.map((layer) => (
+              <div key={layer.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
+                <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{layer.label}</span>
+                <div
+                  onClick={() => layer.onChange(!layer.value)}
+                  style={{ width: 30, height: 16, borderRadius: 999, background: layer.value ? COLOR.text : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
+                >
+                  <div style={{ position: "absolute", top: 2, left: 2, width: 12, height: 12, borderRadius: "50%", background: "#fff", transform: layer.value ? "translateX(14px)" : "none", transition: "transform .15s" }} />
+                </div>
+              </div>
+            ))}
+            {/* Import GIS Layer — always shown, matching v1. */}
+            <div style={{ marginTop: 20, fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 7 }}>Import</div>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={importedShapefileLoading}
+              style={{ flexShrink: 0, height: 40, width: "100%", boxSizing: "border-box", padding: 0, background: COLOR.gray800, border: "none", borderRadius: 6, fontFamily: FONT, fontWeight: 700, fontSize: 16, color: "#fff", cursor: "pointer" }}
+            >
+              {importedShapefileHasData ? "Replace Shapefile" : "Import Shapefile"}
+            </button>
+            {importedShapefileHasData && (
+              <button
+                onClick={onClearImportedShapefile}
+                style={{ flexShrink: 0, marginTop: 8, height: 40, width: "100%", boxSizing: "border-box", padding: 0, background: "transparent", border: `1px solid ${COLOR.borderInput}`, borderRadius: 6, fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, cursor: "pointer" }}
+              >
+                Clear Imported
+              </button>
+            )}
+            {!importedShapefileLoading && importedShapefileError && (
+              <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.danger, marginTop: 6 }}>{importedShapefileError}</div>
+            )}
+            {!importedShapefileLoading && !importedShapefileError && importedShapefileName && (
+              <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.blue, marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Imported: {importedShapefileName}</div>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip,.shp,.shx,.dbf,.prj,.cpg,.sbn,.sbx"
+              multiple
+              onChange={(e) => {
+                const files = Array.from(e.target.files ?? []);
+                e.target.value = "";
+                if (files.length > 0) onFilesSelected?.(files);
+              }}
+              style={{ display: "none" }}
+            />
+          </div>
+        </Box>
+        {/* Collapse / expand tab — small rounded handle (same as v1). */}
+        <IconButton
+          aria-label="Toggle GIS Layers Panel"
+          size="xs"
+          position="absolute"
+          top="50%"
+          left={isOpen ? "340px" : "0"}
+          transform="translateY(-50%)"
+          transition="left 0.2s ease"
+          zIndex={901}
+          onClick={onToggle}
+          bg="white"
+          color="gray.600"
+          borderWidth="1px"
+          borderColor="gray.200"
+          boxShadow="md"
+          borderLeftRadius="0"
+          borderRightRadius="md"
+          w="24px"
+          minW="24px"
+          h="40px"
+          css={{ "& svg": { width: "14px", height: "14px" } }}
+        >
+          {isOpen ? <FiChevronsLeft /> : <FiChevronsRight />}
+        </IconButton>
+      </>
+    );
+  }
 
   return (
     <>
@@ -214,7 +318,7 @@ export function AnalysisSidebar({
               onChange={(e) => {
                 const files = Array.from(e.target.files ?? []);
                 e.target.value = "";
-                if (files.length > 0) onFilesSelected(files);
+                if (files.length > 0) onFilesSelected?.(files);
               }}
               style={{ display: "none" }}
             />

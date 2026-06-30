@@ -182,12 +182,14 @@ export async function fetchSourceFolderPreview(folderName: string, opts?: { sign
 export interface ProfileSummary {
   id: string;
   name: string;
+  username: string;
   slug: string;
   division: string;
   created_at: string;
   last_active_at: string | null;
   project_count: number;
   has_pin: boolean;
+  has_email: boolean;
 }
 
 export interface ProfilesOverview {
@@ -217,6 +219,11 @@ export interface UpdateProfileResult {
 }
 
 export interface ResetProfilePinResult {
+  profile: ProfileSummary;
+  overview: ProfilesOverview;
+}
+
+export interface RecoverProfilePinResult {
   profile: ProfileSummary;
   overview: ProfilesOverview;
 }
@@ -251,11 +258,16 @@ export async function fetchProfilesOverview(): Promise<ProfilesOverview> {
   return (await res.json()) as ProfilesOverview;
 }
 
-export async function createProfile(name: string, pin: string, division: string): Promise<CreateProfileResult> {
+export async function createProfile(
+  username: string,
+  email: string,
+  pin: string,
+  division: string,
+): Promise<CreateProfileResult> {
   const res = await fetch("/api/profiles", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, pin, division }),
+    body: JSON.stringify({ username, email, pin, division }),
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as CreateProfileResult;
@@ -284,13 +296,19 @@ export async function logoutProfile(): Promise<LogoutProfileResult> {
 export async function updateProfile(
   profileId: string,
   currentPin: string,
-  name: string,
+  username: string,
   division: string,
+  email?: string,
 ): Promise<UpdateProfileResult> {
+  const body: Record<string, unknown> = { current_pin: currentPin, username, division };
+  // Only include `email` when provided, so the backend leaves it untouched otherwise.
+  if (email !== undefined) {
+    body.email = email;
+  }
   const res = await fetch(`/api/profiles/${encodeURIComponent(profileId)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ current_pin: currentPin, name, division }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as UpdateProfileResult;
@@ -308,6 +326,20 @@ export async function resetProfilePin(
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as ResetProfilePinResult;
+}
+
+export async function recoverProfilePin(
+  profileId: string,
+  email: string,
+  newPin: string,
+): Promise<RecoverProfilePinResult> {
+  const res = await fetch(`/api/profiles/${encodeURIComponent(profileId)}/recover-pin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, new_pin: newPin }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as RecoverProfilePinResult;
 }
 
 export async function recordProfileActivity(
@@ -392,7 +424,10 @@ export async function copyLocalImagesToSourceFolder(
 }
 
 export interface RoadInPolygon {
+  /** The real, createable source-folder name (carries quarter suffix when downloaded). */
   name: string;
+  /** Human-friendly display label, e.g. "TPY Lor 4 (1Q2026)". Falls back to `name`. */
+  label?: string;
   points: number;
   exists: boolean;
 }

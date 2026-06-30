@@ -3,6 +3,9 @@ import { Box, Text, Flex, Button, Tabs, Badge } from "@chakra-ui/react";
 import { Switch } from "../../../components/ui/switch";
 import { FaFilter, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { ATTRIBUTE_LABELS, CYCLERAP_ATTRIBUTE_CONFIGS, SUBCATEGORY_CHILD_ATTRS, SUBCATEGORY_MAP, safetyScoreAttributes } from "./AttributesDropdown";
+import { FONT, COLOR } from "../../../features/ui/designTokens";
+import { V2_GROUP_TAB_LABELS } from "../../../constants/autocodeAttributes";
+import { V2Switch, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
 
 const GROUP_ORDER = [
   "Risk Level",
@@ -23,10 +26,13 @@ const getMasterToggleLabel = (attrName: string, fallbackLabel?: string): string 
 interface FilterPanelProps {
   activeFilters: string[];
   onActiveFiltersChange: (filters: string[]) => void;
+  /** "v2" renders the comp's "Toggle Attributes" panel (no collapsible header). */
+  variant?: "v1" | "v2";
 }
 
-export default function FilterPanel({ activeFilters, onActiveFiltersChange }: FilterPanelProps) {
+export default function FilterPanel({ activeFilters, onActiveFiltersChange, variant = "v1" }: FilterPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [v2Group, setV2Group] = useState<string>(GROUP_ORDER[0]);
 
   const toggle = (attrName: string) => {
     if (activeFilters.includes(attrName)) {
@@ -50,6 +56,64 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange }: Fi
     name: a.name,
     label: a.displayName,
   }));
+
+  // ── v2: the comp's "Toggle Attributes" panel (DESIGN_GUIDE §6 tabs + §7 ──
+  // switches). No collapsible header — the accordion in the layout owns that.
+  if (variant === "v2") {
+    const groupAttrs = attrsByGroup[v2Group] ?? [];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, height: "100%" }}>
+        <div style={v2TabRowStyle}>
+          {GROUP_ORDER.map(group => {
+            const activeInGroup = (attrsByGroup[group] ?? []).filter(a => activeFilters.includes(a.name)).length;
+            return (
+              <div key={group} onClick={() => setV2Group(group)} style={v2TabStyle(group === v2Group)}>
+                {V2_GROUP_TAB_LABELS[group] ?? group}
+                {activeInGroup > 0 ? ` (${activeInGroup})` : ""}
+              </div>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            border: `1px solid ${COLOR.border}`,
+            borderRadius: "0 6px 6px 6px",
+            marginTop: -1,
+            background: COLOR.white,
+            padding: 12,
+            overflowY: "auto",
+          }}
+        >
+          {activeFilters.length >= MAX_ACTIVE && (
+            <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, marginBottom: 10 }}>
+              Maximum of {MAX_ACTIVE} filters reached. Disable one to add another.
+            </div>
+          )}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 40px", alignContent: "start" }}>
+            {groupAttrs.map(attr => {
+              const label = getMasterToggleLabel(attr.name, attr.label);
+              const isActive = activeFilters.includes(attr.name);
+              const isDisabled = activeFilters.length >= MAX_ACTIVE && !isActive;
+              return (
+                <div key={attr.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, opacity: isDisabled ? 0.5 : 1 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, flex: 1, minWidth: 0 }}>
+                    {label}
+                  </span>
+                  <V2Switch
+                    on={isActive}
+                    onColor={COLOR.blue}
+                    onClick={isDisabled ? undefined : () => toggle(attr.name)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Box borderWidth="1px" borderRadius="lg" bg="bg.panel" overflow="hidden">

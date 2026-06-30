@@ -10,6 +10,8 @@ import CodingSidebar from "./components/CodingSidebar";
 import TreatmentSidebar from "./components/TreatmentSidebar";
 import ResetConfirmationDialog from "./components/ResetConfirmationDialog";
 import ExitConfirmationDialog from "./components/ExitConfirmationDialog";
+import SidebarV2 from "./SidebarV2";
+import { useUiVersion } from "../../features/ui/useUiVersion";
 import psatLogo from "../LandingPage/assets/PSAT Logo (Black).png";
 import "./sidebar.css";
 
@@ -358,6 +360,61 @@ export default function Sidebar() {
     (window as any).psat_pendingNavigation = null;
     (window as any).psat_pendingLogout = null;
   }, []);
+
+  const ui = useUiVersion();
+
+  // ── v2 sidebar: clean nav per Sidebar.dc.html. Route-specific panels are
+  // passed through as children so pages not yet migrated to v2 keep working
+  // ("neutralize, don't delete"). All dialogs are shared with v1 below. ──
+  if (ui === "v2") {
+    return (
+      <>
+        <SidebarV2
+          activeProfile={activeProfile}
+          onLogout={onLogout}
+          isLoggingOut={isLoggingOut}
+          onNavigate={navigateSidebar}
+          pathname={pathname}
+        >
+          {/* Coding is migrated to v2: its route-specific controls (Auto-code,
+              Save, segment counters) now live on-canvas in CodingLayoutV2, so the
+              v1 CodingSidebar panel is intentionally NOT embedded here. Treatment
+              is not yet migrated, so its sidebar still passes through. */}
+          {onTreatmentDetail && projectName && (
+            <div className="psat-side-bottom">
+              <TreatmentSidebar
+                onTreatAll={handleTreatAllSegments}
+                onResetAll={handleResetClick}
+                onSave={onTreatmentSave}
+                onExit={onTreatmentExit}
+              />
+            </div>
+          )}
+        </SidebarV2>
+
+        <ExitConfirmationDialog
+          open={exitDialogOpen}
+          onSaveAndExit={handleSaveAndExit}
+          onDiscardAndExit={handleDiscardAndExit}
+          onCancel={handleExitCancel}
+          isSaving={isSaving}
+        />
+        <ExitConfirmationDialog
+          open={treatmentExitDialogOpen}
+          onSaveAndExit={handleTreatmentSaveAndExit}
+          onDiscardAndExit={handleTreatmentDiscardAndExit}
+          onCancel={handleTreatmentExitCancel}
+          isSaving={isSaving}
+        />
+        <ResetConfirmationDialog
+          open={resetDialogOpen}
+          onConfirm={handleConfirmReset}
+          onCancel={() => setResetDialogOpen(false)}
+          isResetting={isResetting}
+        />
+      </>
+    );
+  }
 
   return (
     <aside className="psat-sidebar" aria-label="PSAT sidebar">

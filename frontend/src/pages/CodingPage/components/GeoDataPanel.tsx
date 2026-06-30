@@ -50,6 +50,8 @@ type Props = {
   grade?: number | null;
   gradientPct?: number | null;
   gradientStatus?: string | null;
+  /** "v1" (default) = current Chakra layout; "v2" = Home.dc.html FRAME 4 map (floating tools, no Leaflet zoom control, card chrome). */
+  variant?: "v1" | "v2";
 };
 
 type GJ = FeatureCollection<LineString, any>;
@@ -357,8 +359,26 @@ function StatPill({ label, value }: { label: string; value: string }) {
     </Flex>
   );
 }
+// Leaflet caches the container size at init; if the map mounts before the
+// surrounding flex/page layout has settled to its final height it paints a
+// half-grey tile area. Re-measure once layout settles and on any container
+// resize. (Same root cause seen on the Create-project v2 map.)
+function MapAutosize() {
+  const map = useMap();
+  useEffect(() => {
+    const fix = () => map.invalidateSize();
+    const t = window.setTimeout(fix, 200);
+    let ro: ResizeObserver | null = null;
+    try {
+      ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(map.getContainer());
+    } catch { /* ResizeObserver unsupported — the timeout still covers mount */ }
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  }, [map]);
+  return null;
+}
 
-export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus }: Props) {
+export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
   const navigate = useNavigate();
 
   const decodedName = useMemo(() => {
@@ -414,17 +434,68 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   const [showLandPrivate, setShowLandPrivate] = useState(cachedLayers.showLandPrivate ?? false);
   const [showLandMinistry, setShowLandMinistry] = useState(cachedLayers.showLandMinistry ?? false);
 
+  // Cross-panel GIS layer sync: when two panels show the same project (e.g. the
+  // Treatment page's Before/After maps), toggling a layer on either mirrors to both.
+  // A stable per-instance id lets a panel ignore its own broadcasts, and the last
+  // persisted toggle snapshot lets it skip no-op events (preventing feedback loops).
+  const layerSyncIdRef = useRef(Math.random().toString(36).slice(2));
+  const layerTogglesRef = useRef<Record<string, boolean>>({});
+
   // Update localStorage whenever these toggles change.
   // overlayEnabled is persisted so the next session knows whether the 3 path layers were
   // in "overlay-managed" mode and should be reset (rather than restored as stale trues).
   useEffect(() => {
     if (!projectName) return;
-    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+    const toggles: Record<string, boolean> = {
       showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects,
       showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
+    };
+    layerTogglesRef.current = toggles;
+    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+      ...toggles,
       overlayEnabled: showCurvatureOverlay ?? false,
     }));
+    // Broadcast to any sibling panel showing the same project so its toggles mirror.
+    window.dispatchEvent(new CustomEvent("psat:gisLayers:sync", {
+      detail: { projectName, source: layerSyncIdRef.current, toggles },
+    }));
   }, [showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, showCurvatureOverlay, projectName]);
+
+  // Mirror GIS layer toggles broadcast by a sibling panel for the same project.
+  // The source-id and equality checks make this self-terminating: a panel ignores
+  // its own events and any event whose toggles already match its current state.
+  useEffect(() => {
+    if (!projectName) return;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent).detail as
+        | { projectName?: string; source?: string; toggles?: Record<string, boolean> }
+        | undefined;
+      if (!detail || detail.projectName !== projectName) return;
+      if (detail.source === layerSyncIdRef.current) return;
+      const incoming = detail.toggles;
+      if (!incoming) return;
+      const current = layerTogglesRef.current;
+      if (!Object.keys(incoming).some((key) => incoming[key] !== current[key])) return;
+      layerTogglesRef.current = { ...current, ...incoming };
+      setShowFootpath(!!incoming.showFootpath);
+      setShowCycling(!!incoming.showCycling);
+      setShowShared(!!incoming.showShared);
+      setShowRoadcrossing(!!incoming.showRoadcrossing);
+      setShowMrtExit(!!incoming.showMrtExit);
+      setShowBusStop(!!incoming.showBusStop);
+      setShowBusLane(!!incoming.showBusLane);
+      setShowParkingLot(!!incoming.showParkingLot);
+      setShowKerbLine(!!incoming.showKerbLine);
+      setShowBicycleCrossing(!!incoming.showBicycleCrossing);
+      setShowPathDefects(!!incoming.showPathDefects);
+      setShowStateLand(!!incoming.showStateLand);
+      setShowStatBoard(!!incoming.showStatBoard);
+      setShowLandPrivate(!!incoming.showLandPrivate);
+      setShowLandMinistry(!!incoming.showLandMinistry);
+    };
+    window.addEventListener("psat:gisLayers:sync", handler);
+    return () => window.removeEventListener("psat:gisLayers:sync", handler);
+  }, [projectName]);
 
   // Sync GIS toggle states when the project changes. useState initializers only fire
   // on first mount; without this effect, switching projects leaves stale toggle values
@@ -496,6 +567,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
 
 
   // Analysis sidebar open state
+  // Layer View starts collapsed in both v1 and v2; expand via the edge tab.
   const [isAnalysisSidebarOpen, setIsAnalysisSidebarOpen] = useState(false);
 
   // Delete Mode State
@@ -1058,7 +1130,8 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
 
 
   return (
-    <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius="none">
+    <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius={variant === "v2" ? "6px" : "none"} position={variant === "v2" ? "relative" : undefined}>
+
       {/* Clickable title bar restored as a static header */}
       <Box
         px="4"
@@ -1111,10 +1184,21 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         </Flex>
       </Box>
 
-          {/* Tools + GIS layer toggles */}
-          <Box px="4" pt="2" pb="2" borderBottom="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
+          {/* Tools + GIS layer toggles. v1: a bordered toolbar row under the header.
+              v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map. */}
+          <Box
+            px={variant === "v2" ? "1.5" : "4"}
+            pt={variant === "v2" ? "1.5" : "2"}
+            pb={variant === "v2" ? "1.5" : "2"}
+            borderBottom={variant === "v2" ? undefined : "1px solid"}
+            borderColor="gray.200"
+            _dark={{ borderColor: "gray.700" }}
+            {...(variant === "v2"
+              ? { position: "absolute", top: "60px", right: "12px", zIndex: 1000, bg: "white", borderWidth: "1px", borderRadius: "6px", boxShadow: "sm" }
+              : {})}
+          >
             {/* Tool icon buttons */}
-            <Flex align="center" gap="2" wrap="wrap" mb="2" onClick={(e) => e.stopPropagation()}>
+            <Flex align="center" gap="2" wrap="wrap" mb={variant === "v2" ? "0" : "2"} onClick={(e) => e.stopPropagation()}>
               <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                 <Menu.Trigger asChild>
                   <IconButton
@@ -1258,7 +1342,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         {err && <Text color="red.600">Failed: {err}</Text>}
 
         {!loading && !err && (
-          <Box border="1px solid" borderColor="gray.200" borderRadius="md" overflow="hidden" h="100%">
+          <Box
+            border={variant === "v2" ? "none" : "1px solid"}
+            borderColor="gray.200"
+            borderRadius={variant === "v2" ? "none" : "md"}
+            overflow="hidden"
+            h="100%"
+          >
             <MapContainer
               center={initialCenter.current}
               zoom={13}
@@ -1267,7 +1357,8 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               scrollWheelZoom
               zoomControl={false}
             >
-              <ZoomControl position="topright" />
+              {variant !== "v2" && <ZoomControl position="topright" />}
+              <MapAutosize />
               <MapCursorController
                 mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
               />
@@ -1807,6 +1898,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         )}
 
         <AnalysisSidebar
+          variant={variant}
           isOpen={isAnalysisSidebarOpen}
           onToggle={() => setIsAnalysisSidebarOpen(v => !v)}
           showFootpath={showFootpath}

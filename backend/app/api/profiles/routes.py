@@ -57,7 +57,12 @@ def list_profiles():
 def create_profile():
     data = request.get_json(silent=True) or {}
     try:
-        profile = profile_store.create_profile(data.get("name"), data.get("pin"), data.get("division"))
+        profile = profile_store.create_profile(
+            data.get("username") or data.get("name"),
+            data.get("email"),
+            data.get("pin"),
+            data.get("division"),
+        )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
 
@@ -115,12 +120,16 @@ def record_profile_activity():
 @bp.patch("/<profile_id>")
 def update_profile(profile_id: str):
     data = request.get_json(silent=True) or {}
+    # `email` is only forwarded when the client explicitly sends the key, so an
+    # omitted field leaves the recovery email untouched.
+    email = data.get("email") if "email" in data else None
     try:
         profile = profile_store.update_profile(
             profile_id,
             str(data.get("current_pin") or ""),
-            data.get("name"),
+            data.get("username") or data.get("name"),
             data.get("division"),
+            email,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
@@ -146,6 +155,24 @@ def reset_profile_pin(profile_id: str):
         return jsonify({"error": str(exc)}), 401
 
     _record_profile_event("profile_pin_reset", profile)
+    return jsonify({"profile": profile, "overview": profile_store.get_overview()})
+
+
+@bp.post("/<profile_id>/recover-pin")
+def recover_profile_pin(profile_id: str):
+    data = request.get_json(silent=True) or {}
+    try:
+        profile = profile_store.recover_profile_pin(
+            profile_id,
+            str(data.get("email") or ""),
+            str(data.get("new_pin") or ""),
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), _profile_error_status(exc)
+    except PermissionError as exc:
+        return jsonify({"error": str(exc)}), 401
+
+    _record_profile_event("profile_pin_recovered", profile)
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
 
 

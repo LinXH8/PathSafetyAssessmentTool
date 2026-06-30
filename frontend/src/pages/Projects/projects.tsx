@@ -2,18 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
 import { invalidateAll } from "../../api/projectDataCache";
 import { matchesProjectSearch } from "../../utils/projectSearch";
-import {
-  Button,
-  Dialog,
-  Portal,
-  CloseButton,
-  Spinner,
-} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { LuPencil, LuArrowUpDown, LuArrowUp, LuArrowDown } from "react-icons/lu";
-import EditProjectModal from "./components/EditProjectModal";
 import { toaster } from "../../components/ui/toaster";
 import { useProfile } from "../../features/profile/ProfileProvider";
+import { useUiVersion } from "../../features/ui/useUiVersion";
+import ProjectsLayoutV1 from "./layouts/ProjectsLayoutV1";
+import ProjectsLayoutV2 from "./layouts/ProjectsLayoutV2";
+import type { ProjectsViewModel, SortCriterion } from "./layouts/ProjectsViewModel";
 
 import "./projects.css";
 import "./components/EditProjectModal.css";
@@ -24,33 +19,6 @@ const createProject = (navigate: any) => {
 
 interface FileListResponse {
   projects: ProjectListItem[];
-}
-
-// Generate a consistent, bright, varied color for each unique tag
-function getTagColor(tag: string): string {
-  // Simple hash function to convert string to number
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  // Use multiple hash variations to increase color variety
-  const hash2 = Math.abs(hash >> 16);
-  const hash3 = Math.abs(hash << 3);
-
-  // Create wider hue distribution with warm and cool colors
-  // Avoid muddy middle ranges (40-60 yellow-green, 160-180 cyan)
-  let hue = Math.abs(hash % 360);
-  if (hue >= 40 && hue <= 60) hue = (hue + 30) % 360;  // Skip muddy yellow-green
-  if (hue >= 160 && hue <= 180) hue = (hue + 30) % 360; // Skip muddy cyan
-
-  // Higher saturation (75-95%) for more vibrant colors
-  const saturation = 75 + (hash2 % 21); // 75-95%
-
-  // Higher lightness (65-80%) for brighter, more visible colors
-  const lightness = 65 + (hash3 % 16); // 65-80%
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
 export default function Home() {
@@ -65,7 +33,6 @@ export default function Home() {
   const [loadingProjects, setLoadingProjects] = useState(true);
 
   // Sorting
-  type SortCriterion = { key: string; direction: 'asc' | 'desc' };
   const [sortConfig, setSortConfig] = useState<SortCriterion[]>([
     { key: 'last_updated', direction: 'desc' }, // Default to newest first
   ]);
@@ -485,520 +452,79 @@ export default function Home() {
     };
   };
 
-  const renderHeader = (label: string, key: string, width?: number) => {
-    const meta = getSortMeta(key);
-    return (
-      <th
-        style={{ width, cursor: "pointer", userSelect: "none" }}
-        onClick={(e) => handleSort(key, e)}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          {label}
-          {meta ? (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {meta.direction === 'asc' ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />}
-              {sortConfig.length > 1 && (
-                <span style={{ fontSize: "10px", marginLeft: "2px", fontWeight: "bold" }}>
-                  {meta.priority}
-                </span>
-              )}
-            </div>
-          ) : (
-            <LuArrowUpDown size={14} style={{ opacity: 0.3 }} />
-          )}
-        </div>
-      </th>
-    );
+  // Wrap the module-level create navigation so shells get a zero-arg handler.
+  const onCreateProject = () => createProject(navigate);
+
+  // ── Assemble the view-model: the single typed seam both shells consume. ──
+  const vm: ProjectsViewModel = {
+    activeProfile,
+    legacyProjects,
+    migratingLegacyProjects,
+    moveLegacyProjects,
+    nameQuery,
+    setNameQuery,
+    tagFilters,
+    addTagFilter,
+    removeTagFilter,
+    tagInputValue,
+    setTagInputValue,
+    tagSuggestionsOpen,
+    setTagSuggestionsOpen,
+    filteredTagOptions,
+    hasActiveFilters,
+    clearAllFilters,
+    projects,
+    filtered,
+    selected,
+    loadingProjects,
+    error,
+    status,
+    showCreateProjectPrompt,
+    onRowClick,
+    toggleSelectAll,
+    onCreateProject,
+    askDelete,
+    loadProject,
+    loadPathAnalysis,
+    loadTreatment,
+    askShare,
+    shareTargets,
+    sortConfig,
+    getSortMeta,
+    handleSort,
+    editingProject,
+    setEditingProject,
+    openEdit,
+    setOpenEdit,
+    handleEditSuccess,
+    openDelete,
+    setOpenDelete,
+    deleting,
+    confirmDelete,
+    openShare,
+    setOpenShare,
+    sharing,
+    shareTargetId,
+    setShareTargetId,
+    confirmShare,
   };
 
-  return (
-    <div className="projects-root">
-      {activeProfile && legacyProjects.length > 0 && (
-        <div className="profile-migration-banner">
-          <div>
-            <div className="profile-migration-title">Shared projects are still outside this profile</div>
-            <div className="profile-migration-copy">
-              {legacyProjects.length} existing project{legacyProjects.length === 1 ? " is" : "s are"} still in the shared project area.
-              Move them into {activeProfile.name} so they appear in this profile's project list.
-            </div>
-          </div>
-          <Button
-            colorPalette="teal"
-            variant="solid"
-            loading={migratingLegacyProjects}
-            onClick={() => void moveLegacyProjects()}
-          >
-            Move Shared Projects
-          </Button>
-        </div>
-      )}
+  const ui = useUiVersion();
 
-      <div className="search-panel">
-        <div className="search-row">
-          <div className="search-item">
-            <label htmlFor="nameQuery">Search by project, road, or tag</label>
-            <input
-              id="nameQuery"
-              type="text"
-              placeholder="Type project name, road, or tag…"
-              value={nameQuery}
-              onChange={(e) => setNameQuery(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          <div className="search-item">
-            <label htmlFor="tagFilterInput">Filter by tags</label>
-            <div style={{ position: "relative" }}>
-              <div className="tag-input-container">
-                <div className="tag-input-wrapper">
-                  {tagFilters.map((tag) => (
-                    <div
-                      key={tag}
-                      className="tag-chip"
-                      style={{ backgroundColor: getTagColor(tag) }}
-                    >
-                      <span className="tag-chip-text">{tag}</span>
-                      <button
-                        className="tag-chip-remove"
-                        onClick={() => removeTagFilter(tag)}
-                        type="button"
-                        aria-label={`Remove ${tag} filter`}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                  <input
-                    id="tagFilterInput"
-                    type="text"
-                    value={tagInputValue}
-                    onChange={(event) => {
-                      setTagInputValue(event.target.value);
-                      setTagSuggestionsOpen(true);
-                    }}
-                    onFocus={() => setTagSuggestionsOpen(true)}
-                    onBlur={() => {
-                      window.setTimeout(() => setTagSuggestionsOpen(false), 100);
-                    }}
-                    placeholder={tagFilters.length === 0 ? "Type or click to select tags..." : "Add more tags..."}
-                    className="tag-input-field"
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && filteredTagOptions.length > 0) {
-                        event.preventDefault();
-                        addTagFilter(filteredTagOptions[0]);
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-              {tagSuggestionsOpen && filteredTagOptions.length > 0 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "calc(100% + 8px)",
-                    left: 0,
-                    right: 0,
-                    background: "var(--chakra-colors-bg)",
-                    border: "1px solid var(--chakra-colors-border)",
-                    borderRadius: "8px",
-                    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-                    maxHeight: "220px",
-                    overflowY: "auto",
-                    zIndex: 20,
-                  }}
-                >
-                  {filteredTagOptions.map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        padding: "10px 12px",
-                        textAlign: "left",
-                        background: "transparent",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "var(--chakra-colors-fg)",
-                        fontSize: "14px",
-                      }}
-                      onMouseDown={(event) => {
-                        event.preventDefault();
-                        addTagFilter(tag);
-                      }}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+  // Keep the ?ui flag visible in the URL on /home so devs always see (and
+  // remember) the v1/v2 toggle. Appends the *resolved* version when absent, so
+  // a fresh visit shows ?ui=v1 while a persisted ?ui=v2 choice is respected.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get("ui")) {
+      params.set("ui", ui);
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${params.toString()}${window.location.hash}`
+      );
+    }
+  }, [ui]);
 
-        <div className="search-summary-row">
-          <div className="search-summary-text">
-            {loadingProjects ? (
-              <span className="search-summary-loading">
-                <Spinner size="sm" />
-                <span>Loading project list from backend...</span>
-              </span>
-            ) : error ? (
-              <span className="search-summary-error">
-                {status === "offline" ? "Backend appears offline." : error}
-              </span>
-            ) : (
-              <>
-                {`Showing ${filtered.length} of ${projects.length} project${projects.length === 1 ? "" : "s"}`}
-                {selected.size > 0 ? ` • ${selected.size} selected` : ""}
-              </>
-            )}
-          </div>
-          <div className="search-summary-actions">
-            {nameQuery.trim() && (
-              <button
-                type="button"
-                className="active-filter-pill"
-                onClick={() => setNameQuery("")}
-              >
-                Search: {nameQuery.trim()} ×
-              </button>
-            )}
-            {tagFilters.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className="active-filter-pill"
-                onClick={() => removeTagFilter(tag)}
-              >
-                Tag: {tag} ×
-              </button>
-            ))}
-            {hasActiveFilters && (
-              <button
-                type="button"
-                className="clear-filters-btn"
-                onClick={clearAllFilters}
-              >
-                Clear filters
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="actions-panel" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontWeight: 600, fontSize: '14px' }}>
-            Total Distance Verified: {(filtered.reduce((acc, p) => acc + (p.verified_segment_count || 0), 0) * 10 / 1000).toFixed(2)} km
-          </div>
-          <div className="buttons">
-            <Button onClick={() => createProject(navigate)} colorPalette="black" variant="solid">
-              Create Project
-            </Button>
-            <Button onClick={askDelete} colorPalette="red" disabled={!selected || selected.size === 0}>
-              Delete Project
-            </Button>
-            <Button onClick={loadProject} colorPalette="blue" disabled={!selected || selected.size === 0}>
-              Coding
-            </Button>
-            <Button onClick={loadPathAnalysis} style={{ backgroundColor: "#a220e3", color: "white" }} disabled={!selected || selected.size === 0}>
-              Analyse Projects
-            </Button>
-            <Button onClick={loadTreatment} colorPalette="green" disabled={!selected || selected.size === 0}>
-              Treatment Application
-            </Button>
-            <Button
-              onClick={askShare}
-              colorPalette="teal"
-              variant="outline"
-              disabled={!selected || selected.size === 0 || shareTargets.length === 0}
-            >
-              Share
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="table-container">
-        <div className="table-wrap">
-          <table className="project-table">
-            <thead>
-              <tr>
-                <th style={{ width: 48 }}></th>
-                {renderHeader("Project Name", "name")}
-                {renderHeader("Verification Status", "verification_status", 140)}
-                {renderHeader("Distance Verified", "distance_verified", 140)}
-                {renderHeader("Autocode Status", "autocode_status", 140)}
-                {renderHeader("Time Modified", "last_updated", 180)}
-                <th>Tags</th>
-                <th style={{ width: 180 }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadingProjects ? (
-                <tr>
-                  <td colSpan={8} className="empty">
-                    <div className="table-loading-state">
-                      <Spinner size="sm" />
-                      <span>Loading projects...</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="empty">
-                    {showCreateProjectPrompt ? (
-                      <div className="empty-project-search-state">
-                        <div className="empty-project-search-title">
-                          No projects matched "{nameQuery.trim()}"
-                        </div>
-                        <div className="empty-project-search-copy">
-                          Create a new project if this road or project has not been set up yet.
-                        </div>
-                        <Button
-                          size="sm"
-                          colorPalette="black"
-                          variant="solid"
-                          onClick={() => createProject(navigate)}
-                        >
-                          Create Project
-                        </Button>
-                      </div>
-                    ) : (
-                      "No projects found"
-                    )}
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  <tr className="select-all-row" onClick={toggleSelectAll} style={{ cursor: "pointer" }}>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        checked={filtered.length > 0 && selected.size === filtered.length}
-                        onChange={toggleSelectAll}
-                        aria-label="Select all projects"
-                      />
-                    </td>
-                    <td colSpan={6}>
-                      <strong>Select All</strong>
-                    </td>
-                  </tr>
-                  {filtered.map((p) => {
-                    const isSelected = selected.has(p.name);
-
-                    return (
-                      <tr
-                        key={p.name}
-                        className={isSelected ? "row selected" : "row"}
-                        onClick={() => onRowClick(p.name)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        <td onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => onRowClick(p.name)}
-                            aria-label={`Select ${p.name}`}
-                          />
-                        </td>
-                        <td title={p.name}>{p.name}</td>
-                        <td>
-                          <span style={{ fontSize: "14px", fontWeight: "500" }}>
-                            {typeof p.total_segments === 'number' && p.total_segments > 0
-                              ? `${((p.verified_segment_count ?? 0) / p.total_segments * 100).toFixed(1)}%`
-                              : typeof p.total_segments === 'number'
-                                ? "0%"
-                                : "—"}
-                          </span>
-                          {/* Debug: Show raw values if needed */}
-                          {/* (segments: {p.verified_segment_count}/{p.total_segments}) */}
-                        </td>
-                        <td>
-                          <span style={{ fontSize: "14px", fontWeight: "500" }}>
-                            {typeof p.verified_segment_count === 'number'
-                              ? `${((p.verified_segment_count * 10) / 1000).toFixed(2)} km`
-                              : "0.00 km"}
-                          </span>
-                        </td>
-                        <td>
-                          <span style={{ fontSize: "14px", fontWeight: "500" }}>
-                            {typeof p.total_segments === 'number' && p.total_segments > 0
-                              ? `${((p.autocoded_segment_count ?? 0) / p.total_segments * 100).toFixed(1)}%`
-                              : typeof p.total_segments === 'number'
-                                ? "0%"
-                                : "—"}
-                          </span>
-                        </td>
-                        <td>
-                          <span style={{ fontSize: "14px", color: "#666" }}>
-                            {p.last_updated ? new Date(p.last_updated).toLocaleString('en-GB', {
-                              year: 'numeric',
-                              month: 'numeric',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            }) : "—"}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="tags-container">
-                            {p.tags && p.tags.length > 0 ? (
-                              p.tags
-                                .slice()
-                                .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
-                                .map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="tag-badge"
-                                    style={{
-                                      backgroundColor: getTagColor(tag),
-                                      borderWidth: "1px",
-                                      borderStyle: "solid",
-                                    }}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))
-                            ) : (
-                              <span className="no-tags">—</span>
-                            )}
-                          </div>
-                        </td>
-                        <td onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => {
-                              setEditingProject(p);
-                              setOpenEdit(true);
-                            }}
-                            className="row-edit-btn"
-                            aria-label="Edit project"
-                          >
-                            <LuPencil className="row-edit-icon" />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* 编辑 Dialog */}
-      {editingProject && (
-        <EditProjectModal
-          open={openEdit}
-          onClose={() => setOpenEdit(false)}
-          projectName={editingProject.name}
-          projectTags={editingProject.tags}
-          onSuccess={handleEditSuccess}
-        />
-      )}
-
-      {/* Delete confirmation Dialog */}
-      <Dialog.Root open={openDelete} onOpenChange={(d) => setOpenDelete(d.open)} unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Delete {selected.size} project(s)?</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                This will permanently remove the following projects and their files:
-                <ul style={{ marginTop: "12px", paddingLeft: "20px" }}>
-                  {Array.from(selected).map(name => (
-                    <li key={name}><strong>{name}</strong></li>
-                  ))}
-                </ul>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" disabled={deleting}>
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button
-                  colorPalette="red"
-                  onClick={confirmDelete}
-                  loading={deleting}
-                >
-                  Delete
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-
-      {/* Share to profile Dialog */}
-      <Dialog.Root open={openShare} onOpenChange={(d) => setOpenShare(d.open)} unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Share {selected.size} project(s)</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <div>Send a copy of the following projects to another profile:</div>
-                <ul style={{ margin: "12px 0", paddingLeft: "20px" }}>
-                  {Array.from(selected).map((name) => (
-                    <li key={name}><strong>{name}</strong></li>
-                  ))}
-                </ul>
-                <label htmlFor="shareTargetProfile" style={{ display: "block", fontWeight: 600, marginBottom: "6px" }}>
-                  Share to profile
-                </label>
-                <select
-                  id="shareTargetProfile"
-                  value={shareTargetId}
-                  onChange={(e) => setShareTargetId(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "8px 10px",
-                    borderRadius: "8px",
-                    border: "1px solid var(--chakra-colors-border)",
-                    background: "var(--chakra-colors-bg)",
-                    color: "var(--chakra-colors-fg)",
-                  }}
-                >
-                  {shareTargets.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" disabled={sharing}>
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button
-                  colorPalette="teal"
-                  onClick={confirmShare}
-                  loading={sharing}
-                  disabled={!shareTargetId}
-                >
-                  Share
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-    </div>
-  );
+  return ui === "v2" ? <ProjectsLayoutV2 {...vm} /> : <ProjectsLayoutV1 {...vm} />;
 }

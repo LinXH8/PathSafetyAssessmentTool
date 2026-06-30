@@ -17,6 +17,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { FaDrawPolygon, FaFileImport, FaMapMarkedAlt, FaRoad, FaTrash } from "react-icons/fa";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import ThemeAwareTileLayer from "../../components/common/ThemeAwareTileLayer";
 import { MapCursorController } from "../../components/common/MapCursorController";
 import {
@@ -30,6 +31,7 @@ import {
   type RoadInBounds,
 } from "../../api";
 import { toaster } from "../../components/ui/toaster";
+import { FONT, COLOR } from "../../features/ui/designTokens";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon } from "geojson";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -303,6 +305,24 @@ function MapBoundsFitter({
   return null;
 }
 
+// Re-measure the map once layout settles and on container resize. In the v2
+// layout the map fills a flex cell whose height can finalize after Leaflet
+// inits, which otherwise leaves a half-grey tile area.
+function MapAutosize() {
+  const map = useMap();
+  useEffect(() => {
+    const fix = () => map.invalidateSize();
+    const t = window.setTimeout(fix, 200);
+    let ro: ResizeObserver | null = null;
+    try {
+      ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(map.getContainer());
+    } catch { /* ResizeObserver unsupported — the timeout still covers mount */ }
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  }, [map]);
+  return null;
+}
+
 // ── Polygon overlay ────────────────────────────────────────────────
 function PolygonOverlay({
   points,
@@ -328,7 +348,10 @@ function PolygonOverlay({
 
 // ── Main component ─────────────────────────────────────────────────
 export interface SelectedRoad {
+  /** The real, createable source-folder name (carries quarter suffix when downloaded). */
   name: string;
+  /** Human-friendly display label, e.g. "TPY Lor 4 (1Q2026)". Falls back to `name`. */
+  label?: string;
   points: number;
   exists: boolean;
   selected: boolean;
@@ -339,9 +362,13 @@ interface SelectRoadsMapProps {
   onSelectionGeometryChange: (selectionGeometry: ProjectSelectionGeometry | null) => void;
   refreshKey?: number;
   focusRoadName?: string;
+  /** "v1" (default) = current Chakra layout; "v2" = Home.dc.html Frame 2 map layout. */
+  variant?: "v1" | "v2";
 }
 
-export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryChange, refreshKey = 0, focusRoadName }: SelectRoadsMapProps) {
+export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryChange, refreshKey = 0, focusRoadName, variant = "v1" }: SelectRoadsMapProps) {
+  // v2-only: the Layer View side panel can be collapsed via the map's edge rail.
+  const [layerPanelOpen, setLayerPanelOpen] = useState(false);
   // Polygon state
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
   const [polygonSource, setPolygonSource] = useState<PolygonSource>(null);
@@ -733,7 +760,286 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
           }
         : null;
 
-  // ── Render ──────────────────────────────────────────────────────
+  // ── Shared map element (identical Leaflet setup for both variants) ──
+  const renderMap = () => (
+    <MapContainer
+      center={[1.3521, 103.8198]}
+      zoom={12}
+      style={{ height: variant === "v2" ? "100%" : "350px", width: "100%" }}
+      scrollWheelZoom
+    >
+      <ThemeAwareTileLayer />
+      <MapAutosize />
+      <MapCursorController mode={isDrawing ? "add" : "default"} />
+      <MapClickHandler active={isDrawing} onPoint={addPoint} />
+      <MapViewportWatcher onViewportChange={setViewportState} />
+      <MapBoundsFitter points={mapFocusPoints} />
+      {showPlanningAreaOverlay && overlayPlanningAreas.map((area) => {
+        const areaKey = `${area.name}-${area.partIndex}`;
+        const isHighlighted = highlightPlanningAreaKey === areaKey;
+        return (
+          <LeafletPolygon
+            key={areaKey}
+            positions={area.coords}
+            pathOptions={{
+              color: isHighlighted ? "#0F766E" : "#0D9488",
+              weight: isHighlighted ? 3 : 1.5,
+              opacity: 0.9,
+              fillColor: isHighlighted ? "#14B8A6" : "#5EEAD4",
+              fillOpacity: isHighlighted ? 0.28 : 0.12,
+            }}
+            eventHandlers={{
+              click: (e) => {
+                L.DomEvent.stopPropagation(e as any);
+                selectPlanningArea(area);
+              },
+            }}
+          >
+            <Popup>
+              <Text fontSize="sm" fontWeight="semibold">{area.name}</Text>
+            </Popup>
+          </LeafletPolygon>
+        );
+      })}
+      {uploadedBoundaries.map((boundary) => {
+        const isHighlighted = highlightUploadedBoundaryKey === boundary.key;
+        return (
+          boundary.kind === "polygon" && boundary.coords ? (
+            <LeafletPolygon
+              key={boundary.key}
+              positions={boundary.coords}
+              pathOptions={{
+                color: isHighlighted ? "#C2410C" : "#EA580C",
+                weight: isHighlighted ? 3 : 1.5,
+                opacity: 0.95,
+                fillColor: isHighlighted ? "#FB923C" : "#FDBA74",
+                fillOpacity: isHighlighted ? 0.28 : 0.14,
+              }}
+              eventHandlers={{
+                click: (e) => {
+                  L.DomEvent.stopPropagation(e as any);
+                  selectUploadedBoundary(boundary);
+                },
+              }}
+            >
+              <Popup>
+                <Text fontSize="sm" fontWeight="semibold">{boundary.label}</Text>
+                <Text fontSize="xs" color="orange.700">Imported area selection</Text>
+              </Popup>
+            </LeafletPolygon>
+          ) : (
+            <>
+              {(boundary.lineCoordsSets ?? []).map((lineCoords, partIndex) => (
+                <LeafletPolyline
+                  key={`${boundary.key}-${partIndex}`}
+                  positions={lineCoords}
+                  pathOptions={{
+                    color: isHighlighted ? "#C2410C" : "#EA580C",
+                    weight: isHighlighted ? 4 : 2.5,
+                    opacity: 0.95,
+                  }}
+                  eventHandlers={{
+                    click: (e) => {
+                      L.DomEvent.stopPropagation(e as any);
+                      selectUploadedBoundary(boundary);
+                    },
+                  }}
+                >
+                  <Popup>
+                    <Text fontSize="sm" fontWeight="semibold">{boundary.label}</Text>
+                    <Text fontSize="xs" color="orange.700">Imported path selection</Text>
+                  </Popup>
+                </LeafletPolyline>
+              ))}
+            </>
+          )
+        );
+      })}
+      {showRoadOverlay && overlayRoads.map((road, idx) => (
+        <LeafletPolyline
+          key={`${road.name}-${idx}`}
+          positions={road.coords}
+          pathOptions={{
+            color: highlightRoadName === road.name ? "#1D4ED8" : (road.exists ? "#16A34A" : "#6B7280"),
+            weight: highlightRoadName === road.name ? 4 : 2,
+            opacity: 0.75,
+          }}
+          eventHandlers={{
+            click: () => {
+              setHighlightRoadName(road.name);
+              const hit = roads.find((r) => r.name === road.name);
+              if (hit && !hit.selected) {
+                toggleRoad(road.name);
+              }
+            },
+          }}
+        >
+          <Popup>
+            <Text fontSize="xs" fontWeight="bold">{road.name}</Text>
+            <Text fontSize="xs" color={road.exists ? "green.600" : "orange.600"}>
+              {road.exists ? "Available" : "Not Downloaded"}
+            </Text>
+          </Popup>
+        </LeafletPolyline>
+      ))}
+      {focusRoadSegments.map((seg, idx) => (
+        <LeafletPolyline
+          key={`focus-road-${idx}`}
+          positions={seg.coords}
+          pathOptions={{ color: "#F59E0B", weight: 5, opacity: 0.9 }}
+          interactive={false}
+        />
+      ))}
+      <PolygonOverlay
+        points={polygonPoints}
+      />
+      {polygonSource === "manual" && polygonPoints.map((point, index) => (
+        <Marker
+          key={`polygon-point-${index}-${point[0]}-${point[1]}`}
+          position={point}
+          icon={polygonVertexIcon}
+          draggable
+          eventHandlers={{
+            dragend: (event) => {
+              const latlng = (event.target as L.Marker).getLatLng();
+              movePoint(index, latlng);
+            },
+          }}
+        />
+      ))}
+    </MapContainer>
+  );
+
+  const hiddenFileInput = (
+    <input
+      ref={fileInputRef}
+      type="file"
+      accept={SHAPEFILE_ACCEPT}
+      multiple
+      onChange={handleBoundaryFileChange}
+      style={{ display: "none" }}
+    />
+  );
+
+  // ── v2 render — Home.dc.html Frame 2 map layout ──────────────────
+  if (variant === "v2") {
+    return (
+      <div style={{ display: "flex", gap: 16, height: "100%", minHeight: 0 }}>
+        {/* Left: map card (Layer View panel + map well) */}
+        <div style={{ flex: 1, minWidth: 0, display: "flex", overflow: "hidden", border: `1px solid ${COLOR.border}`, borderRadius: 6 }}>
+          {layerPanelOpen && (
+            <div style={{ width: 340, flexShrink: 0, borderRight: `1px solid ${COLOR.rowDivider}`, padding: 14, display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
+              <div style={{ ...v2Title, marginBottom: 16 }}>Layer View</div>
+              <V2LayerRow label="Roads" on={showRoadOverlay} onToggle={() => setShowRoadOverlay((v) => !v)} />
+              <V2LayerRow label="Planning Area" on={showPlanningAreaOverlay} onToggle={() => setShowPlanningAreaOverlay((v) => !v)} />
+              <div style={{ flex: 1 }} />
+              <div style={{ ...v2Title, marginBottom: 7 }}>Import</div>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                style={{ width: "100%", height: 40, boxSizing: "border-box", padding: 0, background: COLOR.gray800, border: "none", borderRadius: 6, fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.white, cursor: "pointer" }}
+              >
+                {uploadedBoundaries.length > 0 ? "Replace Shapefile" : "Import Shapefile"}
+              </button>
+            </div>
+          )}
+
+          {/* Map well */}
+          <div style={{ flex: 1, minWidth: 0, position: "relative", overflow: "hidden", background: COLOR.gray100 }}>
+            {renderMap()}
+            {/* Collapse / expand tab — small rounded handle (same as v1). */}
+            <button
+              onClick={() => setLayerPanelOpen((v) => !v)}
+              title={layerPanelOpen ? "Collapse Layer View" : "Expand Layer View"}
+              style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", width: 24, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: COLOR.white, border: `1px solid ${COLOR.border}`, borderLeft: "none", borderTopRightRadius: 6, borderBottomRightRadius: 6, boxShadow: "0 1px 4px rgba(0,0,0,0.16)", color: COLOR.gray600, cursor: "pointer", padding: 0, zIndex: 500 }}
+            >
+              {layerPanelOpen ? <FiChevronsLeft size={14} /> : <FiChevronsRight size={14} />}
+            </button>
+            {/* Floating tool cluster (Draw Polygon + Clear) */}
+            <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: 5, background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: 6, padding: 4, zIndex: 500 }}>
+              <button
+                onClick={clearPolygon}
+                title="Clear polygon"
+                style={v2ToolBtn(false)}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={COLOR.danger} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+              </button>
+              <button
+                onClick={() => setIsDrawing((v) => !v)}
+                title={isDrawing ? "Drawing… click map to add points" : "Draw polygon"}
+                style={v2ToolBtn(isDrawing)}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={isDrawing ? COLOR.white : COLOR.text} strokeWidth="2" strokeLinejoin="round"><polygon points="12 3 20 9 17 19 7 19 4 9" /></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Roads Found card */}
+        <div style={{ flex: 1, minWidth: 0, border: `1px solid ${COLOR.border}`, borderRadius: 6, display: "flex", flexDirection: "column", padding: "14px 16px", boxSizing: "border-box", overflow: "hidden" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexShrink: 0 }}>
+            <span style={v2Title}>Roads Found</span>
+            {roads.length > 0 && (
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {selectedUnavailableCount > 0 && (
+                  <button onClick={deselectUnavailable} style={v2GhostInline}>Deselect Unavailable</button>
+                )}
+                <button onClick={allSelected ? deselectAll : selectAll} style={v2GhostInline}>{allSelected ? "Deselect All" : "Select All"}</button>
+              </div>
+            )}
+          </div>
+
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", padding: "0 8px", flexShrink: 0, marginBottom: 6 }}>
+            <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center" }}>
+              <div onClick={roads.length > 0 ? (allSelected ? deselectAll : selectAll) : undefined} style={v2Checkbox(allSelected)}>{allSelected && v2Check}</div>
+              <span style={v2HeaderLabel}>Folder Name</span>
+              <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+            </div>
+            <div style={{ width: 120, flexShrink: 0, display: "flex", gap: 5, alignItems: "center", justifyContent: "center" }}>
+              <span style={v2HeaderLabel}>Segments</span>
+              <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+            </div>
+          </div>
+
+          {/* Body */}
+          <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
+            {roads.length === 0 ? (
+              <div style={{ padding: "32px 12px", textAlign: "center", fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+                {querying ? "Searching for roads…" : "Draw a polygon, pick a planning area, or import a shapefile to find roads."}
+              </div>
+            ) : (
+              roads.map((road) => (
+                <div
+                  key={road.name}
+                  onClick={() => toggleRoad(road.name)}
+                  style={{ display: "flex", alignItems: "center", padding: "8px 8px", minHeight: 35, boxSizing: "border-box", borderBottom: `1px solid ${COLOR.rowDivider}`, cursor: "pointer", background: road.selected ? COLOR.gray100 : "transparent" }}
+                >
+                  <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center", minWidth: 0 }}>
+                    <div onClick={(e) => { e.stopPropagation(); toggleRoad(road.name); }} style={v2Checkbox(road.selected)}>{road.selected && v2Check}</div>
+                    <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: road.exists ? COLOR.text : COLOR.gray500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={road.exists ? (road.label ?? road.name) : `${road.label ?? road.name} — not downloaded`}>
+                      {road.label ?? road.name}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
+                    </span>
+                  </div>
+                  <span style={{ width: 120, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{road.points}</span>
+                </div>
+              ))
+            )}
+          </div>
+
+          {roadStatus && (
+            <div style={{ flexShrink: 0, marginTop: 8, fontFamily: FONT, fontSize: 12, color: roadStatus.color.includes("red") ? COLOR.danger : COLOR.gray500 }}>{roadStatus.text}</div>
+          )}
+          {isFallback && roads.length > 0 && (
+            <div style={{ flexShrink: 0, marginTop: 4, fontFamily: FONT, fontSize: 12, color: COLOR.danger }}>No image data has been downloaded for this area — project creation is not possible until images are available.</div>
+          )}
+        </div>
+
+        {hiddenFileInput}
+      </div>
+    );
+  }
+
+  // ── v1 render ────────────────────────────────────────────────────
   return (
     <Box>
       {/* Toolbar */}
@@ -793,14 +1099,7 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
           </Button>
         )}
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={SHAPEFILE_ACCEPT}
-          multiple
-          onChange={handleBoundaryFileChange}
-          style={{ display: "none" }}
-        />
+        {hiddenFileInput}
       </Flex>
 
       <Box minH="36px" mb={2}>
@@ -818,151 +1117,7 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
 
       {/* Map */}
       <Box borderRadius="md" overflow="hidden" border="1px solid" borderColor="gray.200">
-        <MapContainer
-          center={[1.3521, 103.8198]}
-          zoom={12}
-          style={{ height: "350px", width: "100%" }}
-          scrollWheelZoom
-        >
-          <ThemeAwareTileLayer />
-          <MapCursorController mode={isDrawing ? "add" : "default"} />
-          <MapClickHandler active={isDrawing} onPoint={addPoint} />
-          <MapViewportWatcher onViewportChange={setViewportState} />
-          <MapBoundsFitter points={mapFocusPoints} />
-          {showPlanningAreaOverlay && overlayPlanningAreas.map((area) => {
-            const areaKey = `${area.name}-${area.partIndex}`;
-            const isHighlighted = highlightPlanningAreaKey === areaKey;
-            return (
-              <LeafletPolygon
-                key={areaKey}
-                positions={area.coords}
-                pathOptions={{
-                  color: isHighlighted ? "#0F766E" : "#0D9488",
-                  weight: isHighlighted ? 3 : 1.5,
-                  opacity: 0.9,
-                  fillColor: isHighlighted ? "#14B8A6" : "#5EEAD4",
-                  fillOpacity: isHighlighted ? 0.28 : 0.12,
-                }}
-                eventHandlers={{
-                  click: (e) => {
-                    L.DomEvent.stopPropagation(e as any);
-                    selectPlanningArea(area);
-                  },
-                }}
-              >
-                <Popup>
-                  <Text fontSize="sm" fontWeight="semibold">{area.name}</Text>
-                </Popup>
-              </LeafletPolygon>
-            );
-          })}
-          {uploadedBoundaries.map((boundary) => {
-            const isHighlighted = highlightUploadedBoundaryKey === boundary.key;
-            return (
-              boundary.kind === "polygon" && boundary.coords ? (
-                <LeafletPolygon
-                  key={boundary.key}
-                  positions={boundary.coords}
-                  pathOptions={{
-                    color: isHighlighted ? "#C2410C" : "#EA580C",
-                    weight: isHighlighted ? 3 : 1.5,
-                    opacity: 0.95,
-                    fillColor: isHighlighted ? "#FB923C" : "#FDBA74",
-                    fillOpacity: isHighlighted ? 0.28 : 0.14,
-                  }}
-                  eventHandlers={{
-                    click: (e) => {
-                      L.DomEvent.stopPropagation(e as any);
-                      selectUploadedBoundary(boundary);
-                    },
-                  }}
-                >
-                  <Popup>
-                    <Text fontSize="sm" fontWeight="semibold">{boundary.label}</Text>
-                    <Text fontSize="xs" color="orange.700">Imported area selection</Text>
-                  </Popup>
-                </LeafletPolygon>
-              ) : (
-                <>
-                  {(boundary.lineCoordsSets ?? []).map((lineCoords, partIndex) => (
-                    <LeafletPolyline
-                      key={`${boundary.key}-${partIndex}`}
-                      positions={lineCoords}
-                      pathOptions={{
-                        color: isHighlighted ? "#C2410C" : "#EA580C",
-                        weight: isHighlighted ? 4 : 2.5,
-                        opacity: 0.95,
-                      }}
-                      eventHandlers={{
-                        click: (e) => {
-                          L.DomEvent.stopPropagation(e as any);
-                          selectUploadedBoundary(boundary);
-                        },
-                      }}
-                    >
-                      <Popup>
-                        <Text fontSize="sm" fontWeight="semibold">{boundary.label}</Text>
-                        <Text fontSize="xs" color="orange.700">Imported path selection</Text>
-                      </Popup>
-                    </LeafletPolyline>
-                  ))}
-                </>
-              )
-            );
-          })}
-          {showRoadOverlay && overlayRoads.map((road, idx) => (
-            <LeafletPolyline
-              key={`${road.name}-${idx}`}
-              positions={road.coords}
-              pathOptions={{
-                color: highlightRoadName === road.name ? "#1D4ED8" : (road.exists ? "#16A34A" : "#6B7280"),
-                weight: highlightRoadName === road.name ? 4 : 2,
-                opacity: 0.75,
-              }}
-              eventHandlers={{
-                click: () => {
-                  setHighlightRoadName(road.name);
-                  const hit = roads.find((r) => r.name === road.name);
-                  if (hit && !hit.selected) {
-                    toggleRoad(road.name);
-                  }
-                },
-              }}
-            >
-              <Popup>
-                <Text fontSize="xs" fontWeight="bold">{road.name}</Text>
-                <Text fontSize="xs" color={road.exists ? "green.600" : "orange.600"}>
-                  {road.exists ? "Available" : "Not Downloaded"}
-                </Text>
-              </Popup>
-            </LeafletPolyline>
-          ))}
-          {focusRoadSegments.map((seg, idx) => (
-            <LeafletPolyline
-              key={`focus-road-${idx}`}
-              positions={seg.coords}
-              pathOptions={{ color: "#F59E0B", weight: 5, opacity: 0.9 }}
-              interactive={false}
-            />
-          ))}
-          <PolygonOverlay
-            points={polygonPoints}
-          />
-          {polygonSource === "manual" && polygonPoints.map((point, index) => (
-            <Marker
-              key={`polygon-point-${index}-${point[0]}-${point[1]}`}
-              position={point}
-              icon={polygonVertexIcon}
-              draggable
-              eventHandlers={{
-                dragend: (event) => {
-                  const latlng = (event.target as L.Marker).getLatLng();
-                  movePoint(index, latlng);
-                },
-              }}
-            />
-          ))}
-        </MapContainer>
+        {renderMap()}
       </Box>
 
       <Box minH="24px" mt={2}>
@@ -1018,7 +1173,7 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                     onChange={() => toggleRoad(road.name)}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <Text fontSize="sm">{road.name}</Text>
+                  <Text fontSize="sm">{road.label ?? road.name}</Text>
                 </HStack>
                 <HStack gap={2}>
                   <Text fontSize="xs" color="gray.500">
@@ -1067,5 +1222,65 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
         </Box>
       )}
     </Box>
+  );
+}
+
+// ── v2 presentational helpers (Home.dc.html Frame 2 map layout) ──────
+const v2Title: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text };
+const v2HeaderLabel: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text };
+const v2GhostInline: React.CSSProperties = {
+  height: 30,
+  padding: "0 10px",
+  background: "transparent",
+  border: `1px solid ${COLOR.borderInput}`,
+  borderRadius: 6,
+  fontFamily: FONT,
+  fontWeight: 700,
+  fontSize: 14,
+  color: COLOR.text,
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+};
+
+function v2ToolBtn(active: boolean): React.CSSProperties {
+  return {
+    width: 28,
+    height: 28,
+    background: active ? COLOR.blue : COLOR.white,
+    border: `1px solid ${active ? COLOR.blue : COLOR.border}`,
+    borderRadius: 6,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    padding: 0,
+  };
+}
+
+// 16×16 checkbox per DESIGN_GUIDE §7.
+function v2Checkbox(checked: boolean): React.CSSProperties {
+  return checked
+    ? { width: 16, height: 16, background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
+    : { width: 16, height: 16, border: `1px solid ${COLOR.borderInput}`, borderRadius: 2, flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
+}
+
+const v2Check = (
+  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+    <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// On/off switch per DESIGN_GUIDE §7 (track 30×16, thumb 12, neutral on-track #2D3748).
+function V2LayerRow({ label, on, onToggle }: { label: string; on: boolean; onToggle: () => void }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
+      <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{label}</span>
+      <div
+        onClick={onToggle}
+        style={{ width: 30, height: 16, borderRadius: 999, background: on ? COLOR.text : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
+      >
+        <div style={{ position: "absolute", top: 2, left: 2, width: 12, height: 12, borderRadius: "50%", background: "#fff", transform: on ? "translateX(14px)" : "none", transition: "transform .15s" }} />
+      </div>
+    </div>
   );
 }
