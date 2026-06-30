@@ -54,6 +54,11 @@ scripts/generate_symbol_descriptions.py
 scripts/list_bicycle_crossings.py
 scripts/numerical_parity_v213.py
 scripts/verify_treatment12_donut.py
+scripts/segment_paths.py
+scripts/infer_obstacles.py
+
+# Generated reports (exported from the app)
+Generated Reports/
 
 # Data and Models
 CycleRAP - model - generation v2.13 - to suppliers.xlsm
