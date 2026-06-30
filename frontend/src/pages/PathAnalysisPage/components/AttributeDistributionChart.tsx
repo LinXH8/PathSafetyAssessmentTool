@@ -19,6 +19,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { ChartTypeToggle } from "../../../components/ui/ChartTypeToggle";
+import { FONT } from "../../../features/ui/designTokens";
+import { V2Segmented, DistTooltipBox } from "./paV2Primitives";
 
 interface CategoryItem {
   category: string;
@@ -39,6 +41,8 @@ interface AttributeDistributionChartProps {
   categoryStatus?: AttributeStatus[];
   totalSegmentsLoaded?: number;
   totalSegmentsViewed?: number;
+  /** "v2" swaps the Pie/Bar toggle for the §5 segmented control + slims the title. */
+  variant?: "v1" | "v2";
 }
 
 export default function AttributeDistributionChart({
@@ -47,7 +51,9 @@ export default function AttributeDistributionChart({
   categoryStatus = [],
   totalSegmentsLoaded,
   totalSegmentsViewed,
+  variant = "v1",
 }: AttributeDistributionChartProps) {
+  const isV2 = variant === "v2";
   const [chartTypeState, setChartTypeState] = useState<"pie" | "bar">("pie");
 
   const activeChartType = chartTypeState;
@@ -123,7 +129,7 @@ export default function AttributeDistributionChart({
       {/* Header with Toggle */}
       <Flex justify="space-between" align="center" mb="4" flexWrap="wrap" gap="4">
         <Box>
-          <Text fontSize="lg" fontWeight="bold">
+          <Text fontSize={isV2 ? "16px" : "lg"} fontWeight="bold" style={isV2 ? { fontFamily: FONT } : undefined}>
             Distribution of {selectedAttribute}
           </Text>
           <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
@@ -263,7 +269,18 @@ export default function AttributeDistributionChart({
             </Box>
           )}
         </Box>
-        {showToggle && <ChartTypeToggle chartType={chartTypeState} onToggle={setChartTypeState} />}
+        {showToggle && (
+          isV2 ? (
+            <V2Segmented
+              options={[{ value: "pie", label: "Pie" }, { value: "bar", label: "Bar" }]}
+              value={chartTypeState}
+              onChange={setChartTypeState}
+              height={34}
+            />
+          ) : (
+            <ChartTypeToggle chartType={chartTypeState} onToggle={setChartTypeState} />
+          )
+        )}
       </Flex>
 
       {/* Chart Container */}
@@ -297,6 +314,9 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    if (isV2) {
+                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                    }
                     return (
                       <Box
                         bg="white"
@@ -385,6 +405,9 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    if (isV2) {
+                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                    }
                     return (
                       <Box
                         bg="white"
