@@ -616,6 +616,13 @@ _GRADIENT_PROFILE_CATALOG: "dict[str, dict] | None" = None
 _GRADIENT_CATALOG_LOAD_TIME: float = 0.0
 _PROJECT_GRADIENT_CACHE: dict[str, dict[str, tuple[int, float]]] = {}
 _PROJECT_GRADIENT_CACHE_STATE: dict[str, str] = {}
+# Serialises the cold-cache build below. The build reads a GeoPackage via GDAL
+# (not reentrant) and does per-segment Shapely projection (GIL-bound). Without
+# this lock, N concurrent `/versions/latest/attributes` requests (one per loaded
+# project on the Path Analysis page) all run the heavy build at once on a cold
+# cache, crashing a worker thread -> ECONNRESET. Double-checked against the cache
+# so warm hits never take the lock.
+_GRADIENT_CACHE_LOCK = threading.Lock()
 
 _GRADIENT_CACHE_STATE_PROFILE_MISSING = "profile_missing"
 _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE = "profile_available"
@@ -830,101 +837,110 @@ def _nearest_chainage_index(chainages: list[float], target: float) -> "int | Non
 
 
 def _get_project_gradient_mapping(project_name: str) -> dict[str, tuple[int, float]]:
-    if project_name in _PROJECT_GRADIENT_CACHE:
-        return _PROJECT_GRADIENT_CACHE[project_name]
+    cached = _PROJECT_GRADIENT_CACHE.get(project_name)
+    if cached is not None:
+        return cached
 
-    mapping: dict[str, tuple[int, float]] = {}
-    _PROJECT_GRADIENT_CACHE[project_name] = mapping
-    _PROJECT_GRADIENT_CACHE_STATE[project_name] = _GRADIENT_CACHE_STATE_PROFILE_MISSING
+    # Serialise the cold-cache build so concurrent requests don't all run the
+    # non-thread-safe GDAL/Shapely work at once. Re-check inside the lock: another
+    # thread may have finished building while we waited.
+    with _GRADIENT_CACHE_LOCK:
+        cached = _PROJECT_GRADIENT_CACHE.get(project_name)
+        if cached is not None:
+            return cached
 
-    if not project_name:
-        return mapping
+        mapping: dict[str, tuple[int, float]] = {}
+        _PROJECT_GRADIENT_CACHE[project_name] = mapping
+        _PROJECT_GRADIENT_CACHE_STATE[project_name] = _GRADIENT_CACHE_STATE_PROFILE_MISSING
 
-    try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        gpkg_path = proj.project_path / "geo_data.gpkg"
-        if not gpkg_path.exists():
-            print(f"[Gradient] no geo_data.gpkg for project '{project_name}'")
+        if not project_name:
             return mapping
 
-        gdf = gpd.read_file(gpkg_path)
-        if gdf.empty or "Image Reference" not in gdf.columns:
-            print(f"[Gradient] project '{project_name}' has no usable Image Reference column in geo_data.gpkg")
-            return mapping
+        try:
+            ctx = get_ctx()
+            proj: Project = ctx["pm"].project(project_name)
+            gpkg_path = proj.project_path / "geo_data.gpkg"
+            if not gpkg_path.exists():
+                print(f"[Gradient] no geo_data.gpkg for project '{project_name}'")
+                return mapping
 
-        if gdf.crs is None:
-            gdf = gdf.set_crs("EPSG:3414")
-        elif gdf.crs.to_epsg() != 3414:
-            gdf = gdf.to_crs(epsg=3414)
+            gdf = gpd.read_file(gpkg_path)
+            if gdf.empty or "Image Reference" not in gdf.columns:
+                print(f"[Gradient] project '{project_name}' has no usable Image Reference column in geo_data.gpkg")
+                return mapping
 
-        centerline = _stitch_gradient_centerline(gdf)
-        if centerline is None:
-            print(f"[Gradient] project '{project_name}' has no usable centerline for gradient lookup")
-            return mapping
+            if gdf.crs is None:
+                gdf = gdf.set_crs("EPSG:3414")
+            elif gdf.crs.to_epsg() != 3414:
+                gdf = gdf.to_crs(epsg=3414)
 
-        meta = _resolve_gradient_profile_for_project(project_name, centerline)
-        if not meta:
-            print(f"[Gradient] no matching profile found for project '{project_name}'")
-            return mapping
+            centerline = _stitch_gradient_centerline(gdf)
+            if centerline is None:
+                print(f"[Gradient] project '{project_name}' has no usable centerline for gradient lookup")
+                return mapping
 
-        _PROJECT_GRADIENT_CACHE_STATE[project_name] = _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE
+            meta = _resolve_gradient_profile_for_project(project_name, centerline)
+            if not meta:
+                print(f"[Gradient] no matching profile found for project '{project_name}'")
+                return mapping
 
-        profile_df = pd.read_csv(meta["_profile_path"])
-        if profile_df.empty or "chainage_m" not in profile_df.columns:
-            print(f"[Gradient] profile CSV missing chainage_m for '{meta.get('path_key')}'")
-            return mapping
+            _PROJECT_GRADIENT_CACHE_STATE[project_name] = _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE
 
-        profile_df = profile_df.sort_values("chainage_m").reset_index(drop=True)
-        chainages = [float(v) for v in profile_df["chainage_m"].tolist()]
-        if len(chainages) > 1:
-            diffs = [chainages[i] - chainages[i - 1] for i in range(1, len(chainages))]
-            step = float(pd.Series(diffs).median())
-        else:
-            step = 0.0
-        tolerance = max(step * 1.5, 1.0)
+            profile_df = pd.read_csv(meta["_profile_path"])
+            if profile_df.empty or "chainage_m" not in profile_df.columns:
+                print(f"[Gradient] profile CSV missing chainage_m for '{meta.get('path_key')}'")
+                return mapping
 
-        for _, row in gdf.iterrows():
-            image_ref = str(row.get("Image Reference") or "").strip()
-            geom = row.geometry
-            if not image_ref or geom is None or geom.is_empty:
-                continue
-            if geom.geom_type == "MultiLineString":
-                parts = list(geom.geoms)
-                if not parts:
+            profile_df = profile_df.sort_values("chainage_m").reset_index(drop=True)
+            chainages = [float(v) for v in profile_df["chainage_m"].tolist()]
+            if len(chainages) > 1:
+                diffs = [chainages[i] - chainages[i - 1] for i in range(1, len(chainages))]
+                step = float(pd.Series(diffs).median())
+            else:
+                step = 0.0
+            tolerance = max(step * 1.5, 1.0)
+
+            for _, row in gdf.iterrows():
+                image_ref = str(row.get("Image Reference") or "").strip()
+                geom = row.geometry
+                if not image_ref or geom is None or geom.is_empty:
                     continue
-                geom = max(parts, key=lambda g: g.length)
-            if geom.geom_type != "LineString":
-                continue
+                if geom.geom_type == "MultiLineString":
+                    parts = list(geom.geoms)
+                    if not parts:
+                        continue
+                    geom = max(parts, key=lambda g: g.length)
+                if geom.geom_type != "LineString":
+                    continue
 
-            midpoint = geom.interpolate(0.5, normalized=True)
-            chainage = float(centerline.project(midpoint))
-            idx = _nearest_chainage_index(chainages, chainage)
-            if idx is None:
-                continue
-            profile_row = profile_df.iloc[idx]
-            profile_chainage = float(profile_row.get("chainage_m", float("nan")))
-            if math.isnan(profile_chainage) or abs(profile_chainage - chainage) > tolerance:
-                continue
+                midpoint = geom.interpolate(0.5, normalized=True)
+                chainage = float(centerline.project(midpoint))
+                idx = _nearest_chainage_index(chainages, chainage)
+                if idx is None:
+                    continue
+                profile_row = profile_df.iloc[idx]
+                profile_chainage = float(profile_row.get("chainage_m", float("nan")))
+                if math.isnan(profile_chainage) or abs(profile_chainage - chainage) > tolerance:
+                    continue
 
-            grade_raw = profile_row.get("Grade")
-            grad_raw = profile_row.get("gradient_pct")
-            if pd.isna(grade_raw) or pd.isna(grad_raw):
-                continue
+                grade_raw = profile_row.get("Grade")
+                grad_raw = profile_row.get("gradient_pct")
+                if pd.isna(grade_raw) or pd.isna(grad_raw):
+                    continue
 
-            grade_coded = int(float(grade_raw))
-            gradient_pct = float(grad_raw)
-            if grade_coded in (1, 2):
-                mapping[image_ref] = (grade_coded, gradient_pct)
+                grade_coded = int(float(grade_raw))
+                gradient_pct = float(grad_raw)
+                if grade_coded in (1, 2):
+                    mapping[image_ref] = (grade_coded, gradient_pct)
 
-        print(
-            f"[Gradient] project '{project_name}' -> profile '{meta.get('path_key')}' mapped {len(mapping)} image refs",
-            flush=True,
-        )
-    except Exception as exc:
-        print(f"[Gradient] WARNING: failed to build project gradient cache for '{project_name}': {exc}", flush=True)
+            print(
+                f"[Gradient] project '{project_name}' -> profile '{meta.get('path_key')}' mapped {len(mapping)} image refs",
+                flush=True,
+            )
+        except Exception as exc:
+            print(f"[Gradient] WARNING: failed to build project gradient cache for '{project_name}': {exc}", flush=True)
 
-    return mapping
+        return mapping
 
 
 def _get_project_gradient_cache_state(project_name: str) -> str:
