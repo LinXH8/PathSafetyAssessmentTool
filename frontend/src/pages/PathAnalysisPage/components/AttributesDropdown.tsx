@@ -583,14 +583,11 @@ export const ATTRIBUTE_SUBCATEGORIES: Record<string, Record<string, string>> = {
 };
 
 /**
- * Returns the display hex color for a given attribute name and category value.
- * Identical logic to the getCategoryColor function in PathAnalysisMapView.
- * Exported here to avoid duplication and circular imports.
+ * Per-attribute → per-value color map. Single source of truth for the filter-pill
+ * and focus-attribute point colors, consumed by getCategoryColor() below AND by
+ * PathAnalysisMapView's attributeCategoryColors memo (legend / pie / bar).
  */
-export function getCategoryColor(attribute: string, category: string): string {
-  const isSafetyScore = ["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"].includes(attribute);
-
-  const categoryColors: Record<string, string | Record<string, string>> = {
+export const CATEGORY_COLORS: Record<string, string | Record<string, string>> = {
     "Not Selected": "#9CA3AF",
     "Low": "#87C424",
     "Medium": "#FFCC1A",
@@ -719,13 +716,20 @@ export function getCategoryColor(attribute: string, category: string): string {
       "Industrial":   "#EA580C",
       "Recreational": "#9333EA",
     },
-  };
+};
+
+/**
+ * Returns the display hex color for a given attribute name and category value.
+ * Backed by CATEGORY_COLORS (the single source above).
+ */
+export function getCategoryColor(attribute: string, category: string): string {
+  const isSafetyScore = ["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"].includes(attribute);
 
   if (isSafetyScore) {
-    return (categoryColors[category] as string) || "#6B7280";
+    return (CATEGORY_COLORS[category] as string) || "#6B7280";
   }
 
-  const attributeColors = categoryColors[attribute];
+  const attributeColors = CATEGORY_COLORS[attribute];
   if (typeof attributeColors === "object" && attributeColors !== null) {
     return (attributeColors as Record<string, string>)[category] || "#6B7280";
   }

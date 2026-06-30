@@ -13,6 +13,7 @@ import { MapCursorController } from "../../../components/common/MapCursorControl
 import type { Feature, FeatureCollection, LineString, Position } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { GIS_LAYER_COLORS as layerColors } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
 import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { useNavigate } from "react-router-dom";
@@ -915,23 +916,8 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => { controller.abort(); };
   }, [activeGisLat, activeGisLon, showPathDefects]);
 
-  // Layer colors matching curvature analysis
-  const layerColors = {
-    footpath: "#1E90FF",    // DodgerBlue
-    cycling: "#B91C1C",     // Deep Red
-    shared: "#A855F7",      // Purple
-    roadcrossing: "#10B981", // Emerald/Green
-    mrt_exit: "#06B6D4",    // Cyan
-    bicycle_crossing: "#F97316", // Orange
-    bus_stop: "#8B5CF6",    // Purple
-    bus_lane: "#EAB308",    // Yellow
-    parking_lot: "#D97706", // Amber/Gold
-    kerb_line: "#D946EF",   // Fuchsia
-    state_land: "#14B8A6",  // Teal
-    stat_board: "#F59E0B",  // Amber
-    land_private: "#6366F1", // Indigo
-    land_ministry: "#EC4899", // Pink
-  };
+  // GIS layer colors now sourced from constants/mapColors.ts (imported above as
+  // layerColors) — single source shared with PathAnalysisMapView + AnalysisSidebar.
 
   // Get segment color based on the crash type with the highest score
   const getSegmentColor = (segmentIndex: number): string => {

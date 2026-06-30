@@ -9,7 +9,7 @@ import { toaster } from "../../../components/ui/toaster";
 import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Marker, Pane, ZoomControl } from "react-leaflet";
 import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
-import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
+import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
 import { Menu } from "@chakra-ui/react";
 import { MapCursorController } from "../../../components/common/MapCursorController";
@@ -1587,150 +1587,22 @@ export default function AttributeAnalysisMapView({
   }, [categoryToggles, getFocusedAttributeValue, primaryFocusAttribute, visibleSegments]);
 
   // Generate colors for attribute categories based on the effective focus level.
+  // Colors come from CATEGORY_COLORS (AttributesDropdown) — the single source
+  // shared with getCategoryColor and the filter pills.
   const attributeCategoryColors = useMemo(() => {
     if (!effectiveFocusAttribute) return {};
 
-    const categoryColors: Record<string, string | Record<string, string>> = {
-      "Low": "#87C424",
-      "Medium": "#FFCC1A",
-      "High": "#FF5B1A",
-      "Extreme": "#CD1AFF",
-      "Adjacent Sidewalk 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Road Lane 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Vehicle Parking 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Severe Hazard 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent object or level change 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Road Lane 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Vehicle Parking 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Severe Hazard 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent object or level change 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Line of Sight": { "Adequate": "#16A34A", "Inadequate": "#DC2626" },
-      "Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "FO Type": {
-        "Lamp Post": "#DC2626",
-        "Traffic Light": "#EA580C",
-        "Covered Linkway Pole": "#F59E0B",
-        "Bollard": "#CA8A04",
-        "Bollards": "#CA8A04",
-        "Billboard": "#7C3AED",
-        "Billboards": "#7C3AED",
-        "Sign Pole": "#0284C7",
-        "Sign Poles": "#0284C7",
-        "Railing": "#0891B2",
-        "Utility Box": "#EC4899",
-        "Vegetation": "#16A34A",
-        "Others": "#6B7280",
-      },
-      "Non-Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "NFO Type": {
-        "Barrier": "#DC2626",
-        "Bin": "#EA580C",
-        "Bins": "#EA580C",
-        "Bicycle": "#F59E0B",
-        "Cone": "#CA8A04",
-        "Others": "#6B7280",
-      },
-      "Width Restriction": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Light Segregation": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Facility access": { "Adequate": "#16A34A", "Inadequate": "#DC2626" },
-      "Loose or slippery surface": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Major Surface Deformation or Drain Opening": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Tram or Train Rails": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Delineation": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Street Lighting": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Grade": {
-        "<=2% (1:25)": "#16A34A",
-        "2.9% (1:20)": "#65A30D",
-        "3.8% (1:15)": "#CA8A04",
-        "4.7% (1:12)": "#EA580C",
-        ">=5%": "#DC2626",
-      },
-      "Curvature": { "No Sharp Turn Present": "#16A34A", "Sharp Turn Present": "#DC2626" },
-      "Curvature Sub-category": {
-        "<6.5m": "#DC2626",
-        "<10m": "#EA580C",
-        "Path Junction": "#9333EA",
-        "Sharp Bend": "#EA580C",
-        "Both": "#9333EA",
-        "10–18m": "#16A34A",
-        ">18m": "#2563EB",
-      },
-      "Facility Width per Direction": { "Wide": "#16A34A", "Narrow": "#FFCC1A", "Very Narrow": "#DC2626" },
-      "Facility Width Sub-category": {
-        "≤1.5m": "#DC2626",
-        ">1.5–1.8m": "#EA580C",
-        ">1.8–<2m": "#F59E0B",
-        "2–<3.5m": "#16A34A",
-        "3.5–4m": "#0891B2",
-        ">4m": "#2563EB",
-      },
-      "Peak pedestrian flow along or across facility": { "None": "#6B7280", "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Peak bicycle/LV traffic flow": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Observed proportion of cargo bikes and mopeds": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Heavy vehicle flow": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Bicycle/LV speed – average": { "< 20km/h": "#16A34A", "=/> 20km/h": "#DC2626" },
-      "Bicycle/LV speed differential": { "< 10km/h": "#16A34A", "=/> 10km/h": "#DC2626" },
-      "Intersection or Road Crossing": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Crossing Facility": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Crossing Type": {
-        "Zebra Crossing": "#CA8A04",
-        "Signalised PC": "#2563EB",
-        "Bicycle Crossing": "#16A34A",
-        "Unsignalised Junction": "#EA580C",
-        "Development Access": "#9333EA",
-      },
-      "Pedestrian Crossing": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Intersecting Bicycle Facility": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Property Access": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Intersection Approach": { "Separate/NA": "#16A34A", "Shared": "#DC2626" },
-      "Number of lanes – adjacent road": { "1 per Direction/NA": "#16A34A", "> 1 per Direction": "#DC2626" },
-      "Number of lanes – intersecting road": { "1 per Direction/NA": "#16A34A", "> 1 per Direction": "#DC2626" },
-      "Road speed limit": {
-        "NA": "#6B7280",
-        "30 km/h": "#16A34A",
-        "40 km/h": "#65A30D",
-        "50 km/h": "#FFCC1A",
-        "60 km/h": "#F59E0B",
-        "70 km/h": "#EA580C",
-        "80 km/h": "#DC2626",
-        "90 km/h": "#991B1B",
-      },
-      "Flow Direction": { "One Way": "#2563EB", "Two Way": "#9333EA" },
-      "Delineation Type": {
-        "Cycling Path": "#2563EB",
-        "Red Stripe": "#DC2626",
-        "Signalised Crossing": "#EA580C",
-        "Zebra Crossing": "#CA8A04",
-        "Faded Marking": "#9CA3AF",
-      },
-      "Facility Type": {
-        "Sidewalk": "#2563EB",
-        "Multi-Use Path": "#9333EA",
-        "Off-Road Bicycle Path": "#16A34A",
-        "On-road Bicycle Lane": "#CA8A04",
-        "Road Shoulder": "#F59E0B",
-        "Mixed Traffic Road Lane": "#DC2626",
-      },
-      "Area type": {
-        "Urban": "#2563EB",
-        "Suburban": "#0891B2",
-        "Rural": "#16A34A",
-        "Industrial": "#EA580C",
-        "Recreational": "#9333EA",
-      },
-    };
-
-    const attributeColors = categoryColors[effectiveFocusAttribute];
+    const attributeColors = CATEGORY_COLORS[effectiveFocusAttribute];
     if (typeof attributeColors === "object" && attributeColors !== null) {
       return attributeColors as Record<string, string>;
     }
 
     if (SAFETY_FOCUS_ATTRIBUTES.has(effectiveFocusAttribute || "")) {
       return {
-        "Low": categoryColors["Low"] as string,
-        "Medium": categoryColors["Medium"] as string,
-        "High": categoryColors["High"] as string,
-        "Extreme": categoryColors["Extreme"] as string,
+        "Low": CATEGORY_COLORS["Low"] as string,
+        "Medium": CATEGORY_COLORS["Medium"] as string,
+        "High": CATEGORY_COLORS["High"] as string,
+        "Extreme": CATEGORY_COLORS["Extreme"] as string,
       };
     }
 
