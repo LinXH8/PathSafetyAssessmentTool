@@ -1331,6 +1331,18 @@ export default function AttributeAnalysisMapView({
   const visibleSegments = useMemo(() => {
     const segments: VisibleSegment[] = [];
 
+    // Filtering (getFilterAttributeText) and focus coloring (getCategoryColor) both rely on
+    // attrMappings to turn numeric attribute codes into the text labels that categoryToggles
+    // and the colour maps are keyed by. If mappings aren't ready yet (cold module cache after
+    // a multi-page round-trip), every segment's value is an unmatched code → nothing gets
+    // filtered out and nothing gets a category colour, producing a one-frame flash of ALL
+    // segments rendered grey. When mappings are required but not ready, render nothing for
+    // that frame instead (a brief blank is far less jarring than "irrelevant grey segments").
+    const mappingsReady = Object.keys(attrMappings).length > 0;
+    const needsMappings =
+      activeFilters.length > 0 || (!!primaryFocusAttribute && primaryFocusAttribute !== "Project");
+    if (needsMappings && !mappingsReady) return segments;
+
     projectsData.forEach((projectData) => {
       projectData.geoFeatures.forEach((feature, i) => {
         const g = feature.geometry;
@@ -1422,7 +1434,7 @@ export default function AttributeAnalysisMapView({
     });
 
     return segments;
-  }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText]);
+  }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText, attrMappings, primaryFocusAttribute]);
 
   // Per-project map of visible (filtered) segment indices. Indices are 0-based and
   // match geoFeatures/attributes/scores order, so the Top Risk Contributors panel can

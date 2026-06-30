@@ -725,7 +725,12 @@ export default function ReportBuilderPage() {
     const cst: FilterCategoryStatus[] = catStatus ? JSON.parse(catStatus) : [];
     const fidx: Record<string, number[]> | null = filteredSegs ? JSON.parse(filteredSegs) : null;
     const fvals: Record<string, Record<number, Record<string, string>>> | null = filteredVals ? JSON.parse(filteredVals) : null;
-    const combined = [...new Set([...paP, ...trP])];
+    // Prefer the Treatment context when it's set (i.e. the report was launched from the
+    // Treatment page); otherwise use the Path Analysis context. The two entry points clear
+    // the other key, so this is unambiguous — and it means we no longer need to destructively
+    // remove pathAnalysis_loadedProjects (which corrupted the Analysis page's loaded-projects
+    // state on back-navigation).
+    const combined = trP.length > 0 ? [...new Set(trP)] : [...new Set(paP)];
     setLoadedProjects(combined);
     setActiveFilterNames(flt);
     setActiveCategoryStatus(cst);

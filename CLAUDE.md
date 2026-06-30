@@ -134,6 +134,46 @@ targets back-navigation specifically.
 - `frontend/src/pages/Projects/projects.tsx` — `loadPathAnalysis()`: `invalidateAll()` +
   clears `pathAnalysisMap_viewport`
 
+### TreatmentDetailPage: Can't Scroll After "Generate Report" → Back (2026-06-28)
+
+**Symptom:** On the Treatment Application page, click **Generate Report** (sidebar →
+navigates to `/analysis/report`), then press **back** to return to the treatment page. The
+treatment page can no longer scroll at all — the mouse wheel does nothing.
+
+**Root cause — leaked Chakra/Zag Dialog scroll lock.** The "Confirm Apply All" Dialog
+(`treatmentDetailPage.tsx:2128`, `<Dialog.Root open={openConfirmAlert}>` rendered through a
+`<Portal>`) is the page's only Chakra overlay. While open, Zag's scroll-lock machinery sets
+`data-scroll-locked` plus inline `overflow: hidden` / `pointer-events: none` directly on
+`<html>` and `<body>` (same mechanism documented in the next section). Zag normally restores
+those styles when the dialog closes, but the restore runs after a close animation tick — if
+the whole `TreatmentDetailPage` unmounts first (clicking **Generate Report** navigates away),
+the cleanup never fires and the lock leaks onto the document. The **Report Builder
+(`reportBuilderPage.tsx`) uses no Chakra components and never touches `<body>` styles**, so it
+neither causes nor clears the lock. On back-navigation the treatment page remounts into an
+already-locked `<body>` → window scroll is dead.
+
+**Why it isn't obvious:** the treatment page's main content lives in fixed-height panels with
+their own `overflowY: auto` (e.g. `treatmentDetailPage.tsx:1683`), so those inner regions keep
+scrolling — only the outer window/page scroll is frozen.
+
+**Fix:** Added a `clearScrollLock()` helper in `TreatmentDetailPage` that resets
+`overflow` / `pointer-events` and removes `data-scroll-locked` from both `<html>` and `<body>`,
+wired into two effects:
+
+1. `useEffect([openConfirmAlert])` — when the dialog closes, `setTimeout(clearScrollLock, 400)`
+   to win the race against Zag's own (possibly-skipped) cleanup.
+2. `useEffect([])` — runs `clearScrollLock()` on **mount** (clears any lock left over when
+   returning from the Report Builder) and on **unmount** (clears it before navigating away).
+
+This is the same class of bug — and same JS cleanup workaround — as the EditProjectModal /
+AddSegmentsDialog fix documented below; the only new wrinkle is that here the lock is surfaced
+by a full-page route unmount rather than a same-page close.
+
+**Key file:**
+
+- `frontend/src/pages/TreatmentPage/treatmentDetailPage.tsx` — `clearScrollLock()` + the two
+  `useEffect`s next to the `openConfirmAlert` state declaration
+
 ### Chakra UI Dialog: Blocking Interaction After Close
 
 **Symptom:** After closing a `Dialog` (e.g. EditProjectModal), the page beneath becomes unresponsive — mouse wheel scroll and clicks on rows are blocked. Only the native scrollbar thumb drag still works.
@@ -322,6 +362,45 @@ context, JSON encoding/decoding, and route dispatch runs for every segment even 
 `_gis_autocode_core()` / `_cv_autocode_core()` directly (bypassing HTTP dispatch) is expected to
 reduce per-segment time from ~2.5 s to <0.5 s and is the highest-impact remaining fix.
 
+### TreatmentDetailPage: Score Drops Disappear After Data Loads (2026-06-26)
+
+**Symptom:** In the Treatment Application page's "By Segment" view, the "Score drop: X.X"
+labels under each treatment did not appear consistently after projects were loaded. They
+would sometimes appear briefly then vanish, or not appear at all — dependent on how fast
+the backend responded to the score-drop API call.
+
+**Root cause: `commitPage` debounce fires 300ms after data loads and calls `gotoPage`**
+
+The chain of events on `fetchData` completion:
+
+1. `setProjectMap(newMap)` + `setAttrs(newAttrs)` → `scope.count` changes (0 → N) and
+   `gotoPage` is recreated (depends on `len = attrs.length`).
+2. `commitPage` is recreated — it depends on `[gotoPage, isAllScope, scope]`.
+3. The `pageInput` debounce effect (`[pageInput, commitPage]`, line 1355) fires because
+   `commitPage` is a new function reference, even if `pageInput` hasn't changed.
+4. 300ms later: `commitPage(pageInput)` → `gotoPage(currentPage)` (same page) →
+   `setSegmentScoreDrops({})` clears the score drops.
+5. `currentIndex` didn't change → score drops `useEffect` deps unchanged → effect does
+   NOT re-run → score drops stay empty forever (until the user navigates to a new segment).
+
+**Why it was inconsistent:** If the `treatment_segment_effectiveness` API responded in
+**< 300ms**, drops would appear, then be wiped by step 4. If it responded in **> 300ms**,
+the fetch was still in flight when `gotoPage` fired; since `currentIndex` didn't change,
+`cancelled` stayed `false` and the fetch completed, setting the drops correctly.
+
+**Fix:** Add `currentPage` to `commitPage`'s dependency array and add an early return
+when `globalPage === currentPage`. This prevents `gotoPage` (and its `setSegmentScoreDrops({})`)
+from being called when `commitPage` fires due to `scope`/`gotoPage` recreation but the
+resolved destination page is the same:
+
+```ts
+if (globalPage === currentPage) return;
+```
+
+**Key file:**
+- `frontend/src/pages/TreatmentPage/treatmentDetailPage.tsx` — `commitPage`: added
+  `currentPage` to deps, early return on `globalPage === currentPage`
+
 ### Report Builder: Top Risk Stretches Images (2026-06-11)
 
 **Symptom:** Every "Top Risk Stretches" page in the Report Builder showed the grey
@@ -508,6 +587,61 @@ This drops all three cache namespaces (`geodata`, `attributes`, `results`) for e
 
 - `frontend/src/pages/CodingPage/codingPage.tsx` — `saveAllProjects()`: added `invalidateProject` call per dirty project; import added
 - `frontend/src/api/projectDataCache.ts` — `invalidateProject(project)`: drops `geodata`, `attributes`, `results` for one project
+
+### PathAnalysisPage: Grey "All-Segments" Flash After Treatment → Report Round-Trip (2026-06-30)
+
+**Symptom:** Navigate Analysis → Treatment (via the "Open in Treatment" button) → **Generate
+Report** → back to Treatment → back to Analysis. On the returning Analysis page there's a brief
+flash where **all** segments (including ones the filter should hide — "irrelevant segments") are
+rendered **grey** (`#6B7280`) before the correct filtered/coloured view appears.
+
+**Two independent causes, both fixed:**
+
+#### Cause A — `attrMappings`-cold render shows ALL segments grey (primary)
+
+`visibleSegments` (`PathAnalysisMapView.tsx`) filters via `getFilterAttributeText` and the map
+colours via `getCategoryColor` — **both rely on `attrMappings`** to convert numeric attribute
+codes into the text labels that `categoryToggles` and the colour maps are keyed by. When
+`attrMappings` is empty for a render (the module-level mappings cache is cold — e.g. its initial
+async fetch hadn't resolved/persisted before this longer multi-page round-trip), **every**
+segment's value is an unmatched code → nothing is filtered out (all segments show) and nothing
+gets a category colour (all grey). This is the same "all segments then filtered" flash class the
+sync-mappings init (`getCachedAttributeMappingsSync()`) targets, but that only helps when the
+cache is already warm.
+
+**Fix:** In the `visibleSegments` memo, when mappings are **required** (`activeFilters.length > 0`
+or a non-`Project` `primaryFocusAttribute`) but **not ready** (`attrMappings` has no keys), return
+`[]` — render **nothing** for that frame instead of all-grey. A brief blank is far
+less jarring than irrelevant grey segments, and it self-resolves the moment mappings load (the
+fetch's `.catch` sets a minimal adequacy fallback, so it can never stay blank). Warm-cache path is
+unaffected (mappings ready on render 1). Added `attrMappings` + `primaryFocusAttribute` to the memo
+deps. **Use `primaryFocusAttribute`, NOT `effectiveFocusAttribute`, in the guard** —
+`effectiveFocusAttribute` is derived from `visibleSegments` (circular dep).
+
+#### Cause B — Report generation destroyed the Analysis loaded-projects state
+
+The Treatment-page **Generate Report** button (`Sidebar.tsx`, the `onTreatmentDetail` variant) did
+`sessionStorage.removeItem("pathAnalysis_loadedProjects")` so the Report Builder (which unioned
+`pathAnalysis_loadedProjects` + `treatment_loadedProjects`) would reflect the Treatment selection.
+This corrupted the Analysis page's persisted loaded-projects list; on back-navigation it only
+"self-healed" via the `pathAnalysis_selectedProjects` fallback in `getStoredLoadedProjects()` — and
+if that key was also absent, Analysis fell back to `fetchProjectList()` and loaded **all** projects
+(the "irrelevant segments").
+
+**Fix:** Stop deleting the key. The Report Builder now **prefers** `treatment_loadedProjects` when
+present, else `pathAnalysis_loadedProjects` (`reportBuilderPage.tsx`: `const combined = trP.length
+> 0 ? [...new Set(trP)] : [...new Set(paP)]`). The two report entry points already clear the other
+context's key (Analysis→Report clears `treatment_loadedProjects`), so the preference is
+unambiguous and no destructive removal is needed.
+
+**Key files:**
+
+- `frontend/src/pages/PathAnalysisPage/components/PathAnalysisMapView.tsx` — `visibleSegments`:
+  `mappingsReady`/`needsMappings` guard + deps
+- `frontend/src/pages/sidebar/Sidebar.tsx` — Treatment-page "Generate Report": removed the
+  `removeItem("pathAnalysis_loadedProjects")`
+- `frontend/src/pages/ReportBuilderPage/reportBuilderPage.tsx` — session-restore effect: prefer
+  `treatment_loadedProjects` over `pathAnalysis_loadedProjects` instead of unioning
 
 ## Commands
 
