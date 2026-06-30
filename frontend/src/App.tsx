@@ -50,7 +50,13 @@ export default function App() {
       <Routes>
 
         <Route path="/" element={<LandingPage />} />
-        <Route path="/help" element={<HelpPage />} />
+
+        {/* Help/User Guide gets the real AppLayout sidebar (legitimate, not a
+            self-rendered one), but stays OUTSIDE RequireProfile so it remains
+            publicly accessible (e.g. from the landing page) without a login. */}
+        <Route element={<AppLayout />}>
+          <Route path="/help" element={<HelpPage />} />
+        </Route>
 
         <Route element={<RequireProfile><AppLayout /></RequireProfile>}>
           <Route path="/home" element={<Home />} />

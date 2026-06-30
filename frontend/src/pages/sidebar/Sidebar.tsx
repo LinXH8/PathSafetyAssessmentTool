@@ -405,7 +405,6 @@ export default function Sidebar() {
           onLogout={onLogout}
           isLoggingOut={isLoggingOut}
           onGuardedAction={guardedAction}
-          pathname={pathname}
         >
           {/* Coding and Treatment are both migrated to v2: their route-specific
               controls now live on-canvas (CodingLayoutV2 / TreatmentDetailLayoutV2),

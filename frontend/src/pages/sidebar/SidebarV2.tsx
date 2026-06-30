@@ -16,7 +16,6 @@ interface SidebarV2Props {
    * button honours the prompt.
    */
   onGuardedAction: (action: () => void) => void;
-  pathname: string;
   /** Route-specific panels (CodingSidebar etc.) for not-yet-migrated pages. */
   children?: ReactNode;
 }
@@ -86,7 +85,6 @@ export default function SidebarV2({
   onLogout,
   isLoggingOut,
   onGuardedAction,
-  pathname,
   children,
 }: SidebarV2Props) {
   const navigate = useNavigate();
@@ -113,7 +111,6 @@ export default function SidebarV2({
   const selectedNames = useMemo(() => Array.from(qsSelected), [qsSelected]);
   const hasSelection = selectedNames.length > 0;
   const allChecked = projects.length > 0 && qsSelected.size === projects.length;
-  const isHome = pathname === "/home";
 
   const toggleProject = (name: string) =>
     setQsSelected((prev) => {
@@ -257,14 +254,14 @@ export default function SidebarV2({
         {navButton("Path Analysis", () => onGuardedAction(() => openPathAnalysis(navigate, selectedNames)), { disabled: !hasSelection })}
         {navButton("Treatment Application", () => onGuardedAction(() => openTreatment(navigate, selectedNames)), { disabled: !hasSelection })}
 
-        {isHome && navButton("Generated Reports", () => go("/generated-reports"))}
+        {navButton("Generated Reports", () => go("/generated-reports"))}
 
         {/* Route-specific panels for pages not yet migrated to v2. */}
         {children}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 14 }}>
-        {isHome && navButton("GIS Layers", () => go("/gis-layers"))}
+        {navButton("GIS Layers", () => go("/gis-layers"))}
         {navButton("User Guide", () => go("/help"))}
         {activeProfile && (
           <div

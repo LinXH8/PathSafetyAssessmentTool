@@ -284,3 +284,100 @@
 .rb-spinner {
   animation: rb-spin 1s linear infinite;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   v2 overrides — scoped to .rb-page--v2 so v1 is untouched.
+   Fits the canvas to the v2 shell (which has 0 app-main padding, unlike v1's
+   24px) and re-skins the chrome to the DESIGN_GUIDE tokens (Inter, gray.200
+   borders, no shadows, teal = global export scope).
+   ══════════════════════════════════════════════════════════════════════════ */
+.rb-page--v2 {
+  /* v2 .app-main--v2 has padding:0, so cancel the v1 negative margin and the
+     48px height deduction that compensated for v1's 24px padding. */
+  margin: 0;
+  height: 100vh;
+  background: #f7fafc;
+  font-family: Inter, sans-serif;
+}
+
+/* ── Toolbar ── */
+.rb-page--v2 .rb-toolbar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: none;
+  padding: 12px 16px;
+}
+
+/* ── Buttons ── */
+.rb-page--v2 .rb-btn {
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+  background: #fff;
+  color: #2d3748;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+.rb-page--v2 .rb-btn:hover:not(:disabled) {
+  background: #f7fafc;
+}
+.rb-page--v2 .rb-btn:disabled {
+  background: #edf2f7;
+  border-color: #e2e8f0;
+  color: #a0aec0;
+  opacity: 1;
+}
+.rb-page--v2 .rb-btn-secondary {
+  color: #2d3748;
+}
+/* PDF export = secondary dark; Word export = teal (both global-scope commits). */
+.rb-page--v2 .rb-export-group .rb-btn {
+  background: #1a202c;
+  border-color: #1a202c;
+  color: #fff;
+}
+.rb-page--v2 .rb-export-group .rb-btn:hover:not(:disabled) {
+  background: #2d3748;
+}
+.rb-page--v2 .rb-btn-primary,
+.rb-page--v2 .rb-export-group .rb-btn-primary {
+  background: #319795;
+  border-color: #319795;
+  color: #fff;
+}
+.rb-page--v2 .rb-btn-primary:hover:not(:disabled),
+.rb-page--v2 .rb-export-group .rb-btn-primary:hover:not(:disabled) {
+  background: #2c7a7b;
+}
+
+/* ── Sections sidebar ── */
+.rb-page--v2 .rb-sections-sidebar {
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+}
+.rb-page--v2 .rb-reorder-hint {
+  color: #718096;
+}
+.rb-page--v2 .rb-checklist-item:hover,
+.rb-page--v2 .rb-reorder-grip:hover {
+  color: #319795;
+}
+.rb-page--v2 .rb-reorder-row {
+  border-color: #e2e8f0;
+}
+.rb-page--v2 .rb-reorder-row:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+}
+.rb-page--v2 .rb-reorder-row-dragging {
+  border-color: #319795;
+  box-shadow: 0 4px 14px rgba(49, 151, 149, 0.18);
+}
+
+/* ── Canvas ── */
+.rb-page--v2 .rb-canvas-container {
+  background: #f7fafc;
+}
+.rb-page--v2 .rb-canvas-hint {
+  color: #718096;
+}
