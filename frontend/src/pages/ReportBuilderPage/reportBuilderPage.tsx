@@ -626,12 +626,8 @@ export default function ReportBuilderPage() {
     const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis"]);
     const l = _readSaved();
     if (Array.isArray(l?.elements)) {
-      // Migration: display order is now driven by array order, not `el.y`.
-      // Pre-dnd-kit layouts encoded their arrangement purely in `y` (react-rnd
-      // never reordered the array), so sort by `y` once to preserve it.
       const saved = (l.elements as ElementState[])
-        .filter((e) => !REMOVED_IDS.has(e.id))
-        .sort((a, b) => a.y - b.y);
+        .filter((e) => !REMOVED_IDS.has(e.id));
       // Inject any new default elements missing from the saved layout (e.g. benchmarkStats added after save)
       const savedIds = new Set(saved.map((e: ElementState) => e.id));
       const injected = DEFAULT_ELEMENTS.filter((e) => !savedIds.has(e.id));
@@ -1272,6 +1268,17 @@ export default function ReportBuilderPage() {
       if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
       saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
     } catch (e) { console.error("Save layout failed:", e); }
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
+
+  // Auto-save layout on every change so navigation away never loses section arrangement.
+  useEffect(() => {
+    try {
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+        elements, reportTitle, oicName, purpose, recommendations,
+        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
+      }));
+      setHasSaved(true);
+    } catch (e) { /* quota exceeded or private browsing — silent */ }
   }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
 
   const restoreLayout = useCallback(() => {
