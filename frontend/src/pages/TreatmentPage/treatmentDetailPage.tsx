@@ -720,6 +720,13 @@ export default function TreatmentDetailPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTreatments, setSelectedTreatments] = useState<Set<number>>(new Set());
+  // Inline auto-save status for the "By Segment" view (replaces the Apply button)
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  // Debounce timer for the segment-view auto-save (click-driven).
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Holds a flush fn for a debounced auto-save that hasn't fired yet, so navigating
+  // away (segment change / unmount) can persist it instead of dropping it.
+  const pendingSaveRef = useRef<null | (() => void)>(null);
 
   const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>({});
   const [showPostTreatment, setShowPostTreatment] = useState<boolean>(false);
@@ -1228,6 +1235,8 @@ export default function TreatmentDetailPage() {
         if (cancelled) return;
 
         if (state.has_treatments) {
+          // Refresh the authoritative cache for this segment; the seeding effect below
+          // re-ticks the checkboxes from treatmentState (no spurious auto-save).
           setTreatmentState((prev) => ({
             ...prev,
             [currentIndex]: {
@@ -1244,14 +1253,12 @@ export default function TreatmentDetailPage() {
                 : null,
             },
           }));
-          setSelectedTreatments(new Set());
           setShowPostTreatment(true);
         } else {
-          setSelectedTreatments(new Set());
           setShowPostTreatment(false);
         }
       } catch (e) {
-
+        // ignore
       }
     })();
 
@@ -1260,47 +1267,32 @@ export default function TreatmentDetailPage() {
     };
   }, [resolveIndex, currentIndex, refreshTrigger]);
 
-  // Handle applying treatments
-  const handleApplyTreatments = useCallback(async () => {
-    const ctx = resolveIndex(currentIndex);
-    if (!ctx || selectedTreatments.size === 0) return;
-
-    setApplyLoading(true);
-
-    try {
-      const result = await applyTreatments(ctx.name, {
-        segment_index: ctx.localIndex,
-        treatment_ids: [...new Set([...(treatmentState[currentIndex]?.treatment_ids ?? []), ...Array.from(selectedTreatments)])],
-        image_ref: imgRef,
-      });
-
-      // Update local state
-      setTreatmentState((prev) => ({
-        ...prev,
-        [currentIndex]: {
-          applied: true,
-          treatment_ids: result.treatments_applied.split(",").map((x) => Number(x.trim())).filter((x) => !isNaN(x)),
-          after_scores: {
-            BB: result.after_scores.BB,
-            BP: result.after_scores.BP,
-            SB: result.after_scores.SB,
-            VB: result.after_scores.VB,
-            total: result.after_scores["Overall Risk Level"],
-          },
-        },
-      }));
-
-      setSelectedTreatments(new Set());
-      setPreviewScores(null);
-      setPreviewLoading(false);
-      setShowPostTreatment(true);
-
-    } catch (e: any) {
-    } finally {
-      setApplyLoading(false);
+  // Segment view: the checkboxes reflect ONLY the active segment's persisted treatments.
+  // On every segment change we hard-reset the selection to that segment's saved set, so a
+  // treatment checked on one segment never leaks onto another. `treatmentState` is
+  // bulk-loaded on mount and synced on save, making this reliable on back-navigation.
+  // Saves are click-driven (scheduleSegmentSave), so seeding here never triggers a write.
+  const lastSeededIndexRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (accordionView !== "segment") {
+      lastSeededIndexRef.current = null; // force a re-seed when returning to segment view
+      return;
     }
-  }, [resolveIndex, currentIndex, selectedTreatments, imgRef, treatmentState]);
+    const persisted = treatmentState[currentIndex]?.treatment_ids ?? [];
+    if (lastSeededIndexRef.current !== currentIndex) {
+      // Entered a new segment — reset checkboxes to exactly this segment's treatments.
+      lastSeededIndexRef.current = currentIndex;
+      setSelectedTreatments(new Set(persisted));
+      return;
+    }
+    // Same segment, treatmentState arrived/changed (async bulk-load): fill in only when the
+    // user hasn't selected anything yet, so in-progress edits are never clobbered.
+    setSelectedTreatments((prev) =>
+      prev.size === 0 && persisted.length > 0 ? new Set(persisted) : prev
+    );
+  }, [currentIndex, treatmentState, accordionView]);
 
+  // Handle applying treatments
   const handleConfirmApplyToAll = async () => {
     if (selectedTreatments.size === 0 || !currentCtx) return;
     setApplyLoading(true);
@@ -1329,19 +1321,17 @@ export default function TreatmentDetailPage() {
     }
   };
 
-  // Fetch preview scores when selection changes
+  // Bulk "by treatment" view: live, non-persisting preview of the selected treatments.
   useEffect(() => {
+    if (accordionView === "segment") return; // segment view persists via scheduleSegmentSave
     const ctx = resolveIndex(currentIndex);
     if (!ctx || currentIndex < 0 || selectedTreatments.size === 0) {
       setPreviewScores(null);
       setPreviewLoading(false);
       return;
     }
-
     setPreviewScores(null);
     let cancelled = false;
-
-    // Debounce to avoid too many requests
     const timeoutId = setTimeout(async () => {
       setPreviewLoading(true);
       try {
@@ -1349,11 +1339,7 @@ export default function TreatmentDetailPage() {
           segment_index: ctx.localIndex,
           treatment_ids: combinedTreatmentIds,
         });
-
-        if (cancelled || !result.ok) {
-          return;
-        }
-
+        if (cancelled || !result.ok) return;
         setPreviewScores({
           BB: result.after_scores.BB,
           BP: result.after_scores.BP,
@@ -1362,51 +1348,100 @@ export default function TreatmentDetailPage() {
           total: result.after_scores["Overall Risk Level"],
         });
       } catch (e) {
-
+        // ignore
       } finally {
-        if (!cancelled) {
-          setPreviewLoading(false);
-        }
+        if (!cancelled) setPreviewLoading(false);
       }
-    }, 300); // 300ms debounce
-
+    }, 300);
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
     };
-  }, [combinedTreatmentIds, currentIndex, resolveIndex, selectedTreatments]);
+  }, [combinedTreatmentIds, currentIndex, resolveIndex, selectedTreatments, accordionView]);
 
-  // Handle resetting treatments
-  const handleResetTreatments = useCallback(async () => {
-    const ctx = resolveIndex(currentIndex);
-    if (!ctx) return;
+  // Persist a segment's checked treatments. `silent` skips current-view UI updates
+  // (used when flushing on navigate-away) but always syncs the local treatment cache.
+  const persistSegmentTreatments = useCallback(
+    async (projectName: string, localIndex: number, savedGlobalIndex: number, ids: number[], silent: boolean) => {
+      pendingSaveRef.current = null;
+      if (!silent) setAutoSaveStatus("saving");
+      try {
+        const result = await applyTreatments(projectName, {
+          segment_index: localIndex,
+          treatment_ids: ids, // empty array resets the segment
+          image_ref: imgRef,
+        });
+        const appliedIds = result.treatments_applied
+          ? result.treatments_applied.split(",").map((x) => Number(x.trim())).filter((x) => !isNaN(x))
+          : [];
+        const afterScores =
+          appliedIds.length > 0
+            ? {
+                BB: result.after_scores.BB,
+                BP: result.after_scores.BP,
+                SB: result.after_scores.SB,
+                VB: result.after_scores.VB,
+                total: result.after_scores["Overall Risk Level"],
+              }
+            : null;
+        // Keep the local cache in sync so the checkbox stays ticked on back-navigation.
+        setTreatmentState((prev) => {
+          const next = { ...prev };
+          if (appliedIds.length > 0) {
+            next[savedGlobalIndex] = { applied: true, treatment_ids: appliedIds, after_scores: afterScores };
+          } else {
+            delete next[savedGlobalIndex];
+          }
+          return next;
+        });
+        if (!silent) {
+          setPreviewScores(afterScores);
+          setShowPostTreatment(appliedIds.length > 0);
+          setAutoSaveStatus("saved");
+          setTimeout(() => setAutoSaveStatus("idle"), 1500);
+        }
+      } catch (e) {
+        if (!silent) setAutoSaveStatus("idle");
+      }
+    },
+    [imgRef]
+  );
 
-    setApplyLoading(true);
+  // Debounced auto-save for the segment view, driven by user clicks (not state diffing,
+  // so seeding the checkbox set from persisted state never triggers a spurious write).
+  const scheduleSegmentSave = useCallback(
+    (ids: number[]) => {
+      const ctx = resolveIndex(currentIndex);
+      if (!ctx) return;
+      const savedGlobalIndex = currentIndex;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      // Flush fn used on navigate-away so a still-pending change is never dropped.
+      pendingSaveRef.current = () => {
+        if (saveTimerRef.current) {
+          clearTimeout(saveTimerRef.current);
+          saveTimerRef.current = null;
+        }
+        void persistSegmentTreatments(ctx.name, ctx.localIndex, savedGlobalIndex, ids, true);
+      };
+      saveTimerRef.current = setTimeout(() => {
+        saveTimerRef.current = null;
+        void persistSegmentTreatments(ctx.name, ctx.localIndex, savedGlobalIndex, ids, false);
+      }, 300);
+    },
+    [resolveIndex, currentIndex, persistSegmentTreatments]
+  );
 
-    try {
-      // Apply with empty treatment list to reset
-      await applyTreatments(ctx.name, {
-        segment_index: ctx.localIndex,
-        treatment_ids: [],
-        image_ref: imgRef,
-      });
-
-      // Clear local state
-      setTreatmentState((prev) => {
-        const next = { ...prev };
-        delete next[currentIndex];
-        return next;
-      });
-
-      setSelectedTreatments(new Set());
-      setPreviewScores(null);
-      setPreviewLoading(false);
-      setShowPostTreatment(false);
-    } catch (e: any) {
-    } finally {
-      setApplyLoading(false);
-    }
-  }, [resolveIndex, currentIndex, imgRef]);
+  // Flush any pending (debounced) auto-save when the user navigates to another
+  // segment or leaves the page, so a quick toggle-then-navigate is never lost.
+  useEffect(() => {
+    return () => {
+      const flush = pendingSaveRef.current;
+      if (flush) {
+        pendingSaveRef.current = null;
+        void flush();
+      }
+    };
+  }, [currentIndex]);
 
   // Pagination
   const gotoPage = useCallback(
@@ -1577,6 +1612,10 @@ export default function TreatmentDetailPage() {
 
   const hasApplied = appliedTreatmentIds.length > 0;
   const hasSelected = selectedTreatments.size > 0;
+  // In the bulk "by treatment" view the selection is staged (unsaved) and drives a live
+  // score/attribute preview. In segment view the selection mirrors the applied set, so
+  // the Pre/Post toggle controls the display instead — never the selection size.
+  const isStagingPreview = accordionView !== "segment" && selectedTreatments.size > 0;
 
   if (projectNames.length === 0) {
     return (
@@ -1850,7 +1889,14 @@ export default function TreatmentDetailPage() {
                         ? (treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
                         : fullyAppliedTreatments.has(t.id);
 
-                      const isDisabled = isApplied;
+                      // In segment view treatments auto-save and stay toggleable; only the
+                      // bulk "by treatment" view disables already-applied rows.
+                      const isDisabled = accordionView === "segment" ? false : isApplied;
+
+                      // Segment view: a checked treatment IS the applied state, so keep it as a
+                      // normal blue ticked checkbox rather than the green "applied" styling
+                      // (which is reserved for the bulk "by treatment" view).
+                      const showAppliedStyle = accordionView === "segment" ? false : isApplied;
 
                       return (
                         <Flex
@@ -1860,7 +1906,7 @@ export default function TreatmentDetailPage() {
                           p="2"
                           borderRadius="md"
                           bg={
-                            isApplied
+                            showAppliedStyle
                               ? "green.50"
                               : selectedTreatments.has(t.id)
                                 ? "blue.50"
@@ -1868,7 +1914,7 @@ export default function TreatmentDetailPage() {
                           }
                           borderWidth="1px"
                           borderColor={
-                            isApplied
+                            showAppliedStyle
                               ? "green.200"
                               : selectedTreatments.has(t.id)
                                 ? "blue.200"
@@ -1882,12 +1928,12 @@ export default function TreatmentDetailPage() {
                             shadow: isDisabled ? undefined : "sm"
                           }}
                           _dark={{
-                            bg: isApplied
+                            bg: showAppliedStyle
                               ? "green.900"
                               : selectedTreatments.has(t.id)
                                 ? "blue.900"
                                 : "gray.700",
-                            borderColor: isApplied
+                            borderColor: showAppliedStyle
                               ? "green.700"
                               : selectedTreatments.has(t.id)
                                 ? "blue.700"
@@ -1902,11 +1948,15 @@ export default function TreatmentDetailPage() {
                               newSelected.add(t.id);
                             }
                             setSelectedTreatments(newSelected);
+                            // Segment view auto-saves on toggle; treatment view stages for Apply.
+                            if (accordionView === "segment") {
+                              scheduleSegmentSave(Array.from(newSelected).sort((a, b) => a - b));
+                            }
                           }}
                         >
                           <input
                             type="checkbox"
-                            checked={isApplied || selectedTreatments.has(t.id)}
+                            checked={accordionView === "segment" ? selectedTreatments.has(t.id) : (isApplied || selectedTreatments.has(t.id))}
                             disabled={isDisabled}
                             onChange={() => { }}
                             style={{ marginTop: '3px', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
@@ -1915,7 +1965,7 @@ export default function TreatmentDetailPage() {
                           <Box flex="1">
                             <Text fontSize="xs" fontWeight="medium" color="gray.900" _dark={{ color: "white" }} lineHeight="1.2">
                               {t.name}
-                              {isApplied && " ✓"}
+                              {showAppliedStyle && " ✓"}
                             </Text>
                             {accordionView === "treatment" && (
                               <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
@@ -1972,34 +2022,39 @@ export default function TreatmentDetailPage() {
                       })()
                     }
                     onClick={() => {
+                      let next: Set<number>;
                       if (selectedTreatments.size > 0) {
-                        setSelectedTreatments(new Set());
+                        next = new Set();
+                      } else if (accordionView === "segment") {
+                        const currentAttr = attrs[currentIndex] as any;
+                        if (!currentAttr) return;
+                        next = new Set(getApplicableTreatments(currentAttr).map(t => t.id));
                       } else {
-                        if (accordionView === "segment") {
-                          const currentAttr = attrs[currentIndex] as any;
-                          if (!currentAttr) return;
-                          const applicable = getApplicableTreatments(currentAttr);
-                          const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                          setSelectedTreatments(new Set(applicable.filter(t => !appliedIds.includes(t.id)).map(t => t.id)));
-                        } else {
-                          setSelectedTreatments(new Set(allApplicableTreatments.map(t => t.id)));
-                        }
+                        next = new Set(allApplicableTreatments.map(t => t.id));
+                      }
+                      setSelectedTreatments(next);
+                      // Segment view auto-saves the resulting set; treatment view stages for Apply.
+                      if (accordionView === "segment") {
+                        scheduleSegmentSave(Array.from(next).sort((a, b) => a - b));
                       }
                     }}
                   >
                     {selectedTreatments.size > 0 ? "Clear" : "All"}
                   </Button>
-                  {accordionView === "segment" && treatmentState[currentIndex]?.applied && (
-                    <Button
-                      flex="1"
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="red"
-                      loading={applyLoading}
-                      onClick={handleResetTreatments}
-                    >
-                      Reset
-                    </Button>
+                  {accordionView === "segment" && autoSaveStatus !== "idle" && (
+                    <Flex flex="1" align="center" justify="flex-end" gap="1" fontSize="xs">
+                      {autoSaveStatus === "saving" ? (
+                        <>
+                          <Spinner size="xs" />
+                          <Text color="gray.500" _dark={{ color: "gray.400" }}>Saving…</Text>
+                        </>
+                      ) : (
+                        <>
+                          <LuCheck color="#22c55e" />
+                          <Text color="green.600" _dark={{ color: "green.300" }}>Saved</Text>
+                        </>
+                      )}
+                    </Flex>
                   )}
                 </Flex>
 
@@ -2031,26 +2086,24 @@ export default function TreatmentDetailPage() {
                     {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
                     <span>{imageCopyButtonLabel}</span>
                   </Button>
-                  <Button
-                    size="sm"
-                    flex="1"
-                    variant="solid"
-                    colorScheme={accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0 ? "green" : "blue"}
-                    disabled={selectedTreatments.size === 0 || applyLoading}
-                    loading={applyLoading}
-                    onClick={async () => {
-                      if (accordionView === "segment") {
-                        handleApplyTreatments();
-                      } else {
+                  {/* Per-segment view auto-saves on toggle, so the Apply button only
+                      drives the bulk "by treatment" apply-to-all confirmation flow. */}
+                  {accordionView !== "segment" && (
+                    <Button
+                      size="sm"
+                      flex="1"
+                      variant="solid"
+                      colorScheme="blue"
+                      disabled={selectedTreatments.size === 0 || applyLoading}
+                      loading={applyLoading}
+                      onClick={async () => {
                         if (selectedTreatments.size === 0 || !currentCtx) return;
                         setOpenConfirmAlert(true);
-                      }
-                    }}
-                  >
-                    {accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0
-                      ? "Applied ✓"
-                      : `Apply (${selectedTreatments.size})`}
-                  </Button>
+                      }}
+                    >
+                      {`Apply (${selectedTreatments.size})`}
+                    </Button>
+                  )}
                 </Flex>
               </Flex>
             </Box>
@@ -2144,8 +2197,10 @@ export default function TreatmentDetailPage() {
                   } as any
                   : originalScores;
 
-                // Show preview scores whenever treatments are selected, regardless of showPostTreatment toggle
-                if (selectedTreatments.size > 0) {
+                // Live preview only for the bulk "by treatment" view's STAGED (unsaved)
+                // selection. In segment view the selection mirrors the applied set, so the
+                // Pre/Post toggle (showPostTreatment) is the source of truth instead.
+                if (isStagingPreview) {
                   if (previewLoading || !previewScores) {
                     return appliedScoreRow;
                   }
@@ -2170,7 +2225,7 @@ export default function TreatmentDetailPage() {
                 return originalScores;
               })()}
               beforeScores={
-                (selectedTreatments.size > 0 || (showPostTreatment && treatmentState[currentIndex]?.applied))
+                (isStagingPreview || (showPostTreatment && treatmentState[currentIndex]?.applied))
                   ? {
                     BB: scores[currentIndex]?.["BB"] ?? 0,
                     BP: scores[currentIndex]?.["BP"] ?? 0,
@@ -2180,7 +2235,7 @@ export default function TreatmentDetailPage() {
                   }
                   : undefined
               }
-              showPreviewBackground={selectedTreatments.size > 0}
+              showPreviewBackground={isStagingPreview}
               projectContributors={projectContributors}
               onContributorClick={handleContributorClick}
             />
@@ -2214,7 +2269,8 @@ export default function TreatmentDetailPage() {
                   Show Pre-Treatment
                 </Text>
                 <Switch
-                  checked={!showPostTreatment}
+                  // Untreated segments have nothing to compare: keep the toggle off + greyed.
+                  checked={segmentHasTreatments ? !showPostTreatment : false}
                   disabled={!segmentHasTreatments}
                   onCheckedChange={(e: any) => setShowPostTreatment(!e.checked)}
                 />
@@ -2223,9 +2279,13 @@ export default function TreatmentDetailPage() {
             <Box flex="1" minH="0">
               <AttributesPanel
                 row={
-                  showPostTreatment && (treatmentState[currentIndex]?.applied || selectedTreatments.size > 0)
-                    ? modifiedAttrs
-                    : attrs[currentIndex]
+                  // Pre-treatment toggle wins: show original attrs when showing pre-treatment,
+                  // the treatment-modified attrs otherwise (staged preview or applied).
+                  !showPostTreatment
+                    ? attrs[currentIndex]
+                    : (isStagingPreview || treatmentState[currentIndex]?.applied)
+                      ? modifiedAttrs
+                      : attrs[currentIndex]
                 }
                 mappings={attrMappings}
                 changedFields={

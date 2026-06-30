@@ -643,6 +643,82 @@ unambiguous and no destructive removal is needed.
 - `frontend/src/pages/ReportBuilderPage/reportBuilderPage.tsx` — session-restore effect: prefer
   `treatment_loadedProjects` over `pathAnalysis_loadedProjects` instead of unioning
 
+### TreatmentDetailPage: By-Segment Auto-Save (Removed Apply Button) (2026-06-30)
+
+**Change:** In the **"By Segment"** view, checking/unchecking a treatment now **auto-saves**
+(debounced) — the per-segment **Apply** and **Reset** buttons were removed and replaced with an
+inline **"Saving… / Saved ✓"** indicator. The bulk **"By Treatment" / Apply-to-All** view is
+unchanged (keeps its **Apply** button + `openConfirmAlert` confirmation, since one click mutates
+many segments). Backend untouched: `POST /treatments/apply` already persists the full set (and
+resets on `[]`). All edits are in `frontend/src/pages/TreatmentPage/treatmentDetailPage.tsx`.
+
+This shipped as a series of fixes; the final design and the gotchas that produced it:
+
+#### 1. Saves are CLICK-DRIVEN, not state-diff-driven
+
+The first attempt auto-saved from a `useEffect` that diffed `selectedTreatments` vs the persisted
+`treatmentState`. This raced badly: seeding the checkbox set, async `treatmentState` arrival, and
+navigation all looked like "changes" and could fire spurious saves — including an **empty save that
+wiped a segment**. **Fix:** saves fire only from the checkbox/`Clear`/`All` `onClick` handlers via
+`scheduleSegmentSave(ids)` (300ms debounce) → `persistSegmentTreatments(project, localIndex,
+savedGlobalIndex, ids, silent)`. Seeding state can never trigger a write. Refs: `saveTimerRef`
+(debounce), `pendingSaveRef` (flush fn).
+
+#### 2. Flush pending save on navigate-away
+
+A toggle-then-navigate within the 300ms debounce used to drop the save. **Fix:** a `useEffect`
+keyed on `[currentIndex]` flushes `pendingSaveRef` (persists silently) on segment change / unmount,
+so the last toggle is never lost. `persistSegmentTreatments` always syncs the local `treatmentState`
+cache (even when `silent`/after navigation) so the checkbox is correct on return.
+
+#### 3. Checkbox must reflect the PERSISTED set, seeded reliably (not from async fetch)
+
+Driving the checkbox off `selectedTreatments` seeded by the per-segment `getSegmentTreatments`
+fetch was unreliable — the box came back **unticked** after navigating away and back. **Root
+cause:** map/list navigation uses `onJump={(i) => setCurrentPage(i + 1)}` (and scope/project
+switches call `setCurrentPage` directly) — these **bypass `gotoPage`**, the only place that cleared
+`selectedTreatments`. So a treatment checked on one segment **visually leaked onto every other
+segment** ("applying across all segments"), and untreated segments showed stale ticks. **Fix:** a
+seeding `useEffect` keyed on `[currentIndex, treatmentState, accordionView]` with a
+`lastSeededIndexRef` **hard-resets** `selectedTreatments` to *exactly* the current segment's
+persisted treatments on **any** `currentIndex` change (regardless of nav method), while a
+same-segment branch only fills in async-arrived state when the user hasn't already selected
+something (never clobbers an in-progress edit). `treatmentState` is bulk-loaded on mount
+(`getAllTreatments`) and synced on save, so it's reliably present on back-navigation. The backend /
+`/treatments/all` were verified isolated to one segment — this was purely a frontend display leak.
+
+#### 4. Segment-view checkbox styling stays BLUE, not green "applied"
+
+Once a treatment auto-saves, the row used to flip to the green "applied" styling + a green "✓",
+which was confusing in the auto-save model (checking *is* the action). **Fix:** `showAppliedStyle =
+accordionView === "segment" ? false : isApplied` — segment-view checked rows render as a normal
+**blue ticked checkbox**; green/"✓" is reserved for the bulk "by treatment" view. Checkbox
+`checked` in segment view is driven purely by `selectedTreatments.has(t.id)` (so unchecking works
+instantly); `isDisabled` is `false` in segment view so applied treatments are toggleable.
+
+#### 5. "Show Pre-Treatment" toggle broke because the selection now mirrors the applied set
+
+`SegmentScoresCard` used `selectedTreatments.size > 0` as the proxy for "actively previewing an
+unsaved selection." After the refactor, segment-view `selectedTreatments` **mirrors the applied
+set**, so it's always `>0` on a treated segment → the score card short-circuited to post-treatment
+and **ignored the toggle**. **Fix:** introduced `isStagingPreview = accordionView !== "segment" &&
+selectedTreatments.size > 0` (true only for the bulk view's genuinely staged/unsaved selection).
+The live-preview branch, `beforeScores`, and `showPreviewBackground` all use `isStagingPreview`; in
+segment view the `showPostTreatment` toggle is the source of truth (`!showPostTreatment` →
+original/pre, else applied/post). The AttributesPanel `row` gates on the toggle first
+(`!showPostTreatment ? attrs[currentIndex] : …`).
+
+#### 6. "Show Pre-Treatment" toggle off + greyed for untreated segments
+
+It was `disabled={!segmentHasTreatments}` but `checked={!showPostTreatment}` rendered **on** for
+untreated segments (`showPostTreatment` is `false` there). **Fix:** `checked={segmentHasTreatments ?
+!showPostTreatment : false}` — untreated segments show the toggle off and disabled.
+
+**Key symbols (all in `treatmentDetailPage.tsx`):** `scheduleSegmentSave`,
+`persistSegmentTreatments`, `saveTimerRef`, `pendingSaveRef`, `lastSeededIndexRef`,
+`autoSaveStatus`, `isStagingPreview`, `showAppliedStyle`. `handleApplyTreatments` /
+`handleResetTreatments` were deleted (dead after removing the buttons).
+
 ## Commands
 
 - Frontend: `cd frontend && npm run dev`
