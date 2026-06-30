@@ -2134,8 +2134,11 @@ export default function TreatmentDetailPage() {
               minW={0}
               size="sm"
               variant="outline"
-              onClick={() => gotoPage(currentPage - 1)}
-              disabled={currentPage <= 1}
+              onClick={() => {
+                const prev = pageIndices[scopePage - 2];
+                if (prev !== undefined) gotoPage(prev + 1);
+              }}
+              disabled={scopePage <= 1}
             >
               Previous
             </Button>
@@ -2145,8 +2148,11 @@ export default function TreatmentDetailPage() {
               minW={0}
               size="sm"
               variant="solid"
-              onClick={() => gotoPage(currentPage + 1)}
-              disabled={currentPage >= len}
+              onClick={() => {
+                const next = pageIndices[scopePage];
+                if (next !== undefined) gotoPage(next + 1);
+              }}
+              disabled={scopePage >= scopeTotal}
             >
               Next
             </Button>
