@@ -121,8 +121,10 @@ export default function PathAnalysisLayoutV2({
           </AccordionSection>
         </div>
 
-        {/* Right — Map block (50%); the map view's root Box fills this height in v2 */}
-        <div style={{ flex: "1 1 0", minWidth: 0, height: "100%" }}>
+        {/* Right — Map block (50%); the map view's root Box fills this height in v2.
+            minWidth:0 + overflow:hidden guarantee the wide segment Table scrolls
+            inside its card instead of spilling across the page. */}
+        <div style={{ flex: "1 1 0", minWidth: 0, maxWidth: "100%", height: "100%", overflow: "hidden" }}>
           <PathAnalysisMapView
             variant="v2"
             filtersPortalTarget={openFilters ? filtersHost : null}

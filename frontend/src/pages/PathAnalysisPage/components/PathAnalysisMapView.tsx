@@ -2454,6 +2454,9 @@ export default function AttributeAnalysisMapView({
       bg="white"
       overflow={isV2 ? "hidden" : undefined}
       h={isV2 ? "100%" : undefined}
+      w={isV2 ? "100%" : undefined}
+      minW={isV2 ? 0 : undefined}
+      maxW={isV2 ? "100%" : undefined}
       display={isV2 ? "flex" : undefined}
       flexDirection={isV2 ? "column" : undefined}
       _dark={{ bg: "gray.800" }}
@@ -2462,7 +2465,7 @@ export default function AttributeAnalysisMapView({
       <Tabs.Root
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value)}
-        {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
+        {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
       >
         <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4" flexShrink={0}>
           <HStack gap="4">
@@ -3393,8 +3396,8 @@ export default function AttributeAnalysisMapView({
         </Tabs.Content>
 
         {/* Table Tab Content */}
-        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
-          <Box {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, minW: 0, maxW: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+          <Box {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
             {selectedProjects.length > 0 && allPoints.length > 0 && (
               <Box p="4" borderBottom="1px solid" borderColor="gray.200">
                 <Text fontSize="sm" fontWeight="semibold" mb="2">
@@ -3474,7 +3477,7 @@ export default function AttributeAnalysisMapView({
                 </Box>
 
                 {/* Table */}
-                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0 } : {})}>
+                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%" } : {})}>
                   <table
                     style={{
                       width: "100%",

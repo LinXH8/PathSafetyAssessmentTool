@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Spinner } from "@chakra-ui/react";
 import ImageUploadModal from "../../sidebar/components/ImageUploadModal";
 import SelectRoadsMap from "../SelectRoadsMap";
 import { getTagColor } from "../../Projects/tagColor";
@@ -96,6 +97,9 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
     folders,
     selectedFolders,
     setSelectedFolders,
+    folderSummaries,
+    loadingFolderSummaries,
+    folderProjectCounts,
     usingRoadSelection,
     selectedRoadFolders,
     unavailableSelectedRoads,
@@ -232,6 +236,12 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                 />
               </div>
               <button onClick={openImageUploadModal} style={secondaryInlineBtn}>Import Folder</button>
+              {loadingFolderSummaries && (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <Spinner size="sm" color={COLOR.blue} />
+                  <span style={captionStyle}>Loading folder stats…</span>
+                </div>
+              )}
             </div>
 
             {err && <span style={{ ...captionStyle, color: COLOR.danger, flexShrink: 0 }}>{err}</span>}
@@ -269,11 +279,31 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                           <div onClick={(e) => { e.stopPropagation(); toggleFolderRow(f); }} style={checkboxBox(isSelected)}>{isSelected && checkSvg}</div>
                           <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={f}>{f}</span>
                         </div>
-                        {/* Summary columns: placeholder until the launch-time bulk fetcher exists. */}
-                        <span style={cellStyle(W_SEG)}>—</span>
-                        <span style={cellStyle(W_QTR)}>—</span>
-                        <span style={cellStyle(W_DIST)}>—</span>
-                        <span style={cellStyle(W_PROJ)}>—</span>
+                        {/* Summary columns: auto-loaded stats; a pending row shows a
+                            quiet spinner until its background preview resolves. */}
+                        {(() => {
+                          const s = folderSummaries[f];
+                          const resolved = !!(s && s.cached);
+                          const seg = s?.segment_count;
+                          const dist = s?.total_distance_km;
+                          const projCount = folderProjectCounts[f] ?? 0;
+                          const pendingCell = <Spinner size="xs" color={COLOR.gray400} />;
+                          return (
+                            <>
+                              <span style={cellStyle(W_SEG)}>
+                                {resolved ? (typeof seg === "number" ? seg : "—") : pendingCell}
+                              </span>
+                              <span style={cellStyle(W_QTR)}>
+                                {resolved ? (s?.survey_quarter ?? (s?.survey_quarters?.length ? s.survey_quarters.join(", ") : "—")) : pendingCell}
+                              </span>
+                              <span style={cellStyle(W_DIST)}>
+                                {resolved ? (typeof dist === "number" ? dist.toFixed(1) : "—") : pendingCell}
+                              </span>
+                              {/* Projects count is derived from the project list — always known. */}
+                              <span style={cellStyle(W_PROJ)}>{projCount}</span>
+                            </>
+                          );
+                        })()}
                       </div>
                     );
                   })

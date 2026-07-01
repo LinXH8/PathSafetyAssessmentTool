@@ -489,6 +489,7 @@ export default function Home() {
     tagSuggestionsOpen,
     setTagSuggestionsOpen,
     filteredTagOptions,
+    allTags,
     hasActiveFilters,
     clearAllFilters,
     projects,

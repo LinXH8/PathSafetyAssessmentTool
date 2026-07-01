@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toaster } from "../../../components/ui/toaster";
 import * as api from "../../../api";
-import { getTagColor } from "../tagColor";
+import TagInputV2 from "../../../components/common/TagInputV2";
 import { FONT, COLOR } from "../../../features/ui/designTokens";
 import type { ProjectListItem } from "../../../api";
 
@@ -22,6 +22,8 @@ interface EditProjectModalV2Props {
   open: boolean;
   onClose: () => void;
   projects: ProjectListItem[];
+  /** All known tags across every project — powers the tag autocomplete. */
+  suggestions?: string[];
   onSuccess: (
     updates: Array<{ oldName: string; newName: string; tags: string[] }>
   ) => void;
@@ -31,6 +33,7 @@ export default function EditProjectModalV2({
   open,
   onClose,
   projects,
+  suggestions = [],
   onSuccess,
 }: EditProjectModalV2Props) {
   const isMulti = projects.length > 1;
@@ -48,7 +51,6 @@ export default function EditProjectModalV2({
 
   const [newName, setNewName] = useState(single?.name ?? "");
   const [tags, setTags] = useState<string[]>(initialTags);
-  const [tagInput, setTagInput] = useState("");
   const [saving, setSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +59,6 @@ export default function EditProjectModalV2({
     if (open) {
       setNewName(single?.name ?? "");
       setTags(initialTags);
-      setTagInput("");
       // Focus the primary field once the overlay is painted.
       window.setTimeout(() => inputRef.current?.focus(), 0);
     }
@@ -74,19 +75,6 @@ export default function EditProjectModalV2({
   }, [open, saving, onClose]);
 
   if (!open) return null;
-
-  function handleTagKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "," || e.key === "Enter") {
-      e.preventDefault();
-      const trimmed = tagInput.trim();
-      if (trimmed && !tags.includes(trimmed)) setTags((t) => [...t, trimmed]);
-      setTagInput("");
-    } else if (e.key === "Backspace" && tagInput === "" && tags.length > 0) {
-      setTags((t) => t.slice(0, -1));
-    }
-  }
-
-  const removeTag = (tag: string) => setTags((t) => t.filter((x) => x !== tag));
 
   async function handleSave() {
     if (single && !newName.trim()) {
@@ -294,56 +282,12 @@ export default function EditProjectModalV2({
 
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <label style={labelStyle}>Tags</label>
-            <div
-              style={{
-                boxSizing: "border-box",
-                width: "100%",
-                minHeight: 40,
-                padding: "6px 8px",
-                border: `1px solid ${COLOR.borderInput}`,
-                borderRadius: 6,
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 6,
-                alignItems: "center",
-                background: COLOR.white,
-              }}
-            >
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: getTagColor(tag),
-                    color: COLOR.white,
-                    borderRadius: 999,
-                    padding: "2px 10px",
-                    fontFamily: FONT,
-                    fontWeight: 700,
-                    fontSize: 14,
-                  }}
-                >
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    aria-label={`Remove ${tag}`}
-                    style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-              <input
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={handleTagKeyDown}
-                placeholder={tags.length === 0 ? "Type a tag and press comma or enter" : "Add tag…"}
-                style={{ flex: 1, minWidth: 120, border: "none", outline: "none", fontFamily: FONT, fontSize: 16, background: "transparent", color: COLOR.text }}
-              />
-            </div>
+            <TagInputV2
+              tags={tags}
+              onChange={setTags}
+              suggestions={suggestions}
+              placeholder={tags.length === 0 ? "Type a tag and press comma or enter" : "Add tag…"}
+            />
             <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
               Press comma (,) or Enter to add a tag
             </span>

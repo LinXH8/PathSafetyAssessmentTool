@@ -222,6 +222,18 @@ function mergeRoadSelection(
   }));
 }
 
+// Road labels carry the survey quarter as a trailing bracket, e.g.
+// "TPY Lor 4 (1Q2026)" or "… (1Q2026, 2Q2026)". Split it out so the v2 table can
+// show the quarter in its own column instead of cramming it into the name.
+const ROAD_QUARTER_RE = /\s*\(((?:[1-4]Q\d{4})(?:\s*,\s*[1-4]Q\d{4})*)\)\s*$/i;
+function splitRoadLabel(rawLabel: string): { name: string; quarter: string | null } {
+  const match = rawLabel.match(ROAD_QUARTER_RE);
+  if (match && match.index != null) {
+    return { name: rawLabel.slice(0, match.index).trim() || rawLabel, quarter: match[1].trim() };
+  }
+  return { name: rawLabel, quarter: null };
+}
+
 // ── Map click handler ──────────────────────────────────────────────
 function MapClickHandler({
   active,
@@ -995,6 +1007,9 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
               <span style={v2HeaderLabel}>Folder Name</span>
               <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
             </div>
+            <div style={{ width: 110, flexShrink: 0, display: "flex", gap: 5, alignItems: "center", justifyContent: "center" }}>
+              <span style={v2HeaderLabel}>Quarter</span>
+            </div>
             <div style={{ width: 120, flexShrink: 0, display: "flex", gap: 5, alignItems: "center", justifyContent: "center" }}>
               <span style={v2HeaderLabel}>Segments</span>
               <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
@@ -1008,7 +1023,9 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                 {querying ? "Searching for roads…" : "Draw a polygon, pick a planning area, or import a shapefile to find roads."}
               </div>
             ) : (
-              roads.map((road) => (
+              roads.map((road) => {
+                const { name: roadDisplayName, quarter } = splitRoadLabel(road.label ?? road.name);
+                return (
                 <div
                   key={road.name}
                   onClick={() => toggleRoad(road.name)}
@@ -1017,12 +1034,14 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                   <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center", minWidth: 0 }}>
                     <div onClick={(e) => { e.stopPropagation(); toggleRoad(road.name); }} style={v2Checkbox(road.selected)}>{road.selected && v2Check}</div>
                     <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: road.exists ? COLOR.text : COLOR.gray500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={road.exists ? (road.label ?? road.name) : `${road.label ?? road.name} — not downloaded`}>
-                      {road.label ?? road.name}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
+                      {roadDisplayName}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
                     </span>
                   </div>
+                  <span style={{ width: 110, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: quarter ? COLOR.text : COLOR.gray400 }} title={quarter ?? undefined}>{quarter ?? "—"}</span>
                   <span style={{ width: 120, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{road.points}</span>
                 </div>
-              ))
+                );
+              })
             )}
           </div>
 

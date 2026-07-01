@@ -5,7 +5,9 @@ import {
   createProjectFromFolder,
   fetchProjectList,
   fetchSourceFolderPreview,
+  fetchSourceFolderSummaries,
   type SourceFolderPreview,
+  type SourceFolderSummary,
   type ProjectSelectionGeometry,
 } from "../../api";
 import { type SelectedRoad } from "./SelectRoadsMap";
@@ -36,6 +38,11 @@ export default function CreateProjectPage() {
   const [folderPreviewError, setFolderPreviewError] = useState<string | null>(null);
   const [selectedRoads, setSelectedRoads] = useState<SelectedRoad[]>([]);
   const [selectedSelectionGeometry, setSelectedSelectionGeometry] = useState<ProjectSelectionGeometry | null>(null);
+  // Auto-loaded per-folder stats for the v2 folder table (segments/quarter/etc).
+  const [folderSummaries, setFolderSummaries] = useState<Record<string, SourceFolderSummary>>({});
+  const [loadingFolderSummaries, setLoadingFolderSummaries] = useState(false);
+  // How many existing projects were created from each source folder.
+  const [folderProjectCounts, setFolderProjectCounts] = useState<Record<string, number>>({});
 
   const selectedRoadFolders = useMemo(
     () => selectedRoads.filter((road) => road.selected),
@@ -63,10 +70,15 @@ export default function CreateProjectPage() {
 
       // Extract all unique tags from existing projects
       const tagSet = new Set<string>();
+      const projectCounts: Record<string, number> = {};
       projectsData.projects.forEach(p => {
         p.tags?.forEach(tag => tagSet.add(tag));
+        (p.source_folders ?? []).forEach((sf) => {
+          projectCounts[sf] = (projectCounts[sf] ?? 0) + 1;
+        });
       });
       setExistingTags(Array.from(tagSet).sort());
+      setFolderProjectCounts(projectCounts);
     } catch (e: any) {
       if (e?.name !== "AbortError") setErr(e?.message ?? "Failed to load folders");
     } finally {
@@ -119,6 +131,73 @@ export default function CreateProjectPage() {
 
     return () => ctrl.abort();
   }, [folder, roadAvailabilityVersion, selectedFolderExists]);
+
+  // Auto-populate the folder table with per-folder stats. Two-phase for speed:
+  //   1. one cheap cache-only bulk request fills every already-computed folder;
+  //   2. uncached folders are filled progressively via the single-folder preview
+  //      endpoint, capped at a small concurrency so hundreds of new folders never
+  //      hammer the backend or block the UI.
+  useEffect(() => {
+    let cancelled = false;
+    const ctrl = new AbortController();
+
+    (async () => {
+      setLoadingFolderSummaries(true);
+      let summaries: SourceFolderSummary[] = [];
+      try {
+        summaries = await fetchSourceFolderSummaries({ signal: ctrl.signal });
+      } catch (e: any) {
+        if (cancelled || e?.name === "AbortError") return;
+        setLoadingFolderSummaries(false);
+        return;
+      }
+      if (cancelled) return;
+
+      setFolderSummaries(() => {
+        const next: Record<string, SourceFolderSummary> = {};
+        summaries.forEach((s) => { next[s.folder_name] = s; });
+        return next;
+      });
+
+      // Progressively resolve the uncached folders with bounded concurrency.
+      const pending = summaries.filter((s) => !s.cached).map((s) => s.folder_name);
+      if (pending.length === 0) {
+        if (!cancelled) setLoadingFolderSummaries(false);
+        return;
+      }
+
+      const CONCURRENCY = 3;
+      let cursor = 0;
+      const worker = async () => {
+        while (!cancelled) {
+          const index = cursor++;
+          if (index >= pending.length) break;
+          const folderName = pending[index];
+          try {
+            const preview = await fetchSourceFolderPreview(folderName, { signal: ctrl.signal, skipRename: true });
+            if (cancelled) break;
+            // The preview may rename the folder (quarter suffix) — key by both.
+            setFolderSummaries((prev) => ({
+              ...prev,
+              [folderName]: { ...(prev[folderName] ?? {} as SourceFolderSummary), ...preview, cached: true },
+              [preview.folder_name]: { ...(prev[preview.folder_name] ?? {} as SourceFolderSummary), ...preview, cached: true },
+            }));
+          } catch (e: any) {
+            if (e?.name === "AbortError") break;
+            // Leave the row as an unresolved stub; a manual select can retry.
+          }
+        }
+      };
+
+      await Promise.all(Array.from({ length: Math.min(CONCURRENCY, pending.length) }, worker));
+      if (!cancelled) setLoadingFolderSummaries(false);
+    })();
+
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
+  }, [roadAvailabilityVersion]);
 
   const handleRoadSelectionChange = useCallback((roads: SelectedRoad[]) => {
     setSelectedRoads(roads);
@@ -228,6 +307,9 @@ export default function CreateProjectPage() {
     folderPreview,
     loadingFolderPreview,
     folderPreviewError,
+    folderSummaries,
+    loadingFolderSummaries,
+    folderProjectCounts,
     usingRoadSelection,
     selectedRoadFolders,
     unavailableSelectedRoads,

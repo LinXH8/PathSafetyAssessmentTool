@@ -424,6 +424,7 @@ export default function Sidebar() {
           onDiscardAndExit={handleTreatmentDiscardAndExit}
           onCancel={handleTreatmentExitCancel}
           isSaving={isSaving}
+          context="Treatment Page"
         />
         <ResetConfirmationDialog
           open={resetDialogOpen}
@@ -590,6 +591,7 @@ export default function Sidebar() {
         onDiscardAndExit={handleTreatmentDiscardAndExit}
         onCancel={handleTreatmentExitCancel}
         isSaving={isSaving}
+        context="Treatment Page"
       />
 
       <ResetConfirmationDialog

@@ -120,6 +120,14 @@ type Props = {
   activeGroupTab?: string | null;
   /** "v1" (default) = current Chakra layout; "v2" = Home.dc.html FRAME 4 attribute design. */
   variant?: "v1" | "v2";
+  /** Autocode-by-attribute selection mode (v2). Cells become click-to-select
+   *  (green highlight) and their value controls go read-only. */
+  selectionMode?: boolean;
+  /** Currently-selected real attribute keys (selection mode). */
+  selectedKeys?: Set<string>;
+  /** Real keys that are eligible for selection; others aren't clickable. */
+  selectableKeys?: Set<string>;
+  onToggleSelect?: (realKey: string) => void;
 };
 
 /** ====== Group ordering (tab order) ====== */
@@ -369,6 +377,10 @@ export default function AttributesPanel({
   projectName, // Passed from parent
   onEditOptions,
   variant = "v1",
+  selectionMode = false,
+  selectedKeys,
+  selectableKeys,
+  onToggleSelect,
 }: Props & { projectName?: string }) {
   const [detecting, setDetecting] = useState(false);
 
@@ -460,9 +472,9 @@ export default function AttributesPanel({
   if (variant === "v2") {
     const v2Fields = grouped ? (grouped[selectedTab] ?? []) : [];
     return (
-      <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0, flex: typeof flex === "number" ? flex : undefined }}>
-        {/* attribute category tabs (§6) */}
-        <div style={{ display: "flex", alignItems: "flex-end", overflowX: "auto", overflowY: "hidden", flexShrink: 0, scrollbarWidth: "none" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0, width: "100%", minWidth: 0, maxWidth: "100%", flex: typeof flex === "number" ? flex : undefined }}>
+        {/* attribute category tabs (§6) — scroll sideways when they overflow. */}
+        <div style={{ display: "flex", alignItems: "flex-end", overflowX: "auto", overflowY: "hidden", flexShrink: 0, minWidth: 0, scrollbarWidth: "none" }}>
           {groupsWithFields.map((g) => {
             const active = selectedTab === g;
             return (
@@ -481,7 +493,7 @@ export default function AttributesPanel({
           {!row || v2Fields.length === 0 ? (
             <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: 8 }}>No attributes</div>
           ) : (
-            <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 18px", overflowY: "auto", alignContent: "start" }}>
+            <div style={{ flex: 1, display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "10px 18px", overflowY: "auto", alignContent: "start" }}>
               {v2Fields.map(([k, v]) => {
                 const dict = mappings[k];
                 const strVal = toDisplayString(v);
@@ -494,11 +506,17 @@ export default function AttributesPanel({
                 // manual edit, yellow = autocoded change (green when highlightColor="green",
                 // e.g. Treatment). The inner value box is tinted to match (not left white),
                 // and an autocoded field's title is tagged with its source — (CV) or (GIS).
-                const hl = isEdited
+                // In autocode selection mode, a selected cell shows the green
+                // "modified" highlight (reused from manual-edit / autocode) so the
+                // panel looks identical until the user clicks to select.
+                const isSelectable = !selectionMode || !selectableKeys || selectableKeys.has(k);
+                const isSelected = selectionMode && !!selectedKeys?.has(k);
+                let hl = isEdited
                   ? { bg: "#FFF5F5", border: "#E53E3E" }
                   : isChanged
                     ? (highlightColor === "green" ? { bg: "#F0FFF4", border: "#38A169" } : { bg: "#FFFFF0", border: "#D69E2E" })
                     : null;
+                if (isSelected) hl = { bg: "#F0FFF4", border: "#38A169" };
                 const boxBg = hl ? hl.bg : COLOR.white;
                 const boxBorder = hl ? hl.border : COLOR.border;
                 const source = fieldSources[k]; // "CV" | "GIS" | undefined
@@ -514,23 +532,37 @@ export default function AttributesPanel({
                   </Box>
                 );
                 return (
-                  <div key={k} style={{ borderWidth: 2, borderStyle: "solid", borderColor: hl ? hl.border : "transparent", background: hl ? hl.bg : "transparent", borderRadius: 6, padding: 8 }}>
+                  <div
+                    key={k}
+                    onClick={selectionMode && isSelectable && onToggleSelect ? () => onToggleSelect(k) : undefined}
+                    style={{
+                      minWidth: 0,
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                      borderColor: hl ? hl.border : "transparent",
+                      background: hl ? hl.bg : "transparent",
+                      borderRadius: 6,
+                      padding: 8,
+                      cursor: selectionMode ? (isSelectable ? "pointer" : "not-allowed") : undefined,
+                      opacity: selectionMode && !isSelectable ? 0.55 : 1,
+                    }}
+                  >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
                       <Box minW={0} flex={1}>
-                        {ATTRIBUTE_TOOLTIPS[k] ? (
+                        {ATTRIBUTE_TOOLTIPS[k] && !selectionMode ? (
                           <Tooltip content={ATTRIBUTE_TOOLTIPS[k]} showArrow portalled openDelay={100} closeOnClick={false} contentProps={{ maxW: "280px", fontSize: "xs" }}>
                             {titleNode}
                           </Tooltip>
                         ) : titleNode}
                       </Box>
-                      {showPencil && (
+                      {showPencil && !selectionMode && (
                         <button className="attr-edit-btn" onClick={(e) => { e.stopPropagation(); onEditOptions!(childField!); }} aria-label={`Edit options for ${childField}`}>
                           <LuPencil className="attr-edit-icon" />
                         </button>
                       )}
                     </div>
                     {dict ? (
-                      <div style={{ position: "relative", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg }}>
+                      <div style={{ position: "relative", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg, pointerEvents: selectionMode ? "none" : undefined }}>
                         <select
                           value={strVal}
                           disabled={readOnly}
@@ -569,7 +601,7 @@ export default function AttributesPanel({
                           onChange?.(k, val);
                           onEdit?.(k, val);
                         }}
-                        style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg, padding: "6px 9px", fontFamily: FONT, fontSize: 16, color: COLOR.text, outline: "none" }}
+                        style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg, padding: "6px 9px", fontFamily: FONT, fontSize: 16, color: COLOR.text, outline: "none", pointerEvents: selectionMode ? "none" : undefined }}
                       />
                     )}
                   </div>

@@ -36,6 +36,8 @@ export interface ProjectsViewModel {
   tagSuggestionsOpen: boolean;
   setTagSuggestionsOpen: (open: boolean) => void;
   filteredTagOptions: string[];
+  /** Every unique tag across all projects — powers edit-modal autocomplete. */
+  allTags: string[];
   hasActiveFilters: boolean;
   clearAllFilters: () => void;
 

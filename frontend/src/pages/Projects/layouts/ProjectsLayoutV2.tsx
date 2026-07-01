@@ -60,6 +60,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     tagSuggestionsOpen,
     setTagSuggestionsOpen,
     filteredTagOptions,
+    allTags,
     hasActiveFilters,
     clearAllFilters,
     projects,
@@ -485,6 +486,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
         open={openEdit}
         onClose={() => setOpenEdit(false)}
         projects={selectedProjects}
+        suggestions={allTags}
         onSuccess={applyEditUpdates}
       />
     </div>

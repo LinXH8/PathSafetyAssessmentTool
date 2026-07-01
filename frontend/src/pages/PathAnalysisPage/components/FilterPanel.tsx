@@ -62,7 +62,9 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange, vari
   if (variant === "v2") {
     const groupAttrs = attrsByGroup[v2Group] ?? [];
     return (
-      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, height: "100%" }}>
+      // width/minWidth/overflow bound the panel to its column so the tab row's
+      // own horizontal scroll engages instead of stretching the whole section.
+      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, height: "100%", width: "100%", minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
         <div style={v2TabRowStyle}>
           {GROUP_ORDER.map(group => {
             const activeInGroup = (attrsByGroup[group] ?? []).filter(a => activeFilters.includes(a.name)).length;
@@ -78,12 +80,14 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange, vari
           style={{
             flex: 1,
             minHeight: 0,
+            minWidth: 0,
             border: `1px solid ${COLOR.border}`,
             borderRadius: "0 6px 6px 6px",
             marginTop: -1,
             background: COLOR.white,
             padding: 12,
             overflowY: "auto",
+            overflowX: "hidden",
           }}
         >
           {activeFilters.length >= MAX_ACTIVE && (
@@ -98,7 +102,7 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange, vari
               const isDisabled = activeFilters.length >= MAX_ACTIVE && !isActive;
               return (
                 <div key={attr.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, opacity: isDisabled ? 0.5 : 1 }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, flex: 1, minWidth: 0 }}>
+                  <span title={label} style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {label}
                   </span>
                   <V2Switch

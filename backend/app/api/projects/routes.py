@@ -3803,12 +3803,21 @@ def _build_source_folder_summary(source_dir: Path, image_files: list[Path]) -> d
     geotagged_image_count = 0
     segment_count = 0
     segment_error = None
+    total_distance_km = None
 
     try:
         geo_points = get_image_folder_geo(str(source_dir))
         geotagged_image_count = len(geo_points)
         if geotagged_image_count > 0:
-            segment_count = len(_build_project_geo_data_from_points(geo_points, source_dir.name))
+            segments_gdf = _build_project_geo_data_from_points(geo_points, source_dir.name)
+            segment_count = len(segments_gdf)
+            # Total surveyed distance — reproject to SVY21 (Singapore metric CRS)
+            # for an accurate length in metres, then report km.
+            try:
+                metric = segments_gdf.to_crs(3414)
+                total_distance_km = round(float(metric.length.sum()) / 1000.0, 2)
+            except Exception:
+                total_distance_km = None
     except Exception as exc:
         segment_error = str(exc)
 
@@ -3824,6 +3833,7 @@ def _build_source_folder_summary(source_dir: Path, image_files: list[Path]) -> d
         "image_count": len(image_files),
         "geotagged_image_count": geotagged_image_count,
         "segment_count": segment_count,
+        "total_distance_km": total_distance_km,
         "segment_error": segment_error,
         "earliest_modified_at": min(modified_dates).isoformat() if modified_dates else None,
         "latest_modified_at": max(modified_dates).isoformat() if modified_dates else None,
@@ -3868,7 +3878,7 @@ def _maybe_auto_rename_source_folder(source_dir: Path, in_root: Path, summary: d
     return target_dir, previous_name
 
 
-def _resolve_source_folder_preview(source_dir: Path, in_root: Path) -> dict:
+def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename: bool = True) -> dict:
     image_files = _iter_source_image_files(source_dir)
     cache_key = _build_source_folder_cache_key(source_dir, image_files)
     metadata = _load_source_folder_metadata(source_dir)
@@ -3886,10 +3896,13 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path) -> dict:
 
     summary["folder_name"] = source_dir.name
     renamed_from = None
-    try:
-        source_dir, renamed_from = _maybe_auto_rename_source_folder(source_dir, in_root, summary)
-    except Exception as exc:
-        current_app.logger.warning("Failed to auto-rename source folder %s: %s", source_dir, exc)
+    if allow_rename:
+        # The bulk auto-load path passes allow_rename=False so browsing the Create
+        # page never silently renames folders on disk under the user.
+        try:
+            source_dir, renamed_from = _maybe_auto_rename_source_folder(source_dir, in_root, summary)
+        except Exception as exc:
+            current_app.logger.warning("Failed to auto-rename source folder %s: %s", source_dir, exc)
 
     summary["folder_name"] = source_dir.name
 
@@ -3946,7 +3959,72 @@ def preview_input_folder():
     if not source_dir.exists() or not source_dir.is_dir():
         return fail("Source folder not found", 404)
 
-    return ok(_resolve_source_folder_preview(source_dir, in_root))
+    # skip_rename=1 lets the Create page's bulk auto-load compute stats without
+    # triggering the quarter-suffix auto-rename (which would move folders on disk
+    # under the browsing user).
+    allow_rename = str(request.args.get("skip_rename") or "").strip().lower() not in ("1", "true", "yes")
+    return ok(_resolve_source_folder_preview(source_dir, in_root, allow_rename=allow_rename))
+
+
+@bp.get("/folders/summaries")
+def summarise_input_folders():
+    """
+    Fast, cache-only bulk summary for every source folder — used to auto-populate
+    the Create page table without computing anything heavy.
+
+    For each folder we return its previously-cached summary if present (a plain
+    JSON read, no EXIF/geo work), otherwise a lightweight stub with
+    ``cached: false`` so the frontend knows to lazily fetch a full preview for it.
+    This keeps the endpoint O(number-of-folders) file reads even when hundreds of
+    uncached folders exist.
+
+    GET /api/projects/folders/summaries
+    Response: { items: [ { folder_name, segment_count, survey_quarter, ...,
+                           cached } ] }
+    """
+    try:
+        ctx = get_ctx()
+    except Exception as exc:
+        return jsonify({"error": f"Backend initialisation failed: {exc}"}), 500
+    pm = ctx["pm"]
+    in_path: Path = pm.in_path
+
+    if not in_path.exists():
+        return ok({"items": []})
+
+    items: list[dict] = []
+    for entry in sorted(os.listdir(in_path)):
+        source_dir = in_path / entry
+        if not source_dir.is_dir():
+            continue
+
+        metadata = _load_source_folder_metadata(source_dir)
+        summary = metadata.get("summary") if metadata is not None else None
+        if isinstance(summary, dict):
+            result = dict(summary)
+            result["folder_name"] = entry
+            result.setdefault("survey_quarters", [])
+            result["mixed_quarters"] = len(result.get("survey_quarters") or []) > 1
+            result["cached"] = True
+        else:
+            result = {
+                "folder_name": entry,
+                "image_count": None,
+                "geotagged_image_count": None,
+                "segment_count": None,
+                "total_distance_km": None,
+                "segment_error": None,
+                "earliest_modified_at": None,
+                "latest_modified_at": None,
+                "survey_quarter": None,
+                "survey_quarters": [],
+                "mixed_quarters": False,
+                "cached": False,
+            }
+        result["renamed_from"] = None
+        items.append(result)
+
+    return ok({"items": items})
 
 
 @bp.get("/folders/image")
