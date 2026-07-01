@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
  * Resolution order (synchronous, safe to call at app root):
  *   1. URL `?ui=v1` / `?ui=v2`  → use it AND persist to localStorage.
  *   2. localStorage["psat:uiVersion"] → use it.
- *   3. default → "v1" (v1 is production until the swap).
+ *   3. default → "v2" (v2 is the production default since the swap; an explicit
+ *      stored "v1" is still honoured so testers can pin the old UI).
  *
  * Flip live with `?ui=v2` / `?ui=v1`; the choice sticks per browser.
  * Note: the Chakra theme is picked from this flag at provider mount, so
@@ -23,7 +24,7 @@ export function resolveUiVersion(): UiVersion {
     return param;
   }
   const stored = localStorage.getItem(KEY);
-  return stored === "v2" ? "v2" : "v1";
+  return stored === "v1" ? "v1" : "v2";
 }
 
 export function useUiVersion(): UiVersion {
