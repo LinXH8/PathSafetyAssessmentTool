@@ -605,7 +605,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                       <span
                         key={`${c.name}-${i}`}
                         onClick={() => vm.onContributorClick(c.name)}
-                        style={{ background: "#D53F8C", color: "#fff", borderRadius: 4, padding: "4px 9px", fontSize: 16, cursor: "pointer" }}
+                        style={{ background: "#DD6B20", color: "#fff", borderRadius: 4, padding: "4px 9px", fontSize: 16, cursor: "pointer" }}
                       >
                         {c.name}
                       </span>
@@ -623,6 +623,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   <span style={{ fontSize: 16, color: segmentHasTreatments ? COLOR.gray500 : COLOR.gray400 }}>Show Pre-Treatment</span>
                   <V2Switch
                     on={!showPostTreatment && segmentHasTreatments}
+                    onColor={COLOR.teal}
                     onClick={segmentHasTreatments ? () => vm.setShowPostTreatment(!showPostTreatment) : undefined}
                   />
                 </div>

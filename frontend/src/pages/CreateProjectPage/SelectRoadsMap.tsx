@@ -930,8 +930,8 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
           {layerPanelOpen && (
             <div style={{ width: 340, flexShrink: 0, borderRight: `1px solid ${COLOR.rowDivider}`, padding: 14, display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
               <div style={{ ...v2Title, marginBottom: 16 }}>Layer View</div>
-              <V2LayerRow label="Roads" on={showRoadOverlay} onToggle={() => setShowRoadOverlay((v) => !v)} />
-              <V2LayerRow label="Planning Area" on={showPlanningAreaOverlay} onToggle={() => setShowPlanningAreaOverlay((v) => !v)} />
+              <V2LayerRow label="Roads" color="#16A34A" geometry="line" on={showRoadOverlay} onToggle={() => setShowRoadOverlay((v) => !v)} />
+              <V2LayerRow label="Planning Area" color="#0D9488" geometry="polygon" on={showPlanningAreaOverlay} onToggle={() => setShowPlanningAreaOverlay((v) => !v)} />
               <div style={{ flex: 1 }} />
               <div style={{ ...v2Title, marginBottom: 7 }}>Import</div>
               <button
@@ -1243,11 +1243,14 @@ const v2GhostInline: React.CSSProperties = {
 };
 
 function v2ToolBtn(active: boolean): React.CSSProperties {
+  // Ghost-inside-container treatment: the floating cluster owns the single outer
+  // border; inactive buttons are borderless so they don't double up (matches the
+  // Coding / Path Analysis floating map controls).
   return {
     width: 28,
     height: 28,
-    background: active ? COLOR.blue : COLOR.white,
-    border: `1px solid ${active ? COLOR.blue : COLOR.border}`,
+    background: active ? COLOR.blue : "transparent",
+    border: `1px solid ${active ? COLOR.blue : "transparent"}`,
     borderRadius: 6,
     display: "flex",
     alignItems: "center",
@@ -1270,14 +1273,43 @@ const v2Check = (
   </svg>
 );
 
-// On/off switch per DESIGN_GUIDE §7 (track 30×16, thumb 12, neutral on-track #2D3748).
-function V2LayerRow({ label, on, onToggle }: { label: string; on: boolean; onToggle: () => void }) {
+// Small black glyph signifying how the layer draws on the map (line / polygon).
+// Fixed 14px box so the row height never shifts.
+function V2GeometryIcon({ type }: { type: "line" | "polygon" | "point" }) {
+  const common = { width: 14, height: 14, viewBox: "0 0 16 16", style: { flexShrink: 0, display: "block" } as const };
+  if (type === "line") {
+    return (
+      <svg {...common} fill="none" stroke="#000" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="2 12 6 6 10 10 14 4" />
+      </svg>
+    );
+  }
+  if (type === "point") {
+    return (
+      <svg {...common} fill="#000">
+        <path d="M8 1.5c-2.5 0-4.5 2-4.5 4.5 0 3.2 4.5 8.5 4.5 8.5s4.5-5.3 4.5-8.5C12.5 3.5 10.5 1.5 8 1.5z" />
+        <circle cx="8" cy="6" r="1.7" fill="#fff" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...common} fill="none" stroke="#000" strokeWidth={1.6} strokeLinejoin="round">
+      <polygon points="8 2 14 6.5 11.7 14 4.3 14 2 6.5" />
+    </svg>
+  );
+}
+
+function V2LayerRow({ label, color, geometry, on, onToggle }: { label: string; color: string; geometry: "line" | "polygon" | "point"; on: boolean; onToggle: () => void }) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
-      <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{label}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
+        <V2GeometryIcon type={geometry} />
+        <div style={{ width: 10, height: 10, borderRadius: "50%", background: color, flexShrink: 0 }} />
+        <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{label}</span>
+      </div>
       <div
         onClick={onToggle}
-        style={{ width: 30, height: 16, borderRadius: 999, background: on ? COLOR.text : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
+        style={{ width: 30, height: 16, borderRadius: 999, background: on ? color : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
       >
         <div style={{ position: "absolute", top: 2, left: 2, width: 12, height: 12, borderRadius: "50%", background: "#fff", transform: on ? "translateX(14px)" : "none", transition: "transform .15s" }} />
       </div>

@@ -1021,10 +1021,18 @@ export async function uploadShapefiles(files: File[], category?: string): Promis
 export async function previewUploadedShapefiles(files: File[]): Promise<FeatureCollection> {
   const formData = new FormData();
   files.forEach(file => formData.append("files", file));
-  const res = await fetch("/api/shapefiles/preview-upload", {
-    method: "POST",
-    body: formData,
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/shapefiles/preview-upload", {
+      method: "POST",
+      body: formData,
+    });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Cannot reach the backend to import the shapefile. Make sure the backend is running (e.g. via Run-PSAT.bat) and try again.");
+    }
+    throw error;
+  }
   if (!res.ok) throw new Error(await readError(res));
   return res.json();
 }

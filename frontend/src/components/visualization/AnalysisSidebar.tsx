@@ -7,6 +7,8 @@ import { FONT, COLOR } from '../../features/ui/designTokens';
 import { GIS_LAYER_COLORS } from '../../constants/mapColors';
 import './AnalysisPanel.css';
 
+type LayerGeometry = 'line' | 'point' | 'polygon';
+
 interface GISLayerToggle {
   key: string;
   label: string;
@@ -14,6 +16,35 @@ interface GISLayerToggle {
   value: boolean;
   onChange: (v: boolean) => void;
   colorPalette: string;
+  geometry: LayerGeometry;
+}
+
+// Small black glyph shown before the colour dot, signifying how the layer is drawn
+// on the map (vector line / point / polygon). Fixed 14px box so the row never
+// changes height when it renders.
+function LayerGeometryIcon({ type }: { type: LayerGeometry }) {
+  const common = { width: 14, height: 14, viewBox: "0 0 16 16", style: { flexShrink: 0, display: "block" } as const };
+  if (type === 'line') {
+    return (
+      <svg {...common} fill="none" stroke="#000" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-label="Line layer">
+        <polyline points="2 12 6 6 10 10 14 4" />
+      </svg>
+    );
+  }
+  if (type === 'polygon') {
+    return (
+      <svg {...common} fill="none" stroke="#000" strokeWidth={1.6} strokeLinejoin="round" aria-label="Polygon layer">
+        <polygon points="8 2 14 6.5 11.7 14 4.3 14 2 6.5" />
+      </svg>
+    );
+  }
+  // point — a map pin so it reads differently from the round colour dot
+  return (
+    <svg {...common} fill="#000" aria-label="Point layer">
+      <path d="M8 1.5c-2.5 0-4.5 2-4.5 4.5 0 3.2 4.5 8.5 4.5 8.5s4.5-5.3 4.5-8.5C12.5 3.5 10.5 1.5 8 1.5z" />
+      <circle cx="8" cy="6" r="1.7" fill="#fff" />
+    </svg>
+  );
 }
 
 interface AnalysisSidebarProps {
@@ -96,21 +127,21 @@ export function AnalysisSidebar({
 }: AnalysisSidebarProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const layers: GISLayerToggle[] = [
-    { key: 'footpath',          label: 'Footpath',          color: GIS_LAYER_COLORS.footpath,         colorPalette: 'blue',   value: showFootpath,          onChange: setShowFootpath },
-    { key: 'cycling',           label: 'Cycling Path',      color: GIS_LAYER_COLORS.cycling,          colorPalette: 'red',    value: showCycling,           onChange: setShowCycling },
-    { key: 'shared',            label: 'Shared Path',       color: GIS_LAYER_COLORS.shared,           colorPalette: 'purple', value: showShared,            onChange: setShowShared },
-    { key: 'roadcrossing',      label: 'Road Crossing',     color: GIS_LAYER_COLORS.roadcrossing,     colorPalette: 'green',  value: showRoadcrossing,      onChange: setShowRoadcrossing },
-    { key: 'bicycle_crossing',  label: 'Bicycle Crossing',  color: GIS_LAYER_COLORS.bicycle_crossing, colorPalette: 'orange', value: showBicycleCrossing,   onChange: setShowBicycleCrossing },
-    { key: 'mrt_exit',          label: 'MRT Exit',          color: GIS_LAYER_COLORS.mrt_exit,         colorPalette: 'cyan',   value: showMrtExit,           onChange: setShowMrtExit },
-    { key: 'bus_stop',          label: 'Bus Stop',          color: GIS_LAYER_COLORS.bus_stop,         colorPalette: 'purple', value: showBusStop,           onChange: setShowBusStop },
-    { key: 'bus_lane',          label: 'Bus Lane',          color: GIS_LAYER_COLORS.bus_lane,         colorPalette: 'yellow', value: showBusLane,           onChange: setShowBusLane },
-    { key: 'parking_lot',       label: 'Parking Lot',       color: GIS_LAYER_COLORS.parking_lot,      colorPalette: 'orange', value: showParkingLot,        onChange: setShowParkingLot },
-    { key: 'kerb_line',         label: 'Kerb Line',         color: GIS_LAYER_COLORS.kerb_line,        colorPalette: 'pink',   value: showKerbLine,          onChange: setShowKerbLine },
-    { key: 'path_defects',      label: 'Path Defects',      color: GIS_LAYER_COLORS.path_defects,     colorPalette: 'red',    value: showPathDefects,       onChange: setShowPathDefects },
-    { key: 'state_land',        label: 'State Land',         color: GIS_LAYER_COLORS.state_land,       colorPalette: 'teal',   value: showStateLand,         onChange: setShowStateLand },
-    { key: 'stat_board',        label: 'Stat Board',         color: GIS_LAYER_COLORS.stat_board,       colorPalette: 'yellow', value: showStatBoard,         onChange: setShowStatBoard },
-    { key: 'land_private',      label: 'Private Land',       color: GIS_LAYER_COLORS.land_private,     colorPalette: 'purple', value: showLandPrivate,       onChange: setShowLandPrivate },
-    { key: 'land_ministry',     label: 'Ministry Land',      color: GIS_LAYER_COLORS.land_ministry,    colorPalette: 'pink',   value: showLandMinistry,      onChange: setShowLandMinistry },
+    { key: 'footpath',          label: 'Footpath',          color: GIS_LAYER_COLORS.footpath,         colorPalette: 'blue',   geometry: 'line',    value: showFootpath,          onChange: setShowFootpath },
+    { key: 'cycling',           label: 'Cycling Path',      color: GIS_LAYER_COLORS.cycling,          colorPalette: 'red',    geometry: 'line',    value: showCycling,           onChange: setShowCycling },
+    { key: 'shared',            label: 'Shared Path',       color: GIS_LAYER_COLORS.shared,           colorPalette: 'purple', geometry: 'line',    value: showShared,            onChange: setShowShared },
+    { key: 'roadcrossing',      label: 'Road Crossing',     color: GIS_LAYER_COLORS.roadcrossing,     colorPalette: 'green',  geometry: 'line',    value: showRoadcrossing,      onChange: setShowRoadcrossing },
+    { key: 'bicycle_crossing',  label: 'Bicycle Crossing',  color: GIS_LAYER_COLORS.bicycle_crossing, colorPalette: 'orange', geometry: 'point',   value: showBicycleCrossing,   onChange: setShowBicycleCrossing },
+    { key: 'mrt_exit',          label: 'MRT Exit',          color: GIS_LAYER_COLORS.mrt_exit,         colorPalette: 'cyan',   geometry: 'point',   value: showMrtExit,           onChange: setShowMrtExit },
+    { key: 'bus_stop',          label: 'Bus Stop',          color: GIS_LAYER_COLORS.bus_stop,         colorPalette: 'purple', geometry: 'point',   value: showBusStop,           onChange: setShowBusStop },
+    { key: 'bus_lane',          label: 'Bus Lane',          color: GIS_LAYER_COLORS.bus_lane,         colorPalette: 'yellow', geometry: 'line',    value: showBusLane,           onChange: setShowBusLane },
+    { key: 'parking_lot',       label: 'Parking Lot',       color: GIS_LAYER_COLORS.parking_lot,      colorPalette: 'orange', geometry: 'polygon', value: showParkingLot,        onChange: setShowParkingLot },
+    { key: 'kerb_line',         label: 'Kerb Line',         color: GIS_LAYER_COLORS.kerb_line,        colorPalette: 'pink',   geometry: 'line',    value: showKerbLine,          onChange: setShowKerbLine },
+    { key: 'path_defects',      label: 'Path Defects',      color: GIS_LAYER_COLORS.path_defects,     colorPalette: 'red',    geometry: 'point',   value: showPathDefects,       onChange: setShowPathDefects },
+    { key: 'state_land',        label: 'State Land',         color: GIS_LAYER_COLORS.state_land,       colorPalette: 'teal',   geometry: 'polygon', value: showStateLand,         onChange: setShowStateLand },
+    { key: 'stat_board',        label: 'Stat Board',         color: GIS_LAYER_COLORS.stat_board,       colorPalette: 'yellow', geometry: 'polygon', value: showStatBoard,         onChange: setShowStatBoard },
+    { key: 'land_private',      label: 'Private Land',       color: GIS_LAYER_COLORS.land_private,     colorPalette: 'purple', geometry: 'polygon', value: showLandPrivate,       onChange: setShowLandPrivate },
+    { key: 'land_ministry',     label: 'Ministry Land',      color: GIS_LAYER_COLORS.land_ministry,    colorPalette: 'pink',   geometry: 'polygon', value: showLandMinistry,      onChange: setShowLandMinistry },
   ];
 
   // ── v2 render — 340px Layer View panel (Home.dc.html FRAME 4 / DESIGN_GUIDE §13).
@@ -149,6 +180,7 @@ export function AnalysisSidebar({
             {layers.map((layer) => (
               <div key={layer.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
+                  <LayerGeometryIcon type={layer.geometry} />
                   <div style={{ width: 10, height: 10, borderRadius: "50%", background: layer.color, flexShrink: 0 }} />
                   <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{layer.label}</span>
                 </div>
@@ -268,6 +300,7 @@ export function AnalysisSidebar({
               _hover={{ bg: "gray.50", _dark: { bg: "gray.750" } }}
             >
               <Flex align="center" gap="2" flex="1" minW="0">
+                <LayerGeometryIcon type={layer.geometry} />
                 <Box
                   w="10px"
                   h="10px"

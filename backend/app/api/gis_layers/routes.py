@@ -498,6 +498,8 @@ def preview_upload():
     if not files:
         return jsonify({"error": "No files received"}), 400
 
+    uploaded_names = [f.filename for f in files if f.filename]
+
     tmp_dir = Path(tempfile.mkdtemp(dir=_temp_root()))
     try:
         for f in files:
@@ -506,16 +508,34 @@ def preview_upload():
             f.save(str(tmp_path))
 
             if tmp_path.suffix.lower() == ".zip":
-                with zipfile.ZipFile(str(tmp_path)) as zf:
-                    zf.extractall(str(tmp_dir))
+                try:
+                    with zipfile.ZipFile(str(tmp_path)) as zf:
+                        zf.extractall(str(tmp_dir))
+                except zipfile.BadZipFile:
+                    return jsonify({"error": f"'{f.filename}' is not a valid .zip archive. Re-export or re-zip the shapefile and try again."}), 400
 
         shp_files = list(tmp_dir.rglob("*.shp"))
         if not shp_files:
-            return jsonify({"error": "No .shp file found in the uploaded files"}), 400
-        geojson = _read_shapefile_as_geojson(str(shp_files[0]), max_features=5000)
+            names = ", ".join(uploaded_names) if uploaded_names else "the upload"
+            return jsonify({"error": f"No .shp file was found in {names}. A shapefile needs a .shp file (plus its .dbf and .shx companions). Upload a .zip containing all parts, or select the .shp together with its companion files."}), 400
+
+        # A .shp is unreadable without its .shx (index) and .dbf (attributes).
+        # Detect this up-front so the user gets an actionable message instead of
+        # a cryptic fiona/GDAL error.
+        shp = shp_files[0]
+        missing = [ext for ext in (".shx", ".dbf") if not shp.with_suffix(ext).exists()]
+        if missing:
+            missing_str = ", ".join(missing)
+            return jsonify({"error": f"'{shp.name}' is missing its companion file(s): {missing_str}. Upload the whole shapefile set (.shp, .shx, .dbf, .prj) together — a single .shp cannot be read on its own. Zipping the folder is the most reliable way."}), 400
+
+        geojson = _read_shapefile_as_geojson(str(shp), max_features=5000)
     except Exception as e:
         import traceback
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
+        detail = str(e).strip() or e.__class__.__name__
+        return jsonify({
+            "error": f"Could not read the shapefile: {detail}. Check that the .shp, .shx, .dbf and .prj files are all present and not corrupted.",
+            "traceback": traceback.format_exc(),
+        }), 500
     finally:
         shutil.rmtree(str(tmp_dir), ignore_errors=True)
 

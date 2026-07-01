@@ -142,10 +142,9 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
   const createDisabled = !canCreate || creating;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: 32, boxSizing: "border-box", height: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", padding: 32, boxSizing: "border-box", height: "100vh", gap: 16 }}>
+      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, color: COLOR.text, flexShrink: 0 }}>Create Project</span>
       <div style={{ ...card, flex: 1, display: "flex", flexDirection: "column", gap: 16, padding: 16, overflow: "hidden", minHeight: 0 }}>
-        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, color: COLOR.text, flexShrink: 0 }}>Create Project</span>
-
         {/* ── Name + Tags (two columns) ── */}
         <div style={{ display: "flex", gap: 16, flexShrink: 0, alignItems: "flex-start" }}>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>

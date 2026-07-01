@@ -393,16 +393,16 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
               <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: 8, flexWrap: "wrap" }}>
                   <span style={sectionTitle}>Top Risk Contributors</span>
-                  {legendRow([["By Project", COLOR.gray500], ["By Segment", "#D53F8C"]])}
+                  {legendRow([["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]])}
                 </div>
                 <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: 6, overflowY: "auto", height: 112 }}>
                   {segChips.map((c, i) => (
-                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#D53F8C", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#DD6B20", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: 3 }}>{c.val.toFixed(1)}</strong>
                     </div>
                   ))}
                   {projChips.map((c: { name: string; contribution: number }, i: number) => (
-                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: COLOR.gray500, color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#2B6CB0", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
                     </div>
                   ))}

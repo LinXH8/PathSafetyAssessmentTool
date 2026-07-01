@@ -2482,13 +2482,13 @@ export default function AttributeAnalysisMapView({
             {allPoints.length > 0 && (
               <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
               <>
-                <HStack gap="0">
+                <HStack gap="1.5">
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
                       <IconButton
                         aria-label="Single Point Tools"
                         size="sm"
-                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "outline"}
+                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
                         colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
                         onClick={(e) => {
                           if (isDeleteMode || isPointAddMode) {
@@ -2501,8 +2501,6 @@ export default function AttributeAnalysisMapView({
                             setPolygonPoints([]);
                           }
                         }}
-                        borderTopRightRadius={0}
-                        borderBottomRightRadius={0}
                       >
                         {isDeleteMode ? <FaTrash /> : isPointAddMode ? <FaPlus /> : <FaMousePointer />}
                       </IconButton>
@@ -2541,11 +2539,8 @@ export default function AttributeAnalysisMapView({
                       <IconButton
                         aria-label="Polygon Tools"
                         size="sm"
-                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "outline"}
+                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
                         colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "red" : "blue") : "gray"}
-                        borderTopLeftRadius={0}
-                        borderBottomLeftRadius={0}
-                        borderLeft="none"
                         onClick={(e) => {
                           if (isPolygonMode || isPolygonAddMode) {
                             e.preventDefault();
@@ -2636,7 +2631,7 @@ export default function AttributeAnalysisMapView({
                   }}
                   style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
                 >
-                  {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                  {hasSavedReport ? "Continue Report" : "Generate Report"}
                 </Button>
                 <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                   <Menu.Trigger asChild>
@@ -2699,9 +2694,12 @@ export default function AttributeAnalysisMapView({
                   <Button
                     key={proj}
                     size="sm"
-                    colorPalette={isV2 ? "pink" : "blue"}
+                    colorPalette={isV2 ? undefined : "blue"}
                     variant={isV2 ? "solid" : "outline"}
                     borderRadius={isV2 ? "999px" : undefined}
+                    bg={isV2 ? projectColors[proj] : undefined}
+                    color={isV2 ? "white" : undefined}
+                    _hover={isV2 ? { opacity: 0.85 } : undefined}
                     onClick={() => handleProjectClick(proj)}
                   >
                     {proj}
@@ -3407,9 +3405,12 @@ export default function AttributeAnalysisMapView({
                     <Button
                       key={proj}
                       size="sm"
-                      colorPalette={isV2 ? "pink" : "blue"}
+                      colorPalette={isV2 ? undefined : "blue"}
                       variant={isV2 ? "solid" : "outline"}
                       borderRadius={isV2 ? "999px" : undefined}
+                      bg={isV2 ? projectColors[proj] : undefined}
+                      color={isV2 ? "white" : undefined}
+                      _hover={isV2 ? { opacity: 0.85 } : undefined}
                       onClick={() => handleTableProjectJump(proj)}
                     >
                       {proj}

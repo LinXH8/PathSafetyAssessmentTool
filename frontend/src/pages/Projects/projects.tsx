@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
 import { invalidateAll } from "../../api/projectDataCache";
+import { useProjectSelection } from "../../features/projectSelection";
 import { matchesProjectSearch } from "../../utils/projectSearch";
 import { useNavigate } from "react-router-dom";
 import { toaster } from "../../components/ui/toaster";
@@ -43,8 +44,9 @@ export default function Home() {
   const [tagInputValue, setTagInputValue] = useState("");
   const [tagSuggestionsOpen, setTagSuggestionsOpen] = useState(false);
 
-  // Selected Projects (multiple selection)
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  // Selected Projects (multiple selection). Backed by the shared selection
+  // store so the v2 sidebar Quick Select mirrors — and persists — the same set.
+  const [selected, setSelected] = useProjectSelection();
 
   // Delete dialog state
   const [openDelete, setOpenDelete] = useState(false);
@@ -306,31 +308,47 @@ export default function Home() {
     navigate("/analysis/path");
   };
 
-  // Edit success callback
+  // Edit success callback (v1 single-project edit). Spread the existing project
+  // so metric/date fields survive the update — losing last_updated used to punt
+  // the edited row to the bottom of the default (last_updated desc) sort, which
+  // read as the row "disappearing".
   const handleEditSuccess = (newName: string, newTags: string[]) => {
     if (!editingProject) return;
+    applyEditUpdates([{ oldName: editingProject.name, newName, tags: newTags }]);
+  };
 
-    const oldName = editingProject.name;
+  // Edit success callback (v2 multi-project edit). Applies one or many project
+  // updates in a single pass, preserving every other field on each row and
+  // remapping the selection for any renamed project.
+  const applyEditUpdates = (
+    updates: Array<{ oldName: string; newName: string; tags: string[] }>
+  ) => {
+    if (updates.length === 0) return;
+    const byOldName = new Map(updates.map((u) => [u.oldName, u]));
 
-    // Update local list
     setProjectList((prev) => {
       if (!prev) return prev;
       return {
-        projects: prev.projects.map((p) =>
-          p.name === oldName ? { name: newName, tags: newTags } : p
-        ),
+        projects: prev.projects.map((p) => {
+          const u = byOldName.get(p.name);
+          return u ? { ...p, name: u.newName, tags: u.tags } : p;
+        }),
       };
     });
 
-    // If edited project is currently selected and name changed, update selection
-    if (selected.has(oldName) && newName !== oldName) {
-      setSelected(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(oldName);
-        newSet.add(newName);
-        return newSet;
+    // Remap selection for any renamed project so the edited rows stay selected.
+    setSelected((prev) => {
+      let changed = false;
+      const next = new Set(prev);
+      updates.forEach((u) => {
+        if (u.newName !== u.oldName && next.has(u.oldName)) {
+          next.delete(u.oldName);
+          next.add(u.newName);
+          changed = true;
+        }
       });
-    }
+      return changed ? next : prev;
+    });
   };
 
   // Open delete confirmation dialog for first selected project
@@ -497,6 +515,8 @@ export default function Home() {
     openEdit,
     setOpenEdit,
     handleEditSuccess,
+    applyEditUpdates,
+    selectedProjects: projects.filter((p) => selected.has(p.name)),
     openDelete,
     setOpenDelete,
     deleting,

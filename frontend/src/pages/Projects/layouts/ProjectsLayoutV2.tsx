@@ -1,6 +1,7 @@
 import { Spinner } from "@chakra-ui/react";
 import { getTagColor } from "../tagColor";
 import ProjectsDialogs from "./ProjectsDialogs";
+import EditProjectModalV2 from "../components/EditProjectModalV2";
 import { FONT, COLOR } from "../../../features/ui/designTokens";
 import type { ProjectsViewModel, SortMeta } from "./ProjectsViewModel";
 
@@ -81,7 +82,10 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     getSortMeta,
     handleSort,
     setEditingProject,
+    openEdit,
     setOpenEdit,
+    applyEditUpdates,
+    selectedProjects,
     activeProfile,
     legacyProjects,
     migratingLegacyProjects,
@@ -91,10 +95,12 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
   const noSelection = selected.size === 0;
   const allSelected = filtered.length > 0 && selected.size === filtered.length;
 
+  // v2 edit operates on the WHOLE selection (single → name+tags, many → shared
+  // tags). Keep editingProject null so the v1 Chakra edit modal in
+  // ProjectsDialogs never mounts on this shell.
   const onEditSelected = () => {
-    const first = projects.find((p) => selected.has(p.name));
-    if (!first) return;
-    setEditingProject(first);
+    if (selectedProjects.length === 0) return;
+    setEditingProject(null);
     setOpenEdit(true);
   };
 
@@ -154,7 +160,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: 32, boxSizing: "border-box", minHeight: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: 32, boxSizing: "border-box", height: "100vh", overflow: "hidden" }}>
       {activeProfile && legacyProjects.length > 0 && (
         <div style={{ ...card, padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
           <div>
@@ -190,8 +196,8 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
       <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
         <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
           <div style={{ display: "flex", flexDirection: "row", gap: 12, width: "100%" }}>
-            {/* Search by Tags */}
-            <div style={{ flex: 1.8, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+            {/* Search by Tags (Project Name is ordered first below; both flex 1 = equal width) */}
+            <div style={{ flex: 1, order: 2, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
               <label style={labelStyle}>Search by Tags</label>
               <div style={{ position: "relative" }}>
                 <div style={{ ...inputStyle, height: "auto", minHeight: 40, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
@@ -304,8 +310,8 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
               </div>
             </div>
 
-            {/* Search by Project Name */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+            {/* Search by Project Name — ordered first */}
+            <div style={{ flex: 1, order: 1, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
               <label style={labelStyle}>Search by Project Name</label>
               <input
                 type="text"
@@ -475,6 +481,12 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
       </div>
 
       <ProjectsDialogs {...vm} />
+      <EditProjectModalV2
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        projects={selectedProjects}
+        onSuccess={applyEditUpdates}
+      />
     </div>
   );
 }

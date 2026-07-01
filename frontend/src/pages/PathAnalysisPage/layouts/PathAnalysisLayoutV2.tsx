@@ -63,9 +63,12 @@ export default function PathAnalysisLayoutV2({
         gap: CARD_GAP,
       }}
     >
-      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, flexShrink: 0 }}>
-        Path Analysis
-      </span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20 }}>Path Analysis</span>
+        <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+          Loaded: {loadedProjects.length} project{loadedProjects.length === 1 ? "" : "s"}
+        </span>
+      </div>
 
       {!hasProjects && (
         <div style={{ ...v2CardStyle({ padding: 20 }), fontSize: 16, color: COLOR.gray500 }}>

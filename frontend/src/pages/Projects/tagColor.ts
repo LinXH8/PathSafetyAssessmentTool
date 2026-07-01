@@ -20,8 +20,8 @@ export function getTagColor(tag: string): string {
   // Higher saturation (75-95%) for more vibrant colors
   const saturation = 75 + (hash2 % 21); // 75-95%
 
-  // Higher lightness (65-80%) for brighter, more visible colors
-  const lightness = 65 + (hash3 % 16); // 65-80%
+  // Lightness 38-52%: dark enough for white text to pass contrast, not pastel
+  const lightness = 38 + (hash3 % 15); // 38-52%
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }

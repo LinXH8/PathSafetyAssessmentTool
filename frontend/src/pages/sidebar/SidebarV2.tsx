@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProjectList, type ProjectListItem, type ProfileSummary } from "../../api";
 import { openCoding, openPathAnalysis, openTreatment } from "../../features/projectNav";
+import { useProjectSelection } from "../../features/projectSelection";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 import psatLogo from "./assets/psat-logo.png";
 import "./sidebar-v2.css";
@@ -91,7 +92,8 @@ export default function SidebarV2({
   // Every nav button runs through the unsaved-changes guard.
   const go = (to: string) => onGuardedAction(() => navigate(to));
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
-  const [qsSelected, setQsSelected] = useState<Set<string>>(new Set());
+  // Shared with the Home page — selecting there checks these, and vice versa.
+  const [qsSelected, setQsSelected] = useProjectSelection();
   const [qsOpen, setQsOpen] = useState(false);
 
   useEffect(() => {
