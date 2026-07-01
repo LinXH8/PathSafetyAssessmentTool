@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { CSSProperties } from "react";
 import { Box, Flex, Text, Spinner, Portal, Progress, Card, CardBody } from "@chakra-ui/react";
 
@@ -7,6 +7,7 @@ import AttributesPanel from "../components/AttributesPanel";
 import GeoDataPanel from "../components/GeoDataPanel";
 import AutocodeValidation from "../../PathAnalysisPage/components/AutocodeValidation";
 import ExitConfirmationDialog from "../../sidebar/components/ExitConfirmationDialog";
+import ConfirmDialogV2 from "../../../components/common/ConfirmDialogV2";
 import CodingAttributeModals from "./CodingAttributeModals";
 import { RISK_BAND_COLORS, getSegmentRiskBandColor } from "../../../components/visualization/scoreband/colorConstants";
 import { GROUP_ORDER, GROUP_RULES, KEY_ALIASES } from "../../../constants/autocodeAttributes";
@@ -129,23 +130,48 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
     widthData, curvData, showCurvatureOverlay, setShowCurvatureOverlay, refreshCurrentProject,
   } = vm;
 
-  // Auto-code-by-attribute selection (the comp's attrCoding mode). Local UI state.
+  // Auto-code-by-attribute selection. Selection now happens IN the attribute
+  // panel: the user clicks attribute cells (which highlight green) instead of a
+  // separate checklist. Selected values are the real backend attribute keys.
   const [attrCoding, setAttrCoding] = useState(false);
-  const [selectedAttrs, setSelectedAttrs] = useState<Set<string>>(new Set());
-  const allAttrNames = GROUP_ORDER.flatMap((g) => GROUP_RULES[g]);
+  const [selectedAttrKeys, setSelectedAttrKeys] = useState<Set<string>>(new Set());
+  // The autocodeable real keys — only these cells are selectable in the panel.
+  const allAttrKeys = useMemo(
+    () => new Set(GROUP_ORDER.flatMap((g) => GROUP_RULES[g]).map((n) => KEY_ALIASES[n] ?? n)),
+    []
+  );
 
-  const toggleAttr = (name: string) =>
-    setSelectedAttrs((prev) => {
+  // Autocode confirmation — every autocode overwrites attributes, so gate it
+  // behind the shared v2 confirm popup. `null` = closed.
+  const [autocodeConfirm, setAutocodeConfirm] = useState<
+    | { kind: "one" }
+    | { kind: "byAttribute"; fields: string[]; count: number }
+    | null
+  >(null);
+
+  const toggleAttrKey = (key: string) =>
+    setSelectedAttrKeys((prev) => {
       const next = new Set(prev);
-      next.has(name) ? next.delete(name) : next.add(name);
+      next.has(key) ? next.delete(key) : next.add(key);
       return next;
     });
 
   const runAutocodeByAttributes = () => {
-    const fields = [...selectedAttrs].map((n) => KEY_ALIASES[n] ?? n);
+    const fields = [...selectedAttrKeys];
     if (fields.length === 0) return;
-    dispatch("psat:autocode:by-field", { fields });
-    setAttrCoding(false);
+    setAutocodeConfirm({ kind: "byAttribute", fields, count: fields.length });
+  };
+
+  const confirmAutocode = () => {
+    if (!autocodeConfirm) return;
+    if (autocodeConfirm.kind === "one") {
+      dispatch("psat:autocode:one");
+    } else {
+      dispatch("psat:autocode:by-field", { fields: autocodeConfirm.fields });
+      setAttrCoding(false);
+      setSelectedAttrKeys(new Set());
+    }
+    setAutocodeConfirm(null);
   };
 
   const renderTabs = () => (
@@ -207,8 +233,47 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
     return (
       <Box style={{ padding: CONTENT_PADDING, display: "flex", flexDirection: "column", gap: CARD_GAP, minHeight: "100vh" }}>
         {renderTabs()}
-        <div style={{ ...card, borderRadius: "0 6px 6px 6px", overflow: "hidden", height: "calc(100vh - 180px)", marginTop: -1 }}>
-          <iframe src="/PSAT coding sheetMay26.pdf" style={{ width: "100%", height: "100%", border: "none" }} title="Coding Guide PDF" />
+        <div
+          style={{
+            ...card,
+            borderRadius: "0 6px 6px 6px",
+            marginTop: -1,
+            height: "calc(100vh - 180px)",
+            display: "flex",
+            flexDirection: "column",
+            padding: 16,
+            boxSizing: "border-box",
+            colorScheme: "light",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexShrink: 0 }}>
+            <span style={sectionTitle}>CycleRAP Coding Guide</span>
+            <a
+              href="/PSAT coding sheetMay26.pdf"
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: COLOR.blue, textDecoration: "none" }}
+            >
+              Open in new tab ↗
+            </a>
+          </div>
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              border: `1px solid ${COLOR.border}`,
+              borderRadius: RADIUS,
+              overflow: "hidden",
+              background: COLOR.white,
+              colorScheme: "light",
+            }}
+          >
+            <iframe
+              src="/PSAT coding sheetMay26.pdf#view=FitH"
+              style={{ width: "100%", height: "100%", border: "none", background: COLOR.white, colorScheme: "light" }}
+              title="Coding Guide PDF"
+            />
+          </div>
         </div>
       </Box>
     );
@@ -355,7 +420,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                 <ImagePanel projectName={currentProjectName!} imageRef={imgRef} panelHeight={undefined} fit="cover" />
               </div>
 
-              <button onClick={() => dispatch("psat:autocode:one")} style={{ ...btnBase, width: "100%", background: COLOR.blue, flexShrink: 0 }}>
+              <button onClick={() => setAutocodeConfirm({ kind: "one" })} style={{ ...btnBase, width: "100%", background: COLOR.blue, flexShrink: 0 }}>
                 Auto-code by Segment
               </button>
               <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
@@ -393,16 +458,16 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
               <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: 8, flexWrap: "wrap" }}>
                   <span style={sectionTitle}>Top Risk Contributors</span>
-                  {legendRow([["By Project", COLOR.gray500], ["By Segment", "#D53F8C"]])}
+                  {legendRow([["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]])}
                 </div>
                 <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: 6, overflowY: "auto", height: 112 }}>
                   {segChips.map((c, i) => (
-                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#D53F8C", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#DD6B20", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: 3 }}>{c.val.toFixed(1)}</strong>
                     </div>
                   ))}
                   {projChips.map((c: { name: string; contribution: number }, i: number) => (
-                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: COLOR.gray500, color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#2B6CB0", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
                     </div>
                   ))}
@@ -412,74 +477,56 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                 </div>
               </div>
 
-              {/* Attribute area: editor (idle) or autocode-select checklist */}
-              {attrCoding ? (
-                <div style={{ flex: 1, ...card, padding: 12, display: "flex", flexDirection: "column", gap: 10, overflow: "hidden", minHeight: 320 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-                    <span style={sectionTitle}>Select attributes to auto-code</span>
+              {/* Attribute area. The panel is identical whether idle or in
+                  autocode-select mode — in select mode the cells become
+                  click-to-select (green highlight) and only the control buttons
+                  below change (a 2×2 grid, per the v2 design). */}
+              <>
+                <div style={{ flex: 1, minHeight: 480, display: "flex", flexDirection: "column" }}>
+                  <AttributesPanel
+                    variant="v2"
+                    row={currentAttr}
+                    originalRow={originalCurrentAttr}
+                    mappings={attrMappings}
+                    panelHeight={undefined}
+                    flex={1}
+                    onChange={onAttrChange}
+                    onEdit={onEdit}
+                    changedFields={changedFieldsByRow[currentIndex] || []}
+                    fieldSources={fieldSourcesByRow[currentIndex] || {}}
+                    highlightColor="yellow"
+                    activeGroupTab={activeAttributeGroupTab}
+                    selectionMode={attrCoding}
+                    selectedKeys={selectedAttrKeys}
+                    selectableKeys={allAttrKeys}
+                    onToggleSelect={toggleAttrKey}
+                    onEditOptions={(field) => {
+                      const raw = currentAttr?.[field];
+                      let currentValue = raw != null ? String(raw) : null;
+                      if (field === "Issue Type (Slippery)" && !currentValue) currentValue = "Algae";
+                      const delineationVal = currentAttr?.["Delineation"];
+                      const delineationNotPresent = field === "Delineation Type" && (delineationVal === 2 || delineationVal === "2");
+                      setEditingOptions({ field, currentValue, delineationNotPresent });
+                    }}
+                  />
+                </div>
+                {attrCoding ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
                     <div style={{ display: "flex", gap: 8 }}>
-                      <button onClick={() => setSelectedAttrs(new Set())} style={{ ...btnBase, height: 32, padding: "0 12px", background: COLOR.gray800 }}>Select None</button>
-                      <button onClick={() => setSelectedAttrs(new Set(allAttrNames))} style={{ ...btnBase, height: 32, padding: "0 12px", background: COLOR.gray800 }}>Select All</button>
+                      <button onClick={() => setSelectedAttrKeys(new Set())} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select None</button>
+                      <button onClick={() => setSelectedAttrKeys(new Set(allAttrKeys))} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select All</button>
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button onClick={() => { setAttrCoding(false); setSelectedAttrKeys(new Set()); }} style={{ ...btnBase, flex: 1, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.text }}>Cancel</button>
+                      <button onClick={runAutocodeByAttributes} disabled={selectedAttrKeys.size === 0} style={{ ...btnBase, flex: 1, background: COLOR.teal, opacity: selectedAttrKeys.size === 0 ? 0.5 : 1, cursor: selectedAttrKeys.size === 0 ? "not-allowed" : "pointer" }}>Auto-code by Attributes</button>
                     </div>
                   </div>
-                  <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 12 }}>
-                    {GROUP_ORDER.map((group) => (
-                      <div key={group}>
-                        <div style={{ ...sectionTitle, marginBottom: 6 }}>{group}</div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 18px" }}>
-                          {GROUP_RULES[group].map((name) => {
-                            const checked = selectedAttrs.has(name);
-                            return (
-                              <div key={name} onClick={() => toggleAttr(name)} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-                                <div style={{ width: 16, height: 16, flexShrink: 0, borderRadius: 2, border: `1px solid ${checked ? COLOR.blue : COLOR.borderInput}`, background: checked ? COLOR.blue : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                  {checked && (
-                                    <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                  )}
-                                </div>
-                                <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{name}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                    <button onClick={() => setAttrCoding(false)} style={{ ...btnBase, flex: 1, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.text }}>Cancel</button>
-                    <button onClick={runAutocodeByAttributes} disabled={selectedAttrs.size === 0} style={{ ...btnBase, flex: 1, background: COLOR.teal, opacity: selectedAttrs.size === 0 ? 0.5 : 1, cursor: selectedAttrs.size === 0 ? "not-allowed" : "pointer" }}>Auto-code by Attributes</button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div style={{ flex: 1, minHeight: 480, display: "flex", flexDirection: "column" }}>
-                    <AttributesPanel
-                      variant="v2"
-                      row={currentAttr}
-                      originalRow={originalCurrentAttr}
-                      mappings={attrMappings}
-                      panelHeight={undefined}
-                      flex={1}
-                      onChange={onAttrChange}
-                      onEdit={onEdit}
-                      changedFields={changedFieldsByRow[currentIndex] || []}
-                      fieldSources={fieldSourcesByRow[currentIndex] || {}}
-                      highlightColor="yellow"
-                      activeGroupTab={activeAttributeGroupTab}
-                      onEditOptions={(field) => {
-                        const raw = currentAttr?.[field];
-                        let currentValue = raw != null ? String(raw) : null;
-                        if (field === "Issue Type (Slippery)" && !currentValue) currentValue = "Algae";
-                        const delineationVal = currentAttr?.["Delineation"];
-                        const delineationNotPresent = field === "Delineation Type" && (delineationVal === 2 || delineationVal === "2");
-                        setEditingOptions({ field, currentValue, delineationNotPresent });
-                      }}
-                    />
-                  </div>
-                  <button onClick={() => { setSelectedAttrs(new Set()); setAttrCoding(true); }} style={{ ...btnBase, width: "100%", background: COLOR.teal, flexShrink: 0 }}>
+                ) : (
+                  <button onClick={() => { setSelectedAttrKeys(new Set()); setAttrCoding(true); }} style={{ ...btnBase, width: "100%", background: COLOR.teal, flexShrink: 0 }}>
                     Auto-code by Attributes
                   </button>
-                </>
-              )}
+                )}
+              </>
             </div>
           </div>
         </div>
@@ -527,6 +574,20 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
         onDiscardAndExit={onDiscardAndExit}
         onSaveAndExit={onSaveAndExit}
         isSaving={isSaving}
+      />
+
+      <ConfirmDialogV2
+        open={autocodeConfirm !== null}
+        title="Start Autocoding?"
+        message={
+          autocodeConfirm?.kind === "byAttribute"
+            ? `Autocoding will overwrite the ${autocodeConfirm.count} selected attribute${autocodeConfirm.count === 1 ? "" : "s"} on every segment in this project, including any manually verified values. Are you sure you want to proceed?`
+            : "Autocoding will overwrite the attributes on this segment, including any manually verified values. Are you sure you want to proceed?"
+        }
+        confirmLabel="Start Autocoding"
+        cancelLabel="Cancel"
+        onConfirm={confirmAutocode}
+        onCancel={() => setAutocodeConfirm(null)}
       />
 
       <CodingAttributeModals {...vm} />

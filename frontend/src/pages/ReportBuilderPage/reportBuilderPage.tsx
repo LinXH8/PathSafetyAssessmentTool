@@ -3109,10 +3109,10 @@ export default function ReportBuilderPage() {
         </button>
 
         <button className="rb-btn rb-btn-secondary" onClick={saveLayout} title="Save your report layout, section arrangement, and text to this browser. The layout will be automatically restored the next time you open the Report Builder.">
-          💾 Save layout
+          Save layout
         </button>
         <button className="rb-btn rb-btn-secondary" onClick={resetLayout} title="Reset all sections and text to their default values">
-          🔄 Reset layout
+          Reset layout
         </button>
         {hasSaved && (
           <button className="rb-btn rb-btn-secondary" onClick={restoreLayout} title="Revert to the last manually saved layout (does not affect live project data)">

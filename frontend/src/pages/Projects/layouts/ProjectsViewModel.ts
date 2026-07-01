@@ -36,6 +36,8 @@ export interface ProjectsViewModel {
   tagSuggestionsOpen: boolean;
   setTagSuggestionsOpen: (open: boolean) => void;
   filteredTagOptions: string[];
+  /** Every unique tag across all projects — powers edit-modal autocomplete. */
+  allTags: string[];
   hasActiveFilters: boolean;
   clearAllFilters: () => void;
 
@@ -72,6 +74,12 @@ export interface ProjectsViewModel {
   openEdit: boolean;
   setOpenEdit: (open: boolean) => void;
   handleEditSuccess: (newName: string, newTags: string[]) => void;
+  /** v2 multi-project edit: apply one or many name/tag updates at once. */
+  applyEditUpdates: (
+    updates: Array<{ oldName: string; newName: string; tags: string[] }>
+  ) => void;
+  /** Currently-selected project rows (full objects), for the v2 edit modal. */
+  selectedProjects: ProjectListItem[];
 
   // ── delete dialog ──
   openDelete: boolean;

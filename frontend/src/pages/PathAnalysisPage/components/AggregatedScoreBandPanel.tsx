@@ -232,7 +232,7 @@ export function AggregatedScoreBandPanel({
                 const tot = (dist[1] || 0) + (dist[2] || 0) + (dist[3] || 0) + (dist[4] || 0);
                 return (
                   <div key={key} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <span style={{ width: 170, textAlign: "right", fontFamily: FONT, fontSize: 16, color: "#2D3748", flexShrink: 0 }}>
+                    <span style={{ width: 200, textAlign: "right", fontFamily: FONT, fontSize: 16, color: "#2D3748", flexShrink: 0, whiteSpace: "nowrap" }}>
                       {label}
                     </span>
                     <div style={{ flex: 1, display: "flex", height: 24, borderRadius: 4, overflow: "hidden", background: "#EDF2F7" }}>

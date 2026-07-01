@@ -424,6 +424,7 @@ export default function Sidebar() {
           onDiscardAndExit={handleTreatmentDiscardAndExit}
           onCancel={handleTreatmentExitCancel}
           isSaving={isSaving}
+          context="Treatment Page"
         />
         <ResetConfirmationDialog
           open={resetDialogOpen}
@@ -505,7 +506,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {"📄 Generate Report"}
+                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
               </Button>
               {hasSavedReport && (
                 <div style={{ fontSize: 11, color: "#b060e0", textAlign: "center", lineHeight: 1.4 }}>
@@ -526,7 +527,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {"📄 Generate Report"}
+                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
               </Button>
             </div>
           )}
@@ -593,6 +594,7 @@ export default function Sidebar() {
         onDiscardAndExit={handleTreatmentDiscardAndExit}
         onCancel={handleTreatmentExitCancel}
         isSaving={isSaving}
+        context="Treatment Page"
       />
 
       <ResetConfirmationDialog

@@ -63,9 +63,12 @@ export default function PathAnalysisLayoutV2({
         gap: CARD_GAP,
       }}
     >
-      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, flexShrink: 0 }}>
-        Path Analysis
-      </span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20 }}>Path Analysis</span>
+        <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+          Loaded: {loadedProjects.length} project{loadedProjects.length === 1 ? "" : "s"}
+        </span>
+      </div>
 
       {!hasProjects && (
         <div style={{ ...v2CardStyle({ padding: 20 }), fontSize: 16, color: COLOR.gray500 }}>
@@ -118,8 +121,10 @@ export default function PathAnalysisLayoutV2({
           </AccordionSection>
         </div>
 
-        {/* Right — Map block (50%); the map view's root Box fills this height in v2 */}
-        <div style={{ flex: "1 1 0", minWidth: 0, height: "100%" }}>
+        {/* Right — Map block (50%); the map view's root Box fills this height in v2.
+            minWidth:0 + overflow:hidden guarantee the wide segment Table scrolls
+            inside its card instead of spilling across the page. */}
+        <div style={{ flex: "1 1 0", minWidth: 0, maxWidth: "100%", height: "100%", overflow: "hidden" }}>
           <PathAnalysisMapView
             variant="v2"
             filtersPortalTarget={openFilters ? filtersHost : null}

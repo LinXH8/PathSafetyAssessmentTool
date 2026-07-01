@@ -601,22 +601,50 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   );
                 })}
               </div>
-              {segmentTRC.length > 0 && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <span style={{ fontSize: 16, fontWeight: 700 }}>Top Risk Contributors</span>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {segmentTRC.map((c, i) => (
-                      <span
-                        key={`${c.name}-${i}`}
-                        onClick={() => vm.onContributorClick(c.name)}
-                        style={{ background: "#D53F8C", color: "#fff", borderRadius: 4, padding: "4px 9px", fontSize: 16, cursor: "pointer" }}
-                      >
-                        {c.name}
-                      </span>
-                    ))}
+              {(() => {
+                const projTRC = vm.projectContributors?.contributors ?? [];
+                return (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 16, fontWeight: 700 }}>Top Risk Contributors</span>
+                      {/* Colour legend — matches the Coding page. */}
+                      <div style={{ display: "flex", gap: 12 }}>
+                        {[["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]].map(([label, color]) => (
+                          <span key={label} style={{ display: "flex", gap: 4, alignItems: "center", fontFamily: FONT, fontSize: 12, color: COLOR.gray600 }}>
+                            <span style={{ width: 10, height: 10, borderRadius: 2, background: color, display: "inline-block" }} />
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {/* By-segment contributors (orange) with their contribution value. */}
+                      {segmentTRC.map((c, i) => (
+                        <div
+                          key={`s${c.name}-${i}`}
+                          onClick={() => vm.onContributorClick(c.name)}
+                          style={{ background: "#DD6B20", color: "#fff", borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}
+                        >
+                          {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
+                        </div>
+                      ))}
+                      {/* By-project contributors (blue) with their contribution value. */}
+                      {projTRC.map((c, i) => (
+                        <div
+                          key={`p${c.name}-${i}`}
+                          onClick={() => vm.onContributorClick(c.name)}
+                          style={{ background: "#2B6CB0", color: "#fff", borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}
+                        >
+                          {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
+                        </div>
+                      ))}
+                      {segmentTRC.length === 0 && projTRC.length === 0 && (
+                        <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>No contributor data</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
 
             {/* Attributes */}
@@ -627,6 +655,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   <span style={{ fontSize: 16, color: segmentHasTreatments ? COLOR.gray500 : COLOR.gray400 }}>Show Pre-Treatment</span>
                   <V2Switch
                     on={!showPostTreatment && segmentHasTreatments}
+                    onColor={COLOR.teal}
                     onClick={segmentHasTreatments ? () => vm.setShowPostTreatment(!showPostTreatment) : undefined}
                   />
                 </div>

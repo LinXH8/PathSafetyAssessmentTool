@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from "react";
-import type { SourceFolderPreview, ProjectSelectionGeometry } from "../../../api";
+import type { SourceFolderPreview, SourceFolderSummary, ProjectSelectionGeometry } from "../../../api";
 import type { SelectedRoad } from "../SelectRoadsMap";
 
 /**
@@ -39,6 +39,12 @@ export interface CreateProjectViewModel {
   folderPreview: SourceFolderPreview | null;
   loadingFolderPreview: boolean;
   folderPreviewError: string | null;
+  /** Per-folder summary stats auto-loaded for the v2 folder table. */
+  folderSummaries: Record<string, SourceFolderSummary>;
+  /** True while any folder summary is still being fetched in the background. */
+  loadingFolderSummaries: boolean;
+  /** Count of existing projects created from each source folder. */
+  folderProjectCounts: Record<string, number>;
 
   // ── road selection ──
   usingRoadSelection: boolean;

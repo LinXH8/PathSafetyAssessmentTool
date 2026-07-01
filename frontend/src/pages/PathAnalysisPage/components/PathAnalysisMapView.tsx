@@ -2527,6 +2527,9 @@ export default function AttributeAnalysisMapView({
       bg="white"
       overflow={isV2 ? "hidden" : undefined}
       h={isV2 ? "100%" : undefined}
+      w={isV2 ? "100%" : undefined}
+      minW={isV2 ? 0 : undefined}
+      maxW={isV2 ? "100%" : undefined}
       display={isV2 ? "flex" : undefined}
       flexDirection={isV2 ? "column" : undefined}
       _dark={{ bg: "gray.800" }}
@@ -2535,7 +2538,7 @@ export default function AttributeAnalysisMapView({
       <Tabs.Root
         value={activeTab}
         onValueChange={(e) => setActiveTab(e.value)}
-        {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
+        {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
       >
         <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4" flexShrink={0}>
           <HStack gap="4">
@@ -2555,13 +2558,13 @@ export default function AttributeAnalysisMapView({
             {allPoints.length > 0 && (
               <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
               <>
-                <HStack gap="0">
+                <HStack gap="1.5">
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
                       <IconButton
                         aria-label="Single Point Tools"
                         size="sm"
-                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "outline"}
+                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
                         colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
                         onClick={(e) => {
                           if (isDeleteMode || isPointAddMode) {
@@ -2574,8 +2577,6 @@ export default function AttributeAnalysisMapView({
                             setPolygonPoints([]);
                           }
                         }}
-                        borderTopRightRadius={0}
-                        borderBottomRightRadius={0}
                       >
                         {isDeleteMode ? <FaTrash /> : isPointAddMode ? <FaPlus /> : <FaMousePointer />}
                       </IconButton>
@@ -2614,11 +2615,8 @@ export default function AttributeAnalysisMapView({
                       <IconButton
                         aria-label="Polygon Tools"
                         size="sm"
-                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "outline"}
+                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
                         colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "red" : "blue") : "gray"}
-                        borderTopLeftRadius={0}
-                        borderBottomLeftRadius={0}
-                        borderLeft="none"
                         onClick={(e) => {
                           if (isPolygonMode || isPolygonAddMode) {
                             e.preventDefault();
@@ -2699,9 +2697,11 @@ export default function AttributeAnalysisMapView({
           {allPoints.length > 0 && (
             <HStack gap="2">
               <Button
-                colorPalette="green"
                 size="sm"
                 onClick={handleOpenInTreatment}
+                {...(isV2
+                  ? { style: { background: COLOR.blue, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 } }
+                  : { colorPalette: "green" as const })}
               >
                 {activeFilters.length > 0 ? "Treat Filtered Segments" : "Open in Treatment"}
               </Button>
@@ -2717,7 +2717,7 @@ export default function AttributeAnalysisMapView({
                     }}
                     style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
                   >
-                    {"📄 Generate Report"}
+                    {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
                   </Button>
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
@@ -2781,9 +2781,12 @@ export default function AttributeAnalysisMapView({
                   <Button
                     key={proj}
                     size="sm"
-                    colorPalette={isV2 ? "pink" : "blue"}
+                    colorPalette={isV2 ? undefined : "blue"}
                     variant={isV2 ? "solid" : "outline"}
                     borderRadius={isV2 ? "999px" : undefined}
+                    bg={isV2 ? projectColors[proj] : undefined}
+                    color={isV2 ? "white" : undefined}
+                    _hover={isV2 ? { opacity: 0.85 } : undefined}
                     onClick={() => handleProjectClick(proj)}
                   >
                     {proj}
@@ -3436,8 +3439,8 @@ export default function AttributeAnalysisMapView({
         </Tabs.Content>
 
         {/* Table Tab Content */}
-        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
-          <Box {...(isV2 ? { flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, minW: 0, maxW: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+          <Box {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
             {selectedProjects.length > 0 && allPoints.length > 0 && (
               <Box p="4" borderBottom="1px solid" borderColor="gray.200">
                 <Text fontSize="sm" fontWeight="semibold" mb="2">
@@ -3448,9 +3451,12 @@ export default function AttributeAnalysisMapView({
                     <Button
                       key={proj}
                       size="sm"
-                      colorPalette={isV2 ? "pink" : "blue"}
+                      colorPalette={isV2 ? undefined : "blue"}
                       variant={isV2 ? "solid" : "outline"}
                       borderRadius={isV2 ? "999px" : undefined}
+                      bg={isV2 ? projectColors[proj] : undefined}
+                      color={isV2 ? "white" : undefined}
+                      _hover={isV2 ? { opacity: 0.85 } : undefined}
                       onClick={() => handleTableProjectJump(proj)}
                     >
                       {proj}
@@ -3514,7 +3520,7 @@ export default function AttributeAnalysisMapView({
                 </Box>
 
                 {/* Table */}
-                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0 } : {})}>
+                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%" } : {})}>
                   <table
                     style={{
                       width: "100%",
