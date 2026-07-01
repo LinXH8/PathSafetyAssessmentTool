@@ -56,18 +56,18 @@ const RSB_LEGEND: Array<[string, string]> = [
 
 // ── shared style fragments ──
 const card: CSSProperties = { background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: RADIUS };
-const sectionTitle: CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text };
-const caption: CSSProperties = { fontFamily: FONT, fontSize: 12, color: COLOR.gray500 };
-const btnBase: CSSProperties = { height: 40, boxSizing: "border-box", padding: 0, border: "none", borderRadius: RADIUS, fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.white, cursor: "pointer" };
+const sectionTitle: CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text };
+const caption: CSSProperties = { fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 };
+const btnBase: CSSProperties = { height: "2.5rem", boxSizing: "border-box", padding: 0, border: "none", borderRadius: RADIUS, fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, cursor: "pointer" };
 
 function tabStyle(active: boolean): CSSProperties {
   return {
-    padding: "8px 16px",
+    padding: "0.5rem 1rem",
     fontFamily: FONT,
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: "1rem",
     cursor: "pointer",
-    borderRadius: "6px 6px 0 0",
+    borderRadius: "0.375rem 0.375rem 0 0",
     border: `1px solid ${COLOR.border}`,
     borderBottom: active ? "none" : `1px solid ${COLOR.border}`,
     marginBottom: active ? -1 : 0,
@@ -79,10 +79,10 @@ function tabStyle(active: boolean): CSSProperties {
 
 function legendRow(items: Array<[string, string]>) {
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+    <div style={{ display: "flex", gap: "0.625rem", alignItems: "center" }}>
       {items.map(([label, color]) => (
-        <span key={label} style={{ display: "flex", gap: 4, alignItems: "center", fontFamily: FONT, fontSize: 12, color: COLOR.gray600 }}>
-          <span style={{ width: 9, height: 9, background: color, borderRadius: 2, display: "inline-block", flexShrink: 0 }} />
+        <span key={label} style={{ display: "flex", gap: "0.25rem", alignItems: "center", fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray600 }}>
+          <span style={{ width: "0.5625rem", height: "0.5625rem", background: color, borderRadius: "0.125rem", display: "inline-block", flexShrink: 0 }} />
           {label}
         </span>
       ))}
@@ -98,17 +98,17 @@ function Stepper({ value, onChange, onCommit, onStep, width = 54 }: {
   width?: number;
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "stretch", border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, overflow: "hidden", height: 30 }}>
+    <div style={{ display: "flex", alignItems: "stretch", border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, overflow: "hidden", height: "1.875rem" }}>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onCommit}
         onKeyDown={(e) => { if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur(); }}
-        style={{ width, padding: "0 10px", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, border: "none", outline: "none", background: "transparent", borderRight: `1px solid ${COLOR.border}` }}
+        style={{ width, padding: "0 0.625rem", fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, border: "none", outline: "none", background: "transparent", borderRight: `1px solid ${COLOR.border}` }}
       />
-      <div style={{ display: "flex", flexDirection: "column", width: 18 }}>
-        <button onClick={() => onStep(1)} style={{ flex: 1, borderBottom: `1px solid ${COLOR.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▲</button>
-        <button onClick={() => onStep(-1)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▼</button>
+      <div style={{ display: "flex", flexDirection: "column", width: "1.125rem" }}>
+        <button onClick={() => onStep(1)} style={{ flex: 1, borderBottom: `1px solid ${COLOR.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▲</button>
+        <button onClick={() => onStep(-1)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▼</button>
       </div>
     </div>
   );
@@ -175,7 +175,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
   };
 
   const renderTabs = () => (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexShrink: 0, gap: 8 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexShrink: 0, gap: "0.5rem" }}>
       {/* Project tabs — scroll horizontally when many projects are open. */}
       <div style={{ display: "flex", alignItems: "flex-end", overflowX: "auto", flexShrink: 1, minWidth: 0, scrollbarWidth: "none" }}>
         {projectList.map((name) => (
@@ -186,14 +186,14 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
       </div>
       {/* Sticky right cluster: Coding Guide stays reachable from any project without
           horizontal scrolling (safety: jump to the guide from e.g. project #20). */}
-      <div style={{ display: "flex", alignItems: "flex-end", flexShrink: 0, gap: 4 }}>
+      <div style={{ display: "flex", alignItems: "flex-end", flexShrink: 0, gap: "0.25rem" }}>
         {returnToAnalysis && (
-          <button onClick={onBackToAnalysis} style={{ ...btnBase, height: 32, padding: "0 12px", marginBottom: 4, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.blue }}>
+          <button onClick={onBackToAnalysis} style={{ ...btnBase, height: "2rem", padding: "0 0.75rem", marginBottom: "0.25rem", background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.blue }}>
             ← Back to Path Analysis
           </button>
         )}
         <div onClick={() => setActiveTab("coding-guide")} style={tabStyle(isShowingCodingGuide)}>Coding Guide</div>
-        <div onClick={() => window.open("https://irap.org/cyclerap/", "_blank", "noopener,noreferrer")} style={{ padding: "8px 16px", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, cursor: "pointer", whiteSpace: "nowrap" }}>CycleRAP ↗</div>
+        <div onClick={() => window.open("https://irap.org/cyclerap/", "_blank", "noopener,noreferrer")} style={{ padding: "0.5rem 1rem", fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, cursor: "pointer", whiteSpace: "nowrap" }}>CycleRAP ↗</div>
       </div>
     </div>
   );
@@ -214,7 +214,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
         ) : (
           <>
             <Text fontWeight="bold">Preloading Images...</Text>
-            <Progress.Root value={imageLoadingProgress} maxW="300px" w="100%" colorPalette="blue">
+            <Progress.Root value={imageLoadingProgress} maxW="18.75rem" w="100%" colorPalette="blue">
               <Progress.Track><Progress.Range /></Progress.Track>
               <Progress.ValueText>{imageLoadingProgress}%</Progress.ValueText>
             </Progress.Root>
@@ -236,23 +236,23 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
         <div
           style={{
             ...card,
-            borderRadius: "0 6px 6px 6px",
-            marginTop: -1,
-            height: "calc(100vh - 180px)",
+            borderRadius: "0 0.375rem 0.375rem 0.375rem",
+            marginTop: "-0.0625rem",
+            height: "calc(100vh - 11.25rem)",
             display: "flex",
             flexDirection: "column",
-            padding: 16,
+            padding: "1rem",
             boxSizing: "border-box",
             colorScheme: "light",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem", flexShrink: 0 }}>
             <span style={sectionTitle}>CycleRAP Coding Guide</span>
             <a
               href="/PSAT coding sheetMay26.pdf"
               target="_blank"
               rel="noreferrer"
-              style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: COLOR.blue, textDecoration: "none" }}
+              style={{ fontFamily: FONT, fontWeight: 700, fontSize: "0.8125rem", color: COLOR.blue, textDecoration: "none" }}
             >
               Open in new tab ↗
             </a>
@@ -304,7 +304,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
     <Box style={{ padding: CONTENT_PADDING, display: "flex", flexDirection: "column", gap: CARD_GAP, minHeight: "100vh", position: "relative" }}>
       {autoCoding && (
         <Portal>
-          <Box position="fixed" inset={0} bg="blackAlpha.400" backdropFilter="blur(2px)" zIndex={1000} aria-busy="true">
+          <Box position="fixed" inset={0} bg="blackAlpha.400" backdropFilter="blur(0.125rem)" zIndex={1000} aria-busy="true">
             <Progress.Root value={progress} min={0} max={100} orientation="horizontal" colorPalette="blue" variant="subtle" size="sm" position="absolute" top={0} left={0} right={0} zIndex={1001}>
               <Progress.Track><Progress.Range /></Progress.Track>
             </Progress.Root>
@@ -345,13 +345,13 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
       {/* Tabs + main coding card */}
       <div style={{ display: "flex", flexDirection: "column" }}>
         {renderTabs()}
-        <div style={{ ...card, borderRadius: "0 6px 6px 6px", display: "flex", flexDirection: "column", overflow: "hidden", marginTop: -1 }}>
+        <div style={{ ...card, borderRadius: "0 0.375rem 0.375rem 0.375rem", display: "flex", flexDirection: "column", overflow: "hidden", marginTop: "-0.0625rem" }}>
 
           {/* Segment Navigator Bar */}
-          <div style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
-              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <div style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.75rem 1.25rem", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "2rem", alignItems: "center", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                   <div style={sectionTitle}>Segments Verified</div>
                   <div style={caption}>{verifiedPct}</div>
                 </div>
@@ -362,8 +362,8 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                   onStep={(d) => commitSegment(String((currentData.verifiedSegmentCount ?? 0) + d), true)}
                 />
               </div>
-              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                   <div style={sectionTitle}>Segments Autocoded</div>
                   <div style={caption}>{autocodedPct}</div>
                 </div>
@@ -375,7 +375,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                 />
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               <Stepper
                 value={pageInput}
                 onChange={(v) => setPageInput(v.replace(/^0+/, ""))}
@@ -383,7 +383,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                 onStep={(d) => commitPage(String(currentPage + d), true)}
               />
               <span style={{ ...sectionTitle }}>/{len || 0}</span>
-              <button onClick={() => dispatch("psat:save")} style={{ ...btnBase, padding: "0 16px", marginLeft: 8, background: COLOR.blue }}>Save</button>
+              <button onClick={() => dispatch("psat:save")} style={{ ...btnBase, padding: "0 1rem", marginLeft: "0.5rem", background: COLOR.blue }}>Save</button>
             </div>
           </div>
 
@@ -391,24 +391,24 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
           <div style={{ display: "flex", overflow: "hidden", flexWrap: "wrap" }}>
 
             {/* LEFT: Risk block */}
-            <div style={{ flex: "1 1 420px", minWidth: 360, display: "flex", flexDirection: "column", gap: 10, padding: "14px 16px", boxSizing: "border-box" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: 8, flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 26.25rem", minWidth: "22.5rem", display: "flex", flexDirection: "column", gap: "0.625rem", padding: "0.875rem 1rem", boxSizing: "border-box" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: "0.5rem", flexWrap: "wrap" }}>
                 <span style={sectionTitle}>Crash Type Scores</span>
                 {legendRow(RSB_LEGEND)}
               </div>
-              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+              <div style={{ display: "flex", gap: "0.375rem", flexShrink: 0 }}>
                 {crashCards.map((c) => (
-                  <div key={c.key} style={{ flex: 1, borderRadius: RADIUS, display: "flex", alignItems: "center", justifyContent: "center", padding: "8px 10px", gap: 8, minHeight: 58, background: c.color }}>
-                    <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: 30, height: 30, objectFit: "contain", flexShrink: 0 }} />
+                  <div key={c.key} style={{ flex: 1, borderRadius: RADIUS, display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.625rem", gap: "0.5rem", minHeight: "3.625rem", background: c.color }}>
+                    <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: "1.875rem", height: "1.875rem", objectFit: "contain", flexShrink: 0 }} />
                     <div>
-                      <div style={{ fontFamily: FONT, fontSize: 16, fontWeight: 500, color: COLOR.white }}>{c.key}</div>
-                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.white, lineHeight: 1 }}>{c.value.toFixed(1)}</div>
+                      <div style={{ fontFamily: FONT, fontSize: "1rem", fontWeight: 500, color: COLOR.white }}>{c.key}</div>
+                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{c.value.toFixed(1)}</div>
                     </div>
                   </div>
                 ))}
-                <div style={{ flex: 1, borderRadius: RADIUS, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 8, minHeight: 58, background: riskColor }}>
-                  <div style={{ fontFamily: FONT, fontWeight: 500, fontSize: 16, color: COLOR.white, textAlign: "center" }}>Risk Score</div>
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.white, lineHeight: 1 }}>{riskScore.toFixed(1)}</div>
+                <div style={{ flex: 1, borderRadius: RADIUS, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.5rem", minHeight: "3.625rem", background: riskColor }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 500, fontSize: "1rem", color: COLOR.white, textAlign: "center" }}>Risk Score</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{riskScore.toFixed(1)}</div>
                 </div>
               </div>
 
@@ -416,14 +416,14 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                   image fill all space the left column gains by stretching to match the
                   right (attributes) column height; fit="cover" fills the box (no
                   letterbox bars). minHeight keeps it usable when columns stack narrow. */}
-              <div style={{ flex: 1, minHeight: 300, display: "flex", flexDirection: "column" }}>
+              <div style={{ flex: 1, minHeight: "18.75rem", display: "flex", flexDirection: "column" }}>
                 <ImagePanel projectName={currentProjectName!} imageRef={imgRef} panelHeight={undefined} fit="cover" />
               </div>
 
               <button onClick={() => setAutocodeConfirm({ kind: "one" })} style={{ ...btnBase, width: "100%", background: COLOR.blue, flexShrink: 0 }}>
                 Auto-code by Segment
               </button>
-              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
                 <button
                   onClick={() => gotoPage(currentPage - 1)}
                   disabled={currentPage <= 1}
@@ -451,24 +451,24 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
             </div>
 
             {/* RIGHT: TRC + Attributes */}
-            <div style={{ flex: "1 1 420px", minWidth: 360, display: "flex", flexDirection: "column", gap: 14, padding: "14px 16px", boxSizing: "border-box" }}>
+            <div style={{ flex: "1 1 26.25rem", minWidth: "22.5rem", display: "flex", flexDirection: "column", gap: "0.875rem", padding: "0.875rem 1rem", boxSizing: "border-box" }}>
               {/* Top Risk Contributors. The chip area is a FIXED ~3-row height with
                   internal scroll so the panel below it doesn't jump as the chip count
                   changes segment-to-segment. */}
-              <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: 8, flexWrap: "wrap" }}>
+              <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, gap: "0.5rem", flexWrap: "wrap" }}>
                   <span style={sectionTitle}>Top Risk Contributors</span>
                   {legendRow([["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]])}
                 </div>
-                <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: 6, overflowY: "auto", height: 112 }}>
+                <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: "0.375rem", overflowY: "auto", height: "7rem" }}>
                   {segChips.map((c, i) => (
-                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#DD6B20", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
-                      {c.name}<strong style={{ marginLeft: 3 }}>{c.val.toFixed(1)}</strong>
+                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#DD6B20", color: COLOR.white, borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
+                      {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.val.toFixed(1)}</strong>
                     </div>
                   ))}
                   {projChips.map((c: { name: string; contribution: number }, i: number) => (
-                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#2B6CB0", color: COLOR.white, borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}>
-                      {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
+                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#2B6CB0", color: COLOR.white, borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
+                      {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                     </div>
                   ))}
                   {segChips.length === 0 && projChips.length === 0 && (
@@ -482,7 +482,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                   click-to-select (green highlight) and only the control buttons
                   below change (a 2×2 grid, per the v2 design). */}
               <>
-                <div style={{ flex: 1, minHeight: 480, display: "flex", flexDirection: "column" }}>
+                <div style={{ flex: 1, minHeight: "30rem", display: "flex", flexDirection: "column" }}>
                   <AttributesPanel
                     variant="v2"
                     row={currentAttr}
@@ -511,12 +511,12 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                   />
                 </div>
                 {attrCoding ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                    <div style={{ display: "flex", gap: 8 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flexShrink: 0 }}>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
                       <button onClick={() => setSelectedAttrKeys(new Set())} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select None</button>
                       <button onClick={() => setSelectedAttrKeys(new Set(allAttrKeys))} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select All</button>
                     </div>
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
                       <button onClick={() => { setAttrCoding(false); setSelectedAttrKeys(new Set()); }} style={{ ...btnBase, flex: 1, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.text }}>Cancel</button>
                       <button onClick={runAutocodeByAttributes} disabled={selectedAttrKeys.size === 0} style={{ ...btnBase, flex: 1, background: COLOR.teal, opacity: selectedAttrKeys.size === 0 ? 0.5 : 1, cursor: selectedAttrKeys.size === 0 ? "not-allowed" : "pointer" }}>Auto-code by Attributes</button>
                     </div>
@@ -553,13 +553,13 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
       />
 
       {filterContext?.legend && (
-        <div style={{ ...card, display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", flexWrap: "wrap" }}>
+        <div style={{ ...card, display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.5rem 0.75rem", flexWrap: "wrap" }}>
           <span style={{ ...caption, fontWeight: 700, color: COLOR.gray500 }}>Filter:</span>
-          <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: COLOR.text }}>{filterContext.legend.attribute}</span>
+          <span style={{ fontFamily: FONT, fontSize: "0.75rem", fontWeight: 500, color: COLOR.text }}>{filterContext.legend.attribute}</span>
           {filterContext.legend.entries.map(({ category, color }) => (
-            <span key={category} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 9, height: 9, borderRadius: 2, background: color, display: "inline-block", flexShrink: 0 }} />
-              <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray600 }}>{category}</span>
+            <span key={category} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
+              <span style={{ width: "0.5625rem", height: "0.5625rem", borderRadius: "0.125rem", background: color, display: "inline-block", flexShrink: 0 }} />
+              <span style={{ fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray600 }}>{category}</span>
             </span>
           ))}
         </div>

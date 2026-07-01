@@ -32,7 +32,9 @@ import {
 } from "../treatmentConstants";
 import type { TreatmentViewModel } from "./TreatmentViewModel";
 
-const MAP_H = 280;
+// Fluid map height: 30.7vh = 280px at the 911px reference viewport, clamped so the
+// well stays usable on very short/tall screens. GeoDataPanel accepts CSS strings.
+const MAP_H = "clamp(11.25rem, 30.7vh, 20rem)";
 
 // ───────────────────────── small presentational helpers ─────────────────────────
 
@@ -69,8 +71,8 @@ function V2Btn({
       onClick={onClick}
       disabled={isOff}
       style={{
-        height: 40,
-        padding: "0 16px",
+        height: "2.5rem",
+        padding: "0 1rem",
         flex,
         width,
         background: isOff ? COLOR.gray100 : p.bg,
@@ -83,13 +85,13 @@ function V2Btn({
         borderRadius: RADIUS,
         fontFamily: FONT,
         fontWeight: 700,
-        fontSize: 16,
+        fontSize: "1rem",
         cursor: isOff ? "not-allowed" : "pointer",
         whiteSpace: "nowrap",
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: 6,
+        gap: "0.375rem",
       }}
     >
       {loading && <Spinner size="xs" />}
@@ -107,17 +109,17 @@ function Stepper({ value, onChange, onCommit, onStep, width = 54 }: {
   width?: number;
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "stretch", border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, overflow: "hidden", height: 40 }}>
+    <div style={{ display: "flex", alignItems: "stretch", border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, overflow: "hidden", height: "2.5rem" }}>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onCommit}
         onKeyDown={(e) => { if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur(); }}
-        style={{ width, padding: "0 10px", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, border: "none", outline: "none", background: "transparent", borderRight: `1px solid ${COLOR.border}`, textAlign: "center", boxSizing: "border-box" }}
+        style={{ width, padding: "0 0.625rem", fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, border: "none", outline: "none", background: "transparent", borderRight: `1px solid ${COLOR.border}`, textAlign: "center", boxSizing: "border-box" }}
       />
-      <div style={{ display: "flex", flexDirection: "column", width: 18 }}>
-        <button onClick={() => onStep(1)} style={{ flex: 1, borderBottom: `1px solid ${COLOR.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▲</button>
-        <button onClick={() => onStep(-1)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▼</button>
+      <div style={{ display: "flex", flexDirection: "column", width: "1.125rem" }}>
+        <button onClick={() => onStep(1)} style={{ flex: 1, borderBottom: `1px solid ${COLOR.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▲</button>
+        <button onClick={() => onStep(-1)} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", color: COLOR.gray500, cursor: "pointer", background: "transparent", border: "none", borderRadius: 0 }}>▼</button>
       </div>
     </div>
   );
@@ -168,7 +170,7 @@ const DIST_ROWS: Array<{ key: "Overall" | "VB" | "BB" | "SB" | "BP"; label: stri
 const BAND_HUES = [RISK_BAND_COLORS.LOW, RISK_BAND_COLORS.MEDIUM, RISK_BAND_COLORS.HIGH, RISK_BAND_COLORS.EXTREME];
 const BAND_NAMES = ["Low", "Medium", "High", "Extreme"];
 
-const CAPTION: CSSProperties = { fontSize: 12, color: COLOR.gray500, fontFamily: FONT };
+const CAPTION: CSSProperties = { fontSize: "0.75rem", color: COLOR.gray500, fontFamily: FONT };
 
 // ───────────────────────────────── layout ─────────────────────────────────
 
@@ -192,13 +194,13 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
 
   // ── gating (mirror V1) ──
   if (projectNames.length === 0) {
-    return <Box p="32px"><Text color="red.500">Invalid project name.</Text></Box>;
+    return <Box p="2rem"><Text color="red.500">Invalid project name.</Text></Box>;
   }
   if (loading) {
     return <Flex align="center" justify="center" h="60vh"><Spinner size="lg" /></Flex>;
   }
   if (error) {
-    return <Box p="32px"><Text color="red.500">Error: {error}</Text></Box>;
+    return <Box p="2rem"><Text color="red.500">Error: {error}</Text></Box>;
   }
 
   const hasTabs = projectNames.length > 1;
@@ -307,10 +309,10 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
   };
 
   return (
-    <div style={{ fontFamily: FONT, color: COLOR.text, padding: 32, boxSizing: "border-box", minHeight: "100vh" }}>
+    <div style={{ fontFamily: FONT, color: COLOR.text, padding: "2rem", boxSizing: "border-box", minHeight: "100vh" }}>
       {/* TITLE */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 16 }}>
-        <span style={{ fontSize: 20, fontWeight: 700 }}>Treatment Application</span>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem", marginBottom: "1rem" }}>
+        <span style={{ fontSize: "1.25rem", fontWeight: 700 }}>Treatment Application</span>
         <span style={CAPTION}>
           Loaded: {projectNames.length} project{projectNames.length > 1 ? "s" : ""}
           {currentCtx ? ` · ${currentCtx.name}` : ""}
@@ -319,7 +321,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
 
       {/* PROJECT TABS */}
       {hasTabs && (
-        <div style={{ ...v2TabRowStyle, gap: 4, marginBottom: -1, position: "relative", zIndex: 2 }}>
+        <div style={{ ...v2TabRowStyle, gap: "0.25rem", marginBottom: "-0.0625rem", position: "relative", zIndex: 2 }}>
           <div onClick={vm.onSelectAllProjects} style={v2TabStyle(isAllScope)}>
             All Projects ({len})
           </div>
@@ -340,30 +342,30 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
         style={{
           background: COLOR.white,
           border: `1px solid ${COLOR.border}`,
-          borderRadius: hasTabs ? "0 6px 6px 6px" : RADIUS,
-          padding: 20,
+          borderRadius: hasTabs ? "0 0.375rem 0.375rem 0.375rem" : RADIUS,
+          padding: "1.25rem",
           display: "flex",
           flexDirection: "column",
-          gap: 18,
+          gap: "1.125rem",
           boxSizing: "border-box",
         }}
       >
         {/* top row: effectiveness (left) · segment selector + page actions (right) */}
-        <Flex align="center" justify="space-between" gap="16px" wrap="wrap">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 16, fontWeight: 700 }}>Effectiveness</span>
-            <span style={{ fontSize: 16, fontWeight: 700, color: COLOR.teal }}>{effectivenessLabel}</span>
+        <Flex align="center" justify="space-between" gap="1rem" wrap="wrap">
+          <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "1rem", fontWeight: 700 }}>Effectiveness</span>
+            <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.teal }}>{effectivenessLabel}</span>
             <span style={CAPTION}>{improvedSegmentCount} Improved</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Stepper
                 value={pageInput}
                 onChange={vm.setPageInput}
                 onCommit={() => vm.commitPage(pageInput)}
                 onStep={(d) => vm.commitPage(String(scopePage + d))}
               />
-              <span style={{ fontSize: 16, fontWeight: 700, color: COLOR.text }}>/ {scopeTotal || 0}</span>
+              <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.text }}>/ {scopeTotal || 0}</span>
             </div>
             <V2Btn kind="blue" onClick={vm.onSaveAll} loading={vm.isSavingAll}>Save</V2Btn>
             <V2Btn kind="dark" onClick={vm.onGenerateReport}>Generate Report</V2Btn>
@@ -372,7 +374,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
         </Flex>
 
         {/* maps */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div style={{ minWidth: 0 }}>
             <GeoDataPanel
               variant="v2"
@@ -412,22 +414,22 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
         </div>
 
         {/* body: photos | controls */}
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 16, alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: "1rem", alignItems: "stretch" }}>
           {/* COL 1: photos — fills the card height set by COL 2; the two image
               boxes flex to share the space, the Prev/Next buttons stay fixed. */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: 0 }}>
-            <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-              <span style={{ fontSize: 16, fontWeight: 700, flexShrink: 0 }}>Segment Photo</span>
-              <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", border: `1px solid ${COLOR.border}`, borderRadius: 6, overflow: "hidden" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", minHeight: 0 }}>
+            <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: "0.375rem" }}>
+              <span style={{ fontSize: "1rem", fontWeight: 700, flexShrink: 0 }}>Segment Photo</span>
+              <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem", overflow: "hidden" }}>
                 <ImagePanel projectName={currentCtx?.name} imageRef={imgRef} fit="cover" />
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+            <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
               <V2Btn kind="dark" flex={1} onClick={() => { const p = pageIndices[scopePage - 2]; if (p !== undefined) vm.gotoPage(p + 1); }} disabled={scopePage <= 1}>Previous</V2Btn>
               <V2Btn kind="dark" flex={1} onClick={() => { const p = pageIndices[scopePage]; if (p !== undefined) vm.gotoPage(p + 1); }} disabled={scopePage >= scopeTotal}>Next</V2Btn>
             </div>
-            <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-              <span style={{ fontSize: 16, fontWeight: 700, flexShrink: 0 }}>Post-Treatment Artistic Impression</span>
+            <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: "0.375rem" }}>
+              <span style={{ fontSize: "1rem", fontWeight: 700, flexShrink: 0 }}>Post-Treatment Artistic Impression</span>
               <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
                 <PostTreatmentImageUpload
                   projectName={currentCtx?.name || ""}
@@ -439,12 +441,12 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
           </div>
 
           {/* COL 2: controls + attributes */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.125rem" }}>
             {/* Treatment Options */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <Flex align="center" justify="space-between" gap="12px" wrap="wrap">
-                <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 16, fontWeight: 700 }}>Treatment Options</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <Flex align="center" justify="space-between" gap="0.75rem" wrap="wrap">
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "1rem", fontWeight: 700 }}>Treatment Options</span>
                   <V2Segmented
                     options={[{ value: "segment", label: "By Segment" }, { value: "treatment", label: "By Treatment" }]}
                     value={accordionView}
@@ -460,9 +462,9 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   <span style={CAPTION}>Ranking Treatment Options...</span>
                 </Flex>
               ) : displayTreatments.length === 0 ? (
-                <div style={{ padding: "24px 0", textAlign: "center", color: COLOR.gray500, fontSize: 16 }}>{listEmptyLabel}</div>
+                <div style={{ padding: "1.5rem 0", textAlign: "center", color: COLOR.gray500, fontSize: "1rem" }}>{listEmptyLabel}</div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 300, overflowY: "auto", paddingRight: 2 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", maxHeight: "18.75rem", overflowY: "auto", paddingRight: "0.125rem" }}>
                   {displayTreatments.map((t) => {
                     const isApplied = accordionView === "segment"
                       ? !!(treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
@@ -491,35 +493,35 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         key={t.id}
                         onClick={() => toggleTreatment(t.id, isDisabledItem)}
                         style={{
-                          display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: RADIUS, boxSizing: "border-box",
+                          display: "flex", alignItems: "center", gap: "0.625rem", padding: "0.625rem 0.75rem", borderRadius: RADIUS, boxSizing: "border-box",
                           cursor: isDisabledItem ? "default" : "pointer",
                           background: showAppliedStyle ? "#F0FFF4" : isSel ? "#EBF8FF" : COLOR.white,
                           border: `1px solid ${showAppliedStyle ? "#9AE6B4" : isSel ? "#90CDF4" : COLOR.border}`,
                         }}
                       >
-                        <div style={{ width: 18, height: 18, borderRadius: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: cbBg, border: `1px solid ${cbBorder}` }}>
+                        <div style={{ width: "1.125rem", height: "1.125rem", borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: cbBg, border: `1px solid ${cbBorder}` }}>
                           {(showAppliedStyle || isSel) && (
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                           )}
                         </div>
-                        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-                          <span style={{ fontSize: 16, fontWeight: 700, color: COLOR.text }}>{t.name}</span>
+                        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+                          <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.text }}>{t.name}</span>
                           {metric && <span style={CAPTION}>{metric}</span>}
                         </div>
-                        {showAppliedStyle && <span style={{ fontSize: 12, fontWeight: 700, color: "#38A169" }}>✓</span>}
+                        {showAppliedStyle && <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#38A169" }}>✓</span>}
                       </div>
                     );
                   })}
                 </div>
               )}
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                   <V2Btn kind="ghost" flex={1} onClick={onAllClear} disabled={selectedTreatments.size === 0 && allClearDisabled}>
                     {selectedTreatments.size > 0 ? "Clear" : "All"}
                   </V2Btn>
                   {accordionView === "segment" && autoSaveStatus !== "idle" && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, color: autoSaveStatus === "saving" ? "#6B7280" : "#16A34A" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.8125rem", color: autoSaveStatus === "saving" ? "#6B7280" : "#16A34A" }}>
                       {autoSaveStatus === "saving" ? (
                         <><Spinner size="xs" /><span>Saving…</span></>
                       ) : (
@@ -528,7 +530,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                     </div>
                   )}
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
                   <V2Btn
                     kind="dark"
                     flex={1}
@@ -563,37 +565,37 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
             </div>
 
             {/* Crash Type Scores */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <Flex align="center" justify="space-between" gap="12px" wrap="wrap">
-                <span style={{ fontSize: 16, fontWeight: 700 }}>Crash Type Scores</span>
-                <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: pillFg, background: pillBg, borderRadius: RADIUS, padding: "3px 10px", whiteSpace: "nowrap" }}>{pillText}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <Flex align="center" justify="space-between" gap="0.75rem" wrap="wrap">
+                <span style={{ fontSize: "1rem", fontWeight: 700 }}>Crash Type Scores</span>
+                <div style={{ display: "flex", gap: "0.625rem", alignItems: "center", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 700, color: pillFg, background: pillBg, borderRadius: RADIUS, padding: "0.1875rem 0.625rem", whiteSpace: "nowrap" }}>{pillText}</span>
                   {RSB_LEGEND.map((lg) => (
-                    <div key={lg.label} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      <span style={{ width: 9, height: 9, borderRadius: 2, background: lg.c, display: "inline-block", flexShrink: 0 }} />
-                      <span style={{ fontSize: 12, color: COLOR.gray600 }}>{lg.label}</span>
+                    <div key={lg.label} style={{ display: "flex", alignItems: "center", gap: "0.1875rem" }}>
+                      <span style={{ width: "0.5625rem", height: "0.5625rem", borderRadius: "0.125rem", background: lg.c, display: "inline-block", flexShrink: 0 }} />
+                      <span style={{ fontSize: "0.75rem", color: COLOR.gray600 }}>{lg.label}</span>
                     </div>
                   ))}
                 </div>
               </Flex>
-              <div style={{ display: "flex", gap: 6 }}>
+              <div style={{ display: "flex", gap: "0.375rem" }}>
                 {crashCards.map((c) => {
                   const color = bandColor(c.value, c.key);
                   const isScore = c.key === "Overall";
                   return (
                     <div
                       key={c.key}
-                      style={{ flex: 1, minHeight: 58, background: color, borderRadius: RADIUS, padding: "8px 10px", gap: 8, display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" }}
+                      style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" }}
                     >
                       {!isScore && c.icon && (
-                        <img src={c.icon} alt={c.label} style={{ height: 28, objectFit: "contain", flexShrink: 0 }} />
+                        <img src={c.icon} alt={c.label} style={{ height: "1.75rem", objectFit: "contain", flexShrink: 0 }} />
                       )}
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <div style={{ fontSize: 16, fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{isScore ? "Risk Score" : c.label}</div>
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-                          <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", lineHeight: 1 }}>{Number(c.value).toFixed(1)}</div>
+                        <div style={{ fontSize: "1rem", fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{isScore ? "Risk Score" : c.label}</div>
+                        <div style={{ display: "flex", alignItems: "baseline", gap: "0.3125rem" }}>
+                          <div style={{ fontSize: "1rem", fontWeight: 700, color: "#fff", lineHeight: 1 }}>{Number(c.value).toFixed(1)}</div>
                           {c.delta !== null && (
-                            <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,.9)" }}>↓ {c.delta.toFixed(1)}</span>
+                            <span style={{ fontSize: "0.75rem", fontWeight: 400, color: "rgba(255,255,255,.9)" }}>↓ {c.delta.toFixed(1)}</span>
                           )}
                         </div>
                       </div>
@@ -604,28 +606,28 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               {(() => {
                 const projTRC = vm.projectContributors?.contributors ?? [];
                 return (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 16, fontWeight: 700 }}>Top Risk Contributors</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                      <span style={{ fontSize: "1rem", fontWeight: 700 }}>Top Risk Contributors</span>
                       {/* Colour legend — matches the Coding page. */}
-                      <div style={{ display: "flex", gap: 12 }}>
+                      <div style={{ display: "flex", gap: "0.75rem" }}>
                         {[["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]].map(([label, color]) => (
-                          <span key={label} style={{ display: "flex", gap: 4, alignItems: "center", fontFamily: FONT, fontSize: 12, color: COLOR.gray600 }}>
-                            <span style={{ width: 10, height: 10, borderRadius: 2, background: color, display: "inline-block" }} />
+                          <span key={label} style={{ display: "flex", gap: "0.25rem", alignItems: "center", fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray600 }}>
+                            <span style={{ width: "0.625rem", height: "0.625rem", borderRadius: "0.125rem", background: color, display: "inline-block" }} />
                             {label}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
                       {/* By-segment contributors (orange) with their contribution value. */}
                       {segmentTRC.map((c, i) => (
                         <div
                           key={`s${c.name}-${i}`}
                           onClick={() => vm.onContributorClick(c.name)}
-                          style={{ background: "#DD6B20", color: "#fff", borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}
+                          style={{ background: "#DD6B20", color: "#fff", borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
                         >
-                          {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
+                          {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                         </div>
                       ))}
                       {/* By-project contributors (blue) with their contribution value. */}
@@ -633,13 +635,13 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         <div
                           key={`p${c.name}-${i}`}
                           onClick={() => vm.onContributorClick(c.name)}
-                          style={{ background: "#2B6CB0", color: "#fff", borderRadius: 4, padding: "4px 9px", fontFamily: FONT, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap" }}
+                          style={{ background: "#2B6CB0", color: "#fff", borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
                         >
-                          {c.name}<strong style={{ marginLeft: 3 }}>{c.contribution.toFixed(1)}</strong>
+                          {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                         </div>
                       ))}
                       {segmentTRC.length === 0 && projTRC.length === 0 && (
-                        <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>No contributor data</span>
+                        <span style={{ fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 }}>No contributor data</span>
                       )}
                     </div>
                   </div>
@@ -648,11 +650,11 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
             </div>
 
             {/* Attributes */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <Flex align="center" justify="space-between" gap="12px">
-                <span style={{ fontSize: 16, fontWeight: 700 }}>Attributes</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 16, color: segmentHasTreatments ? COLOR.gray500 : COLOR.gray400 }}>Show Pre-Treatment</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <Flex align="center" justify="space-between" gap="0.75rem">
+                <span style={{ fontSize: "1rem", fontWeight: 700 }}>Attributes</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "1rem", color: segmentHasTreatments ? COLOR.gray500 : COLOR.gray400 }}>Show Pre-Treatment</span>
                   <V2Switch
                     on={!showPostTreatment && segmentHasTreatments}
                     onColor={COLOR.teal}
@@ -683,7 +685,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
       </div>
 
       {/* BEFORE / AFTER OVERALL RISK LEVEL CARDS */}
-      <div style={{ display: "flex", gap: 16, marginTop: 16, alignItems: "stretch" }}>
+      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", alignItems: "stretch" }}>
         {([
           { title: "Before Treatment", counts: beforeBandCounts },
           { title: "After Treatment", counts: afterBandCounts },
@@ -748,20 +750,20 @@ function RiskLevelCard({
   const [barHover, setBarHover] = useState<{ x: number; y: number; row: string; band: string; count: number; pct: number } | null>(null);
 
   return (
-    <div style={{ flex: 1, minWidth: 0, background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, display: "flex", flexDirection: "column", padding: "18px 20px", boxSizing: "border-box" }}>
-      <span style={{ fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 18 }}>{title}</span>
+    <div style={{ flex: 1, minWidth: 0, background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: RADIUS, display: "flex", flexDirection: "column", padding: "1.125rem 1.25rem", boxSizing: "border-box" }}>
+      <span style={{ fontWeight: 700, fontSize: "1rem", color: COLOR.text, marginBottom: "1.125rem" }}>{title}</span>
       <div
         data-risk-bars
-        style={{ display: "flex", flexDirection: "column", gap: 14, position: "relative" }}
+        style={{ display: "flex", flexDirection: "column", gap: "0.875rem", position: "relative" }}
         onMouseLeave={() => setBarHover(null)}
       >
         {DIST_ROWS.map((row) => {
           const dist = counts[row.key];
           const total = [1, 2, 3, 4].reduce((a, b) => a + (dist[b] ?? 0), 0);
           return (
-            <div key={row.key} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <span style={{ width: 150, textAlign: "right", fontSize: 16, color: COLOR.text, flexShrink: 0 }}>{row.label}</span>
-              <div style={{ flex: 1, display: "flex", height: 22, borderRadius: 4, overflow: "hidden", background: COLOR.gray100 }}>
+            <div key={row.key} style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+              <span style={{ width: "9.375rem", textAlign: "right", fontSize: "1rem", color: COLOR.text, flexShrink: 0 }}>{row.label}</span>
+              <div style={{ flex: 1, display: "flex", height: "1.375rem", borderRadius: "0.25rem", overflow: "hidden", background: COLOR.gray100 }}>
                 {[1, 2, 3, 4].map((band) => {
                   const v = dist[band] ?? 0;
                   if (v <= 0) return null;
@@ -788,25 +790,25 @@ function RiskLevelCard({
           </div>
         )}
       </div>
-      <div style={{ marginTop: 18 }}>
-        <div style={{ textAlign: "center", fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 12 }}>Risk Level by Crash Type</div>
-        <div style={{ display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap" }}>
+      <div style={{ marginTop: "1.125rem" }}>
+        <div style={{ textAlign: "center", fontWeight: 700, fontSize: "1rem", color: COLOR.text, marginBottom: "0.75rem" }}>Risk Level by Crash Type</div>
+        <div style={{ display: "flex", justifyContent: "center", gap: "2.5rem", flexWrap: "wrap" }}>
           <ThresholdLegend heading="VB Crashes:" rows={["Low Risk: <10", "Medium Risk: 10-25", "High Risk: 25-60", "Extreme Risk: >60"]} />
           <ThresholdLegend heading="BB, BP, SB crashes:" rows={["Low Risk: <5", "Medium Risk: 5-10", "High Risk: 10-20", "Extreme Risk: >20"]} />
         </div>
       </div>
-      <span style={{ ...CAPTION, marginTop: 10 }}>{scopeCount} segments in scope</span>
+      <span style={{ ...CAPTION, marginTop: "0.625rem" }}>{scopeCount} segments in scope</span>
     </div>
   );
 }
 
 function ThresholdLegend({ heading, rows }: { heading: string; rows: string[] }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <div style={{ fontWeight: 700, fontSize: 12, color: COLOR.text }}>{heading}</div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
+      <div style={{ fontWeight: 700, fontSize: "0.75rem", color: COLOR.text }}>{heading}</div>
       {rows.map((r, i) => (
-        <div key={r} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12, color: COLOR.gray600 }}>
-          <span style={{ width: 9, height: 9, background: BAND_HUES[i], borderRadius: 2, flexShrink: 0 }} />
+        <div key={r} style={{ display: "flex", alignItems: "center", gap: "0.4375rem", fontSize: "0.75rem", color: COLOR.gray600 }}>
+          <span style={{ width: "0.5625rem", height: "0.5625rem", background: BAND_HUES[i], borderRadius: "0.125rem", flexShrink: 0 }} />
           {r}
         </div>
       ))}

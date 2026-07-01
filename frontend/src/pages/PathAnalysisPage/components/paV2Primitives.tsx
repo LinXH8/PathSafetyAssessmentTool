@@ -30,8 +30,8 @@ export function V2Switch({
     <div
       onClick={onClick}
       style={{
-        width: trackW,
-        height: trackH,
+        width: `${trackW / 16}rem`,
+        height: `${trackH / 16}rem`,
         background: on ? onColor : COLOR.borderInput,
         borderRadius: 999,
         flexShrink: 0,
@@ -42,13 +42,13 @@ export function V2Switch({
     >
       <div
         style={{
-          width: thumb,
-          height: thumb,
+          width: `${thumb / 16}rem`,
+          height: `${thumb / 16}rem`,
           background: COLOR.white,
           borderRadius: "50%",
           position: "absolute",
-          top: 2,
-          left: on ? 2 + travel : 2,
+          top: "0.125rem",
+          left: on ? `${(2 + travel) / 16}rem` : "0.125rem",
           boxShadow: "0 1px 2px rgba(0,0,0,.25)",
           transition: "left .15s",
         }}
@@ -65,12 +65,12 @@ export function V2Segmented<T extends string>({
   options,
   value,
   onChange,
-  height = 40,
+  height = "2.5rem",
 }: {
   options: { value: T; label: string }[];
   value: T;
   onChange: (v: T) => void;
-  height?: number;
+  height?: number | string;
 }) {
   return (
     <div
@@ -90,12 +90,12 @@ export function V2Segmented<T extends string>({
             key={opt.value}
             onClick={() => onChange(opt.value)}
             style={{
-              padding: "0 16px",
+              padding: "0 1rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontFamily: FONT,
-              fontSize: 16,
+              fontSize: "1rem",
               fontWeight: active ? 700 : 400,
               background: active ? COLOR.white : COLOR.gray100,
               color: active ? COLOR.gray800 : COLOR.gray500,
@@ -125,15 +125,15 @@ export function DistTooltipBox({ title, detail }: { title: string; detail: strin
       style={{
         background: COLOR.white,
         border: `1px solid ${COLOR.border}`,
-        borderRadius: 4,
-        padding: "4px 8px",
+        borderRadius: "0.25rem",
+        padding: "0.25rem 0.5rem",
         fontFamily: FONT,
         whiteSpace: "nowrap",
         pointerEvents: "none",
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 700, color: COLOR.text }}>{title}</div>
-      <div style={{ fontSize: 12, color: COLOR.gray600 }}>{detail}</div>
+      <div style={{ fontSize: "0.75rem", fontWeight: 700, color: COLOR.text }}>{title}</div>
+      <div style={{ fontSize: "0.75rem", color: COLOR.gray600 }}>{detail}</div>
     </div>
   );
 }
@@ -141,15 +141,15 @@ export function DistTooltipBox({ title, detail }: { title: string; detail: strin
 /** Tab chip (§6) — joins the card below when active. */
 export function v2TabStyle(active: boolean): CSSProperties {
   return {
-    padding: "8px 13px",
+    padding: "0.5rem 0.8125rem",
     fontFamily: FONT,
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: "1rem",
     lineHeight: 1,
     boxSizing: "border-box",
     cursor: "pointer",
     userSelect: "none",
-    borderRadius: "6px 6px 0 0",
+    borderRadius: "0.375rem 0.375rem 0 0",
     border: `1px solid ${COLOR.border}`,
     borderBottom: active ? "none" : `1px solid ${COLOR.border}`,
     marginBottom: active ? -1 : 0,
@@ -217,18 +217,18 @@ export function AccordionSection({
           justifyContent: "space-between",
           alignItems: "center",
           border: `1px solid ${COLOR.border}`,
-          padding: "10px 14px",
+          padding: "0.625rem 0.875rem",
           borderRadius: RADIUS,
           cursor: "pointer",
           userSelect: "none",
         }}
       >
-        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text }}>
           {title}
         </span>
         <svg
-          width="14"
-          height="14"
+          width="0.875rem"
+          height="0.875rem"
           viewBox="0 0 24 24"
           fill="none"
           stroke={COLOR.gray600}
@@ -246,7 +246,7 @@ export function AccordionSection({
             flex: 1,
             minHeight: 0,
             overflowY: "auto",
-            paddingTop: 10,
+            paddingTop: "0.625rem",
             ...bodyStyle,
           }}
         >

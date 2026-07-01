@@ -96,16 +96,16 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
       background: COLOR.canvas,
       fontFamily: FONT,
       color: COLOR.text,
-      padding: 32,
+      padding: "2rem",
       boxSizing: "border-box",
     }}>
       {/* Page title */}
-      <span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1, marginBottom: 16, flexShrink: 0 }}>
+      <span style={{ fontSize: "1.25rem", fontWeight: 700, lineHeight: 1, marginBottom: "1rem", flexShrink: 0 }}>
         User Guide
       </span>
 
       {/* Tab pills (join the card below) */}
-      <div style={{ display: "flex", gap: 4, flexShrink: 0, alignItems: "flex-end", position: "relative", zIndex: 2 }}>
+      <div style={{ display: "flex", gap: "0.25rem", flexShrink: 0, alignItems: "flex-end", position: "relative", zIndex: 2 }}>
         {TAB_ORDER.map(tab => (
           <button
             key={tab}
@@ -121,7 +121,7 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
       <div style={v2CardStyle({
         flex: 1,
         minHeight: 0,
-        borderRadius: "0 6px 6px 6px",
+        borderRadius: "0 0.375rem 0.375rem 0.375rem",
         display: "flex",
         overflow: "hidden",
         position: "relative",
@@ -129,18 +129,18 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
       })}>
         {/* Left nav */}
         <div style={{
-          width: 230,
+          width: "14.375rem",
           flexShrink: 0,
           overflowY: "auto",
-          padding: 20,
+          padding: "1.25rem",
           borderRight: `1px solid ${COLOR.rowDivider}`,
           display: "flex",
           flexDirection: "column",
-          gap: 4,
+          gap: "0.25rem",
           boxSizing: "border-box",
         }}>
           {/* Single "last updated" for this tab */}
-          <span style={{ fontSize: 12, color: COLOR.gray500, marginBottom: 10, display: "block" }}>
+          <span style={{ fontSize: "0.75rem", color: COLOR.gray500, marginBottom: "0.625rem", display: "block" }}>
             Last updated {latestUpdated(docs)}
           </span>
 
@@ -151,7 +151,7 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
                 key={doc.id}
                 onClick={() => setActiveIdx(i)}
                 style={{
-                  padding: "10px 12px",
+                  padding: "0.625rem 0.75rem",
                   borderRadius: RADIUS,
                   cursor: "pointer",
                   background: active ? COLOR.blue : "transparent",
@@ -163,7 +163,7 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
                   outline: "none",
                   fontFamily: FONT,
                   fontWeight: 700,
-                  fontSize: 16,
+                  fontSize: "1rem",
                   lineHeight: 1.3,
                   color: active ? COLOR.white : COLOR.text,
                 }}
@@ -179,7 +179,7 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
         {/* Content area */}
         <div
           ref={contentRef}
-          style={{ flex: 1, minWidth: 0, overflowY: "auto", padding: "28px 36px", boxSizing: "border-box" }}
+          style={{ flex: 1, minWidth: 0, overflowY: "auto", padding: "1.75rem 2.25rem", boxSizing: "border-box" }}
         >
           {loading ? (
             <p style={{ color: COLOR.gray500, fontStyle: "italic" }}>Loading document…</p>
@@ -211,10 +211,10 @@ function V2MarkdownContent({ content }: { content: string }) {
     h1: ({ children }: any) => <h1 id={toId(children)} style={{ ...headingBase, fontSize: "1.4rem" }}>{children}</h1>,
     h2: ({ children }: any) => <h2 id={toId(children)} style={{ ...headingBase, fontSize: "1.2rem" }}>{children}</h2>,
     h3: ({ children }: any) => <h3 id={toId(children)} style={{ ...headingBase, fontSize: "1.05rem" }}>{children}</h3>,
-    p:  ({ children }: any) => <p style={{ marginBottom: "1rem", color: COLOR.gray600, fontSize: 16, lineHeight: 1.65 }}>{children}</p>,
+    p:  ({ children }: any) => <p style={{ marginBottom: "1rem", color: COLOR.gray600, fontSize: "1rem", lineHeight: 1.65 }}>{children}</p>,
     ul: ({ children }: any) => <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: COLOR.gray600 }}>{children}</ul>,
     ol: ({ children }: any) => <ol style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: COLOR.gray600 }}>{children}</ol>,
-    li: ({ children }: any) => <li style={{ marginBottom: "0.25rem", fontSize: 16, lineHeight: 1.65 }}>{children}</li>,
+    li: ({ children }: any) => <li style={{ marginBottom: "0.25rem", fontSize: "1rem", lineHeight: 1.65 }}>{children}</li>,
     strong: ({ children }: any) => <strong style={{ color: COLOR.text, fontWeight: 600 }}>{children}</strong>,
     a: ({ href, children }: any) => {
       if (href?.startsWith("#")) {
@@ -231,13 +231,13 @@ function V2MarkdownContent({ content }: { content: string }) {
       return <a href={href} style={{ color: COLOR.blue, textDecoration: "underline" }}>{children}</a>;
     },
     blockquote: ({ children }: any) => (
-      <blockquote style={{ borderLeft: `4px solid ${COLOR.blue}`, paddingLeft: "1rem", fontStyle: "italic", margin: "1rem 0", color: COLOR.gray600 }}>
+      <blockquote style={{ borderLeft: `0.25rem solid ${COLOR.blue}`, paddingLeft: "1rem", fontStyle: "italic", margin: "1rem 0", color: COLOR.gray600 }}>
         {children}
       </blockquote>
     ),
     code: ({ inline, children }: any) =>
       inline
-        ? <code style={{ background: COLOR.gray100, padding: "0.1rem 0.3rem", borderRadius: 4, fontFamily: "monospace", fontSize: "0.875em", color: COLOR.dangerHover }}>{children}</code>
+        ? <code style={{ background: COLOR.gray100, padding: "0.1rem 0.3rem", borderRadius: "0.25rem", fontFamily: "monospace", fontSize: "0.875em", color: COLOR.dangerHover }}>{children}</code>
         : <code style={{ fontFamily: "monospace" }}>{children}</code>,
     pre: ({ children }: any) => (
       <pre style={{ background: COLOR.gray800, padding: "1rem", borderRadius: RADIUS, overflowX: "auto", marginBottom: "1rem", color: "#f1f5f9" }}>{children}</pre>
@@ -248,12 +248,12 @@ function V2MarkdownContent({ content }: { content: string }) {
       </div>
     ),
     th: ({ children }: any) => <th style={{ border: `1px solid ${COLOR.border}`, padding: "0.75rem", textAlign: "left", background: COLOR.gray100, color: COLOR.text, fontWeight: 600, whiteSpace: "nowrap" }}>{children}</th>,
-    td: ({ children }: any) => <td style={{ border: `1px solid ${COLOR.border}`, padding: "0.75rem", color: COLOR.gray600, minWidth: 80 }}>{children}</td>,
+    td: ({ children }: any) => <td style={{ border: `1px solid ${COLOR.border}`, padding: "0.75rem", color: COLOR.gray600, minWidth: "5rem" }}>{children}</td>,
     hr: () => <hr style={{ border: "none", borderTop: `1px solid ${COLOR.rowDivider}`, margin: "1.5rem 0" }} />,
   };
 
   return (
-    <div style={{ fontSize: 16, lineHeight: 1.65 }}>
+    <div style={{ fontSize: "1rem", lineHeight: 1.65 }}>
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={components as any}>
         {content}
       </ReactMarkdown>

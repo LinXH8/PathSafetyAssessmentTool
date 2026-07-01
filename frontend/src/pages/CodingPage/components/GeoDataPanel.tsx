@@ -32,7 +32,7 @@ type Props = {
   feature: Feature<LineString, any> | null;  // 当前段（父组件传入）
   index: number;                             // 当前页（父组件传入，0-based）
   onJump?: (idx: number) => void;            // Jump to segment callback
-  containerHeight?: number;                  // 容器总高度（包括header）
+  containerHeight?: number | string;         // 容器总高度（包括header）; number→px, or a CSS length string (e.g. clamp/vh) for fluid v2 maps
   scores?: ScoreRow[];                       // Optional scores passed from parent for real-time updates
   subtitle?: string;                         // Optional subtitle to display next to "Map Preview"
   geoFeatures?: Feature<LineString, any>[];  // Optional pre-loaded geofeatures (for multi-project display)
@@ -1126,7 +1126,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         : gradientState.text;
 
   return (
-    <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius={variant === "v2" ? "6px" : "none"} position={variant === "v2" ? "relative" : undefined}>
+    <Card.Root display="flex" flexDirection="column" h={typeof containerHeight === "number" ? `${containerHeight}px` : containerHeight} overflow="hidden" borderRadius={variant === "v2" ? "6px" : "none"} position={variant === "v2" ? "relative" : undefined}>
 
       {/* Clickable title bar restored as a static header */}
       <Box

@@ -35,7 +35,10 @@ export const COLOR = {
 // Categorical / tag palette (cycled in order; excludes blue/teal/RSB hues)
 export const CATEGORICAL = ["#718096", "#00B5D8", "#D53F8C", "#DD6B20"] as const;
 
-export const RADIUS = 6;
-export const CONTENT_PADDING = 32;
-export const CARD_GAP = 16;
-export const SIDEBAR_WIDTH = 280;
+// Sizing tokens — hybrid responsive units (see temp/UI_V2_REDESIGN_GUIDE.md
+// "Sizing & Responsive-Unit Conversion Catalog"). Reference viewport 1920×911,
+// root font 16px. Density values are rem (px÷16), screen-independent.
+export const RADIUS = "0.375rem"; // 6px
+export const CONTENT_PADDING = "2rem"; // 32px — screen content padding
+export const CARD_GAP = "1rem"; // 16px — gap between stacked cards
+export const SIDEBAR_WIDTH = "17.5rem"; // 280px — fixed rem (never raw vw; balloons on ultrawide)
