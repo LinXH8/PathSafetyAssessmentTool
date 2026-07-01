@@ -1115,6 +1115,15 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     setIsAddSegmentsDialogOpen(true);
   }, [polygonPoints, points]);
 
+  // Metric readouts shared by the v1 header pills and the v2 floating map cluster.
+  const curvDisplay = curvData?.radius != null ? `${curvData.radius.toFixed(1)} m` : "—";
+  const widthDisplay = widthM != null ? `${widthM.toFixed(2)} m` : "—";
+  const gradeDisplay =
+    gradientState.mode === "grade"
+      ? gradientState.text.replace("Grade 1 (<5°)", "<5°").replace("Grade 2 (≥5°)", "≥5°")
+      : gradientState.text === GRADIENT_STATUS_NO_LIDAR_RESULT
+        ? "N/A"
+        : gradientState.text;
 
   return (
     <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius={variant === "v2" ? "6px" : "none"} position={variant === "v2" ? "relative" : undefined}>
@@ -1138,54 +1147,65 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
             - {subtitle}
           </Text>
         )}
-        <Flex align="center" gap="1.5" ml="auto">
-          <Flex align="center" gap="3" mr="2" pr="2" borderRight="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
-            <StatPill
-              label="Curv"
-              value={curvData?.radius != null ? `${curvData.radius.toFixed(1)} m` : "—"}
-            />
-            <StatPill
-              label="Width"
-              value={widthM != null ? `${widthM.toFixed(2)} m` : "—"}
-            />
-            <StatPill
-              label="Grade"
-              value={
-                gradientState.mode === "grade"
-                  ? gradientState.text.replace("Grade 1 (<5°)", "<5°").replace("Grade 2 (≥5°)", "≥5°")
-                  : gradientState.text === GRADIENT_STATUS_NO_LIDAR_RESULT
-                    ? "N/A"
-                    : gradientState.text
-              }
+        {/* v1: metric pills + Analysis Overlay toggle live in the header. v2 (Home.dc.html
+            FRAME 4): metrics move into the floating map cluster and the overlay toggle moves
+            into the Layer View panel, leaving the header as a plain title. */}
+        {variant !== "v2" && (
+          <Flex align="center" gap="1.5" ml="auto">
+            <Flex align="center" gap="3" mr="2" pr="2" borderRight="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
+              <StatPill label="Curv" value={curvDisplay} />
+              <StatPill label="Width" value={widthDisplay} />
+              <StatPill label="Grade" value={gradeDisplay} />
+            </Flex>
+            <Text fontSize="xs" fontWeight="medium" color={showCurvatureOverlay ? "gray.900" : "gray.400"} _dark={{ color: showCurvatureOverlay ? "gray.100" : "gray.500" }}>
+              Analysis Overlay
+            </Text>
+            <Switch
+              colorPalette="gray"
+              size="sm"
+              checked={showCurvatureOverlay}
+              onCheckedChange={onToggleCurvatureOverlay}
             />
           </Flex>
-          <Text fontSize="xs" fontWeight="medium" color={showCurvatureOverlay ? "gray.900" : "gray.400"} _dark={{ color: showCurvatureOverlay ? "gray.100" : "gray.500" }}>
-            Analysis Overlay
-          </Text>
-          <Switch
-            colorPalette="gray"
-            size="sm"
-            checked={showCurvatureOverlay}
-            onCheckedChange={onToggleCurvatureOverlay}
-          />
-        </Flex>
+        )}
       </Box>
 
           {/* Tools + GIS layer toggles. v1: a bordered toolbar row under the header.
-              v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map. */}
+              v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map —
+              Curv./Width/Grade metrics, a divider, then the two tool buttons. */}
           <Box
-            px={variant === "v2" ? "1.5" : "4"}
-            pt={variant === "v2" ? "1.5" : "2"}
-            pb={variant === "v2" ? "1.5" : "2"}
+            px={variant === "v2" ? "0" : "4"}
+            pt={variant === "v2" ? "0" : "2"}
+            pb={variant === "v2" ? "0" : "2"}
             borderBottom={variant === "v2" ? undefined : "1px solid"}
             borderColor="gray.200"
             _dark={{ borderColor: "gray.700" }}
             {...(variant === "v2"
-              ? { position: "absolute", top: "60px", right: "12px", zIndex: 1000, bg: "white", borderWidth: "1px", borderRadius: "6px", boxShadow: "sm" }
+              ? { position: "absolute", top: "60px", right: "12px", zIndex: 1000, bg: "white", borderWidth: "1px", borderRadius: "6px", boxShadow: "sm", display: "flex", alignItems: "stretch", overflow: "hidden" }
               : {})}
           >
+            {/* v2: floating metric readouts (Curv./Width/Grade) ahead of the tools. */}
+            {variant === "v2" && (
+              <Flex align="stretch">
+                {([["Curv.", curvDisplay], ["Width", widthDisplay], ["Grade", gradeDisplay]] as const).map(([label, value]) => (
+                  <Flex key={label} direction="column" align="center" justify="center" gap="2px" px="12px" py="5px">
+                    <Text fontSize="12px" color="#718096" lineHeight="1">{label}</Text>
+                    <Text fontSize="16px" color="#4A5568" lineHeight="1" whiteSpace="nowrap">{value}</Text>
+                  </Flex>
+                ))}
+              </Flex>
+            )}
             {/* Tool icon buttons */}
-            <Flex align="center" gap="2" wrap="wrap" mb={variant === "v2" ? "0" : "2"} onClick={(e) => e.stopPropagation()}>
+            <Flex
+              align="center"
+              gap={variant === "v2" ? "1.5" : "2"}
+              wrap="wrap"
+              mb={variant === "v2" ? "0" : "2"}
+              onClick={(e) => e.stopPropagation()}
+              {...(variant === "v2"
+                ? { px: "6px", borderLeft: "1px solid", borderColor: "gray.200" }
+                : {})}
+            >
               <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                 <Menu.Trigger asChild>
                   <IconButton
@@ -1918,6 +1938,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
           setShowLandPrivate={setShowLandPrivate}
           showLandMinistry={showLandMinistry}
           setShowLandMinistry={setShowLandMinistry}
+          {...(variant === "v2"
+            ? { showCurvatureOverlay: showCurvatureOverlay ?? false, onToggleCurvatureOverlay }
+            : {})}
         />
       </CardBody>
 

@@ -57,6 +57,11 @@ interface AnalysisSidebarProps {
   importedShapefileError?: string | null;
   importedShapefileName?: string | null;
   onClearImportedShapefile?: () => void;
+  /** Curvature "Analysis Overlay" toggle — Coding page only. When provided, renders an
+   *  Analysis Overlay switch at the top of the v2 Layer View panel (Home.dc.html FRAME 4:
+   *  the overlay toggle lives with the layer toggles, not in the map header). */
+  showCurvatureOverlay?: boolean;
+  onToggleCurvatureOverlay?: () => void;
   /** "v1" (default) = slide-in overlay panel; "v2" = static 340px Layer View panel (Home.dc.html FRAME 4 / DESIGN_GUIDE §13). */
   variant?: "v1" | "v2";
 }
@@ -85,6 +90,8 @@ export function AnalysisSidebar({
   importedShapefileError,
   importedShapefileName,
   onClearImportedShapefile,
+  showCurvatureOverlay,
+  onToggleCurvatureOverlay,
   variant = "v1",
 }: AnalysisSidebarProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -126,12 +133,28 @@ export function AnalysisSidebar({
         >
           <div style={{ width: 340, height: "100%", overflowY: "auto", padding: "10px 14px", boxSizing: "border-box", display: "flex", flexDirection: "column" }}>
             <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 16 }}>Layer View</div>
+            {/* Analysis Overlay (curvature) toggle — Coding page. Grouped with the layer
+                toggles per Home.dc.html FRAME 4; separated by a divider from the GIS layers. */}
+            {onToggleCurvatureOverlay && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", paddingBottom: 12, marginBottom: 4, borderBottom: `1px solid ${COLOR.rowDivider}` }}>
+                <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>Analysis Overlay</span>
+                <div
+                  onClick={onToggleCurvatureOverlay}
+                  style={{ width: 30, height: 16, borderRadius: 999, background: showCurvatureOverlay ? COLOR.text : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
+                >
+                  <div style={{ position: "absolute", top: 2, left: 2, width: 12, height: 12, borderRadius: "50%", background: "#fff", transform: showCurvatureOverlay ? "translateX(14px)" : "none", transition: "transform .15s" }} />
+                </div>
+              </div>
+            )}
             {layers.map((layer) => (
               <div key={layer.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
-                <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{layer.label}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: layer.color, flexShrink: 0 }} />
+                  <span style={{ fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{layer.label}</span>
+                </div>
                 <div
                   onClick={() => layer.onChange(!layer.value)}
-                  style={{ width: 30, height: 16, borderRadius: 999, background: layer.value ? COLOR.text : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
+                  style={{ width: 30, height: 16, borderRadius: 999, background: layer.value ? layer.color : COLOR.borderInput, position: "relative", cursor: "pointer", flexShrink: 0, transition: "background .15s" }}
                 >
                   <div style={{ position: "absolute", top: 2, left: 2, width: 12, height: 12, borderRadius: "50%", background: "#fff", transform: layer.value ? "translateX(14px)" : "none", transition: "transform .15s" }} />
                 </div>
