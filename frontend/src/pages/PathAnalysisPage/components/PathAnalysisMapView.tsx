@@ -21,7 +21,7 @@ import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
-import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS } from "../../../constants/mapColors";
+import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -2164,7 +2164,7 @@ export default function AttributeAnalysisMapView({
         .map(([project, count]) => ({
           category: project,
           count,
-          color: projectColors[project] || "#6B7280",
+          color: projectColors[project] || CATEGORY_UNKNOWN_COLOR,
         }))
         .sort((a, b) => b.count - a.count); // Sort by count descending
     } else {
@@ -2181,7 +2181,7 @@ export default function AttributeAnalysisMapView({
         .map(([category, count]) => ({
           category,
           count,
-          color: attributeCategoryColors[category] || "#6B7280",
+          color: attributeCategoryColors[category] || CATEGORY_UNKNOWN_COLOR,
         }));
 
       const semanticOrder = getSemanticCategoryOrder(effectiveFocusAttribute);
@@ -2321,7 +2321,7 @@ export default function AttributeAnalysisMapView({
       const currentToggles = categoryToggles[attr] || {};
       const categoryStatusItems = categories.map(cat => {
         const isActive = currentToggles[cat] !== false;
-        let color = "#6B7280";
+        let color = CATEGORY_UNKNOWN_COLOR;
         if (attr === "Project") {
           color = projectColors[cat] || color;
         } else {
@@ -3374,7 +3374,7 @@ export default function AttributeAnalysisMapView({
                       <LeafletPolygon
                         key={boundary.key}
                         positions={boundary.coords}
-                        pathOptions={{ color: "#EA580C", weight: 2, opacity: 0.95, fillColor: "#FDBA74", fillOpacity: 0.2, interactive: false }}
+                        pathOptions={{ color: MAP_INTERACTION_COLORS.importedOverlay, weight: 2, opacity: 0.95, fillColor: MAP_INTERACTION_COLORS.importedOverlayFill, fillOpacity: 0.2, interactive: false }}
                       />
                     ) : (
                       <>
@@ -3382,7 +3382,7 @@ export default function AttributeAnalysisMapView({
                           <LeafletPolyline
                             key={`${boundary.key}-${partIndex}`}
                             positions={lineCoords}
-                            pathOptions={{ color: "#EA580C", weight: 2.5, opacity: 0.95, interactive: false }}
+                            pathOptions={{ color: MAP_INTERACTION_COLORS.importedOverlay, weight: 2.5, opacity: 0.95, interactive: false }}
                           />
                         ))}
                       </>

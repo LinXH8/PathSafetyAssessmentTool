@@ -22,6 +22,7 @@ import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import proj4 from "proj4";
 import type { FeatureCollection, Position } from "geojson";
+import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants/mapColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
@@ -1174,10 +1175,10 @@ export default function ReportBuilderPage() {
         } else if (parentVal) {
           color = parentColor.get(parentVal);
         }
-        m.set(`${row._project}_${row._segIndex}`, color ?? "#6B7280");
+        m.set(`${row._project}_${row._segIndex}`, color ?? CATEGORY_UNKNOWN_COLOR);
       });
     } else {
-      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? "#2563EB"));
+      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? MAP_MISSING_SCORE_COLOR));
     }
     return m;
   }, [activeFilterNames, activeCategoryStatus, filteredSegValues]);
