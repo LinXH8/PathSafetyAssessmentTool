@@ -77,9 +77,55 @@ export default function GisLayersPage() {
   const [confirmRevertPath, setConfirmRevertPath] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  type FilterMode = "all" | "autocoding" | "project" | "analysis";
+  const [filterMode, setFilterMode] = useState<FilterMode>("all");
   const [filterText, setFilterText] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hoveredFilter, setHoveredFilter] = useState<FilterMode | null>(null);
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  const getLayerPurpose = (file: ShapefileInfo): FilterMode => {
+    const cat = file.category.toLowerCase();
+    const name = file.base_name.toLowerCase();
+
+    // Project Setup: boundary and road network reference layers
+    if (cat === "planning_area" || cat === "road_name") return "project";
+    if (cat === "linkid_shape_file" && name.includes("node")) return "project";
+
+    // Auto-coding: layers that feed the scoring engine but are NOT overlays in the Analysis page
+    // (area/landuse classification polygons, speed limit lines, road link network)
+    if (
+      cat === "area_type" ||
+      cat.startsWith("landuse") ||
+      cat.startsWith("central") ||        // Centralmb2025 urban area type polygon
+      cat === "speed_limit" ||
+      cat === "linkid_shape_file"          // link file (non-node already caught above)
+    ) return "autocoding";
+
+    // Analysis: everything else — all layers shown as overlays in the Analysis page
+    // (path centrelines, crossings, transit, parking, kerb, defects, land type, AMG counts)
+    return "analysis";
+  };
 
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const filterOptions: { value: FilterMode; label: string; desc: string }[] = [
+    { value: "all",        label: "All Layers",    desc: "Shows every available GIS shapefile in this project across all categories." },
+    { value: "autocoding", label: "Auto-coding",   desc: "Layers that feed directly into the scoring calculations. Includes area type polygons (urban/rural/recreational), land use classifications, speed limit lines, and the road link network file." },
+    { value: "project",    label: "Project Setup", desc: "Reference layers required before a project can be created or run. Includes planning area boundaries, the road name network (to match paths to roads), and the road network node file for intersection referencing." },
+    { value: "analysis",   label: "Analysis",      desc: "All layers displayed as overlays in the Analysis page. Includes path centrelines (footpath, cycling, shared), road and bicycle crossings, MRT exits, bus stops, bus lanes, parking lots, kerb lines, path defects, land type categories, and AMG pedestrian/cyclist count data." },
+  ];
 
   // Color Mode Values
   const rootBg = useColorModeValue("gray.50", "gray.900");
@@ -372,26 +418,126 @@ export default function GisLayersPage() {
           borderColor={borderColor}
         >
           <Box p={4} borderBottom="1px solid" borderColor={panelHeaderBorder} bg={panelHeaderBg}>
-            <Flex align="center" justify="space-between" gap="3">
-              <Text fontWeight="600" color={titleColor} whiteSpace="nowrap">Available Shapefiles</Text>
-              <input
-                type="text"
-                placeholder="Filter shapefiles..."
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  padding: "4px 10px",
-                  borderRadius: "6px",
-                  border: "1px solid var(--chakra-colors-gray-300)",
-                  background: "transparent",
-                  color: "inherit",
-                  fontSize: "13px",
-                  outline: "none",
-                }}
-              />
+            <Flex align="center" justify="space-between" gap="3" mb={2}>
+              <Text fontWeight="600" color={titleColor} whiteSpace="nowrap">Layers</Text>
+              <Box ref={filterDropdownRef} position="relative" flex={1} minWidth={0}>
+                {/* Trigger button */}
+                <button
+                  onClick={() => setDropdownOpen(o => !o)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "4px 10px",
+                    borderRadius: "6px",
+                    border: "1px solid var(--chakra-colors-gray-300)",
+                    background: "transparent",
+                    color: "inherit",
+                    fontSize: "13px",
+                    cursor: "pointer",
+                    textAlign: "left",
+                  }}
+                >
+                  <span>{filterOptions.find(o => o.value === filterMode)?.label}</span>
+                  <span style={{ marginLeft: 6, fontSize: "10px", opacity: 0.6 }}>{dropdownOpen ? "▲" : "▼"}</span>
+                </button>
+
+                {/* Dropdown list — labels only */}
+                {dropdownOpen && (
+                  <Box
+                    position="absolute"
+                    top="calc(100% + 4px)"
+                    left={0}
+                    right={0}
+                    zIndex={999}
+                    bg={panelBg}
+                    border="1px solid"
+                    borderColor={borderColor}
+                    borderRadius="6px"
+                    boxShadow="md"
+                    overflow="hidden"
+                    onMouseLeave={() => { setHoveredFilter(null); setTooltipPos(null); }}
+                  >
+                    {filterOptions.map(opt => (
+                      <Box
+                        key={opt.value}
+                        px={3}
+                        py="8px"
+                        cursor="pointer"
+                        bg={filterMode === opt.value ? selectedItemBg : "transparent"}
+                        _hover={{ bg: filterMode === opt.value ? selectedItemHoverBg : itemHoverBg }}
+                        onMouseEnter={(e) => {
+                          setHoveredFilter(opt.value);
+                          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                          setTooltipPos({ x: rect.right + 10, y: rect.top + rect.height / 2 });
+                        }}
+                        onClick={() => { setFilterMode(opt.value); setDropdownOpen(false); setHoveredFilter(null); setTooltipPos(null); }}
+                      >
+                        <Text fontSize="13px" fontWeight={filterMode === opt.value ? "600" : "400"} color={textColor}>
+                          {opt.label}
+                        </Text>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+
+                {/* Description tooltip — position:fixed escapes the panel's overflow:hidden */}
+                {dropdownOpen && hoveredFilter && tooltipPos && (
+                  <Box
+                    position="fixed"
+                    top={`${tooltipPos.y}px`}
+                    left={`${tooltipPos.x}px`}
+                    zIndex={9999}
+                    bg="#2D3748"
+                    borderRadius="8px"
+                    boxShadow="lg"
+                    p={3}
+                    width="230px"
+                    pointerEvents="none"
+                    style={{ transform: "translateY(-50%)" }}
+                  >
+                    {/* Left-pointing arrow */}
+                    <Box
+                      position="absolute"
+                      left="-6px"
+                      top="50%"
+                      width={0}
+                      height={0}
+                      style={{
+                        transform: "translateY(-50%)",
+                        borderTop: "6px solid transparent",
+                        borderBottom: "6px solid transparent",
+                        borderRight: "6px solid #2D3748",
+                      }}
+                    />
+                    <Text fontSize="12px" fontWeight="600" color="white" mb="4px">
+                      {filterOptions.find(o => o.value === hoveredFilter)?.label}
+                    </Text>
+                    <Text fontSize="11px" color="gray.300" lineHeight="1.6">
+                      {filterOptions.find(o => o.value === hoveredFilter)?.desc}
+                    </Text>
+                  </Box>
+                )}
+              </Box>
             </Flex>
+            <input
+              type="text"
+              placeholder="Filter shapefiles..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "4px 10px",
+                borderRadius: "6px",
+                border: "1px solid var(--chakra-colors-gray-300)",
+                background: "transparent",
+                color: "inherit",
+                fontSize: "13px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
           </Box>
           {actionError && (
             <Box px={3} py={2} bg="red.50" _dark={{ bg: "red.950", borderColor: "red.700" }} borderBottom="1px solid" borderColor="red.200">
@@ -412,11 +558,17 @@ export default function GisLayersPage() {
             ) : shapefiles.length === 0 ? (
                  <Box p={4} color={emptyStateColor}>No shapefiles found.</Box>
             ) : (() => {
-              const filtered = shapefiles.filter(f => f.name.toLowerCase().includes(filterText.toLowerCase()));
+              const filtered = shapefiles.filter(f => {
+                const modeMatch = filterMode === "all" || getLayerPurpose(f) === filterMode;
+                const textMatch = !filterText || f.name.toLowerCase().includes(filterText.toLowerCase());
+                return modeMatch && textMatch;
+              });
               return (
               <div className="layer-list-container">
                 {filtered.length === 0 ? (
-                  <Box p={4} color={emptyStateColor}>No shapefiles match "{filterText}".</Box>
+                  <Box p={4} color={emptyStateColor}>
+                    No shapefiles match{filterText ? ` "${filterText}"` : ""}.
+                  </Box>
                 ) : null}
                 {filtered.map(file => {
                   const isSelected = selectedLayer?.path === file.path;
