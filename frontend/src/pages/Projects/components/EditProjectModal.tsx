@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
 import * as api from "../../../api";
+import { getTagColor } from "../tagColor";
 import "./editProjectModal.css";
 
 interface EditProjectModalProps {
@@ -20,25 +21,6 @@ interface EditProjectModalProps {
   onSuccess: (newName: string, newTags: string[]) => void;
 }
 
-// Generate a consistent, bright, varied color for each unique tag (same as home.tsx)
-function getTagColor(tag: string): string {
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  const hash2 = Math.abs(hash >> 16);
-  const hash3 = Math.abs(hash << 3);
-
-  let hue = Math.abs(hash % 360);
-  if (hue >= 40 && hue <= 60) hue = (hue + 30) % 360;
-  if (hue >= 160 && hue <= 180) hue = (hue + 30) % 360;
-
-  const saturation = 75 + (hash2 % 21);
-  const lightness = 65 + (hash3 % 16);
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
 
 export default function EditProjectModal({
   open,

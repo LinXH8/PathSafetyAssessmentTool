@@ -15,27 +15,8 @@ import {
 import ImageUploadModal from "../../sidebar/components/ImageUploadModal";
 import SelectRoadsMap from "../SelectRoadsMap";
 import type { CreateProjectViewModel } from "./CreateProjectViewModel";
+import { getTagColor } from "../../Projects/tagColor";
 import "../../Projects/components/EditProjectModal.css";
-
-// Generate a consistent, bright, varied color for each unique tag (same as EditProjectModal)
-function getTagColor(tag: string): string {
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  const hash2 = Math.abs(hash >> 16);
-  const hash3 = Math.abs(hash << 3);
-
-  let hue = Math.abs(hash % 360);
-  if (hue >= 40 && hue <= 60) hue = (hue + 30) % 360;
-  if (hue >= 160 && hue <= 180) hue = (hue + 30) % 360;
-
-  const saturation = 75 + (hash2 % 21);
-  const lightness = 65 + (hash3 % 16);
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
 
 function formatCaptureDate(value: string | null | undefined, options?: Intl.DateTimeFormatOptions) {
   if (!value) return null;

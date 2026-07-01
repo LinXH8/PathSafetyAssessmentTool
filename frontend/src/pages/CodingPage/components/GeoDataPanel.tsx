@@ -13,6 +13,7 @@ import { MapCursorController } from "../../../components/common/MapCursorControl
 import type { Feature, FeatureCollection, LineString, Position } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
 import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +59,8 @@ type GJ = FeatureCollection<LineString, any>;
 
 // Deep emerald used for the "verified" dot halo. Deliberately distinct from the
 // yellow-green LOW risk-band colour (#87C424) so verified state stays legible.
-const VERIFIED_HALO_COLOR = "#16A34A";
+// Sourced from the shared map-color base (constants/mapColors.ts).
+const VERIFIED_HALO_COLOR = MAP_INTERACTION_COLORS.verifiedHalo;
 
 type ScoreRow = {
   "Overall Risk Level": number;
@@ -915,33 +917,18 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => { controller.abort(); };
   }, [activeGisLat, activeGisLon, showPathDefects]);
 
-  // Layer colors matching curvature analysis
-  const layerColors = {
-    footpath: "#1E90FF",    // DodgerBlue
-    cycling: "#B91C1C",     // Deep Red
-    shared: "#A855F7",      // Purple
-    roadcrossing: "#10B981", // Emerald/Green
-    mrt_exit: "#06B6D4",    // Cyan
-    bicycle_crossing: "#F97316", // Orange
-    bus_stop: "#8B5CF6",    // Purple
-    bus_lane: "#EAB308",    // Yellow
-    parking_lot: "#D97706", // Amber/Gold
-    kerb_line: "#D946EF",   // Fuchsia
-    state_land: "#14B8A6",  // Teal
-    stat_board: "#F59E0B",  // Amber
-    land_private: "#6366F1", // Indigo
-    land_ministry: "#EC4899", // Pink
-  };
+  // GIS layer colors now sourced from constants/mapColors.ts (imported above as
+  // layerColors) — single source shared with PathAnalysisMapView + AnalysisSidebar.
 
   // Get segment color based on the crash type with the highest score
   const getSegmentColor = (segmentIndex: number): string => {
     if (!activeScores || segmentIndex >= activeScores.length) {
-      return "#2563EB"; // Default blue if no scores
+      return MAP_MISSING_SCORE_COLOR; // Default blue if no scores
     }
 
     const segmentScores = activeScores[segmentIndex];
     if (!segmentScores) {
-      return "#2563EB"; // Default blue if no score data for this segment
+      return MAP_MISSING_SCORE_COLOR; // Default blue if no score data for this segment
     }
 
     const crashTypes = ["BB", "BP", "SB", "VB"];
@@ -1770,7 +1757,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                   const inScope = !scopeRange || (globalIdx >= scopeRange.start && globalIdx < scopeRange.start + scopeRange.count);
                   const dimmed = !inScope && !isActive;
                   const baseColor = filterColorMap?.get(localIdx) ?? getSegmentColor(globalIdx);
-                  const color = isActive ? "#1E63D8" : baseColor;
+                  const color = isActive ? MAP_INTERACTION_COLORS.activeSegment : baseColor;
                   const radius = isActive ? 9 : 5;
                   // Handle both new and old column names for backward compatibility
                   const imgRef = f.properties?.["Image Reference"];
@@ -1819,7 +1806,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                         },
                         mouseover: (e) => {
                           if (isDeleteMode) {
-                            e.target.setStyle({ color: "red", weight: 4 });
+                            e.target.setStyle({ color: MAP_INTERACTION_COLORS.deleteHover, weight: 4 });
                             const target = e.originalEvent.target as HTMLElement;
                             if (target) target.style.cursor = "pointer";
                           }

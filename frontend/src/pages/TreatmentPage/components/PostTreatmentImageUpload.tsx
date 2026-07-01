@@ -6,9 +6,11 @@ import { toaster } from "../../../components/ui/toaster";
 interface Props {
   projectName: string;
   segmentIndex: number;
+  /** When true, suppresses the internal top margin and title text (caller renders the label instead). */
+  hideHeader?: boolean;
 }
 
-export default function PostTreatmentImageUpload({ projectName, segmentIndex }: Props) {
+export default function PostTreatmentImageUpload({ projectName, segmentIndex, hideHeader }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -124,10 +126,12 @@ export default function PostTreatmentImageUpload({ projectName, segmentIndex }: 
   }, [onPaste]);
 
   return (
-    <Box mt={4} width="100%" height="100%" display="flex" flexDirection="column" flex="1" minH={0}>
-      <Text fontSize="sm" fontWeight="bold" mb={2} flexShrink={0}>
-        Post-Treatment Artistic Impression
-      </Text>
+    <Box mt={hideHeader ? 0 : 4} width="100%" height="100%" display="flex" flexDirection="column" flex="1" minH={0}>
+      {!hideHeader && (
+        <Text fontSize="sm" fontWeight="bold" mb={2} flexShrink={0}>
+          Post-Treatment Artistic Impression
+        </Text>
+      )}
       <Box
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}

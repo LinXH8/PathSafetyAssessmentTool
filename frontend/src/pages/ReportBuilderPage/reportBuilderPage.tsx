@@ -22,9 +22,11 @@ import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import proj4 from "proj4";
 import type { FeatureCollection, Position } from "geojson";
+import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants/mapColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
+import { useUiVersion } from "../../features/ui/useUiVersion";
 
 // ── SVY21 (EPSG:3414) → WGS84 ───────────────────────────────────────────────
 proj4.defs(
@@ -616,6 +618,8 @@ function SortableSectionRow({
 
 export default function ReportBuilderPage() {
   const navigate = useNavigate();
+  const isV2 = useUiVersion() === "v2";
+  const accent = isV2 ? "#319795" : "#a020d0";
   const canvasRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const hasAutoFit = useRef(false);
@@ -1172,10 +1176,10 @@ export default function ReportBuilderPage() {
         } else if (parentVal) {
           color = parentColor.get(parentVal);
         }
-        m.set(`${row._project}_${row._segIndex}`, color ?? "#6B7280");
+        m.set(`${row._project}_${row._segIndex}`, color ?? CATEGORY_UNKNOWN_COLOR);
       });
     } else {
-      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? "#2563EB"));
+      ds.allBandMap.forEach((band, key) => m.set(key, RISK_COLORS[band] ?? MAP_MISSING_SCORE_COLOR));
     }
     return m;
   }, [activeFilterNames, activeCategoryStatus, filteredSegValues]);
@@ -2835,7 +2839,7 @@ export default function ReportBuilderPage() {
 
   // ── Page ──────────────────────────────────────────────────────────────────
   return (
-    <div className="rb-page">
+    <div className={isV2 ? "rb-page rb-page--v2" : "rb-page"}>
       <input
         ref={postTreatmentUploadRef}
         type="file"
@@ -2925,7 +2929,7 @@ export default function ReportBuilderPage() {
       <div className="rb-main">
         <aside className="rb-sections-sidebar">
           <div className="rb-reorder-header">
-            <span style={{ fontWeight: 600, color: "#a020d0" }}>Report Sections</span>
+            <span style={{ fontWeight: 700, color: accent }}>Report Sections</span>
             <span className="rb-reorder-hint">
               Drag <GripVertical size={11} style={{ verticalAlign: "-2px" }} /> to reorder · check to show / hide
             </span>
@@ -3005,15 +3009,15 @@ export default function ReportBuilderPage() {
             <button
               onClick={() => goToPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
-              style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid #d0c0e8", background: currentPage === 0 ? "#f0f0f0" : "#fff", cursor: currentPage === 0 ? "not-allowed" : "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", opacity: currentPage === 0 ? 0.35 : 1, pointerEvents: "auto", color: "#a020d0" }}
+              style={{ width: 36, height: 36, borderRadius: "50%", border: `1px solid ${isV2 ? "#E2E8F0" : "#d0c0e8"}`, background: currentPage === 0 ? "#f0f0f0" : "#fff", cursor: currentPage === 0 ? "not-allowed" : "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", opacity: currentPage === 0 ? 0.35 : 1, pointerEvents: "auto", color: accent }}
             >▲</button>
-            <div style={{ background: "#fff", border: "1px solid #e0d0f0", borderRadius: 14, padding: "4px 10px", fontSize: 11, color: "#a020d0", fontWeight: 700, textAlign: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.1)", whiteSpace: "nowrap" }}>
+            <div style={{ background: "#fff", border: `1px solid ${isV2 ? "#E2E8F0" : "#e0d0f0"}`, borderRadius: 14, padding: "4px 10px", fontSize: 11, color: accent, fontWeight: 700, textAlign: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.1)", whiteSpace: "nowrap" }}>
               {currentPage + 1} / {totalPages}
             </div>
             <button
               onClick={() => goToPage(Math.min(totalPages - 1, currentPage + 1))}
               disabled={currentPage >= totalPages - 1}
-              style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid #d0c0e8", background: currentPage >= totalPages - 1 ? "#f0f0f0" : "#fff", cursor: currentPage >= totalPages - 1 ? "not-allowed" : "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", opacity: currentPage >= totalPages - 1 ? 0.35 : 1, pointerEvents: "auto", color: "#a020d0" }}
+              style={{ width: 36, height: 36, borderRadius: "50%", border: `1px solid ${isV2 ? "#E2E8F0" : "#d0c0e8"}`, background: currentPage >= totalPages - 1 ? "#f0f0f0" : "#fff", cursor: currentPage >= totalPages - 1 ? "not-allowed" : "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", opacity: currentPage >= totalPages - 1 ? 0.35 : 1, pointerEvents: "auto", color: accent }}
             >▼</button>
           </div>
 

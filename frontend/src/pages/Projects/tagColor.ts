@@ -25,3 +25,19 @@ export function getTagColor(tag: string): string {
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
+
+// Pre/Post-aware FILL color, used by the treatment analysis pages. "Pre"/"Post"
+// get fixed subtle orange/green; every other tag falls back to the hash color.
+export function getTagFillColor(tag: string): string {
+  if (tag === "Pre") return "#fed7aa"; // orange.subtle
+  if (tag === "Post") return "#bbf7d0"; // green.subtle
+  return getTagColor(tag);
+}
+
+// Pre/Post-aware BORDER color, paired with getTagFillColor on the treatment
+// analysis pages. Non-Pre/Post tags get a neutral translucent border.
+export function getTagBorderColor(tag: string): string {
+  if (tag === "Pre") return "#fb923c"; // orange.emphasized
+  if (tag === "Post") return "#22c55e"; // green.emphasized
+  return "rgba(0, 0, 0, 0.1)";
+}
