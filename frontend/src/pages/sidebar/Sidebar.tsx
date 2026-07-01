@@ -495,7 +495,10 @@ export default function Sidebar() {
                 onClick={() => {
                   const projects = projectName.split(",").map((p: string) => p.trim()).filter(Boolean);
                   sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(projects));
-                  sessionStorage.removeItem("pathAnalysis_loadedProjects");
+                  // NOTE: do NOT remove pathAnalysis_loadedProjects here — doing so corrupted
+                  // the Analysis page's loaded-projects state on back-navigation. The Report
+                  // Builder now prefers treatment_loadedProjects when present (see
+                  // reportBuilderPage.tsx), so the report still reflects the Treatment context.
                   navigate("/analysis/report");
                 }}
                 style={{ backgroundColor: "#a220e3", color: "white" }}
@@ -503,7 +506,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "Continue Report" : "Generate Report"}
+                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
               </Button>
               {hasSavedReport && (
                 <div style={{ fontSize: 11, color: "#b060e0", textAlign: "center", lineHeight: 1.4 }}>
@@ -524,7 +527,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "Continue Report" : "Generate Report"}
+                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
               </Button>
             </div>
           )}

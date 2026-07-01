@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
-import type { Feature, FeatureCollection } from "geojson";
+import type { Feature } from "geojson";
 
 import {
   fetchProjectDetail,
-  fetchProjectAttributes,
-  fetchProjectGeoJSON,
   applyTreatments,
   getSegmentTreatments,
   getAllTreatments,
@@ -20,14 +18,19 @@ import {
   saveTreatments,
 } from "../../api";
 
-import type { AttributeRow } from "../../api";
+import type { AttributeRow, CodingFilterContext } from "../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults } from "../../api/projectDataCache";
 import { resolveContributorTabGroup } from "../CodingPage/components/AttributesPanel";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
 import { toaster } from "../../components/ui/toaster";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import TreatmentDetailLayoutV1 from "./layouts/TreatmentDetailLayoutV1";
+import TreatmentDetailLayoutV2 from "./layouts/TreatmentDetailLayoutV2";
+import type { TreatmentViewModel } from "./layouts/TreatmentViewModel";
 
 import {
   ALL_PROJECTS,
+  TREATMENTS,
   getApplicableTreatments,
   applyTreatmentEffects,
   calculateBandFromScore,
@@ -37,18 +40,12 @@ import {
   copyTextToClipboard,
   copyRichContentToClipboard,
   type ProjectDetail,
-  type AttributesResponse,
   type ScoreType,
-  type Treatment,
   type CopyButtonState,
 } from "./treatmentConstants";
-import type { TreatmentViewModel } from "./layouts/TreatmentViewModel";
-import TreatmentDetailLayoutV1 from "./layouts/TreatmentDetailLayoutV1";
-import TreatmentDetailLayoutV2 from "./layouts/TreatmentDetailLayoutV2";
 
 export default function TreatmentDetailPage() {
   const { projectName } = useParams<{ projectName: string }>();
-  const navigate = useNavigate();
   const ui = useUiVersion();
 
   // Parse project names
@@ -66,6 +63,25 @@ export default function TreatmentDetailPage() {
       return [];
     }
   }, [projectName]);
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Filter mode: opened from the Path Analysis page's "Treat Filtered Segments" button.
+  // The ?filtered=1 query param is the authoritative switch — only when present do we honor
+  // the (possibly stale) treatment_filterContext sessionStorage key. This restricts the page
+  // to the filtered subset (pagination, both maps, treatment counts) without dropping segments
+  // from the aggregated arrays (which would break the global→local index mapping).
+  const filterMode = searchParams.get("filtered") === "1";
+  const filterContext = useMemo<CodingFilterContext | null>(() => {
+    if (!filterMode) return null;
+    try {
+      const raw = sessionStorage.getItem("treatment_filterContext");
+      return raw ? (JSON.parse(raw) as CodingFilterContext) : null;
+    } catch {
+      return null;
+    }
+  }, [filterMode]);
 
   const [projectMap, setProjectMap] = useState<Array<{
     name: string;
@@ -91,6 +107,39 @@ export default function TreatmentDetailPage() {
     const p = projectMap.find((p) => p.name === activeProject);
     return p ? { start: p.startIndex, count: p.count } : { start: 0, count: attrs.length };
   }, [isAllScope, activeProject, projectMap, attrs.length]);
+
+  // Ordered list of global indices the user can navigate / that should render. In filter
+  // mode this is the filtered subset (mapped from each project's local indices via its
+  // startIndex window); otherwise it is the full contiguous range. `pageIndices` is further
+  // narrowed to the active project scope. Arrays (attrs/geoFeatures/scores) stay full, so the
+  // global→local mapping used for treatment application is unaffected.
+  const filteredGlobalIndices = useMemo<number[]>(() => {
+    if (!filterContext) return [];
+    const out: number[] = [];
+    for (const p of projectMap) {
+      const fp = filterContext.projects.find((x) => x.projectName === p.name);
+      if (!fp) continue;
+      for (const localIdx of [...fp.filteredIndices].sort((a, b) => a - b)) {
+        if (localIdx >= 0 && localIdx < p.count) out.push(p.startIndex + localIdx);
+      }
+    }
+    return out;
+  }, [filterContext, projectMap]);
+
+  const filteredGlobalIndexSet = useMemo(
+    () => new Set(filteredGlobalIndices),
+    [filteredGlobalIndices]
+  );
+
+  // The ordered global indices the pager walks for the current scope.
+  const pageIndices = useMemo<number[]>(() => {
+    if (filterMode) {
+      return filteredGlobalIndices.filter(
+        (gi) => gi >= scope.start && gi < scope.start + scope.count
+      );
+    }
+    return Array.from({ length: scope.count }, (_, i) => scope.start + i);
+  }, [filterMode, filteredGlobalIndices, scope]);
 
   // Effectiveness = # of segments whose Overall Risk Level Band improves when the
   // treatment is applied in isolation. Raw per-project counts are fetched once per
@@ -120,8 +169,10 @@ export default function TreatmentDetailPage() {
     if (!attrs || attrs.length === 0) return [];
 
     const uniqueMap = new Map<number, Treatment>();
-    // Only consider segments within the active focus scope.
+    // Only consider segments within the active focus scope (and, in filter mode, the
+    // filtered subset).
     for (let i = scope.start; i < scope.start + scope.count; i++) {
+      if (filterMode && !filteredGlobalIndexSet.has(i)) continue;
       const row = attrs[i];
       if (!row) continue;
       const applicable = getApplicableTreatments(row as any);
@@ -138,13 +189,20 @@ export default function TreatmentDetailPage() {
       if (eb !== ea) return eb - ea;
       return a.id - b.id;
     });
-  }, [attrs, effectivenessCounts, scope]);
+  }, [attrs, effectivenessCounts, scope, filterMode, filteredGlobalIndexSet]);
 
   const [geoFeatures, setGeoFeatures] = useState<Feature[]>([]);
   const [scores, setScores] = useState<Record<string, any>[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTreatments, setSelectedTreatments] = useState<Set<number>>(new Set());
+  // Inline auto-save status for the "By Segment" view (replaces the Apply button)
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  // Debounce timer for the segment-view auto-save (click-driven).
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Holds a flush fn for a debounced auto-save that hasn't fired yet, so navigating
+  // away (segment change / unmount) can persist it instead of dropping it.
+  const pendingSaveRef = useRef<null | (() => void)>(null);
 
   const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>({});
   const [showPostTreatment, setShowPostTreatment] = useState<boolean>(false);
@@ -166,42 +224,74 @@ export default function TreatmentDetailPage() {
       let appliedCount = 0;
 
       for (let i = scope.start; i < scope.start + scope.count; i++) {
-         const attr = attrs[i] as any;
-         if (!attr) continue;
-         const applicable = getApplicableTreatments(attr);
-         if (applicable.some(x => x.id === t.id)) {
-            applicableCount++;
-            if (treatmentState[i]?.applied && treatmentState[i]?.treatment_ids?.includes(t.id)) {
-               appliedCount++;
-            }
-         }
+        if (filterMode && !filteredGlobalIndexSet.has(i)) continue;
+        const attr = attrs[i] as any;
+        if (!attr) continue;
+        const applicable = getApplicableTreatments(attr);
+        if (applicable.some(x => x.id === t.id)) {
+          applicableCount++;
+          if (treatmentState[i]?.applied && treatmentState[i]?.treatment_ids?.includes(t.id)) {
+            appliedCount++;
+          }
+        }
       }
 
       if (applicableCount > 0 && applicableCount === appliedCount) {
-         fullyApplied.add(t.id);
+        fullyApplied.add(t.id);
       }
     });
 
     return fullyApplied;
-  }, [allApplicableTreatments, attrs, treatmentState, scope]);
+  }, [allApplicableTreatments, attrs, treatmentState, scope, filterMode, filteredGlobalIndexSet]);
   const [applyLoading, setApplyLoading] = useState(false);
   const [openConfirmAlert, setOpenConfirmAlert] = useState(false);
   const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>("idle");
+
+  // The "Confirm Apply All" Chakra/Zag Dialog locks page scroll while open by
+  // setting `data-scroll-locked` + inline `overflow: hidden` / `pointer-events: none`
+  // on <html>/<body>. If the page unmounts (e.g. clicking "Generate Report" →
+  // navigating to the Report Builder) before Zag restores those styles, the lock
+  // leaks and the window can no longer scroll when the user navigates back.
+  // Clear the lock whenever the dialog closes, and on unmount, so the page is
+  // always scrollable again. See CLAUDE.md "Chakra UI Dialog: Blocking Interaction".
+  const clearScrollLock = useCallback(() => {
+    const body = document.body;
+    const html = document.documentElement;
+    body.style.overflow = "";
+    html.style.overflow = "";
+    body.style.pointerEvents = "";
+    html.style.pointerEvents = "";
+    body.removeAttribute("data-scroll-locked");
+    html.removeAttribute("data-scroll-locked");
+  }, []);
+
+  useEffect(() => {
+    if (!openConfirmAlert) {
+      // Delay past Zag's close animation/cleanup so we win the race.
+      const t = setTimeout(clearScrollLock, 400);
+      return () => clearTimeout(t);
+    }
+  }, [openConfirmAlert, clearScrollLock]);
+
+  // Safety net: clear any leftover lock on unmount (navigation away) and on mount
+  // (returning from the Report Builder) so the treatment page is never stuck.
+  useEffect(() => {
+    clearScrollLock();
+    return () => clearScrollLock();
+  }, [clearScrollLock]);
+
+
   const [imageCopyButtonState, setImageCopyButtonState] = useState<CopyButtonState>("idle");
 
   // Preview state
   const [previewScores, setPreviewScores] = useState<ScoreType | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
+
   // v2 page-level action loading states
   const [isSavingAll, setIsSavingAll] = useState(false);
   const [resetAllConfirmOpen, setResetAllConfirmOpen] = useState(false);
   const [isResettingAll, setIsResettingAll] = useState(false);
-  const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
-  }, []);
-
-  const [searchParams] = useSearchParams();
   const len = attrs.length;
   const initialSegment = searchParams.get("segment");
   // Pending ?segment= navigation, consumed once data has loaded (see effect near gotoPage).
@@ -214,15 +304,15 @@ export default function TreatmentDetailPage() {
     [currentPage, len]
   );
 
-  // Safety net: if the current segment drifts outside the active scope window
-  // (e.g. projectMap resolves after navigation), snap back to the scope's first segment.
+  // Safety net: if the current segment isn't in the navigable list (e.g. projectMap
+  // resolves after navigation, a scope/tab switch, or — in filter mode — an initial page
+  // that isn't part of the filtered subset), snap to the first navigable segment.
   useEffect(() => {
-    if (isAllScope || scope.count === 0) return;
-    if (currentIndex < scope.start || currentIndex >= scope.start + scope.count) {
-      setCurrentPage(scope.start + 1);
-      setPageInput("1"); // scope-relative first page
+    if (pageIndices.length === 0) return;
+    if (!pageIndices.includes(currentIndex)) {
+      setCurrentPage(pageIndices[0] + 1);
     }
-  }, [isAllScope, scope, currentIndex]);
+  }, [pageIndices, currentIndex]);
 
   const handleContributorClick = useCallback((name: string) => {
     const targetGroup = resolveContributorTabGroup(name);
@@ -254,24 +344,40 @@ export default function TreatmentDetailPage() {
   // Get segment count for a specific project
   const getProjectSegmentCount = useCallback((projectName: string): number => {
     const project = projectMap.find(p => p.name === projectName);
-    return project?.count ?? 0;
-  }, [projectMap]);
+    if (!project) return 0;
+    if (filterMode) {
+      return filteredGlobalIndices.filter(
+        gi => gi >= project.startIndex && gi < project.startIndex + project.count
+      ).length;
+    }
+    return project.count;
+  }, [projectMap, filterMode, filteredGlobalIndices]);
 
-  // Get the first segment index for a specific project
+  // Get the first (navigable) global segment index for a specific project — in filter mode
+  // the first filtered segment, otherwise the project's first segment.
   const getProjectFirstSegmentIndex = useCallback((projectName: string): number => {
     const project = projectMap.find(p => p.name === projectName);
-    return project?.startIndex ?? 0;
-  }, [projectMap]);
+    if (!project) return 0;
+    if (filterMode) {
+      const first = filteredGlobalIndices.find(
+        gi => gi >= project.startIndex && gi < project.startIndex + project.count
+      );
+      return first ?? project.startIndex;
+    }
+    return project.startIndex;
+  }, [projectMap, filterMode, filteredGlobalIndices]);
 
-  // Calculate before treatment band distributions (segments within the active scope)
+  // Calculate before treatment band distributions (navigable segments within the active
+  // scope — the filtered subset in filter mode, otherwise the whole scope window).
   const beforeBandCounts = useMemo(() => {
-    return calculateBandDistributions(scores.slice(scope.start, scope.start + scope.count));
-  }, [scores, scope]);
+    return calculateBandDistributions(pageIndices.map(gi => scores[gi]).filter(Boolean));
+  }, [scores, pageIndices]);
 
-  // Calculate after treatment band distributions (segments within the active scope)
+  // Calculate after treatment band distributions (navigable segments within the active scope)
   const afterBandCounts = useMemo(() => {
-    const treatedSegments = scores.slice(scope.start, scope.start + scope.count).map((scoreRow, i) => {
-      const index = scope.start + i;
+    const treatedSegments = pageIndices.map((index) => {
+      const scoreRow = scores[index];
+      if (!scoreRow) return null;
       const state = treatmentState[index];
       if (!state?.applied || !state.after_scores) {
         return scoreRow; // Not treated, return original
@@ -298,8 +404,8 @@ export default function TreatmentDetailPage() {
         "Overall Risk Level Band": overallBand,
       };
     });
-    return calculateBandDistributions(treatedSegments);
-  }, [scores, treatmentState, scope]);
+    return calculateBandDistributions(treatedSegments.filter(Boolean) as Record<string, any>[]);
+  }, [scores, treatmentState, pageIndices]);
 
   // Effectiveness — % AND count of in-scope segments whose Overall Risk Level band
   // improved (dropped) after the applied treatments. Drives the v2 top row.
@@ -389,18 +495,17 @@ export default function TreatmentDetailPage() {
     if (projectNames.length === 0) return;
     setLoading(true);
     setError(null);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60_000);
     try {
+      // Read endpoints go through the shared projectDataCache (the same cache the Path
+      // Analysis page warms). Opening Treatment from Analysis's "Open in Treatment" button —
+      // and navigating back and forth — is then a cache hit instead of a full re-fetch.
       const results = await Promise.all(projectNames.map(async (name) => {
-        const sig = controller.signal;
         const [d, a, gjson, resultsRes] = await Promise.all([
           fetchProjectDetail(name),
-          fetchProjectAttributes(name) as Promise<AttributesResponse>,
-          fetchProjectGeoJSON(name) as Promise<FeatureCollection>,
-          fetch(`/api/projects/${encodeURIComponent(name)}/results`, { signal: sig })
-            .then(async res => {
-              const data = res.ok ? await res.json() : { result_rows: [] };
+          getCachedAttributes(name),
+          getCachedGeoJSON(name),
+          getCachedResults(name)
+            .then(async data => {
               if (!data.result_rows || data.result_rows.length === 0) {
                 const calc = await calculateScore(name);
                 return calc.ok ? calc : { result_rows: [] };
@@ -437,7 +542,6 @@ export default function TreatmentDetailPage() {
     } catch (e: any) {
       setError(e?.message ?? "Unknown error");
     } finally {
-      clearTimeout(timeout);
       setLoading(false);
     }
   }, [projectNames]);
@@ -638,6 +742,8 @@ export default function TreatmentDetailPage() {
         if (cancelled) return;
 
         if (state.has_treatments) {
+          // Refresh the authoritative cache for this segment; the seeding effect below
+          // re-ticks the checkboxes from treatmentState (no spurious auto-save).
           setTreatmentState((prev) => ({
             ...prev,
             [currentIndex]: {
@@ -654,14 +760,12 @@ export default function TreatmentDetailPage() {
                 : null,
             },
           }));
-          setSelectedTreatments(new Set());
           setShowPostTreatment(true);
         } else {
-          setSelectedTreatments(new Set());
           setShowPostTreatment(false);
         }
       } catch (e) {
-
+        // ignore
       }
     })();
 
@@ -670,46 +774,30 @@ export default function TreatmentDetailPage() {
     };
   }, [resolveIndex, currentIndex, refreshTrigger]);
 
-  // Handle applying treatments
-  const handleApplyTreatments = useCallback(async () => {
-    const ctx = resolveIndex(currentIndex);
-    if (!ctx || selectedTreatments.size === 0) return;
-
-    setApplyLoading(true);
-
-    try {
-      const result = await applyTreatments(ctx.name, {
-        segment_index: ctx.localIndex,
-        treatment_ids: [...new Set([...(treatmentState[currentIndex]?.treatment_ids ?? []), ...Array.from(selectedTreatments)])],
-        image_ref: imgRef,
-      });
-
-      // Update local state
-      setTreatmentState((prev) => ({
-        ...prev,
-        [currentIndex]: {
-          applied: true,
-          treatment_ids: result.treatments_applied.split(",").map((x) => Number(x.trim())).filter((x) => !isNaN(x)),
-          after_scores: {
-            BB: result.after_scores.BB,
-            BP: result.after_scores.BP,
-            SB: result.after_scores.SB,
-            VB: result.after_scores.VB,
-            total: result.after_scores["Overall Risk Level"],
-          },
-        },
-      }));
-
-      setSelectedTreatments(new Set());
-      setPreviewScores(null);
-      setPreviewLoading(false);
-      setShowPostTreatment(true);
-
-    } catch (e: any) {
-    } finally {
-      setApplyLoading(false);
+  // Segment view: the checkboxes reflect ONLY the active segment's persisted treatments.
+  // On every segment change we hard-reset the selection to that segment's saved set, so a
+  // treatment checked on one segment never leaks onto another. `treatmentState` is
+  // bulk-loaded on mount and synced on save, making this reliable on back-navigation.
+  // Saves are click-driven (scheduleSegmentSave), so seeding here never triggers a write.
+  const lastSeededIndexRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (accordionView !== "segment") {
+      lastSeededIndexRef.current = null; // force a re-seed when returning to segment view
+      return;
     }
-  }, [resolveIndex, currentIndex, selectedTreatments, imgRef, treatmentState]);
+    const persisted = treatmentState[currentIndex]?.treatment_ids ?? [];
+    if (lastSeededIndexRef.current !== currentIndex) {
+      // Entered a new segment — reset checkboxes to exactly this segment's treatments.
+      lastSeededIndexRef.current = currentIndex;
+      setSelectedTreatments(new Set(persisted));
+      return;
+    }
+    // Same segment, treatmentState arrived/changed (async bulk-load): fill in only when the
+    // user hasn't selected anything yet, so in-progress edits are never clobbered.
+    setSelectedTreatments((prev) =>
+      prev.size === 0 && persisted.length > 0 ? new Set(persisted) : prev
+    );
+  }, [currentIndex, treatmentState, accordionView]);
 
   // Resolve current project name for UI display
   const currentCtx = resolveIndex(currentIndex);
@@ -719,42 +807,40 @@ export default function TreatmentDetailPage() {
     setApplyLoading(true);
     setOpenConfirmAlert(false);
     try {
-        const allDetails: any[] = [];
-        // Apply across every project (All Projects) or only the active tab's project.
-        const targets = isAllScope ? projectMap : projectMap.filter(p => p.name === activeProject);
-        for (const id of Array.from(selectedTreatments)) {
-            for (const proj of targets) {
-                const res = await applySpecificTreatment(proj.name, id);
-                if (res.details) {
-                    res.details.forEach((d: any) => d.projectName = proj.name);
-                    allDetails.push(...res.details);
-                }
-            }
+      const allDetails: any[] = [];
+      // Apply across every project (All Projects) or only the active tab's project.
+      const targets = isAllScope ? projectMap : projectMap.filter(p => p.name === activeProject);
+      for (const id of Array.from(selectedTreatments)) {
+        for (const proj of targets) {
+          const res = await applySpecificTreatment(proj.name, id);
+          if (res.details) {
+            res.details.forEach((d: any) => d.projectName = proj.name);
+            allDetails.push(...res.details);
+          }
         }
-        window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
-        setSelectedTreatments(new Set());
-        setShowPostTreatment(true);
+      }
+      window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
+      setSelectedTreatments(new Set());
+      setShowPostTreatment(true);
     } catch (e: any) {
-        console.error("Apply specific failed:", e);
-        alert(e.message || "Failed to apply treatment");
+      console.error("Apply specific failed:", e);
+      alert(e.message || "Failed to apply treatment");
     } finally {
-        setApplyLoading(false);
+      setApplyLoading(false);
     }
   }, [selectedTreatments, currentCtx, isAllScope, projectMap, activeProject]);
 
-  // Fetch preview scores when selection changes
+  // Bulk "by treatment" view: live, non-persisting preview of the selected treatments.
   useEffect(() => {
+    if (accordionView === "segment") return; // segment view persists via scheduleSegmentSave
     const ctx = resolveIndex(currentIndex);
     if (!ctx || currentIndex < 0 || selectedTreatments.size === 0) {
       setPreviewScores(null);
       setPreviewLoading(false);
       return;
     }
-
     setPreviewScores(null);
     let cancelled = false;
-
-    // Debounce to avoid too many requests
     const timeoutId = setTimeout(async () => {
       setPreviewLoading(true);
       try {
@@ -762,11 +848,7 @@ export default function TreatmentDetailPage() {
           segment_index: ctx.localIndex,
           treatment_ids: combinedTreatmentIds,
         });
-
-        if (cancelled || !result.ok) {
-          return;
-        }
-
+        if (cancelled || !result.ok) return;
         setPreviewScores({
           BB: result.after_scores.BB,
           BP: result.after_scores.BP,
@@ -775,51 +857,100 @@ export default function TreatmentDetailPage() {
           total: result.after_scores["Overall Risk Level"],
         });
       } catch (e) {
-
+        // ignore
       } finally {
-        if (!cancelled) {
-          setPreviewLoading(false);
-        }
+        if (!cancelled) setPreviewLoading(false);
       }
-    }, 300); // 300ms debounce
-
+    }, 300);
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
     };
-  }, [combinedTreatmentIds, currentIndex, resolveIndex, selectedTreatments]);
+  }, [combinedTreatmentIds, currentIndex, resolveIndex, selectedTreatments, accordionView]);
 
-  // Handle resetting treatments
-  const handleResetTreatments = useCallback(async () => {
-    const ctx = resolveIndex(currentIndex);
-    if (!ctx) return;
+  // Persist a segment's checked treatments. `silent` skips current-view UI updates
+  // (used when flushing on navigate-away) but always syncs the local treatment cache.
+  const persistSegmentTreatments = useCallback(
+    async (projectName: string, localIndex: number, savedGlobalIndex: number, ids: number[], silent: boolean) => {
+      pendingSaveRef.current = null;
+      if (!silent) setAutoSaveStatus("saving");
+      try {
+        const result = await applyTreatments(projectName, {
+          segment_index: localIndex,
+          treatment_ids: ids, // empty array resets the segment
+          image_ref: imgRef,
+        });
+        const appliedIds = result.treatments_applied
+          ? result.treatments_applied.split(",").map((x) => Number(x.trim())).filter((x) => !isNaN(x))
+          : [];
+        const afterScores =
+          appliedIds.length > 0
+            ? {
+                BB: result.after_scores.BB,
+                BP: result.after_scores.BP,
+                SB: result.after_scores.SB,
+                VB: result.after_scores.VB,
+                total: result.after_scores["Overall Risk Level"],
+              }
+            : null;
+        // Keep the local cache in sync so the checkbox stays ticked on back-navigation.
+        setTreatmentState((prev) => {
+          const next = { ...prev };
+          if (appliedIds.length > 0) {
+            next[savedGlobalIndex] = { applied: true, treatment_ids: appliedIds, after_scores: afterScores };
+          } else {
+            delete next[savedGlobalIndex];
+          }
+          return next;
+        });
+        if (!silent) {
+          setPreviewScores(afterScores);
+          setShowPostTreatment(appliedIds.length > 0);
+          setAutoSaveStatus("saved");
+          setTimeout(() => setAutoSaveStatus("idle"), 1500);
+        }
+      } catch (e) {
+        if (!silent) setAutoSaveStatus("idle");
+      }
+    },
+    [imgRef]
+  );
 
-    setApplyLoading(true);
+  // Debounced auto-save for the segment view, driven by user clicks (not state diffing,
+  // so seeding the checkbox set from persisted state never triggers a spurious write).
+  const scheduleSegmentSave = useCallback(
+    (ids: number[]) => {
+      const ctx = resolveIndex(currentIndex);
+      if (!ctx) return;
+      const savedGlobalIndex = currentIndex;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      // Flush fn used on navigate-away so a still-pending change is never dropped.
+      pendingSaveRef.current = () => {
+        if (saveTimerRef.current) {
+          clearTimeout(saveTimerRef.current);
+          saveTimerRef.current = null;
+        }
+        void persistSegmentTreatments(ctx.name, ctx.localIndex, savedGlobalIndex, ids, true);
+      };
+      saveTimerRef.current = setTimeout(() => {
+        saveTimerRef.current = null;
+        void persistSegmentTreatments(ctx.name, ctx.localIndex, savedGlobalIndex, ids, false);
+      }, 300);
+    },
+    [resolveIndex, currentIndex, persistSegmentTreatments]
+  );
 
-    try {
-      // Apply with empty treatment list to reset
-      await applyTreatments(ctx.name, {
-        segment_index: ctx.localIndex,
-        treatment_ids: [],
-        image_ref: imgRef,
-      });
-
-      // Clear local state
-      setTreatmentState((prev) => {
-        const next = { ...prev };
-        delete next[currentIndex];
-        return next;
-      });
-
-      setSelectedTreatments(new Set());
-      setPreviewScores(null);
-      setPreviewLoading(false);
-      setShowPostTreatment(false);
-    } catch (e: any) {
-    } finally {
-      setApplyLoading(false);
-    }
-  }, [resolveIndex, currentIndex, imgRef]);
+  // Flush any pending (debounced) auto-save when the user navigates to another
+  // segment or leaves the page, so a quick toggle-then-navigate is never lost.
+  useEffect(() => {
+    return () => {
+      const flush = pendingSaveRef.current;
+      if (flush) {
+        pendingSaveRef.current = null;
+        void flush();
+      }
+    };
+  }, [currentIndex]);
 
   // Pagination
   const gotoPage = useCallback(
@@ -844,10 +975,11 @@ export default function TreatmentDetailPage() {
     pendingSegment.current = null;
   }, [len, gotoPage]);
 
-  // Page number shown to the user — scope-relative (1..scope.count) when a project
-  // tab is active, global otherwise. currentPage/currentIndex stay global internally.
-  const scopePage = isAllScope ? currentPage : currentIndex - scope.start + 1;
-  const scopeTotal = isAllScope ? len : scope.count;
+  // Page number shown to the user — the position of the current segment within the
+  // navigable list (`pageIndices`), which already accounts for project scope and (in
+  // filter mode) the filtered subset. currentPage/currentIndex stay global internally.
+  const scopePage = Math.max(1, pageIndices.indexOf(currentIndex) + 1);
+  const scopeTotal = pageIndices.length;
 
   useEffect(() => {
     setPageInput(String(scopePage));
@@ -858,22 +990,36 @@ export default function TreatmentDetailPage() {
       const raw = Number(valStr);
       if (!Number.isFinite(raw)) return;
       // Data not loaded yet — don't let the clamp below collapse the page to 1.
-      if (scope.count === 0) return;
-      // valStr is scope-relative; map back to a global page within the scope window.
-      const relClamped = Math.min(Math.max(1, raw), scope.count);
-      const globalPage = isAllScope ? relClamped : scope.start + relClamped;
+      if (pageIndices.length === 0) return;
+      // valStr is a 1-based position within the navigable list; map back to a global index.
+      const relClamped = Math.min(Math.max(1, raw), pageIndices.length);
+      const targetGlobal = pageIndices[relClamped - 1];
       // Skip if the page hasn't actually changed — prevents spurious gotoPage calls
       // (which reset segmentScoreDrops) when scope/gotoPage are recreated on data load.
-      if (globalPage === currentPage) return;
-      gotoPage(globalPage);
+      if (targetGlobal === undefined || targetGlobal === currentIndex) return;
+      gotoPage(targetGlobal + 1);
     },
-    [gotoPage, isAllScope, scope, currentPage]
+    [gotoPage, pageIndices, currentIndex]
   );
 
   useEffect(() => {
     const t = setTimeout(() => commitPage(pageInput), 300);
     return () => clearTimeout(t);
   }, [pageInput, commitPage]);
+
+  // Filter context for the before/after maps. The maps receive ALL aggregated features with
+  // startIndex=0, so GeoDataPanel's localIdx === global index. We therefore build a SINGLE
+  // entry keyed to the active project name (the only one GeoDataPanel reads) whose
+  // filteredIndices are the GLOBAL indices to show (the filtered subset within the active
+  // scope = pageIndices). `points` is left empty so the maps keep their risk-band / after-
+  // treatment colors (filterColorMap falls back to the score-based color).
+  const mapFilterContext = useMemo<CodingFilterContext | null>(() => {
+    if (!filterMode || !filterContext || !currentCtx) return null;
+    return {
+      projects: [{ projectName: currentCtx.name, filteredIndices: pageIndices, points: [] }],
+    };
+  }, [filterMode, filterContext, currentCtx, pageIndices]);
+
 
   const projectContributors = useMemo(() => {
     if (!currentCtx?.name) return null;
@@ -974,6 +1120,10 @@ export default function TreatmentDetailPage() {
 
   const hasApplied = appliedTreatmentIds.length > 0;
   const hasSelected = selectedTreatments.size > 0;
+  // In the bulk "by treatment" view the selection is staged (unsaved) and drives a live
+  // score/attribute preview. In segment view the selection mirrors the applied set, so
+  // the Pre/Post toggle controls the display instead — never the selection size.
+  const isStagingPreview = accordionView !== "segment" && selectedTreatments.size > 0;
 
   // ════════ v2 page-level actions (on-canvas; v1 routes these via the sidebar) ════════
   const onConfirmResetAll = useCallback(async () => {
@@ -1041,42 +1191,97 @@ export default function TreatmentDetailPage() {
     navigate("/analysis/report");
   }, [projectNames, navigate]);
 
+  const hasSavedReport = useMemo(() => {
+    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+  }, []);
+
   const vm: TreatmentViewModel = {
-    projectNames, loading, error,
-    attrs, geoFeatures, scores, afterTreatmentScores, len,
-    activeProject, isAllScope, scope, panKey, currentCtx,
+    projectNames,
+    loading,
+    error,
+    attrs,
+    geoFeatures,
+    scores,
+    afterTreatmentScores,
+    len,
+    activeProject,
+    isAllScope,
+    scope,
+    panKey,
+    currentCtx,
     onSelectAllProjects: () => {
       setActiveProject(ALL_PROJECTS);
-      setCurrentPage(1);
+      setCurrentPage((filterMode ? (filteredGlobalIndices[0] ?? 0) : 0) + 1);
       setPageInput("1");
       setPanKey((k) => k + 1);
     },
     onSelectProject: (name) => {
       setActiveProject(name);
-      const firstSegmentPage = getProjectFirstSegmentIndex(name) + 1;
-      setCurrentPage(firstSegmentPage);
+      setCurrentPage(getProjectFirstSegmentIndex(name) + 1);
       setPageInput("1");
       setPanKey((k) => k + 1);
     },
     getProjectSegmentCount,
-    currentIndex, currentPage, scopePage, scopeTotal, pageInput, setPageInput, commitPage, gotoPage,
-    imgRef, currentImageUrl,
-    accordionView, setAccordionView, effectivenessLoading, allApplicableTreatments,
-    effectivenessCounts, applicableCounts, segmentScoreDrops, fullyAppliedTreatments,
-    selectedTreatments, setSelectedTreatments, treatmentState, applyLoading,
-    hasApplied, hasSelected, appliedTreatmentIds,
-    onApplyTreatments: handleApplyTreatments,
-    onResetTreatments: handleResetTreatments,
-    copyButtonState, copyButtonLabel, imageCopyButtonState, imageCopyButtonLabel,
+    currentIndex,
+    currentPage,
+    scopePage,
+    scopeTotal,
+    pageIndices,
+    pageInput,
+    setPageInput,
+    commitPage,
+    gotoPage,
+    imgRef,
+    currentImageUrl,
+    accordionView,
+    setAccordionView,
+    effectivenessLoading,
+    allApplicableTreatments,
+    effectivenessCounts,
+    applicableCounts,
+    segmentScoreDrops,
+    fullyAppliedTreatments,
+    selectedTreatments,
+    setSelectedTreatments,
+    treatmentState,
+    applyLoading,
+    hasApplied,
+    hasSelected,
+    appliedTreatmentIds,
+    onApplyTreatments: () => {},
+    onResetTreatments: () => {
+      setSelectedTreatments(new Set());
+      scheduleSegmentSave([]);
+    },
+    autoSaveStatus,
+    scheduleSegmentSave,
+    copyButtonState,
+    copyButtonLabel,
+    imageCopyButtonState,
+    imageCopyButtonLabel,
     onCopyTreatmentPrompt: handleCopyTreatmentPrompt,
     onCopyCurrentImage: handleCopyCurrentImage,
-    showPostTreatment, setShowPostTreatment, segmentHasTreatments,
-    modifiedAttrs, changedAttributes, changedFieldSources, attrMappings, activeAttributeGroupTab,
+    showPostTreatment,
+    setShowPostTreatment,
+    segmentHasTreatments,
+    modifiedAttrs,
+    changedAttributes,
+    changedFieldSources,
+    attrMappings,
+    activeAttributeGroupTab,
     onContributorClick: handleContributorClick,
-    previewScores, previewLoading, projectContributors,
-    beforeBandCounts, afterBandCounts,
-    openConfirmAlert, setOpenConfirmAlert, onConfirmApplyToAll: handleConfirmApplyToAll,
-    // v2-only
+    isStagingPreview,
+    previewScores,
+    previewLoading,
+    projectContributors,
+    mapFilterContext,
+    filterMode,
+    beforeBandCounts,
+    afterBandCounts,
+    openConfirmAlert,
+    setOpenConfirmAlert,
+    onConfirmApplyToAll: handleConfirmApplyToAll,
+    onBack: () => navigate("/analysis/path"),
     effectivenessLabel,
     improvedSegmentCount,
     onResetAll: () => setResetAllConfirmOpen(true),
@@ -1090,5 +1295,7 @@ export default function TreatmentDetailPage() {
     isResettingAll,
   };
 
-  return ui === "v2" ? <TreatmentDetailLayoutV2 {...vm} /> : <TreatmentDetailLayoutV1 {...vm} />;
+  return ui === "v2"
+    ? <TreatmentDetailLayoutV2 {...vm} />
+    : <TreatmentDetailLayoutV1 {...vm} />;
 }

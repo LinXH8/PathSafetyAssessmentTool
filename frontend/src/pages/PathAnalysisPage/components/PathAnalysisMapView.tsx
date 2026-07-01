@@ -514,7 +514,7 @@ export default function AttributeAnalysisMapView({
   const isV2 = variant === "v2";
   const navigate = useNavigate();
   // v2: a "Generate Report" button sits beside the Download dropdown (ported from
-  // the v1 sidebar). The label flips to "Continue Report" when a saved layout exists.
+  // the v1 sidebar).
   const hasSavedReport = useMemo(() => {
     try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
   }, []);
@@ -1387,6 +1387,18 @@ export default function AttributeAnalysisMapView({
   const visibleSegments = useMemo(() => {
     const segments: VisibleSegment[] = [];
 
+    // Filtering (getFilterAttributeText) and focus coloring (getCategoryColor) both rely on
+    // attrMappings to turn numeric attribute codes into the text labels that categoryToggles
+    // and the colour maps are keyed by. If mappings aren't ready yet (cold module cache after
+    // a multi-page round-trip), every segment's value is an unmatched code → nothing gets
+    // filtered out and nothing gets a category colour, producing a one-frame flash of ALL
+    // segments rendered grey. When mappings are required but not ready, render nothing for
+    // that frame instead (a brief blank is far less jarring than "irrelevant grey segments").
+    const mappingsReady = Object.keys(attrMappings).length > 0;
+    const needsMappings =
+      activeFilters.length > 0 || (!!primaryFocusAttribute && primaryFocusAttribute !== "Project");
+    if (needsMappings && !mappingsReady) return segments;
+
     projectsData.forEach((projectData) => {
       projectData.geoFeatures.forEach((feature, i) => {
         const g = feature.geometry;
@@ -1478,7 +1490,7 @@ export default function AttributeAnalysisMapView({
     });
 
     return segments;
-  }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText]);
+  }, [projectsData, activeFilters, categoryToggles, subcategoryToggles, rangeFilters, dataRangeBounds, getFilterAttributeText, attrMappings, primaryFocusAttribute]);
 
   // Per-project map of visible (filtered) segment indices. Indices are 0-based and
   // match geoFeatures/attributes/scores order, so the Top Risk Contributors panel can
@@ -1721,7 +1733,7 @@ export default function AttributeAnalysisMapView({
     return allPoints.filter(({ latlng }) => {
       const [lat, lng] = latlng;
       return lat >= sw.lat - latPad && lat <= ne.lat + latPad &&
-             lng >= sw.lng - lngPad && lng <= ne.lng + lngPad;
+        lng >= sw.lng - lngPad && lng <= ne.lng + lngPad;
     });
   }, [allPoints, mapViewportBounds]);
 
@@ -2049,6 +2061,67 @@ export default function AttributeAnalysisMapView({
   };
 
   // Download CSV file
+  // Build a CodingFilterContext (per-project filtered indices + colored points + legend)
+  // from the currently visible, non-hidden segments. Shared by the segment-click → Coding
+  // navigation and the "Open in Treatment (filtered)" button. Returns null when no filters
+  // are active (caller treats this as "no restriction").
+  const buildFilterContext = (): CodingFilterContext | null => {
+    if (activeFilters.length === 0) return null;
+
+    const projectMap = new Map<string, FilteredProjectData>();
+    const visiblePoints = allPoints.filter(pt => !hiddenProjects.includes(pt.projectName));
+    visiblePoints.forEach(pt => {
+      if (!projectMap.has(pt.projectName)) {
+        projectMap.set(pt.projectName, { projectName: pt.projectName, filteredIndices: [], points: [] });
+      }
+      const entry = projectMap.get(pt.projectName)!;
+      entry.filteredIndices.push(pt.idx);
+      entry.points.push({ latlng: pt.latlng, color: pt.color, idx: pt.idx });
+    });
+
+    let legend: CodingFilterContext['legend'] | undefined;
+    if (effectiveFocusAttribute && effectiveFocusAttribute !== "Project") {
+      const seen = new Map<string, string>();
+      visiblePoints.forEach(pt => {
+        const val = pt.attributeValue;
+        if (val && val !== "None" && val !== "Not Selected" && !seen.has(val)) {
+          seen.set(val, pt.color);
+        }
+      });
+      const canonical = ATTRIBUTE_OPTIONS[effectiveFocusAttribute] ?? [];
+      const entries = Array.from(seen.entries())
+        .map(([category, color]) => ({ category, color }))
+        .sort((a, b) => {
+          const ai = canonical.indexOf(a.category);
+          const bi = canonical.indexOf(b.category);
+          if (ai === -1 && bi === -1) return a.category.localeCompare(b.category);
+          if (ai === -1) return 1;
+          if (bi === -1) return -1;
+          return ai - bi;
+        });
+      if (entries.length > 0) legend = { attribute: effectiveFocusAttribute, entries };
+    }
+
+    return { projects: Array.from(projectMap.values()), ...(legend ? { legend } : {}) };
+  };
+
+  // Open the currently-loaded projects in the Treatment Application page, restricted to the
+  // currently-filtered segments. When no filters are active, opens all segments (the
+  // ?filtered=1 switch is omitted so the Treatment page applies no restriction).
+  const handleOpenInTreatment = (): void => {
+    if (loadedProjects.length === 0) return;
+    const ctx = buildFilterContext();
+    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(loadedProjects));
+    const encoded = loadedProjects.map(name => encodeURIComponent(name)).join(',');
+    if (ctx && ctx.projects.length > 0) {
+      sessionStorage.setItem("treatment_filterContext", JSON.stringify(ctx));
+      navigate(`/treatment/${encoded}?filtered=1`);
+    } else {
+      sessionStorage.removeItem("treatment_filterContext");
+      navigate(`/treatment/${encoded}`);
+    }
+  };
+
   const handleDownloadCSV = (): void => {
     const csvContent = generateCSV();
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -2622,65 +2695,76 @@ export default function AttributeAnalysisMapView({
           </HStack>
 
           {allPoints.length > 0 && (
-            isV2 ? (
-              // v2: a teal "Generate Report" button (global scope, §4) beside a single
-              // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
-              <HStack gap="2">
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    sessionStorage.removeItem("treatment_loadedProjects");
-                    navigate("/analysis/report");
-                  }}
-                  style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                >
-                  {hasSavedReport ? "Continue Report" : "Generate Report"}
-                </Button>
-                <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                  <Menu.Trigger asChild>
-                    <Button
-                      size="sm"
-                      style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                    >
-                      Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
-                    </Button>
-                  </Menu.Trigger>
-                  <Menu.Positioner>
-                    <Menu.Content zIndex={2000}>
-                      <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
-                      <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
-                      <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
-                    </Menu.Content>
-                  </Menu.Positioner>
-                </Menu.Root>
-              </HStack>
-            ) : (
-              <HStack gap="2">
-                <Button
-                  colorPalette="blue"
-                  size="sm"
-                  onClick={handleDownloadCSV}
-                >
-                  Download Table
-                </Button>
-                <Button
-                  colorPalette="teal"
-                  size="sm"
-                  variant="outline"
-                  onClick={handleDownloadImages}
-                >
-                  Download Images
-                </Button>
-                <Button
-                  colorPalette="green"
-                  size="sm"
-                  variant="outline"
-                  onClick={handleDownloadShapefile}
-                >
-                  Download Shapefile
-                </Button>
-              </HStack>
-            )
+            <HStack gap="2">
+              <Button
+                size="sm"
+                onClick={handleOpenInTreatment}
+                {...(isV2
+                  ? { style: { background: COLOR.blue, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 } }
+                  : { colorPalette: "green" as const })}
+              >
+                {activeFilters.length > 0 ? "Treat Filtered Segments" : "Open in Treatment"}
+              </Button>
+              {isV2 ? (
+                // v2: a teal "Generate Report" button (global scope, §4) beside a single
+                // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
+                <HStack gap="2">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      sessionStorage.removeItem("treatment_loadedProjects");
+                      navigate("/analysis/report");
+                    }}
+                    style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                  >
+                    {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                  </Button>
+                  <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
+                    <Menu.Trigger asChild>
+                      <Button
+                        size="sm"
+                        style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                      >
+                        Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
+                      </Button>
+                    </Menu.Trigger>
+                    <Menu.Positioner>
+                      <Menu.Content zIndex={2000}>
+                        <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
+                        <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
+                        <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
+                      </Menu.Content>
+                    </Menu.Positioner>
+                  </Menu.Root>
+                </HStack>
+              ) : (
+                <>
+                  <Button
+                    colorPalette="blue"
+                    size="sm"
+                    onClick={handleDownloadCSV}
+                  >
+                    Download Table
+                  </Button>
+                  <Button
+                    colorPalette="teal"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleDownloadImages}
+                  >
+                    Download Images
+                  </Button>
+                  <Button
+                    colorPalette="green"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleDownloadShapefile}
+                  >
+                    Download Shapefile
+                  </Button>
+                </>
+              )}
+            </HStack>
           )}
         </Flex>
 
@@ -2773,303 +2857,303 @@ export default function AttributeAnalysisMapView({
                   const idx = i - 1; // -1 for projects, 0..n for attrs
                   const tabValue = isProjectsTab ? "project" : String(idx);
                   return (
-                  <Tabs.Content key={tabValue} value={tabValue} p="4">
-                    {isProjectsTab ? (
-                      <>
-                        <Flex align="center" justify="space-between" mb="2">
-                          <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
-                            Projects (toggle to show/hide on the map)
-                          </Text>
-                          {hiddenProjects.length > 0 && (
-                            <Button
-                              size="xs"
-                              variant="ghost"
-                              colorPalette="gray"
-                              onClick={() => onHiddenProjectsChange([])}
-                            >
-                              Show all
-                            </Button>
-                          )}
-                        </Flex>
-                        <Flex flexWrap="wrap" gap="2">
-                          {loadedProjects.map(projectName => {
-                            const hex = projectColors[projectName];
-                            const isOn = !hiddenProjects.includes(projectName);
-                            return (
-                              <Flex
-                                key={projectName}
-                                as="button"
-                                align="center"
-                                gap="2"
-                                px="3"
-                                py="1.5"
-                                borderWidth="1px"
-                                borderRadius="md"
-                                cursor="pointer"
-                                userSelect="none"
-                                transition="all 0.15s"
-                                style={isOn
-                                  ? { backgroundColor: hex + "22", borderColor: hex }
-                                  : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                                }
+                    <Tabs.Content key={tabValue} value={tabValue} p="4">
+                      {isProjectsTab ? (
+                        <>
+                          <Flex align="center" justify="space-between" mb="2">
+                            <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
+                              Projects (toggle to show/hide on the map)
+                            </Text>
+                            {hiddenProjects.length > 0 && (
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                colorPalette="gray"
+                                onClick={() => onHiddenProjectsChange([])}
+                              >
+                                Show all
+                              </Button>
+                            )}
+                          </Flex>
+                          <Flex flexWrap="wrap" gap="2">
+                            {loadedProjects.map(projectName => {
+                              const hex = projectColors[projectName];
+                              const isOn = !hiddenProjects.includes(projectName);
+                              return (
+                                <Flex
+                                  key={projectName}
+                                  as="button"
+                                  align="center"
+                                  gap="2"
+                                  px="3"
+                                  py="1.5"
+                                  borderWidth="1px"
+                                  borderRadius="md"
+                                  cursor="pointer"
+                                  userSelect="none"
+                                  transition="all 0.15s"
+                                  style={isOn
+                                    ? { backgroundColor: hex + "22", borderColor: hex }
+                                    : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
+                                  }
+                                  onClick={() => {
+                                    if (isOn) {
+                                      onHiddenProjectsChange([...hiddenProjects, projectName]);
+                                    } else {
+                                      onHiddenProjectsChange(hiddenProjects.filter(p => p !== projectName));
+                                    }
+                                  }}
+                                >
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight={isOn ? "semibold" : "normal"}
+                                    color={isOn ? "gray.800" : "gray.400"}
+                                    _dark={{ color: isOn ? "gray.100" : "gray.500" }}
+                                    userSelect="none"
+                                  >
+                                    {projectName}
+                                  </Text>
+                                  <Box
+                                    w="30px"
+                                    h="17px"
+                                    borderRadius="full"
+                                    position="relative"
+                                    flexShrink={0}
+                                    transition="background 0.15s"
+                                    style={{ backgroundColor: isOn ? hex : "#CBD5E0" }}
+                                  >
+                                    <Box
+                                      position="absolute"
+                                      w="13px"
+                                      h="13px"
+                                      borderRadius="full"
+                                      bg="white"
+                                      top="2px"
+                                      transition="left 0.15s"
+                                      style={{ left: isOn ? "15px" : "2px" }}
+                                    />
+                                  </Box>
+                                </Flex>
+                              );
+                            })}
+                          </Flex>
+                        </>
+                      ) : (
+                        /* Per-category toggles for the selected attribute */
+                        categoryFilterAttribute && (
+                          <>
+                            {/* Header row: label + reset button */}
+                            <Flex align="center" justify="space-between" mb="2">
+                              <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
+                                {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}
+                              </Text>
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                colorPalette="gray"
                                 onClick={() => {
-                                  if (isOn) {
-                                    onHiddenProjectsChange([...hiddenProjects, projectName]);
-                                  } else {
-                                    onHiddenProjectsChange(hiddenProjects.filter(p => p !== projectName));
+                                  const opts = ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories;
+                                  setCategoryToggles(prev => ({
+                                    ...prev,
+                                    [categoryFilterAttribute]: Object.fromEntries(opts.map(c => [c, true])),
+                                  }));
+                                  const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
+                                  if (subcatConfig) {
+                                    const allChildOpts = Object.values(subcatConfig.parentCategories).flat();
+                                    setSubcategoryToggles(prev => ({
+                                      ...prev,
+                                      [subcatConfig.childAttr]: Object.fromEntries(allChildOpts.map(c => [c, true])),
+                                    }));
                                   }
                                 }}
                               >
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight={isOn ? "semibold" : "normal"}
-                                  color={isOn ? "gray.800" : "gray.400"}
-                                  _dark={{ color: isOn ? "gray.100" : "gray.500" }}
-                                  userSelect="none"
-                                >
-                                  {projectName}
-                                </Text>
-                                <Box
-                                  w="30px"
-                                  h="17px"
-                                  borderRadius="full"
-                                  position="relative"
-                                  flexShrink={0}
-                                  transition="background 0.15s"
-                                  style={{ backgroundColor: isOn ? hex : "#CBD5E0" }}
-                                >
-                                  <Box
-                                    position="absolute"
-                                    w="13px"
-                                    h="13px"
-                                    borderRadius="full"
-                                    bg="white"
-                                    top="2px"
-                                    transition="left 0.15s"
-                                    style={{ left: isOn ? "15px" : "2px" }}
-                                  />
-                                </Box>
-                              </Flex>
-                            );
-                          })}
-                        </Flex>
-                      </>
-                    ) : (
-                    /* Per-category toggles for the selected attribute */
-                    categoryFilterAttribute && (
-                      <>
-                        {/* Header row: label + reset button */}
-                  <Flex align="center" justify="space-between" mb="2">
-                    <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
-                      {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}
-                    </Text>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      colorPalette="gray"
-                      onClick={() => {
-                        const opts = ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories;
-                        setCategoryToggles(prev => ({
-                          ...prev,
-                          [categoryFilterAttribute]: Object.fromEntries(opts.map(c => [c, true])),
-                        }));
-                        const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
-                        if (subcatConfig) {
-                          const allChildOpts = Object.values(subcatConfig.parentCategories).flat();
-                          setSubcategoryToggles(prev => ({
-                            ...prev,
-                            [subcatConfig.childAttr]: Object.fromEntries(allChildOpts.map(c => [c, true])),
-                          }));
-                        }
-                      }}
-                    >
-                      Reset
-                    </Button>
-                  </Flex>
-                  {NUMERIC_FILTER_ATTRIBUTES.has(categoryFilterAttribute) ? (
-                    /* Numeric range filter: slider inputs */
-                    <Box>
-                      <Text fontSize="xs" color="gray.500" mb="2">
-                        Range filter for {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}:
-                      </Text>
-                      {(() => {
-                        const bounds = dataRangeBounds[categoryFilterAttribute];
-                        const [rMin, rMax] = rangeFilters[categoryFilterAttribute] ?? [bounds?.min ?? 0, bounds?.max ?? 100];
-                        return (
-                          <Box px="2">
-                            <Slider
-                              min={bounds?.min ?? 0}
-                              max={bounds?.max ?? 100}
-                              step={1}
-                              value={[rMin, rMax]}
-                              onValueChange={({ value }) => {
-                                setRangeFilters(prev => ({
-                                  ...prev,
-                                  [categoryFilterAttribute]: [value[0], value[1]] as [number, number],
-                                }));
-                              }}
-                            />
-                            <Flex justify="space-between" mt="1">
-                              <Text fontSize="xs" color="gray.500">{rMin}</Text>
-                              <Text fontSize="xs" color="gray.500">{rMax}</Text>
+                                Reset
+                              </Button>
                             </Flex>
-                          </Box>
-                        );
-                      })()}
-                    </Box>
-                ) : (
-                  /* Layer 2 chips each followed immediately by their Layer 3 children */
-                  <Flex direction="column" gap="2">
-                    {(ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories).map(category => {
-                      const isOn = categoryToggles[categoryFilterAttribute]?.[category] ?? true;
-                      const hexColor = getCategoryColor(categoryFilterAttribute, category);
-                      const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
-                      const childAttr = subcatConfig?.childAttr;
-                      const subcats = subcatConfig?.parentCategories[category];
-                      const hasSubcats = isOn && subcats?.length;
-                      return (
-                        <Box key={category}>
-                          {/* Layer 2 chip */}
-                          <Flex
-                            as="button"
-                            align="center"
-                            gap="2"
-                            px="3"
-                            py="1.5"
-                            borderWidth="1px"
-                            borderRadius="md"
-                            cursor="pointer"
-                            userSelect="none"
-                            transition="all 0.15s"
-                            style={isOn
-                              ? { backgroundColor: hexColor + "22", borderColor: hexColor }
-                              : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                            }
-                            onClick={() => {
-                              setCategoryToggles(prev => ({
-                                ...prev,
-                                [categoryFilterAttribute]: {
-                                  ...prev[categoryFilterAttribute],
-                                  [category]: !isOn,
-                                },
-                              }));
-                            }}
-                          >
-                            <Text
-                              fontSize="sm"
-                              fontWeight={isOn ? "semibold" : "normal"}
-                              color={isOn ? "gray.800" : "gray.400"}
-                              _dark={{ color: isOn ? "gray.100" : "gray.500" }}
-                              userSelect="none"
-                            >
-                              {category}
-                            </Text>
-                            <Box
-                              w="30px"
-                              h="17px"
-                              borderRadius="full"
-                              position="relative"
-                              flexShrink={0}
-                              transition="background 0.15s"
-                              style={{ backgroundColor: isOn ? hexColor : "#CBD5E0" }}
-                            >
-                              <Box
-                                position="absolute"
-                                w="13px"
-                                h="13px"
-                                borderRadius="full"
-                                bg="white"
-                                top="2px"
-                                transition="left 0.15s"
-                                style={{ left: isOn ? "15px" : "2px" }}
-                              />
-                            </Box>
-                          </Flex>
-
-                          {/* Layer 3 chips — only visible when parent is ON */}
-                          {hasSubcats && childAttr && (
-                            <Box
-                              mt="1.5"
-                              ml="3"
-                              pl="3"
-                              borderLeft="2px solid"
-                              style={{ borderColor: hexColor + "66" }}
-                            >
-                              <Flex gap="1.5" flexWrap="wrap">
-                                {subcats!.map(sub => {
-                                  const subOn = subcategoryToggles[childAttr]?.[sub] ?? true;
-                                  const subColor = getCategoryColor(childAttr, sub);
+                            {NUMERIC_FILTER_ATTRIBUTES.has(categoryFilterAttribute) ? (
+                              /* Numeric range filter: slider inputs */
+                              <Box>
+                                <Text fontSize="xs" color="gray.500" mb="2">
+                                  Range filter for {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}:
+                                </Text>
+                                {(() => {
+                                  const bounds = dataRangeBounds[categoryFilterAttribute];
+                                  const [rMin, rMax] = rangeFilters[categoryFilterAttribute] ?? [bounds?.min ?? 0, bounds?.max ?? 100];
                                   return (
-                                    <Flex
-                                      key={sub}
-                                      as="button"
-                                      align="center"
-                                      gap="1.5"
-                                      px="2.5"
-                                      py="1"
-                                      borderWidth="1px"
-                                      borderRadius="md"
-                                      cursor="pointer"
-                                      userSelect="none"
-                                      transition="all 0.15s"
-                                      style={subOn
-                                        ? { backgroundColor: subColor + "22", borderColor: subColor }
-                                        : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                                      }
-                                      onClick={() => {
-                                        setSubcategoryToggles(prev => ({
-                                          ...prev,
-                                          [childAttr]: {
-                                            ...prev[childAttr],
-                                            [sub]: !subOn,
-                                          },
-                                        }));
-                                      }}
-                                    >
-                                      <Text
-                                        fontSize="xs"
-                                        fontWeight={subOn ? "semibold" : "normal"}
-                                        color={subOn ? "gray.700" : "gray.400"}
-                                        _dark={{ color: subOn ? "gray.200" : "gray.500" }}
+                                    <Box px="2">
+                                      <Slider
+                                        min={bounds?.min ?? 0}
+                                        max={bounds?.max ?? 100}
+                                        step={1}
+                                        value={[rMin, rMax]}
+                                        onValueChange={({ value }) => {
+                                          setRangeFilters(prev => ({
+                                            ...prev,
+                                            [categoryFilterAttribute]: [value[0], value[1]] as [number, number],
+                                          }));
+                                        }}
+                                      />
+                                      <Flex justify="space-between" mt="1">
+                                        <Text fontSize="xs" color="gray.500">{rMin}</Text>
+                                        <Text fontSize="xs" color="gray.500">{rMax}</Text>
+                                      </Flex>
+                                    </Box>
+                                  );
+                                })()}
+                              </Box>
+                            ) : (
+                              /* Layer 2 chips each followed immediately by their Layer 3 children */
+                              <Flex direction="column" gap="2">
+                                {(ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories).map(category => {
+                                  const isOn = categoryToggles[categoryFilterAttribute]?.[category] ?? true;
+                                  const hexColor = getCategoryColor(categoryFilterAttribute, category);
+                                  const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
+                                  const childAttr = subcatConfig?.childAttr;
+                                  const subcats = subcatConfig?.parentCategories[category];
+                                  const hasSubcats = isOn && subcats?.length;
+                                  return (
+                                    <Box key={category}>
+                                      {/* Layer 2 chip */}
+                                      <Flex
+                                        as="button"
+                                        align="center"
+                                        gap="2"
+                                        px="3"
+                                        py="1.5"
+                                        borderWidth="1px"
+                                        borderRadius="md"
+                                        cursor="pointer"
                                         userSelect="none"
+                                        transition="all 0.15s"
+                                        style={isOn
+                                          ? { backgroundColor: hexColor + "22", borderColor: hexColor }
+                                          : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
+                                        }
+                                        onClick={() => {
+                                          setCategoryToggles(prev => ({
+                                            ...prev,
+                                            [categoryFilterAttribute]: {
+                                              ...prev[categoryFilterAttribute],
+                                              [category]: !isOn,
+                                            },
+                                          }));
+                                        }}
                                       >
-                                        {sub}
-                                      </Text>
-                                      <Box
-                                        w="24px"
-                                        h="14px"
-                                        borderRadius="full"
-                                        position="relative"
-                                        flexShrink={0}
-                                        transition="background 0.15s"
-                                        style={{ backgroundColor: subOn ? subColor : "#CBD5E0" }}
-                                      >
+                                        <Text
+                                          fontSize="sm"
+                                          fontWeight={isOn ? "semibold" : "normal"}
+                                          color={isOn ? "gray.800" : "gray.400"}
+                                          _dark={{ color: isOn ? "gray.100" : "gray.500" }}
+                                          userSelect="none"
+                                        >
+                                          {category}
+                                        </Text>
                                         <Box
-                                          position="absolute"
-                                          w="10px"
-                                          h="10px"
+                                          w="30px"
+                                          h="17px"
                                           borderRadius="full"
-                                          bg="white"
-                                          top="2px"
-                                          transition="left 0.15s"
-                                          style={{ left: subOn ? "12px" : "2px" }}
-                                        />
-                                      </Box>
-                                    </Flex>
+                                          position="relative"
+                                          flexShrink={0}
+                                          transition="background 0.15s"
+                                          style={{ backgroundColor: isOn ? hexColor : "#CBD5E0" }}
+                                        >
+                                          <Box
+                                            position="absolute"
+                                            w="13px"
+                                            h="13px"
+                                            borderRadius="full"
+                                            bg="white"
+                                            top="2px"
+                                            transition="left 0.15s"
+                                            style={{ left: isOn ? "15px" : "2px" }}
+                                          />
+                                        </Box>
+                                      </Flex>
+
+                                      {/* Layer 3 chips — only visible when parent is ON */}
+                                      {hasSubcats && childAttr && (
+                                        <Box
+                                          mt="1.5"
+                                          ml="3"
+                                          pl="3"
+                                          borderLeft="2px solid"
+                                          style={{ borderColor: hexColor + "66" }}
+                                        >
+                                          <Flex gap="1.5" flexWrap="wrap">
+                                            {subcats!.map(sub => {
+                                              const subOn = subcategoryToggles[childAttr]?.[sub] ?? true;
+                                              const subColor = getCategoryColor(childAttr, sub);
+                                              return (
+                                                <Flex
+                                                  key={sub}
+                                                  as="button"
+                                                  align="center"
+                                                  gap="1.5"
+                                                  px="2.5"
+                                                  py="1"
+                                                  borderWidth="1px"
+                                                  borderRadius="md"
+                                                  cursor="pointer"
+                                                  userSelect="none"
+                                                  transition="all 0.15s"
+                                                  style={subOn
+                                                    ? { backgroundColor: subColor + "22", borderColor: subColor }
+                                                    : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
+                                                  }
+                                                  onClick={() => {
+                                                    setSubcategoryToggles(prev => ({
+                                                      ...prev,
+                                                      [childAttr]: {
+                                                        ...prev[childAttr],
+                                                        [sub]: !subOn,
+                                                      },
+                                                    }));
+                                                  }}
+                                                >
+                                                  <Text
+                                                    fontSize="xs"
+                                                    fontWeight={subOn ? "semibold" : "normal"}
+                                                    color={subOn ? "gray.700" : "gray.400"}
+                                                    _dark={{ color: subOn ? "gray.200" : "gray.500" }}
+                                                    userSelect="none"
+                                                  >
+                                                    {sub}
+                                                  </Text>
+                                                  <Box
+                                                    w="24px"
+                                                    h="14px"
+                                                    borderRadius="full"
+                                                    position="relative"
+                                                    flexShrink={0}
+                                                    transition="background 0.15s"
+                                                    style={{ backgroundColor: subOn ? subColor : "#CBD5E0" }}
+                                                  >
+                                                    <Box
+                                                      position="absolute"
+                                                      w="10px"
+                                                      h="10px"
+                                                      borderRadius="full"
+                                                      bg="white"
+                                                      top="2px"
+                                                      transition="left 0.15s"
+                                                      style={{ left: subOn ? "12px" : "2px" }}
+                                                    />
+                                                  </Box>
+                                                </Flex>
+                                              );
+                                            })}
+                                          </Flex>
+                                        </Box>
+                                      )}
+                                    </Box>
                                   );
                                 })}
                               </Flex>
-                            </Box>
-                          )}
-                        </Box>
-                      );
-                    })}
-                  </Flex>
-                  )}
-                </>
-              )
-                    )}
-                  </Tabs.Content>
+                            )}
+                          </>
+                        )
+                      )}
+                    </Tabs.Content>
                   );
                 })}
               </Tabs.Root>
@@ -3233,49 +3317,8 @@ export default function AttributeAnalysisMapView({
                               // When filters are active, pass filter context so the Coding
                               // page map shows only filtered segments (+ the current segment).
                               const segmentIdx = idx + 1; // 1-based index for UI
-                              let filterContext: CodingFilterContext | null = null;
-                              if (activeFilters.length > 0) {
-                                // Group visible non-hidden segments by project
-                                const projectMap = new Map<string, FilteredProjectData>();
-                                const visiblePoints = allPoints.filter(pt => !hiddenProjects.includes(pt.projectName));
-                                visiblePoints.forEach(pt => {
-                                    if (!projectMap.has(pt.projectName)) {
-                                      projectMap.set(pt.projectName, { projectName: pt.projectName, filteredIndices: [], points: [] });
-                                    }
-                                    const entry = projectMap.get(pt.projectName)!;
-                                    entry.filteredIndices.push(pt.idx);
-                                    entry.points.push({
-                                      latlng: pt.latlng,
-                                      color: pt.color,
-                                      idx: pt.idx,
-                                    });
-                                  });
-
-                                // Build color legend from visible points
-                                let legend: CodingFilterContext['legend'] | undefined;
-                                if (effectiveFocusAttribute && effectiveFocusAttribute !== "Project") {
-                                  const seen = new Map<string, string>();
-                                  visiblePoints.forEach(pt => {
-                                    const val = pt.attributeValue;
-                                    if (val && val !== "None" && val !== "Not Selected" && !seen.has(val)) {
-                                      seen.set(val, pt.color);
-                                    }
-                                  });
-                                  const canonical = ATTRIBUTE_OPTIONS[effectiveFocusAttribute] ?? [];
-                                  const entries = Array.from(seen.entries())
-                                    .map(([category, color]) => ({ category, color }))
-                                    .sort((a, b) => {
-                                      const ai = canonical.indexOf(a.category);
-                                      const bi = canonical.indexOf(b.category);
-                                      if (ai === -1 && bi === -1) return a.category.localeCompare(b.category);
-                                      if (ai === -1) return 1;
-                                      if (bi === -1) return -1;
-                                      return ai - bi;
-                                    });
-                                  if (entries.length > 0) legend = { attribute: effectiveFocusAttribute, entries };
-                                }
-
-                                filterContext = { projects: Array.from(projectMap.values()), ...(legend ? { legend } : {}) };
+                              const filterContext = buildFilterContext();
+                              if (filterContext) {
                                 sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
                               } else {
                                 sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);

@@ -26,6 +26,7 @@ import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
+import { getCachedResults } from "../../api/projectDataCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
 
 // ── SVY21 (EPSG:3414) → WGS84 ───────────────────────────────────────────────
@@ -630,12 +631,8 @@ export default function ReportBuilderPage() {
     const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis"]);
     const l = _readSaved();
     if (Array.isArray(l?.elements)) {
-      // Migration: display order is now driven by array order, not `el.y`.
-      // Pre-dnd-kit layouts encoded their arrangement purely in `y` (react-rnd
-      // never reordered the array), so sort by `y` once to preserve it.
       const saved = (l.elements as ElementState[])
-        .filter((e) => !REMOVED_IDS.has(e.id))
-        .sort((a, b) => a.y - b.y);
+        .filter((e) => !REMOVED_IDS.has(e.id));
       // Inject any new default elements missing from the saved layout (e.g. benchmarkStats added after save)
       const savedIds = new Set(saved.map((e: ElementState) => e.id));
       const injected = DEFAULT_ELEMENTS.filter((e) => !savedIds.has(e.id));
@@ -677,6 +674,13 @@ export default function ReportBuilderPage() {
   const [allScoreRows, setAllScoreRows] = useState<TopRiskRow[]>([]);
   const [enrichedMap, setEnrichedMap] = useState<Map<string, EnrichedDetail>>(new Map());
   const [isLoadingScores, setIsLoadingScores] = useState(false);
+
+  // ── Network (all-profile) data for Benchmarking Stats comparison ──────────
+  // allProfileProjects: every project in the active profile (fetched on mount).
+  // networkScoreRows: null = not yet loaded, [] = loaded but empty.
+  const [allProfileProjects, setAllProfileProjects] = useState<string[]>([]);
+  const [networkScoreRows, setNetworkScoreRows] = useState<TopRiskRow[] | null>(null);
+  const [isLoadingNetworkData, setIsLoadingNetworkData] = useState(false);
 
   // ── Path Analysis filtered subset ─────────────────────────────────────────
   // Per-project 0-based segment indices the user filtered to on the Path
@@ -733,7 +737,12 @@ export default function ReportBuilderPage() {
     const cst: FilterCategoryStatus[] = catStatus ? JSON.parse(catStatus) : [];
     const fidx: Record<string, number[]> | null = filteredSegs ? JSON.parse(filteredSegs) : null;
     const fvals: Record<string, Record<number, Record<string, string>>> | null = filteredVals ? JSON.parse(filteredVals) : null;
-    const combined = [...new Set([...paP, ...trP])];
+    // Prefer the Treatment context when it's set (i.e. the report was launched from the
+    // Treatment page); otherwise use the Path Analysis context. The two entry points clear
+    // the other key, so this is unambiguous — and it means we no longer need to destructively
+    // remove pathAnalysis_loadedProjects (which corrupted the Analysis page's loaded-projects
+    // state on back-navigation).
+    const combined = trP.length > 0 ? [...new Set(trP)] : [...new Set(paP)];
     setLoadedProjects(combined);
     setActiveFilterNames(flt);
     setActiveCategoryStatus(cst);
@@ -757,18 +766,18 @@ export default function ReportBuilderPage() {
         return toAdd.length ? [...prev, ...toAdd] : prev;
       });
     }
-    if (combined.length === 0) {
-      setPickerLoading(true);
-      fetch("/api/projects")
-        .then((r) => r.json())
-        .then((d) => {
-          const names: string[] = (d.projects ?? []).map((p: { name: string }) => p.name).sort();
+    // Always fetch all profile projects for the network benchmark comparison.
+    fetch("/api/projects")
+      .then((r) => r.json())
+      .then((d) => {
+        const names: string[] = (d.projects ?? []).map((p: { name: string }) => p.name).sort();
+        setAllProfileProjects(names);
+        if (combined.length === 0) {
           setAvailableProjects(names);
           setShowProjectPicker(true);
-        })
-        .catch(() => setShowProjectPicker(true))
-        .finally(() => setPickerLoading(false));
-    }
+        }
+      })
+      .catch(() => { if (combined.length === 0) setShowProjectPicker(true); });
   }, []);
 
 
@@ -875,6 +884,34 @@ export default function ReportBuilderPage() {
     fetchAll();
   }, [loadedProjects]);
 
+  // ── Network data fetch (lazy — only when benchmarkStats section is visible) ──
+  useEffect(() => {
+    const hasBenchmarkVisible = elements.some((e) => e.type === "benchmarkStats" && e.visible);
+    if (!hasBenchmarkVisible || networkScoreRows !== null || allProfileProjects.length === 0) return;
+    setIsLoadingNetworkData(true);
+    Promise.all(
+      allProfileProjects.map(async (name) => {
+        try {
+          const data = await getCachedResults(name);
+          return (data.result_rows ?? []).map((row: Record<string, unknown>, i: number) => ({
+            ...row,
+            _project: name,
+            _segIndex: i + 1,
+          })) as TopRiskRow[];
+        } catch { return [] as TopRiskRow[]; }
+      })
+    ).then((perProject) => {
+      const rows = perProject.flat().map((row) => ({
+        ...row,
+        _sumScore: ((row as TopRiskRow).VB || 0) + ((row as TopRiskRow).BB || 0) + ((row as TopRiskRow).SB || 0) + ((row as TopRiskRow).BP || 0),
+        _maxBand: (row as TopRiskRow)["Overall Risk Level Band"] ??
+          Math.max((row as TopRiskRow)["VB Band"] || 0, (row as TopRiskRow)["BB Band"] || 0, (row as TopRiskRow)["SB Band"] || 0, (row as TopRiskRow)["BP Band"] || 0),
+      }));
+      setNetworkScoreRows(rows as TopRiskRow[]);
+    }).catch(() => setNetworkScoreRows([]))
+      .finally(() => setIsLoadingNetworkData(false));
+  }, [elements, allProfileProjects, networkScoreRows]);
+
   // ── Datasets: full vs. Path-Analysis-filtered subset ──────────────────────
   // A filter is active iff Path Analysis persisted a filtered-segment map AND
   // named active filters. The filtered rows are `allScoreRows` restricted to the
@@ -912,6 +949,12 @@ export default function ReportBuilderPage() {
       .map((p) => { const v = byProject.get(p)!; return { project: p, treatedSegments: v.treated, treatmentCounts: v.counts }; });
     return { ...core, treatmentSummaries };
   }, [filteredScoreRows, loadedProjects, segmentTreatmentMap]);
+
+  // ── Network dataset (all profile projects) ────────────────────────────────
+  const networkDataset = useMemo(() => {
+    if (!networkScoreRows) return null;
+    return buildCoreDataset(networkScoreRows, allProfileProjects);
+  }, [networkScoreRows, allProfileProjects]);
 
   // Segments needing image/attribute enrichment = union of both datasets' top rows.
   const enrichTargets = useMemo(() => {
@@ -1036,7 +1079,15 @@ export default function ReportBuilderPage() {
         const lastChunkH = H + headerH + lastCount * PROJ_ROW_H + 16;
         return (numChunks - 1) * PAGE_H + lastChunkH;
       }
-      case "benchmarkStats": return H + 36 + 32 + 5 * 56 + 24; // header + thead + 5 rows (VB/BB/SB/BP/Overall) + footer
+      case "benchmarkStats": {
+        const hasNet = !!networkDataset?.distributions;
+        const cardH = hasNet ? 122 : 82;  // crash-type scorecard row (with-net includes two extra rows)
+        const ovH = hasNet ? 80 : 62;     // Overall Risk strip (padding "14px 18px" + ~30px content; with-net adds network col)
+        const rowH = hasNet ? 60 : 38;    // table row (padding "8px 6px" + enlarged font; with-net adds net row)
+        // H + top-pad+title(36) + subtitle(14) + cards + cards-mb + strip + strip-mb
+        //   + per-band-label+table-header(43) + 4 rows + bottom-pad(20)
+        return H + 36 + 14 + cardH + 10 + ovH + 12 + 43 + 4 * rowH + 20;
+      }
       case "riskStats": return H + 36 + (scoreStats ? 5 * 54 + 24 : 50); // each row: label line + range bar + scale labels + spacing
       case "topAttributes": return H + 36 + (attributeFrequency.length > 0 ? attributeFrequency.length * 34 + 16 : 50);
       case "recommendations": {
@@ -1276,6 +1327,17 @@ export default function ReportBuilderPage() {
       if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
       saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
     } catch (e) { console.error("Save layout failed:", e); }
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
+
+  // Auto-save layout on every change so navigation away never loses section arrangement.
+  useEffect(() => {
+    try {
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+        elements, reportTitle, oicName, purpose, recommendations,
+        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
+      }));
+      setHasSaved(true);
+    } catch (e) { /* quota exceeded or private browsing — silent */ }
   }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
 
   const restoreLayout = useCallback(() => {
@@ -2248,18 +2310,82 @@ export default function ReportBuilderPage() {
 
       // ── Benchmarking Statistics ────────────────────────────────────────────
       case "benchmarkStats": {
-        const crashRows = [
-          { key: "VB" as const, label: "Vehicle–Bicycle", short: "VB" },
-          { key: "BB" as const, label: "Bicycle–Bicycle", short: "BB" },
-          { key: "SB" as const, label: "Single-Bicycle", short: "SB" },
-          { key: "BP" as const, label: "Bicycle–Pedestrian", short: "BP" },
-          { key: "Overall" as const, label: "Overall Risk", short: "ALL" },
+        const crashTypeCards = [
+          { key: "VB" as const, label: "Vehicle–Bicycle" },
+          { key: "BB" as const, label: "Bicycle–Bicycle" },
+          { key: "SB" as const, label: "Single-Bicycle" },
+          { key: "BP" as const, label: "Bicycle–Pedestrian" },
         ];
 
-        // Count segments that are Low or Medium overall
-        const safePct = (distributions && totalSegments > 0)
-          ? (((distributions.Overall[1] || 0) + (distributions.Overall[2] || 0)) / totalSegments * 100).toFixed(1)
-          : null;
+        const netDist = networkDataset?.distributions;
+        const netTotal = networkDataset?.totalSegments ?? 0;
+
+        const allLoaded =
+          allProfileProjects.length > 0 &&
+          loadedProjects.length === allProfileProjects.length &&
+          allProfileProjects.every((p) => loadedProjects.includes(p));
+        const showNet = !!netDist && !allLoaded;
+
+        // Safe % = (Low + Medium) / total
+        const safePctOf = (dist: BandDist, tot: number) =>
+          tot > 0 ? (((dist[1] || 0) + (dist[2] || 0)) / tot) * 100 : 0;
+
+        // Color avg score by weighted-average band from the distribution for that crash type
+        const avgBandColor = (dist: BandDist) => {
+          const total = ([1, 2, 3, 4] as const).reduce((s, b) => s + (dist[b] || 0), 0);
+          if (!total) return "#999";
+          const avgBand = ([1, 2, 3, 4] as const).reduce((s, b) => s + b * (dist[b] || 0), 0) / total;
+          return RISK_COLORS[Math.min(4, Math.max(1, Math.round(avgBand))) as 1 | 2 | 3 | 4];
+        };
+
+        // Color safe% by threshold: ≥60% green, ≥40% amber, <40% red
+        const safeColor = (pct: number) => (pct >= 60 ? "#27ae60" : pct >= 40 ? "#e67e22" : "#e74c3c");
+
+        // ▲/▼ for safe %: more safe than network = green
+        const deltaSafe = (lPct: number, nPct: number, size = 7) => {
+          const d = lPct - nPct;
+          if (Math.abs(d) < 1) return <span style={{ color: "#bbb", fontSize: size }}>≈</span>;
+          return (
+            <span style={{ color: d > 0 ? "#27ae60" : "#e74c3c", fontSize: size, fontWeight: 700 }}>
+              {d > 0 ? "▲" : "▼"}{Math.abs(d).toFixed(1)}%
+            </span>
+          );
+        };
+
+        // ▲/▼ for avg score: lower avg = safer = good
+        const deltaAvg = (lAvg: string, nAvg: string, size = 7) => {
+          const ld = parseFloat(lAvg), nd = parseFloat(nAvg);
+          if (isNaN(ld) || isNaN(nd)) return null;
+          const d = ld - nd;
+          if (Math.abs(d) < 0.05) return <span style={{ color: "#bbb", fontSize: size }}>≈</span>;
+          return (
+            <span style={{ color: d < 0 ? "#27ae60" : "#e74c3c", fontSize: size, fontWeight: 700 }}>
+              {d > 0 ? "▲" : "▼"}{Math.abs(d).toFixed(2)}
+            </span>
+          );
+        };
+
+        // ▲/▼ per band cell: Low/Med more = good; High/Ext more = bad
+        const deltaBand = (lPct: number, nPct: number, band: number) => {
+          const d = lPct - nPct;
+          if (Math.abs(d) < 1) return <span style={{ color: "#ccc", fontSize: 9 }}>≈</span>;
+          const isGood = band <= 2 ? d > 0 : d < 0;
+          return (
+            <span style={{ color: isGood ? "#27ae60" : "#e74c3c", fontSize: 9, fontWeight: 700 }}>
+              {d > 0 ? "▲" : "▼"}{Math.abs(d).toFixed(1)}%
+            </span>
+          );
+        };
+
+        // Overall stats
+        const ovDist = distributions?.Overall;
+        const ovTotal = ovDist ? Object.values(ovDist).reduce((a, b) => a + b, 0) || 1 : 1;
+        const ovSafe = ovDist ? safePctOf(ovDist, ovTotal) : 0;
+        const ovAvg = scoreStats?.Overall?.avg ?? "—";
+        const netOvDist = netDist?.Overall;
+        const netOvTotal = netOvDist ? Object.values(netOvDist).reduce((a, b) => a + b, 0) || 1 : 1;
+        const netOvSafe = netOvDist ? safePctOf(netOvDist, netOvTotal) : 0;
+        const netOvAvg = networkDataset?.scoreStats?.Overall?.avg;
 
         return (
           <div style={{ padding: "10px 14px" }}>
@@ -2268,12 +2394,13 @@ export default function ReportBuilderPage() {
               onChange={(t) => setSecTitle(el.id, t)}
               style={{ fontSize: 20, fontWeight: 600, color: "#1a1a2e", display: "block", marginBottom: 4 }}
             />
-            <div style={{ fontSize: 10, color: "#888", marginBottom: 10 }}>
-              Risk band distribution &amp; score averages across all crash types · {totalSegments} segments total
-              {safePct !== null && (
-                <span style={{ marginLeft: 12, color: "#27ae60", fontWeight: 600 }}>
-                  ✓ {safePct}% Low or Medium overall
-                </span>
+            <div style={{ fontSize: 10, color: "#888", marginBottom: 10, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+              <span>Risk band distribution &amp; avg scores · {totalSegments} segments loaded</span>
+              {showNet && (
+                <span style={{ color: "#bbb" }}>vs {netTotal} segments network-wide ({allProfileProjects.length} projects)</span>
+              )}
+              {allLoaded && (
+                <span style={{ color: "#aaa", fontStyle: "italic" }}>All profile projects loaded — no separate baseline</span>
               )}
             </div>
 
@@ -2286,74 +2413,212 @@ export default function ReportBuilderPage() {
                 <div style={{ color: "#888", fontSize: 12 }}>No score data — run scoring first.</div>
               )
             ) : (
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
-                <thead>
-                  <tr style={{ background: "#f5f0fa" }}>
-                    <th style={{ ...thStyle, width: 140 }}>Crash Type</th>
-                    {[1, 2, 3, 4].map((band) => (
-                      <th key={band} style={{ ...thStyle, textAlign: "center", color: RISK_COLORS[band] }}>
-                        {RISK_LABELS[band]}
-                      </th>
-                    ))}
-                    <th style={{ ...thStyle, textAlign: "center" }}>Avg Score</th>
-                    <th style={{ ...thStyle, textAlign: "center" }}>Distribution</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {crashRows.map(({ key, label }, ri) => {
+              <>
+                {/* ── Crash-type scorecards ─────────────────────────────────── */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                  {crashTypeCards.map(({ key, label }) => {
                     const dist = distributions[key];
-                    const total = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
-                    const isOverall = key === "Overall";
-                    const avg = scoreStats?.[key as keyof ScoreStats]?.avg ?? "—";
+                    const tot = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+                    const avg = scoreStats?.[key]?.avg ?? "—";
+                    const safe = safePctOf(dist, tot);
+                    const netDistRow = netDist?.[key];
+                    const netRowTot = netDistRow ? Object.values(netDistRow).reduce((a, b) => a + b, 0) || 1 : 1;
+                    const netSafe = netDistRow ? safePctOf(netDistRow, netRowTot) : 0;
+                    const netAvg = networkDataset?.scoreStats?.[key]?.avg;
                     return (
-                      <tr
-                        key={key}
-                        style={{
-                          borderBottom: "1px solid #f0eaf8",
-                          background: isOverall ? "#f0e8fc" : ri % 2 === 0 ? "#fff" : "#fafafa",
-                          fontWeight: isOverall ? 700 : 400,
-                        }}
-                      >
-                        <td style={{ ...tdStyle, fontWeight: isOverall ? 700 : 600, color: "#1a1a2e" }}>
+                      <div key={key} style={{
+                        flex: 1,
+                        border: "1px solid #e8e0f0",
+                        borderRadius: 6,
+                        padding: "8px 10px",
+                        background: "#fdfbff",
+                        display: "flex",
+                        flexDirection: "column",
+                        minWidth: 0,
+                      }}>
+                        <div style={{ fontSize: 8, fontWeight: 700, color: "#666", marginBottom: 5, letterSpacing: 0.3, textTransform: "uppercase", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {label}
-                        </td>
-                        {[1, 2, 3, 4].map((band) => {
-                          const count = dist[band] || 0;
-                          const pct = (count / total * 100);
-                          return (
-                            <td key={band} style={{ ...tdStyle, textAlign: "center", padding: "4px 4px" }}>
-                              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                                <span style={{ color: RISK_COLORS[band], fontWeight: isOverall ? 800 : 600, fontSize: isOverall ? 11 : 10 }}>
-                                  {pct.toFixed(1)}%
-                                </span>
-                                <span style={{ color: "#bbb", fontSize: 8 }}>({count})</span>
-                              </div>
-                            </td>
-                          );
-                        })}
-                        <td style={{ ...tdStyle, textAlign: "center", fontWeight: isOverall ? 700 : 500, color: isOverall ? "#a020d0" : "#333" }}>
-                          {avg}
-                        </td>
-                        {/* Mini stacked bar */}
-                        <td style={{ ...tdStyle, padding: "4px 8px", width: 100 }}>
-                          <div style={{ display: "flex", height: 10, borderRadius: 4, overflow: "hidden", gap: 1 }}>
-                            {[1, 2, 3, 4].map((band) => {
-                              const pct = (dist[band] || 0) / total * 100;
-                              return pct > 0 ? (
-                                <div
-                                  key={band}
-                                  title={`${RISK_LABELS[band]}: ${pct.toFixed(1)}%`}
-                                  style={{ width: `${pct}%`, background: RISK_COLORS[band], minWidth: pct > 0 ? 2 : 0 }}
-                                />
-                              ) : null;
-                            })}
+                        </div>
+                        {/* Avg score — headline number */}
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 1 }}
+                          title={`Average ${label} risk score across loaded segments (lower = safer)`}>
+                          <span style={{ fontSize: 22, fontWeight: 800, color: avgBandColor(dist), lineHeight: 1 }}>{avg}</span>
+                          <span style={{ fontSize: 7, color: "#aaa" }}>avg score</span>
+                        </div>
+                        {/* Mini distribution bar */}
+                        <div style={{ display: "flex", height: 5, borderRadius: 3, overflow: "hidden", margin: "6px 0" }}>
+                          {[1, 2, 3, 4].map((band) => {
+                            const pct = (dist[band] || 0) / tot * 100;
+                            return pct > 0 ? (
+                              <div key={band} title={`${RISK_LABELS[band]}: ${pct.toFixed(1)}%`}
+                                style={{ width: `${pct}%`, background: RISK_COLORS[band] }} />
+                            ) : null;
+                          })}
+                        </div>
+                        {/* Network comparison */}
+                        {showNet && (
+                          <div style={{ borderTop: "1px dashed #e8e0f0", paddingTop: 6, marginTop: 4, display: "flex", flexDirection: "column", gap: 3 }}>
+                            <div title={`Average ${label} score across all ${allProfileProjects.length} profile projects (network baseline)`}
+                              style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ fontSize: 9, color: "#aaa", whiteSpace: "nowrap" }}>Net avg</span>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: "#666" }}>{netAvg ?? "—"}</span>
+                              {netAvg && deltaAvg(avg, netAvg, 11)}
+                            </div>
+                            <div title={`% of all profile segments rated Low or Medium risk for ${label}`}
+                              style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ fontSize: 9, color: "#aaa", whiteSpace: "nowrap" }}>Net</span>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: "#888" }}>{netSafe.toFixed(1)}%</span>
+                              {deltaSafe(safe, netSafe, 11)}
+                            </div>
                           </div>
-                        </td>
-                      </tr>
+                        )}
+                      </div>
                     );
                   })}
-                </tbody>
-              </table>
+                </div>
+
+                {/* ── Overall summary strip ─────────────────────────────────── */}
+                {ovDist && (
+                  <div style={{
+                    background: "#f0e8fc",
+                    borderRadius: 8,
+                    padding: "14px 18px",
+                    marginBottom: 12,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 18,
+                    flexWrap: "wrap",
+                  }}>
+                    <span style={{ fontWeight: 700, fontSize: 13, color: "#6b21a8", whiteSpace: "nowrap" }}>Overall Risk</span>
+                    <div title="Average overall risk score across loaded segments (lower = safer)"
+                      style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+                      <span style={{ fontSize: 28, fontWeight: 800, color: "#1a1a2e", lineHeight: 1 }}>{ovAvg}</span>
+                      <span style={{ fontSize: 10, color: "#888" }}>avg score</span>
+                    </div>
+                    <div style={{ flex: 1, display: "flex", height: 14, borderRadius: 5, overflow: "hidden", minWidth: 80 }}>
+                      {[1, 2, 3, 4].map((band) => {
+                        const pct = (ovDist[band] || 0) / ovTotal * 100;
+                        return pct > 0 ? (
+                          <div key={band} title={`${RISK_LABELS[band]}: ${pct.toFixed(1)}%`}
+                            style={{ width: `${pct}%`, background: RISK_COLORS[band] }} />
+                        ) : null;
+                      })}
+                    </div>
+                    {showNet && netOvDist && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingLeft: 16, borderLeft: "2px solid #d8c8f0" }}>
+                        <div title={`Average overall score across all ${allProfileProjects.length} profile projects (network baseline)`}
+                          style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span style={{ fontSize: 12, color: "#9b59b6", whiteSpace: "nowrap" }}>Net avg</span>
+                          <span style={{ fontSize: 20, fontWeight: 700, color: "#7c3aed", lineHeight: 1 }}>{netOvAvg ?? "—"}</span>
+                          {netOvAvg && deltaAvg(ovAvg, netOvAvg, 14)}
+                        </div>
+                        <div title="% of all profile segments rated Low or Medium risk overall (network baseline)"
+                          style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span style={{ fontSize: 12, color: "#9b59b6", whiteSpace: "nowrap" }}>Net</span>
+                          <span style={{ fontSize: 20, fontWeight: 700, color: "#7c3aed", lineHeight: 1 }}>{netOvSafe.toFixed(1)}%</span>
+                          {deltaSafe(ovSafe, netOvSafe, 14)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Per-band detail table ─────────────────────────────────── */}
+                <div style={{ fontSize: 10, color: "#aaa", marginBottom: 6, letterSpacing: 0.4, textTransform: "uppercase", fontWeight: 600 }}>
+                  Per-band breakdown
+                  {showNet && <span style={{ marginLeft: 10, fontWeight: 400, letterSpacing: 0 }}>
+                    <span style={{ color: "#555" }}>■</span> Loaded &nbsp;
+                    <span style={{ color: "#bbb" }}>■</span> Network
+                  </span>}
+                </div>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: "#f5f0fa" }}>
+                      <th style={{ ...thStyle, width: 150, fontSize: 12 }}>Crash Type</th>
+                      {[1, 2, 3, 4].map((band) => (
+                        <th key={band} title={`% of segments scored ${RISK_LABELS[band as keyof typeof RISK_LABELS]} risk for this crash type`}
+                          style={{ ...thStyle, textAlign: "center", color: RISK_COLORS[band], fontSize: 12 }}>
+                          {RISK_LABELS[band]}
+                        </th>
+                      ))}
+                      <th title="Average risk score for this crash type across loaded segments (lower = safer)"
+                        style={{ ...thStyle, textAlign: "center", fontSize: 12 }}>Avg</th>
+                      <th title="Risk band distribution across segments — coloured by band"
+                        style={{ ...thStyle, textAlign: "center", fontSize: 12 }}>Distribution</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {crashTypeCards.map(({ key, label }, ri) => {
+                      const dist = distributions[key];
+                      const tot = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+                      const avg = scoreStats?.[key]?.avg ?? "—";
+                      const netDistRow = netDist?.[key];
+                      const netRowTot = netDistRow ? Object.values(netDistRow).reduce((a, b) => a + b, 0) || 1 : 1;
+                      const netAvg = networkDataset?.scoreStats?.[key]?.avg;
+                      return (
+                        <tr key={key} style={{ borderBottom: "1px solid #f0eaf8", background: ri % 2 === 0 ? "#fff" : "#fafafa" }}>
+                          <td style={{ ...tdStyle, fontWeight: 600, color: "#444", fontSize: 12, padding: "8px 10px" }}>{label}</td>
+                          {[1, 2, 3, 4].map((band) => {
+                            const count = dist[band] || 0;
+                            const pct = count / tot * 100;
+                            const netCount = netDistRow?.[band] || 0;
+                            const netPct = netCount / netRowTot * 100;
+                            return (
+                              <td key={band} style={{ ...tdStyle, textAlign: "center", padding: "8px 6px" }}>
+                                <div title={`${pct.toFixed(1)}% of loaded segments scored ${RISK_LABELS[band as keyof typeof RISK_LABELS]} risk for ${label}`}
+                                  style={{ color: RISK_COLORS[band], fontWeight: 700, fontSize: 14 }}>{pct.toFixed(1)}%</div>
+                                {showNet && (
+                                  <div title={`${netPct.toFixed(1)}% of all ${netTotal} profile segments scored ${RISK_LABELS[band as keyof typeof RISK_LABELS]} risk for ${label}`}
+                                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, borderTop: "1px dashed #eee", marginTop: 5, paddingTop: 5 }}>
+                                    <span style={{ color: "#999", fontSize: 11, fontWeight: 600 }}>{netPct.toFixed(1)}%</span>
+                                    {deltaBand(pct, netPct, band)}
+                                  </div>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td title={`Average ${label} score across loaded segments (lower = safer)`}
+                            style={{ ...tdStyle, textAlign: "center", fontSize: 14, fontWeight: 600, color: avgBandColor(dist), padding: "8px 6px" }}>
+                            {avg}
+                            {showNet && netAvg && (
+                              <div title={`Average ${label} score across all ${allProfileProjects.length} profile projects (network baseline)`}
+                                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, color: "#999", fontSize: 11, fontWeight: 600, borderTop: "1px dashed #eee", marginTop: 5, paddingTop: 5 }}>
+                                {netAvg} {deltaAvg(avg, netAvg, 11)}
+                              </div>
+                            )}
+                          </td>
+                          <td style={{ ...tdStyle, padding: "8px 10px", width: 100 }}>
+                            <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden", gap: 1 }}>
+                              {[1, 2, 3, 4].map((band) => {
+                                const pct = (dist[band] || 0) / tot * 100;
+                                return pct > 0 ? (
+                                  <div key={band} title={`${RISK_LABELS[band]}: ${pct.toFixed(1)}%`}
+                                    style={{ width: `${pct}%`, background: RISK_COLORS[band], minWidth: 2 }} />
+                                ) : null;
+                              })}
+                            </div>
+                            {showNet && netDistRow && (
+                              <div style={{ display: "flex", height: 4, borderRadius: 2, overflow: "hidden", gap: 1, marginTop: 3, opacity: 0.5 }}>
+                                {[1, 2, 3, 4].map((band) => {
+                                  const pct = (netDistRow[band] || 0) / netRowTot * 100;
+                                  return pct > 0 ? (
+                                    <div key={band} style={{ width: `${pct}%`, background: RISK_COLORS[band], minWidth: 2 }} />
+                                  ) : null;
+                                })}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {isLoadingNetworkData && !allLoaded && (
+                  <div style={{ color: "#aaa", fontSize: 9, display: "flex", alignItems: "center", gap: 5, marginTop: 6 }}>
+                    <Loader2 size={10} className="rb-spinner" /> Loading network data for comparison…
+                  </div>
+                )}
+              </>
             )}
           </div>
         );
