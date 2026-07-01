@@ -147,6 +147,22 @@ def _load_originals() -> dict:
             return {}
     return {}
 
+
+def _detect_geom_type(shp_path: Path) -> str | None:
+    """Read the geometry type from a spatial file's schema without loading all features."""
+    try:
+        with fiona.open(str(shp_path)) as f:
+            raw = (f.schema.get("geometry") or "").replace("3D ", "").strip()
+            if "Polygon" in raw:
+                return "Polygon"
+            if "Line" in raw:
+                return "LineString"
+            if "Point" in raw:
+                return "Point"
+    except Exception:
+        pass
+    return None
+
 def _save_originals(data: dict) -> None:
     _originals_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
 
@@ -221,9 +237,22 @@ def _file_info(shp_path: Path, root: Path) -> dict:
     req_cols = ", ".join(ld.required_columns) if ld and ld.required_columns else "None"
     affects = ld.description if ld else "Unknown"
     
-    geom_type_str = "Unknown"
-    if ld and ld.geometry_types:
-        geom_type_str = ", ".join(ld.geometry_types)
+    # Detect geometry type from the actual file first (reads schema only, not all features)
+    geom_type_str = _detect_geom_type(shp_path)
+    if geom_type_str is None:
+        # Fall back to layer definition if file detection fails
+        if ld and ld.geometry_types:
+            raw = ld.geometry_types[0]
+            if "Polygon" in raw:
+                geom_type_str = "Polygon"
+            elif "Line" in raw:
+                geom_type_str = "LineString"
+            elif "Point" in raw:
+                geom_type_str = "Point"
+            else:
+                geom_type_str = raw
+        else:
+            geom_type_str = "Unknown"
 
     # Use stem for display name, replacing underscores with spaces
     display_name = shp_path.stem.replace("_", " ").title()
