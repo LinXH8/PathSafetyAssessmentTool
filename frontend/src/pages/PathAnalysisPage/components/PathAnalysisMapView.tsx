@@ -514,7 +514,7 @@ export default function AttributeAnalysisMapView({
   const isV2 = variant === "v2";
   const navigate = useNavigate();
   // v2: a "Generate Report" button sits beside the Download dropdown (ported from
-  // the v1 sidebar). The label flips to "Continue Report" when a saved layout exists.
+  // the v1 sidebar).
   const hasSavedReport = useMemo(() => {
     try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
   }, []);
@@ -2717,7 +2717,7 @@ export default function AttributeAnalysisMapView({
                     }}
                     style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
                   >
-                    {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                    {"📄 Generate Report"}
                   </Button>
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>

@@ -175,7 +175,7 @@ const CAPTION: CSSProperties = { fontSize: 12, color: COLOR.gray500, fontFamily:
 export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
   const {
     projectNames, loading, error, isAllScope, activeProject, len,
-    scope, panKey, currentCtx, scopeTotal, scopePage, pageInput,
+    scope, panKey, currentCtx, scopeTotal, scopePage, pageInput, pageIndices,
     geoFeatures, currentIndex, scores, afterTreatmentScores,
     accordionView, attrs, effectivenessLoading, allApplicableTreatments,
     effectivenessCounts, applicableCounts, segmentScoreDrops, treatmentState,
@@ -187,6 +187,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     activeAttributeGroupTab, previewScores, previewLoading,
     beforeBandCounts, afterBandCounts, openConfirmAlert,
     effectivenessLabel, improvedSegmentCount,
+    autoSaveStatus, isStagingPreview, mapFilterContext,
   } = vm;
 
   // ── gating (mirror V1) ──
@@ -210,7 +211,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     : originalScores;
 
   let displayScoreRow: any = originalScores;
-  if (selectedTreatments.size > 0) {
+  if (isStagingPreview) {
     displayScoreRow = (previewLoading || !previewScores)
       ? appliedScoreRow
       : { ...scores[currentIndex], BB: previewScores.BB, BP: previewScores.BP, SB: previewScores.SB, VB: previewScores.VB, "Overall Risk Level": previewScores.total };
@@ -220,7 +221,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     displayScoreRow = appliedAfter ? appliedScoreRow : originalScores;
   }
 
-  const showDelta = selectedTreatments.size > 0 || (showPostTreatment && treatmentState[currentIndex]?.applied);
+  const showDelta = isStagingPreview || (showPostTreatment && treatmentState[currentIndex]?.applied);
   const beforeForDelta = showDelta ? originalScores : null;
 
   const crashCards: Array<{ key: string; label: string; value: number; delta: number | null; icon?: string }> = [
@@ -240,7 +241,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
   let pillText = "No treatments applied";
   let pillBg: string = COLOR.gray100;
   let pillFg: string = COLOR.gray500;
-  if (selectedTreatments.size > 0) {
+  if (isStagingPreview) {
     pillText = "Preview"; pillBg = "#EBF8FF"; pillFg = COLOR.blue;
   } else if (treatmentState[currentIndex]?.applied) {
     pillText = "Applied"; pillBg = "#F0FFF4"; pillFg = "#38A169";
@@ -274,29 +275,25 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     return allApplicableTreatments.length === 0;
   })();
   const onAllClear = () => {
+    let next: Set<number>;
     if (selectedTreatments.size > 0) {
-      vm.setSelectedTreatments(new Set());
-      return;
-    }
-    if (accordionView === "segment") {
+      next = new Set();
+    } else if (accordionView === "segment") {
       if (!currentAttr) return;
-      const applicable = getApplicableTreatments(currentAttr);
-      const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-      vm.setSelectedTreatments(new Set(applicable.filter((t) => !appliedIds.includes(t.id)).map((t) => t.id)));
+      next = new Set(getApplicableTreatments(currentAttr).map((t) => t.id));
     } else {
-      vm.setSelectedTreatments(new Set(allApplicableTreatments.map((t) => t.id)));
+      next = new Set(allApplicableTreatments.map((t) => t.id));
+    }
+    vm.setSelectedTreatments(next);
+    if (accordionView === "segment") {
+      vm.scheduleSegmentSave(Array.from(next).sort((a, b) => a - b));
     }
   };
   const resetAvailable = accordionView === "segment" && !!treatmentState[currentIndex]?.applied;
-  const segApplied = accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0;
 
   const onApplyClick = () => {
-    if (accordionView === "segment") {
-      vm.onApplyTreatments();
-    } else {
-      if (selectedTreatments.size === 0 || !currentCtx) return;
-      vm.setOpenConfirmAlert(true);
-    }
+    if (selectedTreatments.size === 0 || !currentCtx) return;
+    vm.setOpenConfirmAlert(true);
   };
 
   const toggleTreatment = (id: number, disabled: boolean) => {
@@ -304,6 +301,9 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     const next = new Set(selectedTreatments);
     if (next.has(id)) next.delete(id); else next.add(id);
     vm.setSelectedTreatments(next);
+    if (accordionView === "segment") {
+      vm.scheduleSegmentSave(Array.from(next).sort((a, b) => a - b));
+    }
   };
 
   return (
@@ -366,7 +366,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               <span style={{ fontSize: 16, fontWeight: 700, color: COLOR.text }}>/ {scopeTotal || 0}</span>
             </div>
             <V2Btn kind="blue" onClick={vm.onSaveAll} loading={vm.isSavingAll}>Save</V2Btn>
-            <V2Btn kind="dark" onClick={vm.onGenerateReport}>{vm.hasSavedReport ? "Continue Report" : "Generate Report"}</V2Btn>
+            <V2Btn kind="dark" onClick={vm.onGenerateReport}>Generate Report</V2Btn>
             <V2Btn kind="danger" onClick={vm.onResetAll}>Reset All</V2Btn>
           </div>
         </Flex>
@@ -386,6 +386,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               startIndex={0}
               scores={scores as any}
               scopeRange={isAllScope ? null : scope}
+              filterContext={mapFilterContext}
               autoFitKey={panKey}
               panKey={panKey}
             />
@@ -403,6 +404,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               startIndex={0}
               scores={afterTreatmentScores as any}
               scopeRange={isAllScope ? null : scope}
+              filterContext={mapFilterContext}
               autoFitKey={panKey}
               panKey={panKey}
             />
@@ -421,8 +423,8 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               </div>
             </div>
             <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-              <V2Btn kind="dark" flex={1} onClick={() => vm.gotoPage(currentPage - 1)} disabled={currentPage <= 1}>Previous</V2Btn>
-              <V2Btn kind="dark" flex={1} onClick={() => vm.gotoPage(currentPage + 1)} disabled={currentPage >= len}>Next</V2Btn>
+              <V2Btn kind="dark" flex={1} onClick={() => { const p = pageIndices[scopePage - 2]; if (p !== undefined) vm.gotoPage(p + 1); }} disabled={scopePage <= 1}>Previous</V2Btn>
+              <V2Btn kind="dark" flex={1} onClick={() => { const p = pageIndices[scopePage]; if (p !== undefined) vm.gotoPage(p + 1); }} disabled={scopePage >= scopeTotal}>Next</V2Btn>
             </div>
             <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
               <span style={{ fontSize: 16, fontWeight: 700, flexShrink: 0 }}>Post-Treatment Artistic Impression</span>
@@ -465,9 +467,12 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                     const isApplied = accordionView === "segment"
                       ? !!(treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
                       : fullyAppliedTreatments.has(t.id);
+                    // Segment view: always toggleable (auto-saves); treatment view: lock applied rows
+                    const isDisabledItem = accordionView === "segment" ? false : isApplied;
+                    const showAppliedStyle = accordionView === "segment" ? false : isApplied;
                     const isSel = selectedTreatments.has(t.id);
-                    const cbBg = isApplied ? "#38A169" : isSel ? COLOR.blue : COLOR.white;
-                    const cbBorder = isApplied ? "#38A169" : isSel ? COLOR.blue : COLOR.borderInput;
+                    const cbBg = showAppliedStyle ? "#38A169" : isSel ? COLOR.blue : COLOR.white;
+                    const cbBorder = showAppliedStyle ? "#38A169" : isSel ? COLOR.blue : COLOR.borderInput;
 
                     let metric = "";
                     if (accordionView === "treatment") {
@@ -484,16 +489,16 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                     return (
                       <div
                         key={t.id}
-                        onClick={() => toggleTreatment(t.id, isApplied)}
+                        onClick={() => toggleTreatment(t.id, isDisabledItem)}
                         style={{
                           display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: RADIUS, boxSizing: "border-box",
-                          cursor: isApplied ? "default" : "pointer",
-                          background: isApplied ? "#F0FFF4" : isSel ? "#EBF8FF" : COLOR.white,
-                          border: `1px solid ${isApplied ? "#9AE6B4" : isSel ? "#90CDF4" : COLOR.border}`,
+                          cursor: isDisabledItem ? "default" : "pointer",
+                          background: showAppliedStyle ? "#F0FFF4" : isSel ? "#EBF8FF" : COLOR.white,
+                          border: `1px solid ${showAppliedStyle ? "#9AE6B4" : isSel ? "#90CDF4" : COLOR.border}`,
                         }}
                       >
                         <div style={{ width: 18, height: 18, borderRadius: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: cbBg, border: `1px solid ${cbBorder}` }}>
-                          {(isApplied || isSel) && (
+                          {(showAppliedStyle || isSel) && (
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                           )}
                         </div>
@@ -501,7 +506,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                           <span style={{ fontSize: 16, fontWeight: 700, color: COLOR.text }}>{t.name}</span>
                           {metric && <span style={CAPTION}>{metric}</span>}
                         </div>
-                        {isApplied && <span style={{ fontSize: 12, fontWeight: 700, color: "#38A169" }}>✓</span>}
+                        {showAppliedStyle && <span style={{ fontSize: 12, fontWeight: 700, color: "#38A169" }}>✓</span>}
                       </div>
                     );
                   })}
@@ -509,9 +514,20 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               )}
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <V2Btn kind="ghost" width="100%" onClick={onAllClear} disabled={selectedTreatments.size === 0 && allClearDisabled}>
-                  {selectedTreatments.size > 0 ? "Clear" : "All"}
-                </V2Btn>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <V2Btn kind="ghost" flex={1} onClick={onAllClear} disabled={selectedTreatments.size === 0 && allClearDisabled}>
+                    {selectedTreatments.size > 0 ? "Clear" : "All"}
+                  </V2Btn>
+                  {accordionView === "segment" && autoSaveStatus !== "idle" && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, color: autoSaveStatus === "saving" ? "#6B7280" : "#16A34A" }}>
+                      {autoSaveStatus === "saving" ? (
+                        <><Spinner size="xs" /><span>Saving…</span></>
+                      ) : (
+                        <span>Saved ✓</span>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div style={{ display: "flex", gap: 8 }}>
                   <V2Btn
                     kind="dark"
@@ -532,27 +548,15 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                     {imageCopyButtonLabel}
                   </V2Btn>
                 </div>
-                {segApplied ? (
-                  <div
-                    style={{
-                      height: 40, width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
-                      background: "#F0FFF4", border: "1px solid #9AE6B4", borderRadius: RADIUS,
-                      fontFamily: FONT, fontWeight: 700, fontSize: 16, color: "#38A169", cursor: "default",
-                    }}
-                  >
-                    Applied ✓
-                  </div>
-                ) : (
+                {accordionView === "treatment" && (
                   <V2Btn
-                    kind={accordionView === "treatment" ? "teal" : "blue"}
+                    kind="teal"
                     width="100%"
                     disabled={selectedTreatments.size === 0}
                     loading={applyLoading}
                     onClick={onApplyClick}
                   >
-                    {accordionView === "treatment"
-                      ? `Apply to All (${selectedTreatments.size})`
-                      : `Apply (${selectedTreatments.size})`}
+                    {`Apply to All (${selectedTreatments.size})`}
                   </V2Btn>
                 )}
               </div>
@@ -630,9 +634,11 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               <AttributesPanel
                 variant="v2"
                 row={
-                  showPostTreatment && (treatmentState[currentIndex]?.applied || selectedTreatments.size > 0)
-                    ? modifiedAttrs
-                    : attrs[currentIndex]
+                  !showPostTreatment
+                    ? attrs[currentIndex]
+                    : (isStagingPreview || treatmentState[currentIndex]?.applied)
+                      ? modifiedAttrs
+                      : attrs[currentIndex]
                 }
                 mappings={attrMappings}
                 changedFields={showPostTreatment ? Array.from(changedAttributes) : []}

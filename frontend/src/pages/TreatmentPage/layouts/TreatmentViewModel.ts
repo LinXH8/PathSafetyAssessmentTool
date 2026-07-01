@@ -6,7 +6,7 @@
  * fetches, owns server state, or touches sessionStorage.
  */
 import type { Feature } from "geojson";
-import type { AttributeRow } from "../../../api";
+import type { AttributeRow, CodingFilterContext } from "../../../api";
 import type { Treatment, ScoreType, CopyButtonState } from "../treatmentConstants";
 
 export interface TreatmentViewModel {
@@ -37,6 +37,7 @@ export interface TreatmentViewModel {
   currentPage: number;
   scopePage: number;
   scopeTotal: number;
+  pageIndices: number[];
   pageInput: string;
   setPageInput(v: string): void;
   commitPage(v: string): void;
@@ -67,6 +68,10 @@ export interface TreatmentViewModel {
   onApplyTreatments(): void;
   onResetTreatments(): void;
 
+  // ── auto-save (segment view) ──
+  autoSaveStatus: "idle" | "saving" | "saved";
+  scheduleSegmentSave(ids: number[]): void;
+
   // ── copy actions ──
   copyButtonState: CopyButtonState;
   copyButtonLabel: string;
@@ -87,9 +92,15 @@ export interface TreatmentViewModel {
   onContributorClick(name: string): void;
 
   // ── crash-type scores card ──
+  // true only in the bulk "by treatment" view's staged (unsaved) selection
+  isStagingPreview: boolean;
   previewScores: ScoreType | null;
   previewLoading: boolean;
   projectContributors: { projectName: string; contributors: Array<{ name: string; contribution: number }> } | null;
+
+  // ── filter context (for before/after maps in filter mode) ──
+  mapFilterContext: CodingFilterContext | null;
+  filterMode: boolean;
 
   // ── overall analysis (bottom) ──
   beforeBandCounts: {
@@ -105,6 +116,9 @@ export interface TreatmentViewModel {
   openConfirmAlert: boolean;
   setOpenConfirmAlert(v: boolean): void;
   onConfirmApplyToAll(): void;
+
+  // ── navigation ──
+  onBack(): void;
 
   // ════════ v2-only page actions (on-canvas; v1 has these in the sidebar) ════════
   effectivenessLabel: string;          // e.g. "28%"

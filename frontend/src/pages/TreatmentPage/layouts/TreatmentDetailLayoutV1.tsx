@@ -1,7 +1,6 @@
 /**
- * Treatment Application — V1 layout shell. The current page body extracted
- * verbatim from `treatmentDetailPage.tsx`, now props-driven from
- * `TreatmentViewModel`. Byte-identical under `?ui=v1`.
+ * Treatment Application — V1 layout shell. Props-driven from TreatmentViewModel.
+ * Segment view uses auto-save (no Apply button); treatment view uses Apply-to-All.
  */
 import {
   Box,
@@ -41,7 +40,7 @@ import type { TreatmentViewModel } from "./TreatmentViewModel";
 export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
   const {
     projectNames, loading, error, isAllScope, activeProject, len,
-    scope, panKey, currentCtx, scopeTotal, scopePage, pageInput,
+    scope, panKey, currentCtx, scopeTotal, scopePage, pageInput, pageIndices,
     geoFeatures, currentIndex, scores, afterTreatmentScores,
     accordionView, attrs, effectivenessLoading, allApplicableTreatments,
     effectivenessCounts, applicableCounts, segmentScoreDrops, treatmentState,
@@ -52,6 +51,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
     modifiedAttrs, changedAttributes, changedFieldSources, attrMappings,
     activeAttributeGroupTab, previewScores, previewLoading, projectContributors,
     beforeBandCounts, afterBandCounts, openConfirmAlert,
+    autoSaveStatus, isStagingPreview, mapFilterContext,
   } = vm;
 
   if (projectNames.length === 0) {
@@ -80,7 +80,13 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
 
   return (
     <Box p="4">
-      {/* Project Tabs - scope the whole page to one project (or All Projects) */}
+      <Flex mb="3">
+        <Button variant="outline" colorPalette="gray" size="sm" onClick={vm.onBack}>
+          ← Back to Analysis
+        </Button>
+      </Flex>
+
+      {/* Project Tabs */}
       {projectNames.length > 1 && (
         <Flex gap="2" mb="4" wrap="wrap">
           {/* All Projects tab — aggregate view across every loaded project */}
@@ -90,7 +96,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             colorPalette={isAllScope ? "blue" : "gray"}
             size="md"
           >
-            All Projects ({len})
+            All Projects ({vm.filterMode ? pageIndices.length : len})
           </Button>
           {projectNames.map((proj) => {
             const isActive = activeProject === proj;
@@ -167,6 +173,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             startIndex={0}
             scores={scores as any}
             scopeRange={isAllScope ? null : scope}
+            filterContext={mapFilterContext}
             autoFitKey={panKey}
             panKey={panKey}
           />
@@ -189,6 +196,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             geoFeatures={geoFeatures as Feature<LineString, any>[]}
             startIndex={0}
             scopeRange={isAllScope ? null : scope}
+            filterContext={mapFilterContext}
             autoFitKey={panKey}
             panKey={panKey}
           />
@@ -296,10 +304,13 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                 <Flex direction="column" gap="2">
                   {displayTreatments.map((t) => {
                     const isApplied = accordionView === "segment"
-                      ? (treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
+                      ? !!(treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
                       : fullyAppliedTreatments.has(t.id);
 
-                    const isDisabled = isApplied;
+                    // Segment view: always toggleable (auto-saves); treatment view: lock applied rows
+                    const isDisabled = accordionView === "segment" ? false : isApplied;
+                    // Green "applied" styling only for the bulk view; segment view stays blue
+                    const showAppliedStyle = accordionView === "segment" ? false : isApplied;
 
                     return (
                       <Flex
@@ -309,7 +320,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                         p="2"
                         borderRadius="md"
                         bg={
-                          isApplied
+                          showAppliedStyle
                             ? "green.50"
                             : selectedTreatments.has(t.id)
                               ? "blue.50"
@@ -317,7 +328,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                         }
                         borderWidth="1px"
                         borderColor={
-                          isApplied
+                          showAppliedStyle
                             ? "green.200"
                             : selectedTreatments.has(t.id)
                               ? "blue.200"
@@ -331,12 +342,12 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                           shadow: isDisabled ? undefined : "sm"
                         }}
                         _dark={{
-                          bg: isApplied
+                          bg: showAppliedStyle
                             ? "green.900"
                             : selectedTreatments.has(t.id)
                               ? "blue.900"
                               : "gray.700",
-                          borderColor: isApplied
+                          borderColor: showAppliedStyle
                             ? "green.700"
                             : selectedTreatments.has(t.id)
                               ? "blue.700"
@@ -351,11 +362,14 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                             newSelected.add(t.id);
                           }
                           vm.setSelectedTreatments(newSelected);
+                          if (accordionView === "segment") {
+                            vm.scheduleSegmentSave(Array.from(newSelected).sort((a, b) => a - b));
+                          }
                         }}
                       >
                         <input
                           type="checkbox"
-                          checked={isApplied || selectedTreatments.has(t.id)}
+                          checked={accordionView === "segment" ? selectedTreatments.has(t.id) : (isApplied || selectedTreatments.has(t.id))}
                           disabled={isDisabled}
                           onChange={() => { }}
                           style={{ marginTop: '3px', cursor: isDisabled ? 'not-allowed' : 'pointer' }}
@@ -364,7 +378,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                         <Box flex="1">
                           <Text fontSize="xs" fontWeight="medium" color="gray.900" _dark={{ color: "white" }} lineHeight="1.2">
                             {t.name}
-                            {isApplied && " ✓"}
+                            {showAppliedStyle && " ✓"}
                           </Text>
                           {accordionView === "treatment" && (
                             <Text fontSize="2xs" color="blue.600" _dark={{ color: "blue.300" }} mt="1" fontWeight="semibold">
@@ -412,43 +426,44 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                       if (accordionView === "segment") {
                         const currentAttr = attrs[currentIndex] as any;
                         if (!currentAttr) return true;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        return applicable.every(t => appliedIds.includes(t.id));
-                      } else {
-                        return allApplicableTreatments.length === 0;
+                        return getApplicableTreatments(currentAttr).length === 0;
                       }
+                      return allApplicableTreatments.length === 0;
                     })()
                   }
                   onClick={() => {
+                    let next: Set<number>;
                     if (selectedTreatments.size > 0) {
-                      vm.setSelectedTreatments(new Set());
+                      next = new Set();
+                    } else if (accordionView === "segment") {
+                      const currentAttr = attrs[currentIndex] as any;
+                      if (!currentAttr) return;
+                      next = new Set(getApplicableTreatments(currentAttr).map(t => t.id));
                     } else {
-                      if (accordionView === "segment") {
-                        const currentAttr = attrs[currentIndex] as any;
-                        if (!currentAttr) return;
-                        const applicable = getApplicableTreatments(currentAttr);
-                        const appliedIds = treatmentState[currentIndex]?.treatment_ids ?? [];
-                        vm.setSelectedTreatments(new Set(applicable.filter(t => !appliedIds.includes(t.id)).map(t => t.id)));
-                      } else {
-                        vm.setSelectedTreatments(new Set(allApplicableTreatments.map(t => t.id)));
-                      }
+                      next = new Set(allApplicableTreatments.map(t => t.id));
+                    }
+                    vm.setSelectedTreatments(next);
+                    if (accordionView === "segment") {
+                      vm.scheduleSegmentSave(Array.from(next).sort((a, b) => a - b));
                     }
                   }}
                 >
                   {selectedTreatments.size > 0 ? "Clear" : "All"}
                 </Button>
-                {accordionView === "segment" && treatmentState[currentIndex]?.applied && (
-                  <Button
-                    flex="1"
-                    size="xs"
-                    variant="ghost"
-                    colorScheme="red"
-                    loading={applyLoading}
-                    onClick={vm.onResetTreatments}
-                  >
-                    Reset
-                  </Button>
+                {accordionView === "segment" && autoSaveStatus !== "idle" && (
+                  <Flex flex="1" align="center" justify="flex-end" gap="1" fontSize="xs">
+                    {autoSaveStatus === "saving" ? (
+                      <>
+                        <Spinner size="xs" />
+                        <Text color="gray.500" _dark={{ color: "gray.400" }}>Saving…</Text>
+                      </>
+                    ) : (
+                      <>
+                        <LuCheck color="#22c55e" />
+                        <Text color="green.600" _dark={{ color: "green.300" }}>Saved</Text>
+                      </>
+                    )}
+                  </Flex>
                 )}
               </Flex>
 
@@ -480,26 +495,23 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   {imageCopyButtonState === "copied" ? <LuCheck /> : <LuImage />}
                   <span>{imageCopyButtonLabel}</span>
                 </Button>
-                <Button
-                  size="sm"
-                  flex="1"
-                  variant="solid"
-                  colorScheme={accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0 ? "green" : "blue"}
-                  disabled={selectedTreatments.size === 0 || applyLoading}
-                  loading={applyLoading}
-                  onClick={async () => {
-                    if (accordionView === "segment") {
-                      vm.onApplyTreatments();
-                    } else {
+                {/* Segment view auto-saves on toggle; Apply only drives the bulk "by treatment" flow */}
+                {accordionView !== "segment" && (
+                  <Button
+                    size="sm"
+                    flex="1"
+                    variant="solid"
+                    colorScheme="blue"
+                    disabled={selectedTreatments.size === 0 || applyLoading}
+                    loading={applyLoading}
+                    onClick={() => {
                       if (selectedTreatments.size === 0 || !currentCtx) return;
                       vm.setOpenConfirmAlert(true);
-                    }
-                  }}
-                >
-                  {accordionView === "segment" && treatmentState[currentIndex]?.applied && selectedTreatments.size === 0
-                    ? "Applied ✓"
-                    : `Apply (${selectedTreatments.size})`}
-                </Button>
+                    }}
+                  >
+                    {`Apply (${selectedTreatments.size})`}
+                  </Button>
+                )}
               </Flex>
             </Flex>
           </Box>
@@ -530,8 +542,11 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
               minW={0}
               size="sm"
               variant="outline"
-              onClick={() => vm.gotoPage(currentPage - 1)}
-              disabled={currentPage <= 1}
+              onClick={() => {
+                const prev = pageIndices[scopePage - 2];
+                if (prev !== undefined) vm.gotoPage(prev + 1);
+              }}
+              disabled={scopePage <= 1}
             >
               Previous
             </Button>
@@ -541,8 +556,11 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
               minW={0}
               size="sm"
               variant="solid"
-              onClick={() => vm.gotoPage(currentPage + 1)}
-              disabled={currentPage >= len}
+              onClick={() => {
+                const next = pageIndices[scopePage];
+                if (next !== undefined) vm.gotoPage(next + 1);
+              }}
+              disabled={scopePage >= scopeTotal}
             >
               Next
             </Button>
@@ -593,8 +611,8 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   } as any
                   : originalScores;
 
-                // Show preview scores whenever treatments are selected, regardless of showPostTreatment toggle
-                if (selectedTreatments.size > 0) {
+                // Live preview only for the bulk "by treatment" view's staged selection
+                if (isStagingPreview) {
                   if (previewLoading || !previewScores) {
                     return appliedScoreRow;
                   }
@@ -612,14 +630,10 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   return originalScores;
                 }
 
-                if (appliedAfterScores) {
-                  return appliedScoreRow;
-                }
-
-                return originalScores;
+                return appliedAfterScores ? appliedScoreRow : originalScores;
               })()}
               beforeScores={
-                (selectedTreatments.size > 0 || (showPostTreatment && treatmentState[currentIndex]?.applied))
+                (isStagingPreview || (showPostTreatment && treatmentState[currentIndex]?.applied))
                   ? {
                     BB: scores[currentIndex]?.["BB"] ?? 0,
                     BP: scores[currentIndex]?.["BP"] ?? 0,
@@ -629,7 +643,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   }
                   : undefined
               }
-              showPreviewBackground={selectedTreatments.size > 0}
+              showPreviewBackground={isStagingPreview}
               projectContributors={projectContributors}
               onContributorClick={vm.onContributorClick}
             />
@@ -663,7 +677,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   Show Pre-Treatment
                 </Text>
                 <Switch
-                  checked={!showPostTreatment}
+                  checked={segmentHasTreatments ? !showPostTreatment : false}
                   disabled={!segmentHasTreatments}
                   onCheckedChange={(e: any) => vm.setShowPostTreatment(!e.checked)}
                 />
@@ -672,17 +686,15 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             <Box flex="1" minH="0">
               <AttributesPanel
                 row={
-                  showPostTreatment && (treatmentState[currentIndex]?.applied || selectedTreatments.size > 0)
-                    ? modifiedAttrs
-                    : attrs[currentIndex]
+                  !showPostTreatment
+                    ? attrs[currentIndex]
+                    : (isStagingPreview || treatmentState[currentIndex]?.applied)
+                      ? modifiedAttrs
+                      : attrs[currentIndex]
                 }
                 mappings={attrMappings}
-                changedFields={
-                  showPostTreatment ? Array.from(changedAttributes) : []
-                }
-                fieldSources={
-                  showPostTreatment ? changedFieldSources : {}
-                }
+                changedFields={showPostTreatment ? Array.from(changedAttributes) : []}
+                fieldSources={showPostTreatment ? changedFieldSources : {}}
                 highlightMessage="Modified by treatment"
                 activeGroupTab={activeAttributeGroupTab}
                 readOnly={true}
