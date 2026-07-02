@@ -78,7 +78,6 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Heavy Vehicle Flow | Low; Moderate to High | — |
 | Bicycle/LV Speed – Average | < 20 km/h; ≥ 20 km/h | — |
 | Road Speed Limit | NA; 30 km/h; 40 km/h; 50 km/h; 60 km/h; 70 km/h; 80 km/h; 90 km/h | — |
-| Delineation | Not Present | Faded Marking |
 **How to use finer filtering:**
 
 1. In the Filter panel, select an attribute that supports finer filtering (marked **❖**).
