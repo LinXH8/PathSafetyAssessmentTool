@@ -29,7 +29,7 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
 
   return (
     <>
-      {/* 编辑 Dialog */}
+      {/* Edit project dialog */}
       {editingProject && (
         <EditProjectModal
           open={openEdit}

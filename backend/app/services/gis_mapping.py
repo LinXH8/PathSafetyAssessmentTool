@@ -103,7 +103,7 @@ class LayerStore:
         """Lazy load: reads from parquet cache or shapefile on first access."""
         if name not in self.layers:
             if name not in self.paths:
-                raise KeyError(f"未注册图层: {name}")
+                raise KeyError(f"Layer not registered: {name}")
             shp_path: Path = self.paths[name]
             if not shp_path.exists() and not shp_path.with_name(shp_path.stem + ".cache.parquet").exists():
                 print(f"Warning: neither {shp_path} nor its parquet cache exists. Returning empty GeoDataFrame.")
@@ -139,7 +139,7 @@ class LayerStore:
         pt = Point(point) if isinstance(point, tuple) else point
 
         if input_crs is None:
-            # 简单启发式：如果像经纬度，就当 WGS84，否则当作已是米制
+            # Simple heuristic: if coordinates look like lat/lon, assume WGS84; otherwise treat as metric CRS already
             x, y = (pt.x, pt.y)
             if (-180 <= x <= 180) and (-90 <= y <= 90):
                 crs_in = CRS_WGS84
@@ -153,7 +153,7 @@ class LayerStore:
 
     @classmethod
     def default(cls, base_dir="shp"):
-        """预设所有图层路径"""
+        """Pre-register all default layer paths."""
         store = cls()
         base = Path(base_dir)
         store.add_path("mrt", base / "Mrt_exit" / "MRT_EXITS.shp")
@@ -198,7 +198,7 @@ class LayerStore:
 
 
 class GIS:
-    """简单规则判断"""
+    """Simple rule-based spatial query wrapper."""
     def __init__(self, store: LayerStore):
         self.store = store
         # Cache prepared path layers to avoid repeated CRS/Z/validity processing.
@@ -246,7 +246,7 @@ class GIS:
             return {'MICROMOBILITY': 0, 'OTHER': 0}
 
         g = df.copy()
-        # 统一出行类型
+        # Normalise travel mode labels
         g[data_col] = g[data_col].astype(str).str.strip().str.upper()
         alias = {
             'CYCLISTS': 'CYCLIST',
@@ -258,15 +258,15 @@ class GIS:
         mic = {'CYCLIST', 'PMD', 'PAB'}
         g['mode_group'] = np.where(g[data_col].isin(mic), 'MICROMOBILITY', 'OTHER')
 
-        # 时间→按小时取整
+        # Truncate timestamps to the hour
         g[time_col] = pd.to_datetime(g[time_col], errors='coerce', dayfirst=dayfirst)
         g = g[g[time_col].notna()]
         g['hour'] = g[time_col].dt.floor('H')
 
-        # 计数列数值化
+        # Coerce count column to numeric
         g[count_col] = pd.to_numeric(g[count_col], errors='coerce').fillna(0)
 
-        # 每小时 × 分组 合计
+        # Sum counts by hour x mode group
         hourly = (g.groupby(['hour','mode_group'], as_index=False)[count_col]
                     .sum().rename(columns={count_col: 'hourly_count'}))
 
@@ -307,25 +307,25 @@ class GIS:
         return 2
     
     def get_peak_pedestrian_flow(self, pt, dist=20):
-        # 统一坐标到 3414（米）
+        # Reproject query point to metric CRS (EPSG:3414)
         pt = self.store.to_metric_point(pt)
 
         gdf1 = self.store.get("beforeCount")
         gdf2 = self.store.get("sensorCount")
 
-        # 只保留有效点
+        # Drop rows with missing or non-Point geometries
         gdf1 = gdf1[gdf1.geometry.notna() & (gdf1.geom_type == "Point")].copy()
         gdf2 = gdf2[gdf2.geometry.notna() & (gdf2.geom_type == "Point")].copy()
 
         buf = pt.buffer(dist)
 
-        # sindex 粗筛 + 精确距离细筛
+        # Coarse sindex candidate filter, then exact distance refinement
         idx1 = gdf1.sindex.query(buf)
         near1 = gdf1.iloc[idx1]
         if len(near1):
             near1 = near1[near1.geometry.distance(pt) <= dist]
         else:
-            near1 = gdf1.iloc[0:0]  # 空表但保留列
+            near1 = gdf1.iloc[0:0]  # empty GeoDataFrame that preserves column schema
 
         idx2 = gdf2.sindex.query(buf)
         near2 = gdf2.iloc[idx2]
@@ -333,20 +333,20 @@ class GIS:
             near2 = near2[near2.geometry.distance(pt) <= dist]
         else:
             near2 = gdf2.iloc[0:0]
-            
 
-        # 小工具：做小时聚合
+
+        # Helper: aggregate to hourly peak by mode group
         before_peaks = (
             self._peak_hourly_by_group(
                 near1,
-                data_col='DataType',    # ← 按你的真实列名改
-                time_col='DateTime',    # ← 按你的真实列名改
-                count_col='Count_Data',       # ← 按你的真实列名改
+                data_col='DataType',    # column name in beforeCount shapefile
+                time_col='DateTime',    # column name in beforeCount shapefile
+                count_col='Count_Data', # column name in beforeCount shapefile
                 dayfirst=True
             )
             if len(near1) else None
         )
-        
+
         sensor_peaks = (
             self._peak_hourly_by_group(
                 near2,
@@ -358,7 +358,7 @@ class GIS:
             if len(near2) else None
         )
 
-        # 统一返回结构
+        # Unified return structure
         return {
             "before_peaks": before_peaks,   # {'MICROMOBILITY': x, 'OTHER': y}
             "sensor_peaks": sensor_peaks,   # {'MICROMOBILITY': x, 'OTHER': y}

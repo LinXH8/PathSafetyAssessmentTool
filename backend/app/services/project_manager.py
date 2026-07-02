@@ -408,7 +408,7 @@ class Project:
         yyyymmdd = datetime.datetime.now().strftime("%Y%m%d")
         today_ver_path = self.project_path / "versions" / yyyymmdd
         if not today_ver_path.exists():
-            # 只有在今天目录真的不存在时，才创建新版本
+            # Only create a new version when today's directory does not yet exist
             self.create_new_version(self.latest())
 
         # NOTE: metadata is NOT serialized here intentionally.

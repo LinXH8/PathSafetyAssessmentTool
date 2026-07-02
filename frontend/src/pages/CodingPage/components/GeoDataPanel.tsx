@@ -29,10 +29,10 @@ import { GRADIENT_STATUS_NO_LIDAR_RESULT, getGradientDisplayState } from "../../
 
 type Props = {
   projectName: string;                       // Current project name from parent
-  feature: Feature<LineString, any> | null;  // 当前段（父组件传入）
-  index: number;                             // 当前页（父组件传入，0-based）
+  feature: Feature<LineString, any> | null;  // Current segment (passed from parent)
+  index: number;                             // Current page index (passed from parent, 0-based)
   onJump?: (idx: number) => void;            // Jump to segment callback
-  containerHeight?: number | string;         // 容器总高度（包括header）; number→px, or a CSS length string (e.g. clamp/vh) for fluid v2 maps
+  containerHeight?: number | string;         // Total container height (including header); number=px or a CSS length string (e.g. clamp/vh) for fluid v2 maps
   scores?: ScoreRow[];                       // Optional scores passed from parent for real-time updates
   subtitle?: string;                         // Optional subtitle to display next to "Map Preview"
   geoFeatures?: Feature<LineString, any>[];  // Optional pre-loaded geofeatures (for multi-project display)
@@ -67,7 +67,7 @@ type ScoreRow = {
   [key: string]: any;
 };
 
-// --- EPSG:3414 (SVY21 / Singapore TM) 定义 -> EPSG:4326 ---
+// --- EPSG:3414 (SVY21 / Singapore TM) projection definition -> EPSG:4326 ---
 proj4.defs(
   "EPSG:3414",
   "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
@@ -82,12 +82,12 @@ const to4326 = (p: Position): [number, number] => {
     return [y, x]; // return [lat, lon]
   }
 
-  // 返回 [lat, lng]
+  // Returns [lat, lng]
   const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
   return [lat, lon];
 };
 
-// 小组件：根据点集自动 fit bounds (only on initial load)
+// Helper component: auto-fit map bounds to a set of points (first load only)
 function FitBounds({ points }: { points: [number, number][] }) {
   const map = useMap();
   const hasFitRef = useRef(false);
@@ -630,7 +630,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
   };
   const [pathDefects, setPathDefects] = useState<PathDefect[] | null>(null);
 
-  // 拉取整条 geodata（如果没有 external geofeatures）
+  // Fetch the full geodata for this project (skipped when parent provides external geofeatures)
   useEffect(() => {
     // Skip if we have external geofeatures provided by parent
     if (hasExternalGeoFeatures) {
@@ -698,7 +698,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => window.removeEventListener("psat:scores:updated", handleScoresUpdated);
   }, [fetchScores, externalScores]);
 
-  // 取每条 LineString 的首点（转 4326），并保留原 feature
+  // Extract the first point of each LineString (reprojected to WGS84) and keep a reference to the original feature.
   // For multi-project display, localIdx is the index within geoFeatures,
   // and globalIdx is the index within the aggregated scores array
   const points = useMemo(() => {
@@ -756,7 +756,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     [verifiedByProject, decodedName]
   );
 
-  // 当前高亮点 - use globalIdx to match the index prop (global index)
+  // Currently highlighted point — use globalIdx to match the index prop (global index)
   const current = useMemo(() => points.find(p => p.globalIdx === index) ?? null, [points, index]);
 
   // GIS query point: starts at current segment, can be repositioned by clicking on the map
@@ -812,7 +812,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     { percentDigits: 1 },
   );
 
-  // 初始中心（无数据时默认新加坡中心点）
+  // Initial map centre (defaults to Singapore centre when no data is loaded)
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
 
   // Fetch GIS layers when any toggle is turned on and we have a current point
@@ -1372,7 +1372,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* CartoDB Light basemap - same as Curvature Analysis */}
               <ThemeAwareTileLayer />
 
-              {/* 数据范围自适应 (first load only) */}
+              {/* Auto-fit bounds to all data points (first load only) */}
               {allLatLngs.length > 0 && <FitBounds points={allLatLngs} />}
 
               {/* Auto-zoom to current point when GIS layers active */}
@@ -1384,7 +1384,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* Zoom to the 5m curvature circle when the overlay is enabled */}
               <ZoomToCurvature showCurvatureOverlay={showCurvatureOverlay ?? false} circleCoords={circleCoords} />
 
-              {/* 自动跟随当前选中点 */}
+              {/* Auto-pan to the currently selected segment point */}
               <MapAutoCenter
                 center={current?.latlng ?? null}
                 anyLayerOn={showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showPathDefects}

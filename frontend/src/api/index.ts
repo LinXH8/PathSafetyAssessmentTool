@@ -104,9 +104,9 @@ export async function fetchProjectGeoJSON(projectName: string): Promise<FeatureC
 }
 
 // ===== types =====
-export type AttrMappings = Record<string, Record<string, string>>; // 字段名 -> { "1": "Suburban", ... }
+export type AttrMappings = Record<string, Record<string, string>>; // field name -> { "1": "Suburban", ... }
 
-// ===== fetch mappings (数字 -> 文本) =====
+// ===== fetch mappings (numeric code -> display label) =====
 export async function fetchAttributeMappings(): Promise<AttrMappings> {
   const r = await fetch("/api/projects/attribute-mappings");
   if (!r.ok) throw new Error("Failed to load attribute mappings");
@@ -573,7 +573,7 @@ export async function createProjectFromFolder(
     }),
   });
   if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-  // 返回形如 { ok: true, name: "<project>" }
+  // Returns { ok: true, name: "<project>" }
   return (await res.json()) as { ok?: boolean; name?: string };
 }
 
@@ -583,11 +583,11 @@ export async function deleteProject(projectName: string) {
     method: "DELETE",
   });
   if (!res.ok) {
-    // 尝试输出后端的错误信息
+    // Attempt to surface the backend error message
     const msg = await res.text().catch(() => res.statusText);
     throw new Error(msg || "Delete failed");
   }
-  // 预计返回 { ok: true, name: string }
+  // Expected response shape: { ok: true, name: string }
   return (await res.json()) as { ok?: boolean; name?: string };
 }
 
