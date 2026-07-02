@@ -471,8 +471,24 @@ export default function AttributesPanel({
   // presentation differs. ──
   if (variant === "v2") {
     const v2Fields = grouped ? (grouped[selectedTab] ?? []) : [];
+    // Lock the attribute grid to the FIRST tab's height so the panel never
+    // changes height between tabs or segments (taller tabs scroll; shorter tabs
+    // show trailing whitespace). Two things make this robust where prior attempts
+    // failed:
+    //   1. The height is self-imposed in PX. The consumer's parent chain is
+    //      height:auto, so a %/flex height silently resolves to "auto" and never
+    //      scrolls — the panel must not rely on inherited height at all.
+    //   2. Rows are a FIXED px height (>= the natural item height, incl. the 24px
+    //      pencil button), so items can never be squeezed and clip into each other.
+    const V2_COLS = 2;
+    const V2_ROW_H = 88; // px — one attribute row (title + pencil + control + padding + border)
+    const V2_ROW_GAP = 10; // px — matches the grid's rowGap ("10px 18px")
+    const v2RefCount =
+      groupsWithFields[0] && grouped ? (grouped[groupsWithFields[0]]?.length ?? 0) : 0;
+    const v2RefRows = Math.max(1, Math.ceil(v2RefCount / V2_COLS));
+    const gridBodyHeight = v2RefRows * V2_ROW_H + (v2RefRows - 1) * V2_ROW_GAP;
     return (
-      <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0, width: "100%", minWidth: 0, maxWidth: "100%", flex: typeof flex === "number" ? flex : undefined }}>
+      <div style={{ display: "flex", flexDirection: "column", width: "100%", minWidth: 0, maxWidth: "100%" }}>
         {/* attribute category tabs (§6) — scroll sideways when they overflow. */}
         <div style={{ display: "flex", alignItems: "flex-end", overflowX: "auto", overflowY: "hidden", flexShrink: 0, minWidth: 0, scrollbarWidth: "none" }}>
           {groupsWithFields.map((g) => {
@@ -489,11 +505,11 @@ export default function AttributesPanel({
           })}
         </div>
         {/* card body */}
-        <div style={{ flex: 1, minHeight: 0, border: `1px solid ${COLOR.border}`, borderRadius: "0 6px 6px 6px", background: COLOR.white, padding: 12, marginTop: -1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: "0 6px 6px 6px", background: COLOR.white, padding: 12, marginTop: -1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {!row || v2Fields.length === 0 ? (
-            <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: 8 }}>No attributes</div>
+            <div style={{ height: gridBodyHeight, fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: 8 }}>No attributes</div>
           ) : (
-            <div style={{ flex: 1, display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "10px 18px", overflowY: "auto", alignContent: "start" }}>
+            <div style={{ height: gridBodyHeight, display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gridAutoRows: `${V2_ROW_H}px`, gap: "10px 18px", overflowY: "auto", alignContent: "start" }}>
               {v2Fields.map(([k, v]) => {
                 const dict = mappings[k];
                 const strVal = toDisplayString(v);

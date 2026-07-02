@@ -460,14 +460,14 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                   <span style={sectionTitle}>Top Risk Contributors</span>
                   {legendRow([["By Project", "#2B6CB0"], ["By Segment", "#DD6B20"]])}
                 </div>
-                <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: "0.375rem", overflowY: "auto", height: "7rem" }}>
+                <div style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap", gap: "0.375rem", overflowY: "auto", height: "6rem" }}>
                   {segChips.map((c, i) => (
-                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#DD6B20", color: COLOR.white, borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`s${i}`} onClick={() => handleContributorClick(c.name)} style={{ display: "inline-flex", alignItems: "center", height: "1.75rem", boxSizing: "border-box", background: "#DD6B20", color: COLOR.white, borderRadius: "0.25rem", padding: "0 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.val.toFixed(1)}</strong>
                     </div>
                   ))}
                   {projChips.map((c: { name: string; contribution: number }, i: number) => (
-                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ background: "#2B6CB0", color: COLOR.white, borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <div key={`p${i}`} onClick={() => handleContributorClick(c.name)} style={{ display: "inline-flex", alignItems: "center", height: "1.75rem", boxSizing: "border-box", background: "#2B6CB0", color: COLOR.white, borderRadius: "0.25rem", padding: "0 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}>
                       {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                     </div>
                   ))}
