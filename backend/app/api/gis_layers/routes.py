@@ -148,6 +148,59 @@ def _load_originals() -> dict:
     return {}
 
 
+# ── User-defined metadata overrides (Required Columns / Affects) ───────
+# Lets users correct or set the "Required Columns" / "Affects" labels shown
+# in the GIS Layers list for layers that don't match a known LayerDefinition
+# (e.g. a newly uploaded layer that isn't part of the autocoding pipeline).
+# This is display metadata only — it does not change what columns the
+# scoring engine actually reads.
+KNOWN_AFFECT_PARAMETERS = [
+    "Facility Width",
+    "Curvature",
+    "Grade",
+    "Road Operating Speed",
+    "Road Speed Limit",
+    "Number of Lanes – Adjacent Road",
+    "Pedestrian Crossing",
+    "Crossing Facility",
+    "Crossing Type",
+    "Peak Pedestrian Flow",
+    "Peak Bicycle Traffic Flow",
+    "Heavy Vehicle Flow",
+    "Adjacent Vehicle Parking",
+    "Area Type (Urban)",
+    "Area Type (Rural)",
+    "Area Type (Recreational)",
+    "Area Type (Industrial)",
+    "Land Use Type",
+    "Road Name Reference",
+    "Road Network Node Reference",
+    "Loose/Slippery Surface",
+    "Major Surface Deformation",
+    "Intersection or Road Crossing",
+    "Area-based Reporting",
+    "User Counts (Pedestrian/Cyclist)",
+]
+
+
+def _metadata_overrides_path() -> Path:
+    return _shp_root() / ".psat_layer_metadata.json"
+
+
+def _load_metadata_overrides() -> dict:
+    p = _metadata_overrides_path()
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+
+def _save_metadata_overrides(data: dict) -> None:
+    _metadata_overrides_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
 def _detect_geom_type(shp_path: Path) -> str | None:
     """Read the geometry type from a spatial file's schema without loading all features."""
     try:
@@ -236,6 +289,16 @@ def _file_info(shp_path: Path, root: Path) -> dict:
     ld = get_layer_definition(ld_key)
     req_cols = ", ".join(ld.required_columns) if ld and ld.required_columns else "None"
     affects = ld.description if ld else "Unknown"
+
+    # A user-set override (via /api/shapefiles/metadata) always wins over the
+    # guessed/hardcoded values above — needed for layers that don't fit any
+    # known LayerDefinition.
+    override = _load_metadata_overrides().get(rel.as_posix())
+    is_custom_metadata = False
+    if override:
+        req_cols = override.get("required_columns") or req_cols
+        affects = override.get("affects") or affects
+        is_custom_metadata = True
     
     # Detect geometry type from the actual file first (reads schema only, not all features)
     geom_type_str = _detect_geom_type(shp_path)
@@ -269,7 +332,8 @@ def _file_info(shp_path: Path, root: Path) -> dict:
         "year": year,
         "source": fallback_source,
         "required_columns": req_cols,
-        "affects": affects
+        "affects": affects,
+        "is_custom_metadata": is_custom_metadata,
     }
 
 
@@ -686,7 +750,68 @@ def delete_shapefile(shapefile_path: str):
         originals.pop(shapefile_path)
         _save_originals(originals)
 
+    overrides = _load_metadata_overrides()
+    if shapefile_path in overrides:
+        overrides.pop(shapefile_path)
+        _save_metadata_overrides(overrides)
+
     return jsonify({"message": f"Deleted {len(deleted)} file(s)", "deleted_files": deleted})
+
+
+# ---------------------------------------------------------------------------
+# GET /api/shapefiles/parameter-options
+# ---------------------------------------------------------------------------
+
+@bp.get("/parameter-options")
+def get_parameter_options():
+    """Return the curated list of parameter tags offered in the 'Affects' picker."""
+    return jsonify(KNOWN_AFFECT_PARAMETERS)
+
+
+# ---------------------------------------------------------------------------
+# POST /api/shapefiles/metadata
+# ---------------------------------------------------------------------------
+
+@bp.post("/metadata")
+def set_layer_metadata():
+    """
+    Set a user-defined override for a layer's displayed 'Required Columns' /
+    'Affects' metadata. This does not change what the scoring engine reads —
+    it only corrects the informational labels shown in the GIS Layers list.
+
+    Body: {
+        "path": "category/file.shp",
+        "required_columns": "COL_A, COL_B",   # optional, free text
+        "affects": ["Facility Width", "Curvature", "My Custom Parameter"]
+    }
+    """
+    body = request.get_json(force=True, silent=True) or {}
+    shapefile_path = (body.get("path") or "").strip()
+    required_columns = (body.get("required_columns") or "").strip()
+    affects_list = body.get("affects") or []
+
+    if not shapefile_path:
+        return jsonify({"error": "path is required"}), 400
+    if not isinstance(affects_list, list):
+        return jsonify({"error": "affects must be a list of strings"}), 400
+
+    abs_path = _safe_relative(shapefile_path)
+    if abs_path is None or not abs_path.exists():
+        return jsonify({"error": f"Shapefile not found: {shapefile_path}"}), 404
+
+    affects_str = ", ".join(str(a).strip() for a in affects_list if str(a).strip())
+    if not required_columns and not affects_str:
+        return jsonify({"error": "Provide at least one of required_columns or affects"}), 400
+
+    overrides = _load_metadata_overrides()
+    overrides[shapefile_path] = {
+        "required_columns": required_columns,
+        "affects": affects_str,
+    }
+    _save_metadata_overrides(overrides)
+
+    root = _shp_root()
+    return jsonify({"message": "Layer metadata updated", "info": _file_info(abs_path, root)})
 
 
 # ---------------------------------------------------------------------------
@@ -749,6 +874,12 @@ def rename_shapefile():
         originals[new_rel] = orig_stem
     _save_originals(originals)
 
+    # Remap any metadata override to follow the file's new path
+    overrides = _load_metadata_overrides()
+    if shapefile_path in overrides:
+        overrides[new_rel] = overrides.pop(shapefile_path)
+        _save_metadata_overrides(overrides)
+
     return jsonify({"message": f"Renamed {len(renamed)} file(s)", "new_path": new_rel, "renamed_files": renamed})
 
 
@@ -795,5 +926,10 @@ def revert_shapefile():
     new_rel = (parent / (original_stem + ".shp")).relative_to(_shp_root()).as_posix()
     originals.pop(shapefile_path, None)
     _save_originals(originals)
+
+    overrides = _load_metadata_overrides()
+    if shapefile_path in overrides:
+        overrides[new_rel] = overrides.pop(shapefile_path)
+        _save_metadata_overrides(overrides)
 
     return jsonify({"message": f"Reverted {len(renamed)} file(s)", "new_path": new_rel, "renamed_files": renamed})
