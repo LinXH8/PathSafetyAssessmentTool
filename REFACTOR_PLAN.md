@@ -137,7 +137,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 ### Phase 0 — Repo hygiene & dead-file cleanup (3–4 days)
 - [x] **S0.1** Delete committed build/log artifacts + untrack scratch `.py` + tighten `.gitignore` — 0.5d — *depends: none*
 - [x] **S0.2** Delete 21 confirmed-dead frontend modules — 0.5d — *depends: none*
-- [ ] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
+- [x] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
 - [ ] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
 - [ ] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
 - [ ] **S0.6** Consolidate doc trees + add `docs/`→`frontend/public/docs/` sync — 1–1.5d — *depends: none*
@@ -199,7 +199,7 @@ newly-orphaned files. Keep `vite-env.d.ts` and `types/index.ts`.
 **Verify:** `npm run lint && npx tsc --noEmit && npm run build` all pass; app runs, every route still renders.
 **Commit:** `chore(frontend): remove dead unreachable pages and components`
 
-### S0.3 — Archive + remove `scratch/`  · Done: ____
+### S0.3 — Archive + remove `scratch/`  · Done: 2026-07-02
 **Goal:** Get one-off doc-gen tooling out of the repo (user chose: archive outside repo).
 **Do:** Copy `scratch/` to an external archive location (outside the repo working tree), confirm the copy, then
 `git rm -r scratch/`.
@@ -383,3 +383,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · setup · created `xh_dev` baseline tag `pre-refactor-baseline` (9822f228); wrote REFACTOR_PLAN.md to repo root (added `!REFACTOR_PLAN.md` to .gitignore since `*.md` is ignored).
 - 2026-07-02 · S0.1 · removed 30 tracked junk files (build/log artifacts + root scratch `.py`); added artifact globs to .gitignore. Backend imports OK. Note: dev utilities + backend `test_*.py` intentionally left for S0.4/S3.7.
 - 2026-07-02 · S0.2 · deleted 21 dead TSX modules + 4 companion CSS files (25 files total). Kept `AnalysisPanel.css` (used by live `AnalysisSidebar.tsx` + `codingPage.tsx`), `shapefileManagement.css` (used by live `ShapefileModal.tsx`), `ScoreBandDistributionPanel.css` (used by two live AggregatedPanel files). `curvature/` and `width/` subdirs now empty and removed. `tsc --noEmit` clean; build errors are all pre-existing (confirmed via stash comparison).
+- 2026-07-02 · S0.3 · archived 39-file `scratch/` to `~/psat_scratch_archive/` (verified diff-clean), then `git rm -r scratch/`. Added `scratch/` to `.gitignore` to prevent re-commit.

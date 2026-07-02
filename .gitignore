@@ -74,6 +74,7 @@ completed.csv
 test.jpg
 frontend/test_puppeteer.js
 generate-summary-*.xlsx
+scratch/
 
 # Build / log / compile artifacts (never commit — see REFACTOR_PLAN.md S0.1)
 *.out
