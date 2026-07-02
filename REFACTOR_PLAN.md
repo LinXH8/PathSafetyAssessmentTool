@@ -17,10 +17,15 @@
 5. **Update this file:** flip `[ ]`→`[x]` in the Dashboard, set the `Done:` date in the session block, add a
    one-line note of anything surprising for the next chat.
 6. **Commit** (per `CLAUDE.md`: prompt the user before committing/pushing to `xh_dev`). Suggested message is in
-   each session. Commit this updated REFACTOR_PLAN.md together with the work.
+   each session — **every commit message must include the session tag `[Sx.y]`** (e.g. `[S0.1]`, `[S2.3]`).
+   Commit this updated REFACTOR_PLAN.md together with the work.
 7. **Stop.** One session per chat keeps context small and reviewable.
 
 **Guardrails for every session:**
+
+- **Session tag in every commit message.** Every commit produced by a session MUST include the session tag
+  `[Sx.y]` (e.g. `[S0.1]`, `[S2.3]`) so commits can be traced back to the session that produced them.
+  Format: `<type>(<scope>): <description> [Sx.y]`. Never omit the tag, even for minor follow-up commits.
 - **Read-only commands run without asking.** Execute any non-mutating action — `git status/diff/log/show`, `grep`,
   `find`, `cat`, `ls`, `wc`, reachability scripts, `npm run lint`/`tsc --noEmit`, `python -c "import app"`, etc. —
   freely, WITHOUT prompting for permission. Only pause for approval on mutating/outward actions (commits, pushes,
@@ -186,7 +191,7 @@ inspect_data, backend/inspect_data, inspect_curvature{,_v2}, patch_geodata_panel
 generate_draft_slides). Add ignore globs (`*_log.txt`, `*.out`, `*.err`, `build_*.txt`). **Do NOT touch** dev utilities
 (S0.4) or backend `test_*.py` (S3.7).
 **Verify:** `git ls-files | grep -E '\.(out|err)$'` empty; app still boots.
-**Commit:** `chore: remove committed build/log artifacts and scratch scripts`
+**Commit:** `chore: remove committed build/log artifacts and scratch scripts [S0.1]`
 
 ### S0.2 — Delete 21 dead frontend modules  · Done: 2026-07-02
 **Goal:** Remove confirmed-unreachable FE source (see inventory — none are routed/rendered).
@@ -197,14 +202,14 @@ TreatmentMapView,AttributesDropdown}`, orphaned `components/visualization/{Analy
 scoreband/ScoreBandDistributionPanel}`). Remove now-empty dirs. **Re-run the reachability script after** to confirm no
 newly-orphaned files. Keep `vite-env.d.ts` and `types/index.ts`.
 **Verify:** `npm run lint && npx tsc --noEmit && npm run build` all pass; app runs, every route still renders.
-**Commit:** `chore(frontend): remove dead unreachable pages and components`
+**Commit:** `chore(frontend): remove dead unreachable pages and components [S0.2]`
 
 ### S0.3 — Archive + remove `scratch/`  · Done: 2026-07-02
 **Goal:** Get one-off doc-gen tooling out of the repo (user chose: archive outside repo).
 **Do:** Copy `scratch/` to an external archive location (outside the repo working tree), confirm the copy, then
 `git rm -r scratch/`.
 **Verify:** `git ls-files scratch/` empty; app unaffected.
-**Commit:** `chore: remove scratch/ doc-generation tooling (archived externally)`
+**Commit:** `chore: remove scratch/ doc-generation tooling (archived externally) [S0.3]`
 
 ### S0.4 — Relocate dev utility scripts  · Done: 2026-07-02
 **Context to load:** `backend/{extract_xml_dates,generate_road_reference,generate_user_guide_pdf,setup_test_project,
@@ -212,7 +217,7 @@ visualize_facility_width}.py`, `frontend/replace_tiles.py`.
 **Do:** Move these into `scripts/` (or `backend/scripts/` for backend-specific); fix internal relative paths. Confirm via
 grep none are imported by `backend/app/**` (already verified: 0 imports).
 **Verify:** `grep -r` shows no broken imports; scripts still runnable standalone.
-**Commit:** `chore: relocate dev utility scripts into scripts/`
+**Commit:** `chore: relocate dev utility scripts into scripts/ [S0.4]`
 
 ### S0.5 — Consolidate `config.json`  · Done: 2026-07-02
 **Goal:** One source of truth (root vs `backend/config.json` are duplicates).
@@ -220,7 +225,7 @@ grep none are imported by `backend/app/**` (already verified: 0 imports).
 **Do:** Determine which path the running app/Docker actually reads (grep for `config.json` loads). Keep that one,
 remove the other, add a comment documenting the choice. Update any loader path if needed.
 **Verify:** Backend boots and reads config; values unchanged.
-**Commit:** `chore: consolidate duplicate config.json to single source`
+**Commit:** `chore: consolidate duplicate config.json to single source [S0.5]`
 
 ### S0.6 — Consolidate docs + sync  · Done: ____
 **Goal:** Reduce 3 doc trees to a canonical set; stop drift. (`.docx` left alone per user decision.)
@@ -229,7 +234,7 @@ remove the other, add a comment documenting the choice. Update any loader path i
 content into `docs/`; archive purely-historical migration notes under `docs/archive/`. Add a small sync script (or npm
 script) copying `docs/` → `frontend/public/docs/` and document it in README.
 **Verify:** In-app Help still loads (`frontend/public/docs` populated); no broken relative links.
-**Commit:** `docs: consolidate doc trees and add docs sync`
+**Commit:** `docs: consolidate doc trees and add docs sync [S0.6]`
 
 ### S0.7 — English-only comment sweep (baseline)  · Done: ____
 **Goal:** Remove non-English comments/docs from files the refactor may not otherwise touch.
@@ -240,7 +245,7 @@ comments re: torch/CUDA wheels).
 translate **comments/docstrings**. (Per-file translations during later sessions are handled by the global guardrail;
 this is the one-time baseline.)
 **Verify:** Re-run the grep; remaining non-ASCII hits are intentional data, not comments.
-**Commit:** `docs: translate non-English code comments to English`
+**Commit:** `docs: translate non-English code comments to English [S0.7]`
 
 ### S1.1 — Split `api/index.ts`  · Done: ____
 **Goal:** 1,519-line client → ~9 domain modules + barrel; zero logic change.
@@ -249,7 +254,7 @@ this is the one-time baseline.)
 functions by domain (groupings noted in commit). Keep `index.ts` re-exporting everything (barrel) so existing imports
 don't break. Shared `fetch` error helper stays/extracts to `api/_client.ts`.
 **Verify:** frontend gate passes; no import churn at call sites.
-**Commit:** `refactor(api): split monolithic api/index.ts into domain modules`
+**Commit:** `refactor(api): split monolithic api/index.ts into domain modules [S1.1]`
 
 ### S1.2 — Populate `types/index.ts`  · Done: ____
 **Goal:** Single home for shared domain types; kill duplicate interface decls.
@@ -259,7 +264,7 @@ don't break. Shared `fetch` error helper stays/extracts to `api/_client.ts`.
 where currently re-declared; convert `catch (e: any)`→`unknown`+guards in touched files; enable stricter tsconfig flags
 if low-risk.
 **Verify:** `tsc --noEmit` clean.
-**Commit:** `refactor(types): centralize shared domain types`
+**Commit:** `refactor(types): centralize shared domain types [S1.2]`
 
 ### S1.3 — `riskColors` + `projection` utils  · Done: ____
 **Context to load:** `frontend/src/constants/colorConstants.ts`; the 3 inline `to4326` copies in
@@ -267,14 +272,14 @@ if low-risk.
 **Do:** `utils/riskColors.ts` (reuse `colorConstants.ts`, export `RISK_COLORS`/`RISK_LABELS`); `utils/projection.ts`
 (single `to4326`/`to3414`). Replace inline copies with imports.
 **Verify:** Segment colors + map coords visually unchanged (Regression Checklist items 3).
-**Commit:** `refactor(utils): extract shared risk-color and projection helpers`
+**Commit:** `refactor(utils): extract shared risk-color and projection helpers [S1.3]`
 
 ### S1.4 — Shared map components  · Done: ____
 **Context to load:** `DraggableMarker`/`PolygonDrawingTool`/`isPointInPolygon` in `PathAnalysisMapView.tsx` &
 `GeoDataPanel.tsx`.
 **Do:** Create `frontend/src/components/map/DraggableMarker.tsx` + `PolygonDrawing.tsx`; replace both copies.
 **Verify:** Polygon draw + marker drag work on both pages.
-**Commit:** `refactor(map): extract shared DraggableMarker and PolygonDrawing`
+**Commit:** `refactor(map): extract shared DraggableMarker and PolygonDrawing [S1.4]`
 
 ### S1.5 — VOID
 The Treatment/Analysis `AttributesDropdown` copies were dead code (deleted in S0.2); only
@@ -286,7 +291,7 @@ The Treatment/Analysis `AttributesDropdown` copies were dead code (deleted in S0
 strings). Migrate `pathAnalysisMap_*`, `pathAnalysis_*`, `codingFilterContext`, `gisLayerToggles_*`. Preserve exact key
 strings to keep existing user sessions valid.
 **Verify:** Viewport restore + filter persistence + filter-color context all survive back-nav (Regression items 1,2,4).
-**Commit:** `refactor(state): add useSessionState hook and typed session keys`
+**Commit:** `refactor(state): add useSessionState hook and typed session keys [S1.6]`
 
 ### S2.1–S2.5 — Monolith decomposition (one file per session)  · Done: ____ each
 **Goal (all):** Turn each page into a thin orchestrator by extracting hooks (data/state) + sub-components along seams.
@@ -299,7 +304,7 @@ No behavior change. After each extraction: build + manual smoke + commit.
 - **S2.5 reportBuilderPage** → `useReportData`, `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`.
 **Context to load (each):** the target file + `CLAUDE.md` + hooks/components from Phase 1.
 **Verify (each):** frontend gate + full Regression Checklist for that page's flows.
-**Commit (each):** `refactor(<page>): decompose into hooks and sub-components`
+**Commit (each):** `refactor(<page>): decompose into hooks and sub-components [S2.x]`
 
 ### S3.1 — `@with_project` decorator  · Done: ____
 **Context to load:** `backend/app/api/projects/routes.py` (the `get_ctx()`→`pm`→`project`→`latest` + try/except→JSON
@@ -307,7 +312,7 @@ pattern, ~40 sites).
 **Do:** Decorator injecting `(pm, proj, ver)` and standardizing exception→JSON. Apply incrementally; keep responses
 byte-identical.
 **Verify:** Hit a representative endpoint of each kind; responses unchanged.
-**Commit:** `refactor(backend): add @with_project decorator and standardize error handling`
+**Commit:** `refactor(backend): add @with_project decorator and standardize error handling [S3.1]`
 
 ### S3.2 — Split `routes.py`  · Done: ____
 **Context to load:** `routes.py`, `backend/app/api/projects/__init__.py`.
@@ -315,45 +320,45 @@ byte-identical.
 `source_folders.py`, `gis_queries.py`, `export.py`, `baseline.py`. Move private helpers to service functions. Keep URL
 routes identical (register all blueprints).
 **Verify:** Every route still registered (`flask routes`-equiv / boot log); smoke each group.
-**Commit:** `refactor(backend): split projects routes.py into blueprint modules`
+**Commit:** `refactor(backend): split projects routes.py into blueprint modules [S3.2]`
 
 ### S3.3 — `logging` over `print()`  · Done: ____
 **Do:** Configure a logger; replace ~68 `print()` with leveled logs. Preserve any user-facing stdout the app relies on.
 **Verify:** Boot, run an autocode, confirm logs emit.
-**Commit:** `refactor(backend): replace print with logging`
+**Commit:** `refactor(backend): replace print with logging [S3.3]`
 
 ### S3.4 — Extract Curvature/Width analyzers  · Done: ____
 **Context to load:** `backend/app/services/gis_mapping.py` (curvature ~900 lines; width logic), `backend/app/utils/path_width_curvature.py`.
 **Do:** Move curvature → `services/curvature_analyzer.py` (`CurvatureAnalyzer`); width → `services/width_analyzer.py`.
 `GIS` class delegates. Keep numeric outputs identical (spot-check against a known segment).
 **Verify:** `backend/test_curvature_analysis.py` still passes; compare curvature/width on a sample project.
-**Commit:** `refactor(gis): extract CurvatureAnalyzer and WidthAnalyzer`
+**Commit:** `refactor(gis): extract CurvatureAnalyzer and WidthAnalyzer [S3.4]`
 
 ### S3.5 — `query_nearby()` + unify proximity  · Done: ____
 **Context to load:** `gis_mapping.py` proximity methods (`is_mrt`/`is_bus_lane`/… ) + buffer/sindex/distance repeats.
 **Do:** Add `query_nearby(layer, point, buffer, max_dist)`; route the 8 near-identical proximity checks + ~20 repeated
 patterns through it.
 **Verify:** GIS autocode results unchanged on a sample project.
-**Commit:** `refactor(gis): add query_nearby helper and unify proximity checks`
+**Commit:** `refactor(gis): add query_nearby helper and unify proximity checks [S3.5]`
 
 ### S3.6 — Split `project_manager.py`  · Done: ____
 **Context to load:** `backend/app/services/project_manager.py`.
 **Do:** Split `ProjectVersion` into data/serialization/defaults concerns; move image dedup/materialization to
 `services/image_storage.py`. Keep public API of `project_manager` stable.
 **Verify:** Create/open/list project + image dedup still work.
-**Commit:** `refactor(backend): modularize project_manager and extract image_storage`
+**Commit:** `refactor(backend): modularize project_manager and extract image_storage [S3.6]`
 
 ### S3.7 — Organize backend tests  · Done: ____
 **Do:** Move the ~24 root `backend/test_*.py` into `backend/tests/` + add `conftest.py` + `pytest.ini`. **Move only,
 do not rewrite** (per scope). Drop obviously-dead dependency-probe scripts (confirm via run first).
 **Verify:** `cd backend && pytest` collects from `tests/`.
-**Commit:** `chore(backend): consolidate tests into tests/ directory`
+**Commit:** `chore(backend): consolidate tests into tests/ directory [S3.7]`
 
 ### S3.8 — Type-hint pass  · Done: ____
 **Do:** Add param/return hints to `routes.py` + `project_manager.py`; add `TypedDict`s for common payloads. No logic
 change.
 **Verify:** Optional `mypy`/boot; gate passes.
-**Commit:** `refactor(backend): add type hints to routes and project_manager`
+**Commit:** `refactor(backend): add type hints to routes and project_manager [S3.8]`
 
 ### S4.1 — End-to-end manual QA  · Done: ____
 **Do:** Run the app (`docker-compose up` or local dev). Walk the full flow: project create → code → autocode → score →
