@@ -150,7 +150,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [ ] ~~S1.5 unify AttributesDropdown~~ — **VOID** (Treatment/Analysis copies are dead code; deleted in S0.2)
 
 ### Phase 1 — Frontend shared foundation (6–9 days) — *do before Phase 2*
-- [ ] **S1.1** Split `api/index.ts` into domain modules + barrel — 1d — *depends: none*
+- [x] **S1.1** Split `api/index.ts` into domain modules + barrel — 1d — *depends: none*
 - [ ] **S1.2** Populate `types/index.ts`; remove dup interfaces; `any`→`unknown` — 1–2d — *depends: S1.1*
 - [ ] **S1.3** Extract `utils/riskColors.ts` + `utils/projection.ts` — 1d — *depends: none*
 - [ ] **S1.4** Extract shared map components (`DraggableMarker`, `PolygonDrawing`) — 1d — *depends: S1.3*
@@ -247,7 +247,7 @@ this is the one-time baseline.)
 **Verify:** Re-run the grep; remaining non-ASCII hits are intentional data, not comments.
 **Commit:** `docs: translate non-English code comments to English [S0.7]`
 
-### S1.1 — Split `api/index.ts`  · Done: ____
+### S1.1 — Split `api/index.ts`  · Done: 2026-07-02
 **Goal:** 1,519-line client → ~9 domain modules + barrel; zero logic change.
 **Context to load:** `frontend/src/api/index.ts`, `frontend/src/api/projectDataCache.ts`.
 **Do:** Create `frontend/src/api/{projects,attributes,geo,autocode,treatments,shapefiles,auth,media,reports}.ts`; move
@@ -393,3 +393,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.5 · deleted root `config.json` (dead duplicate — all loaders resolve `backend/config.json` via `get_full_path()`). Added docstring to `get_full_path` explaining canonical location; translated Chinese comment in `config.py`. Deferred: `serializer.py:475` bare `open("config.json")` is CWD-dependent.
 - 2026-07-02 · S0.6 · moved `frontend/public/docs/{user,admin,developer}/` → `docs/` (canonical source); removed 9 stale root `docs/*.md` duplicates; renamed 16 `backend/Documentation/` files into `docs/developer/gis/` (actionable) and `docs/archive/gis/` (historical migration notes); removed empty `backend/Documentation/` dir; added `!docs/**` gitignore exception; added `scripts/sync_docs.sh` + `npm run docs:sync`; ran sync to regenerate `frontend/public/docs/` mirror. All 21 HelpPage doc paths verified OK. Note: `frontend/public/docs/` existing user/admin/developer files are unchanged from pre-session state (sync replayed identical content); only new gis/ and cyclerap_v213_audit.md files appear as additions in `frontend/public/docs/developer/`.
 - 2026-07-02 · S0.7 · translated all Chinese comments/docstrings to English across 8 files: `backend/requirements.txt` (5 lines), `gis_mapping.py` (12 comments + 1 exception message), `serializer.py` (3), `project_manager.py` (1), `frontend/src/api/index.ts` (5), `GeoDataPanel.tsx` (11), `ProjectsDialogs.tsx` (1), `landingPage.tsx` (1). Re-ran grep — zero CJK hits remain. Non-CJK non-ASCII (arrows →, en-dashes –, box-drawing ─) are legitimate English typography, left as-is. Backend imports OK; frontend build errors are all pre-existing.
+- 2026-07-02 · S1.1 · split 1,596-line `api/index.ts` into 9 domain modules (`_client`, `projects`, `geo`, `sourceFolders`, `autocode`, `treatments`, `shapefiles`, `auth`, `media`, `reports`) + barrel `index.ts`. Updated `projectDataCache.ts` to import from `./projects` directly. Added module headers + TSDoc to all new files. `tsc --noEmit` clean; `npm run build` error count identical to baseline (37 pre-existing errors, 0 new). Note: `CalculateScoreResult.result_rows` kept as `any[]` (matching original) — narrowing to `unknown[]` is deferred to S1.2 to avoid breaking callers.
