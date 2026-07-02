@@ -21,6 +21,10 @@
 7. **Stop.** One session per chat keeps context small and reviewable.
 
 **Guardrails for every session:**
+- **Read-only commands run without asking.** Execute any non-mutating action — `git status/diff/log/show`, `grep`,
+  `find`, `cat`, `ls`, `wc`, reachability scripts, `npm run lint`/`tsc --noEmit`, `python -c "import app"`, etc. —
+  freely, WITHOUT prompting for permission. Only pause for approval on mutating/outward actions (commits, pushes,
+  `git rm`, file writes/deletes, installs). This matches `CLAUDE.md`'s standard protocol.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
 - No automated test suite exists (user opted out). Your safety net is: small commits + manual run + the
