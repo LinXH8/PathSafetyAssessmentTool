@@ -1,9 +1,0 @@
-{
-    "destination_folder": "../data",
-    "source_folder": "src",
-    "in_folder": "../in",
-    "CycleRAP_source": "CycleRAP_v2.11.xlsm",
-    "capture_frequency": 10,
-    "project_prefix": "",
-    "current_project": null
-}

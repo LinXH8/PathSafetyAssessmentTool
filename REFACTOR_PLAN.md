@@ -139,7 +139,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S0.2** Delete 21 confirmed-dead frontend modules — 0.5d — *depends: none*
 - [x] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
 - [x] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
-- [ ] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
+- [x] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
 - [ ] **S0.6** Consolidate doc trees + add `docs/`→`frontend/public/docs/` sync — 1–1.5d — *depends: none*
 - [ ] **S0.7** English-only comment sweep (baseline pass) — 0.5d — *depends: none*
 - [ ] ~~S1.5 unify AttributesDropdown~~ — **VOID** (Treatment/Analysis copies are dead code; deleted in S0.2)
@@ -214,7 +214,7 @@ grep none are imported by `backend/app/**` (already verified: 0 imports).
 **Verify:** `grep -r` shows no broken imports; scripts still runnable standalone.
 **Commit:** `chore: relocate dev utility scripts into scripts/`
 
-### S0.5 — Consolidate `config.json`  · Done: ____
+### S0.5 — Consolidate `config.json`  · Done: 2026-07-02
 **Goal:** One source of truth (root vs `backend/config.json` are duplicates).
 **Context to load:** `config.json`, `backend/config.json`, `backend/app/config.py`, `docker-compose.yml`, `backend.Dockerfile`.
 **Do:** Determine which path the running app/Docker actually reads (grep for `config.json` loads). Keep that one,
@@ -377,7 +377,7 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 ---
 
 ## DEFERRED FINDINGS (bugs/oddities spotted mid-refactor — do NOT fix inline)
-- _(add dated one-liners here as you go)_
+- 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
 
 ## SESSION LOG (one line per completed session)
 - 2026-07-02 · setup · created `xh_dev` baseline tag `pre-refactor-baseline` (9822f228); wrote REFACTOR_PLAN.md to repo root (added `!REFACTOR_PLAN.md` to .gitignore since `*.md` is ignored).
@@ -385,3 +385,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.2 · deleted 21 dead TSX modules + 4 companion CSS files (25 files total). Kept `AnalysisPanel.css` (used by live `AnalysisSidebar.tsx` + `codingPage.tsx`), `shapefileManagement.css` (used by live `ShapefileModal.tsx`), `ScoreBandDistributionPanel.css` (used by two live AggregatedPanel files). `curvature/` and `width/` subdirs now empty and removed. `tsc --noEmit` clean; build errors are all pre-existing (confirmed via stash comparison).
 - 2026-07-02 · S0.3 · archived 39-file `scratch/` to `~/psat_scratch_archive/` (verified diff-clean), then `git rm -r scratch/`. Added `scratch/` to `.gitignore` to prevent re-commit.
 - 2026-07-02 · S0.4 · moved 6 tracked dev utility scripts (5 backend + `frontend/replace_tiles.py`) to `scripts/` via `git mv`; also promoted 2 previously-.gitignore'd visualize scripts (`visualize_obstacles.py`, `visualize_width_restriction.py`) — removed their filename-only ignore rules and added them to `scripts/`. Fixed all `Path(__file__).parent` references in moved scripts to use `Path(__file__).resolve().parent.parent / "backend"`. Backend imports OK.
+- 2026-07-02 · S0.5 · deleted root `config.json` (dead duplicate — all loaders resolve `backend/config.json` via `get_full_path()`). Added docstring to `get_full_path` explaining canonical location; translated Chinese comment in `config.py`. Deferred: `serializer.py:475` bare `open("config.json")` is CWD-dependent.
