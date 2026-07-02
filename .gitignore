@@ -75,9 +75,21 @@ test.jpg
 frontend/test_puppeteer.js
 generate-summary-*.xlsx
 
+# Build / log / compile artifacts (never commit — see REFACTOR_PLAN.md S0.1)
+*.out
+*.err
+*_log.txt
+build_*.txt
+logs.txt
+output.txt
+batch_output.txt
+pytest_out.txt
+overlaps_*.txt
+
 # Documentation and explanations
 *.md
 !README.md
+!REFACTOR_PLAN.md
 *.lnk
 CycleRAP_User_Guide.pdf
 !frontend/public/docs/**
