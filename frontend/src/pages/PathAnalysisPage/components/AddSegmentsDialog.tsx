@@ -14,26 +14,8 @@ import {
 import { useState, useEffect, type KeyboardEvent } from "react";
 import { fetchProjectList, copySegments, checkCollisions } from "../../../api";
 import { toaster } from "../../../components/ui/toaster";
+import { getTagColor } from "../../Projects/tagColor";
 import "../../Projects/components/EditProjectModal.css";
-
-// Helper to generate consistent tag colors
-function getTagColor(tag: string): string {
-    let hash = 0;
-    for (let i = 0; i < tag.length; i++) {
-        hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hash2 = Math.abs(hash >> 16);
-    const hash3 = Math.abs(hash << 3);
-
-    let hue = Math.abs(hash % 360);
-    if (hue >= 40 && hue <= 60) hue = (hue + 30) % 360;
-    if (hue >= 160 && hue <= 180) hue = (hue + 30) % 360;
-
-    const saturation = 75 + (hash2 % 21);
-    const lightness = 65 + (hash3 % 16);
-
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
 
 interface SourceProjectData {
     projectName: string;

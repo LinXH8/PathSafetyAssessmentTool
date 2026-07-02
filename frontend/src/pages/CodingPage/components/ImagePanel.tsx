@@ -6,11 +6,14 @@ type Props = {
   projectName?: string;
   imageRef?: string;
   panelHeight?: number; // px
+  /** "contain" (default) shows the whole photo (may letterbox); "cover" fills the box. */
+  fit?: "contain" | "cover";
 };
 
 export default function ImagePanel({
   projectName,
   imageRef,
+  fit = "contain",
 }: Props) {
   const [brightness, setBrightness] = useState(100);
 
@@ -48,9 +51,11 @@ export default function ImagePanel({
               as="img"
               src={`/api/projects/${encodeURIComponent(projectName ?? "")}/images/${encodeURIComponent(imageRef ?? "")}`}
               alt={imageRef ?? "image"}
+              w={fit === "cover" ? "100%" : undefined}
+              h={fit === "cover" ? "100%" : undefined}
               maxW="100%"
               maxH="100%"
-              objectFit="contain"
+              objectFit={fit}
               style={{ filter: `brightness(${brightness}%)` }}
             />
           </Box>

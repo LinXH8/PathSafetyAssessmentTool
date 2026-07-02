@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import type { CSSProperties } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import {
-  aggregateTopContributors,
-  type TopContributor,
-} from "../../../utils/aggregateTopContributors";
+import { aggregateTopContributors } from "../../../utils/aggregateTopContributors";
 import { getCachedResults, invalidateAllOfNamespace } from "../../../api/projectDataCache";
+import { FONT, COLOR } from "../../../features/ui/designTokens";
+import { PROJECT_POINT_COLORS } from "../../../constants/mapColors";
 import "../../../components/visualization/scoreband/ScoreBandDistributionPanel.css";
 import "./AggregatedScoreBandPanel.css";
 
@@ -16,11 +16,14 @@ interface AggregatedTopContributorsPanelProps {
   // provided, contributors are aggregated only over the surviving segments. `null`
   // (before the map first reports) falls back to aggregating all segments.
   visibleSegmentsByProject?: Record<string, number[]> | null;
+  /** "v2" renders the comp's accordion-body chip groups (no internal header). */
+  variant?: "v1" | "v2";
 }
 
 export function AggregatedTopContributorsPanel({
   selectedProjects,
   visibleSegmentsByProject,
+  variant = "v1",
 }: AggregatedTopContributorsPanelProps) {
   // Raw /results rows per project, fetched once per project set. Aggregation (and
   // filter-driven narrowing) happens reactively in the memos below — so toggling a
@@ -139,6 +142,56 @@ export function AggregatedTopContributorsPanel({
   }, [selectedProjects, rawResultsByProject, filterRows]);
 
   const totalContribCount = combinedContributors.length;
+
+  // ── v2: the comp's "Top Risk Contributors" accordion body — per-project ──
+  // groups of project-coloured chips matching the map's PROJECT_POINT_COLORS palette.
+  if (variant === "v2") {
+    if (loading) {
+      return <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: "8px 2px" }}>Loading contributors…</div>;
+    }
+    if (perProjectContributors.length === 0) {
+      return <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: "8px 2px" }}>No contributor data available.</div>;
+    }
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingRight: 2 }}>
+        {perProjectContributors.map((p) => {
+          const projectIdx = selectedProjects.indexOf(p.projectName);
+          const projectColor = PROJECT_POINT_COLORS[projectIdx % PROJECT_POINT_COLORS.length];
+          const chipStyle: CSSProperties = {
+            display: "inline-flex",
+            alignItems: "center",
+            background: projectColor,
+            color: COLOR.white,
+            borderRadius: 4,
+            padding: "4px 9px",
+            fontFamily: FONT,
+            fontSize: 16,
+            fontWeight: 400,
+            whiteSpace: "nowrap",
+          };
+          return (
+            <div key={p.projectName}>
+              <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, marginBottom: 7, color: projectColor }}>
+                {p.projectName}
+              </div>
+              {p.contributors.length === 0 ? (
+                <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>No contributors.</div>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {p.contributors.map((attr, idx) => (
+                    <div key={idx} style={chipStyle}>
+                      {attr.name}
+                      <strong style={{ marginLeft: 3 }}>+{attr.contribution.toFixed(1)}</strong>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="score-band-panel">

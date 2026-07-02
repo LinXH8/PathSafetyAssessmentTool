@@ -7,6 +7,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import proj4 from "proj4";
 import type { Feature, FeatureCollection, LineString, Position } from "geojson";
+import { MAP_MISSING_SCORE_COLOR } from "../../../constants/mapColors";
 
 type GJ = FeatureCollection<LineString, any>;
 
@@ -108,7 +109,7 @@ export default function TreatmentMapView() {
 
                 {/* Render all points as markers */}
                 {points.map(({ idx, latlng, f }) => {
-                  const color = "#2563EB";
+                  const color = MAP_MISSING_SCORE_COLOR;
                   const radius = 5;
                   const label = `#${idx} ${f.properties?.["Image Reference"] ?? ""}`;
 

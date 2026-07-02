@@ -3,11 +3,15 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { getCachedResults, invalidateAllOfNamespace } from "../../../api/projectDataCache";
 import ScoreBandPieChart from "../../../components/visualization/scoreband/ScoreBandPieChart";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { FONT } from "../../../features/ui/designTokens";
+import { DistTooltipBox } from "./paV2Primitives";
 import "../../../components/visualization/scoreband/ScoreBandDistributionPanel.css";
 import "./AggregatedScoreBandPanel.css";
 
 interface AggregatedScoreBandPanelProps {
   selectedProjects: string[];
+  /** "v2" renders the comp's "Overall Risk Level" stacked-bar card (no header). */
+  variant?: "v1" | "v2";
 }
 
 type BandDistribution = Record<number, number>;
@@ -45,11 +49,16 @@ const CRASH_TYPE_LABELS: Record<string, string> = {
 
 export function AggregatedScoreBandPanel({
   selectedProjects,
+  variant = "v1",
 }: AggregatedScoreBandPanelProps) {
   const [distributions, setDistributions] = useState<CrashTypeDistributions | null>(null);
   const [totalSegments, setTotalSegments] = useState(0);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<string[]>([]);
+  // v2 stacked-bar hover tooltip (parity with the Pie/Bar chart hover — count + %).
+  const [barHover, setBarHover] = useState<
+    { x: number; y: number; row: string; band: string; count: number; pct: number } | null
+  >(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Process band distributions from API responses
@@ -179,6 +188,132 @@ export function AggregatedScoreBandPanel({
     return () =>
       window.removeEventListener("psat:scores:updated", handleScoresUpdated);
   }, [fetchAndAggregateResults]);
+
+  // ── v2: the comp's "Overall Risk Level" card — stacked horizontal band ──
+  // bars per crash type + the threshold legend. No internal collapsible header.
+  if (variant === "v2") {
+    const BAND_HEX: Record<number, string> = {
+      1: RISK_BAND_COLORS.LOW,
+      2: RISK_BAND_COLORS.MEDIUM,
+      3: RISK_BAND_COLORS.HIGH,
+      4: RISK_BAND_COLORS.EXTREME,
+    };
+    const BAND_LABEL: Record<number, string> = { 1: "Low", 2: "Medium", 3: "High", 4: "Extreme" };
+    const ROWS: { key: keyof CrashTypeDistributions; label: string }[] = [
+      { key: "Overall", label: "Overall" },
+      { key: "VB", label: "Vehicle-Bicycle (VB)" },
+      { key: "BB", label: "Bicycle-Bicycle (BB)" },
+      { key: "SB", label: "Single-Bicycle (SB)" },
+      { key: "BP", label: "Bicycle-Pedestrian (BP)" },
+    ];
+    const capStyle = { fontFamily: FONT, fontSize: 12, color: "#718096" } as const;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "18px 20px", boxSizing: "border-box" }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: "#2D3748", marginBottom: 18, flexShrink: 0 }}>
+          Overall Risk Level
+        </span>
+        {loading ? (
+          <div style={{ ...capStyle, flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            Loading score distributions…
+          </div>
+        ) : !distributions || totalSegments === 0 ? (
+          <div style={{ ...capStyle, flex: 1, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 12px" }}>
+            {errors[0] ?? "No score data available."}
+          </div>
+        ) : (
+          <>
+            <div
+              data-rsb-bars
+              style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 14, justifyContent: "center", position: "relative" }}
+              onMouseLeave={() => setBarHover(null)}
+            >
+              {ROWS.map(({ key, label }) => {
+                const dist = distributions[key];
+                const tot = (dist[1] || 0) + (dist[2] || 0) + (dist[3] || 0) + (dist[4] || 0);
+                return (
+                  <div key={key} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <span style={{ width: 200, textAlign: "right", fontFamily: FONT, fontSize: 16, color: "#2D3748", flexShrink: 0, whiteSpace: "nowrap" }}>
+                      {label}
+                    </span>
+                    <div style={{ flex: 1, display: "flex", height: 24, borderRadius: 4, overflow: "hidden", background: "#EDF2F7" }}>
+                      {tot > 0 &&
+                        [1, 2, 3, 4].map((band) => {
+                          const c = dist[band] || 0;
+                          if (c === 0) return null;
+                          const pct = (c / tot) * 100;
+                          return (
+                            <div
+                              key={band}
+                              style={{ width: `${pct}%`, background: BAND_HEX[band], cursor: "pointer" }}
+                              onMouseMove={(e) => {
+                                const host = e.currentTarget.closest("[data-rsb-bars]") as HTMLElement | null;
+                                const r = host?.getBoundingClientRect();
+                                setBarHover({
+                                  x: r ? e.clientX - r.left : 0,
+                                  y: r ? e.clientY - r.top : 0,
+                                  row: label,
+                                  band: BAND_LABEL[band],
+                                  count: c,
+                                  pct,
+                                });
+                              }}
+                            />
+                          );
+                        })}
+                    </div>
+                  </div>
+                );
+              })}
+              {/* Hover tooltip — the shared standard treatment (band, count, %). */}
+              {barHover && (
+                <div style={{ position: "absolute", left: barHover.x + 12, top: barHover.y + 12, zIndex: 20 }}>
+                  <DistTooltipBox
+                    title={`${barHover.row} · ${barHover.band}`}
+                    detail={`Count: ${barHover.count} (${barHover.pct.toFixed(1)}%)`}
+                  />
+                </div>
+              )}
+            </div>
+            <div style={{ flexShrink: 0, marginTop: 18 }}>
+              <div style={{ textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: "#2D3748", marginBottom: 12 }}>
+                Risk Level by Crash Type
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", gap: 56, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: "#2D3748" }}>VB Crashes:</div>
+                  {[
+                    [RISK_BAND_COLORS.LOW, "Low Risk: <10"],
+                    [RISK_BAND_COLORS.MEDIUM, "Medium Risk: 10-25"],
+                    [RISK_BAND_COLORS.HIGH, "High Risk: 25-60"],
+                    [RISK_BAND_COLORS.EXTREME, "Extreme Risk: >60"],
+                  ].map(([hex, txt]) => (
+                    <div key={txt} style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: FONT, fontSize: 12, color: "#4A5568" }}>
+                      <span style={{ width: 9, height: 9, background: hex, borderRadius: 2, flexShrink: 0 }} />
+                      {txt}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: "#2D3748" }}>BB, BP, SB crashes:</div>
+                  {[
+                    [RISK_BAND_COLORS.LOW, "Low Risk: <5"],
+                    [RISK_BAND_COLORS.MEDIUM, "Medium Risk: 5-10"],
+                    [RISK_BAND_COLORS.HIGH, "High Risk: 10-20"],
+                    [RISK_BAND_COLORS.EXTREME, "Extreme Risk: >20"],
+                  ].map(([hex, txt]) => (
+                    <div key={txt} style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: FONT, fontSize: 12, color: "#4A5568" }}>
+                      <span style={{ width: 9, height: 9, background: hex, borderRadius: 2, flexShrink: 0 }} />
+                      {txt}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="score-band-panel">

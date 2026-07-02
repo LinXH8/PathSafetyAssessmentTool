@@ -13,6 +13,7 @@ import { MapCursorController } from "../../../components/common/MapCursorControl
 import type { Feature, FeatureCollection, LineString, Position } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
 import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { useNavigate } from "react-router-dom";
@@ -50,13 +51,16 @@ type Props = {
   grade?: number | null;
   gradientPct?: number | null;
   gradientStatus?: string | null;
+  /** "v1" (default) = current Chakra layout; "v2" = Home.dc.html FRAME 4 map (floating tools, no Leaflet zoom control, card chrome). */
+  variant?: "v1" | "v2";
 };
 
 type GJ = FeatureCollection<LineString, any>;
 
 // Deep emerald used for the "verified" dot halo. Deliberately distinct from the
 // yellow-green LOW risk-band colour (#87C424) so verified state stays legible.
-const VERIFIED_HALO_COLOR = "#16A34A";
+// Sourced from the shared map-color base (constants/mapColors.ts).
+const VERIFIED_HALO_COLOR = MAP_INTERACTION_COLORS.verifiedHalo;
 
 type ScoreRow = {
   "Overall Risk Level": number;
@@ -357,8 +361,26 @@ function StatPill({ label, value }: { label: string; value: string }) {
     </Flex>
   );
 }
+// Leaflet caches the container size at init; if the map mounts before the
+// surrounding flex/page layout has settled to its final height it paints a
+// half-grey tile area. Re-measure once layout settles and on any container
+// resize. (Same root cause seen on the Create-project v2 map.)
+function MapAutosize() {
+  const map = useMap();
+  useEffect(() => {
+    const fix = () => map.invalidateSize();
+    const t = window.setTimeout(fix, 200);
+    let ro: ResizeObserver | null = null;
+    try {
+      ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(map.getContainer());
+    } catch { /* ResizeObserver unsupported — the timeout still covers mount */ }
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  }, [map]);
+  return null;
+}
 
-export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus }: Props) {
+export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
   const navigate = useNavigate();
 
   const decodedName = useMemo(() => {
@@ -547,6 +569,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
 
 
   // Analysis sidebar open state
+  // Layer View starts collapsed in both v1 and v2; expand via the edge tab.
   const [isAnalysisSidebarOpen, setIsAnalysisSidebarOpen] = useState(false);
 
   // Delete Mode State
@@ -894,33 +917,18 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => { controller.abort(); };
   }, [activeGisLat, activeGisLon, showPathDefects]);
 
-  // Layer colors matching curvature analysis
-  const layerColors = {
-    footpath: "#1E90FF",    // DodgerBlue
-    cycling: "#B91C1C",     // Deep Red
-    shared: "#A855F7",      // Purple
-    roadcrossing: "#10B981", // Emerald/Green
-    mrt_exit: "#06B6D4",    // Cyan
-    bicycle_crossing: "#F97316", // Orange
-    bus_stop: "#8B5CF6",    // Purple
-    bus_lane: "#EAB308",    // Yellow
-    parking_lot: "#D97706", // Amber/Gold
-    kerb_line: "#D946EF",   // Fuchsia
-    state_land: "#14B8A6",  // Teal
-    stat_board: "#F59E0B",  // Amber
-    land_private: "#6366F1", // Indigo
-    land_ministry: "#EC4899", // Pink
-  };
+  // GIS layer colors now sourced from constants/mapColors.ts (imported above as
+  // layerColors) — single source shared with PathAnalysisMapView + AnalysisSidebar.
 
   // Get segment color based on the crash type with the highest score
   const getSegmentColor = (segmentIndex: number): string => {
     if (!activeScores || segmentIndex >= activeScores.length) {
-      return "#2563EB"; // Default blue if no scores
+      return MAP_MISSING_SCORE_COLOR; // Default blue if no scores
     }
 
     const segmentScores = activeScores[segmentIndex];
     if (!segmentScores) {
-      return "#2563EB"; // Default blue if no score data for this segment
+      return MAP_MISSING_SCORE_COLOR; // Default blue if no score data for this segment
     }
 
     const crashTypes = ["BB", "BP", "SB", "VB"];
@@ -1107,9 +1115,19 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     setIsAddSegmentsDialogOpen(true);
   }, [polygonPoints, points]);
 
+  // Metric readouts shared by the v1 header pills and the v2 floating map cluster.
+  const curvDisplay = curvData?.radius != null ? `${curvData.radius.toFixed(1)} m` : "—";
+  const widthDisplay = widthM != null ? `${widthM.toFixed(2)} m` : "—";
+  const gradeDisplay =
+    gradientState.mode === "grade"
+      ? gradientState.text.replace("Grade 1 (<5°)", "<5°").replace("Grade 2 (≥5°)", "≥5°")
+      : gradientState.text === GRADIENT_STATUS_NO_LIDAR_RESULT
+        ? "N/A"
+        : gradientState.text;
 
   return (
-    <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius="none">
+    <Card.Root display="flex" flexDirection="column" h={`${containerHeight}px`} overflow="hidden" borderRadius={variant === "v2" ? "6px" : "none"} position={variant === "v2" ? "relative" : undefined}>
+
       {/* Clickable title bar restored as a static header */}
       <Box
         px="4"
@@ -1129,43 +1147,65 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
             - {subtitle}
           </Text>
         )}
-        <Flex align="center" gap="1.5" ml="auto">
-          <Flex align="center" gap="3" mr="2" pr="2" borderRight="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
-            <StatPill
-              label="Curv"
-              value={curvData?.radius != null ? `${curvData.radius.toFixed(1)} m` : "—"}
-            />
-            <StatPill
-              label="Width"
-              value={widthM != null ? `${widthM.toFixed(2)} m` : "—"}
-            />
-            <StatPill
-              label="Grade"
-              value={
-                gradientState.mode === "grade"
-                  ? gradientState.text.replace("Grade 1 (<5°)", "<5°").replace("Grade 2 (≥5°)", "≥5°")
-                  : gradientState.text === GRADIENT_STATUS_NO_LIDAR_RESULT
-                    ? "N/A"
-                    : gradientState.text
-              }
+        {/* v1: metric pills + Analysis Overlay toggle live in the header. v2 (Home.dc.html
+            FRAME 4): metrics move into the floating map cluster and the overlay toggle moves
+            into the Layer View panel, leaving the header as a plain title. */}
+        {variant !== "v2" && (
+          <Flex align="center" gap="1.5" ml="auto">
+            <Flex align="center" gap="3" mr="2" pr="2" borderRight="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
+              <StatPill label="Curv" value={curvDisplay} />
+              <StatPill label="Width" value={widthDisplay} />
+              <StatPill label="Grade" value={gradeDisplay} />
+            </Flex>
+            <Text fontSize="xs" fontWeight="medium" color={showCurvatureOverlay ? "gray.900" : "gray.400"} _dark={{ color: showCurvatureOverlay ? "gray.100" : "gray.500" }}>
+              Analysis Overlay
+            </Text>
+            <Switch
+              colorPalette="gray"
+              size="sm"
+              checked={showCurvatureOverlay}
+              onCheckedChange={onToggleCurvatureOverlay}
             />
           </Flex>
-          <Text fontSize="xs" fontWeight="medium" color={showCurvatureOverlay ? "gray.900" : "gray.400"} _dark={{ color: showCurvatureOverlay ? "gray.100" : "gray.500" }}>
-            Analysis Overlay
-          </Text>
-          <Switch
-            colorPalette="gray"
-            size="sm"
-            checked={showCurvatureOverlay}
-            onCheckedChange={onToggleCurvatureOverlay}
-          />
-        </Flex>
+        )}
       </Box>
 
-          {/* Tools + GIS layer toggles */}
-          <Box px="4" pt="2" pb="2" borderBottom="1px solid" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
+          {/* Tools + GIS layer toggles. v1: a bordered toolbar row under the header.
+              v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map —
+              Curv./Width/Grade metrics, a divider, then the two tool buttons. */}
+          <Box
+            px={variant === "v2" ? "0" : "4"}
+            pt={variant === "v2" ? "0" : "2"}
+            pb={variant === "v2" ? "0" : "2"}
+            borderBottom={variant === "v2" ? undefined : "1px solid"}
+            borderColor="gray.200"
+            _dark={{ borderColor: "gray.700" }}
+            {...(variant === "v2"
+              ? { position: "absolute", top: "60px", right: "12px", zIndex: 1000, bg: "white", borderWidth: "1px", borderRadius: "6px", boxShadow: "sm", display: "flex", alignItems: "stretch", overflow: "hidden" }
+              : {})}
+          >
+            {/* v2: floating metric readouts (Curv./Width/Grade) ahead of the tools. */}
+            {variant === "v2" && (
+              <Flex align="stretch">
+                {([["Curv.", curvDisplay], ["Width", widthDisplay], ["Grade", gradeDisplay]] as const).map(([label, value]) => (
+                  <Flex key={label} direction="column" align="center" justify="center" gap="2px" px="12px" py="5px">
+                    <Text fontSize="12px" color="#718096" lineHeight="1">{label}</Text>
+                    <Text fontSize="16px" color="#4A5568" lineHeight="1" whiteSpace="nowrap">{value}</Text>
+                  </Flex>
+                ))}
+              </Flex>
+            )}
             {/* Tool icon buttons */}
-            <Flex align="center" gap="2" wrap="wrap" mb="2" onClick={(e) => e.stopPropagation()}>
+            <Flex
+              align="center"
+              gap={variant === "v2" ? "1.5" : "2"}
+              wrap="wrap"
+              mb={variant === "v2" ? "0" : "2"}
+              onClick={(e) => e.stopPropagation()}
+              {...(variant === "v2"
+                ? { px: "6px", borderLeft: "1px solid", borderColor: "gray.200" }
+                : {})}
+            >
               <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                 <Menu.Trigger asChild>
                   <IconButton
@@ -1309,7 +1349,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         {err && <Text color="red.600">Failed: {err}</Text>}
 
         {!loading && !err && (
-          <Box border="1px solid" borderColor="gray.200" borderRadius="md" overflow="hidden" h="100%">
+          <Box
+            border={variant === "v2" ? "none" : "1px solid"}
+            borderColor="gray.200"
+            borderRadius={variant === "v2" ? "none" : "md"}
+            overflow="hidden"
+            h="100%"
+          >
             <MapContainer
               center={initialCenter.current}
               zoom={13}
@@ -1318,7 +1364,8 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               scrollWheelZoom
               zoomControl={false}
             >
-              <ZoomControl position="topright" />
+              {variant !== "v2" && <ZoomControl position="topright" />}
+              <MapAutosize />
               <MapCursorController
                 mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
               />
@@ -1730,7 +1777,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                   const inScope = !scopeRange || (globalIdx >= scopeRange.start && globalIdx < scopeRange.start + scopeRange.count);
                   const dimmed = !inScope && !isActive;
                   const baseColor = filterColorMap?.get(localIdx) ?? getSegmentColor(globalIdx);
-                  const color = isActive ? "#1E63D8" : baseColor;
+                  const color = isActive ? MAP_INTERACTION_COLORS.activeSegment : baseColor;
                   const radius = isActive ? 9 : 5;
                   // Handle both new and old column names for backward compatibility
                   const imgRef = f.properties?.["Image Reference"];
@@ -1779,7 +1826,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                         },
                         mouseover: (e) => {
                           if (isDeleteMode) {
-                            e.target.setStyle({ color: "red", weight: 4 });
+                            e.target.setStyle({ color: MAP_INTERACTION_COLORS.deleteHover, weight: 4 });
                             const target = e.originalEvent.target as HTMLElement;
                             if (target) target.style.cursor = "pointer";
                           }
@@ -1858,6 +1905,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         )}
 
         <AnalysisSidebar
+          variant={variant}
           isOpen={isAnalysisSidebarOpen}
           onToggle={() => setIsAnalysisSidebarOpen(v => !v)}
           showFootpath={showFootpath}
@@ -1890,6 +1938,9 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
           setShowLandPrivate={setShowLandPrivate}
           showLandMinistry={showLandMinistry}
           setShowLandMinistry={setShowLandMinistry}
+          {...(variant === "v2"
+            ? { showCurvatureOverlay: showCurvatureOverlay ?? false, onToggleCurvatureOverlay }
+            : {})}
         />
       </CardBody>
 

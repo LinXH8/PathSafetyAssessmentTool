@@ -8,6 +8,8 @@ import { MapContainer, Polyline, CircleMarker, Polygon as LeafletPolygon, Toolti
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useColorModeValue } from "../../components/ui/color-mode";
+import { GIS_VIEWER_GEOMETRY_COLORS } from "../../constants/mapColors";
+import { useUiVersion } from "../../features/ui/useUiVersion";
 const getLayerMetadata = (fileName: string) => {
   const name = fileName.toLowerCase();
   
@@ -111,6 +113,14 @@ export default function GisLayersPage() {
   };
 
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
+
+  // ── v2 design tokens (DESIGN_GUIDE.md): 6px radius, no shadow, gray.200
+  // borders, 32px content padding, 700 headers, teal = global-scope action.
+  const isV2 = useUiVersion() === "v2";
+  const cardRadius = isV2 ? "6px" : "lg";
+  const cardShadow = isV2 ? "none" : "sm";
+  const headWeight = isV2 ? "700" : "600";
+  const contentPad = isV2 ? 8 : 6;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -393,26 +403,26 @@ export default function GisLayersPage() {
   );
 
   return (
-    <Box display="flex" flexDirection="column" h="100%" p={6} bg={rootBg} overflowY="auto">
+    <Box display="flex" flexDirection="column" h="100%" p={contentPad} bg={rootBg} overflowY="auto">
       <Flex mb={6} justify="space-between" align="flex-start">
         <Box>
-          <Text fontSize="2xl" fontWeight="600" color={titleColor} mb={2}>GIS Layers Mapping</Text>
+          <Text fontSize={isV2 ? "xl" : "2xl"} fontWeight={headWeight} color={titleColor} mb={2}>GIS Layers Mapping</Text>
           <Text fontSize="sm" color={subtitleColor}>
             View all the shapefiles currently available in the system on the interactive map below.
           </Text>
         </Box>
-        <Button onClick={() => setShapefileModalOpen(true)} colorPalette="blue" size="sm">
+        <Button onClick={() => setShapefileModalOpen(true)} colorPalette={isV2 ? "teal" : "blue"} size={isV2 ? "md" : "sm"}>
           Update GIS Layer
         </Button>
       </Flex>
 
       <Flex h="calc(100vh - 180px)" gap="4">
         {/* Left Side: Table of Layers */}
-        <Box 
-          flex="0 0 400px" 
-          bg={panelBg} 
-          borderRadius="lg" 
-          boxShadow="sm" 
+        <Box
+          flex="0 0 400px"
+          bg={panelBg}
+          borderRadius={cardRadius}
+          boxShadow={cardShadow}
           overflow="hidden"
           display="flex"
           flexDirection="column"
@@ -421,7 +431,7 @@ export default function GisLayersPage() {
         >
           <Box p={4} borderBottom="1px solid" borderColor={panelHeaderBorder} bg={panelHeaderBg}>
             <Flex align="center" justify="space-between" gap="3" mb={2}>
-              <Text fontWeight="600" color={titleColor} whiteSpace="nowrap">Layers</Text>
+              <Text fontWeight={headWeight} color={titleColor} whiteSpace="nowrap">Layers</Text>
               <Box ref={filterDropdownRef} position="relative" flex={1} minWidth={0}>
                 {/* Trigger button */}
                 <button
@@ -476,7 +486,7 @@ export default function GisLayersPage() {
                         }}
                         onClick={() => { setFilterMode(opt.value); setDropdownOpen(false); setHoveredFilter(null); setTooltipPos(null); }}
                       >
-                        <Text fontSize="13px" fontWeight={filterMode === opt.value ? "600" : "400"} color={textColor}>
+                        <Text fontSize="13px" fontWeight={filterMode === opt.value ? headWeight : "400"} color={textColor}>
                           {opt.label}
                         </Text>
                       </Box>
@@ -492,7 +502,7 @@ export default function GisLayersPage() {
                     left={`${tooltipPos.x}px`}
                     zIndex={9999}
                     bg="#2D3748"
-                    borderRadius="8px"
+                    borderRadius="6px"
                     boxShadow="lg"
                     p={3}
                     width="230px"
@@ -513,7 +523,7 @@ export default function GisLayersPage() {
                         borderRight: "6px solid #2D3748",
                       }}
                     />
-                    <Text fontSize="12px" fontWeight="600" color="white" mb="4px">
+                    <Text fontSize="12px" fontWeight={headWeight} color="white" mb="4px">
                       {filterOptions.find(o => o.value === hoveredFilter)?.label}
                     </Text>
                     <Text fontSize="11px" color="gray.300" lineHeight="1.6">
@@ -615,7 +625,7 @@ export default function GisLayersPage() {
                           </Flex>
                         ) : (
                           <>
-                            <Text fontWeight="600" fontSize="sm" truncate title={file.name} color={titleColor} flex="1">
+                            <Text fontWeight={headWeight} fontSize="sm" truncate title={file.name} color={titleColor} flex="1">
                               {file.name}
                             </Text>
                             <HStack gap="1" flexShrink={0} onClick={(e) => e.stopPropagation()}>
@@ -736,12 +746,12 @@ export default function GisLayersPage() {
         </Box>
 
         {/* Right Side: Map */}
-        <Box 
-          flex="1" 
-          bg={mapContainerBg} 
-          borderRadius="lg" 
-          boxShadow="sm"
-          borderWidth="1px" 
+        <Box
+          flex="1"
+          bg={mapContainerBg}
+          borderRadius={cardRadius}
+          boxShadow={cardShadow}
+          borderWidth="1px"
           borderColor={borderColor}
           overflow="hidden"
           position="relative"
@@ -765,10 +775,10 @@ export default function GisLayersPage() {
                 key={`poly-${i}`}
                 positions={poly.positions}
                 pathOptions={{
-                  color: "#9333EA",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.polygon,
                   weight: 2,
                   opacity: 0.8,
-                  fillColor: "#9333EA",
+                  fillColor: GIS_VIEWER_GEOMETRY_COLORS.polygon,
                   fillOpacity: 0.2
                 }}
               >
@@ -782,7 +792,7 @@ export default function GisLayersPage() {
                 key={`line-${i}`}
                 positions={line.positions}
                 pathOptions={{
-                  color: "#2563eb",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.line,
                   weight: 3,
                   opacity: 0.8
                 }}
@@ -798,11 +808,11 @@ export default function GisLayersPage() {
                 center={pt.latlng}
                 radius={5}
                 pathOptions={{
-                  color: "#DC2626",
+                  color: GIS_VIEWER_GEOMETRY_COLORS.pointStroke,
                   weight: 1,
                   opacity: 0.9,
                   fillOpacity: 0.7,
-                  fillColor: "#EF4444"
+                  fillColor: GIS_VIEWER_GEOMETRY_COLORS.pointFill
                 }}
               >
                 {renderTooltip(pt.props)}

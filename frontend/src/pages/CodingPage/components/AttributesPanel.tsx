@@ -18,6 +18,8 @@ import { LuPencil, LuInfo } from "react-icons/lu";
 import { Tooltip } from "../../../components/ui/tooltip";
 import { useState } from "react";
 import { toaster } from "../../../components/ui/toaster";
+import { FONT, COLOR } from "../../../features/ui/designTokens";
+import { V2_GROUP_TAB_LABELS } from "../../../constants/autocodeAttributes";
 import "./AttributesPanel.css";
 
 /** Maps real parent key → child field name whose options are editable */
@@ -116,6 +118,16 @@ type Props = {
   flex?: number | string;
   onEditOptions?: (fieldName: string) => void;
   activeGroupTab?: string | null;
+  /** "v1" (default) = current Chakra layout; "v2" = Home.dc.html FRAME 4 attribute design. */
+  variant?: "v1" | "v2";
+  /** Autocode-by-attribute selection mode (v2). Cells become click-to-select
+   *  (green highlight) and their value controls go read-only. */
+  selectionMode?: boolean;
+  /** Currently-selected real attribute keys (selection mode). */
+  selectedKeys?: Set<string>;
+  /** Real keys that are eligible for selection; others aren't clickable. */
+  selectableKeys?: Set<string>;
+  onToggleSelect?: (realKey: string) => void;
 };
 
 /** ====== Group ordering (tab order) ====== */
@@ -364,6 +376,11 @@ export default function AttributesPanel({
   activeGroupTab,
   projectName, // Passed from parent
   onEditOptions,
+  variant = "v1",
+  selectionMode = false,
+  selectedKeys,
+  selectableKeys,
+  onToggleSelect,
 }: Props & { projectName?: string }) {
   const [detecting, setDetecting] = useState(false);
 
@@ -448,6 +465,154 @@ export default function AttributesPanel({
 
   // Check if any fields have been changed (for showing the info text)
   const hasChangedFields = changedFieldsSet.size > 0;
+
+  // ── v2 render — Home.dc.html FRAME 4 attribute design (tabs §6 + inline
+  // value fields §9). Reuses the same grouping/edit logic as v1; only the
+  // presentation differs. ──
+  if (variant === "v2") {
+    const v2Fields = grouped ? (grouped[selectedTab] ?? []) : [];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0, width: "100%", minWidth: 0, maxWidth: "100%", flex: typeof flex === "number" ? flex : undefined }}>
+        {/* attribute category tabs (§6) — scroll sideways when they overflow. */}
+        <div style={{ display: "flex", alignItems: "flex-end", overflowX: "auto", overflowY: "hidden", flexShrink: 0, minWidth: 0, scrollbarWidth: "none" }}>
+          {groupsWithFields.map((g) => {
+            const active = selectedTab === g;
+            return (
+              <div
+                key={g}
+                onClick={() => setSelectedTab(g as any)}
+                style={{ padding: "8px 13px", lineHeight: 1, boxSizing: "border-box", fontFamily: FONT, fontWeight: 700, fontSize: 16, cursor: "pointer", whiteSpace: "nowrap", borderRadius: "6px 6px 0 0", border: `1px solid ${COLOR.border}`, borderBottom: active ? "none" : `1px solid ${COLOR.border}`, marginBottom: active ? -1 : 0, background: active ? COLOR.white : COLOR.gray100, color: active ? COLOR.text : COLOR.gray500 }}
+              >
+                {V2_GROUP_TAB_LABELS[g] ?? g}
+              </div>
+            );
+          })}
+        </div>
+        {/* card body */}
+        <div style={{ flex: 1, minHeight: 0, border: `1px solid ${COLOR.border}`, borderRadius: "0 6px 6px 6px", background: COLOR.white, padding: 12, marginTop: -1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          {!row || v2Fields.length === 0 ? (
+            <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, padding: 8 }}>No attributes</div>
+          ) : (
+            <div style={{ flex: 1, display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "10px 18px", overflowY: "auto", alignContent: "start" }}>
+              {v2Fields.map(([k, v]) => {
+                const dict = mappings[k];
+                const strVal = toDisplayString(v);
+                const isChanged = changedFieldsSet.has(k);
+                const isEdited = isManuallyEdited(k, v);
+                const childField = PARENT_TO_CHILD_FIELD[k];
+                const parentKey = childField ? CHILD_REQUIRES_PARENT_PRESENT[childField] : undefined;
+                const showPencil = !!childField && !!onEditOptions && !(parentKey && Number(row[parentKey]) !== 1);
+                // Whole-cell highlight (rounded), matching the v1 "old style": red =
+                // manual edit, yellow = autocoded change (green when highlightColor="green",
+                // e.g. Treatment). The inner value box is tinted to match (not left white),
+                // and an autocoded field's title is tagged with its source — (CV) or (GIS).
+                // In autocode selection mode, a selected cell shows the green
+                // "modified" highlight (reused from manual-edit / autocode) so the
+                // panel looks identical until the user clicks to select.
+                const isSelectable = !selectionMode || !selectableKeys || selectableKeys.has(k);
+                const isSelected = selectionMode && !!selectedKeys?.has(k);
+                let hl = isEdited
+                  ? { bg: "#FFF5F5", border: "#E53E3E" }
+                  : isChanged
+                    ? (highlightColor === "green" ? { bg: "#F0FFF4", border: "#38A169" } : { bg: "#FFFFF0", border: "#D69E2E" })
+                    : null;
+                if (isSelected) hl = { bg: "#F0FFF4", border: "#38A169" };
+                const boxBg = hl ? hl.bg : COLOR.white;
+                const boxBorder = hl ? hl.border : COLOR.border;
+                const source = fieldSources[k]; // "CV" | "GIS" | undefined
+                // The attribute title is its own tooltip trigger (no separate (i) icon).
+                // An autocoded field appends its source tag — (CV)/(GIS) — in regular
+                // weight, coloured to match the highlight border (e.g. the deeper yellow).
+                const titleNode = (
+                  <Box as="span" style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: isEdited ? "#C53030" : COLOR.text, cursor: ATTRIBUTE_TOOLTIPS[k] ? "help" : "default" }}>
+                    {k}
+                    {isChanged && source && (
+                      <span style={{ fontWeight: 400, color: hl?.border ?? COLOR.gray500 }}> ({source})</span>
+                    )}
+                  </Box>
+                );
+                return (
+                  <div
+                    key={k}
+                    onClick={selectionMode && isSelectable && onToggleSelect ? () => onToggleSelect(k) : undefined}
+                    style={{
+                      minWidth: 0,
+                      borderWidth: 2,
+                      borderStyle: "solid",
+                      borderColor: hl ? hl.border : "transparent",
+                      background: hl ? hl.bg : "transparent",
+                      borderRadius: 6,
+                      padding: 8,
+                      cursor: selectionMode ? (isSelectable ? "pointer" : "not-allowed") : undefined,
+                      opacity: selectionMode && !isSelectable ? 0.55 : 1,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 6 }}>
+                      <Box minW={0} flex={1}>
+                        {ATTRIBUTE_TOOLTIPS[k] && !selectionMode ? (
+                          <Tooltip content={ATTRIBUTE_TOOLTIPS[k]} showArrow portalled openDelay={100} closeOnClick={false} contentProps={{ maxW: "280px", fontSize: "xs" }}>
+                            {titleNode}
+                          </Tooltip>
+                        ) : titleNode}
+                      </Box>
+                      {showPencil && !selectionMode && (
+                        <button className="attr-edit-btn" onClick={(e) => { e.stopPropagation(); onEditOptions!(childField!); }} aria-label={`Edit options for ${childField}`}>
+                          <LuPencil className="attr-edit-icon" />
+                        </button>
+                      )}
+                    </div>
+                    {dict ? (
+                      <div style={{ position: "relative", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg, pointerEvents: selectionMode ? "none" : undefined }}>
+                        <select
+                          value={strVal}
+                          disabled={readOnly}
+                          onChange={(e) => {
+                            let val: string | number | boolean | null = e.target.value === "" ? null : e.target.value;
+                            if (val !== null && originalRow) {
+                              const ov = originalRow[k];
+                              if (typeof ov === "number" && typeof val === "string" && !Number.isNaN(Number(val))) val = Number(val);
+                            }
+                            onChange?.(k, val);
+                            onEdit?.(k, val);
+                          }}
+                          style={{ width: "100%", appearance: "none", WebkitAppearance: "none", border: "none", outline: "none", background: "transparent", padding: "6px 26px 6px 9px", fontFamily: FONT, fontSize: 16, color: COLOR.text, cursor: readOnly ? "default" : "pointer" }}
+                        >
+                          {k !== "Road speed limit" && !dict[strVal] && strVal !== "" && (
+                            <option value={strVal}>{`(Unknown) ${strVal}`}</option>
+                          )}
+                          {k === "Road speed limit" && dict
+                            ? ["NA", "0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120"]
+                                .map((code) => { const label = dict[code]; return label ? <option key={code} value={code}>{label}</option> : null; })
+                                .filter(Boolean)
+                            : Object.entries(dict || {}).map(([code, label]) => <option key={code} value={code}>{label}</option>)}
+                        </select>
+                        <svg width="9" height="6" viewBox="0 0 10 6" fill="none" style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
+                          <path d="M1 1l4 4 4-4" stroke="#718096" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <input
+                        value={strVal}
+                        disabled={readOnly}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          const num = Number(raw);
+                          const val = raw !== "" && Number.isFinite(num) && /^\d+(\.\d+)?$/.test(raw) ? num : raw === "" ? null : raw;
+                          onChange?.(k, val);
+                          onEdit?.(k, val);
+                        }}
+                        style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${boxBorder}`, borderRadius: 6, background: boxBg, padding: "6px 9px", fontFamily: FONT, fontSize: 16, color: COLOR.text, outline: "none", pointerEvents: selectionMode ? "none" : undefined }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (!row) {
     return (

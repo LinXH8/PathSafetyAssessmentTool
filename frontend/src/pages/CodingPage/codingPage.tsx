@@ -1,26 +1,8 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import {
-  Box,
-  Dialog,
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Spinner,
-  NumberInput,
-  Button,
-  Input,
-  Portal,
-  Progress,
-  Card,
-  CardBody,
-} from "@chakra-ui/react";
 
 import type { Feature, FeatureCollection, LineString } from "geojson";
 import { toaster } from "../../components/ui/toaster";
-import ExitConfirmationDialog from "../sidebar/components/ExitConfirmationDialog";
-
 
 import {
   fetchProjectDetail,
@@ -36,10 +18,7 @@ import {
 import type { AttributeRow, CodingFilterContext } from "../../api";
 import { autocodeImage, autocodeGIS, autocodeAllStream, CODING_FILTER_CONTEXT_KEY } from "../../api";
 
-import ImagePanel from "./components/ImagePanel";
-import AttributesPanel, { resolveContributorTabGroup } from "./components/AttributesPanel";
-import AttributeOptionsDialog from "./components/AttributeOptionsDialog";
-import GeoDataPanel from "./components/GeoDataPanel";
+import { resolveContributorTabGroup } from "./components/AttributesPanel";
 import { saveAttributes } from "../../api";
 import "../../components/visualization/AnalysisPanel.css";
 import { getCachedAttributeMappingsSync, getCachedAttributeMappings, invalidateProject } from "../../api/projectDataCache";
@@ -47,34 +26,22 @@ import { fetchWidthVisualization } from "../../api/widthVisualization";
 import type { WidthVisualizationResponse } from "../../api/widthVisualization";
 import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
 import type { CurvatureVisualizationResponse } from "../../api/curvatureVisualization";
-import SegmentScoresCard from "../../components/visualization/scoreband/SegmentScoresCard";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
-import AutocodeValidation from "../PathAnalysisPage/components/AutocodeValidation";
+import { useUiVersion } from "../../features/ui/useUiVersion";
+import {
+  FO_TYPE_SUGGESTIONS,
+  NFO_TYPE_SUGGESTIONS,
+  FACILITY_WIDTH_SUBCATEGORY_MAP,
+} from "./codingConstants";
+import type { AttrMappings, ProjectDataState } from "./codingConstants";
+import CodingLayoutV1 from "./layouts/CodingLayoutV1";
+import CodingLayoutV2 from "./layouts/CodingLayoutV2";
+import type { CodingViewModel } from "./layouts/CodingViewModel";
 
 
-type ProjectDetail = { name: string; versions: string[]; latest: string };
+// ProjectDetail, AttrMappings, ProjectDataState moved to ./codingConstants
+// (shared by the container and the layout shells).
 type AttributesResponse = { rows: AttributeRow[] };
-type AttrMappings = Record<string, Record<string, string>>;
-
-const PANEL_HEIGHT = 550;
-
-// Type for project data
-type ProjectDataState = {
-  detail: ProjectDetail | null;
-  attrs: AttributeRow[];
-  geoFeatures: Feature[];
-  scores: any[];
-  currentPage: number;
-  changedFieldsByRow: Record<number, string[]>;
-  fieldSourcesByRow: Record<number, Record<string, string>>;
-  loading: boolean;
-  error: string | null;
-  editedRow: AttributeRow | null;
-  verified?: boolean;
-  verifiedSegmentCount?: number;
-  autocodedSegmentCount?: number;
-  isDirty?: boolean;
-};
 
 const defaultProjectData: ProjectDataState = {
   detail: null,
@@ -97,8 +64,7 @@ const projectDataCache: Record<string, ProjectDataState> = {};
 const savedAttrsSnapshot: Record<string, AttributeRow[]> = {};
 
 const DELINEATION_PRESENT_SUGGESTIONS = ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"];
-const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollard", "Billboard", "Sign Pole", "Railing", "Utility Box", "Vegetation", "Others"];
-const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bin", "Bicycle", "Cone", "Others"];
+// FO_TYPE_SUGGESTIONS / NFO_TYPE_SUGGESTIONS moved to ./codingConstants.
 
 // Renamed FO Type finer-attribute labels. Applied to every project's rows as they
 // load from the backend so existing data — including projects created on other
@@ -154,19 +120,8 @@ function migrateAttrRows(rows: AttributeRow[]): AttributeRow[] {
 }
 const SLIPPERY_ISSUE_TYPE_SUGGESTIONS = ["Algae", "Leaves", "Soil", "Sand"];
 
-const FACILITY_WIDTH_SUBCATEGORY_MAP: Record<string, string[]> = {
-  "Very Narrow": ["≤1.5m", ">1.5–1.8m", ">1.8–<2m"],
-  "Narrow": ["2–<3.5m", "3.5–4m"],
-  "Wide": [">4m"],
-};
-
-function getParentCategoryForSubcat(subCat: string | null | undefined): string | null {
-  if (!subCat) return null;
-  for (const [parent, children] of Object.entries(FACILITY_WIDTH_SUBCATEGORY_MAP)) {
-    if (children.includes(subCat)) return parent;
-  }
-  return null;
-}
+// FACILITY_WIDTH_SUBCATEGORY_MAP moved to ./codingConstants; getParentCategoryForSubcat
+// moved to ./layouts/CodingLayoutV1 (render-only).
 
 type LogicCheckNotif = { description: string; isWarning: boolean };
 
@@ -290,173 +245,6 @@ function applyLogicChecks(
 
   return { extraUpdates, notifications };
 }
-
-function PresentMultiTagModal({
-  open,
-  options,
-  onConfirm,
-  onCancel,
-  title,
-  description,
-  singleSelect = false,
-}: {
-  open: boolean;
-  options: string[];
-  onConfirm: (val: string) => void;
-  onCancel?: () => void;
-  title: string;
-  description: string;
-  singleSelect?: boolean;
-}) {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showOthersInput, setShowOthersInput] = useState(false);
-  const [othersText, setOthersText] = useState("");
-
-  useEffect(() => {
-    if (open) {
-      setSelectedTags([]);
-      setShowOthersInput(false);
-      setOthersText("");
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) {
-      const t = setTimeout(() => {
-        document.body.style.pointerEvents = "auto";
-        document.documentElement.style.pointerEvents = "auto";
-        document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
-        document.body.removeAttribute("data-scroll-locked");
-        document.documentElement.removeAttribute("data-scroll-locked");
-      }, 400);
-      return () => clearTimeout(t);
-    }
-  }, [open]);
-
-  function toggleTag(tag: string) {
-    if (singleSelect) {
-      setSelectedTags([tag]);
-    } else {
-      setSelectedTags((prev) =>
-        prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-      );
-    }
-  }
-
-  function handleAddOthers() {
-    const trimmed = othersText.trim();
-    if (trimmed && !selectedTags.includes(trimmed)) {
-      setSelectedTags((prev) => [...prev, trimmed]);
-    }
-    setOthersText("");
-    setShowOthersInput(false);
-  }
-
-  return (
-    <Dialog.Root open={open} onOpenChange={() => { }} unmountOnExit>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content maxW="420px" w="full">
-            <Dialog.Header>
-              <Dialog.Title>{title}</Dialog.Title>
-            </Dialog.Header>
-            <Dialog.Body>
-              <Text fontSize="sm" mb="3">
-                {description}
-              </Text>
-              <Box display="flex" flexWrap="wrap" gap="2">
-                {options.map((opt) => {
-                  const selected = selectedTags.includes(opt);
-                  return (
-                    <Box
-                      key={opt}
-                      as="button"
-                      px="3"
-                      py="1.5"
-                      borderRadius="full"
-                      borderWidth="2px"
-                      borderColor={selected ? "blue.500" : "gray.200"}
-                      bg={selected ? "blue.50" : "white"}
-                      color={selected ? "blue.800" : "gray.700"}
-                      fontWeight={selected ? "semibold" : "normal"}
-                      fontSize="sm"
-                      cursor="pointer"
-                      _hover={{ borderColor: "blue.400", bg: "blue.50" }}
-                      _dark={{
-                        bg: selected ? "blue.900" : "gray.800",
-                        borderColor: selected ? "blue.400" : "gray.600",
-                        color: selected ? "blue.200" : "gray.300",
-                      }}
-                      transition="all 0.15s"
-                      onClick={() => toggleTag(opt)}
-                    >
-                      {opt}
-                    </Box>
-                  );
-                })}
-                {!singleSelect && (
-                  <Box
-                    as="button"
-                    px="3"
-                    py="1.5"
-                    borderRadius="full"
-                    borderWidth="2px"
-                    borderColor="gray.300"
-                    bg="white"
-                    color="gray.600"
-                    fontSize="sm"
-                    cursor="pointer"
-                    _hover={{ borderColor: "blue.400", bg: "blue.50" }}
-                    _dark={{ bg: "gray.800", borderColor: "gray.500", color: "gray.300" }}
-                    transition="all 0.15s"
-                    onClick={() => setShowOthersInput(true)}
-                  >
-                    + Others
-                  </Box>
-                )}
-              </Box>
-              {showOthersInput && (
-                <Box display="flex" gap="2" mt="3">
-                  <Input
-                    size="sm"
-                    placeholder="Enter custom value..."
-                    value={othersText}
-                    onChange={(e) => setOthersText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") { e.preventDefault(); handleAddOthers(); }
-                    }}
-                    autoFocus
-                  />
-                  <Button size="sm" variant="outline" onClick={handleAddOthers} disabled={!othersText.trim()}>
-                    Add
-                  </Button>
-                </Box>
-              )}
-            </Dialog.Body>
-            <Dialog.Footer>
-              {onCancel && (
-                <Button variant="outline" onClick={onCancel}>
-                  Cancel
-                </Button>
-              )}
-              <Button
-                colorPalette="blue"
-                disabled={selectedTags.length === 0}
-                onClick={() => onConfirm(selectedTags.join(", "))}
-              >
-                Confirm
-              </Button>
-            </Dialog.Footer>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
-  );
-}
-
-
 
 export default function CodingPage() {
   const { projectNames } = useParams<{ projectNames: string }>();
@@ -2384,684 +2172,133 @@ export default function CodingPage() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  if (projectList.length === 0) {
-    return <Box p="4"><Text color="red.500">No projects selected.</Text></Box>;
-  }
+  // ── Path Analysis return-flow handlers (lifted from the v1 JSX) ──
+  const returnToAnalysis = Boolean((location.state as any)?.returnToAnalysis);
 
-  if (!isShowingCodingGuide && (loading || !imagesLoaded)) {
-    return (
-      <Flex align="center" justify="center" h="60vh" direction="column" gap={4}>
-        {loading ? (
-          <>
-            <Spinner size="lg" />
-            <Text>Loading project data...</Text>
-          </>
-        ) : (
-          <>
-            <Text fontWeight="bold">Preloading Images...</Text>
-            <Progress.Root value={imageLoadingProgress} maxW="300px" w="100%" colorPalette="blue">
-              <Progress.Track>
-                <Progress.Range />
-              </Progress.Track>
-              <Progress.ValueText>{imageLoadingProgress}%</Progress.ValueText>
-            </Progress.Root>
-            <Text fontSize="sm" color="gray.500">
-              Please wait while we cache images for smooth navigation.
-            </Text>
-          </>
-        )}
-      </Flex>
-    );
-  }
+  const onBackToAnalysis = () => {
+    const anyChanges = projectList.some(projName => {
+      const current = projectData[projName]?.attrs;
+      const snapshot = savedAttrsSnapshot[projName];
+      if (!current || !snapshot) return false;
+      return JSON.stringify(current) !== JSON.stringify(snapshot);
+    });
+    if (anyChanges) {
+      setIsSaveDialogOpen(true);
+    } else {
+      toaster.create({ title: "No changes to save.", type: "info" });
+      window.history.back();
+    }
+  };
 
-  if (!isShowingCodingGuide && error) {
-    return (
-      <Box p="4">
-        <Text color="red.500">Error: {error}</Text>
-      </Box>
-    );
-  }
+  const onDiscardAndExit = () => {
+    setIsSaveDialogOpen(false);
+    // Revert each project's attrs back to the last-saved snapshot so that
+    // if the user navigates back to CodingPage the stale edits are gone.
+    projectList.forEach(projName => {
+      const snapshot = savedAttrsSnapshot[projName];
+      if (snapshot) {
+        updateProjectData(projName, { attrs: snapshot, isDirty: false });
+      }
+    });
+    toaster.create({ title: "Changes discarded.", type: "info" });
+    window.history.back();
+  };
 
-  // Show Coding Guide
-  if (isShowingCodingGuide) {
-    return (
-      <Box p="4">
-        <Flex gap="2" mb="4" wrap="wrap">
-          {projectList.map((projectName) => {
-            const projData = projectData[projectName];
-            const projSegmentCount = projData?.attrs.length ?? 0;
-            const isActive = activeTab === projectName;
-            return (
-              <Button
-                key={projectName}
-                onClick={() => setActiveTab(projectName)}
-                variant={isActive ? "solid" : "outline"}
-                colorPalette={isActive ? "blue" : "gray"}
-                size="md"
-              >
-                {projectName} ({projSegmentCount})
-              </Button>
-            );
-          })}
-          <Button
-            onClick={() => setActiveTab("coding-guide")}
-            variant={isShowingCodingGuide ? "solid" : "outline"}
-            colorPalette={isShowingCodingGuide ? "blue" : "gray"}
-            size="md"
-          >
-            Coding Guide
-          </Button>
-          <Button
-            onClick={() => window.open("https://irap.org/cyclerap/", "_blank", "noopener,noreferrer")}
-            variant="outline"
-            colorPalette="gray"
-            size="md"
-          >
-            CycleRAP
-          </Button>
-        </Flex>
-        <Box
-          borderWidth="1px"
-          borderColor="gray.200"
-          borderRadius="md"
-          overflow="hidden"
-          h="calc(100vh - 150px)"
-        >
-          <iframe
-            src="/PSAT coding sheetMay26.pdf"
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "none",
-            }}
-            title="Coding Guide PDF"
-          />
-        </Box>
-      </Box>
-    );
-  }
+  const onSaveAndExit = async () => {
+    setIsSaving(true);
+    const success = await saveAllProjects();
+    setIsSaving(false);
+    if (success) {
+      setIsSaveDialogOpen(false);
+      window.history.back();
+    }
+  };
 
-  return (
-    <Box p="4">
-      {autoCoding && (
-        <Portal>
-          <Box
-            position="fixed"
-            inset={0}
-            bg="blackAlpha.400"
-            backdropFilter="blur(2px)"
-            zIndex={1000}
-            aria-busy="true"
-          >
-            <Progress.Root
-              value={progress}
-              min={0}
-              max={100}
-              orientation="horizontal"
-              colorPalette="blue"
-              variant="subtle"
-              size="sm"
-              position="absolute"
-              top={0}
-              left={0}
-              right={0}
-              zIndex={1001}
-            >
-              <Progress.Track>
-                <Progress.Range />
-              </Progress.Track>
-            </Progress.Root>
+  const ui = useUiVersion();
 
-            <Flex minH="100vh" align="center" justify="center" p="4">
-              <Card.Root shadow="lg" borderRadius="2xl" maxW="md" w="full">
-                <CardBody>
-                  <Flex direction="column" gap="4">
-                    <Flex align="center" gap="3">
-                      <Spinner />
-                      <Box>
-                        <Text fontWeight="bold">Auto-coding…</Text>
-                        <Text fontSize="sm" color="gray.600">
-                          {autoCodeMsg || "Please wait while models run."}
-                        </Text>
-                      </Box>
-                    </Flex>
+  const vm: CodingViewModel = {
+    projectList,
+    projectData,
+    activeTab,
+    setActiveTab,
+    isShowingCodingGuide,
+    currentProjectName,
+    loading,
+    error,
+    imagesLoaded,
+    imageLoadingProgress,
+    autoCoding,
+    progress,
+    autoCodeMsg,
+    projectProgress,
+    detail,
+    currentData,
+    attrs,
+    scores,
+    geoFeatures,
+    currentIndex,
+    currentPage,
+    len,
+    currentAttr,
+    originalCurrentAttr,
+    imgRef,
+    changedFieldsByRow,
+    fieldSourcesByRow,
+    attrMappings,
+    segmentInput,
+    setSegmentInput,
+    commitSegment,
+    autocodedSegmentInput,
+    setAutocodedSegmentInput,
+    commitAutocodedSegment,
+    pageInput,
+    setPageInput,
+    commitPage,
+    gotoPage,
+    projectContributors,
+    handleContributorClick,
+    activeAttributeGroupTab,
+    cameFromPathAnalysis,
+    currentSegmentVerified,
+    toggleCurrentSegmentVerified,
+    verifiedByProject,
+    filterContext,
+    returnToAnalysis,
+    onBackToAnalysis,
+    onDiscardAndExit,
+    onSaveAndExit,
+    isSaveDialogOpen,
+    setIsSaveDialogOpen,
+    isSaving,
+    onAttrChange,
+    onEdit,
+    editCurrentAttr,
+    editCurrentAttrMany,
+    widthData,
+    curvData,
+    showCurvatureOverlay,
+    setShowCurvatureOverlay,
+    refreshCurrentProject,
+    editingOptions,
+    setEditingOptions,
+    handleSaveOptions,
+    presentDelineationTypeOptions,
+    foTypeOptions,
+    nfoTypeOptions,
+    slipperyIssueTypeOptions,
+    pendingPresentDelineationChange,
+    setPendingPresentDelineationChange,
+    pendingNotPresentDelineationChange,
+    setPendingNotPresentDelineationChange,
+    pendingPresentFOChange,
+    setPendingPresentFOChange,
+    pendingPresentNFOChange,
+    setPendingPresentNFOChange,
+    pendingPresentSlipperyChange,
+    setPendingPresentSlipperyChange,
+    pendingFacilityWidthParentChange,
+    setPendingFacilityWidthParentChange,
+  };
 
-                    {Object.entries(projectProgress).length > 0 && (
-                      <Flex direction="column" gap="3">
-                        {Object.entries(projectProgress).map(([projectName, { processed, total }]) => (
-                          <Box key={projectName}>
-                            <Flex justify="space-between" mb="2" align="center">
-                              <Text fontSize="sm" fontWeight="medium">{projectName}</Text>
-                              <Text fontSize="xs" color="gray.600">{processed}/{total}</Text>
-                            </Flex>
-                            <Progress.Root
-                              value={total > 0 ? (processed / total) * 100 : 0}
-                              min={0}
-                              max={100}
-                              colorPalette="blue"
-                              size="sm"
-                            >
-                              <Progress.Track>
-                                <Progress.Range />
-                              </Progress.Track>
-                            </Progress.Root>
-                          </Box>
-                        ))}
-                      </Flex>
-                    )}
-                  </Flex>
-                </CardBody>
-              </Card.Root>
-            </Flex>
-          </Box>
-        </Portal>
-      )}
-
-      <Flex gap="2" mb="4" wrap="wrap">
-        {projectList.map((projectName) => {
-          const projData = projectData[projectName];
-          const projSegmentCount = projData?.attrs.length ?? 0;
-          const isActive = activeTab === projectName;
-          return (
-            <Button
-              key={projectName}
-              onClick={() => setActiveTab(projectName)}
-              variant={isActive ? "solid" : "outline"}
-              colorPalette={isActive ? "blue" : "gray"}
-              size="md"
-            >
-              {projectName} ({projSegmentCount})
-            </Button>
-          );
-        })}
-        <Button
-          onClick={() => setActiveTab("coding-guide")}
-          variant={isShowingCodingGuide ? "solid" : "outline"}
-          colorPalette={isShowingCodingGuide ? "blue" : "gray"}
-          size="md"
-        >
-          Coding Guide
-        </Button>
-        <Button
-          onClick={() => window.open("https://irap.org/cyclerap/", "_blank", "noopener,noreferrer")}
-          variant="outline"
-          colorPalette="gray"
-          size="md"
-        >
-          CycleRAP
-        </Button>
-
-        {location.state?.returnToAnalysis && (
-          <Button
-            ml="auto"
-            variant="ghost"
-            colorPalette="blue"
-            size="sm"
-            onClick={() => {
-              const anyChanges = projectList.some(projName => {
-                const current = projectData[projName]?.attrs;
-                const snapshot = savedAttrsSnapshot[projName];
-                if (!current || !snapshot) return false;
-                return JSON.stringify(current) !== JSON.stringify(snapshot);
-              });
-              if (anyChanges) {
-                setIsSaveDialogOpen(true);
-              } else {
-                toaster.create({ title: "No changes to save.", type: "info" });
-                window.history.back();
-              }
-            }}
-          >
-            ← Back to Path Analysis
-          </Button>
-        )}
-
-        <ExitConfirmationDialog
-          open={isSaveDialogOpen}
-          onCancel={() => setIsSaveDialogOpen(false)}
-          onDiscardAndExit={() => {
-            setIsSaveDialogOpen(false);
-            // Revert each project's attrs back to the last-saved snapshot so that
-            // if the user navigates back to CodingPage the stale edits are gone.
-            projectList.forEach(projName => {
-              const snapshot = savedAttrsSnapshot[projName];
-              if (snapshot) {
-                updateProjectData(projName, { attrs: snapshot, isDirty: false });
-              }
-            });
-            toaster.create({ title: "Changes discarded.", type: "info" });
-            window.history.back();
-          }}
-          onSaveAndExit={async () => {
-            setIsSaving(true);
-            const success = await saveAllProjects();
-            setIsSaving(false);
-            if (success) {
-              setIsSaveDialogOpen(false);
-              window.history.back();
-            }
-          }}
-          isSaving={isSaving}
-        />
-      </Flex>
-
-      <Flex justify="space-between" align="center" mb="3">
-        <Flex align="center" gap="3">
-          <Box>
-            <Text fontSize="lg" fontWeight="bold">{detail?.name ?? currentProjectName}</Text>
-            {detail?.latest && (
-              <Text fontSize="sm" color="gray.600">Latest version: {detail.latest}</Text>
-            )}
-          </Box>
-          <Flex align="center" gap="2">
-            <Text fontSize="sm" fontWeight="bold">Segments Verified:</Text>
-            <NumberInput.Root
-              maxW="80px"
-              min={0}
-              max={len || 0}
-              value={segmentInput}
-              onValueChange={(e) => setSegmentInput(e.value)}
-            >
-              <NumberInput.Control />
-              <NumberInput.Input
-                placeholder="0"
-                onBlur={() => commitSegment(segmentInput, true)}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.currentTarget.blur();
-                  }
-                }}
-              />
-            </NumberInput.Root>
-            <span style={{ fontSize: "18px", minWidth: "50px" }}>
-              {len > 0
-                ? `${((currentData.verifiedSegmentCount ?? 0) / len * 100).toFixed(1)}%`
-                : "0%"}
-            </span>
-          </Flex>
-
-          <Flex align="center" gap="2">
-            <Text fontSize="sm" fontWeight="bold">Segments Autocoded:</Text>
-            <NumberInput.Root
-              maxW="80px"
-              min={0}
-              max={len || 0}
-              value={autocodedSegmentInput}
-              onValueChange={(e) => setAutocodedSegmentInput(e.value)}
-            >
-              <NumberInput.Control />
-              <NumberInput.Input
-                placeholder="0"
-                onBlur={() => commitAutocodedSegment(autocodedSegmentInput, true)}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
-                    ev.currentTarget.blur();
-                  }
-                }}
-              />
-            </NumberInput.Root>
-            <span style={{ fontSize: "18px", minWidth: "50px" }}>
-              {len > 0
-                ? `${((currentData.autocodedSegmentCount ?? 0) / len * 100).toFixed(1)}%`
-                : "0%"}
-            </span>
-          </Flex>
-        </Flex>
-
-        <Flex align="center" gap="3">
-          <Text fontSize="sm" color="gray.600">
-            {len > 0 ? `${currentPage} / ${len}` : "0 / 0"}
-          </Text>
-
-          <NumberInput.Root
-            maxW="120px"
-            min={1}
-            max={len || 1}
-            value={pageInput}
-            onValueChange={(e) => {
-              const val = e.value.replace(/^0+/, "");
-              setPageInput(val);
-            }}
-          >
-            <NumberInput.Control />
-            <NumberInput.Input
-              onBlur={() => commitPage(pageInput, true)}
-              onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
-                  ev.currentTarget.blur();
-                }
-              }}
-            />
-          </NumberInput.Root>
-        </Flex>
-      </Flex>
-
-      <Grid
-        templateColumns={{ base: "1fr", md: "2fr 1fr" }}
-        gap="16px"
-      >
-        <GridItem
-          display="flex"
-          flexDirection="column"
-          minH={`${PANEL_HEIGHT}px`}
-          gap="4"
-        >
-          <Box
-            bg="white"
-            borderRadius="md"
-            p="1"
-            borderWidth="1px"
-            borderColor="gray.200"
-            _dark={{ bg: "gray.800", borderColor: "gray.600" }}
-            flexShrink={0}
-          >
-            <SegmentScoresCard
-              scores={scores[currentIndex] || null}
-              projectContributors={projectContributors}
-              onContributorClick={handleContributorClick}
-            />
-          </Box>
-
-          <Box flex="1" minH={0}>
-            <ImagePanel
-              projectName={currentProjectName!}
-              imageRef={imgRef}
-              panelHeight={PANEL_HEIGHT}
-            />
-          </Box>
-
-          <Flex
-            flex="0 0 auto"
-            h="56px"
-            w="100%"
-            minW={0}
-            align="center"
-            gap="4"
-            pt="0"
-            position="relative"
-            zIndex={1}
-            bg="bg"
-          >
-            <Button
-              flex="1"
-              minW={0}
-              size="sm"
-              variant="outline"
-              onClick={() => gotoPage(currentPage - 1)}
-              disabled={currentPage <= 1}
-            >
-              Previous
-            </Button>
-
-            {cameFromPathAnalysis && (
-              <Button
-                flex="1"
-                minW={0}
-                size="sm"
-                colorPalette="green"
-                variant={currentSegmentVerified ? "solid" : "outline"}
-                onClick={toggleCurrentSegmentVerified}
-                title={currentSegmentVerified ? "Click to unmark this segment" : "Mark this segment as reviewed"}
-              >
-                {currentSegmentVerified ? "✓ Verified" : "Mark Verified"}
-              </Button>
-            )}
-
-            <Button
-              flex="1"
-              minW={0}
-              size="sm"
-              variant="solid"
-              onClick={() => gotoPage(currentPage + 1)}
-              disabled={currentPage >= len}
-            >
-              Next
-            </Button>
-          </Flex>
-        </GridItem>
-
-        <GridItem
-          display="flex"
-          flexDirection="column"
-          gap="4"
-        >
-          <Box flex="1" minH={0} display="flex" flexDirection="column">
-            <AttributesPanel
-              row={currentAttr}
-              originalRow={originalCurrentAttr}
-              mappings={attrMappings}
-              panelHeight={undefined} // Let it fill the parent
-              flex={1}
-              onChange={onAttrChange}
-              onEdit={onEdit}
-              changedFields={changedFieldsByRow[currentIndex] || []}
-              fieldSources={fieldSourcesByRow[currentIndex] || {}}
-              highlightColor="yellow"
-              activeGroupTab={activeAttributeGroupTab}
-              onEditOptions={(field) => {
-                const raw = currentAttr?.[field];
-                let currentValue = raw != null ? String(raw) : null;
-                if (field === "Issue Type (Slippery)" && !currentValue) {
-                  currentValue = "Algae";
-                }
-                const delineationVal = currentAttr?.["Delineation"];
-                const delineationNotPresent = field === "Delineation Type"
-                  && (delineationVal === 2 || delineationVal === "2");
-                setEditingOptions({ field, currentValue, delineationNotPresent });
-              }}
-            />
-          </Box>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <GeoDataPanel
-            projectName={currentProjectName!}
-            feature={
-              geoFeatures[currentIndex]?.geometry?.type === "LineString"
-                ? (geoFeatures[currentIndex] as any)
-                : null
-            }
-            index={currentIndex}
-            onJump={(i) => gotoPage(i + 1)}
-            scores={scores}
-            filterContext={filterContext}
-            verifiedByProject={cameFromPathAnalysis ? verifiedByProject : undefined}
-            onDataChange={refreshCurrentProject}
-            curvData={curvData}
-            widthM={widthData?.width ?? null}
-            grade={(currentAttr?.["Grade"] as number | null) ?? null}
-            gradientPct={(currentAttr?.["Gradient %"] as number | null) ?? null}
-            gradientStatus={(currentAttr?.["Gradient Status"] as string | null) ?? null}
-            showCurvatureOverlay={showCurvatureOverlay}
-            onToggleCurvatureOverlay={() => setShowCurvatureOverlay(v => !v)}
-          />
-        </GridItem>
-
-        {filterContext?.legend && (
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <Flex
-              align="center"
-              gap="3"
-              px="3"
-              py="2"
-              bg="gray.50"
-              borderRadius="md"
-              borderWidth="1px"
-              borderColor="gray.200"
-              flexWrap="wrap"
-              _dark={{ bg: "gray.800", borderColor: "gray.600" }}
-            >
-              <Text fontSize="xs" fontWeight="semibold" color="gray.500" flexShrink={0} _dark={{ color: "gray.400" }}>
-                Filter:
-              </Text>
-              <Text fontSize="xs" fontWeight="medium" color="gray.700" flexShrink={0} _dark={{ color: "gray.200" }}>
-                {filterContext.legend.attribute}
-              </Text>
-              {filterContext.legend.entries.map(({ category, color }) => (
-                <Flex key={category} align="center" gap="1.5">
-                  <Box w="10px" h="10px" borderRadius="full" flexShrink={0} style={{ backgroundColor: color }} />
-                  <Text fontSize="xs" color="gray.700" _dark={{ color: "gray.300" }}>{category}</Text>
-                </Flex>
-              ))}
-            </Flex>
-          </GridItem>
-        )}
-
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <AutocodeValidation
-            projectName={currentProjectName!}
-            attributes={attrs}
-            panelHeight={350}
-          />
-        </GridItem>
-      </Grid>
-
-      <AttributeOptionsDialog
-        open={editingOptions !== null}
-        onClose={() => setEditingOptions(null)}
-        fieldName={editingOptions?.field ?? ""}
-        currentValue={editingOptions?.currentValue ?? null}
-        delineationNotPresent={editingOptions?.delineationNotPresent}
-        singleSelect={
-          editingOptions?.field === "Facility Width Sub-category" ||
-          editingOptions?.field === "Crossing Type" ||
-          editingOptions?.field === "Curvature Sub-category"
-        }
-        facilityWidthConfirm={
-          editingOptions?.field === "Facility Width Sub-category"
-            ? {
-                oldSubCategory: editingOptions.currentValue ?? null,
-                oldCategory: getParentCategoryForSubcat(editingOptions.currentValue),
-                getNewCategory: (tag) => getParentCategoryForSubcat(tag),
-              }
-            : undefined
-        }
-        onSetValue={(val) => {
-          if (!editingOptions) return;
-          if (editingOptions.field === "Facility Width Sub-category" && val) {
-            const newParent = getParentCategoryForSubcat(val);
-            if (newParent) {
-              const dict = attrMappings["Facility Width per Direction"] ?? {};
-              const entry = Object.entries(dict).find(([, label]) => label === newParent);
-              const rawCode = entry?.[0];
-              const code = rawCode !== undefined
-                ? (isNaN(Number(rawCode)) ? rawCode : Number(rawCode))
-                : null;
-              editCurrentAttrMany({
-                "Facility Width Sub-category": val,
-                ...(code !== null ? { "Facility Width per Direction": code } : {}),
-              });
-              return;
-            }
-          }
-          editCurrentAttr(editingOptions.field, val);
-        }}
-        options={editingOptions
-          ? (() => {
-            const field = editingOptions.field;
-            // Seed with predefined suggestions so FO/NFO Type edits always show the full list
-            const seeds = field === "FO Type" ? FO_TYPE_SUGGESTIONS
-              : field === "NFO Type" ? NFO_TYPE_SUGGESTIONS
-              : [];
-            const projectVals = Object.values(projectData)
-              .flatMap((pd) => pd?.attrs ?? [])
-              .flatMap((row) => {
-                const v = row[field];
-                if (v == null || String(v).trim() === "") return [];
-                return String(v).split(",").map((s) => s.trim()).filter(Boolean);
-              });
-            return Array.from(new Set([...seeds, ...projectVals])).sort();
-          })()
-          : []}
-        onSave={handleSaveOptions}
-        onSetParentNotPresent={
-          editingOptions?.field === "FO Type"
-            ? () => onEdit("Fixed Obstacle on Facility", 2)
-            : editingOptions?.field === "NFO Type"
-            ? () => onEdit("Non-Fixed Obstacle on Facility", 2)
-            : editingOptions?.field === "Delineation Type" && !editingOptions?.delineationNotPresent
-            ? () => onEdit("Delineation", 2)
-            : editingOptions?.field === "Issue Type (Slippery)"
-            ? () => onEdit("Loose or slippery surface", 2)
-            : editingOptions?.field === "Crossing Type"
-            ? () => onEdit("Crossing Facility", 2)
-            : undefined
-        }
-      />
-
-
-      {/* Forced delineation type selection — shown when user switches Delineation Not Present→Present */}
-      <PresentMultiTagModal
-        open={pendingPresentDelineationChange}
-        title="Select Delineation Type"
-        description='Delineation was set to "Present". Please select the type(s) that apply:'
-        options={presentDelineationTypeOptions}
-        onConfirm={(val) => {
-          editCurrentAttr("Delineation Type", val);
-          setPendingPresentDelineationChange(false);
-        }}
-      />
-      <PresentMultiTagModal
-        open={pendingNotPresentDelineationChange}
-        singleSelect
-        title="Set Delineation Condition"
-        description='Delineation was set to "Not Present". Is it Absent or In Poor Condition?'
-        options={["Absent", "In Poor Condition"]}
-        onConfirm={(val) => {
-          editCurrentAttr("Delineation Type", val);
-          setPendingNotPresentDelineationChange(false);
-        }}
-      />
-      <PresentMultiTagModal
-        open={pendingPresentFOChange}
-        title="Select FO Type"
-        description='Fixed Obstacle was set to "Present". Please select the type(s) that apply:'
-        options={foTypeOptions}
-        onConfirm={(val) => {
-          editCurrentAttr("FO Type", val);
-          setPendingPresentFOChange(false);
-        }}
-      />
-      <PresentMultiTagModal
-        open={pendingPresentNFOChange}
-        title="Select NFO Type"
-        description='Non-Fixed Obstacle was set to "Present". Please select the type(s) that apply:'
-        options={nfoTypeOptions}
-        onConfirm={(val) => {
-          editCurrentAttr("NFO Type", val);
-          setPendingPresentNFOChange(false);
-        }}
-      />
-      <PresentMultiTagModal
-        open={pendingPresentSlipperyChange}
-        title="Select Issue Type (Slippery)"
-        description='"Loose or slippery surface" was set to "Present". Please select the issue type(s) that apply:'
-        options={slipperyIssueTypeOptions}
-        onConfirm={(val) => {
-          editCurrentAttr("Issue Type (Slippery)", val);
-          setPendingPresentSlipperyChange(false);
-        }}
-      />
-      <PresentMultiTagModal
-        open={pendingFacilityWidthParentChange !== null}
-        singleSelect
-        title="Select Facility Width Sub-category"
-        description={`Facility Width was set to "${pendingFacilityWidthParentChange?.categoryLabel}". Please select the specific sub-category:`}
-        options={pendingFacilityWidthParentChange?.subCategories ?? []}
-        onConfirm={(val) => {
-          editCurrentAttrMany({ "Facility Width Sub-category": val });
-          setPendingFacilityWidthParentChange(null);
-        }}
-        onCancel={() => {
-          if (pendingFacilityWidthParentChange) {
-            editCurrentAttrMany({
-              "Facility Width per Direction": pendingFacilityWidthParentChange.originalParentCode,
-              "Facility Width Sub-category": pendingFacilityWidthParentChange.originalSubCategory,
-            });
-          }
-          setPendingFacilityWidthParentChange(null);
-        }}
-      />
-    </Box>
-  );
+  return ui === "v2" ? <CodingLayoutV2 {...vm} /> : <CodingLayoutV1 {...vm} />;
 }

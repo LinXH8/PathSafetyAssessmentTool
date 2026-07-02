@@ -1,11 +1,15 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import type { ReactNode, CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { FONT, COLOR } from "../../../features/ui/designTokens";
+import { V2Segmented, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
 import { Box, Text, Tabs, Button, Flex, HStack, Portal, Input, IconButton, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
 import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Marker, Pane, ZoomControl } from "react-leaflet";
-import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash } from "react-icons/fa";
+import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
-import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
+import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
 import { Menu } from "@chakra-ui/react";
 import { MapCursorController } from "../../../components/common/MapCursorController";
@@ -17,6 +21,7 @@ import proj4 from "proj4";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
+import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -246,8 +251,17 @@ function ViewportPersister() {
 function MapInvalidateSize() {
   const map = useMap();
   useEffect(() => {
+    // Initial pass (fires moveend so marker culling re-runs).
     const id = setTimeout(() => { map.invalidateSize(); map.fire('moveend'); }, 0);
-    return () => clearTimeout(id);
+    // Second pass once the v2 card height has settled + observe container resizes,
+    // mirroring the Coding / Create-Project fix for the half-grey-tiles bug.
+    const settle = window.setTimeout(() => map.invalidateSize(), 200);
+    let ro: ResizeObserver | null = null;
+    try {
+      ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(map.getContainer());
+    } catch { /* ResizeObserver unsupported — the timeouts still cover mount */ }
+    return () => { clearTimeout(id); clearTimeout(settle); ro?.disconnect(); };
   }, [map]);
   return null;
 }
@@ -414,6 +428,25 @@ function PolygonDrawingTool({ isPolygonMode, isPolygonAddMode, onPolygonPoint, o
   );
 }
 
+/**
+ * Renders `children` inline (`to === undefined`, the v1 default), into a portal
+ * (`to` is a DOM node, v2 with the host mounted), or nothing (`to === null`, v2
+ * before the host mounts). Lets the v2 layout relocate the project / category
+ * toggle UI into the left "Current Filters" accordion while the map view keeps
+ * owning all of its state — no state lift required.
+ */
+function MaybePortal({
+  to,
+  children,
+}: {
+  to?: HTMLElement | null;
+  children: ReactNode;
+}) {
+  if (to === undefined) return <>{children}</>;
+  if (to === null) return null;
+  return createPortal(children, to);
+}
+
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
   selectedAttributes: string[];
@@ -437,6 +470,15 @@ interface AttributeAnalysisMapViewProps {
   loadedProjects: string[];
   hiddenProjects: string[];
   onHiddenProjectsChange: (hidden: string[]) => void;
+  /** "v2" applies the redesigned chrome (comp Frame 3 "Map Block"). */
+  variant?: "v1" | "v2";
+  /**
+   * v2 only — a DOM node (the left "Current Filters" accordion body) into which
+   * the project / category-toggle UI is portalled. The map view keeps owning the
+   * toggle state; only the rendered controls move. Null until the accordion's
+   * body mounts; while null the controls simply aren't shown (filters still apply).
+   */
+  filtersPortalTarget?: HTMLElement | null;
 }
 
 
@@ -466,8 +508,21 @@ export default function AttributeAnalysisMapView({
   loadedProjects,
   hiddenProjects,
   onHiddenProjectsChange,
+  variant = "v1",
+  filtersPortalTarget,
 }: AttributeAnalysisMapViewProps) {
+  const isV2 = variant === "v2";
   const navigate = useNavigate();
+  // v2: a "Generate Report" button sits beside the Download dropdown (ported from
+  // the v1 sidebar). The label flips to "Continue Report" when a saved layout exists.
+  const hasSavedReport = useMemo(() => {
+    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+  }, []);
+  // v2: the polygon / single-select tools move off the top bar into a floating
+  // cluster over the map (mirrors Coding). This host is that overlay; the tools
+  // portal into it. Null until it mounts (then they simply aren't shown).
+  const [toolsHost, setToolsHost] = useState<HTMLElement | null>(null);
+  const toolsHostRef = useCallback((n: HTMLDivElement | null) => setToolsHost(n), []);
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<string>("map");
   const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
@@ -631,13 +686,8 @@ export default function AttributeAnalysisMapView({
     setImportedBoundaryError(null);
   }, []);
 
-  const gisLayerColors = {
-    footpath: "#1E90FF", cycling: "#B91C1C", shared: "#A855F7",
-    roadcrossing: "#10B981", mrt_exit: "#06B6D4", bicycle_crossing: "#F97316",
-    bus_stop: "#8B5CF6", bus_lane: "#EAB308", parking_lot: "#D97706",
-    kerb_line: "#D946EF", state_land: "#14B8A6", stat_board: "#F59E0B",
-    land_private: "#6366F1", land_ministry: "#EC4899",
-  } as const;
+  // gisLayerColors / PROJECT_POINT_COLORS now live in constants/mapColors.ts
+  // (imported above) — single source shared with AnalysisSidebar.
 
   // GIS overlay fetch is data-driven (within a radius of every loaded segment) rather
   // than viewport-driven; see the effect defined after `allPoints` is computed.
@@ -914,23 +964,38 @@ export default function AttributeAnalysisMapView({
 
   // Define table columns
   const tableColumns = useMemo(() => {
-    const cols: { key: string; label: string }[] = [
+    // The filter/toggle attribute columns (+ any subcategory child columns).
+    const attrCols: { key: string; label: string }[] = [];
+    for (const attr of activeFilters) {
+      attrCols.push({ key: attr, label: ATTRIBUTE_LABELS[attr] ?? attr });
+      const subcat = SUBCATEGORY_MAP[attr];
+      if (subcat) {
+        const childAttr = subcat.childAttr;
+        attrCols.push({ key: childAttr, label: ATTRIBUTE_LABELS[childAttr] ?? childAttr });
+      }
+    }
+    if (isV2) {
+      // v2 order: Project Name, Segment No., Overall Risk Score, Coordinates,
+      // then the toggle attributes, then Image Reference last (it's long).
+      return [
+        { key: "Project", label: "Project Name" },
+        { key: "Segment #", label: "Segment No." },
+        { key: "Overall Risk Score", label: "Overall Risk Score" },
+        { key: "Coordinates", label: "Coordinates" },
+        ...attrCols,
+        { key: "Image Reference", label: "Image Reference" },
+      ];
+    }
+    // v1 order (unchanged).
+    return [
       { key: "Project", label: "Project" },
       { key: "Segment #", label: "Segment #" },
       { key: "Image Reference", label: "Image Reference" },
       { key: "Coordinates", label: "Coordinates" },
+      ...attrCols,
+      { key: "Overall Risk Score", label: "Overall Risk Score" },
     ];
-    for (const attr of activeFilters) {
-      cols.push({ key: attr, label: ATTRIBUTE_LABELS[attr] ?? attr });
-      const subcat = SUBCATEGORY_MAP[attr];
-      if (subcat) {
-        const childAttr = subcat.childAttr;
-        cols.push({ key: childAttr, label: ATTRIBUTE_LABELS[childAttr] ?? childAttr });
-      }
-    }
-    cols.push({ key: "Overall Risk Score", label: "Overall Risk Score" });
-    return cols;
-  }, [activeFilters]);
+  }, [activeFilters, isV2]);
 
 
   // Helper function to convert numeric attribute value to text using mappings
@@ -1163,16 +1228,7 @@ export default function AttributeAnalysisMapView({
 
   // Generate distinct colors for each project
   const projectColors = useMemo(() => {
-    const colors = [
-      "#2563EB", // Blue
-      "#DC2626", // Red
-      "#16A34A", // Green
-      "#CA8A04", // Yellow
-      "#9333EA", // Purple
-      "#EA580C", // Orange
-      "#0891B2", // Cyan
-      "#DB2777", // Pink
-    ];
+    const colors = PROJECT_POINT_COLORS;
     const colorMap: Record<string, string> = {};
     loadedProjects.forEach((proj, idx) => {
       colorMap[proj] = colors[idx % colors.length];
@@ -1531,150 +1587,22 @@ export default function AttributeAnalysisMapView({
   }, [categoryToggles, getFocusedAttributeValue, primaryFocusAttribute, visibleSegments]);
 
   // Generate colors for attribute categories based on the effective focus level.
+  // Colors come from CATEGORY_COLORS (AttributesDropdown) — the single source
+  // shared with getCategoryColor and the filter pills.
   const attributeCategoryColors = useMemo(() => {
     if (!effectiveFocusAttribute) return {};
 
-    const categoryColors: Record<string, string | Record<string, string>> = {
-      "Low": "#87C424",
-      "Medium": "#FFCC1A",
-      "High": "#FF5B1A",
-      "Extreme": "#CD1AFF",
-      "Adjacent Sidewalk 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Road Lane 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Vehicle Parking 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Severe Hazard 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent object or level change 0-1m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Road Lane 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Vehicle Parking 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent Severe Hazard 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Adjacent object or level change 1-3m": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Line of Sight": { "Adequate": "#16A34A", "Inadequate": "#DC2626" },
-      "Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "FO Type": {
-        "Lamp Post": "#DC2626",
-        "Traffic Light": "#EA580C",
-        "Covered Linkway Pole": "#F59E0B",
-        "Bollard": "#CA8A04",
-        "Bollards": "#CA8A04",
-        "Billboard": "#7C3AED",
-        "Billboards": "#7C3AED",
-        "Sign Pole": "#0284C7",
-        "Sign Poles": "#0284C7",
-        "Railing": "#0891B2",
-        "Utility Box": "#EC4899",
-        "Vegetation": "#16A34A",
-        "Others": "#6B7280",
-      },
-      "Non-Fixed Obstacle on Facility": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "NFO Type": {
-        "Barrier": "#DC2626",
-        "Bin": "#EA580C",
-        "Bins": "#EA580C",
-        "Bicycle": "#F59E0B",
-        "Cone": "#CA8A04",
-        "Others": "#6B7280",
-      },
-      "Width Restriction": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Light Segregation": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Facility access": { "Adequate": "#16A34A", "Inadequate": "#DC2626" },
-      "Loose or slippery surface": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Major Surface Deformation or Drain Opening": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Tram or Train Rails": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Delineation": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Street Lighting": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Grade": {
-        "<=2% (1:25)": "#16A34A",
-        "2.9% (1:20)": "#65A30D",
-        "3.8% (1:15)": "#CA8A04",
-        "4.7% (1:12)": "#EA580C",
-        ">=5%": "#DC2626",
-      },
-      "Curvature": { "No Sharp Turn Present": "#16A34A", "Sharp Turn Present": "#DC2626" },
-      "Curvature Sub-category": {
-        "<6.5m": "#DC2626",
-        "<10m": "#EA580C",
-        "Path Junction": "#9333EA",
-        "Sharp Bend": "#EA580C",
-        "Both": "#9333EA",
-        "10–18m": "#16A34A",
-        ">18m": "#2563EB",
-      },
-      "Facility Width per Direction": { "Wide": "#16A34A", "Narrow": "#FFCC1A", "Very Narrow": "#DC2626" },
-      "Facility Width Sub-category": {
-        "≤1.5m": "#DC2626",
-        ">1.5–1.8m": "#EA580C",
-        ">1.8–<2m": "#F59E0B",
-        "2–<3.5m": "#16A34A",
-        "3.5–4m": "#0891B2",
-        ">4m": "#2563EB",
-      },
-      "Peak pedestrian flow along or across facility": { "None": "#6B7280", "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Peak bicycle/LV traffic flow": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Observed proportion of cargo bikes and mopeds": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Heavy vehicle flow": { "Low": "#16A34A", "Moderate to high": "#DC2626" },
-      "Bicycle/LV speed – average": { "< 20km/h": "#16A34A", "=/> 20km/h": "#DC2626" },
-      "Bicycle/LV speed differential": { "< 10km/h": "#16A34A", "=/> 10km/h": "#DC2626" },
-      "Intersection or Road Crossing": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Crossing Facility": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Crossing Type": {
-        "Zebra Crossing": "#CA8A04",
-        "Signalised PC": "#2563EB",
-        "Bicycle Crossing": "#16A34A",
-        "Unsignalised Junction": "#EA580C",
-        "Development Access": "#9333EA",
-      },
-      "Pedestrian Crossing": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Intersecting Bicycle Facility": { "Present": "#16A34A", "Not Present": "#DC2626" },
-      "Property Access": { "Present": "#DC2626", "Not Present": "#16A34A" },
-      "Intersection Approach": { "Separate/NA": "#16A34A", "Shared": "#DC2626" },
-      "Number of lanes – adjacent road": { "1 per Direction/NA": "#16A34A", "> 1 per Direction": "#DC2626" },
-      "Number of lanes – intersecting road": { "1 per Direction/NA": "#16A34A", "> 1 per Direction": "#DC2626" },
-      "Road speed limit": {
-        "NA": "#6B7280",
-        "30 km/h": "#16A34A",
-        "40 km/h": "#65A30D",
-        "50 km/h": "#FFCC1A",
-        "60 km/h": "#F59E0B",
-        "70 km/h": "#EA580C",
-        "80 km/h": "#DC2626",
-        "90 km/h": "#991B1B",
-      },
-      "Flow Direction": { "One Way": "#2563EB", "Two Way": "#9333EA" },
-      "Delineation Type": {
-        "Cycling Path": "#2563EB",
-        "Red Stripe": "#DC2626",
-        "Signalised Crossing": "#EA580C",
-        "Zebra Crossing": "#CA8A04",
-        "Faded Marking": "#9CA3AF",
-      },
-      "Facility Type": {
-        "Sidewalk": "#2563EB",
-        "Multi-Use Path": "#9333EA",
-        "Off-Road Bicycle Path": "#16A34A",
-        "On-road Bicycle Lane": "#CA8A04",
-        "Road Shoulder": "#F59E0B",
-        "Mixed Traffic Road Lane": "#DC2626",
-      },
-      "Area type": {
-        "Urban": "#2563EB",
-        "Suburban": "#0891B2",
-        "Rural": "#16A34A",
-        "Industrial": "#EA580C",
-        "Recreational": "#9333EA",
-      },
-    };
-
-    const attributeColors = categoryColors[effectiveFocusAttribute];
+    const attributeColors = CATEGORY_COLORS[effectiveFocusAttribute];
     if (typeof attributeColors === "object" && attributeColors !== null) {
       return attributeColors as Record<string, string>;
     }
 
     if (SAFETY_FOCUS_ATTRIBUTES.has(effectiveFocusAttribute || "")) {
       return {
-        "Low": categoryColors["Low"] as string,
-        "Medium": categoryColors["Medium"] as string,
-        "High": categoryColors["High"] as string,
-        "Extreme": categoryColors["Extreme"] as string,
+        "Low": CATEGORY_COLORS["Low"] as string,
+        "Medium": CATEGORY_COLORS["Medium"] as string,
+        "High": CATEGORY_COLORS["High"] as string,
+        "Extreme": CATEGORY_COLORS["Extreme"] as string,
       };
     }
 
@@ -2236,7 +2164,7 @@ export default function AttributeAnalysisMapView({
         .map(([project, count]) => ({
           category: project,
           count,
-          color: projectColors[project] || "#6B7280",
+          color: projectColors[project] || CATEGORY_UNKNOWN_COLOR,
         }))
         .sort((a, b) => b.count - a.count); // Sort by count descending
     } else {
@@ -2253,7 +2181,7 @@ export default function AttributeAnalysisMapView({
         .map(([category, count]) => ({
           category,
           count,
-          color: attributeCategoryColors[category] || "#6B7280",
+          color: attributeCategoryColors[category] || CATEGORY_UNKNOWN_COLOR,
         }));
 
       const semanticOrder = getSemanticCategoryOrder(effectiveFocusAttribute);
@@ -2393,7 +2321,7 @@ export default function AttributeAnalysisMapView({
       const currentToggles = categoryToggles[attr] || {};
       const categoryStatusItems = categories.map(cat => {
         const isActive = currentToggles[cat] !== false;
-        let color = "#6B7280";
+        let color = CATEGORY_UNKNOWN_COLOR;
         if (attr === "Project") {
           color = projectColors[cat] || color;
         } else {
@@ -2499,31 +2427,71 @@ export default function AttributeAnalysisMapView({
     setIsAddSegmentsDialogOpen(true);
   };
 
+  // v2 table: Project Name + Segment No. are frozen (sticky) while side-scrolling.
+  const V2_COL_W: Record<string, number> = { "Project": 200, "Segment #": 130 };
+  const v2StickyStyle = (key: string, isHeader: boolean): CSSProperties => {
+    if (!isV2) return {};
+    if (key !== "Project" && key !== "Segment #") return {};
+    const left = key === "Segment #" ? V2_COL_W["Project"] : 0;
+    const w = V2_COL_W[key];
+    return {
+      position: "sticky",
+      left,
+      width: w,
+      minWidth: w,
+      maxWidth: w,
+      background: "#fff",
+      // header sticky-corner sits above both the other headers and the body sticky cells
+      zIndex: isHeader ? 5 : 3,
+    };
+  };
+
   return (
     <Box
       borderWidth="1px"
-      borderRadius="lg"
+      borderRadius={isV2 ? "6px" : "lg"}
+      borderColor={isV2 ? COLOR.border : undefined}
       bg="white"
+      overflow={isV2 ? "hidden" : undefined}
+      h={isV2 ? "100%" : undefined}
+      w={isV2 ? "100%" : undefined}
+      minW={isV2 ? 0 : undefined}
+      maxW={isV2 ? "100%" : undefined}
+      display={isV2 ? "flex" : undefined}
+      flexDirection={isV2 ? "column" : undefined}
       _dark={{ bg: "gray.800" }}
     >
       {/* Tabs */}
-      <Tabs.Root value={activeTab} onValueChange={(e) => setActiveTab(e.value)}>
-        <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4">
+      <Tabs.Root
+        value={activeTab}
+        onValueChange={(e) => setActiveTab(e.value)}
+        {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
+      >
+        <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4" flexShrink={0}>
           <HStack gap="4">
-            <Tabs.List>
-              <Tabs.Trigger value="map">Map View</Tabs.Trigger>
-              <Tabs.Trigger value="table">Table View</Tabs.Trigger>
-            </Tabs.List>
+            {isV2 ? (
+              <V2Segmented
+                options={[{ value: "map", label: "Map" }, { value: "table", label: "Table" }]}
+                value={activeTab === "table" ? "table" : "map"}
+                onChange={setActiveTab}
+              />
+            ) : (
+              <Tabs.List>
+                <Tabs.Trigger value="map">Map View</Tabs.Trigger>
+                <Tabs.Trigger value="table">Table View</Tabs.Trigger>
+              </Tabs.List>
+            )}
 
             {allPoints.length > 0 && (
+              <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
               <>
-                <HStack gap="0" mr="2">
+                <HStack gap="1.5">
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
                       <IconButton
                         aria-label="Single Point Tools"
                         size="sm"
-                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "outline"}
+                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
                         colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
                         onClick={(e) => {
                           if (isDeleteMode || isPointAddMode) {
@@ -2536,8 +2504,6 @@ export default function AttributeAnalysisMapView({
                             setPolygonPoints([]);
                           }
                         }}
-                        borderTopRightRadius={0}
-                        borderBottomRightRadius={0}
                       >
                         {isDeleteMode ? <FaTrash /> : isPointAddMode ? <FaPlus /> : <FaMousePointer />}
                       </IconButton>
@@ -2576,11 +2542,8 @@ export default function AttributeAnalysisMapView({
                       <IconButton
                         aria-label="Polygon Tools"
                         size="sm"
-                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "outline"}
+                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
                         colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "red" : "blue") : "gray"}
-                        borderTopLeftRadius={0}
-                        borderBottomLeftRadius={0}
-                        borderLeft="none"
                         onClick={(e) => {
                           if (isPolygonMode || isPolygonAddMode) {
                             e.preventDefault();
@@ -2654,43 +2617,78 @@ export default function AttributeAnalysisMapView({
                   </Button>
                 )}
               </>
+              </MaybePortal>
             )}
           </HStack>
 
           {allPoints.length > 0 && (
-            <HStack gap="2">
-              <Button
-                colorPalette="blue"
-                size="sm"
-                onClick={handleDownloadCSV}
-              >
-                Download Table
-              </Button>
-              <Button
-                colorPalette="teal"
-                size="sm"
-                variant="outline"
-                onClick={handleDownloadImages}
-              >
-                Download Images
-              </Button>
-              <Button
-                colorPalette="green"
-                size="sm"
-                variant="outline"
-                onClick={handleDownloadShapefile}
-              >
-                Download Shapefile
-              </Button>
-            </HStack>
+            isV2 ? (
+              // v2: a teal "Generate Report" button (global scope, §4) beside a single
+              // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
+              <HStack gap="2">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    sessionStorage.removeItem("treatment_loadedProjects");
+                    navigate("/analysis/report");
+                  }}
+                  style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                >
+                  {hasSavedReport ? "Continue Report" : "Generate Report"}
+                </Button>
+                <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
+                  <Menu.Trigger asChild>
+                    <Button
+                      size="sm"
+                      style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
+                    >
+                      Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
+                    </Button>
+                  </Menu.Trigger>
+                  <Menu.Positioner>
+                    <Menu.Content zIndex={2000}>
+                      <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
+                      <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
+                      <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
+                    </Menu.Content>
+                  </Menu.Positioner>
+                </Menu.Root>
+              </HStack>
+            ) : (
+              <HStack gap="2">
+                <Button
+                  colorPalette="blue"
+                  size="sm"
+                  onClick={handleDownloadCSV}
+                >
+                  Download Table
+                </Button>
+                <Button
+                  colorPalette="teal"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDownloadImages}
+                >
+                  Download Images
+                </Button>
+                <Button
+                  colorPalette="green"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDownloadShapefile}
+                >
+                  Download Shapefile
+                </Button>
+              </HStack>
+            )
           )}
         </Flex>
 
         {/* Map Tab Content */}
-        <Tabs.Content value="map">
+        <Tabs.Content value="map" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
           {/* Project Navigation Buttons and Legend */}
           {selectedProjects.length > 0 && (
-            <Box p="4" borderBottom="1px solid" borderColor="gray.200">
+            <Box p="4" borderBottom="1px solid" borderColor="gray.200" flexShrink={0}>
               <Text fontSize="sm" fontWeight="semibold" mb="2">
                 Jump to Project:
               </Text>
@@ -2699,8 +2697,12 @@ export default function AttributeAnalysisMapView({
                   <Button
                     key={proj}
                     size="sm"
-                    colorPalette="blue"
-                    variant="outline"
+                    colorPalette={isV2 ? undefined : "blue"}
+                    variant={isV2 ? "solid" : "outline"}
+                    borderRadius={isV2 ? "999px" : undefined}
+                    bg={isV2 ? projectColors[proj] : undefined}
+                    color={isV2 ? "white" : undefined}
+                    _hover={isV2 ? { opacity: 0.85 } : undefined}
                     onClick={() => handleProjectClick(proj)}
                   >
                     {proj}
@@ -2711,8 +2713,11 @@ export default function AttributeAnalysisMapView({
             </Box>
           )}
 
-          {/* Filter attribute selector + per-category toggles */}
+          {/* Filter attribute selector + per-category toggles. In v2 this UI is
+              portalled into the left "Current Filters" accordion (the map view
+              keeps owning the toggle state). `to=undefined` in v1 → renders here. */}
           {selectedProjects.length > 0 && (
+            <MaybePortal to={isV2 ? (filtersPortalTarget ?? null) : undefined}>
             <Box borderBottom="1px solid" borderColor="gray.200">
               {/* Tabs: always-present "Projects" tab + one per active filter */}
               <Tabs.Root
@@ -2729,18 +2734,39 @@ export default function AttributeAnalysisMapView({
                 }}
                 variant="line"
               >
-                <Box>
-                  <Tabs.List px="4" flexWrap="wrap">
-                    <Tabs.Trigger value="project" fontSize="sm" whiteSpace="nowrap">
-                      1. Projects
-                    </Tabs.Trigger>
+                {isV2 ? (
+                  // v2: design-guide tab style (§6), single row + horizontal scroll.
+                  <div style={{ ...v2TabRowStyle, padding: "0 4px" }}>
+                    <div
+                      onClick={() => { setCategoryFilterAttributeIndex(-1); setPrimaryFocusAttribute("Project"); }}
+                      style={v2TabStyle(categoryFilterAttributeIndex === -1)}
+                    >
+                      Projects
+                    </div>
                     {selectedAttributes.map((attr, idx) => (
-                      <Tabs.Trigger key={attr} value={String(idx)} fontSize="sm" whiteSpace="nowrap">
-                        {idx + 2}. {(ATTRIBUTE_LABELS[attr] ?? attr).slice(0, 22)}
-                      </Tabs.Trigger>
+                      <div
+                        key={attr}
+                        onClick={() => { setCategoryFilterAttributeIndex(idx); setPrimaryFocusAttribute(activeFilters[idx]); }}
+                        style={v2TabStyle(categoryFilterAttributeIndex === idx)}
+                      >
+                        {(ATTRIBUTE_LABELS[attr] ?? attr).slice(0, 22)}
+                      </div>
                     ))}
-                  </Tabs.List>
-                </Box>
+                  </div>
+                ) : (
+                  <Box>
+                    <Tabs.List px="4" flexWrap="wrap">
+                      <Tabs.Trigger value="project" fontSize="sm" whiteSpace="nowrap">
+                        1. Projects
+                      </Tabs.Trigger>
+                      {selectedAttributes.map((attr, idx) => (
+                        <Tabs.Trigger key={attr} value={String(idx)} fontSize="sm" whiteSpace="nowrap">
+                          {idx + 2}. {(ATTRIBUTE_LABELS[attr] ?? attr).slice(0, 22)}
+                        </Tabs.Trigger>
+                      ))}
+                    </Tabs.List>
+                  </Box>
+                )}
 
                 {[null, ...selectedAttributes].map((attr, i) => {
                   const isProjectsTab = attr === null;
@@ -3048,9 +3074,10 @@ export default function AttributeAnalysisMapView({
                 })}
               </Tabs.Root>
             </Box>
+            </MaybePortal>
           )}
 
-          <Box h="650px" position="relative">
+          <Box h={isV2 ? undefined : "650px"} flex={isV2 ? "1" : undefined} minH={isV2 ? 0 : undefined} position="relative">
             {loading && (
               <Box p="6">
                 <Text color="gray.500">Loading map…</Text>
@@ -3064,7 +3091,30 @@ export default function AttributeAnalysisMapView({
 
             {!loading && !err && (
               <>
+                {/* v2: floating tool cluster (polygon / single-select), top-right
+                    over the map — same treatment as Coding's floating map controls.
+                    The header tools portal into here via MaybePortal. */}
+                {isV2 && allPoints.length > 0 && (
+                  <Box
+                    ref={toolsHostRef}
+                    position="absolute"
+                    top="12px"
+                    right="12px"
+                    zIndex={1000}
+                    bg="white"
+                    borderWidth="1px"
+                    borderColor={COLOR.border}
+                    borderRadius="6px"
+                    boxShadow="sm"
+                    p="1.5"
+                    display="flex"
+                    flexDirection="column"
+                    gap="2"
+                    alignItems="stretch"
+                  />
+                )}
                 <AnalysisSidebar
+                  variant={variant}
                   isOpen={isGisSidebarOpen}
                   onToggle={() => setIsGisSidebarOpen(v => !v)}
                   showFootpath={showFootpath} setShowFootpath={setShowFootpath}
@@ -3098,7 +3148,7 @@ export default function AttributeAnalysisMapView({
                   preferCanvas={true}
                   zoomControl={false}
                 >
-                  <ZoomControl position="topright" />
+                  {!isV2 && <ZoomControl position="topright" />}
                   <MapCursorController
                     mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
                   />
@@ -3314,7 +3364,7 @@ export default function AttributeAnalysisMapView({
                     <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
                   ))}
                   {showPathDefects && pathDefects?.map((d, i) => (
-                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: "#EF4444", weight: 2, opacity: 1, fillOpacity: 0.8 }}>
+                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: gisLayerColors.path_defects, weight: 2, opacity: 1, fillOpacity: 0.8 }}>
                       <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
                     </CircleMarker>
                   ))}
@@ -3325,7 +3375,7 @@ export default function AttributeAnalysisMapView({
                       <LeafletPolygon
                         key={boundary.key}
                         positions={boundary.coords}
-                        pathOptions={{ color: "#EA580C", weight: 2, opacity: 0.95, fillColor: "#FDBA74", fillOpacity: 0.2, interactive: false }}
+                        pathOptions={{ color: MAP_INTERACTION_COLORS.importedOverlay, weight: 2, opacity: 0.95, fillColor: MAP_INTERACTION_COLORS.importedOverlayFill, fillOpacity: 0.2, interactive: false }}
                       />
                     ) : (
                       <>
@@ -3333,7 +3383,7 @@ export default function AttributeAnalysisMapView({
                           <LeafletPolyline
                             key={`${boundary.key}-${partIndex}`}
                             positions={lineCoords}
-                            pathOptions={{ color: "#EA580C", weight: 2.5, opacity: 0.95, interactive: false }}
+                            pathOptions={{ color: MAP_INTERACTION_COLORS.importedOverlay, weight: 2.5, opacity: 0.95, interactive: false }}
                           />
                         ))}
                       </>
@@ -3346,8 +3396,8 @@ export default function AttributeAnalysisMapView({
         </Tabs.Content>
 
         {/* Table Tab Content */}
-        <Tabs.Content value="table">
-          <Box>
+        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, minW: 0, maxW: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
+          <Box {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
             {selectedProjects.length > 0 && allPoints.length > 0 && (
               <Box p="4" borderBottom="1px solid" borderColor="gray.200">
                 <Text fontSize="sm" fontWeight="semibold" mb="2">
@@ -3358,8 +3408,12 @@ export default function AttributeAnalysisMapView({
                     <Button
                       key={proj}
                       size="sm"
-                      colorPalette="blue"
-                      variant="outline"
+                      colorPalette={isV2 ? undefined : "blue"}
+                      variant={isV2 ? "solid" : "outline"}
+                      borderRadius={isV2 ? "999px" : undefined}
+                      bg={isV2 ? projectColors[proj] : undefined}
+                      color={isV2 ? "white" : undefined}
+                      _hover={isV2 ? { opacity: 0.85 } : undefined}
                       onClick={() => handleTableProjectJump(proj)}
                     >
                       {proj}
@@ -3423,12 +3477,15 @@ export default function AttributeAnalysisMapView({
                 </Box>
 
                 {/* Table */}
-                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH="650px">
+                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%" } : {})}>
                   <table
                     style={{
                       width: "100%",
-                      borderCollapse: "collapse",
-                      border: "1px solid #e2e8f0",
+                      // Sticky cells render reliably with separate borders (collapse glitches).
+                      borderCollapse: isV2 ? "separate" : "collapse",
+                      borderSpacing: 0,
+                      border: isV2 ? "none" : "1px solid #e2e8f0",
+                      fontFamily: isV2 ? FONT : undefined,
                     }}
                   >
                     <thead>
@@ -3443,25 +3500,39 @@ export default function AttributeAnalysisMapView({
                               style={{
                                 padding: "8px 12px",
                                 textAlign: "left",
-                                borderBottom: "2px solid var(--chakra-colors-border-subtle)",
+                                borderBottom: isV2 ? "1px solid #E2E8F0" : "2px solid var(--chakra-colors-border-subtle)",
                                 cursor: "pointer",
                                 userSelect: "none",
                                 position: "sticky",
                                 top: 0,
-                                zIndex: 1,
-                                backgroundColor: "var(--chakra-colors-bg-subtle)",
+                                zIndex: isV2 ? 2 : 1,
+                                backgroundColor: isV2 ? "#fff" : "var(--chakra-colors-bg-subtle)",
+                                whiteSpace: isV2 ? "nowrap" : undefined,
+                                ...v2StickyStyle(col.key, true),
                               }}
                               onClick={() => handleHeaderClick(col.key)}
                             >
-                              <Flex align="center" gap="2" mb="1">
-                                <Text fontWeight="600" fontSize="sm">
+                              <Flex align="center" gap="2" mb="1" flexWrap="nowrap">
+                                <Text fontWeight={isV2 ? "700" : "600"} fontSize={isV2 ? "16px" : "sm"} fontFamily={isV2 ? FONT : undefined} whiteSpace={isV2 ? "nowrap" : undefined}>
                                   {col.label}
                                 </Text>
-                                {sortDirection && (
-                                  <Text fontSize="xs" color="blue.600">
-                                    {sortDirection === 'asc' ? '↑' : '↓'}
-                                    {sortIndex > 0 && <sup>{sortIndex + 1}</sup>}
-                                  </Text>
+                                {isV2 ? (
+                                  // Home/Create-style sort glyph: ↕ when unsorted, ▲/▼ (+priority) when sorted.
+                                  sortDirection ? (
+                                    <span style={{ fontSize: 12, color: "#4A5568", display: "inline-flex", alignItems: "center", gap: 2 }}>
+                                      {sortDirection === "asc" ? "▲" : "▼"}
+                                      {sortConfig.length > 1 && <span style={{ fontSize: 10, fontWeight: 700 }}>{sortIndex + 1}</span>}
+                                    </span>
+                                  ) : (
+                                    <span style={{ fontSize: 12, color: "#A0AEC0" }}>↕</span>
+                                  )
+                                ) : (
+                                  sortDirection && (
+                                    <Text fontSize="xs" color="blue.600">
+                                      {sortDirection === 'asc' ? '↑' : '↓'}
+                                      {sortIndex > 0 && <sup>{sortIndex + 1}</sup>}
+                                    </Text>
+                                  )
                                 )}
                               </Flex>
                               {/* Per-column filter input */}
@@ -3500,18 +3571,25 @@ export default function AttributeAnalysisMapView({
                               );
 
                               return (
-                                <td key={col.key} style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>
+                                <td
+                                  key={col.key}
+                                  style={{
+                                    padding: isV2 ? "8px 12px" : "12px",
+                                    borderBottom: isV2 ? "1px solid #EDF2F7" : "1px solid #e2e8f0",
+                                    ...v2StickyStyle(col.key, false),
+                                  }}
+                                >
                                   {col.key === "Project" ? (
                                     <Flex align="center" gap="2">
                                       <Box w="8px" h="8px" borderRadius="full" bg={color} />
-                                      <Text fontSize="sm">{value}</Text>
+                                      <Text fontSize={isV2 ? "16px" : "sm"}>{value}</Text>
                                     </Flex>
                                   ) : col.key === "Coordinates" ? (
                                     <Text fontSize="xs" fontFamily="mono">{value}</Text>
                                   ) : col.key === "Overall Risk Score" ? (
-                                    <Text fontSize="sm" fontWeight="600">{value}</Text>
+                                    <Text fontSize={isV2 ? "16px" : "sm"} fontWeight={isV2 ? "700" : "600"}>{value}</Text>
                                   ) : (
-                                    <Text fontSize="sm">{value}</Text>
+                                    <Text fontSize={isV2 ? "16px" : "sm"}>{value}</Text>
                                   )}
                                 </td>
                               );

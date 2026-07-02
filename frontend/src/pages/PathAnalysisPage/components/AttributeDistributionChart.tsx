@@ -3,7 +3,6 @@ import {
   Box,
   Flex,
   Text,
-  Accordion,
 } from "@chakra-ui/react";
 import {
   PieChart,
@@ -19,6 +18,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { ChartTypeToggle } from "../../../components/ui/ChartTypeToggle";
+import { FONT } from "../../../features/ui/designTokens";
+import { V2Segmented, DistTooltipBox } from "./paV2Primitives";
 
 interface CategoryItem {
   category: string;
@@ -39,15 +40,18 @@ interface AttributeDistributionChartProps {
   categoryStatus?: AttributeStatus[];
   totalSegmentsLoaded?: number;
   totalSegmentsViewed?: number;
+  /** "v2" swaps the Pie/Bar toggle for the §5 segmented control + slims the title. */
+  variant?: "v1" | "v2";
 }
 
 export default function AttributeDistributionChart({
   categoryData,
   selectedAttribute,
-  categoryStatus = [],
   totalSegmentsLoaded,
   totalSegmentsViewed,
+  variant = "v1",
 }: AttributeDistributionChartProps) {
+  const isV2 = variant === "v2";
   const [chartTypeState, setChartTypeState] = useState<"pie" | "bar">("pie");
 
   const activeChartType = chartTypeState;
@@ -108,22 +112,12 @@ export default function AttributeDistributionChart({
     );
   };
 
-  const totalActiveCount = categoryStatus.reduce((acc, group) => {
-    if (group.rangeFilter !== undefined) return acc + 1;
-    return acc + group.categories.filter(c => c.isActive).length;
-  }, 0);
-
-  const totalCount = categoryStatus.reduce((acc, group) => {
-    if (group.rangeFilter !== undefined) return acc + 1;
-    return acc + group.categories.length;
-  }, 0);
-
   return (
     <Box>
       {/* Header with Toggle */}
       <Flex justify="space-between" align="center" mb="4" flexWrap="wrap" gap="4">
         <Box>
-          <Text fontSize="lg" fontWeight="bold">
+          <Text fontSize={isV2 ? "16px" : "lg"} fontWeight="bold" style={isV2 ? { fontFamily: FONT } : undefined}>
             Distribution of {selectedAttribute}
           </Text>
           <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
@@ -134,136 +128,22 @@ export default function AttributeDistributionChart({
               Currently Viewing: {totalSegmentsViewed} out of {totalSegmentsLoaded} ({totalSegmentsLoaded > 0 ? ((totalSegmentsViewed / totalSegmentsLoaded) * 100).toFixed(0) : "0"}%)
             </Text>
           )}
-
-          {/* Category Status Accordion */}
-          {categoryStatus && categoryStatus.length > 0 && (
-            <Box mt="3" position="relative" zIndex={10}>
-              <Accordion.Root collapsible>
-                <Accordion.Item value="filters" border="none">
-                  <Accordion.ItemTrigger 
-                    py="1.5" 
-                    px="4"
-                    fontSize="sm" 
-                    fontWeight="semibold"
-                    color="white"
-                    bg="blue.500"
-                    _hover={{ bg: "blue.600" }}
-                    borderRadius="full"
-                    display="inline-flex"
-                    width="fit-content"
-                    boxShadow="sm"
-                  >
-                    Active Filters ({totalActiveCount}/{totalCount})
-                  </Accordion.ItemTrigger>
-                  <Accordion.ItemContent
-                    position="absolute"
-                    bg="white"
-                    _dark={{ bg: "gray.800" }}
-                    boxShadow="xl"
-                    borderRadius="md"
-                    p="4"
-                    mt="1"
-                    minW="320px"
-                    maxH="400px"
-                    overflowY="auto"
-                    borderWidth="1px"
-                  >
-                    <Flex direction="column" gap="3">
-                      {categoryStatus.map((group, groupIndex) => (
-                        <Box key={groupIndex}>
-                          <Text fontSize="xs" fontWeight="bold" color="gray.500" mb="1" textTransform="uppercase">
-                            {group.attribute}
-                          </Text>
-                          {group.rangeFilter !== undefined ? (
-                            /* Numeric range filter: show current bounds */
-                            <Box
-                              px="2"
-                              py="0.5"
-                              borderRadius="md"
-                              bg="blue.subtle"
-                              _dark={{ bg: "blue.subtle" }}
-                              fontSize="xs"
-                              fontWeight="semibold"
-                              color="blue.fg"
-                              borderWidth="1px"
-                              borderColor="blue.300"
-                              display="inline-block"
-                            >
-                              {group.rangeFilter.currentMin} – {group.rangeFilter.currentMax}
-                              {group.rangeFilter.currentMin === group.rangeFilter.min &&
-                               group.rangeFilter.currentMax === group.rangeFilter.max
-                                ? " (all)"
-                                : ""}
-                            </Box>
-                          ) : (
-                            /* Categorical filter: chips with optional subcategory chips */
-                            <Flex direction="column" gap="1.5">
-                              {group.categories.map((item, index) => (
-                                <Box key={index}>
-                                  <Box
-                                    px="2"
-                                    py="0.5"
-                                    borderRadius="full"
-                                    bg={item.isActive ? "blue.subtle" : "gray.100"}
-                                    _dark={{ bg: item.isActive ? "blue.subtle" : "gray.700" }}
-                                    fontSize="xs"
-                                    fontWeight={item.isActive ? "semibold" : "normal"}
-                                    color={item.isActive ? "blue.fg" : "gray.500"}
-                                    borderWidth="1px"
-                                    borderColor={item.isActive ? item.color : "transparent"}
-                                    opacity={item.isActive ? 1 : 0.7}
-                                    textDecoration={item.isActive ? "none" : "line-through"}
-                                    display="inline-block"
-                                  >
-                                    {item.category}
-                                  </Box>
-                                  {/* Subcategory chips (Layer 3) — only shown when parent is active */}
-                                  {item.isActive && item.subcategories && item.subcategories.length > 0 && (
-                                    <Flex
-                                      gap="1.5"
-                                      flexWrap="wrap"
-                                      mt="1"
-                                      ml="3"
-                                      pl="2"
-                                      borderLeftWidth="2px"
-                                      borderColor="gray.200"
-                                      _dark={{ borderColor: "gray.600" }}
-                                    >
-                                      {item.subcategories.map((sub, si) => (
-                                        <Box
-                                          key={si}
-                                          px="1.5"
-                                          py="0.5"
-                                          borderRadius="full"
-                                          bg={sub.isActive ? "green.subtle" : "gray.100"}
-                                          _dark={{ bg: sub.isActive ? "green.subtle" : "gray.700" }}
-                                          fontSize="xs"
-                                          fontWeight={sub.isActive ? "semibold" : "normal"}
-                                          color={sub.isActive ? "green.fg" : "gray.400"}
-                                          borderWidth="1px"
-                                          borderColor={sub.isActive ? sub.color : "transparent"}
-                                          opacity={sub.isActive ? 1 : 0.5}
-                                          textDecoration={sub.isActive ? "none" : "line-through"}
-                                        >
-                                          {sub.name}
-                                        </Box>
-                                      ))}
-                                    </Flex>
-                                  )}
-                                </Box>
-                              ))}
-                            </Flex>
-                          )}
-                        </Box>
-                      ))}
-                    </Flex>
-                  </Accordion.ItemContent>
-                </Accordion.Item>
-              </Accordion.Root>
-            </Box>
-          )}
+          {/* The "Active Filters" pill/accordion was removed in v2 — the active
+              filter set is already visible in the map's filter chips. The chart
+              below keeps its fixed height, so the card height is unaffected. */}
         </Box>
-        {showToggle && <ChartTypeToggle chartType={chartTypeState} onToggle={setChartTypeState} />}
+        {showToggle && (
+          isV2 ? (
+            <V2Segmented
+              options={[{ value: "pie", label: "Pie" }, { value: "bar", label: "Bar" }]}
+              value={chartTypeState}
+              onChange={setChartTypeState}
+              height={34}
+            />
+          ) : (
+            <ChartTypeToggle chartType={chartTypeState} onToggle={setChartTypeState} />
+          )
+        )}
       </Flex>
 
       {/* Chart Container */}
@@ -297,6 +177,9 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    if (isV2) {
+                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                    }
                     return (
                       <Box
                         bg="white"
@@ -385,6 +268,9 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    if (isV2) {
+                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                    }
                     return (
                       <Box
                         bg="white"

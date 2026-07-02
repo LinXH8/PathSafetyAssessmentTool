@@ -1,5 +1,6 @@
 import { Button, Dialog, Portal, CloseButton } from "@chakra-ui/react";
 import EditProjectModal from "../components/EditProjectModal";
+import ConfirmDialogV2 from "../../../components/common/ConfirmDialogV2";
 import type { ProjectsViewModel } from "./ProjectsViewModel";
 
 /**
@@ -39,45 +40,28 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
         />
       )}
 
-      {/* Delete confirmation Dialog */}
-      <Dialog.Root open={openDelete} onOpenChange={(d) => setOpenDelete(d.open)} unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Delete {selected.size} project(s)?</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                This will permanently remove the following projects and their files:
-                <ul style={{ marginTop: "12px", paddingLeft: "20px" }}>
-                  {Array.from(selected).map(name => (
-                    <li key={name}><strong>{name}</strong></li>
-                  ))}
-                </ul>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" disabled={deleting}>
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button
-                  colorPalette="red"
-                  onClick={confirmDelete}
-                  loading={deleting}
-                >
-                  Delete
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+      {/* Delete confirmation — shared v2 confirm popup (danger tone). */}
+      <ConfirmDialogV2
+        open={openDelete}
+        title={`Delete ${selected.size} project${selected.size === 1 ? "" : "s"}?`}
+        tone="danger"
+        message={
+          <>
+            This will permanently remove the following project{selected.size === 1 ? "" : "s"} and their files:
+            <ul style={{ marginTop: 12, paddingLeft: 20 }}>
+              {Array.from(selected).map((name) => (
+                <li key={name}><strong style={{ color: "#2D3748" }}>{name}</strong></li>
+              ))}
+            </ul>
+          </>
+        }
+        confirmLabel="Delete"
+        busyLabel="Deleting…"
+        cancelLabel="Cancel"
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setOpenDelete(false)}
+      />
 
       {/* Share to profile Dialog */}
       <Dialog.Root open={openShare} onOpenChange={(d) => setOpenShare(d.open)} unmountOnExit>

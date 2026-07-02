@@ -76,15 +76,29 @@ export default function Sidebar() {
     return pendingLogout;
   }, []);
 
+  // v2 guarded nav stores the full navigation action (not just a path) because the
+  // Quick-Select handshakes (openCoding/openPathAnalysis/openTreatment) do more than
+  // navigate. When set, it runs in place of the default path navigation.
+  const consumePendingAction = useCallback(() => {
+    const pendingAction = (window as any).psat_pendingAction;
+    (window as any).psat_pendingAction = null;
+    return typeof pendingAction === "function" ? (pendingAction as () => void) : null;
+  }, []);
+
   const completeExitAction = useCallback(async (defaultPath: string) => {
     const shouldLogout = consumePendingLogout();
+    const pendingAction = consumePendingAction();
     const nextPath = consumePendingNavigation(defaultPath);
     if (shouldLogout) {
       await completeLogout();
       return;
     }
+    if (pendingAction) {
+      pendingAction();
+      return;
+    }
     navigate(nextPath);
-  }, [completeLogout, consumePendingLogout, consumePendingNavigation, navigate]);
+  }, [completeLogout, consumePendingAction, consumePendingLogout, consumePendingNavigation, navigate]);
 
   // Navigate with exit prompt for coding page (skip dialog if no real changes)
   const navigateSidebar = useCallback((to: string) => {
@@ -101,6 +115,22 @@ export default function Sidebar() {
       navigate(to);
     }
   }, [inCoding, navigate]);
+
+  // v2: intercept ANY sidebar navigation when the current page has unsaved changes,
+  // showing the exit-without-saving dialog before running the navigation action.
+  // Only coding/treatment track changes (via window.psat_hasUnsavedChanges); on every
+  // other page the action runs immediately. Route-gating prevents a stale dirty flag
+  // from a prior coding session prompting on unrelated pages.
+  const guardedAction = useCallback((action: () => void) => {
+    const tracksChanges = inCoding || Boolean(onTreatmentDetail);
+    const hasChanges = tracksChanges && Boolean((window as any).psat_hasUnsavedChanges);
+    if (hasChanges) {
+      (window as any).psat_pendingAction = action;
+      setExitDialogOpen(true);
+    } else {
+      action();
+    }
+  }, [inCoding, onTreatmentDetail]);
 
   // Bulk treatment operations
   const handleTreatAllSegments = useCallback(async () => {
@@ -285,6 +315,7 @@ export default function Sidebar() {
     // Clear pending navigation
     (window as any).psat_pendingNavigation = null;
     (window as any).psat_pendingLogout = null;
+    (window as any).psat_pendingAction = null;
   }, []);
 
   // Treatment save and exit handlers
@@ -373,30 +404,11 @@ export default function Sidebar() {
           activeProfile={activeProfile}
           onLogout={onLogout}
           isLoggingOut={isLoggingOut}
-          onNavigate={navigateSidebar}
-          pathname={pathname}
+          onGuardedAction={guardedAction}
         >
-          {inCoding && projectName && (
-            <CodingSidebar
-              projectName={projectName}
-              onSave={onSave}
-              onExit={onExit}
-              onAutoCodeOne={onAutoCodeOne}
-              onAutoCodeAll={onAutoCodeAll}
-              onAutoCodeAllProjects={onAutoCodeAllProjects}
-              onAutoCodeByAttribute={onAutoCodeByAttribute}
-            />
-          )}
-          {onTreatmentDetail && projectName && (
-            <div className="psat-side-bottom">
-              <TreatmentSidebar
-                onTreatAll={handleTreatAllSegments}
-                onResetAll={handleResetClick}
-                onSave={onTreatmentSave}
-                onExit={onTreatmentExit}
-              />
-            </div>
-          )}
+          {/* Coding and Treatment are both migrated to v2: their route-specific
+              controls now live on-canvas (CodingLayoutV2 / TreatmentDetailLayoutV2),
+              so neither the v1 CodingSidebar nor TreatmentSidebar is embedded here. */}
         </SidebarV2>
 
         <ExitConfirmationDialog
@@ -412,6 +424,7 @@ export default function Sidebar() {
           onDiscardAndExit={handleTreatmentDiscardAndExit}
           onCancel={handleTreatmentExitCancel}
           isSaving={isSaving}
+          context="Treatment Page"
         />
         <ResetConfirmationDialog
           open={resetDialogOpen}
@@ -490,7 +503,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                {hasSavedReport ? "Continue Report" : "Generate Report"}
               </Button>
               {hasSavedReport && (
                 <div style={{ fontSize: 11, color: "#b060e0", textAlign: "center", lineHeight: 1.4 }}>
@@ -511,7 +524,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                {hasSavedReport ? "Continue Report" : "Generate Report"}
               </Button>
             </div>
           )}
@@ -578,6 +591,7 @@ export default function Sidebar() {
         onDiscardAndExit={handleTreatmentDiscardAndExit}
         onCancel={handleTreatmentExitCancel}
         isSaving={isSaving}
+        context="Treatment Page"
       />
 
       <ResetConfirmationDialog

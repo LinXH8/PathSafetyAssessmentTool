@@ -155,6 +155,7 @@ export interface SourceFolderPreview {
   image_count: number;
   geotagged_image_count: number;
   segment_count: number;
+  total_distance_km?: number | null;
   segment_error: string | null;
   earliest_modified_at: string | null;
   latest_modified_at: string | null;
@@ -172,11 +173,43 @@ export async function listSourceFolderSuggestions(opts?: { signal?: AbortSignal 
   return (data?.items ?? []) as SourceFolderSuggestion[];
 }
 
-export async function fetchSourceFolderPreview(folderName: string, opts?: { signal?: AbortSignal }) {
+export async function fetchSourceFolderPreview(
+  folderName: string,
+  opts?: { signal?: AbortSignal; skipRename?: boolean }
+) {
   const params = new URLSearchParams({ folder_name: folderName });
+  if (opts?.skipRename) params.set("skip_rename", "1");
   const res = await fetch(`/api/projects/folders/preview?${params.toString()}`, { signal: opts?.signal });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as SourceFolderPreview;
+}
+
+/**
+ * Cache-only bulk summary for every source folder. `cached: false` rows carry
+ * null statistics and should be lazily filled via {@link fetchSourceFolderPreview}.
+ * Cheap (no EXIF/geo work) so it can auto-populate the Create table on mount.
+ */
+export interface SourceFolderSummary {
+  folder_name: string;
+  image_count: number | null;
+  geotagged_image_count: number | null;
+  segment_count: number | null;
+  total_distance_km: number | null;
+  segment_error: string | null;
+  earliest_modified_at: string | null;
+  latest_modified_at: string | null;
+  survey_quarter: string | null;
+  survey_quarters: string[];
+  mixed_quarters: boolean;
+  cached: boolean;
+  renamed_from: string | null;
+}
+
+export async function fetchSourceFolderSummaries(opts?: { signal?: AbortSignal }) {
+  const res = await fetch("/api/projects/folders/summaries", { signal: opts?.signal });
+  if (!res.ok) throw new Error(await readError(res));
+  const data = await res.json();
+  return (data?.items ?? []) as SourceFolderSummary[];
 }
 
 export interface ProfileSummary {
@@ -1022,10 +1055,18 @@ export async function uploadShapefiles(files: File[], category?: string): Promis
 export async function previewUploadedShapefiles(files: File[]): Promise<FeatureCollection> {
   const formData = new FormData();
   files.forEach(file => formData.append("files", file));
-  const res = await fetch("/api/shapefiles/preview-upload", {
-    method: "POST",
-    body: formData,
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/shapefiles/preview-upload", {
+      method: "POST",
+      body: formData,
+    });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Cannot reach the backend to import the shapefile. Make sure the backend is running (e.g. via Run-PSAT.bat) and try again.");
+    }
+    throw error;
+  }
   if (!res.ok) throw new Error(await readError(res));
   return res.json();
 }

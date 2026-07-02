@@ -1,15 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  Box,
-  Text,
-} from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 import { fetchProjectList } from "../../api";
-import FilterPanel from "./components/FilterPanel";
-import PathAnalysisMapView from "./components/PathAnalysisMapView";
-import AttributeDistributionChart from "./components/AttributeDistributionChart";
-import AggregatedScoreBandPanel from "./components/AggregatedScoreBandPanel";
-import AggregatedTopContributorsPanel from "./components/AggregatedTopContributorsPanel";
-import "./pathAnalysisPage.css";
+import { useUiVersion } from "../../features/ui/useUiVersion";
+import PathAnalysisLayoutV1 from "./layouts/PathAnalysisLayoutV1";
+import PathAnalysisLayoutV2 from "./layouts/PathAnalysisLayoutV2";
+import type { PathAnalysisChartData, PathAnalysisViewModel } from "./layouts/PathAnalysisViewModel";
 
 const SESSION_KEY_PREFIX = "pathAnalysis_";
 
@@ -29,7 +24,16 @@ const getStoredLoadedProjects = (): string[] => {
   return loadState<string[]>("selectedProjects", []);
 };
 
+/**
+ * Path Analysis container. Owns all server state, sessionStorage keys and the
+ * `projectDataCache` contracts, assembles a single `PathAnalysisViewModel`, and
+ * renders the v1 or v2 shell (see temp/UI_V2_REDESIGN_GUIDE.md §3). No layout/
+ * presentation logic lives here.
+ */
 export default function PathAnalysisPage() {
+  const ui = useUiVersion();
+  const location = useLocation();
+
   const [loadedProjects, setLoadedProjects] = useState<string[]>(() =>
     getStoredLoadedProjects()
   );
@@ -54,22 +58,7 @@ export default function PathAnalysisPage() {
     [loadedProjects, hiddenProjects]
   );
 
-  const [chartData, setChartData] = useState<{
-    categoryDistributionData: { category: string; count: number; color: string }[];
-    primaryFocusAttribute: string | null;
-    categoryStatus: {
-      attribute: string;
-      categories: {
-        category: string;
-        isActive: boolean;
-        color: string;
-        subcategories?: { name: string; isActive: boolean; color: string }[];
-      }[];
-      rangeFilter?: { min: number; max: number; currentMin: number; currentMax: number };
-    }[];
-    totalSegmentsLoaded: number;
-    totalSegmentsViewed: number;
-  }>({
+  const [chartData, setChartData] = useState<PathAnalysisChartData>({
     categoryDistributionData: [],
     primaryFocusAttribute: null,
     categoryStatus: [],
@@ -110,68 +99,33 @@ export default function PathAnalysisPage() {
     setHiddenProjects((prev) => prev.filter((projectName) => loadedProjects.includes(projectName)));
   }, [loadedProjects]);
 
-  return (
-    <Box w="100%" p="6" className="path-analysis-container">
-      <Box mb="6">
-        <Text fontSize="2xl" fontWeight="bold" mb="2">
-          Path Analysis
-        </Text>
-        <Text fontSize="sm" color="fg.muted">
-          Analyze projects based on its attributes.
-        </Text>
-      </Box>
+  // Keep `?ui=<version>` pinned on the URL so the toggle is always visible in the
+  // address bar (mirrors the Projects / Create Project pilots). Path Analysis does
+  // not rely on `location.state`, so the replaceState is safe here.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("ui") !== ui) {
+      params.set("ui", ui);
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${location.pathname}?${params.toString()}`
+      );
+    }
+  }, [ui, location.pathname, location.search]);
 
-      {loadedProjects.length > 0 && (
-        <Box mb="6">
-          <AggregatedScoreBandPanel selectedProjects={loadedProjects} />
-        </Box>
-      )}
+  const vm: PathAnalysisViewModel = {
+    loadedProjects,
+    visibleProjects,
+    activeFilters,
+    hiddenProjects,
+    visibleSegmentsByProject,
+    chartData,
+    onActiveFiltersChange: setActiveFilters,
+    onHiddenProjectsChange: setHiddenProjects,
+    onVisibleSegmentsChange: setVisibleSegmentsByProject,
+    onChartDataUpdate: setChartData,
+  };
 
-      {visibleProjects.length > 0 && (
-        <Box mb="6">
-          <AggregatedTopContributorsPanel
-            selectedProjects={visibleProjects}
-            visibleSegmentsByProject={visibleSegmentsByProject}
-          />
-        </Box>
-      )}
-
-      <Box mb="6">
-        <FilterPanel
-          activeFilters={activeFilters}
-          onActiveFiltersChange={setActiveFilters}
-        />
-      </Box>
-
-      <Box mb="6">
-        <PathAnalysisMapView
-          selectedProjects={visibleProjects}
-          selectedAttributes={activeFilters}
-          onChartDataUpdate={setChartData}
-          onVisibleSegmentsChange={setVisibleSegmentsByProject}
-          loadedProjects={loadedProjects}
-          hiddenProjects={hiddenProjects}
-          onHiddenProjectsChange={setHiddenProjects}
-        />
-      </Box>
-
-      {chartData.primaryFocusAttribute && chartData.categoryDistributionData.length > 0 && (
-        <Box
-          borderWidth="1px"
-          borderRadius="lg"
-          p="6"
-          bg="white"
-          _dark={{ bg: "gray.800" }}
-        >
-          <AttributeDistributionChart
-            categoryData={chartData.categoryDistributionData}
-            selectedAttribute={chartData.primaryFocusAttribute}
-            categoryStatus={chartData.categoryStatus}
-            totalSegmentsLoaded={chartData.totalSegmentsLoaded}
-            totalSegmentsViewed={chartData.totalSegmentsViewed}
-          />
-        </Box>
-      )}
-    </Box>
-  );
+  return ui === "v2" ? <PathAnalysisLayoutV2 {...vm} /> : <PathAnalysisLayoutV1 {...vm} />;
 }

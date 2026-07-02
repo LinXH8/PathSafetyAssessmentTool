@@ -6,6 +6,7 @@ import {
 } from "../../api";
 import { Spinner, Text, Badge, Box, Flex, HStack, Button } from "@chakra-ui/react";
 import { useColorModeValue } from "../../components/ui/color-mode";
+import { useUiVersion } from "../../features/ui/useUiVersion";
 
 function formatBytes(bytes: number, decimals = 1): string {
   if (!bytes) return "0 B";
@@ -39,6 +40,14 @@ export default function GeneratedReportsPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [filterText, setFilterText] = useState("");
+
+  // ── v2 design tokens (DESIGN_GUIDE.md): 6px radius, no shadow, gray.200
+  // borders, 32px content padding, 700 headers. Matches GisLayersPage.
+  const isV2 = useUiVersion() === "v2";
+  const cardRadius = isV2 ? "6px" : "lg";
+  const cardShadow = isV2 ? "none" : "sm";
+  const headWeight = isV2 ? "700" : "600";
+  const contentPad = isV2 ? 8 : 6;
 
   // Color mode values — matches GisLayersPage palette
   const rootBg = useColorModeValue("gray.50", "gray.900");
@@ -116,11 +125,11 @@ export default function GeneratedReportsPage() {
     : null;
 
   return (
-    <Box display="flex" flexDirection="column" h="100%" p={6} bg={rootBg} overflowY="auto">
+    <Box display="flex" flexDirection="column" h="100%" p={contentPad} bg={rootBg} overflowY="auto">
       {/* Page header */}
       <Flex mb={6} justify="space-between" align="flex-start">
         <Box>
-          <Text fontSize="2xl" fontWeight="600" color={titleColor} mb={2}>
+          <Text fontSize={isV2 ? "xl" : "2xl"} fontWeight={headWeight} color={titleColor} mb={2}>
             Generated Reports
           </Text>
           <Text fontSize="sm" color={subtitleColor}>
@@ -131,7 +140,7 @@ export default function GeneratedReportsPage() {
           onClick={loadReports}
           colorPalette="teal"
           variant="surface"
-          size="sm"
+          size={isV2 ? "md" : "sm"}
           disabled={loading}
         >
           Refresh
@@ -143,8 +152,8 @@ export default function GeneratedReportsPage() {
         <Box
           flex="0 0 400px"
           bg={panelBg}
-          borderRadius="lg"
-          boxShadow="sm"
+          borderRadius={cardRadius}
+          boxShadow={cardShadow}
           overflow="hidden"
           display="flex"
           flexDirection="column"
@@ -159,7 +168,7 @@ export default function GeneratedReportsPage() {
             bg={panelHeaderBg}
           >
             <Flex align="center" justify="space-between" gap="3">
-              <Text fontWeight="600" color={titleColor} whiteSpace="nowrap">
+              <Text fontWeight={headWeight} color={titleColor} whiteSpace="nowrap">
                 Saved Reports
               </Text>
               <input
@@ -250,7 +259,7 @@ export default function GeneratedReportsPage() {
                     {/* Name + actions row */}
                     <Flex align="center" justify="space-between" gap="2">
                       <Text
-                        fontWeight="600"
+                        fontWeight={headWeight}
                         fontSize="sm"
                         color={titleColor}
                         flex="1"
@@ -335,8 +344,8 @@ export default function GeneratedReportsPage() {
         <Box
           flex="1"
           bg={panelBg}
-          borderRadius="lg"
-          boxShadow="sm"
+          borderRadius={cardRadius}
+          boxShadow={cardShadow}
           overflow="hidden"
           display="flex"
           flexDirection="column"
