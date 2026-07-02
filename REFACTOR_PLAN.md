@@ -25,6 +25,10 @@
   `find`, `cat`, `ls`, `wc`, reachability scripts, `npm run lint`/`tsc --noEmit`, `python -c "import app"`, etc. —
   freely, WITHOUT prompting for permission. Only pause for approval on mutating/outward actions (commits, pushes,
   `git rm`, file writes/deletes, installs). This matches `CLAUDE.md`'s standard protocol.
+- **Ask before guessing.** Whenever the request is ambiguous, a session's scope is unclear, there are multiple
+  reasonable approaches, or an operation is high-risk (bulk deletes, `git rm`/`reset`, schema/API changes, anything
+  hard to reverse), STOP and prompt the user for their preference rather than assuming. Present the options and a
+  recommendation; proceed only after they choose. Do not silently pick a default on consequential decisions.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
 - No automated test suite exists (user opted out). Your safety net is: small commits + manual run + the
