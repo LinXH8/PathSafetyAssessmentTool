@@ -1,9 +1,8 @@
-# Scoring Logic
+# 6. Scoring Logic
 
 PSAT implements the **CycleRAP v2.11** risk scoring algorithm as a pure Python module (`cyclerap_scoring.py`). No Excel, VBA macros, or Windows-only dependencies are required.
 
 ---
-
 
 ## Table of Contents
 
@@ -31,6 +30,9 @@ PSAT implements the **CycleRAP v2.11** risk scoring algorithm as a pure Python m
 - [6.7 Treatment Logic](#6-7-treatment-logic)
   - [6.71 Treatment List](#6-71-treatment-list)
 - [6.8 Updating the CycleRAP Algorithm](#6-8-updating-the-cyclerap-algorithm)
+- [6.9 Treatment Configuration](#6-9-treatment-configuration)
+- [6.10 How to Add a New Treatment](#6-10-how-to-add-a-new-treatment)
+- [6.11 Implementation Details](#6-11-implementation-details)
 
 ## 6.1 Overview
 
@@ -84,6 +86,7 @@ The algorithm builds four intermediate components (`CM3`, `CM16`, `CM25`, `CM40`
 ```
 CM3 = (product of CU factors) ^ (1 + CQ_sum × 0.1)
 ```
+*Layman's explanation: This math formula is used to calculate the risk score for the main cycling environment based on various factors like surface and lighting.*
 
 **CU factors** (continuous risk multipliers):
 
@@ -151,6 +154,7 @@ VB = (cj3 + cj25) × factors   [fall/conflict — 0 if condition absent]
    + cj40 ÷ 3                  [intersection term 2 — 0 if condition absent]
    + cj40 ÷ 3                  [intersection term 3 — 0 if condition absent]
 ```
+*Layman's explanation: These equations combine the different risk factors calculated above into the final safety scores you see on the screen.*
 
 **Key takeaway:** BB and BP are driven entirely by CM3 + CM16. SB additionally incorporates CM25 for fall scenarios. VB is the only score that uses CM40 (shared-space and intersection conflicts).
 
@@ -208,6 +212,7 @@ CM3 = CU_product ^ (1 + CQ_sum × 0.1)
     = 1.8 ^ 1.0
     = 1.8
 ```
+*Layman's explanation: This example shows how the computer calculates a risk score of 1.8 for a specific road segment.*
 
 **Now add one CQ trigger — set Intersection or Road Crossing = Present (1):**
 
@@ -253,6 +258,7 @@ Operating speed is converted via a sigmoid formula:
 lookup_speed = round(speed) - 1
 risk = 1 + 27.82 / (1 + exp(5.84 − 0.091 × lookup_speed))
 ```
+*Layman's explanation: This formula is used to calculate how the speed of vehicles on the road affects the safety score.*
 
 > Speed is first rounded to the nearest integer, then decremented by 1 before the sigmoid is applied. Returns 1.0 if speed ≤ 1.
 
@@ -419,12 +425,87 @@ Treatments are evaluated by `apply_treatments`, `apply_all_treatments`, and `pre
 
 ## 6.8 Updating the CycleRAP Algorithm
 
-When CycleRAP releases an updated risk scoring model (e.g., transitioning from v2.11 to a newer version), the development team must update the scoring module. 
+When CycleRAP releases an updated risk scoring model (e.g., transitioning from v2.11 to a newer version), the development team must update the scoring module. The update process involves the following steps:
 
-Administrators are advised to contact developers when a new model is released. The update process generally involves the following steps:
+> For administrator instructions on when to trigger an update, see the [Admin Guide → Section 5: CycleRAP Algorithm](../admin/admin-cyclerap-algorithm.md).
 
 1. **Reviewing the New Specifications**: Obtain the new CycleRAP methodology documentation or Excel reference tool.
 2. **Updating `LOOKUP_TABLES`**: Modify the attribute-to-risk-factor dictionaries in `backend/app/services/cyclerap_scoring.py` to match the new multipliers.
 3. **Adjusting Formula Equations**: If new formulas are introduced for intermediate components (e.g., `CM3`, `CM16`, `CM25`, `CM40`) or final scores (`BB`, `BP`, `SB`, `VB`), update the corresponding `calculate_cmX()` and `calculate_cyclerap_score()` functions.
 4. **Modifying Attribute Definitions**: If the new model introduces new fields or changes the allowed values (enums) for existing fields, update the data model, including frontend forms and backend shapefile ingestion validation.
 5. **Testing**: Validate the updated Python output against the new official CycleRAP reference tool (typically using a test batch of road segments) to ensure full fidelity.
+
+---
+
+## 6.9 Treatment Configuration
+
+Treatments in PSAT simulate safety improvements on road segments. Each treatment has a set of **triggers** (conditions that must be met for the treatment to be applicable) and **effects** (attribute changes applied when the treatment is used).
+
+Treatments are defined as a list of dictionaries in the backend. Each dictionary follows this schema:
+
+```python
+{
+    "id": 1,
+    "name": "Upgrade to on-road bicycle lane with light segregation",
+    "triggers": [
+        {"Facility Type": [5], "Light Segregation": [2]},
+        {"Facility Type": [6], "Light Segregation": [2]}
+    ],
+    "effects": {"Facility Type": 4, "Light Segregation": 1, "Facility access": 1}
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | Integer | A unique 1-based identifier for the treatment |
+| `name` | String | The display name shown in the Treatment Page |
+| `triggers` | List[Dict] | A list of condition sets. If **any** dictionary matches the segment's attributes, the treatment is applicable (**OR logic** between list items) |
+| `effects` | Dict | A dictionary of field–value pairs applied when the treatment is used (**1-based indices** from the attribute dropdowns) |
+
+**Trigger Logic (AND / OR):**
+
+- **OR Logic**: The `triggers` list is a collection of alternative conditions. If a segment satisfies any one of these dictionaries, the treatment becomes a "Recommended Treatment".
+- **AND Logic**: Inside a single trigger dictionary, all specified fields must match. For example, `{"Facility Type": [5], "Light Segregation": [2]}` means the segment must be a Road Shoulder (5) **AND** have no Light Segregation (2).
+
+*Layman's explanation: Triggers decide when a treatment is relevant to a road segment. Effects decide what gets changed when the treatment is applied. The OR/AND logic ensures treatments are only offered to segments where they would actually make a difference.*
+
+---
+
+## 6.10 How to Add a New Treatment
+
+To add a new treatment to the system:
+
+1. Open `backend/app/api/projects/routes.py`.
+2. Find the `TREATMENTS = [...]` variable near the top of the file.
+3. Append a new dictionary to the end of the list:
+   - Ensure the `id` is the next available integer.
+   - Use the correct attribute names as keys (matching the CSV headers).
+   - Use the numeric indices for values (e.g. `1` for Present, `2` for Not Present).
+4. If running in Docker, rebuild or restart the backend container to pick up the changes:
+   ```bash
+   docker compose restart backend
+   ```
+
+---
+
+## 6.11 Implementation Details
+
+The treatment logic is handled by the following endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/projects/<name>/treatments/preview` | Calculates the score change without saving |
+| `POST /api/projects/<name>/treatments/apply` | Persists the treatment to the segment |
+| `POST /api/projects/<name>/treatments/effectiveness` | Ranks treatments by how much they reduce risk across the project |
+
+Internal matching logic:
+
+```python
+for trigger_set in treatment["triggers"]:
+    if all(row.get(field) in allowed_values for field, allowed_values in trigger_set.items()):
+        is_applicable = True
+        break
+```
+
+*Layman's explanation: This code checks each treatment against the road segment's current coded values. If the segment's attributes match any of the trigger conditions, the treatment is offered as a recommended fix.*
+

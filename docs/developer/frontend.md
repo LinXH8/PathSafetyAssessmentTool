@@ -1,34 +1,33 @@
-# Frontend
+# 7. Frontend
 
-The PSAT frontend is a **React + TypeScript** SPA built with Vite and served by nginx. It talks to the Flask backend only through `/api/*` requests.
+The PSAT frontend is a React + TypeScript SPA built with Vite and served by nginx. It talks to the Flask backend only through `/api/*` requests.
 
-- **UI library:** Chakra UI v3
-- **Routing:** React Router v6
-- **Maps:** Leaflet via react-leaflet
-- **Docs renderer:** React Markdown + mirrored files in `frontend/public/docs`
+**UI library:** Chakra UI v3  
+**Routing:** React Router v6  
+**Maps:** Leaflet via react-leaflet  
+**Docs renderer:** React Markdown + mirrored files in `frontend/public/docs`
 
+---
 
 ## Table of Contents
 
-- [7.1 Route map](#7-1-route-map)
-- [7.2 Page behavior](#7-2-page-behavior)
-  - [7.21 Landing page](#7-21-landing-page)
-  - [7.22 Help page](#7-22-help-page)
-  - [7.23 Projects page](#7-23-projects-page)
-  - [7.24 Create Project page](#7-24-create-project-page)
-  - [7.25 Coding page](#7-25-coding-page)
-  - [7.26 Path Analysis page](#7-26-path-analysis-page)
-  - [7.27 Treatment pages](#7-27-treatment-pages)
-  - [7.28 GIS Layers page](#7-28-gis-layers-page)
-- [7.3 API client highlights](#7-3-api-client-highlights)
-- [7.4 Visual analysis components](#7-4-visual-analysis-components)
-  - [7.41 CurvatureVisualizationPanel](#7-41-curvaturevisualizationpanel)
-  - [7.42 WidthVisualizationPanel](#7-42-widthvisualizationpanel)
-  - [7.43 GeoDataPanel GIS overlays](#7-43-geodatapanel-gis-overlays)
-- [7.5 State management](#7-5-state-management)
-- [7.6 nginx behavior](#7-6-nginx-behavior)
+- [7.1 Route map](#71-route-map)
+- [7.2 Page behavior](#72-page-behavior)
+  - [7.21 Landing page](#721-landing-page)
+  - [7.22 Help page](#722-help-page)
+  - [7.23 Projects page](#723-projects-page)
+  - [7.24 Create Project page](#724-create-project-page)
+  - [7.25 Coding page](#725-coding-page)
+  - [7.26 Path Analysis page](#726-path-analysis-page)
+  - [7.27 Treatment pages](#727-treatment-pages)
+  - [7.28 GIS Layers page](#728-gis-layers-page)
+- [7.3 API client highlights](#73-api-client-highlights)
+- [7.4 Visual analysis components](#74-visual-analysis-components)
+- [7.5 State management](#75-state-management)
+- [7.6 nginx behavior](#76-nginx-behavior)
+- [7.7 Supporting implementation details](#77-supporting-implementation-details)
 
-## 7.1 Route map
+---
 
 | URL pattern | Component | Purpose |
 |---|---|---|
@@ -45,6 +44,8 @@ The PSAT frontend is a **React + TypeScript** SPA built with Vite and served by 
 
 `HelpButton` is rendered globally, so the help entry point is available from anywhere in the app.
 
+---
+
 ## 7.2 Page behavior
 
 ### 7.21 Landing page
@@ -53,12 +54,15 @@ The PSAT frontend is a **React + TypeScript** SPA built with Vite and served by 
 
 ### 7.22 Help page
 
-`HelpPage` renders two doc collections:
+`HelpPage` renders three doc collections in switchable tabs:
 
-- a **User Guide** made of the `user-*.md` files in `frontend/public/docs/`
-- a **Developer Guide** that mirrors the repository docs and the overview README
+- **User Guide** — the `user-*.md` files under `frontend/public/docs/user/`
+- **Developer Guide** — the developer-focused markdown files under `frontend/public/docs/developer/`, plus the root `README.md`
+- **Admin Guide** — the `admin-*.md` files under `frontend/public/docs/admin/`
 
-This is why documentation changes must be mirrored into `frontend/public/docs/`, not just `docs/`.
+Each tab renders through a dedicated React component (`UserGuide.tsx`, `DeveloperGuide.tsx`, `AdminGuide.tsx`) that fetches and displays the appropriate markdown files.
+
+> Documentation changes must be mirrored into `frontend/public/docs/`, not just `docs/`. The Help page reads only the files under `frontend/public/docs/`.
 
 ### 7.23 Projects page
 
@@ -175,6 +179,8 @@ It currently supports:
 - opening `ShapefileModal` to upload, validate, replace, or delete layers
 - surfacing metadata such as source, year, category, and file size
 
+---
+
 ## 7.3 API client highlights
 
 All client-side fetch wrappers live in `src/api/index.ts`.
@@ -188,6 +194,8 @@ Notable newer exports include:
 - `getTreatmentEffectiveness()`
 - `getTreatmentSegmentEffectiveness()`
 - shapefile-management helpers such as `listShapefiles()`, `uploadShapefiles()`, and `replaceShapefiles()`
+
+---
 
 ## 7.4 Visual analysis components
 
@@ -203,6 +211,8 @@ Calls `POST /api/projects/<name>/width/visualize` and renders the expanding sear
 
 When a single project is active, the coding map can request nearby GIS layers from `POST /api/projects/<name>/gis/layers` to show map context around the active segment.
 
+---
+
 ## 7.5 State management
 
 PSAT still relies on page-local React state rather than a global state library. The main shared patterns are:
@@ -212,21 +222,31 @@ PSAT still relies on page-local React state rather than a global state library. 
 - browser storage for selected Path Analysis filters
 - custom browser events to push metadata changes back to listing pages
 
+---
+
 ## 7.6 nginx behavior
 
 The frontend container:
 
-1. serves the built SPA from `/usr/share/nginx/html`
-2. falls back to `index.html` for client-side routes
-3. proxies `/api/*` to `http://backend:8000/api/`
+- serves the built SPA from `/usr/share/nginx/html`
+- falls back to `index.html` for client-side routes
+- proxies `/api/*` to `http://backend:8000/api/`
 
 ```nginx
 location / {
     root /usr/share/nginx/html;
     try_files $uri /index.html;
 }
-
 location /api/ {
     proxy_pass http://backend:8000/api/;
 }
 ```
+*Layman's explanation: This configuration tells the system how to correctly route messages between the website interface and the background system.*
+
+---
+
+## 7.7 Supporting implementation details
+
+- the Help page reads markdown from `frontend/public/docs/`
+- shared fuzzy matching lives in `src/utils/projectSearch.ts`
+- all backend calls are centralized in `src/api/index.ts`

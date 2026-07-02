@@ -145,7 +145,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
 - [x] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
 - [x] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
-- [ ] **S0.6** Consolidate doc trees + add `docs/`→`frontend/public/docs/` sync — 1–1.5d — *depends: none*
+- [x] **S0.6** Consolidate doc trees + add `docs/`→`frontend/public/docs/` sync — 1–1.5d — *depends: none*
 - [ ] **S0.7** English-only comment sweep (baseline pass) — 0.5d — *depends: none*
 - [ ] ~~S1.5 unify AttributesDropdown~~ — **VOID** (Treatment/Analysis copies are dead code; deleted in S0.2)
 
@@ -227,7 +227,7 @@ remove the other, add a comment documenting the choice. Update any loader path i
 **Verify:** Backend boots and reads config; values unchanged.
 **Commit:** `chore: consolidate duplicate config.json to single source [S0.5]`
 
-### S0.6 — Consolidate docs + sync  · Done: ____
+### S0.6 — Consolidate docs + sync  · Done: 2026-07-02
 **Goal:** Reduce 3 doc trees to a canonical set; stop drift. (`.docx` left alone per user decision.)
 **Context to load:** `docs/`, `frontend/public/docs/`, `backend/Documentation/`, `frontend/public/README.md`.
 **Do:** Canonical = markdown in `docs/`. Fold actionable `backend/Documentation/CURVATURE_*`/`FACILITY_WIDTH_*`/`ROAD_*`
@@ -391,3 +391,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.3 · archived 39-file `scratch/` to `~/psat_scratch_archive/` (verified diff-clean), then `git rm -r scratch/`. Added `scratch/` to `.gitignore` to prevent re-commit.
 - 2026-07-02 · S0.4 · moved 6 tracked dev utility scripts (5 backend + `frontend/replace_tiles.py`) to `scripts/` via `git mv`; also promoted 2 previously-.gitignore'd visualize scripts (`visualize_obstacles.py`, `visualize_width_restriction.py`) — removed their filename-only ignore rules and added them to `scripts/`. Fixed all `Path(__file__).parent` references in moved scripts to use `Path(__file__).resolve().parent.parent / "backend"`. Backend imports OK.
 - 2026-07-02 · S0.5 · deleted root `config.json` (dead duplicate — all loaders resolve `backend/config.json` via `get_full_path()`). Added docstring to `get_full_path` explaining canonical location; translated Chinese comment in `config.py`. Deferred: `serializer.py:475` bare `open("config.json")` is CWD-dependent.
+- 2026-07-02 · S0.6 · moved `frontend/public/docs/{user,admin,developer}/` → `docs/` (canonical source); removed 9 stale root `docs/*.md` duplicates; renamed 16 `backend/Documentation/` files into `docs/developer/gis/` (actionable) and `docs/archive/gis/` (historical migration notes); removed empty `backend/Documentation/` dir; added `!docs/**` gitignore exception; added `scripts/sync_docs.sh` + `npm run docs:sync`; ran sync to regenerate `frontend/public/docs/` mirror. All 21 HelpPage doc paths verified OK. Note: `frontend/public/docs/` existing user/admin/developer files are unchanged from pre-session state (sync replayed identical content); only new gis/ and cyclerap_v213_audit.md files appear as additions in `frontend/public/docs/developer/`.

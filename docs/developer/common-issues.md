@@ -1,36 +1,21 @@
-# Common Issues
+# 8. Common Issues
 
-This page focuses on the issues that show up most often in current PSAT workflows, especially around Docker setup, polygon-based project creation, and GIS-layer management.
+This page covers the issues that show up most often in current PSAT workflows, especially around Docker setup, polygon-based project creation, and GIS-layer management.
 
+---
 
 ## Table of Contents
 
-- [8.1 Docker and startup](#8-1-docker-and-startup)
-  - [8.11 Docker Desktop is not running](#8-11-docker-desktop-is-not-running)
-  - [8.12 Port 80 or 8000 is already in use](#8-12-port-80-or-8000-is-already-in-use)
-  - [8.13 Backend health check fails after build](#8-13-backend-health-check-fails-after-build)
-- [8.2 Models and shapefiles](#8-2-models-and-shapefiles)
-  - [8.21 Auto-code fails because models are missing](#8-21-auto-code-fails-because-models-are-missing)
-  - [8.22 GIS auto-code or GIS Layers page is empty](#8-22-gis-auto-code-or-gis-layers-page-is-empty)
-- [8.3 `in/` folder and source images](#8-3-in-folder-and-source-images)
-  - [8.31 `in/` was created by Docker instead of manually](#8-31-in-was-created-by-docker-instead-of-manually)
-  - [8.32 Images are directly under `in/` instead of inside subfolders](#8-32-images-are-directly-under-in-instead-of-inside-subfolders)
-  - [8.33 Images have no GPS EXIF data](#8-33-images-have-no-gps-exif-data)
-- [8.4 Polygon and road selection](#8-4-polygon-and-road-selection)
-  - [8.41 Polygon selection returns planning areas instead of roads](#8-41-polygon-selection-returns-planning-areas-instead-of-roads)
-  - [8.42 Selected roads are marked unavailable](#8-42-selected-roads-are-marked-unavailable)
-  - [8.43 Create Project says no geotagged images were found inside the polygon](#8-43-create-project-says-no-geotagged-images-were-found-inside-the-polygon)
-- [8.5 Project metadata and search](#8-5-project-metadata-and-search)
-  - [8.51 Searching by road name does not return the expected project](#8-51-searching-by-road-name-does-not-return-the-expected-project)
-  - [8.52 Project name cannot contain underscores](#8-52-project-name-cannot-contain-underscores)
-- [8.6 Scoring and coding](#8-6-scoring-and-coding)
-  - [8.61 Scores do not update after save](#8-61-scores-do-not-update-after-save)
-  - [8.62 First auto-code request is very slow](#8-62-first-auto-code-request-is-very-slow)
-- [8.7 Documentation drift](#8-7-documentation-drift)
-  - [8.71 The repository docs were updated, but the Help page still shows old content](#8-71-the-repository-docs-were-updated-but-the-help-page-still-shows-old-content)
-- [8.8 Data recovery](#8-8-data-recovery)
-  - [8.81 Projects disappear after container restart](#8-81-projects-disappear-after-container-restart)
-  - [8.82 A project was deleted accidentally](#8-82-a-project-was-deleted-accidentally)
+- [8.1 Docker and startup](#81-docker-and-startup)
+- [8.2 Models and shapefiles](#82-models-and-shapefiles)
+- [8.3 `in/` folder and source images](#83-in-folder-and-source-images)
+- [8.4 Polygon and road selection](#84-polygon-and-road-selection)
+- [8.5 Project metadata and search](#85-project-metadata-and-search)
+- [8.6 Scoring and coding](#86-scoring-and-coding)
+- [8.7 Documentation drift](#87-documentation-drift)
+- [8.8 Data recovery](#88-data-recovery)
+
+---
 
 ## 8.1 Docker and startup
 
@@ -56,6 +41,8 @@ This page focuses on the issues that show up most often in current PSAT workflow
 - missing `backend/shapefiles/`
 - a bad local edit that breaks imports
 
+---
+
 ## 8.2 Models and shapefiles
 
 ### 8.21 Auto-code fails because models are missing
@@ -69,6 +56,8 @@ This page focuses on the issues that show up most often in current PSAT workflow
 **Symptom:** GIS-assisted coding returns nothing, or the GIS Layers page has no usable layers.
 
 **Fix:** Confirm the shapefile tree exists under `backend/shapefiles/` and contains the expected layer files, not just empty folders.
+
+---
 
 ## 8.3 `in/` folder and source images
 
@@ -89,6 +78,8 @@ This page focuses on the issues that show up most often in current PSAT workflow
 **Symptom:** Project creation fails, or you get zero usable segments.
 
 **Fix:** The source images must contain GPS EXIF metadata. Screenshots, stripped images, and many exported image sets will not work.
+
+---
 
 ## 8.4 Polygon and road selection
 
@@ -131,6 +122,8 @@ python generate_road_reference.py
 - verify the images in those folders have GPS EXIF data
 - regenerate `road_reference.csv` if the source folders changed recently
 
+---
+
 ## 8.5 Project metadata and search
 
 ### 8.51 Searching by road name does not return the expected project
@@ -147,6 +140,8 @@ python generate_road_reference.py
 
 **Fix:** Use spaces, hyphens, or camel case instead.
 
+---
+
 ## 8.6 Scoring and coding
 
 ### 8.61 Scores do not update after save
@@ -159,6 +154,8 @@ python generate_road_reference.py
 
 **Expected behavior:** The first CV request loads the YOLO models into memory. Subsequent requests are much faster.
 
+---
+
 ## 8.7 Documentation drift
 
 ### 8.71 The repository docs were updated, but the Help page still shows old content
@@ -166,6 +163,8 @@ python generate_road_reference.py
 **Cause:** The Help page reads mirrored markdown from `frontend/public/docs/`, not directly from `docs/`.
 
 **Fix:** Sync both locations whenever docs change.
+
+---
 
 ## 8.8 Data recovery
 

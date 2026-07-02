@@ -91,4 +91,7 @@ overlaps_*.txt
 !REFACTOR_PLAN.md
 *.lnk
 CycleRAP_User_Guide.pdf
+# docs/ is the canonical source for all in-app and developer docs (see REFACTOR_PLAN S0.6)
+!docs/**
+# frontend/public/docs/ is populated by scripts/sync_docs.sh from docs/ — keep it tracked
 !frontend/public/docs/**

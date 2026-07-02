@@ -1,10 +1,16 @@
-# Treatment Configuration
+# 6.9 Treatment Configuration
 
 Treatments in PSAT are used to simulate safety improvements on road segments. Each treatment has a set of **triggers** (conditions that must be met for the treatment to be applicable) and **effects** (changes to the road attributes if the treatment is applied).
 
 ---
 
-## 6.9 Structure of a Treatment
+## Table of Contents
+
+- [6.9 Structure of a Treatment](#69-structure-of-a-treatment)
+- [6.10 How to Add a New Treatment](#610-how-to-add-a-new-treatment)
+- [6.11 Implementation Details](#611-implementation-details)
+
+---
 
 Treatments are defined as a list of dictionaries in the backend. Each dictionary follows this schema:
 
