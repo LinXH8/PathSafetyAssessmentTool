@@ -63,15 +63,15 @@ export default function PathAnalysisLayoutV2({
         gap: CARD_GAP,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
-        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20 }}>Path Analysis</span>
-        <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem", flexShrink: 0 }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1.25rem" }}>Path Analysis</span>
+        <span style={{ fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 }}>
           Loaded: {loadedProjects.length} project{loadedProjects.length === 1 ? "" : "s"}
         </span>
       </div>
 
       {!hasProjects && (
-        <div style={{ ...v2CardStyle({ padding: 20 }), fontSize: 16, color: COLOR.gray500 }}>
+        <div style={{ ...v2CardStyle({ padding: "1.25rem" }), fontSize: "1rem", color: COLOR.gray500 }}>
           No projects loaded. Select projects from the Projects page to analyse.
         </div>
       )}
@@ -80,7 +80,7 @@ export default function PathAnalysisLayoutV2({
           Fixed height that fits the viewport (so the bottom padding isn't clipped)
           with a true 50-50 split; both cards fill it and scroll internally, so
           opening accordions never grows the card or unbalances the grid. */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, height: "clamp(520px, calc(100vh - 152px), 900px)", minHeight: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", height: "clamp(32.5rem, calc(100vh - 9.5rem), 56.25rem)", minHeight: 0 }}>
         {/* Left — Analysis accordion card (50%) */}
         <div
           style={v2CardStyle({
@@ -89,8 +89,8 @@ export default function PathAnalysisLayoutV2({
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            gap: 10,
-            padding: 12,
+            gap: "0.625rem",
+            padding: "0.75rem",
             overflow: "hidden",
           })}
         >
@@ -114,7 +114,7 @@ export default function PathAnalysisLayoutV2({
             {/* Portal host: the map view renders the project / category toggles here. */}
             <div ref={filtersHostRef} />
             {!hasProjects && (
-              <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+              <div style={{ fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 }}>
                 Load projects to adjust filters.
               </div>
             )}
@@ -142,15 +142,15 @@ export default function PathAnalysisLayoutV2({
       {/* ── Row 2: Distribution of Project (left) + Overall Risk Level (right) ──
           Same grid as Row 1 (1fr 1fr) so all four cards are provably equal halves
           and the two rows align column-for-column. */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, minHeight: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", minHeight: 0 }}>
         <div
           style={v2CardStyle({
             flex: "1 1 0",
             minWidth: 0,
-            minHeight: 420,
+            minHeight: "26.25rem",
             display: "flex",
             flexDirection: "column",
-            padding: "18px 20px",
+            padding: "1.125rem 1.25rem",
             overflow: "hidden",
           })}
         >
@@ -165,10 +165,10 @@ export default function PathAnalysisLayoutV2({
             />
           ) : (
             <>
-              <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, marginBottom: 14, flexShrink: 0 }}>
+              <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, marginBottom: "0.875rem", flexShrink: 0 }}>
                 Distribution of Project
               </span>
-              <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT, fontSize: 12, color: COLOR.gray500, textAlign: "center" }}>
+              <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500, textAlign: "center" }}>
                 Select a filter attribute on the map to view its distribution.
               </div>
             </>
@@ -179,7 +179,7 @@ export default function PathAnalysisLayoutV2({
           style={v2CardStyle({
             flex: "1 1 0",
             minWidth: 0,
-            minHeight: 420,
+            minHeight: "26.25rem",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",

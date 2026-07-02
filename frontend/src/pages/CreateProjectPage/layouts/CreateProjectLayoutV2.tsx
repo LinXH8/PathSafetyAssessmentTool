@@ -21,18 +21,18 @@ import type { CreateProjectViewModel } from "./CreateProjectViewModel";
  *     monolithic map component.
  */
 
-const card: React.CSSProperties = { background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: 6 };
-const labelStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text };
-const captionStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 400, fontSize: 12, color: COLOR.gray500 };
+const card: React.CSSProperties = { background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem" };
+const labelStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text };
+const captionStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 400, fontSize: "0.75rem", color: COLOR.gray500 };
 const inputStyle: React.CSSProperties = {
   boxSizing: "border-box",
   width: "100%",
-  height: 40,
-  padding: "8px 12px",
+  height: "2.5rem",
+  padding: "0.5rem 0.75rem",
   border: `1px solid ${COLOR.borderInput}`,
-  borderRadius: 6,
+  borderRadius: "0.375rem",
   fontFamily: FONT,
-  fontSize: 16,
+  fontSize: "1rem",
   outline: "none",
   background: COLOR.white,
   color: COLOR.text,
@@ -46,8 +46,8 @@ const W_PROJ = 110;
 
 function checkboxBox(checked: boolean): React.CSSProperties {
   return checked
-    ? { width: 16, height: 16, background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
-    : { width: 16, height: 16, border: `1px solid ${COLOR.borderInput}`, borderRadius: 2, flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
+    ? { width: "1rem", height: "1rem", background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
+    : { width: "1rem", height: "1rem", border: `1px solid ${COLOR.borderInput}`, borderRadius: "0.125rem", flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
 }
 const checkSvg = (
   <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
@@ -58,9 +58,9 @@ const checkSvg = (
 // Header cell with sort glyph placeholder (§7 / §1a — icon pending).
 function headerCell(label: string, width: number) {
   return (
-    <div style={{ width, flexShrink: 0, display: "flex", gap: 5, alignItems: "center", justifyContent: "center" }}>
+    <div style={{ width, flexShrink: 0, display: "flex", gap: "0.3125rem", alignItems: "center", justifyContent: "center" }}>
       <span style={labelStyle}>{label}</span>
-      <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+      <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
     </div>
   );
 }
@@ -70,9 +70,9 @@ function segStyle(selected: boolean): React.CSSProperties {
   return {
     display: "flex",
     alignItems: "center",
-    padding: "0 16px",
+    padding: "0 1rem",
     fontFamily: FONT,
-    fontSize: 16,
+    fontSize: "1rem",
     cursor: "pointer",
     userSelect: "none",
     ...(selected
@@ -146,12 +146,12 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
   const createDisabled = !canCreate || creating;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: 32, boxSizing: "border-box", height: "100vh", gap: 16 }}>
-      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, color: COLOR.text, flexShrink: 0 }}>Create Project</span>
-      <div style={{ ...card, flex: 1, display: "flex", flexDirection: "column", gap: 16, padding: 16, overflow: "hidden", minHeight: 0 }}>
+    <div style={{ display: "flex", flexDirection: "column", padding: "2rem", boxSizing: "border-box", height: "100vh", gap: "1rem" }}>
+      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1.25rem", color: COLOR.text, flexShrink: 0 }}>Create Project</span>
+      <div style={{ ...card, flex: 1, display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", overflow: "hidden", minHeight: 0 }}>
         {/* ── Name + Tags (two columns) ── */}
-        <div style={{ display: "flex", gap: 16, flexShrink: 0, alignItems: "flex-start" }}>
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+        <div style={{ display: "flex", gap: "1rem", flexShrink: 0, alignItems: "flex-start" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
             <label style={labelStyle}>Project Name *</label>
             <input
               type="text"
@@ -165,21 +165,21 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
             )}
           </div>
 
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
             <label style={labelStyle}>Project Tags</label>
             <div style={{ position: "relative" }}>
-              <div style={{ ...inputStyle, height: "auto", minHeight: 40, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+              <div style={{ ...inputStyle, height: "auto", minHeight: "2.5rem", display: "flex", flexWrap: "wrap", gap: "0.375rem", alignItems: "center" }}>
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6, background: getTagColor(tag), color: COLOR.white, borderRadius: 999, padding: "2px 10px", fontFamily: FONT, fontWeight: 700, fontSize: 14 }}
+                    style={{ display: "inline-flex", alignItems: "center", gap: "0.375rem", background: getTagColor(tag), color: COLOR.white, borderRadius: 999, padding: "0.125rem 0.625rem", fontFamily: FONT, fontWeight: 700, fontSize: "0.875rem" }}
                   >
                     {tag}
                     <button
                       type="button"
                       aria-label={`Remove ${tag}`}
                       onClick={() => removeTag(tag)}
-                      style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}
+                      style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: "0.875rem", lineHeight: 1, padding: 0 }}
                     >
                       ×
                     </button>
@@ -196,7 +196,7 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                   onBlur={() => window.setTimeout(() => setTagSuggestionsOpen(false), 100)}
                   onKeyDown={handleTagInputKeyDown}
                   placeholder={tags.length === 0 ? "Type tag and press comma or enter" : "Add more…"}
-                  style={{ flex: 1, minWidth: 140, border: "none", outline: "none", fontFamily: FONT, fontSize: 16, background: "transparent", color: COLOR.text }}
+                  style={{ flex: 1, minWidth: "8.75rem", border: "none", outline: "none", fontFamily: FONT, fontSize: "1rem", background: "transparent", color: COLOR.text }}
                 />
               </div>
               {tagSuggestionsOpen && filteredTagSuggestions.length > 0 && (
@@ -213,9 +213,9 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
         </div>
 
         {/* ── Create by: segmented control ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
           <span style={labelStyle}>Create by:</span>
-          <div style={{ display: "flex", height: 40, border: `1px solid ${COLOR.border}`, borderRadius: 6, overflow: "hidden" }}>
+          <div style={{ display: "flex", height: "2.5rem", border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem", overflow: "hidden" }}>
             <div onClick={switchToFolder} style={segStyle(createBy === "folder")}>Folder</div>
             <div onClick={switchToMap} style={segStyle(createBy === "map")}>Map</div>
           </div>
@@ -223,21 +223,21 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
 
         {/* ── Create by Folder ── */}
         {createBy === "folder" && (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12, overflow: "hidden", minHeight: 0 }}>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexShrink: 0 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.75rem", overflow: "hidden", minHeight: 0 }}>
+            <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-end", flexShrink: 0 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                 <label style={labelStyle}>Search by Folder Name</label>
                 <input
                   type="text"
                   value={folderSearch}
                   onChange={(e) => setFolderSearch(e.target.value)}
                   placeholder="Type to filter folders…"
-                  style={{ ...inputStyle, width: 460, maxWidth: "100%" }}
+                  style={{ ...inputStyle, width: "28.75rem", maxWidth: "100%" }}
                 />
               </div>
               <button onClick={openImageUploadModal} style={secondaryInlineBtn}>Import Folder</button>
               {loadingFolderSummaries && (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.375rem" }}>
                   <Spinner size="sm" color={COLOR.blue} />
                   <span style={captionStyle}>Loading folder stats…</span>
                 </div>
@@ -247,13 +247,13 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
             {err && <span style={{ ...captionStyle, color: COLOR.danger, flexShrink: 0 }}>{err}</span>}
 
             {/* Folder table */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, overflow: "hidden", minHeight: 0 }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem", overflow: "hidden", minHeight: 0 }}>
               {/* Header */}
-              <div style={{ display: "flex", alignItems: "center", padding: "0 12px", flexShrink: 0 }}>
-                <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", padding: "0 0.75rem", flexShrink: 0 }}>
+                <div style={{ flex: 1, display: "flex", gap: "0.5rem", alignItems: "center" }}>
                   <div onClick={toggleSelectAllVisible} style={checkboxBox(allVisibleSelected)}>{allVisibleSelected && checkSvg}</div>
                   <span style={labelStyle}>Folder Name</span>
-                  <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+                  <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
                 </div>
                 {headerCell("Segments", W_SEG)}
                 {headerCell("Quarter", W_QTR)}
@@ -261,9 +261,9 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                 {headerCell("Projects", W_PROJ)}
               </div>
               {/* Body */}
-              <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: 6, overflowY: "auto", flex: 1, minHeight: 0 }}>
+              <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem", overflowY: "auto", flex: 1, minHeight: 0 }}>
                 {visibleFolders.length === 0 ? (
-                  <div style={{ padding: 40, textAlign: "center", ...captionStyle, fontSize: 16, color: COLOR.gray500 }}>
+                  <div style={{ padding: "2.5rem", textAlign: "center", ...captionStyle, fontSize: "1rem", color: COLOR.gray500 }}>
                     {folders.length === 0 ? "No source folders found." : `No folders match "${folderSearch.trim()}".`}
                   </div>
                 ) : (
@@ -273,11 +273,11 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                       <div
                         key={f}
                         onClick={() => toggleFolderRow(f)}
-                        style={{ display: "flex", alignItems: "center", padding: "8px 12px", minHeight: 35, boxSizing: "border-box", borderBottom: `1px solid ${COLOR.rowDivider}`, cursor: "pointer", background: isSelected ? COLOR.gray100 : "transparent" }}
+                        style={{ display: "flex", alignItems: "center", padding: "0.5rem 0.75rem", minHeight: "2.1875rem", boxSizing: "border-box", borderBottom: `1px solid ${COLOR.rowDivider}`, cursor: "pointer", background: isSelected ? COLOR.gray100 : "transparent" }}
                       >
-                        <div style={{ flex: 1, display: "flex", gap: 8, alignItems: "center", minWidth: 0 }}>
+                        <div style={{ flex: 1, display: "flex", gap: "0.5rem", alignItems: "center", minWidth: 0 }}>
                           <div onClick={(e) => { e.stopPropagation(); toggleFolderRow(f); }} style={checkboxBox(isSelected)}>{isSelected && checkSvg}</div>
-                          <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={f}>{f}</span>
+                          <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: "1rem", color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={f}>{f}</span>
                         </div>
                         {/* Summary columns: auto-loaded stats; a pending row shows a
                             quiet spinner until its background preview resolves. */}
@@ -315,7 +315,7 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
 
         {/* ── Create by Map ── */}
         {createBy === "map" && (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, overflow: "auto", minHeight: 0 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem", overflow: "auto", minHeight: 0 }}>
             <SelectRoadsMap
               variant="v2"
               onSelectionChange={onRoadSelectionChange}
@@ -336,8 +336,8 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
           </div>
         )}
 
-        {/* ── Commit / cancel (194px each) ── */}
-        <div style={{ display: "flex", gap: 16, flexShrink: 0 }}>
+        {/* ── Commit / cancel (12.125rem each) ── */}
+        <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
           <button onClick={onCreate} disabled={createDisabled} style={primaryBtn(createDisabled)}>
             {creating ? "Creating…" : "Create"}
           </button>
@@ -351,62 +351,62 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
 }
 
 function cellStyle(width: number): React.CSSProperties {
-  return { width, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.text };
+  return { width, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: "1rem", color: COLOR.text };
 }
 
 const dropdownStyle: React.CSSProperties = {
   position: "absolute",
-  top: "calc(100% + 4px)",
+  top: "calc(100% + 0.25rem)",
   left: 0,
   right: 0,
   background: COLOR.white,
   border: `1px solid ${COLOR.border}`,
-  borderRadius: 6,
-  boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-  maxHeight: 220,
+  borderRadius: "0.375rem",
+  boxShadow: "0 0.5rem 1.5rem rgba(0,0,0,0.12)",
+  maxHeight: "13.75rem",
   overflowY: "auto",
   zIndex: 1200,
 };
 const dropdownItemStyle: React.CSSProperties = {
   display: "block",
   width: "100%",
-  padding: "9px 12px",
+  padding: "0.5625rem 0.75rem",
   textAlign: "left",
   background: "transparent",
   border: "none",
   cursor: "pointer",
   color: COLOR.text,
   fontFamily: FONT,
-  fontSize: 16,
+  fontSize: "1rem",
 };
 
 // Secondary (dark) inline button — guide §4.
 const secondaryInlineBtn: React.CSSProperties = {
   flexShrink: 0,
-  height: 40,
-  padding: "0 16px",
+  height: "2.5rem",
+  padding: "0 1rem",
   background: COLOR.gray800,
   color: COLOR.white,
   border: "none",
-  borderRadius: 6,
+  borderRadius: "0.375rem",
   fontFamily: FONT,
   fontWeight: 700,
-  fontSize: 16,
+  fontSize: "1rem",
   cursor: "pointer",
   whiteSpace: "nowrap",
 };
 
-// Primary commit — blue (Create), fixed 194px. Disabled = grey per guide §4.
+// Primary commit — blue (Create), fixed 12.125rem. Disabled = grey per guide §4.
 function primaryBtn(disabled: boolean): React.CSSProperties {
   return {
-    width: 194,
-    height: 40,
+    width: "12.125rem",
+    height: "2.5rem",
     boxSizing: "border-box",
-    padding: "0 16px",
-    borderRadius: 6,
+    padding: "0 1rem",
+    borderRadius: "0.375rem",
     fontFamily: FONT,
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: "1rem",
     cursor: disabled ? "not-allowed" : "pointer",
     ...(disabled
       ? { background: COLOR.gray100, border: `1px solid ${COLOR.border}`, color: COLOR.gray400 }
@@ -416,16 +416,16 @@ function primaryBtn(disabled: boolean): React.CSSProperties {
 
 // Ghost cancel — guide §4.
 const ghostBtn: React.CSSProperties = {
-  width: 194,
-  height: 40,
+  width: "12.125rem",
+  height: "2.5rem",
   boxSizing: "border-box",
-  padding: "0 16px",
+  padding: "0 1rem",
   background: "transparent",
   border: `1px solid ${COLOR.borderInput}`,
-  borderRadius: 6,
+  borderRadius: "0.375rem",
   fontFamily: FONT,
   fontWeight: 700,
-  fontSize: 16,
+  fontSize: "1rem",
   color: COLOR.text,
   cursor: "pointer",
 };

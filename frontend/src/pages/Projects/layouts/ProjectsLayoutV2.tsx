@@ -19,31 +19,31 @@ const W_DATE = 175;
 const card: React.CSSProperties = {
   background: COLOR.white,
   border: `1px solid ${COLOR.border}`,
-  borderRadius: 6,
+  borderRadius: "0.375rem",
 };
 
-const labelStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text };
+const labelStyle: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text };
 const inputStyle: React.CSSProperties = {
   boxSizing: "border-box",
   width: "100%",
-  height: 40,
-  padding: "8px 12px",
+  height: "2.5rem",
+  padding: "0.5rem 0.75rem",
   border: `1px solid ${COLOR.borderInput}`,
-  borderRadius: 6,
+  borderRadius: "0.375rem",
   fontFamily: FONT,
-  fontSize: 16,
+  fontSize: "1rem",
   outline: "none",
   background: COLOR.white,
   color: COLOR.text,
 };
-const captionStyle: React.CSSProperties = { fontFamily: FONT, fontSize: 12, color: COLOR.gray500 };
+const captionStyle: React.CSSProperties = { fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 };
 
 function SortGlyph({ meta, multi }: { meta: SortMeta | null; multi: boolean }) {
-  if (!meta) return <span style={{ fontSize: 12, color: COLOR.gray400, cursor: "pointer" }}>↕</span>;
+  if (!meta) return <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>;
   return (
-    <span style={{ fontSize: 12, color: COLOR.gray600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 2 }}>
+    <span style={{ fontSize: "0.75rem", color: COLOR.gray600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.125rem" }}>
       {meta.direction === "asc" ? "▲" : "▼"}
-      {multi && <span style={{ fontSize: 10, fontWeight: 700 }}>{meta.priority}</span>}
+      {multi && <span style={{ fontSize: "0.625rem", fontWeight: 700 }}>{meta.priority}</span>}
     </span>
   );
 }
@@ -114,13 +114,13 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     const disabled = opts?.disabled;
     const base: React.CSSProperties = {
       flex: 1,
-      height: 40,
+      height: "2.5rem",
       boxSizing: "border-box",
-      padding: "0 16px",
-      borderRadius: 6,
+      padding: "0 1rem",
+      borderRadius: "0.375rem",
       fontFamily: FONT,
       fontWeight: 700,
-      fontSize: 16,
+      fontSize: "1rem",
       textAlign: "center",
       border: "none",
       cursor: disabled ? "not-allowed" : "pointer",
@@ -147,7 +147,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
           flex: width ? undefined : 1,
           minWidth: 0,
           display: "flex",
-          gap: 6,
+          gap: "0.375rem",
           alignItems: "center",
           flexShrink: 0,
           cursor: "pointer",
@@ -161,9 +161,9 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: 32, boxSizing: "border-box", height: "100vh", overflow: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "2rem", boxSizing: "border-box", height: "100vh", overflow: "hidden" }}>
       {activeProfile && legacyProjects.length > 0 && (
-        <div style={{ ...card, padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+        <div style={{ ...card, padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
           <div>
             <div style={{ ...labelStyle }}>Shared projects are still outside this profile</div>
             <div style={captionStyle}>
@@ -175,15 +175,15 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
             onClick={() => void moveLegacyProjects()}
             disabled={migratingLegacyProjects}
             style={{
-              height: 40,
-              padding: "0 16px",
+              height: "2.5rem",
+              padding: "0 1rem",
               background: COLOR.teal,
               color: COLOR.white,
               border: "none",
-              borderRadius: 6,
+              borderRadius: "0.375rem",
               fontFamily: FONT,
               fontWeight: 700,
-              fontSize: 16,
+              fontSize: "1rem",
               cursor: migratingLegacyProjects ? "not-allowed" : "pointer",
               whiteSpace: "nowrap",
             }}
@@ -194,28 +194,28 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
       )}
 
       {/* ── Search Area ── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-        <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
-          <div style={{ display: "flex", flexDirection: "row", gap: 12, width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flexShrink: 0 }}>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end" }}>
+          <div style={{ display: "flex", flexDirection: "row", gap: "0.75rem", width: "100%" }}>
             {/* Search by Tags (Project Name is ordered first below; both flex 1 = equal width) */}
-            <div style={{ flex: 1, order: 2, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+            <div style={{ flex: 1, order: 2, display: "flex", flexDirection: "column", gap: "0.25rem", minWidth: 0 }}>
               <label style={labelStyle}>Search by Tags</label>
               <div style={{ position: "relative" }}>
-                <div style={{ ...inputStyle, height: "auto", minHeight: 40, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+                <div style={{ ...inputStyle, height: "auto", minHeight: "2.5rem", display: "flex", flexWrap: "wrap", gap: "0.375rem", alignItems: "center" }}>
                   {tagFilters.map((tag) => (
                     <span
                       key={tag}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
-                        gap: 6,
+                        gap: "0.375rem",
                         background: getTagColor(tag),
                         color: COLOR.white,
                         borderRadius: 999,
-                        padding: "2px 10px",
+                        padding: "0.125rem 0.625rem",
                         fontFamily: FONT,
                         fontWeight: 700,
-                        fontSize: 14,
+                        fontSize: "0.875rem",
                       }}
                     >
                       {tag}
@@ -223,7 +223,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                         type="button"
                         aria-label={`Remove ${tag} filter`}
                         onClick={() => removeTagFilter(tag)}
-                        style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}
+                        style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: "0.875rem", lineHeight: 1, padding: 0 }}
                       >
                         ×
                       </button>
@@ -245,7 +245,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                       }
                     }}
                     placeholder={tagFilters.length === 0 ? "Type or click to select tags…" : "Add more tags…"}
-                    style={{ flex: 1, minWidth: 120, border: "none", outline: "none", fontFamily: FONT, fontSize: 16, background: "transparent", color: COLOR.text }}
+                    style={{ flex: 1, minWidth: "7.5rem", border: "none", outline: "none", fontFamily: FONT, fontSize: "1rem", background: "transparent", color: COLOR.text }}
                   />
                   {/* Clear all filters (name + tags). Replaces v1's separate "Clear
                       filters" row — a single big X at the end of the tag bar. */}
@@ -260,15 +260,15 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        width: 24,
-                        height: 24,
-                        marginLeft: 4,
+                        width: "1.5rem",
+                        height: "1.5rem",
+                        marginLeft: "0.25rem",
                         background: "transparent",
                         border: "none",
-                        borderRadius: 4,
+                        borderRadius: "0.25rem",
                         color: COLOR.gray500,
                         cursor: "pointer",
-                        fontSize: 22,
+                        fontSize: "1.375rem",
                         lineHeight: 1,
                         padding: 0,
                       }}
@@ -281,14 +281,14 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                   <div
                     style={{
                       position: "absolute",
-                      top: "calc(100% + 4px)",
+                      top: "calc(100% + 0.25rem)",
                       left: 0,
                       right: 0,
                       background: COLOR.white,
                       border: `1px solid ${COLOR.border}`,
-                      borderRadius: 6,
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-                      maxHeight: 220,
+                      borderRadius: "0.375rem",
+                      boxShadow: "0 0.5rem 1.5rem rgba(0,0,0,0.12)",
+                      maxHeight: "13.75rem",
                       overflowY: "auto",
                       zIndex: 20,
                     }}
@@ -301,7 +301,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                           e.preventDefault();
                           addTagFilter(tag);
                         }}
-                        style={{ display: "block", width: "100%", padding: "9px 12px", textAlign: "left", background: "transparent", border: "none", cursor: "pointer", color: COLOR.text, fontFamily: FONT, fontSize: 16 }}
+                        style={{ display: "block", width: "100%", padding: "0.5625rem 0.75rem", textAlign: "left", background: "transparent", border: "none", cursor: "pointer", color: COLOR.text, fontFamily: FONT, fontSize: "1rem" }}
                       >
                         {tag}
                       </button>
@@ -312,7 +312,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
             </div>
 
             {/* Search by Project Name — ordered first */}
-            <div style={{ flex: 1, order: 1, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+            <div style={{ flex: 1, order: 1, display: "flex", flexDirection: "column", gap: "0.25rem", minWidth: 0 }}>
               <label style={labelStyle}>Search by Project Name</label>
               <input
                 type="text"
@@ -328,16 +328,16 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
             onClick={onCreateProject}
             style={{
               flexShrink: 0,
-              width: 194,
-              height: 40,
+              width: "12.125rem",
+              height: "2.5rem",
               padding: 0,
               background: COLOR.blue,
               color: COLOR.white,
               border: "none",
-              borderRadius: 6,
+              borderRadius: "0.375rem",
               fontFamily: FONT,
               fontWeight: 700,
-              fontSize: 16,
+              fontSize: "1rem",
               cursor: "pointer",
               whiteSpace: "nowrap",
             }}
@@ -358,13 +358,13 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
       </div>
 
       {/* ── Action Button Row ── */}
-      <div style={{ display: "flex", gap: 32, alignItems: "center", flexShrink: 0 }}>
-        <div style={{ flex: 1, display: "flex", gap: 16 }}>
+      <div style={{ display: "flex", gap: "2rem", alignItems: "center", flexShrink: 0 }}>
+        <div style={{ flex: 1, display: "flex", gap: "1rem" }}>
           {actionBtn("Coding", loadProject, { disabled: noSelection })}
           {actionBtn("Path Analysis", loadPathAnalysis, { disabled: noSelection })}
           {actionBtn("Treatment", loadTreatment, { disabled: noSelection })}
         </div>
-        <div style={{ flex: 1, display: "flex", gap: 16 }}>
+        <div style={{ flex: 1, display: "flex", gap: "1rem" }}>
           {actionBtn("Share", askShare, { disabled: noSelection || shareTargets.length === 0 })}
           {actionBtn("Edit", onEditSelected, { disabled: noSelection })}
           {actionBtn("Delete", askDelete, { disabled: noSelection, danger: true })}
@@ -372,10 +372,10 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
       </div>
 
       {/* ── Project Table ── */}
-      <div style={{ ...card, flex: 1, display: "flex", flexDirection: "column", gap: 8, padding: 16, boxSizing: "border-box", overflow: "hidden", minHeight: 280 }}>
+      <div style={{ ...card, flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem", padding: "1rem", boxSizing: "border-box", overflow: "hidden", minHeight: "17.5rem" }}>
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: 32, padding: "0 8px", flexShrink: 0 }}>
-          <div style={{ flex: "0 0 33%", minWidth: 180, display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "2rem", padding: "0 0.5rem", flexShrink: 0 }}>
+          <div style={{ flex: "0 0 33%", minWidth: "11.25rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
             <div onClick={toggleSelectAll} style={checkboxBox(allSelected)}>
               {allSelected && checkSvg}
             </div>
@@ -390,20 +390,20 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
         </div>
 
         {/* Body */}
-        <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: 6, overflow: "auto", flex: 1 }}>
+        <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem", overflow: "auto", flex: 1 }}>
           {loadingProjects ? (
-            <div style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "center", padding: 40, fontFamily: FONT, fontSize: 16, color: COLOR.gray500 }}>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", justifyContent: "center", padding: "2.5rem", fontFamily: FONT, fontSize: "1rem", color: COLOR.gray500 }}>
               <Spinner size="sm" /> Loading projects…
             </div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: 40, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.gray500 }}>
+            <div style={{ padding: "2.5rem", textAlign: "center", fontFamily: FONT, fontSize: "1rem", color: COLOR.gray500 }}>
               {showCreateProjectPrompt ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", alignItems: "center" }}>
                   <div style={labelStyle}>No projects matched "{nameQuery.trim()}"</div>
                   <div style={captionStyle}>Create a new project if this road or project has not been set up yet.</div>
                   <button
                     onClick={onCreateProject}
-                    style={{ height: 40, padding: "0 16px", background: COLOR.blue, color: COLOR.white, border: "none", borderRadius: 6, fontFamily: FONT, fontWeight: 700, fontSize: 16, cursor: "pointer" }}
+                    style={{ height: "2.5rem", padding: "0 1rem", background: COLOR.blue, color: COLOR.white, border: "none", borderRadius: "0.375rem", fontFamily: FONT, fontWeight: 700, fontSize: "1rem", cursor: "pointer" }}
                   >
                     Create Project
                   </button>
@@ -437,27 +437,27 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 32,
-                    padding: "8px 12px",
-                    minHeight: 35,
+                    gap: "2rem",
+                    padding: "0.5rem 0.75rem",
+                    minHeight: "2.1875rem",
                     boxSizing: "border-box",
                     borderBottom: `1px solid ${COLOR.rowDivider}`,
                     cursor: "pointer",
                     background: isSelected ? COLOR.gray100 : "transparent",
                   }}
                 >
-                  <div style={{ flex: "0 0 33%", minWidth: 180, display: "flex", gap: 8, alignItems: "center" }}>
+                  <div style={{ flex: "0 0 33%", minWidth: "11.25rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
                     <div onClick={(e) => { e.stopPropagation(); onRowClick(p.name); }} style={checkboxBox(isSelected)}>
                       {isSelected && checkSvg}
                     </div>
-                    <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 16, color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={p.name}>
+                    <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: "1rem", color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={p.name}>
                       {p.name}
                     </span>
                   </div>
-                  <span style={{ width: W_VERIF, flexShrink: 0, fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{verif}</span>
-                  <span style={{ width: W_AUTO, flexShrink: 0, fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{auto}</span>
-                  <span style={{ width: W_DATE, flexShrink: 0, fontFamily: FONT, fontSize: 16, color: COLOR.gray600 }}>{date}</span>
-                  <div style={{ flex: 1, minWidth: 0, display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                  <span style={{ width: W_VERIF, flexShrink: 0, fontFamily: FONT, fontSize: "1rem", color: COLOR.text }}>{verif}</span>
+                  <span style={{ width: W_AUTO, flexShrink: 0, fontFamily: FONT, fontSize: "1rem", color: COLOR.text }}>{auto}</span>
+                  <span style={{ width: W_DATE, flexShrink: 0, fontFamily: FONT, fontSize: "1rem", color: COLOR.gray600 }}>{date}</span>
+                  <div style={{ flex: 1, minWidth: 0, display: "flex", gap: "0.375rem", alignItems: "center", flexWrap: "wrap" }}>
                     {p.tags && p.tags.length > 0 ? (
                       p.tags
                         .slice()
@@ -465,7 +465,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
                         .map((tag) => (
                           <span
                             key={tag}
-                            style={{ background: getTagColor(tag), color: COLOR.white, borderRadius: 999, padding: "2px 10px", fontFamily: FONT, fontWeight: 700, fontSize: 14, whiteSpace: "nowrap" }}
+                            style={{ background: getTagColor(tag), color: COLOR.white, borderRadius: 999, padding: "0.125rem 0.625rem", fontFamily: FONT, fontWeight: 700, fontSize: "0.875rem", whiteSpace: "nowrap" }}
                           >
                             {tag}
                           </span>
@@ -496,8 +496,8 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
 // 16×16 checkbox per DESIGN_GUIDE §7.
 function checkboxBox(checked: boolean): React.CSSProperties {
   return checked
-    ? { width: 16, height: 16, background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
-    : { width: 16, height: 16, border: `1px solid ${COLOR.borderInput}`, borderRadius: 2, flexShrink: 0, background: COLOR.white, cursor: "pointer" };
+    ? { width: "1rem", height: "1rem", background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
+    : { width: "1rem", height: "1rem", border: `1px solid ${COLOR.borderInput}`, borderRadius: "0.125rem", flexShrink: 0, background: COLOR.white, cursor: "pointer" };
 }
 
 const checkSvg = (
