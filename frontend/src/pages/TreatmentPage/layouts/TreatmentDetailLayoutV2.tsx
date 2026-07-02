@@ -266,6 +266,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     listEmptyLabel = "No treatments applicable in whole project";
   }
 
+  // Fixed height for the treatment list so the card never shifts — neither
+  // between segments (short lists show whitespace, long lists scroll) nor between
+  // the two view modes. "By Segment" autosaves (no Apply button) so the list gets
+  // the full 4-item height (16rem). "By Treatment" adds the Apply-to-All button
+  // (2.5rem + 0.5rem button-group gap = 3rem), so the list is shortened by exactly
+  // that (13rem) to keep the total block height identical between modes.
+  const treatListH = accordionView === "treatment" ? "13rem" : "16rem";
+
   // All/Clear: build set of applicable-unapplied ids for current scope/mode
   const allClearDisabled = (() => {
     if (accordionView === "segment") {
@@ -457,14 +465,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               </Flex>
 
               {accordionView === "treatment" && effectivenessLoading ? (
-                <Flex direction="column" align="center" justify="center" gap="3" py="6">
+                <Flex direction="column" align="center" justify="center" gap="3" h={treatListH}>
                   <Spinner size="sm" color="blue.500" />
                   <span style={CAPTION}>Ranking Treatment Options...</span>
                 </Flex>
               ) : displayTreatments.length === 0 ? (
-                <div style={{ padding: "1.5rem 0", textAlign: "center", color: COLOR.gray500, fontSize: "1rem" }}>{listEmptyLabel}</div>
+                <div style={{ height: treatListH, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", color: COLOR.gray500, fontSize: "1rem" }}>{listEmptyLabel}</div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", maxHeight: "18.75rem", overflowY: "auto", paddingRight: "0.125rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", height: treatListH, overflowY: "auto", paddingRight: "0.125rem" }}>
                   {displayTreatments.map((t) => {
                     const isApplied = accordionView === "segment"
                       ? !!(treatmentState[currentIndex]?.applied && treatmentState[currentIndex]?.treatment_ids.includes(t.id))
@@ -619,13 +627,13 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         ))}
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap", alignContent: "flex-start", overflowY: "auto", height: "6rem" }}>
                       {/* By-segment contributors (orange) with their contribution value. */}
                       {segmentTRC.map((c, i) => (
                         <div
                           key={`s${c.name}-${i}`}
                           onClick={() => vm.onContributorClick(c.name)}
-                          style={{ background: "#DD6B20", color: "#fff", borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
+                          style={{ display: "inline-flex", alignItems: "center", height: "1.75rem", boxSizing: "border-box", background: "#DD6B20", color: "#fff", borderRadius: "0.25rem", padding: "0 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
                         >
                           {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                         </div>
@@ -635,7 +643,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         <div
                           key={`p${c.name}-${i}`}
                           onClick={() => vm.onContributorClick(c.name)}
-                          style={{ background: "#2B6CB0", color: "#fff", borderRadius: "0.25rem", padding: "0.25rem 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
+                          style={{ display: "inline-flex", alignItems: "center", height: "1.75rem", boxSizing: "border-box", background: "#2B6CB0", color: "#fff", borderRadius: "0.25rem", padding: "0 0.5625rem", fontFamily: FONT, fontSize: "1rem", cursor: "pointer", whiteSpace: "nowrap" }}
                         >
                           {c.name}<strong style={{ marginLeft: "0.1875rem" }}>{c.contribution.toFixed(1)}</strong>
                         </div>
