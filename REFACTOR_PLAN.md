@@ -128,7 +128,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 
 ### Phase 0 — Repo hygiene & dead-file cleanup (3–4 days)
 - [x] **S0.1** Delete committed build/log artifacts + untrack scratch `.py` + tighten `.gitignore` — 0.5d — *depends: none*
-- [ ] **S0.2** Delete 21 confirmed-dead frontend modules — 0.5d — *depends: none*
+- [x] **S0.2** Delete 21 confirmed-dead frontend modules — 0.5d — *depends: none*
 - [ ] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
 - [ ] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
 - [ ] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
@@ -180,7 +180,7 @@ generate_draft_slides). Add ignore globs (`*_log.txt`, `*.out`, `*.err`, `build_
 **Verify:** `git ls-files | grep -E '\.(out|err)$'` empty; app still boots.
 **Commit:** `chore: remove committed build/log artifacts and scratch scripts`
 
-### S0.2 — Delete 21 dead frontend modules  · Done: ____
+### S0.2 — Delete 21 dead frontend modules  · Done: 2026-07-02
 **Goal:** Remove confirmed-unreachable FE source (see inventory — none are routed/rendered).
 **Context to load:** inventory list; `frontend/src/App.tsx` (route table).
 **Do:** Delete the 21 modules (whole dead pages `AnalysisPage/`, `PostTreatmentAnalysisPage/`,
@@ -374,3 +374,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 ## SESSION LOG (one line per completed session)
 - 2026-07-02 · setup · created `xh_dev` baseline tag `pre-refactor-baseline` (9822f228); wrote REFACTOR_PLAN.md to repo root (added `!REFACTOR_PLAN.md` to .gitignore since `*.md` is ignored).
 - 2026-07-02 · S0.1 · removed 30 tracked junk files (build/log artifacts + root scratch `.py`); added artifact globs to .gitignore. Backend imports OK. Note: dev utilities + backend `test_*.py` intentionally left for S0.4/S3.7.
+- 2026-07-02 · S0.2 · deleted 21 dead TSX modules + 4 companion CSS files (25 files total). Kept `AnalysisPanel.css` (used by live `AnalysisSidebar.tsx` + `codingPage.tsx`), `shapefileManagement.css` (used by live `ShapefileModal.tsx`), `ScoreBandDistributionPanel.css` (used by two live AggregatedPanel files). `curvature/` and `width/` subdirs now empty and removed. `tsc --noEmit` clean; build errors are all pre-existing (confirmed via stash comparison).
