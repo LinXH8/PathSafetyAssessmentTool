@@ -138,7 +138,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S0.1** Delete committed build/log artifacts + untrack scratch `.py` + tighten `.gitignore` — 0.5d — *depends: none*
 - [x] **S0.2** Delete 21 confirmed-dead frontend modules — 0.5d — *depends: none*
 - [x] **S0.3** Archive `scratch/` outside repo + `git rm -r scratch/` — 0.5d — *depends: none*
-- [ ] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
+- [x] **S0.4** Move dev utility scripts → `scripts/` — 0.5d — *depends: S0.1*
 - [ ] **S0.5** Consolidate duplicate `config.json` — 0.5d — *depends: none*
 - [ ] **S0.6** Consolidate doc trees + add `docs/`→`frontend/public/docs/` sync — 1–1.5d — *depends: none*
 - [ ] **S0.7** English-only comment sweep (baseline pass) — 0.5d — *depends: none*
@@ -206,7 +206,7 @@ newly-orphaned files. Keep `vite-env.d.ts` and `types/index.ts`.
 **Verify:** `git ls-files scratch/` empty; app unaffected.
 **Commit:** `chore: remove scratch/ doc-generation tooling (archived externally)`
 
-### S0.4 — Relocate dev utility scripts  · Done: ____
+### S0.4 — Relocate dev utility scripts  · Done: 2026-07-02
 **Context to load:** `backend/{extract_xml_dates,generate_road_reference,generate_user_guide_pdf,setup_test_project,
 visualize_facility_width}.py`, `frontend/replace_tiles.py`.
 **Do:** Move these into `scripts/` (or `backend/scripts/` for backend-specific); fix internal relative paths. Confirm via
@@ -384,3 +384,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.1 · removed 30 tracked junk files (build/log artifacts + root scratch `.py`); added artifact globs to .gitignore. Backend imports OK. Note: dev utilities + backend `test_*.py` intentionally left for S0.4/S3.7.
 - 2026-07-02 · S0.2 · deleted 21 dead TSX modules + 4 companion CSS files (25 files total). Kept `AnalysisPanel.css` (used by live `AnalysisSidebar.tsx` + `codingPage.tsx`), `shapefileManagement.css` (used by live `ShapefileModal.tsx`), `ScoreBandDistributionPanel.css` (used by two live AggregatedPanel files). `curvature/` and `width/` subdirs now empty and removed. `tsc --noEmit` clean; build errors are all pre-existing (confirmed via stash comparison).
 - 2026-07-02 · S0.3 · archived 39-file `scratch/` to `~/psat_scratch_archive/` (verified diff-clean), then `git rm -r scratch/`. Added `scratch/` to `.gitignore` to prevent re-commit.
+- 2026-07-02 · S0.4 · moved 6 tracked dev utility scripts (5 backend + `frontend/replace_tiles.py`) to `scripts/` via `git mv`; also promoted 2 previously-.gitignore'd visualize scripts (`visualize_obstacles.py`, `visualize_width_restriction.py`) — removed their filename-only ignore rules and added them to `scripts/`. Fixed all `Path(__file__).parent` references in moved scripts to use `Path(__file__).resolve().parent.parent / "backend"`. Backend imports OK.

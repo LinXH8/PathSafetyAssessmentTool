@@ -2,6 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+# Update BASE_DIR to point to your local backend/shapefiles directory before running.
 BASE_DIR = Path(r"c:\Users\23010975\Documents\GitHub\PathSafetyAssessmentTool\backend\shapefiles")
 
 def get_xml_date(xml_path):

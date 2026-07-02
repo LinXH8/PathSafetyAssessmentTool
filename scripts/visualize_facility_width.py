@@ -25,8 +25,8 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import Circle
 import numpy as np
 
-# Add backend to path
-backend_root = Path(__file__).parent
+# Resolve backend/ relative to this script's location in scripts/
+backend_root = Path(__file__).resolve().parent.parent / "backend"
 sys.path.insert(0, str(backend_root))
 
 from shapely.geometry import Point
@@ -360,7 +360,7 @@ def main():
     """
     Test multiple locations to understand width coding patterns.
     """
-    backend_root = Path(__file__).parent
+    backend_root = Path(__file__).resolve().parent.parent / "backend"
     shp_dir = backend_root / "shapefiles"
 
     if not shp_dir.exists():

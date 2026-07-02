@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-# Paths
-BACKEND_DIR = Path(__file__).parent
+# Paths — resolve backend/ relative to this script's location in scripts/
+BACKEND_DIR = Path(__file__).resolve().parent.parent / "backend"
 DATA_DIR = BACKEND_DIR / "data"
 PROJECT_NAME = "TestProject"
 VERSION = datetime.now().strftime("%Y%m%d")

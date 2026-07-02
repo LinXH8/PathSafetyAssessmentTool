@@ -1,5 +1,5 @@
 from fpdf import FPDF
-import os
+from pathlib import Path
 
 class PDF(FPDF):
     def header(self):
@@ -68,7 +68,7 @@ def create_pdf():
     pdf.print_bullet("Risk Bands:", "Segments are color-coded based on overall risk logic.")
     pdf.print_bullet("Editing:", "You can add or delete segment points directly on the Map preview using the cursor tools.")
 
-    output_path = os.path.join("..", "frontend", "public", "Path_Safety_Assessment_Tool_User_Guide.pdf")
+    output_path = str(Path(__file__).resolve().parent.parent / "frontend" / "public" / "Path_Safety_Assessment_Tool_User_Guide.pdf")
     pdf.output(output_path)
     print(f"PDF successfully created at {output_path}")
 

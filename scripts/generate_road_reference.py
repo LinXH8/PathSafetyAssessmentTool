@@ -6,8 +6,7 @@ from a sample of images, and writes a CSV used by the "Select Roads" polygon
 tool on the Create Project page.
 
 Usage:
-    cd backend
-    python generate_road_reference.py
+    python scripts/generate_road_reference.py
 """
 
 import os
@@ -19,18 +18,18 @@ from pathlib import Path
 import exifread
 
 # ---------------------------------------------------------------------------
-# Config
+# Paths — resolve backend/ relative to this script's location in scripts/
 # ---------------------------------------------------------------------------
+BACKEND_DIR = Path(__file__).resolve().parent.parent / "backend"
 SAMPLE_EVERY_N = 10  # Take every Nth image to keep the CSV manageable
 
 def get_config():
-    config_path = Path(__file__).parent / "config.json"
+    config_path = BACKEND_DIR / "config.json"
     with open(config_path) as f:
         return json.load(f)
 
 def get_full_path(rel):
-    base = Path(__file__).parent
-    return str((base / rel).resolve())
+    return str((BACKEND_DIR / rel).resolve())
 
 def dms_to_decimal(dms, ref):
     deg = dms[0].num / dms[0].den
@@ -75,7 +74,7 @@ def extract_gps_from_folder(folder_path: Path, sample_n: int):
 def main():
     cfg = get_config()
     in_path = Path(get_full_path(cfg["in_folder"]))
-    out_csv = Path(__file__).parent / "shapefiles" / "road_reference.csv"
+    out_csv = BACKEND_DIR / "shapefiles" / "road_reference.csv"
 
     if not in_path.exists():
         print(f"ERROR: in_folder not found: {in_path}")

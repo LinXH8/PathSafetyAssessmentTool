@@ -41,8 +41,6 @@ temp/
 Gradient Calculation/
 profiles/
 .Rhistory
-visualize_obstacles.py
-visualize_width_restriction.py
 run_attribute_inference.py
 visualise_width_restriction.py
 scripts/_v213_snapshot.json
