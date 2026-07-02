@@ -506,7 +506,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                {"📄 Generate Report"}
               </Button>
               {hasSavedReport && (
                 <div style={{ fontSize: 11, color: "#b060e0", textAlign: "center", lineHeight: 1.4 }}>
@@ -527,7 +527,7 @@ export default function Sidebar() {
                 size="sm"
                 width="100%"
               >
-                {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                {"📄 Generate Report"}
               </Button>
             </div>
           )}
