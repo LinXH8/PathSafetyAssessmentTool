@@ -180,7 +180,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [ ] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
 
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
-- [ ] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
+- [x] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
 - [ ] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
 - [ ] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
 - [ ] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
@@ -347,7 +347,7 @@ the page's `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1.
 both layout variants render).
 **Commit (each):** `refactor(<page>): decompose into hooks and sub-components [S2.x]`
 
-### S3.1 — `@with_project` decorator  · Done: ____
+### S3.1 — `@with_project` decorator  · Done: 2026-07-03
 **Context to load:** `backend/app/api/projects/routes.py` (the `get_ctx()`→`pm`→`project`→`latest` + try/except→JSON
 pattern, ~40 sites).
 **Do:** Decorator injecting `(pm, proj, ver)` and standardizing exception→JSON. Apply incrementally; keep responses
@@ -865,3 +865,70 @@ we already made — wasting tokens and risking conflicting choices.
   DEFERRED:        none
   NOTES FOR NEXT:  Before starting S2.1, merge `origin/main` and re-check `PathAnalysisMapView.tsx` line count /
                    structure — main is actively developing the v2 UI in that file.
+
+- 2026-07-03 · S3.1 · added a `@with_project` decorator to `projects/routes.py` and converted 27 single-project
+  handlers to use it, killing the repeated `get_ctx()→pm→project→latest` boilerplate and standardising the
+  missing-project failure path to a JSON 404.
+  FILES CREATED:   none
+  FILES DELETED:   none
+  FILES MOVED:     none
+  FILES MODIFIED:  `backend/app/api/projects/routes.py` (+114 / −121 lines net; added `import functools`, added
+                   the `with_project` decorator (~55L incl. docstring) right after `get_ctx()`, converted 27
+                   handlers)
+  SYMBOLS MOVED/EXTRACTED: new `with_project(_fn=None, *, version=False)` decorator (module-level, defined after
+                   `get_ctx`). It reads the project name from the route's `project_name` kwarg (falls back to
+                   `name` for the `<string:name>/attributes` route), resolves `pm`/`proj` (and `ver` when
+                   `version=True`), and injects them as kwargs into the handler. 27 call sites (handlers) now
+                   decorated.
+  HANDLERS CONVERTED (27): get_project, get_project_metadata, get_image_date_range, get_latest_attributes,
+                   calculate_score, get_results, evaluate_treatments, apply_treatments, preview_treatments,
+                   treatment_effectiveness, treatment_segment_effectiveness, get_all_treatments,
+                   get_segment_treatments, apply_all_treatments, apply_specific_treatment, reset_all_treatments,
+                   save_treatments, update_attributes, get_geodata, delete_segment, delete_segments_batch,
+                   autocode_all, baseline_exists, get_baseline, save_baseline, get_autocode_metadata,
+                   save_autocode_metadata. Plain `@with_project` (proj only): metadata, image-date-range, geodata,
+                   delete_segment, delete_segments_batch + the 5 baseline/autocode-metadata handlers. Everything
+                   else uses `@with_project(version=True)`.
+  IMPORT SITES UPDATED: n/a (internal to routes.py; no external callers of these handlers)
+  BUILD GATE:      `python -m py_compile` OK; `pyflakes` reports zero undefined names; `create_app()` boots and
+                   registers all 62 `projects.*` routes (all 27 converted endpoints present, unique endpoint
+                   names preserved via `functools.wraps`). Backend gate only (no frontend touched).
+  REGRESSION CHECK: n/a for the FE checklist (backend-only). Verified via Flask test client against 6 live
+                   projects: (success) `GET /<proj>`, `/metadata`, `/versions/latest/attributes`, `/results`,
+                   `/treatments/all`, `/baseline/exists`, `/autocode-metadata` all return 200 with unchanged
+                   response shapes; (error) `/metadata` and `/results` on a nonexistent project both return
+                   `404 {"error": "Project not found"}`.
+  ARCHITECTURAL DECISIONS:
+    • Error-shape standardisation (user-confirmed): the decorator returns `fail("Project not found", 404)` on
+      `KeyError` from `pm.project()` and `fail("Project version not found", 404)` on `ValueError`/`FileNotFoundError`
+      from `proj.latest()`. SUCCESS responses are byte-identical; the change is confined to the error path.
+      Handlers that already caught `KeyError`→404 JSON (the baseline/autocode-metadata group) are now
+      byte-identical on errors too; handlers that previously let `KeyError` propagate to Flask's default HTML 500
+      (e.g. get_project, get_latest_attributes, update_attributes — the latter had DEAD `if not proj` code that
+      could never fire since `pm.project()` raises) now uniformly return JSON 404. This is the stated "standardise
+      exception→JSON" goal, not a regression.
+    • Injection via kwargs (not `flask.g`): chosen so each handler's dependency on `pm`/`proj`/`ver` is explicit
+      in its signature. Cost: handlers that only need a subset get harmless `unused-parameter` *Hints* (not
+      errors; the backend gate is import/boot, not lint). `version=True` handlers keep a uniform
+      `(…, pm, proj, ver)` signature for consistency.
+    • Resolution moved OUTSIDE each handler's own `try/except`: for the try-wrapped handlers the inner
+      `try/except Exception` is retained for non-resolution errors (scoring, save, I/O); only the project lookup
+      moved to the decorator. For `autocode_all`, resolution now runs before `_ensure_models_ready()` — a missing
+      project 404s before CV models load (slightly more efficient; success path identical).
+    • The 5 baseline/autocode-metadata handlers keep their now-unreachable `except KeyError: return
+      fail("Project not found", 404)` clauses as harmless belt-and-suspenders, guaranteeing byte-identical
+      behaviour even if a body were to raise `KeyError` for an unrelated reason.
+    • Scope = 27 clean single-project handlers. Deliberately NOT converted: no-project routes (list_projects,
+      folders/*, roads/*, attribute-mappings), multi-project routes (copy_segments, check_collisions),
+      pm-only/custom routes (image serving, post-treatment-image, download-images, export-shapefile,
+      autocode/image, autocode/gis, curvature/width/gis-layers, delete/patch project). These don't fit the
+      single `project_name`→proj injection and are left for S3.2's blueprint split. ~27 `ctx = get_ctx()` sites
+      remain (these handlers + internal helpers).
+  DEFERRED:        none new. (Pre-existing S1.2 finding still open: `treatmentDetailPage.tsx` `TREATMENTS`/`Treatment`
+                   — frontend, unrelated, addressed in S2.4.)
+  NOTES FOR NEXT:  S3.2 (split routes.py into a blueprint package) can build on this: `with_project` is a
+                   module-level helper in `routes.py` — when routes move into sub-modules (crud/treatments/
+                   autocode/baseline/…), `with_project` (and `get_ctx`, `ok`, `fail`) should move to a shared
+                   module (e.g. `projects/_helpers.py` or `projects/context.py`) that every sub-blueprint imports.
+                   The remaining unconverted handlers are good candidates to fold into the decorator (or a sibling
+                   `@with_pm`) as they land in their target sub-modules.

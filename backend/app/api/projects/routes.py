@@ -14,6 +14,7 @@ from flask import (
 )
 import zipfile
 import io
+import functools
 import hashlib
 import json
 import re
@@ -507,6 +508,61 @@ def get_ctx():
         _CTX.update({"pm": pm, "ready": True, "init_error": None})
         print("[Context] Project context ready.", flush=True)
         return _CTX
+
+
+def with_project(_fn=None, *, version=False):
+    """Resolve the route's project (and optionally its latest version) and inject them.
+
+    Replaces the ``ctx = get_ctx(); proj = ctx["pm"].project(<name>); ver = proj.latest()``
+    boilerplate repeated across most project endpoints, and standardises the
+    project-resolution failure path to a JSON 404 (previously inconsistent: some
+    handlers caught ``KeyError`` and returned ``fail("Project not found", 404)`` while
+    others let it propagate to Flask's default HTML 500).
+
+    Usage::
+
+        @bp.get("/<project_name>/metadata")
+        @with_project
+        def handler(project_name, pm, proj): ...
+
+        @bp.get("/<project_name>/results")
+        @with_project(version=True)
+        def handler(project_name, pm, proj, ver): ...
+
+    The project name is read from the route's ``project_name`` kwarg, falling back to
+    ``name`` (the ``<string:name>`` variant). Injected kwargs:
+
+    - ``pm``   — the shared, profile-aware project manager (``get_ctx()["pm"]``)
+    - ``proj`` — the resolved ``Project``
+    - ``ver``  — ``proj.latest()`` (only when ``version=True``)
+
+    Side effects: calls ``get_ctx()`` (cheap cached no-op after ``before_request``).
+    Returns ``fail("Project not found", 404)`` on a missing project and
+    ``fail("Project version not found", 404)`` when the project has no versions —
+    both JSON. All non-resolution errors still surface via the handler's own logic.
+    """
+    def decorator(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            project_name = kwargs.get("project_name") or kwargs.get("name")
+            pm = get_ctx()["pm"]
+            try:
+                proj = pm.project(project_name)
+            except KeyError:
+                return fail("Project not found", 404)
+            kwargs["pm"] = pm
+            kwargs["proj"] = proj
+            if version:
+                try:
+                    kwargs["ver"] = proj.latest()
+                except (ValueError, FileNotFoundError):
+                    return fail("Project version not found", 404)
+            return fn(*args, **kwargs)
+        return wrapper
+
+    # Support both bare ``@with_project`` and parameterised ``@with_project(version=True)``.
+    return decorator(_fn) if _fn is not None else decorator
+
 
 _MODELS_READY = {"cv": False}
 
@@ -1249,17 +1305,12 @@ def list_projects():
     return jsonify({"projects": projects})
 
 @bp.post("/<project_name>/segments/delete-batch")
-def delete_segments_batch(project_name):
+@with_project
+def delete_segments_batch(project_name, pm, proj):
     """
     Batch delete segments from a project at user-specified indices.
     POST body: { "indices": [0, 1, 5] }
     """
-    ctx = get_ctx()
-    pm = ctx["pm"]
-    project = pm.project(project_name)
-    if project is None:
-        abort(404, description="Project not found")
-
     data = request.get_json()
     if not data or "indices" not in data:
         abort(400, description="Missing 'indices' in request body")
@@ -1275,13 +1326,13 @@ def delete_segments_batch(project_name):
     indices = sorted(indices, reverse=True)
 
     try:
-        project.delete_segments(indices)
+        proj.delete_segments(indices)
     except Exception as e:
         traceback.print_exc()
         abort(500, description=f"Failed to delete segments: {e}")
 
     # Return updated metadata
-    meta = project.metadata.to_dict() if project.metadata else {}
+    meta = proj.metadata.to_dict() if proj.metadata else {}
     return jsonify(meta)
 
 @bp.post("/check-collisions")
@@ -1419,15 +1470,12 @@ def copy_segments():
 
 
 @bp.delete("/<project_name>/segments/<int:segment_index>")
-def delete_segment(project_name: str, segment_index: int):
+@with_project
+def delete_segment(project_name: str, segment_index: int, pm, proj):
     """
     Delete a specific segment (point) from the project.
     """
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
-        
         # Verify index is within bounds
         # Check latest attributes for size
         current_size = len(proj.latest().attributes.df)
@@ -1447,11 +1495,9 @@ def delete_segment(project_name: str, segment_index: int):
         return fail(f"Error deleting segment: {str(e)}", 500)
 
 @bp.get("/<project_name>")
-def get_project(project_name: str):
+@with_project(version=True)
+def get_project(project_name: str, pm, proj, ver):
     """Read project metadata and available versions (read-only)."""
-    ctx = get_ctx()
-    proj: Project = ctx["pm"].project(project_name)
-    ver = proj.latest()
     return jsonify({
         "name": proj.metadata.project_name,
         "versions": [v.path.name for v in proj.versions],
@@ -1459,15 +1505,14 @@ def get_project(project_name: str):
     })
 
 @bp.get("/<project_name>/metadata")
-def get_project_metadata(project_name: str):
+@with_project
+def get_project_metadata(project_name: str, pm, proj):
     """Get project metadata including verified status and verified segment count."""
-    ctx = get_ctx()
-    proj: Project = ctx["pm"].project(project_name)
     return jsonify({
         "name": proj.metadata.project_name,
         "tags": proj.metadata.tags or [],
         "dataset": getattr(proj.metadata, 'dataset', None),
-        "source_folders": _get_project_source_folders(proj, ctx["pm"]),
+        "source_folders": _get_project_source_folders(proj, pm),
         "verified": getattr(proj.metadata, 'verified', False),
         "verified_segment_count": getattr(proj.metadata, 'verified_segment_count', 0),
         "autocoded_segment_count": getattr(proj.metadata, 'autocoded_segment_count', 0),
@@ -1478,16 +1523,14 @@ def get_project_metadata(project_name: str):
 
 
 @bp.get("/<project_name>/image-date-range")
-def get_image_date_range(project_name: str):
+@with_project
+def get_image_date_range(project_name: str, pm, proj):
     """Return the earliest and latest image capture dates for a project.
 
     Reads EXIF DateTimeOriginal from each image; falls back to file mtime when
     EXIF is absent. Covers both images/ folder (legacy) and in/ source folders
     (newer projects referenced via geo_data Image Reference column).
     """
-    ctx = get_ctx()
-    pm = ctx["pm"]
-    proj: Project = pm.project(project_name)
     result = _get_image_date_range(proj, pm)
     if result is None:
         return jsonify({"earliest": None, "latest": None})
@@ -1529,16 +1572,13 @@ def _normalize_nfo_type(value):
 
 
 @bp.get("/<project_name>/versions/latest/attributes")
-def get_latest_attributes(project_name: str):
+@with_project(version=True)
+def get_latest_attributes(project_name: str, pm, proj, ver):
     """Return the latest attributes.csv (converted to JSON for front-end table rendering).
 
     Also includes calculated band values (VB Band, BB Band, SB Band, BP Band) if they exist
     in the results, so filtering can use these calculated values.
     """
-    ctx = get_ctx()
-    proj: Project = ctx["pm"].project(project_name)
-    ver = proj.latest()
-
     attrs_df = ver.attributes.df
     attrs_copied = False
 
@@ -1744,12 +1784,11 @@ def _migrate_legacy_images(pm, project_name: str, proj) -> bool:
 
 
 @bp.get("/<project_name>/geodata")
-def get_geodata(project_name: str):
+@with_project
+def get_geodata(project_name: str, pm, proj):
     """Return the project's GeoData (GeoJSON FeatureCollection)."""
     import json
-    ctx = get_ctx()  # Reuse the existing init context
-    proj = ctx["pm"].project(project_name)
-    _migrate_legacy_images(ctx["pm"], project_name, proj)
+    _migrate_legacy_images(pm, project_name, proj)
     gdf = proj.geo_data.df  # GeoPandas GeoDataFrame
 
     # GeoDataFrame -> GeoJSON string, then to dict for jsonify-friendly output
@@ -2249,7 +2288,8 @@ def _convert_attribute_types(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @bp.post("/<project_name>/score")
-def calculate_score(project_name: str):
+@with_project(version=True)
+def calculate_score(project_name: str, pm, proj, ver):
     """
     Calculate cycleRAP scores using native Python implementation (no Excel dependency).
 
@@ -2339,15 +2379,13 @@ def calculate_score(project_name: str):
     return jsonify({"ok": True, "result_rows": df_to_records(results_df)})
 
 @bp.get("/<project_name>/results")
-def get_results(project_name: str):
+@with_project(version=True)
+def get_results(project_name: str, pm, proj, ver):
     """
     Retrieve the latest Overall Risk Levels for a project.
     Returns the calculated results from the latest version.
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         # Always recompute results on load so the v2.13 scoring formula picks up
         # any stale per-segment scores written under earlier model versions.
@@ -2376,15 +2414,12 @@ def get_results(project_name: str):
         }), 500
 
 @bp.post("/<project_name>/treatments")
-def evaluate_treatments(project_name: str):
+@with_project(version=True)
+def evaluate_treatments(project_name: str, pm, proj, ver):
     """
     Use the Excel STM macro to generate treatment suggestions:
     - Requires GeoData + Attributes
     """
-    ctx = get_ctx()
-    proj: Project = ctx["pm"].project(project_name)
-    ver = proj.latest()
-
     gdf = proj.geo_data.df
     attrs = ver.attributes.df
 
@@ -2396,7 +2431,8 @@ def evaluate_treatments(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/apply")
-def apply_treatments(project_name: str):
+@with_project(version=True)
+def apply_treatments(project_name: str, pm, proj, ver):
     """
     Apply selected treatments to a specific segment.
 
@@ -2418,9 +2454,6 @@ def apply_treatments(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         data = request.get_json(silent=True) or {}
         segment_index = data.get("segment_index")
@@ -2539,7 +2572,8 @@ def apply_treatments(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/preview")
-def preview_treatments(project_name: str):
+@with_project(version=True)
+def preview_treatments(project_name: str, pm, proj, ver):
     """
     Preview selected treatments for a specific segment without saving.
     
@@ -2559,9 +2593,6 @@ def preview_treatments(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         data = request.get_json(silent=True) or {}
         segment_index = data.get("segment_index")
@@ -2640,7 +2671,8 @@ def preview_treatments(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/effectiveness")
-def treatment_effectiveness(project_name: str):
+@with_project(version=True)
+def treatment_effectiveness(project_name: str, pm, proj, ver):
     """
     Count, per treatment, how many segments in the project would have their
     Overall Risk Level Band *improve* (band decreases) if that treatment
@@ -2658,9 +2690,6 @@ def treatment_effectiveness(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         data = request.get_json(silent=True) or {}
         requested_ids = data.get("treatment_ids")
@@ -2739,7 +2768,8 @@ def treatment_effectiveness(project_name: str):
 
 
 @bp.get("/<project_name>/treatments/effectiveness/segment/<int:segment_index>")
-def treatment_segment_effectiveness(project_name: str, segment_index: int):
+@with_project(version=True)
+def treatment_segment_effectiveness(project_name: str, segment_index: int, pm, proj, ver):
     """
     For a single segment, compute the Overall Risk Level score drop for each
     treatment applied in isolation. Used by the frontend to rank the
@@ -2752,9 +2782,6 @@ def treatment_segment_effectiveness(project_name: str, segment_index: int):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         attrs_df = ver.attributes.df
         n = len(attrs_df)
@@ -2806,7 +2833,8 @@ def treatment_segment_effectiveness(project_name: str, segment_index: int):
 
 
 @bp.get("/<project_name>/treatments/all")
-def get_all_treatments(project_name: str):
+@with_project(version=True)
+def get_all_treatments(project_name: str, pm, proj, ver):
     """
     Return treatment state for every segment in one call.
 
@@ -2825,9 +2853,6 @@ def get_all_treatments(project_name: str):
     Only segments that actually have treatments are included.
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         treatment_df = ver.treatment.df
         attrs_df = ver.attributes.df
@@ -2894,7 +2919,8 @@ def get_all_treatments(project_name: str):
 
 
 @bp.get("/<project_name>/treatments/segment/<int:segment_index>")
-def get_segment_treatments(project_name: str, segment_index: int):
+@with_project(version=True)
+def get_segment_treatments(project_name: str, segment_index: int, pm, proj, ver):
     """
     Get treatment state for a specific segment.
 
@@ -2909,9 +2935,6 @@ def get_segment_treatments(project_name: str, segment_index: int):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         treatment_df = ver.treatment.df
 
@@ -3007,7 +3030,8 @@ def get_segment_treatments(project_name: str, segment_index: int):
 
 
 @bp.post("/<project_name>/treatments/apply-all")
-def apply_all_treatments(project_name: str):
+@with_project(version=True)
+def apply_all_treatments(project_name: str, pm, proj, ver):
     """
     Apply all applicable recommended treatments to all segments within a project.
 
@@ -3032,9 +3056,6 @@ def apply_all_treatments(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         # Load attributes and treatment dataframes
         attrs_df = ver.attributes.df
@@ -3169,7 +3190,8 @@ def apply_all_treatments(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/apply-specific")
-def apply_specific_treatment(project_name: str):
+@with_project(version=True)
+def apply_specific_treatment(project_name: str, pm, proj, ver):
     """
     Apply a specific treatment to all applicable segments within a project.
 
@@ -3186,9 +3208,6 @@ def apply_specific_treatment(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
         
         data = request.get_json(silent=True) or {}
         target_treatment_id = data.get("treatment_id")
@@ -3312,7 +3331,8 @@ def apply_specific_treatment(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/reset-all")
-def reset_all_treatments(project_name: str):
+@with_project(version=True)
+def reset_all_treatments(project_name: str, pm, proj, ver):
     """
     Clear all applied treatments for all segments in a project.
 
@@ -3325,9 +3345,6 @@ def reset_all_treatments(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         # Load treatment dataframe
         treatment_df = ver.treatment.df.copy()
@@ -3384,7 +3401,8 @@ def reset_all_treatments(project_name: str):
 
 
 @bp.post("/<project_name>/treatments/save")
-def save_treatments(project_name: str):
+@with_project(version=True)
+def save_treatments(project_name: str, pm, proj, ver):
     """
     Save all pending treatment changes to treatment.csv
 
@@ -3395,9 +3413,6 @@ def save_treatments(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        proj: Project = ctx["pm"].project(project_name)
-        ver = proj.latest()
 
         # Save all pending changes
         proj.save_all()
@@ -3418,13 +3433,8 @@ def save_treatments(project_name: str):
 
 
 @bp.put("/<string:name>/attributes")
-def update_attributes(name: str):
-    ctx = get_ctx()
-    pm = ctx["pm"]
-    proj = pm.project(name)
-    if not proj:
-        return fail("Project not found", 404)
-
+@with_project(version=True)
+def update_attributes(name: str, pm, proj, ver):
     data = request.get_json(silent=True) or {}
     rows = data.get("rows")
     if not isinstance(rows, list):
@@ -3432,9 +3442,6 @@ def update_attributes(name: str):
 
     # Convert incoming rows to DataFrame
     new_attrs_df = pd.DataFrame(rows)
-
-    # Get latest version for updating
-    ver = proj.latest()
 
     # --- INJECTED LOGIC: Calculate Scores & Persist Bands ---
     try:
@@ -5824,7 +5831,8 @@ def detect_nearby_gis(projectName):
 
 
 @bp.post("/<project_name>/autocode/all")
-def autocode_all(project_name: str):
+@with_project(version=True)
+def autocode_all(project_name: str, pm, proj, ver):
     """
     Modes:
       A) Single (backward-compatible):
@@ -5855,11 +5863,6 @@ def autocode_all(project_name: str):
 
         # Always ensure models/layers first
         _ensure_models_ready()
-
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
-        ver = proj.latest()
 
         # ---------- helpers to resolve per-row data ----------
         import math
@@ -6282,12 +6285,10 @@ def autocode_all(project_name: str):
 # ===== Baseline Management Endpoints =====
 
 @bp.get("/<project_name>/baseline/exists")
-def baseline_exists(project_name: str):
+@with_project
+def baseline_exists(project_name: str, pm, proj):
     """Check if baseline CSV exists for a project."""
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
 
         baseline_path = proj.project_path / "baseline" / f"{project_name}_baseline.csv"
         exists = baseline_path.exists()
@@ -6301,7 +6302,8 @@ def baseline_exists(project_name: str):
 
 
 @bp.get("/<project_name>/baseline")
-def get_baseline(project_name: str):
+@with_project
+def get_baseline(project_name: str, pm, proj):
     """
     Get baseline CSV as JSON array of row dictionaries.
 
@@ -6315,9 +6317,6 @@ def get_baseline(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
 
         baseline_path = proj.project_path / "baseline" / f"{project_name}_baseline.csv"
 
@@ -6338,7 +6337,8 @@ def get_baseline(project_name: str):
 
 
 @bp.post("/<project_name>/baseline")
-def save_baseline(project_name: str):
+@with_project
+def save_baseline(project_name: str, pm, proj):
     """
     Create or update baseline CSV for a project.
 
@@ -6357,9 +6357,6 @@ def save_baseline(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
 
         data = request.get_json(force=True, silent=True) or {}
         rows = data.get("rows")
@@ -6387,7 +6384,8 @@ def save_baseline(project_name: str):
 # ===== Autocode Metadata Management Endpoints =====
 
 @bp.get("/<project_name>/autocode-metadata")
-def get_autocode_metadata(project_name: str):
+@with_project
+def get_autocode_metadata(project_name: str, pm, proj):
     """
     Get autocode metadata (changed fields and sources) as JSON.
     
@@ -6399,9 +6397,6 @@ def get_autocode_metadata(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
         
         # Use 'autocode' directory for metadata
         autocode_dir = proj.project_path / "autocode"
@@ -6426,7 +6421,8 @@ def get_autocode_metadata(project_name: str):
         return fail(f"Error reading autocode metadata: {e}", 500)
 
 @bp.post("/<project_name>/autocode-metadata")
-def save_autocode_metadata(project_name: str):
+@with_project
+def save_autocode_metadata(project_name: str, pm, proj):
     """
     Save autocode metadata (changed fields and sources) as JSON.
     
@@ -6437,9 +6433,6 @@ def save_autocode_metadata(project_name: str):
         }
     """
     try:
-        ctx = get_ctx()
-        pm = ctx["pm"]
-        proj = pm.project(project_name)
         
         data = request.get_json(force=True, silent=True) or {}
         
