@@ -1125,6 +1125,36 @@ export default function TreatmentDetailPage() {
   // the Pre/Post toggle controls the display instead — never the selection size.
   const isStagingPreview = accordionView !== "segment" && selectedTreatments.size > 0;
 
+  // ── Unsaved-changes guard (feeds the Sidebar's v2 exit-confirmation dialog) ──────────
+  // Segment-view treatment toggles auto-persist to the backend (every `apply` calls
+  // `save_all`, and a pending debounce is flushed on unmount), so the ONLY genuinely
+  // unsaved state is a staged bulk "By Treatment" selection that hasn't been applied yet.
+  // Expose exactly that as `window.psat_hasUnsavedChanges` — the flag `Sidebar.guardedAction`
+  // reads (route-gated to /treatment/*) to decide whether to prompt before navigating away.
+  useEffect(() => {
+    (window as any).psat_hasUnsavedChanges = isStagingPreview;
+    // Clear on unmount so a stale flag never prompts on an unrelated page.
+    return () => { (window as any).psat_hasUnsavedChanges = false; };
+  }, [isStagingPreview]);
+
+  // The shared exit dialog dispatches `psat:save` / `psat:discard`; honour both so its
+  // buttons act on the staged selection (Save = commit it exactly as the Apply button
+  // would; Discard = drop the staged draft and its live preview).
+  useEffect(() => {
+    const handleSave = () => { void handleConfirmApplyToAll(); };
+    const handleDiscard = () => {
+      setSelectedTreatments(new Set());
+      setPreviewScores(null);
+      setSegmentScoreDrops({});
+    };
+    window.addEventListener("psat:save", handleSave);
+    window.addEventListener("psat:discard", handleDiscard);
+    return () => {
+      window.removeEventListener("psat:save", handleSave);
+      window.removeEventListener("psat:discard", handleDiscard);
+    };
+  }, [handleConfirmApplyToAll]);
+
   // ════════ v2 page-level actions (on-canvas; v1 routes these via the sidebar) ════════
   const onConfirmResetAll = useCallback(async () => {
     const targets = isAllScope ? projectNames : [activeProject];

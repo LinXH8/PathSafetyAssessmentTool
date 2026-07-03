@@ -78,6 +78,8 @@ generate-summary-*.xlsx
 # Documentation and explanations
 *.md
 !README.md
+# Standing contributor guides are tracked so teammates (and their Claude) receive them.
+!frontend/CLAUDE.md
 *.lnk
 CycleRAP_User_Guide.pdf
 !frontend/public/docs/**
