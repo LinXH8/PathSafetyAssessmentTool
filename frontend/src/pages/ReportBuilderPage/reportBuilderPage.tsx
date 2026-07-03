@@ -29,12 +29,12 @@ import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
 import { getCachedResults } from "../../api/projectDataCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const CANVAS_W = 794;
 const PAGE_H = 1123;
 const PAGE_GAP = 24;
-const LAYOUT_KEY = "psat_report_layout";
 
 // ── Project Details paging ───────────────────────────────────────────────────
 // Project Details renders ALL projects, chunked into pages of PROJ_PAGE_SIZE.
@@ -473,7 +473,7 @@ function computeFlowLayout(
 // ── Read saved layout once (used by lazy state initialisers below) ──────────
 function _readSaved(): Record<string, unknown> | null {
   try {
-    const raw = localStorage.getItem(LAYOUT_KEY);
+    const raw = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 }
@@ -695,11 +695,11 @@ export default function ReportBuilderPage() {
   const [activeCategoryStatus, setActiveCategoryStatus] = useState<FilterCategoryStatus[]>([]);
 
   const [exporting, setExporting] = useState<"pdf" | "word" | null>(null);
-  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LAYOUT_KEY); } catch { return false; } });
+  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
   const [saveToastVisible, setSaveToastVisible] = useState(false);
   const saveToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // true when this mount auto-restored a previously saved layout
-  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LAYOUT_KEY); } catch { return false; } });
+  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
   const [restoreBannerVisible, setRestoreBannerVisible] = useState(wasAutoRestored);
 
   // ── Project picker (shown when session storage has no projects) ───────────
@@ -710,12 +710,12 @@ export default function ReportBuilderPage() {
 
   // ── Session storage ───────────────────────────────────────────────────────
   useEffect(() => {
-    const pa = sessionStorage.getItem("pathAnalysis_loadedProjects");
-    const tr = sessionStorage.getItem("treatment_loadedProjects");
-    const filters = sessionStorage.getItem("pathAnalysis_activeFilters");
-    const catStatus = sessionStorage.getItem("pathAnalysis_categoryStatus");
-    const filteredSegs = sessionStorage.getItem("pathAnalysis_filteredSegments");
-    const filteredVals = sessionStorage.getItem("pathAnalysis_filteredSegmentValues");
+    const pa = sessionStorage.getItem(SESSION_KEYS.PA_LOADED_PROJECTS);
+    const tr = sessionStorage.getItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
+    const filters = sessionStorage.getItem(SESSION_KEYS.PA_ACTIVE_FILTERS);
+    const catStatus = sessionStorage.getItem(SESSION_KEYS.PA_CATEGORY_STATUS);
+    const filteredSegs = sessionStorage.getItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+    const filteredVals = sessionStorage.getItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
     const paP: string[] = pa ? JSON.parse(pa) : [];
     const trP: string[] = tr ? JSON.parse(tr) : [];
     const flt: string[] = filters ? JSON.parse(filters) : [];
@@ -1303,7 +1303,7 @@ export default function ReportBuilderPage() {
   // ── Save / Restore layout ─────────────────────────────────────────────────
   const saveLayout = useCallback(() => {
     try {
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
         reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
@@ -1317,7 +1317,7 @@ export default function ReportBuilderPage() {
   // Auto-save layout on every change so navigation away never loses section arrangement.
   useEffect(() => {
     try {
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
         reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
@@ -1327,7 +1327,7 @@ export default function ReportBuilderPage() {
 
   const restoreLayout = useCallback(() => {
     try {
-      const saved = localStorage.getItem(LAYOUT_KEY);
+      const saved = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
       if (!saved) return;
       const l = JSON.parse(saved);
       if (l.elements) setElements(l.elements);
@@ -1344,7 +1344,7 @@ export default function ReportBuilderPage() {
 
   const resetLayout = useCallback(() => {
     if (window.confirm("Are you sure you want to reset the layout to default? All unsaved changes will be lost.")) {
-      localStorage.removeItem(LAYOUT_KEY);
+      localStorage.removeItem(LOCAL_KEYS.REPORT_LAYOUT);
       setElements(DEFAULT_ELEMENTS);
       setReportTitle("Path Safety Analysis Executive Summary");
       setOicName("");

@@ -15,7 +15,7 @@ import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "rea
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
 import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
-import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { CODING_FILTER_CONTEXT_KEY, gisLayerToggleKey } from "../../../constants/sessionKeys";
 import { useNavigate } from "react-router-dom";
 
 
@@ -229,7 +229,7 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   const cachedLayers = useMemo(() => {
     if (!projectName) return {};
     try {
-      const stored = localStorage.getItem(`gisLayerToggles_${projectName}`);
+      const stored = localStorage.getItem(gisLayerToggleKey(projectName));
       return stored ? JSON.parse(stored) : {};
     } catch {
       return {};
@@ -274,7 +274,7 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
       showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
     };
     layerTogglesRef.current = toggles;
-    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+    localStorage.setItem(gisLayerToggleKey(projectName), JSON.stringify({
       ...toggles,
       overlayEnabled: showCurvatureOverlay ?? false,
     }));

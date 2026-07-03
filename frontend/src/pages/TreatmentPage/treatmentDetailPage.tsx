@@ -29,6 +29,7 @@ import { resolveContributorTabGroup } from "../CodingPage/components/AttributesP
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
 import { toaster } from "../../components/ui/toaster";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
 import TreatmentDetailLayoutV1 from "./layouts/TreatmentDetailLayoutV1";
 import TreatmentDetailLayoutV2 from "./layouts/TreatmentDetailLayoutV2";
 import type { TreatmentViewModel } from "./layouts/TreatmentViewModel";
@@ -81,7 +82,7 @@ export default function TreatmentDetailPage() {
   const filterContext = useMemo<CodingFilterContext | null>(() => {
     if (!filterMode) return null;
     try {
-      const raw = sessionStorage.getItem("treatment_filterContext");
+      const raw = sessionStorage.getItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT);
       return raw ? (JSON.parse(raw) as CodingFilterContext) : null;
     } catch {
       return null;
@@ -1267,13 +1268,13 @@ export default function TreatmentDetailPage() {
   }, [projectNames]);
 
   const onGenerateReport = useCallback(() => {
-    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(projectNames));
-    sessionStorage.removeItem("pathAnalysis_loadedProjects");
+    sessionStorage.setItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS, JSON.stringify(projectNames));
+    sessionStorage.removeItem(SESSION_KEYS.PA_LOADED_PROJECTS);
     navigate("/analysis/report");
   }, [projectNames, navigate]);
 
   const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+    try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; }
   }, []);
 
   const vm: TreatmentViewModel = {

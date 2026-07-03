@@ -16,7 +16,8 @@ import {
 } from "../../api";
 
 import type { AttributeRow, AttributesResponse, CodingFilterContext } from "../../api";
-import { autocodeImage, autocodeGIS, autocodeAllStream, CODING_FILTER_CONTEXT_KEY } from "../../api";
+import { autocodeImage, autocodeGIS, autocodeAllStream } from "../../api";
+import { CODING_FILTER_CONTEXT_KEY } from "../../constants/sessionKeys";
 
 import { resolveContributorTabGroup } from "./components/AttributesPanel";
 import { saveAttributes } from "../../api";

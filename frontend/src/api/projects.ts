@@ -100,8 +100,12 @@ export type CodingFilterContext = {
   };
 };
 
-/** sessionStorage key for the coding filter context. */
-export const CODING_FILTER_CONTEXT_KEY = "codingFilterContext";
+/**
+ * sessionStorage key for the coding filter context.
+ * Defined in and re-exported from `constants/sessionKeys.ts`; imported here
+ * so the api barrel (`api/index.ts`) continues to expose it without change.
+ */
+export { CODING_FILTER_CONTEXT_KEY } from "../constants/sessionKeys";
 
 /** Numeric attribute code → display label mappings, keyed by field name. */
 export type AttrMappings = Record<string, Record<string, string>>;

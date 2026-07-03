@@ -5,6 +5,7 @@ import { useMemo, useCallback, useState } from "react";
 import { toaster } from "../../components/ui/toaster";
 import { applyAllTreatments, resetAllTreatments, saveTreatments } from "../../api";
 import { useProfile } from "../../features/profile/ProfileProvider";
+import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
 
 import CodingSidebar from "./components/CodingSidebar";
 import TreatmentSidebar from "./components/TreatmentSidebar";
@@ -26,7 +27,7 @@ export default function Sidebar() {
   const { activeProfile, logout } = useProfile();
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [treatmentExitDialogOpen, setTreatmentExitDialogOpen] = useState(false);
-  const hasSavedReport = useMemo(() => { try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; } }, []);
+  const hasSavedReport = useMemo(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } }, []);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -494,7 +495,7 @@ export default function Sidebar() {
               <Button
                 onClick={() => {
                   const projects = projectName.split(",").map((p: string) => p.trim()).filter(Boolean);
-                  sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(projects));
+                  sessionStorage.setItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS, JSON.stringify(projects));
                   // NOTE: do NOT remove pathAnalysis_loadedProjects here — doing so corrupted
                   // the Analysis page's loaded-projects state on back-navigation. The Report
                   // Builder now prefers treatment_loadedProjects when present (see
@@ -519,7 +520,7 @@ export default function Sidebar() {
             <div className="psat-report-section" style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <Button
                 onClick={() => {
-                  sessionStorage.removeItem("treatment_loadedProjects");
+                  sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
                   navigate("/analysis/report");
                 }}
                 style={{ backgroundColor: "#a220e3", color: "white" }}

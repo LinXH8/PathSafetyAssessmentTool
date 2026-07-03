@@ -21,9 +21,10 @@ import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLi
 import { to4326 } from "../../../utils/projection";
 import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
 import { isPointInPolygon } from "../../../components/map/polygonUtils";
-import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
+import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -212,8 +213,8 @@ function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBound
   return null;
 }
 
-// sessionStorage key + shape for the persisted map viewport (center + zoom).
-const VIEWPORT_KEY = "pathAnalysisMap_viewport";
+// Shape of the persisted map viewport (center + zoom).
+// Key: SESSION_KEYS.PA_MAP_VIEWPORT ("pathAnalysisMap_viewport").
 type SavedViewport = { center: [number, number]; zoom: number };
 
 // Persists the live map center/zoom on every pan/zoom so returning from the
@@ -225,7 +226,7 @@ function ViewportPersister() {
     try {
       const c = map.getCenter();
       sessionStorage.setItem(
-        VIEWPORT_KEY,
+        SESSION_KEYS.PA_MAP_VIEWPORT,
         JSON.stringify({ center: [c.lat, c.lng], zoom: map.getZoom() } as SavedViewport)
       );
     } catch { /* sessionStorage unavailable — ignore */ }
@@ -344,7 +345,7 @@ export default function AttributeAnalysisMapView({
   // v2: a "Generate Report" button sits beside the Download dropdown (ported from
   // the v1 sidebar).
   const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+    try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; }
   }, []);
   // v2: the polygon / single-select tools move off the top bar into a floating
   // cluster over the map (mirrors Coding). This host is that overlay; the tools
@@ -376,7 +377,7 @@ export default function AttributeAnalysisMapView({
   // Category toggle states — tracks per-attribute per-value visibility
   const [categoryToggles, setCategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryToggles");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -384,7 +385,7 @@ export default function AttributeAnalysisMapView({
   // Subcategory toggle states — tracks per-child-attr per-value visibility (Layer 3)
   const [subcategoryToggles, setSubcategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_subcategoryToggles");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -392,7 +393,7 @@ export default function AttributeAnalysisMapView({
   // Range filter states for numeric attributes
   const [rangeFilters, setRangeFilters] = useState<Record<string, [number, number]>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_rangeFilters");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -401,7 +402,7 @@ export default function AttributeAnalysisMapView({
   // Index -1 is reserved for the always-present "Projects" tab (colors by project).
   const [categoryFilterAttributeIndex, setCategoryFilterAttributeIndex] = useState<number>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryFilterIndex");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX);
       return stored !== null ? Number(stored) : -1;
     } catch { return -1; }
   });
@@ -412,33 +413,33 @@ export default function AttributeAnalysisMapView({
   // Track which attribute is the primary focus for coloring
   const [primaryFocusAttribute, setPrimaryFocusAttribute] = useState<string | null>(() => {
     try {
-      return sessionStorage.getItem("pathAnalysisMap_primaryFocus") || null;
+      return sessionStorage.getItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS) || null;
     } catch {
       return null;
     }
   });
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryToggles", JSON.stringify(categoryToggles));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES, JSON.stringify(categoryToggles));
   }, [categoryToggles]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_subcategoryToggles", JSON.stringify(subcategoryToggles));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES, JSON.stringify(subcategoryToggles));
   }, [subcategoryToggles]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_rangeFilters", JSON.stringify(rangeFilters));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS, JSON.stringify(rangeFilters));
   }, [rangeFilters]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryFilterIndex", String(categoryFilterAttributeIndex));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX, String(categoryFilterAttributeIndex));
   }, [categoryFilterAttributeIndex]);
 
   useEffect(() => {
     if (primaryFocusAttribute) {
-      sessionStorage.setItem("pathAnalysisMap_primaryFocus", primaryFocusAttribute);
+      sessionStorage.setItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS, primaryFocusAttribute);
     } else {
-      sessionStorage.removeItem("pathAnalysisMap_primaryFocus");
+      sessionStorage.removeItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS);
     }
   }, [primaryFocusAttribute]);
 
@@ -1345,8 +1346,8 @@ export default function AttributeAnalysisMapView({
   // toggle). Indices are 0-based, matching geoFeatures/attributes/scores order.
   useEffect(() => {
     if (activeFilters.length === 0) {
-      sessionStorage.removeItem("pathAnalysis_filteredSegments");
-      sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
       return;
     }
     // Per active-filter attribute, the resolved category VALUE for each filtered
@@ -1370,8 +1371,8 @@ export default function AttributeAnalysisMapView({
       });
       (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
-    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(visibleSegmentIndicesByProject));
-    sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENTS, JSON.stringify(visibleSegmentIndicesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES, JSON.stringify(valuesByProject));
   }, [visibleSegments, visibleSegmentIndicesByProject, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
@@ -1813,7 +1814,7 @@ export default function AttributeAnalysisMapView({
   const savedViewport = useRef<SavedViewport | null>(
     (() => {
       try {
-        const s = sessionStorage.getItem(VIEWPORT_KEY);
+        const s = sessionStorage.getItem(SESSION_KEYS.PA_MAP_VIEWPORT);
         return s ? (JSON.parse(s) as SavedViewport) : null;
       } catch { return null; }
     })()
@@ -1939,13 +1940,13 @@ export default function AttributeAnalysisMapView({
   const handleOpenInTreatment = (): void => {
     if (loadedProjects.length === 0) return;
     const ctx = buildFilterContext();
-    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(loadedProjects));
+    sessionStorage.setItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS, JSON.stringify(loadedProjects));
     const encoded = loadedProjects.map(name => encodeURIComponent(name)).join(',');
     if (ctx && ctx.projects.length > 0) {
-      sessionStorage.setItem("treatment_filterContext", JSON.stringify(ctx));
+      sessionStorage.setItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT, JSON.stringify(ctx));
       navigate(`/treatment/${encoded}?filtered=1`);
     } else {
-      sessionStorage.removeItem("treatment_filterContext");
+      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT);
       navigate(`/treatment/${encoded}`);
     }
   };
@@ -2540,7 +2541,7 @@ export default function AttributeAnalysisMapView({
                   <Button
                     size="sm"
                     onClick={() => {
-                      sessionStorage.removeItem("treatment_loadedProjects");
+                      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
                       navigate("/analysis/report");
                     }}
                     style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
