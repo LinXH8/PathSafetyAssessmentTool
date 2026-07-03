@@ -108,8 +108,17 @@ def _extract_xml_yearStr(shp_path: Path) -> str | None:
 
 
 def _temp_root() -> Path:
-    """Writable temp area that is NOT inside shapefiles/ (avoids gitignore)."""
-    p = Path(__file__).resolve().parents[3] / "temp_uploads"
+    """Writable temp area for uploads, OUTSIDE the backend/ project tree.
+
+    Critically this must NOT live under backend/. The dev server runs with the
+    auto-reloader, and when watchdog is installed Werkzeug watches the backend
+    project root recursively for ``*.py``/``*.pyc``/``*.zip`` changes. Extracting
+    an uploaded shapefile ``.zip`` into ``backend/temp_uploads/`` therefore fired
+    a reload MID-REQUEST, which reset the connection — the shapefile import in
+    Create Project failed with a network/error toast for exactly this reason.
+    Using the OS temp dir keeps upload churn out of the watched tree entirely.
+    """
+    p = Path(tempfile.gettempdir()) / "psat_uploads"
     p.mkdir(exist_ok=True)
     return p
 

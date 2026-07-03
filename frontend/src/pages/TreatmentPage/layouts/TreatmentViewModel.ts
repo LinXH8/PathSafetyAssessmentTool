@@ -8,6 +8,7 @@
 import type { Feature } from "geojson";
 import type { AttributeRow, CodingFilterContext } from "../../../api";
 import type { Treatment, ScoreType, CopyButtonState } from "../treatmentConstants";
+import type { CurvatureVisualizationResponse } from "../../../api/curvatureVisualization";
 
 export interface TreatmentViewModel {
   // ── load / error gating ──
@@ -28,6 +29,12 @@ export interface TreatmentViewModel {
   scope: { start: number; count: number };
   panKey: number;
   currentCtx: { name: string; localIndex: number } | null;
+  // ── current-segment map metrics (Curv./Width/Grade readouts) ──
+  curvData: CurvatureVisualizationResponse | null;
+  widthM: number | null;
+  grade: number | null;
+  gradientPct: number | null;
+  gradientStatus: string | null;
   onSelectAllProjects(): void;
   onSelectProject(name: string): void;
   getProjectSegmentCount(name: string): number;

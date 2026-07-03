@@ -11,6 +11,7 @@ import {
   type ProjectSelectionGeometry,
 } from "../../api";
 import { type SelectedRoad } from "./SelectRoadsMap";
+import { loadFolderSummaryCache, saveFolderSummaries } from "./folderSummaryCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
 import CreateProjectLayoutV1 from "./layouts/CreateProjectLayoutV1";
 import CreateProjectLayoutV2 from "./layouts/CreateProjectLayoutV2";
@@ -39,7 +40,9 @@ export default function CreateProjectPage() {
   const [selectedRoads, setSelectedRoads] = useState<SelectedRoad[]>([]);
   const [selectedSelectionGeometry, setSelectedSelectionGeometry] = useState<ProjectSelectionGeometry | null>(null);
   // Auto-loaded per-folder stats for the v2 folder table (segments/quarter/etc).
-  const [folderSummaries, setFolderSummaries] = useState<Record<string, SourceFolderSummary>>({});
+  // Seeded from the persistent localStorage cache so previously-resolved rows
+  // render instantly on a fresh page load instead of re-fetching every time.
+  const [folderSummaries, setFolderSummaries] = useState<Record<string, SourceFolderSummary>>(() => loadFolderSummaryCache());
   const [loadingFolderSummaries, setLoadingFolderSummaries] = useState(false);
   // How many existing projects were created from each source folder.
   const [folderProjectCounts, setFolderProjectCounts] = useState<Record<string, number>>({});
@@ -153,14 +156,27 @@ export default function CreateProjectPage() {
       }
       if (cancelled) return;
 
+      // Merge the bulk result over the persistent cache: keep previously-resolved
+      // rows (so they don't flash back to spinners) and overlay any fresher
+      // backend-cached stats.
+      const persisted = loadFolderSummaryCache();
       setFolderSummaries(() => {
-        const next: Record<string, SourceFolderSummary> = {};
-        summaries.forEach((s) => { next[s.folder_name] = s; });
+        const next: Record<string, SourceFolderSummary> = { ...persisted };
+        summaries.forEach((s) => {
+          const prev = next[s.folder_name];
+          // Don't let an unresolved bulk stub overwrite a resolved cached row.
+          next[s.folder_name] = s.cached || !prev?.cached ? { ...prev, ...s } : prev;
+        });
         return next;
       });
+      saveFolderSummaries(Object.fromEntries(summaries.filter((s) => s.cached).map((s) => [s.folder_name, s])));
 
-      // Progressively resolve the uncached folders with bounded concurrency.
-      const pending = summaries.filter((s) => !s.cached).map((s) => s.folder_name);
+      // Progressively resolve the uncached folders with bounded concurrency,
+      // skipping any already resolved in the persistent cache (they won't fetch
+      // again on subsequent visits).
+      const pending = summaries
+        .filter((s) => !s.cached && !persisted[s.folder_name]?.cached)
+        .map((s) => s.folder_name);
       if (pending.length === 0) {
         if (!cancelled) setLoadingFolderSummaries(false);
         return;
@@ -177,11 +193,14 @@ export default function CreateProjectPage() {
             const preview = await fetchSourceFolderPreview(folderName, { signal: ctrl.signal, skipRename: true });
             if (cancelled) break;
             // The preview may rename the folder (quarter suffix) — key by both.
+            const resolved = { ...preview, cached: true } as SourceFolderSummary;
             setFolderSummaries((prev) => ({
               ...prev,
-              [folderName]: { ...(prev[folderName] ?? {} as SourceFolderSummary), ...preview, cached: true },
-              [preview.folder_name]: { ...(prev[preview.folder_name] ?? {} as SourceFolderSummary), ...preview, cached: true },
+              [folderName]: { ...(prev[folderName] ?? {} as SourceFolderSummary), ...resolved },
+              [preview.folder_name]: { ...(prev[preview.folder_name] ?? {} as SourceFolderSummary), ...resolved },
             }));
+            // Persist so this folder isn't re-fetched on the next visit.
+            saveFolderSummaries({ [folderName]: resolved, [preview.folder_name]: resolved });
           } catch (e: any) {
             if (e?.name === "AbortError") break;
             // Leave the row as an unresolved stub; a manual select can retry.
