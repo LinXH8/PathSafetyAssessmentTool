@@ -1,5 +1,5 @@
 import type { Feature } from "geojson";
-import type { AttributeRow } from "../../api";
+import type { AttributeRow, ProjectDetail } from "../../api/projects";
 
 /**
  * Shared types + constants for the Coding page, extracted from codingPage.tsx so
@@ -10,10 +10,13 @@ import type { AttributeRow } from "../../api";
  * only helpers (migrations, logic checks, the per-project cache singletons) stay
  * in codingPage.tsx; render-only helpers (PresentMultiTagModal,
  * getParentCategoryForSubcat, PANEL_HEIGHT) live in CodingLayoutV1.tsx.
+ *
+ * ProjectDetail and AttrMappings are re-exported from api/projects (canonical
+ * source) so existing imports from this file continue to resolve without change.
  */
 
-export type ProjectDetail = { name: string; versions: string[]; latest: string };
-export type AttrMappings = Record<string, Record<string, string>>;
+// Re-export so existing consumers of codingConstants still resolve without change.
+export type { ProjectDetail, AttrMappings } from "../../api/projects";
 
 // Per-project data state held in the container and surfaced to the layouts via
 // the view-model.

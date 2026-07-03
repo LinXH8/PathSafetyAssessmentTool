@@ -151,7 +151,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 
 ### Phase 1 — Frontend shared foundation (6–9 days) — *do before Phase 2*
 - [x] **S1.1** Split `api/index.ts` into domain modules + barrel — 1d — *depends: none*
-- [ ] **S1.2** Populate `types/index.ts`; remove dup interfaces; `any`→`unknown` — 1–2d — *depends: S1.1*
+- [x] **S1.2** Populate `types/index.ts`; remove dup interfaces; `any`→`unknown` — 1–2d — *depends: S1.1*
 - [ ] **S1.3** Extract `utils/riskColors.ts` + `utils/projection.ts` — 1d — *depends: none*
 - [ ] **S1.4** Extract shared map components (`DraggableMarker`, `PolygonDrawing`) — 1d — *depends: S1.3*
 - [x] ~~**S1.5** Unify the 3 `AttributesDropdown` variants~~ — **VOID** (2 of 3 were dead code, deleted in S0.2)
@@ -256,7 +256,7 @@ don't break. Shared `fetch` error helper stays/extracts to `api/_client.ts`.
 **Verify:** frontend gate passes; no import churn at call sites.
 **Commit:** `refactor(api): split monolithic api/index.ts into domain modules [S1.1]`
 
-### S1.2 — Populate `types/index.ts`  · Done: ____
+### S1.2 — Populate `types/index.ts`  · Done: 2026-07-03
 **Goal:** Single home for shared domain types; kill duplicate interface decls.
 **Context to load:** `frontend/src/types/index.ts` (empty), `codingPage.tsx` & `treatmentDetailPage.tsx` (dup
 `ProjectDetail`/`AttributesResponse`), `api/index.ts` (`CodingFilterContext`).
@@ -383,6 +383,7 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 
 ## DEFERRED FINDINGS (bugs/oddities spotted mid-refactor — do NOT fix inline)
 - 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
+- 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 33); `Treatment` type is used at line 171 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4.
 
 ## SESSION LOG (one line per completed session)
 - 2026-07-02 · setup · created `xh_dev` baseline tag `pre-refactor-baseline` (9822f228); wrote REFACTOR_PLAN.md to repo root (added `!REFACTOR_PLAN.md` to .gitignore since `*.md` is ignored).
@@ -394,3 +395,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.6 · moved `frontend/public/docs/{user,admin,developer}/` → `docs/` (canonical source); removed 9 stale root `docs/*.md` duplicates; renamed 16 `backend/Documentation/` files into `docs/developer/gis/` (actionable) and `docs/archive/gis/` (historical migration notes); removed empty `backend/Documentation/` dir; added `!docs/**` gitignore exception; added `scripts/sync_docs.sh` + `npm run docs:sync`; ran sync to regenerate `frontend/public/docs/` mirror. All 21 HelpPage doc paths verified OK. Note: `frontend/public/docs/` existing user/admin/developer files are unchanged from pre-session state (sync replayed identical content); only new gis/ and cyclerap_v213_audit.md files appear as additions in `frontend/public/docs/developer/`.
 - 2026-07-02 · S0.7 · translated all Chinese comments/docstrings to English across 8 files: `backend/requirements.txt` (5 lines), `gis_mapping.py` (12 comments + 1 exception message), `serializer.py` (3), `project_manager.py` (1), `frontend/src/api/index.ts` (5), `GeoDataPanel.tsx` (11), `ProjectsDialogs.tsx` (1), `landingPage.tsx` (1). Re-ran grep — zero CJK hits remain. Non-CJK non-ASCII (arrows →, en-dashes –, box-drawing ─) are legitimate English typography, left as-is. Backend imports OK; frontend build errors are all pre-existing.
 - 2026-07-02 · S1.1 · split 1,596-line `api/index.ts` into 9 domain modules (`_client`, `projects`, `geo`, `sourceFolders`, `autocode`, `treatments`, `shapefiles`, `auth`, `media`, `reports`) + barrel `index.ts`. Updated `projectDataCache.ts` to import from `./projects` directly. Added module headers + TSDoc to all new files. `tsc --noEmit` clean; `npm run build` error count identical to baseline (37 pre-existing errors, 0 new). Note: `CalculateScoreResult.result_rows` kept as `any[]` (matching original) — narrowing to `unknown[]` is deferred to S1.2 to avoid breaking callers.
+- 2026-07-03 · S1.2 · populated `types/index.ts` as re-export barrel for 10 shared API types from `api/projects`. Removed duplicate `ProjectDetail`+`AttrMappings` from `codingConstants.ts` (re-exported from api); removed duplicate `ProjectDetail`+`AttributesResponse` from `treatmentConstants.ts` (re-exported from api); removed local `AttributesResponse` from `codingPage.tsx` (imported from api). Converted 15 `catch (e: any)` in `codingPage.tsx` and 2 in `treatmentDetailPage.tsx` to `catch (e: unknown)` with `instanceof Error` guards (empty catches → bare `catch {}`). TSC error count unchanged at 37 (all pre-existing); lint errors down 22 (396→374) from removed `any` annotations. Note: `TREATMENTS` unused import and `Cannot find name 'Treatment'` in `treatmentDetailPage.tsx` are pre-existing; deferred to S2.4 decomposition.

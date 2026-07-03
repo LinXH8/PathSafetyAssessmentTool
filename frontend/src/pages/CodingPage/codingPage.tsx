@@ -15,7 +15,7 @@ import {
   updateProject,
 } from "../../api";
 
-import type { AttributeRow, CodingFilterContext } from "../../api";
+import type { AttributeRow, AttributesResponse, CodingFilterContext } from "../../api";
 import { autocodeImage, autocodeGIS, autocodeAllStream, CODING_FILTER_CONTEXT_KEY } from "../../api";
 
 import { resolveContributorTabGroup } from "./components/AttributesPanel";
@@ -39,9 +39,6 @@ import CodingLayoutV2 from "./layouts/CodingLayoutV2";
 import type { CodingViewModel } from "./layouts/CodingViewModel";
 
 
-// ProjectDetail, AttrMappings, ProjectDataState moved to ./codingConstants
-// (shared by the container and the layout shells).
-type AttributesResponse = { rows: AttributeRow[] };
 
 const defaultProjectData: ProjectDataState = {
   detail: null,
@@ -471,9 +468,9 @@ export default function CodingPage() {
         isDirty: false,
       });
 
-    } catch (e: any) {
+    } catch (e: unknown) {
       updateProjectData(currentProjectName, {
-        error: e?.message ?? "Unknown error",
+        error: e instanceof Error ? e.message : "Unknown error",
         loading: false,
       });
     }
@@ -494,10 +491,10 @@ export default function CodingPage() {
       window.dispatchEvent(new CustomEvent("psat:verified:updated", {
         detail: { projectName, verifiedSegmentCount: clampedCount }
       }));
-    } catch (e: any) {
+    } catch (e: unknown) {
       toaster.create({
         title: "Failed to update",
-        description: e?.message ?? "Failed to update verified segment count",
+        description: e instanceof Error ? e.message : "Failed to update verified segment count",
         type: "error",
       });
     }
@@ -517,10 +514,10 @@ export default function CodingPage() {
       window.dispatchEvent(new CustomEvent("psat:autocoded:updated", {
         detail: { projectName, autocodedSegmentCount: clampedCount }
       }));
-    } catch (e: any) {
+    } catch (e: unknown) {
       toaster.create({
         title: "Failed to update",
-        description: e?.message ?? "Failed to update autocoded segment count",
+        description: e instanceof Error ? e.message : "Failed to update autocoded segment count",
         type: "error",
       });
     }
@@ -876,7 +873,7 @@ export default function CodingPage() {
                 i === currentIndex ? { ...score, ...newScore } : score
               )
             });
-          } catch (e: any) {
+          } catch {
           }
         }
 
@@ -887,10 +884,10 @@ export default function CodingPage() {
           description: `CV + GIS updates applied. ${allChanged.length} fields changed.`,
           type: "success",
         });
-      } catch (e: any) {
+      } catch (e: unknown) {
         toaster.create({
           title: "Auto-code failed",
-          description: String(e?.message ?? e),
+          description: e instanceof Error ? e.message : String(e),
           type: "error",
         });
       } finally {
@@ -983,7 +980,7 @@ export default function CodingPage() {
               }
             }
           }
-        } catch (e: any) {
+        } catch {
         }
 
         setProgress(100);
@@ -1003,10 +1000,10 @@ export default function CodingPage() {
           type: totalFail > 0 ? "warning" : "success",
         });
 
-      } catch (e: any) {
+      } catch (e: unknown) {
         toaster.create({
           title: "Auto-code failed",
-          description: String(e?.message ?? e),
+          description: e instanceof Error ? e.message : String(e),
           type: "error",
         });
       } finally {
@@ -1126,10 +1123,10 @@ export default function CodingPage() {
           type: totalFail > 0 ? "warning" : "success",
         });
 
-      } catch (e: any) {
+      } catch (e: unknown) {
         toaster.create({
           title: "Auto-code failed",
-          description: String(e?.message ?? e),
+          description: e instanceof Error ? e.message : String(e),
           type: "error",
         });
       } finally {
@@ -1268,7 +1265,7 @@ export default function CodingPage() {
                   }
                 }
               }
-            } catch (e: any) {
+            } catch {
             }
 
             // Update autocoded segment count for this project if autocode was successful
@@ -1279,9 +1276,9 @@ export default function CodingPage() {
             totalProcessed += projectAttrsLength;
             totalSuccessful += projectOk;
             totalFailed += projectFail;
-          } catch (e: any) {
+          } catch (e: unknown) {
             totalFailed += projectAttrsLength;
-            errors.push({ projectName, reason: e?.message });
+            errors.push({ projectName, reason: e instanceof Error ? e.message : undefined });
           }
         }
 
@@ -1301,10 +1298,10 @@ export default function CodingPage() {
             type: totalFailed > 0 ? "warning" : "success",
           });
         }
-      } catch (e: any) {
+      } catch (e: unknown) {
         toaster.create({
           title: "Auto-code failed",
-          description: String(e?.message ?? e),
+          description: e instanceof Error ? e.message : String(e),
           type: "error",
         });
       } finally {
@@ -1440,10 +1437,10 @@ export default function CodingPage() {
           loading: false,
           isDirty: false,
         });
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (!cancelled) {
           updateProjectData(currentProjectName, {
-            error: e?.message ?? "Unknown error",
+            error: e instanceof Error ? e.message : "Unknown error",
             loading: false,
           });
         }
@@ -1652,7 +1649,7 @@ export default function CodingPage() {
             scores: data.result_rows as any,
           });
         }
-      } catch (e: any) {
+      } catch {
       }
     })();
 
@@ -1772,10 +1769,10 @@ export default function CodingPage() {
       });
       return true;
 
-    } catch (e: any) {
+    } catch (e: unknown) {
       toaster.create({
         title: "Save failed",
-        description: String(e?.message ?? e),
+        description: e instanceof Error ? e.message : String(e),
         type: "error"
       });
       return false;
@@ -1871,7 +1868,7 @@ export default function CodingPage() {
         });
 
         window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-      } catch (e: any) {
+      } catch {
       }
     }, 500);
   };

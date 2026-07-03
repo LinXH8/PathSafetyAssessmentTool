@@ -539,8 +539,8 @@ export default function TreatmentDetailPage() {
       setAttrs(newAttrs);
       setGeoFeatures(newGeo);
       setScores(newScores);
-    } catch (e: any) {
-      setError(e?.message ?? "Unknown error");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -822,9 +822,9 @@ export default function TreatmentDetailPage() {
       window.dispatchEvent(new CustomEvent("psat:treat:all:completed", { detail: allDetails }));
       setSelectedTreatments(new Set());
       setShowPostTreatment(true);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Apply specific failed:", e);
-      alert(e.message || "Failed to apply treatment");
+      alert(e instanceof Error ? e.message : "Failed to apply treatment");
     } finally {
       setApplyLoading(false);
     }
