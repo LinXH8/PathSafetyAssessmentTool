@@ -36,6 +36,12 @@
   recommendation; proceed only after they choose. Do not silently pick a default on consequential decisions.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
+- **`frontend/CLAUDE.md` is mandatory reading for every frontend-touching session.** It is the v2 UI
+  contributor rulebook (container/ViewModel/shell seam, shared primitives, design tokens, `variant="v2"`
+  gating). Where its rules conflict with an older per-session sketch in this plan, the rulebook wins.
+- **Sync with main first.** Before starting any Phase 2/3 session, merge `origin/main` into `xh_dev` and
+  re-verify the target file's current state (line count, structure) — main is actively developing the v2 UI
+  in the same files this plan decomposes, and session sketches can go stale between chats.
 - No automated test suite exists (user opted out). Your safety net is: small commits + manual run + the
   Regression Checklist. Refactor ONE seam at a time; build/boot after each.
 - **Document as you go** — see the Documentation Standard below. Every module/function/hook you create or move
@@ -85,11 +91,19 @@ Refactoring is also a documentation pass. For any file you create, split, or sub
 
 Tech debt hurting maintainability. Backend: `routes.py` 6,304 lines / ~125 fns (CRUD+autocode+GIS+images+export
 mixed); `gis_mapping.py` 2,583 lines (proximity+speed+curvature+width in one class); `print()` logging; ~24 loose
-`test_*.py` in backend root. Frontend: 5 monoliths (`PathAnalysisMapView` 3,555, `reportBuilderPage` 3,092,
-`codingPage` 3,036, `treatmentDetailPage` 2,197, `GeoDataPanel` 1,901), `api/index.ts` 1,519, ad-hoc sessionStorage,
-empty `types/index.ts`, ~147 `any`, duplicated utils. Repo: ~40 tracked junk files, 3 doc trees, duplicate
+`test_*.py` in backend root. Frontend: 5 monoliths (line counts re-measured 2026-07-03 after the v2 merge:
+`PathAnalysisMapView` 3,537, `reportBuilderPage` 3,346, `codingPage` 2,301, `treatmentDetailPage` 1,387,
+`GeoDataPanel` 1,824), `api/index.ts` 1,519 (split in S1.1), ad-hoc sessionStorage, empty `types/index.ts`
+(populated in S1.2), ~147 `any`, duplicated utils. Repo: ~40 tracked junk files, 3 doc trees, duplicate
 `config.json`, weak `.gitignore`, no CI. **Scope:** full structural refactor, NO test/CI work, solo+Claude Code.
 **Target:** no file > ~600 lines, single sources of truth, clean hygiene, identical runtime behavior.
+
+**v2 UI architecture (merged from main 2026-07-03, commit `d5613347`):** a parallel redesign effort on `main`
+already split six pages (Projects, Coding, Treatment, CreateProject, PathAnalysis, Help) along a
+**container / `*ViewModel.ts` / `*LayoutV1|V2.tsx` shell** seam (`frontend/src/pages/*/layouts/`), governed by
+the `frontend/CLAUDE.md` rulebook. Containers own ALL logic; shells are pure functions of the view-model.
+`PathAnalysisMapView` and `GeoDataPanel` are shared heavy components with gated `variant="v2"` props.
+Phase 2 sessions below were re-scoped (2026-07-03) to build ON TOP of this seam, not against it.
 
 **Estimate:** ~40–55 working days total. Each session below is sized ~0.5–2 days (one or a few chats).
 
@@ -157,12 +171,12 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] ~~**S1.5** Unify the 3 `AttributesDropdown` variants~~ — **VOID** (2 of 3 were dead code, deleted in S0.2)
 - [ ] **S1.6** `useSessionState` hook + typed `SESSION_KEYS`; migrate keys — 2d — *depends: S1.2*
 
-### Phase 2 — Frontend monolith decomposition (16–20 days) — *depends: Phase 1 done*
-- [ ] **S2.1** Decompose `PathAnalysisMapView.tsx` — 4d — *depends: S1.\**
-- [ ] **S2.2** Decompose `GeoDataPanel.tsx` — 3d — *depends: S1.\**
-- [ ] **S2.3** Decompose `codingPage.tsx` — 4d — *depends: S2.2*
-- [ ] **S2.4** Decompose `treatmentDetailPage.tsx` — 3d — *depends: S1.\**
-- [ ] **S2.5** Decompose `reportBuilderPage.tsx` — 4d — *depends: S1.\**
+### Phase 2 — Frontend monolith decomposition (13–17 days) — *depends: Phase 1 done; re-scoped 2026-07-03 for the v2 container/shell seam*
+- [ ] **S2.1** Decompose `PathAnalysisMapView.tsx` (3,537; shared `variant="v2"` component) — 4d — *depends: S1.\**
+- [ ] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
+- [ ] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
+- [ ] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
+- [ ] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
 
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
 - [ ] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
@@ -290,20 +304,46 @@ The Treatment/Analysis `AttributesDropdown` copies were dead code (deleted in S0
 **Do:** `hooks/useSessionState.ts` (typed JSON get/set), `constants/sessionKeys.ts` (`SESSION_KEYS` — no magic
 strings). Migrate `pathAnalysisMap_*`, `pathAnalysis_*`, `codingFilterContext`, `gisLayerToggles_*`. Preserve exact key
 strings to keep existing user sessions valid.
+**Note (2026-07-03, post-v2 merge):** `CreateProjectPage/folderSummaryCache.ts` (new from main) uses
+**localStorage** with its own key — register that key in the central registry (e.g. a parallel `LOCAL_KEYS`)
+for discoverability, but do **not** rewrite the file itself; it's fresh working main code. Also per
+`frontend/CLAUDE.md`, layout shells may never touch sessionStorage — `useSessionState` consumers must be
+containers/hooks.
 **Verify:** Viewport restore + filter persistence + filter-color context all survive back-nav (Regression items 1,2,4).
 **Commit:** `refactor(state): add useSessionState hook and typed session keys [S1.6]`
 
 ### S2.1–S2.5 — Monolith decomposition (one file per session)  · Done: ____ each
 **Goal (all):** Turn each page into a thin orchestrator by extracting hooks (data/state) + sub-components along seams.
 No behavior change. After each extraction: build + manual smoke + commit.
+
+**v2-seam constraint (all — re-scoped 2026-07-03, see CONTEXT):** extractions must respect the
+`frontend/CLAUDE.md` container/shell rules. Extracted data/state hooks live in (and are called from) the
+**container** page file; `*LayoutV1/V2.tsx` shells remain pure functions of the `*ViewModel.ts` — never move
+fetching, server state, or sessionStorage into a shell. Keep each page's ViewModel interface intact (callbacks
+may be re-wired to new hooks, but the shell-facing contract must not change shape without updating both layouts).
+
 - **S2.1 PathAnalysisMapView** → `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`,
-  `<FilterPanel>`, map-event hooks.
+  `<FilterPanel>`, map-event hooks. **Shared heavy component with gated `variant="v2"`** (plus `filtersPortalTarget` /
+  `MaybePortal`) — preserve the variant gating and verify BOTH render paths (v1 and v2 chrome).
 - **S2.2 GeoDataPanel** → `useGISToggleState`, `useCurvatureOverlay`, `useWidthVisualization`, `<DefectsLayer>`.
-- **S2.3 codingPage** → `useProjectDataCache`, `useFilterContext`, `useAutocode`, `useAttributeEditing`.
-- **S2.4 treatmentDetailPage** → `useProjectMapping` (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis`.
+  **Shared heavy component with gated `variant="v2"`** (floating tool cluster, `MapAutosize`) — same both-paths rule.
+  Also consumed by Treatment's Before/After map panels; smoke those too.
+- **S2.3 codingPage** → decompose the **container** (`CodingLayoutV1/V2.tsx` + `CodingViewModel.ts` already exist):
+  `useProjectDataCache`, `useFilterContext`, `useAutocode`, `useAttributeEditing`. Keep the `CodingViewModel`
+  contract intact.
+- **S2.4 treatmentDetailPage** → much of the old scope was done by the v2 split (`TreatmentDetailLayoutV1/V2.tsx` +
+  `TreatmentViewModel.ts`; container is now 1,387 lines). Remaining: extract `useProjectMapping`
+  (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis` from the container.
+  Fix the deferred pre-existing errors here: unused `TREATMENTS` import (line 38) and missing `Treatment` type
+  import (line 176).
 - **S2.5 reportBuilderPage** → `useReportData`, `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`.
-**Context to load (each):** the target file + `CLAUDE.md` + hooks/components from Phase 1.
-**Verify (each):** frontend gate + full Regression Checklist for that page's flows.
+  No v2 layout exists for this page yet (it grew to 3,346 lines) — structure the decomposition as
+  container + view-model per `frontend/CLAUDE.md` so a future `ReportBuilderLayoutV2` can slot in.
+
+**Context to load (each):** the target file + `CLAUDE.md` + **`frontend/CLAUDE.md` (mandatory — §0 protocol)** +
+the page's `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1.
+**Verify (each):** frontend gate + full Regression Checklist for that page's flows (including checklist item 7 —
+both layout variants render).
 **Commit (each):** `refactor(<page>): decompose into hooks and sub-components [S2.x]`
 
 ### S3.1 — `@with_project` decorator  · Done: ____
@@ -378,12 +418,14 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 4. **`startIndex=0`** when passing ALL aggregated features to `GeoDataPanel`.
 5. **Chakra dialog:** closing EditProjectModal/AddSegmentsDialog leaves page interactive (no scroll-lock freeze).
 6. **Autocode skip flags:** single-attribute autocode still respects `skip_cv`/`skip_obstacles`/`skip_gis`.
+7. **Both layout variants render:** for any page whose container/ViewModel was touched, both `*LayoutV1` and
+   `*LayoutV2` still render and interact correctly (the v1/v2 switch must not break either path).
 
 ---
 
 ## DEFERRED FINDINGS (bugs/oddities spotted mid-refactor — do NOT fix inline)
 - 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
-- 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 33); `Treatment` type is used at line 171 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4.
+- 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 38); `Treatment` type is used at line 176 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4. (Line numbers re-verified 2026-07-03 after the v2 merge from main; baseline still 37.)
 
 ## SESSION LOG (one line per completed session)
 - 2026-07-02 · setup · created `xh_dev` baseline tag `pre-refactor-baseline` (9822f228); wrote REFACTOR_PLAN.md to repo root (added `!REFACTOR_PLAN.md` to .gitignore since `*.md` is ignored).
@@ -398,3 +440,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-03 · S1.2 · populated `types/index.ts` as re-export barrel for 10 shared API types from `api/projects`. Removed duplicate `ProjectDetail`+`AttrMappings` from `codingConstants.ts` (re-exported from api); removed duplicate `ProjectDetail`+`AttributesResponse` from `treatmentConstants.ts` (re-exported from api); removed local `AttributesResponse` from `codingPage.tsx` (imported from api). Converted 15 `catch (e: any)` in `codingPage.tsx` and 2 in `treatmentDetailPage.tsx` to `catch (e: unknown)` with `instanceof Error` guards (empty catches → bare `catch {}`). TSC error count unchanged at 37 (all pre-existing); lint errors down 22 (396→374) from removed `any` annotations. Note: `TREATMENTS` unused import and `Cannot find name 'Treatment'` in `treatmentDetailPage.tsx` are pre-existing; deferred to S2.4 decomposition.
 - 2026-07-03 · S1.3 · created `frontend/src/utils/projection.ts` (single `to4326` with WGS84 pass-through guard) and `frontend/src/utils/riskColors.ts` (`RISK_COLORS`/`RISK_LABELS` derived from `RISK_BAND_COLORS`). Removed 3 duplicate inline `proj4.defs()`+`to4326` blocks from `PathAnalysisMapView.tsx`, `GeoDataPanel.tsx`, `reportBuilderPage.tsx`; removed local `RISK_COLORS`/`RISK_LABELS` from `reportBuilderPage.tsx`. Removed `proj4` import and `Position` type from the two files that no longer needed them (GeoDataPanel retains `proj4` for its curvature-triplet inline usage). TSC clean; build error count unchanged at 37. Note: the shared `to4326` uses the GeoDataPanel WGS84-guard version (safest); PathAnalysisMapView and reportBuilderPage previously lacked the guard — this is a correctness fix for new projects that natively output EPSG:4326, not a regression.
 - 2026-07-03 · S1.4 · created `frontend/src/components/map/DraggableMarker.tsx`, `PolygonDrawing.tsx`, and `polygonUtils.ts`. `polygonUtils.ts` holds `isPointInPolygon` (PIP utility, non-component) separately to satisfy react-refresh/only-export-components; `PolygonDrawing.tsx` exports only `PolygonDrawingTool` + `PolygonDrawingToolProps`. Unified API uses `[number, number]` tuples throughout (GeoDataPanel was already on tuples; PathAnalysisMapView callbacks updated from `L.LatLng` → tuple). Removed `Marker` from PathAnalysisMapView's react-leaflet import (was only used by the now-removed inline DraggableMarker); removed `useMapEvents` from GeoDataPanel's react-leaflet import (same reason). Lint errors dropped 374→372 (2 pre-existing `e as any` casts removed); TSC clean; build errors unchanged at 37.
+- 2026-07-03 · plan-maintenance · absorbed the v2 UI merge from main (`d5613347`): six pages now follow the container/`*ViewModel.ts`/`*LayoutV1|V2.tsx` seam governed by `frontend/CLAUDE.md`. Updated CONTEXT line counts (treatmentDetailPage 2,197→1,387, codingPage 3,036→2,301, reportBuilderPage 3,092→3,346), re-scoped S2.1–S2.5 to build on the seam (containers only, both layout variants verified — new Regression item 7), added guardrails (frontend/CLAUDE.md mandatory reading; merge origin/main before each Phase 2/3 session), noted `folderSummaryCache.ts` localStorage key for S1.6 registration (file itself untouched). Verified: tsc baseline still 37; S1.2 deferred finding still valid at new line numbers 38/176.
