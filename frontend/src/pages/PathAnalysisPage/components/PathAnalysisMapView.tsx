@@ -6,7 +6,7 @@ import { FONT, COLOR } from "../../../features/ui/designTokens";
 import { V2Segmented, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
 import { Box, Text, Tabs, Button, Flex, HStack, Portal, Input, IconButton, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Marker, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
 import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
 import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
@@ -16,9 +16,11 @@ import { MapCursorController } from "../../../components/common/MapCursorControl
 import { AnalysisSidebar } from "../../../components/visualization/AnalysisSidebar";
 
 import "leaflet/dist/leaflet.css";
-import L, { divIcon } from "leaflet";
+import L from "leaflet";
 import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon } from "geojson";
 import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
@@ -253,167 +255,6 @@ function MapInvalidateSize() {
   return null;
 }
 
-// Helper: Point in Polygon Algorithm (Ray Casting)
-function isPointInPolygon(point: [number, number], vs: [number, number][]) {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  const x = point[0], y = point[1];
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][0], yi = vs[i][1];
-    const xj = vs[j][0], yj = vs[j][1];
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-interface PolygonDrawingToolProps {
-  isPolygonMode: boolean;
-  isPolygonAddMode: boolean;
-  onPolygonPoint: (latlng: L.LatLng) => void;
-  onPointUpdate: (index: number, latlng: L.LatLng) => void;
-  polygonPoints: [number, number][];
-}
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-function PolygonDrawingTool({ isPolygonMode, isPolygonAddMode, onPolygonPoint, onPointUpdate, polygonPoints }: PolygonDrawingToolProps) {
-  const modeRef = useRef(false);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-
-  // Keep latest points in a ref for access inside drag handler without re-binding
-  const pointsRef = useRef(polygonPoints);
-  useEffect(() => {
-    pointsRef.current = polygonPoints;
-  }, [polygonPoints]);
-
-  useEffect(() => {
-    modeRef.current = isPolygonMode || isPolygonAddMode;
-  }, [isPolygonMode, isPolygonAddMode]);
-
-  useMapEvents({
-    click(e) {
-      if (modeRef.current) {
-        onPolygonPoint(e.latlng);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    // Imperatively update the polygon/polyline shape during drag for performance
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects to be safe
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    // Commit the change to state on drag end
-    onPointUpdate(index, latlng);
-  }, [onPointUpdate]);
-
-  const color = isPolygonAddMode ? "blue" : "red";
-
-  // Custom icon to mimic CircleMarker but allow dragging
-  const createCustomIcon = (color: string) => {
-    return divIcon({
-      className: "custom-polygon-marker",
-      html: `<div style="
-        background-color: ${color};
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 4px rgba(0,0,0,0.4);
-        cursor: grab;
-      "></div>`,
-      iconSize: [20, 20], // Hit box size
-      iconAnchor: [10, 10], // Centered (half of 20)
-    });
-  };
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  if (polygonPoints.length === 0) return null;
-
-  return (
-    <>
-      {polygonPoints.map((pt, idx) => (
-        <DraggableMarker
-          key={`poly-point-${idx}`}
-          position={pt}
-          index={idx}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <LeafletPolyline
-        ref={polylineRef}
-        positions={polygonPoints}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {polygonPoints.length >= 3 && (
-        <LeafletPolygon
-          ref={polygonRef}
-          positions={polygonPoints}
-          pathOptions={{ color: color, fillOpacity: 0.2 }}
-        />
-      )}
-    </>
-  );
-}
 
 /**
  * Renders `children` inline (`to === undefined`, the v1 default), into a portal
@@ -742,14 +583,14 @@ export default function AttributeAnalysisMapView({
   const [sortConfig, setSortConfig] = useState<Array<{ column: string; direction: 'asc' | 'desc' }>>([]);
 
   // Handlers for Polygon Tool
-  const handlePolygonPoint = (latlng: L.LatLng) => {
-    setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
+  const handlePolygonPoint = (latlng: [number, number]) => {
+    setPolygonPoints((prev) => [...prev, latlng]);
   };
 
-  const handlePointUpdate = useCallback((index: number, latlng: L.LatLng) => {
+  const handlePointUpdate = useCallback((index: number, latlng: [number, number]) => {
     setPolygonPoints((prev) => {
       const newPoints = [...prev];
-      newPoints[index] = [latlng.lat, latlng.lng];
+      newPoints[index] = latlng;
       return newPoints;
     });
   }, []);
@@ -3225,11 +3066,11 @@ export default function AttributeAnalysisMapView({
                   />
                   {/* Render Polygon Tool */}
                   <PolygonDrawingTool
-                    isPolygonMode={isPolygonMode}
-                    isPolygonAddMode={isPolygonAddMode}
-                    onPolygonPoint={handlePolygonPoint}
+                    active={isPolygonMode || isPolygonAddMode}
+                    color={isPolygonAddMode ? "blue" : "red"}
+                    points={polygonPoints}
+                    onAddPoint={handlePolygonPoint}
                     onPointUpdate={handlePointUpdate}
-                    polygonPoints={polygonPoints}
                   />
 
                   {/* Tile Layer */}
@@ -3284,7 +3125,7 @@ export default function AttributeAnalysisMapView({
                               // If in polygon mode, add this point to the polygon and stop propagation
                               if (isPolygonMode || isPolygonAddMode) {
                                 L.DomEvent.stopPropagation(e as any);
-                                handlePolygonPoint(L.latLng(latlng[0], latlng[1]));
+                                handlePolygonPoint(latlng);
                                 return;
                               }
 

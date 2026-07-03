@@ -153,7 +153,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S1.1** Split `api/index.ts` into domain modules + barrel — 1d — *depends: none*
 - [x] **S1.2** Populate `types/index.ts`; remove dup interfaces; `any`→`unknown` — 1–2d — *depends: S1.1*
 - [x] **S1.3** Extract `utils/riskColors.ts` + `utils/projection.ts` — 1d — *depends: none*
-- [ ] **S1.4** Extract shared map components (`DraggableMarker`, `PolygonDrawing`) — 1d — *depends: S1.3*
+- [x] **S1.4** Extract shared map components (`DraggableMarker`, `PolygonDrawing`) — 1d — *depends: S1.3*
 - [x] ~~**S1.5** Unify the 3 `AttributesDropdown` variants~~ — **VOID** (2 of 3 were dead code, deleted in S0.2)
 - [ ] **S1.6** `useSessionState` hook + typed `SESSION_KEYS`; migrate keys — 2d — *depends: S1.2*
 
@@ -274,7 +274,7 @@ if low-risk.
 **Verify:** Segment colors + map coords visually unchanged (Regression Checklist items 3).
 **Commit:** `refactor(utils): extract shared risk-color and projection helpers [S1.3]`
 
-### S1.4 — Shared map components  · Done: ____
+### S1.4 — Shared map components  · Done: 2026-07-03
 **Context to load:** `DraggableMarker`/`PolygonDrawingTool`/`isPointInPolygon` in `PathAnalysisMapView.tsx` &
 `GeoDataPanel.tsx`.
 **Do:** Create `frontend/src/components/map/DraggableMarker.tsx` + `PolygonDrawing.tsx`; replace both copies.
@@ -397,3 +397,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S1.1 · split 1,596-line `api/index.ts` into 9 domain modules (`_client`, `projects`, `geo`, `sourceFolders`, `autocode`, `treatments`, `shapefiles`, `auth`, `media`, `reports`) + barrel `index.ts`. Updated `projectDataCache.ts` to import from `./projects` directly. Added module headers + TSDoc to all new files. `tsc --noEmit` clean; `npm run build` error count identical to baseline (37 pre-existing errors, 0 new). Note: `CalculateScoreResult.result_rows` kept as `any[]` (matching original) — narrowing to `unknown[]` is deferred to S1.2 to avoid breaking callers.
 - 2026-07-03 · S1.2 · populated `types/index.ts` as re-export barrel for 10 shared API types from `api/projects`. Removed duplicate `ProjectDetail`+`AttrMappings` from `codingConstants.ts` (re-exported from api); removed duplicate `ProjectDetail`+`AttributesResponse` from `treatmentConstants.ts` (re-exported from api); removed local `AttributesResponse` from `codingPage.tsx` (imported from api). Converted 15 `catch (e: any)` in `codingPage.tsx` and 2 in `treatmentDetailPage.tsx` to `catch (e: unknown)` with `instanceof Error` guards (empty catches → bare `catch {}`). TSC error count unchanged at 37 (all pre-existing); lint errors down 22 (396→374) from removed `any` annotations. Note: `TREATMENTS` unused import and `Cannot find name 'Treatment'` in `treatmentDetailPage.tsx` are pre-existing; deferred to S2.4 decomposition.
 - 2026-07-03 · S1.3 · created `frontend/src/utils/projection.ts` (single `to4326` with WGS84 pass-through guard) and `frontend/src/utils/riskColors.ts` (`RISK_COLORS`/`RISK_LABELS` derived from `RISK_BAND_COLORS`). Removed 3 duplicate inline `proj4.defs()`+`to4326` blocks from `PathAnalysisMapView.tsx`, `GeoDataPanel.tsx`, `reportBuilderPage.tsx`; removed local `RISK_COLORS`/`RISK_LABELS` from `reportBuilderPage.tsx`. Removed `proj4` import and `Position` type from the two files that no longer needed them (GeoDataPanel retains `proj4` for its curvature-triplet inline usage). TSC clean; build error count unchanged at 37. Note: the shared `to4326` uses the GeoDataPanel WGS84-guard version (safest); PathAnalysisMapView and reportBuilderPage previously lacked the guard — this is a correctness fix for new projects that natively output EPSG:4326, not a regression.
+- 2026-07-03 · S1.4 · created `frontend/src/components/map/DraggableMarker.tsx`, `PolygonDrawing.tsx`, and `polygonUtils.ts`. `polygonUtils.ts` holds `isPointInPolygon` (PIP utility, non-component) separately to satisfy react-refresh/only-export-components; `PolygonDrawing.tsx` exports only `PolygonDrawingTool` + `PolygonDrawingToolProps`. Unified API uses `[number, number]` tuples throughout (GeoDataPanel was already on tuples; PathAnalysisMapView callbacks updated from `L.LatLng` → tuple). Removed `Marker` from PathAnalysisMapView's react-leaflet import (was only used by the now-removed inline DraggableMarker); removed `useMapEvents` from GeoDataPanel's react-leaflet import (same reason). Lint errors dropped 374→372 (2 pre-existing `e as any` casts removed); TSC clean; build errors unchanged at 37.

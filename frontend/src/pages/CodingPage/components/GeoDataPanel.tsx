@@ -19,12 +19,14 @@ import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { useNavigate } from "react-router-dom";
 
 
-import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, useMapEvents, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
 import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import proj4 from "proj4";
 import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import type { CurvatureVisualizationResponse } from '../../../api/curvatureVisualization';
 import { GRADIENT_STATUS_NO_LIDAR_RESULT, getGradientDisplayState } from "../../../utils/gradientDisplay";
 
@@ -165,168 +167,6 @@ const defectIcon = divIcon({
   iconSize: [24, 24],
   iconAnchor: [12, 12],
 });
-
-// Polygon Drawing Tool Component
-// Custom icon to mimic CircleMarker but allow dragging
-const createCustomIcon = (color: string) => {
-  return divIcon({
-    className: "custom-polygon-marker",
-    html: `<div style="
-      background-color: ${color};
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 4px rgba(0,0,0,0.4);
-      cursor: grab;
-    "></div>`,
-    iconSize: [20, 20], // Hit box size
-    iconAnchor: [10, 10], // Centered (half of 20)
-  });
-};
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  color: string;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-// Polygon Drawing Tool Component
-function PolygonDrawingTool({ active, points, onAddPoint, onPointUpdate, color = "orange" }: {
-  active: boolean,
-  points: [number, number][],
-  onAddPoint: (latlng: [number, number]) => void,
-  onPointUpdate: (index: number, latlng: [number, number]) => void,
-  color?: string
-}) {
-  const activeRef = useRef(active);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-  const pointsRef = useRef(points);
-
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
-
-  useEffect(() => {
-    pointsRef.current = points;
-  }, [points]);
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  useMapEvents({
-    click(e) {
-      if (activeRef.current) {
-        onAddPoint([e.latlng.lat, e.latlng.lng]);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    onPointUpdate(index, [latlng.lat, latlng.lng]);
-  }, [onPointUpdate]);
-
-  if (!active || points.length === 0) return null;
-
-  return (
-    <>
-      {points.map((p, i) => (
-        <DraggableMarker
-          key={`poly-point-${i}`}
-          position={p}
-          index={i}
-          color={color}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <Polyline
-        ref={polylineRef}
-        positions={points}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {points.length >= 3 && (
-        <Polygon
-          ref={polygonRef}
-          positions={points}
-          pathOptions={{ color: color, fillOpacity: 0.2, stroke: false }}
-        />
-      )}
-    </>
-  );
-}
-
-// PIP Algorithm (Ray Casting)
-const isPointInPolygon = (point: [number, number], vs: [number, number][]) => {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  // x = lon, y = lat
-  const x = point[1], y = point[0];
-
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][1], yi = vs[i][0];
-    const xj = vs[j][1], yj = vs[j][0];
-
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-};
 
 // No global cache needed anymore as we use localStorage
 
