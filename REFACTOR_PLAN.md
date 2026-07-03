@@ -11,16 +11,24 @@
 
 1. **Pick the next session:** In the Dashboard below, find the first row whose box is `[ ]`. Respect `Depends on`.
 2. **Open that session block** (## S0.1, ## S1.2, …). Read its *Context to load* and open only those files.
-3. **Goal = pure refactor.** No behavior changes, no new features. If you find a real bug, note it under
+3. **Query the graph before reading further.** If the session has a `**Graph tools:**` line, run exactly
+   those tools/targets first. Otherwise, and for ANY session that moves, extracts, or renames a function/
+   hook/class/component, run `get_impact_radius_tool` and/or `query_graph_tool(pattern="callers_of")` on the
+   target symbol(s) before touching code — this replaces manual grep/AST-diffing for finding callers (see
+   `CLAUDE.md`'s "MCP Tools: code-review-graph" section for the full tool table).
+4. **Goal = pure refactor.** No behavior changes, no new features. If you find a real bug, note it under
    "Deferred findings" at the bottom — do NOT fix it inline.
-4. **Verify** with the session's checks AND the global Regression Checklist (bottom) if it touched frontend UI.
-5. **Update this file:** flip `[ ]`→`[x]` in the Dashboard, set the `Done:` date in the session block, and
+5. **Verify** with the session's checks, `detect_changes_tool` (risk-scored look at the diff), AND the global
+   Regression Checklist (bottom) if it touched frontend UI.
+6. **Update this file:** flip `[ ]`→`[x]` in the Dashboard, set the `Done:` date in the session block, and
    **add a SESSION LOG entry** following the SESSION LOG STANDARD below (one multi-line entry per session —
-   see that section for the mandatory fields). One-liners are no longer sufficient.
-6. **Commit** (per `CLAUDE.md`: prompt the user before committing/pushing to `xh_dev`). Suggested message is in
+   see that section for the mandatory fields, including `GRAPH USAGE`). One-liners are no longer sufficient.
+   Before moving on, call `build_or_update_graph_tool` (incremental, no args) so the graph reflects this
+   session's edits — the next session (and its own step 3) depends on it being current.
+7. **Commit** (per `CLAUDE.md`: prompt the user before committing/pushing to `xh_dev`). Suggested message is in
    each session — **every commit message must include the session tag `[Sx.y]`** (e.g. `[S0.1]`, `[S2.3]`).
    Commit this updated REFACTOR_PLAN.md together with the work.
-7. **Stop.** One session per chat keeps context small and reviewable.
+8. **Stop.** One session per chat keeps context small and reviewable.
 
 **Guardrails for every session:**
 
@@ -35,6 +43,13 @@
   reasonable approaches, or an operation is high-risk (bulk deletes, `git rm`/`reset`, schema/API changes, anything
   hard to reverse), STOP and prompt the user for their preference rather than assuming. Present the options and a
   recommendation; proceed only after they choose. Do not silently pick a default on consequential decisions.
+- **Use the code-review-graph MCP tools before Grep/Glob for exploration, and before extracting or moving any
+  function/hook/class/component.** Run `get_impact_radius_tool` and/or `query_graph_tool(pattern="callers_of")`
+  on the target symbol BEFORE starting a move/extraction, so every caller that needs rewiring is known up
+  front — this replaces the ad-hoc grep/AST-diffing used in S3.1/S3.2. Use `detect_changes_tool` as part of
+  each session's Verify step. Full tool table lives in `CLAUDE.md`'s "MCP Tools: code-review-graph" section —
+  this bullet points at it rather than repeating it. Record what you ran + found in the SESSION LOG's
+  `GRAPH USAGE` field.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
 - **`frontend/CLAUDE.md` is mandatory reading for every frontend-touching session.** It is the v2 UI
@@ -181,7 +196,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
 - [x] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
-- [ ] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
+- [x] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
 - [ ] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
 - [ ] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
 - [ ] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
@@ -326,25 +341,38 @@ may be re-wired to new hooks, but the shell-facing contract must not change shap
 - **S2.1 PathAnalysisMapView** → `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`,
   `<FilterPanel>`, map-event hooks. **Shared heavy component with gated `variant="v2"`** (plus `filtersPortalTarget` /
   `MaybePortal`) — preserve the variant gating and verify BOTH render paths (v1 and v2 chrome).
+  **Graph tools:** `get_impact_radius_tool` on `PathAnalysisMapView.tsx`; `query_graph_tool(pattern="callers_of")`
+  on each inline helper being pulled into a hook (GIS layer toggle logic, filter state, viewport persistence) to
+  confirm no external caller is missed before it moves.
 - **S2.2 GeoDataPanel** → `useGISToggleState`, `useCurvatureOverlay`, `useWidthVisualization`, `<DefectsLayer>`.
   **Shared heavy component with gated `variant="v2"`** (floating tool cluster, `MapAutosize`) — same both-paths rule.
   Also consumed by Treatment's Before/After map panels; smoke those too.
+  **Graph tools:** `get_impact_radius_tool` on `GeoDataPanel.tsx` — it should surface the Treatment Before/After
+  callers directly (confirm the graph finds them, rather than relying solely on this written reminder).
 - **S2.3 codingPage** → decompose the **container** (`CodingLayoutV1/V2.tsx` + `CodingViewModel.ts` already exist):
   `useProjectDataCache`, `useFilterContext`, `useAutocode`, `useAttributeEditing`. Keep the `CodingViewModel`
   contract intact.
+  **Graph tools:** `get_impact_radius_tool` on `codingPage.tsx`; `query_graph_tool(pattern="callers_of")` on
+  `CodingViewModel`'s exported members to verify the shell-facing contract shape stays intact after extraction.
 - **S2.4 treatmentDetailPage** → much of the old scope was done by the v2 split (`TreatmentDetailLayoutV1/V2.tsx` +
   `TreatmentViewModel.ts`; container is now 1,387 lines). Remaining: extract `useProjectMapping`
   (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis` from the container.
   Fix the deferred pre-existing errors here: unused `TREATMENTS` import (line 38) and missing `Treatment` type
   import (line 176).
+  **Graph tools:** `query_graph_tool(pattern="callers_of")` on `resolveIndex`/`projectMap` before extracting
+  `useProjectMapping`; `get_impact_radius_tool` on `treatmentDetailPage.tsx`.
 - **S2.5 reportBuilderPage** → `useReportData`, `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`.
   No v2 layout exists for this page yet (it grew to 3,346 lines) — structure the decomposition as
   container + view-model per `frontend/CLAUDE.md` so a future `ReportBuilderLayoutV2` can slot in.
+  **Graph tools:** `get_impact_radius_tool` + `get_affected_flows_tool` on `reportBuilderPage.tsx` — this file
+  is the largest and most tangled with no existing seam, so understanding affected flows matters more here than
+  a single-symbol caller lookup.
 
 **Context to load (each):** the target file + `CLAUDE.md` + **`frontend/CLAUDE.md` (mandatory — §0 protocol)** +
-the page's `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1.
-**Verify (each):** frontend gate + full Regression Checklist for that page's flows (including checklist item 7 —
-both layout variants render).
+the page's `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1. Run the session's **Graph
+tools** line first (see per-session bullets above) before opening any file.
+**Verify (each):** frontend gate + `detect_changes_tool` + full Regression Checklist for that page's flows
+(including checklist item 7 — both layout variants render).
 **Commit (each):** `refactor(<page>): decompose into hooks and sub-components [S2.x]`
 
 ### S3.1 — `@with_project` decorator  · Done: 2026-07-03
@@ -355,7 +383,7 @@ byte-identical.
 **Verify:** Hit a representative endpoint of each kind; responses unchanged.
 **Commit:** `refactor(backend): add @with_project decorator and standardize error handling [S3.1]`
 
-### S3.2 — Split `routes.py`  · Done: ____
+### S3.2 — Split `routes.py`  · Done: 2026-07-03
 **Context to load:** `routes.py`, `backend/app/api/projects/__init__.py`.
 **Do:** Convert `projects/` into a package of blueprints: `crud.py`, `autocode.py`, `segments.py`, `images.py`,
 `source_folders.py`, `gis_queries.py`, `export.py`, `baseline.py`. Move private helpers to service functions. Keep URL
@@ -364,44 +392,60 @@ routes identical (register all blueprints).
 **Commit:** `refactor(backend): split projects routes.py into blueprint modules [S3.2]`
 
 ### S3.3 — `logging` over `print()`  · Done: ____
+**Graph tools:** `semantic_search_nodes_tool` for `print(` call sites across the 14 files named in S3.2's NOTES FOR
+NEXT — one call gets file+context instead of a flat grep pass.
 **Do:** Configure a logger; replace ~68 `print()` with leveled logs. Preserve any user-facing stdout the app relies on.
-**Verify:** Boot, run an autocode, confirm logs emit.
+**Verify:** Boot, run an autocode, confirm logs emit; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): replace print with logging [S3.3]`
 
 ### S3.4 — Extract Curvature/Width analyzers  · Done: ____
 **Context to load:** `backend/app/services/gis_mapping.py` (curvature ~900 lines; width logic), `backend/app/utils/path_width_curvature.py`.
+**Graph tools:** `query_graph_tool(pattern="callers_of")` on the curvature/width methods in `gis_mapping.py` BEFORE
+moving them out, so every internal and external caller is known ahead of the `GIS`-class delegation; `get_impact_radius_tool`
+on `gis_mapping.py`.
 **Do:** Move curvature → `services/curvature_analyzer.py` (`CurvatureAnalyzer`); width → `services/width_analyzer.py`.
 `GIS` class delegates. Keep numeric outputs identical (spot-check against a known segment).
-**Verify:** `backend/test_curvature_analysis.py` still passes; compare curvature/width on a sample project.
+**Verify:** `backend/test_curvature_analysis.py` still passes; compare curvature/width on a sample project;
+`detect_changes_tool` on the diff.
 **Commit:** `refactor(gis): extract CurvatureAnalyzer and WidthAnalyzer [S3.4]`
 
 ### S3.5 — `query_nearby()` + unify proximity  · Done: ____
 **Context to load:** `gis_mapping.py` proximity methods (`is_mrt`/`is_bus_lane`/… ) + buffer/sindex/distance repeats.
+**Graph tools:** `semantic_search_nodes_tool` to enumerate the ~8 proximity-check methods (`is_mrt`, `is_bus_lane`,
+…) as extraction targets, instead of manually reading the file.
 **Do:** Add `query_nearby(layer, point, buffer, max_dist)`; route the 8 near-identical proximity checks + ~20 repeated
 patterns through it.
-**Verify:** GIS autocode results unchanged on a sample project.
+**Verify:** GIS autocode results unchanged on a sample project; `detect_changes_tool` on the diff.
 **Commit:** `refactor(gis): add query_nearby helper and unify proximity checks [S3.5]`
 
 ### S3.6 — Split `project_manager.py`  · Done: ____
 **Context to load:** `backend/app/services/project_manager.py`.
+**Graph tools:** `get_impact_radius_tool` on `project_manager.py`; `query_graph_tool(pattern="callers_of")` on
+`ProjectVersion`'s methods before splitting data/serialization/defaults concerns.
 **Do:** Split `ProjectVersion` into data/serialization/defaults concerns; move image dedup/materialization to
 `services/image_storage.py`. Keep public API of `project_manager` stable.
-**Verify:** Create/open/list project + image dedup still work.
+**Verify:** Create/open/list project + image dedup still work; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): modularize project_manager and extract image_storage [S3.6]`
 
 ### S3.7 — Organize backend tests  · Done: ____
+**Graph tools:** `query_graph_tool(pattern="tests_for")` to confirm the current test↔code coverage mapping before
+moving files, so nothing silently stops being collected after the move.
 **Do:** Move the ~24 root `backend/test_*.py` into `backend/tests/` + add `conftest.py` + `pytest.ini`. **Move only,
 do not rewrite** (per scope). Drop obviously-dead dependency-probe scripts (confirm via run first).
 **Verify:** `cd backend && pytest` collects from `tests/`.
 **Commit:** `chore(backend): consolidate tests into tests/ directory [S3.7]`
 
 ### S3.8 — Type-hint pass  · Done: ____
+**Graph tools:** none required — no code is moved or extracted this session (hints only); note this explicitly in
+the SESSION LOG's `GRAPH USAGE` field as `n/a`.
 **Do:** Add param/return hints to `routes.py` + `project_manager.py`; add `TypedDict`s for common payloads. No logic
 change.
 **Verify:** Optional `mypy`/boot; gate passes.
 **Commit:** `refactor(backend): add type hints to routes and project_manager [S3.8]`
 
 ### S4.1 — End-to-end manual QA  · Done: ____
+**Graph tools:** `detect_changes_tool` + `get_affected_flows_tool` across the full accumulated branch diff before
+starting manual QA, to risk-rank which flows to test first.
 **Do:** Run the app (`docker-compose up` or local dev). Walk the full flow: project create → code → autocode → score →
 path analysis filters → treatment apply → report build/export → GIS layers. Fix regressions surfaced. Re-run the full
 Regression Checklist.
@@ -442,6 +486,9 @@ field in this template. Skip a field only if it is genuinely not applicable (e.g
   FILES MODIFIED:  <list each edited file; for large files note before→after line count>
   SYMBOLS MOVED/EXTRACTED: <function/hook/class name, from file → to file, caller count>
   IMPORT SITES UPDATED: <N files had imports rewritten; list or summarise the pattern>
+  GRAPH USAGE:     <graph tool(s) called, target symbol/file, and key findings — e.g. "get_impact_radius_tool
+                   on X.tsx: 4 callers, 0 external"; "query_graph_tool(callers_of) on Y(): confirmed no
+                   callers outside this file"; or "n/a — no code moved/extracted this session">
   BUILD GATE:      TSC <before> → <after> errors; lint <before> → <after>; build <PASS|FAIL>
   REGRESSION CHECK: <list which checklist items (1–7) were manually verified, or "n/a">
   ARCHITECTURAL DECISIONS: <any non-obvious choices made during the session — e.g. why a
@@ -454,7 +501,9 @@ field in this template. Skip a field only if it is genuinely not applicable (e.g
 **Why comprehensive entries matter:** a fresh Claude Code chat starts with zero context. A thorough
 log entry is the primary way prior decisions (what was moved, what was consciously left, what
 surprised us) survive across sessions. Terse one-liners cause the next chat to re-derive decisions
-we already made — wasting tokens and risking conflicting choices.
+we already made — wasting tokens and risking conflicting choices. The same applies to `GRAPH USAGE`:
+a caller count or impact radius re-derived by hand every session wastes tokens the graph already
+gives for free — record what you found so the next session doesn't re-query from scratch.
 
 ---
 
@@ -932,3 +981,103 @@ we already made — wasting tokens and risking conflicting choices.
                    module (e.g. `projects/_helpers.py` or `projects/context.py`) that every sub-blueprint imports.
                    The remaining unconverted handlers are good candidates to fold into the decorator (or a sibling
                    `@with_pm`) as they land in their target sub-modules.
+
+- 2026-07-03 · S3.2 · split the 6,455-line `projects/routes.py` monolith into a blueprint package — 4 shared
+  helper modules + 9 domain route modules — keeping the single `projects` blueprint so all 62 URLs and
+  endpoint names are byte-identical. `routes.py` is now a 20-line back-compat barrel.
+  FILES CREATED (13 modules, all with module docstrings per the Documentation Standard):
+    Support (helpers, no routes):
+      `_helpers.py` (390L): the single `projects` blueprint's cross-cutting infra — `get_ctx`/`invalidate_ctx`
+                     (+`_CTX`/`_CTX_LOCK`), `ok`/`fail`/`df_to_records`, the `with_project` decorator, the GIS
+                     singleton `_get_gis` (+`_GIS_INSTANCE`/`_INIT_LOCK`/`_INIT_ERR`), `warmup_gis`, CV-model
+                     readiness (`_ensure_models_ready`/`_MODELS_READY`/`_warmup_models_in_background`/
+                     `_warmup_thread` + its `.start()`), the `@bp.before_request` logger `_log_incoming`, the
+                     shared `_INFERENCE_DEPTH` counter, and the generic `_get_segment_midpoint` geom helper.
+      `roads_util.py` (207L): cached road-section + planning-area GeoDataFrame accessors and road-name/
+                     download-folder resolution (`_get_road_sections_gdf`, `_get_planning_areas_gdf`,
+                     `_get_known_road_names`, `_available_road_names/_folders`, `_pretty_folder_label`,
+                     `_QUARTER_SUFFIX_RE`).
+      `gradient.py` (472L): the LiDAR gradient-profile subsystem (catalog load, chainage mapping, per-project
+                     cache, `_inject_grade`, `GRADIENT_STATUS_*`).
+      `image_utils.py` (477L): image reference resolution/namespacing + geo-data-from-EXIF-points + legacy
+                     image migration + source-folder→namespace mapping (`_resolve_image_from_in`,
+                     `make_image_namespace`, `build_project_geo_data`, `_migrate_legacy_images`,
+                     `_get_project_source_folders`, `_get_image_date_range`, …). Note: the duplicate
+                     `_IMAGE_EXTENSIONS` definition (old routes.py line 50, dead — overwritten at import by the
+                     line-1160 def) was dropped; the surviving definition is the effective runtime value.
+    Route blueprints (import `from . import bp` + `@bp.route`):
+      `crud.py` (966L): project lifecycle, attributes, custom options, attribute-mappings, score, results,
+                     create-from-folder.
+      `segments.py` (248L): delete (single/batch), copy, collision check.
+      `treatments.py` (1,289L): the `TREATMENTS` catalogue + all 11 `/treatments/*` endpoints.
+      `images.py` (211L): project image serving, post-treatment photo up/get/delete, bulk download.
+      `source_folders.py` (684L): `/folders/*` routes + their ~19 private helpers.
+      `gis_queries.py` (1,040L): roads/planning lookups, GIS overlay/viewport/near-segment layers, curvature +
+                     width visualisations.
+      `autocode.py` (711L): CV/GIS/bulk autocode (`_cv_autocode_core`, `_gis_autocode_core`, `autocode_all`).
+      `export.py` (248L): shapefile export + helpers.
+      `baseline.py` (230L): baseline + autocode-metadata persistence.
+  FILES DELETED:   none (routes.py content moved out; file repurposed as a barrel).
+  FILES MOVED:     n/a (logical move via AST-driven extraction, not `git mv`).
+  FILES MODIFIED:
+    `backend/app/api/projects/routes.py`: 6,455L → 20L — now a docstring + re-export barrel exposing
+                     `get_ctx`, `invalidate_ctx`, `warmup_gis`, `_get_gis`, `ok`, `fail` for the four external
+                     importers (`app/__init__.py`, `report/routes.py`, `profiles/routes.py`,
+                     `width_visualization.py`) so NO external import site changed.
+    `backend/app/api/projects/__init__.py` (4L → 23L): defines `bp`, then imports the 4 support modules, the 9
+                     route modules (registering handlers), and the `routes` barrel.
+  SYMBOLS MOVED/EXTRACTED: all 149 functions + 30 module-level globals/constants distributed across the 13
+                     modules per an AST-computed call graph (single-domain symbols → their domain module;
+                     cross-domain → the relevant support module). Cross-module imports were auto-generated from
+                     the graph. `_INFERENCE_DEPTH` (written by autocode `_cv_autocode_core`/`autocode_all`/its
+                     nested `_bulk_gen`, read by crud `update_project_metadata`) was moved to `_helpers` and all
+                     4 sites rewritten from `global _INFERENCE_DEPTH; _INFERENCE_DEPTH ±= 1` to live
+                     module-attribute access `_helpers._INFERENCE_DEPTH ±= 1` — the ONLY intentional logic edit.
+  IMPORT SITES UPDATED: 0 external. Intra-package: each route module imports its helpers `from ._helpers` /
+                     `.image_utils` / `.gradient` / `.roads_util`.
+  BUILD GATE:      `py_compile` all 15 files OK; `create_app()` boots and registers exactly 62 `projects.*`
+                     routes (identical count + identical endpoint names/URLs/methods vs the S3.1 baseline);
+                     backend gate only (no frontend touched).
+  REGRESSION CHECK: n/a for the FE checklist (backend-only). Backend verification: (1) AST-diff of every
+                     function old-vs-new → 149 funcs, 0 missing / 0 extra, only the 4 expected `_INFERENCE_DEPTH`
+                     functions differ; (2) module-level globals diff → all preserved, only intentional
+                     `_IMAGE_EXTENSIONS` dedup (2→1); (3) `_log_incoming` before_request still registered;
+                     (4) functional smoke via test client on 6 live projects — crud (get/metadata/attributes/
+                     results/geodata/image-date-range), gradient (attributes), image_utils (geodata migration),
+                     treatments (all/segment), baseline (exists/metadata) all 200; gis_queries/segments/export/
+                     autocode/source_folders reached their own input-validation paths (400/handler-level 500)
+                     with no ImportError/NameError, proving cross-module imports resolve at runtime; (5) error
+                     path `/<missing>/metadata` → 404 unchanged.
+  ARCHITECTURAL DECISIONS:
+    • Single shared `bp` (user-confirmed) over multiple sub-blueprints: keeps Flask endpoint names byte-identical
+      (`projects.<fn>`), which the plan's "identical runtime behaviour" goal demands. No `url_for("projects.…")`
+      exists anywhere, but the single-bp choice is strictly safer and is the standard Flask pattern for splitting
+      a large routes file.
+    • `routes.py` kept as a back-compat barrel (not deleted) because 4 modules import names from
+      `app.api.projects.routes`. Zero external edits needed.
+    • Support-vs-route module split: everything that is NOT a `@bp.route` handler and is used by ≥2 domains lives
+      in a support module (`_helpers`/`image_utils`/`gradient`/`roads_util`); single-domain private helpers live
+      with their route module. `gradient` and `image_utils` earned their own modules because their helper
+      clusters are large and shared by crud+autocode / crud+images+source_folders+autocode respectively.
+    • Shared mutable global `_INFERENCE_DEPTH`: accessed via `_helpers._INFERENCE_DEPTH` (module attribute), NOT
+      `from ._helpers import _INFERENCE_DEPTH`, so writers and the reader see the same live value across modules
+      (a `from … import` would bind a stale snapshot; a per-module `global` would create separate counters).
+    • Extraction was performed by a one-shot AST-driven generator (`/tmp/split_routes.py`) rather than manual
+      copy/paste, so function bodies are provably byte-identical (verified by AST dump comparison) — the safest
+      way to move ~6k lines without drift.
+    • Import headers: every module carries the full external-import header from the old file (harmless
+      over-import) to guarantee no missing import; the backend gate is import/boot, not lint, so unused-import
+      hints are acceptable. A future tidy pass could prune per-module.
+  DEFERRED:        Three modules still exceed the ~600-line target — `treatments.py` (1,289; ~210L is the
+                   `TREATMENTS` data catalogue that could move to a `treatment_definitions.py` data module),
+                   `gis_queries.py` (1,040; `get_gis_layers` alone is ~200L), `crud.py` (966). These are cohesive
+                   domain modules and a reasonable S3.2 stopping point; a follow-up could sub-split them and prune
+                   the duplicated import headers. (Not added to DEFERRED FINDINGS — this is refactor granularity,
+                   not a bug.)
+  NOTES FOR NEXT:  S3.3 (logging) now has 14 files to sweep for `print()` instead of one — the GIS singleton
+                   prints (`[GIS] …`) live in `_helpers.py`, the request logger in `_helpers._log_incoming`, and
+                   `[PM]`/`[Context]` prints in the service layer. S3.8 (type hints) targets `crud.py` (the
+                   former routes.py CRUD core) + `project_manager.py`. The `with_project`/`get_ctx`/`ok`/`fail`
+                   shared helpers now live in `_helpers.py` (as the S3.1 note predicted). When adding a new
+                   projects endpoint, put it in the matching domain module and `from . import bp` — do NOT
+                   reintroduce routes into `routes.py` (it is a barrel only).
