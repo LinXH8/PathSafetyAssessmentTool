@@ -20,24 +20,15 @@ import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
-import proj4 from "proj4";
-import type { FeatureCollection, Position } from "geojson";
+import type { FeatureCollection } from "geojson";
 import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants/mapColors";
+import { to4326 } from "../../utils/projection";
+import { RISK_COLORS, RISK_LABELS } from "../../utils/riskColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
 import { getCachedResults } from "../../api/projectDataCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-
-// ── SVY21 (EPSG:3414) → WGS84 ───────────────────────────────────────────────
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-const to4326 = (p: Position): [number, number] => {
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", [p[0], p[1]]) as [number, number];
-  return [lat, lon];
-};
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const CANVAS_W = 794;
@@ -62,12 +53,6 @@ function dateToQuarterLabel(iso: string): string {
   return `Q${Math.ceil(month / 3)} ${year}`;
 }
 
-const RISK_COLORS: Record<number, string> = {
-  1: "#87C424", 2: "#FFCC1A", 3: "#FF5B1A", 4: "#CD1AFF",
-};
-const RISK_LABELS: Record<number, string> = {
-  1: "Low", 2: "Medium", 3: "High", 4: "Extreme",
-};
 const CRASH_TYPE_LABELS: Record<string, string> = {
   Overall: "Overall Risk", VB: "Vehicle–Bicycle", BB: "Bicycle–Bicycle",
   SB: "Single-Bicycle", BP: "Bicycle–Pedestrian",

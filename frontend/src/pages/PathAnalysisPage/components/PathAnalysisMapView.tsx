@@ -17,8 +17,8 @@ import { AnalysisSidebar } from "../../../components/visualization/AnalysisSideb
 
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
-import proj4 from "proj4";
-import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
+import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon } from "geojson";
+import { to4326 } from "../../../utils/projection";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
@@ -171,19 +171,6 @@ const normalizeCrossingTypeLabel = (value: string): string | null => {
   if (normalizedValue.includes("unsignalised junction") || normalizedValue.includes("unsignalized junction")) return "Unsignalised Junction";
   if (normalizedValue.includes("development access")) return "Development Access";
   return null;
-};
-
-// --- EPSG:3414 (SVY21 / Singapore TM) definition -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-
-
-
-const to4326 = (p: Position): [number, number] => {
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
 };
 
 // Component to pan to specific bounds

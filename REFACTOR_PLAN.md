@@ -152,7 +152,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 ### Phase 1 — Frontend shared foundation (6–9 days) — *do before Phase 2*
 - [x] **S1.1** Split `api/index.ts` into domain modules + barrel — 1d — *depends: none*
 - [x] **S1.2** Populate `types/index.ts`; remove dup interfaces; `any`→`unknown` — 1–2d — *depends: S1.1*
-- [ ] **S1.3** Extract `utils/riskColors.ts` + `utils/projection.ts` — 1d — *depends: none*
+- [x] **S1.3** Extract `utils/riskColors.ts` + `utils/projection.ts` — 1d — *depends: none*
 - [ ] **S1.4** Extract shared map components (`DraggableMarker`, `PolygonDrawing`) — 1d — *depends: S1.3*
 - [x] ~~**S1.5** Unify the 3 `AttributesDropdown` variants~~ — **VOID** (2 of 3 were dead code, deleted in S0.2)
 - [ ] **S1.6** `useSessionState` hook + typed `SESSION_KEYS`; migrate keys — 2d — *depends: S1.2*
@@ -266,7 +266,7 @@ if low-risk.
 **Verify:** `tsc --noEmit` clean.
 **Commit:** `refactor(types): centralize shared domain types [S1.2]`
 
-### S1.3 — `riskColors` + `projection` utils  · Done: ____
+### S1.3 — `riskColors` + `projection` utils  · Done: 2026-07-03
 **Context to load:** `frontend/src/constants/colorConstants.ts`; the 3 inline `to4326` copies in
 `PathAnalysisMapView.tsx`, `GeoDataPanel.tsx`, `reportBuilderPage.tsx`.
 **Do:** `utils/riskColors.ts` (reuse `colorConstants.ts`, export `RISK_COLORS`/`RISK_LABELS`); `utils/projection.ts`
@@ -396,3 +396,4 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.7 · translated all Chinese comments/docstrings to English across 8 files: `backend/requirements.txt` (5 lines), `gis_mapping.py` (12 comments + 1 exception message), `serializer.py` (3), `project_manager.py` (1), `frontend/src/api/index.ts` (5), `GeoDataPanel.tsx` (11), `ProjectsDialogs.tsx` (1), `landingPage.tsx` (1). Re-ran grep — zero CJK hits remain. Non-CJK non-ASCII (arrows →, en-dashes –, box-drawing ─) are legitimate English typography, left as-is. Backend imports OK; frontend build errors are all pre-existing.
 - 2026-07-02 · S1.1 · split 1,596-line `api/index.ts` into 9 domain modules (`_client`, `projects`, `geo`, `sourceFolders`, `autocode`, `treatments`, `shapefiles`, `auth`, `media`, `reports`) + barrel `index.ts`. Updated `projectDataCache.ts` to import from `./projects` directly. Added module headers + TSDoc to all new files. `tsc --noEmit` clean; `npm run build` error count identical to baseline (37 pre-existing errors, 0 new). Note: `CalculateScoreResult.result_rows` kept as `any[]` (matching original) — narrowing to `unknown[]` is deferred to S1.2 to avoid breaking callers.
 - 2026-07-03 · S1.2 · populated `types/index.ts` as re-export barrel for 10 shared API types from `api/projects`. Removed duplicate `ProjectDetail`+`AttrMappings` from `codingConstants.ts` (re-exported from api); removed duplicate `ProjectDetail`+`AttributesResponse` from `treatmentConstants.ts` (re-exported from api); removed local `AttributesResponse` from `codingPage.tsx` (imported from api). Converted 15 `catch (e: any)` in `codingPage.tsx` and 2 in `treatmentDetailPage.tsx` to `catch (e: unknown)` with `instanceof Error` guards (empty catches → bare `catch {}`). TSC error count unchanged at 37 (all pre-existing); lint errors down 22 (396→374) from removed `any` annotations. Note: `TREATMENTS` unused import and `Cannot find name 'Treatment'` in `treatmentDetailPage.tsx` are pre-existing; deferred to S2.4 decomposition.
+- 2026-07-03 · S1.3 · created `frontend/src/utils/projection.ts` (single `to4326` with WGS84 pass-through guard) and `frontend/src/utils/riskColors.ts` (`RISK_COLORS`/`RISK_LABELS` derived from `RISK_BAND_COLORS`). Removed 3 duplicate inline `proj4.defs()`+`to4326` blocks from `PathAnalysisMapView.tsx`, `GeoDataPanel.tsx`, `reportBuilderPage.tsx`; removed local `RISK_COLORS`/`RISK_LABELS` from `reportBuilderPage.tsx`. Removed `proj4` import and `Position` type from the two files that no longer needed them (GeoDataPanel retains `proj4` for its curvature-triplet inline usage). TSC clean; build error count unchanged at 37. Note: the shared `to4326` uses the GeoDataPanel WGS84-guard version (safest); PathAnalysisMapView and reportBuilderPage previously lacked the guard — this is a correctness fix for new projects that natively output EPSG:4326, not a regression.

@@ -10,7 +10,7 @@ import { Switch } from "../../../components/ui/switch";
 import { AddSegmentsDialog } from "../../PathAnalysisPage/components/AddSegmentsDialog";
 import { MapCursorController } from "../../../components/common/MapCursorController";
 // import { copySegments } from "../../../api"; // Removed unused import
-import type { Feature, FeatureCollection, LineString, Position } from "geojson";
+import type { Feature, FeatureCollection, LineString } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
 import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
@@ -24,6 +24,7 @@ import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import proj4 from "proj4";
+import { to4326 } from "../../../utils/projection";
 import type { CurvatureVisualizationResponse } from '../../../api/curvatureVisualization';
 import { GRADIENT_STATUS_NO_LIDAR_RESULT, getGradientDisplayState } from "../../../utils/gradientDisplay";
 
@@ -65,26 +66,6 @@ const VERIFIED_HALO_COLOR = MAP_INTERACTION_COLORS.verifiedHalo;
 type ScoreRow = {
   "Overall Risk Level": number;
   [key: string]: any;
-};
-
-// --- EPSG:3414 (SVY21 / Singapore TM) projection definition -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-const to4326 = (p: Position): [number, number] => {
-  const x = p[0];
-  const y = p[1];
-  
-  // If arguably already WGS84 (Singapore lon is ~103, lat is ~1.3)
-  // Newly created projects natively output EPSG:4326, so we must not project SVY21 -> WGS84.
-  if (x >= 90 && x <= 120 && y >= -10 && y <= 20) {
-    return [y, x]; // return [lat, lon]
-  }
-
-  // Returns [lat, lng]
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
 };
 
 // Helper component: auto-fit map bounds to a set of points (first load only)
