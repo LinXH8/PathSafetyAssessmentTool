@@ -48,6 +48,14 @@ export default function Home() {
   // store so the v2 sidebar Quick Select mirrors — and persists — the same set.
   const [selected, setSelected] = useProjectSelection();
 
+  // Every time the Home page mounts (including navigating back to it), start
+  // with a clean slate: clear the table row selection AND the sidebar Quick
+  // Select (they share this store, so one reset updates both).
+  useEffect(() => {
+    setSelected(new Set());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Delete dialog state
   const [openDelete, setOpenDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);

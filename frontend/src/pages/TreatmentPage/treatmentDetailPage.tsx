@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
-import type { Feature } from "geojson";
+import type { Feature, LineString } from "geojson";
+
+import { fetchWidthVisualization } from "../../api/widthVisualization";
+import type { WidthVisualizationResponse } from "../../api/widthVisualization";
+import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
+import type { CurvatureVisualizationResponse } from "../../api/curvatureVisualization";
 
 import {
   fetchProjectDetail,
@@ -473,6 +478,52 @@ export default function TreatmentDetailPage() {
   const currentFeature = useMemo<Feature | null>(() => {
     return geoFeatures[currentIndex] ?? null;
   }, [geoFeatures, currentIndex]);
+
+  // Curvature/width metrics for the current segment (populates the map controls'
+  // Curv./Width readouts — mirrors the Coding page's fetch so Treatment isn't blank).
+  const [widthData, setWidthData] = useState<WidthVisualizationResponse | null>(null);
+  const [curvData, setCurvData] = useState<CurvatureVisualizationResponse | null>(null);
+
+  useEffect(() => {
+    const ctx = resolveIndex(currentIndex);
+    if (!ctx || !currentFeature || currentFeature.geometry?.type !== "LineString") {
+      setWidthData(null);
+      setCurvData(null);
+      return;
+    }
+    const coords = (currentFeature.geometry as LineString).coordinates as [number, number][];
+
+    const widthController = new AbortController();
+    const curvController = new AbortController();
+
+    setWidthData(null);
+    setCurvData(null);
+
+    fetchWidthVisualization(ctx.name, coords, ctx.localIndex, widthController.signal)
+      .then((data) => { if (!widthController.signal.aborted) setWidthData(data); })
+      .catch((e) => { if (widthController.signal.aborted || (e instanceof DOMException && e.name === "AbortError")) return; });
+
+    fetchCurvatureVisualization(ctx.name, coords, ctx.localIndex, curvController.signal)
+      .then((data) => { if (!curvController.signal.aborted) setCurvData(data); })
+      .catch((e) => { if (curvController.signal.aborted || (e instanceof DOMException && e.name === "AbortError")) return; });
+
+    return () => {
+      widthController.abort();
+      curvController.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, currentFeature]);
+
+  // Grade/Gradient come straight off the current segment's attributes (physical
+  // properties — unaffected by treatment).
+  const gradeMetrics = useMemo(() => {
+    const row = attrs[currentIndex] as Record<string, unknown> | undefined;
+    return {
+      grade: (row?.["Grade"] as number | null) ?? null,
+      gradientPct: (row?.["Gradient %"] as number | null) ?? null,
+      gradientStatus: (row?.["Gradient Status"] as string | null) ?? null,
+    };
+  }, [attrs, currentIndex]);
 
   const imgRef = useMemo<string | undefined>(() => {
     const fromAttr =
@@ -1239,6 +1290,11 @@ export default function TreatmentDetailPage() {
     scope,
     panKey,
     currentCtx,
+    curvData,
+    widthM: widthData?.width ?? null,
+    grade: gradeMetrics.grade,
+    gradientPct: gradeMetrics.gradientPct,
+    gradientStatus: gradeMetrics.gradientStatus,
     onSelectAllProjects: () => {
       setActiveProject(ALL_PROJECTS);
       setCurrentPage((filterMode ? (filteredGlobalIndices[0] ?? 0) : 0) + 1);

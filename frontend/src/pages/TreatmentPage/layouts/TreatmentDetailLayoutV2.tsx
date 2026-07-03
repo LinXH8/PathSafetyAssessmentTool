@@ -188,7 +188,6 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     modifiedAttrs, changedAttributes, changedFieldSources, attrMappings,
     activeAttributeGroupTab, previewScores, previewLoading,
     beforeBandCounts, afterBandCounts, openConfirmAlert,
-    effectivenessLabel, improvedSegmentCount,
     autoSaveStatus, isStagingPreview, mapFilterContext,
   } = vm;
 
@@ -358,13 +357,8 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
           boxSizing: "border-box",
         }}
       >
-        {/* top row: effectiveness (left) · segment selector + page actions (right) */}
-        <Flex align="center" justify="space-between" gap="1rem" wrap="wrap">
-          <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "1rem", fontWeight: 700 }}>Effectiveness</span>
-            <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.teal }}>{effectivenessLabel}</span>
-            <span style={CAPTION}>{improvedSegmentCount} Improved</span>
-          </div>
+        {/* top row: segment selector + page actions (right) */}
+        <Flex align="center" justify="flex-end" gap="1rem" wrap="wrap">
           <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Stepper
@@ -392,6 +386,11 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               onJump={(i) => vm.gotoPage(i + 1)}
               containerHeight={MAP_H}
               subtitle="Before Treatment"
+              curvData={vm.curvData}
+              widthM={vm.widthM}
+              grade={vm.grade}
+              gradientPct={vm.gradientPct}
+              gradientStatus={vm.gradientStatus}
               geoFeatures={geoFeatures as Feature<LineString, any>[]}
               startIndex={0}
               scores={scores as any}
@@ -410,6 +409,11 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               onJump={(i) => vm.gotoPage(i + 1)}
               containerHeight={MAP_H}
               subtitle="After Treatment"
+              curvData={vm.curvData}
+              widthM={vm.widthM}
+              grade={vm.grade}
+              gradientPct={vm.gradientPct}
+              gradientStatus={vm.gradientStatus}
               geoFeatures={geoFeatures as Feature<LineString, any>[]}
               startIndex={0}
               scores={afterTreatmentScores as any}
