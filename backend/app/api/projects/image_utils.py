@@ -4,6 +4,8 @@ Resolves stored/`in/` image references, builds project geo-data from image EXIF
 points, migrates legacy image layouts, and maps source folders to image
 namespaces. Shared by crud, images, source-folder and autocode routes."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -257,19 +259,19 @@ def _migrate_legacy_images(pm, project_name: str, proj) -> bool:
 
         source_folders = getattr(proj.metadata, "source_folders", None) or []
         if not source_folders:
-            print(f"[migrate] '{project_name}': no source_folders in metadata — skipping")
+            logger.debug(f"[migrate] '{project_name}': no source_folders in metadata — skipping")
             return False
 
         missing = [sf for sf in source_folders if not (pm.in_path / sf).is_dir()]
         if missing:
-            print(
+            logger.debug(
                 f"[migrate] '{project_name}': source folder(s) not present in in/ — skipping: {missing}",
             )
             return False
 
         geo_df = proj.geo_data.df
         if geo_df.empty or "Image Reference" not in geo_df.columns:
-            print(f"[migrate] '{project_name}': geo_data missing Image Reference column — skipping")
+            logger.debug(f"[migrate] '{project_name}': geo_data missing Image Reference column — skipping")
             return False
 
         prefix = project_name + "_"
@@ -314,16 +316,16 @@ def _migrate_legacy_images(pm, project_name: str, proj) -> bool:
             if isinstance(r, str) and r.strip()
         ]
         if not img_refs:
-            print(f"[migrate] '{project_name}': no image refs in geo_data — skipping")
+            logger.debug(f"[migrate] '{project_name}': no image refs in geo_data — skipping")
             return False
 
-        print(f"[migrate] '{project_name}': checking {len(img_refs)} image refs against in/...")
+        logger.info(f"[migrate] '{project_name}': checking {len(img_refs)} image refs against in/...")
 
         new_ref_map: dict[str, str] = {}
         for img_ref in img_refs:
             result = _strip_and_resolve(img_ref)
             if result is None:
-                print(f"[migrate] '{project_name}': '{img_ref}' not found in in/ — skipping migration")
+                logger.debug(f"[migrate] '{project_name}': '{img_ref}' not found in in/ — skipping migration")
                 return False
             new_ref_map[img_ref] = result[0]
 
@@ -344,18 +346,18 @@ def _migrate_legacy_images(pm, project_name: str, proj) -> bool:
             if tmp_gpkg.exists():
                 tmp_gpkg.unlink(missing_ok=True)
             raise write_exc
-        print(f"[migrate] '{project_name}': geo_data.gpkg updated ({len(new_ref_map)} refs)")
+        logger.info(f"[migrate] '{project_name}': geo_data.gpkg updated ({len(new_ref_map)} refs)")
 
         # Delete the now-redundant images/ folder
         deleted = _rmtree_robust(images_dir)
         if deleted:
-            print(f"[migrate] '{project_name}': images/ deleted. Migration complete.")
+            logger.info(f"[migrate] '{project_name}': images/ deleted. Migration complete.")
         else:
-            print(f"[migrate] '{project_name}': images/ could not be fully deleted (file lock?). Will retry next open.")
+            logger.warning(f"[migrate] '{project_name}': images/ could not be fully deleted (file lock?). Will retry next open.")
         return True
 
     except Exception as exc:
-        print(f"[migrate] '{project_name}': migration error: {exc}")
+        logger.error(f"[migrate] '{project_name}': migration error: {exc}")
         return False
 
 #-----------------------------------------------------------------------------------

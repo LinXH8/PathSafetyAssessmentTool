@@ -1,5 +1,7 @@
 """Shapefile export route and its field-shortening / vertex helpers."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -198,7 +200,7 @@ def export_shapefile():
             parts.append(filtered)
 
         except Exception as exc:
-            print(f"[export-shapefile] skipping '{project_name}': {exc}")
+            logger.warning(f"[export-shapefile] skipping '{project_name}': {exc}")
             continue
 
     if not parts:

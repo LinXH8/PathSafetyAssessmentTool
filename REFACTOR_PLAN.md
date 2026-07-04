@@ -201,7 +201,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
 - [x] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
 - [x] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
-- [ ] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
+- [x] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
 - [ ] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
 - [ ] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
 - [ ] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
@@ -397,7 +397,7 @@ routes identical (register all blueprints).
 **Verify:** Every route still registered (`flask routes`-equiv / boot log); smoke each group.
 **Commit:** `refactor(backend): split projects routes.py into blueprint modules [S3.2]`
 
-### S3.3 — `logging` over `print()`  · Done: ____
+### S3.3 — `logging` over `print()`  · Done: 2026-07-04
 **Context to load (run this first, before opening any file):** `semantic_search_nodes_tool` for `print(` call
 sites across the 14 files named in S3.2's NOTES FOR NEXT — one call gets file+context instead of a flat grep pass.
 **Do:** Configure a logger; replace ~68 `print()` with leveled logs. Preserve any user-facing stdout the app relies on.
@@ -1087,3 +1087,47 @@ gives for free — record what you found so the next session doesn't re-query fr
                    shared helpers now live in `_helpers.py` (as the S3.1 note predicted). When adding a new
                    projects endpoint, put it in the matching domain module and `from . import bp` — do NOT
                    reintroduce routes into `routes.py` (it is a barrel only).
+
+- 2026-07-04 · S3.3 · replaced all 68 `print()` calls in the projects blueprint package with leveled `logging`, and added a central logging config to the app factory.
+  FILES CREATED:   none
+  FILES DELETED:   none
+  FILES MOVED:     none
+  FILES MODIFIED:  `backend/app/__init__.py` (+`_configure_logging()`, called first in `create_app`);
+                   `backend/app/api/projects/_helpers.py` (20 prints), `gradient.py` (14), `gis_queries.py` (12),
+                   `image_utils.py` (10), `autocode.py` (9), `crud.py` (2), `export.py` (1) — each gained a
+                   top-level `import logging` + `logger = logging.getLogger(__name__)` after the `__future__`
+                   import, and every `print(..., flush=True)` became `logger.<level>(...)` (flush dropped).
+  SYMBOLS MOVED/EXTRACTED: none moved; added `_configure_logging()` in `app/__init__.py`.
+  IMPORT SITES UPDATED: 0 external. Each of the 7 package modules added its own `import logging` + module logger.
+  GRAPH USAGE:     `build_or_update_graph_tool` (incremental) after the post-merge state and again after edits;
+                   `semantic_search_nodes_tool("print debug logging …")` → 0 hits (keyword mode, no embeddings —
+                   `print(` isn't a node name), so authoritative site discovery fell back to `grep` (68 real
+                   calls; the raw `grep -c` count of 70 included 2 `Blueprint(` substring false positives in
+                   `__init__.py`/`width_visualization.py`, which are NOT print calls). `detect_changes_tool`
+                   (base=HEAD) → risk 0.35, only the 2 new logging fns flagged untested (no suite — expected).
+  BUILD GATE:      Backend-only (no frontend touched). `py_compile` all 7 modules OK; `create_app()` boots and
+                   registers 62 `projects.*` routes (identical to the S3.2 baseline). Log-emission smoke:
+                   INFO/WARNING emit at default level, DEBUG suppressed; `LOG_LEVEL=DEBUG` surfaces DEBUG.
+  REGRESSION CHECK: n/a for the FE checklist (backend-only).
+  ARCHITECTURAL DECISIONS:
+    • Level mapping rule: strings labelled ERROR / init failures → `error`; labelled WARNING or "failed"/
+      "could not" conditions → `warning`; per-request and per-segment/per-image diagnostics (the `[Flask] >>>`
+      request tracer, autocode CV-inference traces, gradient per-image results, GIS per-layer counts, migration
+      skips) → `debug` so they're silent at the default INFO level but recoverable via `LOG_LEVEL=DEBUG`;
+      everything else (startup/warmup status, bulk progress) → `info`.
+    • Kept the semantic `[GIS]`/`[Context]`/`[Autocode]`/`[Gradient]`/`[migrate]` prefixes inside the message
+      text rather than encoding them as logger names — they don't map 1:1 to modules (`_helpers.py` alone emits
+      `[GIS]`, `[Context]`, `[Autocode]`, `[Flask]`), so preserving them keeps output greppable and behaviour-close.
+    • Central config via `logging.basicConfig` in `create_app` (level from `LOG_LEVEL` env, default INFO). Needed
+      because there was NO logging config before — Python's last-resort handler only shows WARNING+, which would
+      have silently dropped the many former INFO-level status prints.
+    • Scope bounded to the projects package (the 7 files S3.2 created, matching the "~68" estimate). Service-layer
+      `[PM]`/`[Context]` prints referenced in S3.2's note were left for a future pass — they live outside the
+      S3.3-named file set and touching them would overlap S3.6/S3.8's targets.
+  DEFERRED:        Service-layer `print()`s (`project_manager.py` `[PM]`, prediction/GIS service modules) still
+                   use `print()` — out of S3.3's file scope; fold into S3.6/S3.8 or a follow-up logging pass.
+  NOTES FOR NEXT:  Logging is now configured centrally — new backend code should use `logging.getLogger(__name__)`,
+                   NOT `print()`. Default level is INFO; set `LOG_LEVEL=DEBUG` to see the per-request/per-segment
+                   traces. The module-logger pattern (`import logging` + `logger = logging.getLogger(__name__)`
+                   right after `from __future__ import annotations`) is established across the projects package —
+                   match it when adding modules.

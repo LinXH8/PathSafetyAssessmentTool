@@ -1,5 +1,7 @@
 """Autocode routes: CV image autocode, GIS autocode and the bulk autocode driver."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -83,7 +85,7 @@ def _cv_autocode_core(pm, project_name: str, image_ref: str, skip_obstacles: boo
 
 @bp.post("/<project_name>/autocode/image")
 def autocode_image(project_name: str):
-    print(f"[Autocode] >>> autocode_image called for project='{project_name}'")
+    logger.debug(f"[Autocode] >>> autocode_image called for project='{project_name}'")
     try:
         _ensure_models_ready()
         ctx = get_ctx()
@@ -93,9 +95,9 @@ def autocode_image(project_name: str):
         if not image_ref:
             return fail("imageRef is required", 400)
         skip_obstacles = bool(payload.get("skipObstacles", False))
-        print(f"[Autocode] CV inference: {image_ref} (skip_obstacles={skip_obstacles})")
+        logger.debug(f"[Autocode] CV inference: {image_ref} (skip_obstacles={skip_obstacles})")
         updates = _cv_autocode_core(pm, project_name, image_ref, skip_obstacles)
-        print(f"[Autocode] CV done: {image_ref} → {len(updates)} field(s) set")
+        logger.debug(f"[Autocode] CV done: {image_ref} → {len(updates)} field(s) set")
 
         gradient_pct = _inject_grade(image_ref, updates, project_name=project_name)
         resp: dict = {"updates": updates, "changed_fields": list(updates.keys())}
@@ -498,7 +500,7 @@ def autocode_all(project_name: str, pm, proj, ver):
         # inference when the user selects e.g. only "Area type" or "Curvature".
         skip_cv = bool(fields_filter and all(f in _GIS_ONLY_FIELDS for f in fields_filter))
         if skip_cv:
-            print(f"[Autocode] Skipping CV inference — all requested fields are GIS-only: {fields_filter}")
+            logger.info(f"[Autocode] Skipping CV inference — all requested fields are GIS-only: {fields_filter}")
 
         # Fields that require the obstacle detector model (second YOLO pass).
         # Safe to skip when none of these are in the requested fields.
@@ -515,7 +517,7 @@ def autocode_all(project_name: str, pm, proj, ver):
             and not any(f in _CV_OBSTACLE_FIELDS for f in fields_filter)
         )
         if skip_obstacles:
-            print(f"[Autocode] Skipping obstacle detection — no obstacle fields requested: {fields_filter}")
+            logger.info(f"[Autocode] Skipping obstacle detection — no obstacle fields requested: {fields_filter}")
 
         def _bulk_gen():
             """
@@ -536,7 +538,7 @@ def autocode_all(project_name: str, pm, proj, ver):
             sources_by_row: dict = {}
 
             total_count = len(indices)
-            print(f"[Autocode] Bulk starting: {total_count} rows for project '{project_name}'")
+            logger.info(f"[Autocode] Bulk starting: {total_count} rows for project '{project_name}'")
             _helpers._INFERENCE_DEPTH += 1
             try:
                 for idx in indices:
@@ -598,7 +600,7 @@ def autocode_all(project_name: str, pm, proj, ver):
                         yield {"type": "progress", "processed": ok_count, "total": total_count, "errors": len(errors)}
 
                         if ok_count % 10 == 0:
-                            print(f"[Autocode] Bulk progress: {ok_count}/{total_count} done ({len(errors)} errors so far)")
+                            logger.info(f"[Autocode] Bulk progress: {ok_count}/{total_count} done ({len(errors)} errors so far)")
 
                     except Exception as e:
                         traceback.print_exc()
@@ -658,11 +660,11 @@ def autocode_all(project_name: str, pm, proj, ver):
                                 sources_by_row[idx_] = {}
                             sources_by_row[idx_][area_col] = "GIS (Smoothed)"
             except Exception as e:
-                print(f"[Autocode] Area type smoothing failed: {e}")
+                logger.warning(f"[Autocode] Area type smoothing failed: {e}")
 
             # Save to disk (runs only when the loop completes; skipped on generator abandon/disconnect)
             if save and ok_count > 0:
-                print(f"[Autocode] Bulk complete: {ok_count}/{total_count} OK, {len(errors)} failed. Saving...")
+                logger.info(f"[Autocode] Bulk complete: {ok_count}/{total_count} OK, {len(errors)} failed. Saving...")
                 # df.at[] writes bypass the BaseTable.df setter so df_dirty is never set.
                 # Force it True before saving so ver.save_all() actually serializes attributes.
                 ver.attributes.df_dirty = True

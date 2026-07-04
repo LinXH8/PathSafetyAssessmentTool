@@ -4,6 +4,8 @@ Loads gradient centreline profiles, maps project images to (grade, gradient%)
 via chainage, caches results per project, and injects Grade/Gradient% into
 attribute updates (`_inject_grade`). Used by autocode and the attributes read."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -154,7 +156,7 @@ def _load_gradient_profile_catalog() -> dict[str, dict]:
                 if d.is_dir()
             )
             if stale:
-                print("[Gradient] new profiles detected — rebuilding catalog")
+                logger.info("[Gradient] new profiles detected — rebuilding catalog")
                 _GRADIENT_PROFILE_CATALOG = None
                 _PROJECT_GRADIENT_CACHE.clear()
                 _PROJECT_GRADIENT_CACHE_STATE.clear()
@@ -177,7 +179,7 @@ def _load_gradient_profile_catalog() -> dict[str, dict]:
             if not profile_path.exists():
                 continue
             if int(meta.get("valid_gradient_count") or 0) <= 0:
-                print(f"[Gradient] skipping profile '{meta_path.parent.name}' with no valid gradients")
+                logger.debug(f"[Gradient] skipping profile '{meta_path.parent.name}' with no valid gradients")
                 continue
             bounds = meta.get("path_bounds_svy21") or {}
             meta["_bounds"] = None
@@ -201,7 +203,7 @@ def _load_gradient_profile_catalog() -> dict[str, dict]:
             meta["_profile_path"] = str(profile_path)
             result[str(meta.get("path_key") or meta_path.parent.name)] = meta
         except Exception as exc:
-            print(f"[Gradient] WARNING: failed to read profile metadata {meta_path}: {exc}")
+            logger.warning(f"[Gradient] WARNING: failed to read profile metadata {meta_path}: {exc}")
 
     _GRADIENT_PROFILE_CATALOG = result
     _GRADIENT_CATALOG_LOAD_TIME = time.time()
@@ -312,12 +314,12 @@ def _get_project_gradient_mapping(project_name: str) -> dict[str, tuple[int, flo
             proj: Project = ctx["pm"].project(project_name)
             gpkg_path = proj.project_path / "geo_data.gpkg"
             if not gpkg_path.exists():
-                print(f"[Gradient] no geo_data.gpkg for project '{project_name}'")
+                logger.debug(f"[Gradient] no geo_data.gpkg for project '{project_name}'")
                 return mapping
 
             gdf = gpd.read_file(gpkg_path)
             if gdf.empty or "Image Reference" not in gdf.columns:
-                print(f"[Gradient] project '{project_name}' has no usable Image Reference column in geo_data.gpkg")
+                logger.debug(f"[Gradient] project '{project_name}' has no usable Image Reference column in geo_data.gpkg")
                 return mapping
 
             if gdf.crs is None:
@@ -327,19 +329,19 @@ def _get_project_gradient_mapping(project_name: str) -> dict[str, tuple[int, flo
 
             centerline = _stitch_gradient_centerline(gdf)
             if centerline is None:
-                print(f"[Gradient] project '{project_name}' has no usable centerline for gradient lookup")
+                logger.debug(f"[Gradient] project '{project_name}' has no usable centerline for gradient lookup")
                 return mapping
 
             meta = _resolve_gradient_profile_for_project(project_name, centerline)
             if not meta:
-                print(f"[Gradient] no matching profile found for project '{project_name}'")
+                logger.debug(f"[Gradient] no matching profile found for project '{project_name}'")
                 return mapping
 
             _PROJECT_GRADIENT_CACHE_STATE[project_name] = _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE
 
             profile_df = pd.read_csv(meta["_profile_path"])
             if profile_df.empty or "chainage_m" not in profile_df.columns:
-                print(f"[Gradient] profile CSV missing chainage_m for '{meta.get('path_key')}'")
+                logger.warning(f"[Gradient] profile CSV missing chainage_m for '{meta.get('path_key')}'")
                 return mapping
 
             profile_df = profile_df.sort_values("chainage_m").reset_index(drop=True)
@@ -384,11 +386,11 @@ def _get_project_gradient_mapping(project_name: str) -> dict[str, tuple[int, flo
                 if grade_coded in (1, 2):
                     mapping[image_ref] = (grade_coded, gradient_pct)
 
-            print(
+            logger.info(
                 f"[Gradient] project '{project_name}' -> profile '{meta.get('path_key')}' mapped {len(mapping)} image refs",
             )
         except Exception as exc:
-            print(f"[Gradient] WARNING: failed to build project gradient cache for '{project_name}': {exc}")
+            logger.warning(f"[Gradient] WARNING: failed to build project gradient cache for '{project_name}': {exc}")
 
         return mapping
 
@@ -447,15 +449,15 @@ def _inject_grade(image_ref: str, updates: dict, sources: "dict | None" = None,
                 sources["Grade"] = "Gradient Profile"
                 sources["Gradient %"] = "Gradient Profile"
                 sources[GRADIENT_STATUS_FIELD] = "Gradient Profile"
-            print(
+            logger.debug(
                 f"[Gradient] no profile entry for '{image_ref}' in project '{project_name}'"
                 f" -> {gradient_status}",
             )
             return None
         grade_coded, grade_pct = hit
-        print(f"[Gradient] {image_ref}: {grade_pct:+.2f}% -> Grade {grade_coded}")
+        logger.debug(f"[Gradient] {image_ref}: {grade_pct:+.2f}% -> Grade {grade_coded}")
         if grade_coded not in (1, 2):
-            print(f"[Gradient] WARNING: unexpected Grade value {grade_coded!r} for {image_ref} — skipping")
+            logger.warning(f"[Gradient] WARNING: unexpected Grade value {grade_coded!r} for {image_ref} — skipping")
             return None
         updates["Grade"] = grade_coded
         updates["Gradient %"] = round(grade_pct, 2)
@@ -466,5 +468,5 @@ def _inject_grade(image_ref: str, updates: dict, sources: "dict | None" = None,
             sources[GRADIENT_STATUS_FIELD] = "Gradient Profile"
         return grade_pct
     except Exception as _e:
-        print(f"[Gradient] WARNING: error injecting Grade for {image_ref}: {_e}")
+        logger.warning(f"[Gradient] WARNING: error injecting Grade for {image_ref}: {_e}")
         return None

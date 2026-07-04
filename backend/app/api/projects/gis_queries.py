@@ -1,6 +1,8 @@
 """GIS query + visualisation routes: roads/planning-area lookups, GIS overlay
 layers, viewport/near-segment layers, curvature and width visualisations."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -155,7 +157,7 @@ def roads_in_polygon():
                     except (KeyError, ValueError):
                         continue
         except Exception as e:
-            print(f"[roads-in-polygon] CSV lookup failed: {e}")
+            logger.warning(f"[roads-in-polygon] CSV lookup failed: {e}")
 
     # Attempt 2: road sections shapefile — reuse the cached, already-reprojected
     # GeoDataFrame that roads-in-bounds uses so CRS handling is identical.
@@ -167,7 +169,7 @@ def roads_in_polygon():
         )
         if road_name_col is not None:
             intersecting_roads = road_gdf[road_gdf.geometry.intersects(poly)]
-            print(
+            logger.debug(
                 f"[roads-in-polygon] shapefile hit {len(intersecting_roads)} features"
                 f" | poly bounds {poly.bounds}",
             )
@@ -184,7 +186,7 @@ def roads_in_polygon():
                 else:
                     all_road_names[name]["points"] += count
     except Exception as e:
-        print(f"[roads-in-polygon] shapefile lookup failed: {type(e).__name__}: {e}")
+        logger.warning(f"[roads-in-polygon] shapefile lookup failed: {type(e).__name__}: {e}")
 
     # If we have any road data (CSV or shapefile), return it.
     # Roads whose images have been downloaded are emitted as one row per actual
@@ -211,7 +213,7 @@ def roads_in_polygon():
                     "points": points,
                     "exists": False,
                 })
-        print(f"[DEBUG] Returning {len(roads)} merged roads (fallback=False)")
+        logger.debug(f"[DEBUG] Returning {len(roads)} merged roads (fallback=False)")
         return ok({"roads": roads, "fallback": False})
 
     # ── Fallback 2: planning areas shapefile (town names only as last resort) ──
@@ -674,20 +676,20 @@ def get_gis_layers(project_name: str):
                 try:
                     gdf = _gis.store.get(layer_name)
                     if gdf is None or gdf.empty:
-                        print(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': empty or None — skipped")
+                        logger.debug(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': empty or None — skipped")
                         continue
 
                     # Spatial query using the CACHED sindex (fast, read-only)
                     candidate_indices = list(gdf.sindex.intersection(buffer_geom.bounds))
 
                     if not candidate_indices:
-                        print(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': 0 candidates in spatial index (total features: {len(gdf)})")
+                        logger.debug(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': 0 candidates in spatial index (total features: {len(gdf)})")
                         continue
 
                     candidates = gdf.iloc[candidate_indices]
                     intersecting = candidates[candidates.geometry.notna() & candidates.intersects(buffer_geom)]
 
-                    print(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': {len(intersecting)} intersecting features found (candidates: {len(candidates)})")
+                    logger.debug(f"[GIS] Layer '{layer_key}' sub-layer '{layer_name}': {len(intersecting)} intersecting features found (candidates: {len(candidates)})")
 
                     if intersecting.empty:
                         continue
@@ -770,13 +772,13 @@ def get_gis_layers(project_name: str):
                 except Exception as e:
                     import traceback
                     traceback.print_exc()
-                    print(f"Error processing sub-layer '{layer_name}': {e}")
+                    logger.warning(f"Error processing sub-layer '{layer_name}': {e}")
 
             result_layers[layer_key] = all_features
 
         # Build response
         layer_summary = {k: len(v) for k, v in result_layers.items()}
-        print(f"[GIS] Response: {layer_summary}")
+        logger.debug(f"[GIS] Response: {layer_summary}")
 
         response = {
             "ok": True,
@@ -894,7 +896,7 @@ def _extract_gis_overlay_layers(_gis, buffer_geom, requested_layers, simplify_to
 
             except Exception as e:
                 traceback.print_exc()
-                print(f"[GIS Overlay] Error processing layer '{layer_name}': {e}")
+                logger.warning(f"[GIS Overlay] Error processing layer '{layer_name}': {e}")
 
         result_layers[layer_key] = all_features
 
@@ -932,7 +934,7 @@ def get_gis_viewport_layers():
         result_layers = _extract_gis_overlay_layers(_gis, buffer_geom, requested_layers, simplify_tol, max_features)
 
         layer_summary = {k: len(v) for k, v in result_layers.items()}
-        print(f"[GIS Viewport] Response: {layer_summary}")
+        logger.debug(f"[GIS Viewport] Response: {layer_summary}")
         return ok({"ok": True, "layers": result_layers})
 
     except Exception as e:
@@ -980,7 +982,7 @@ def get_gis_near_segments():
         result_layers = _extract_gis_overlay_layers(_gis, buffer_geom, requested_layers, simplify_tol, max_features)
 
         layer_summary = {k: len(v) for k, v in result_layers.items()}
-        print(f"[GIS NearSegments] {len(coords)} pts r={radius}m → {layer_summary}")
+        logger.debug(f"[GIS NearSegments] {len(coords)} pts r={radius}m → {layer_summary}")
         return ok({"ok": True, "layers": result_layers})
 
     except Exception as e:

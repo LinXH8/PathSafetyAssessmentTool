@@ -3,6 +3,8 @@
 List/get/create/delete/patch projects, read/write attributes, custom attribute
 options, attribute mappings, score calculation and results retrieval."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -313,7 +315,7 @@ def get_custom_attribute_options():
             with open(path, "r", encoding="utf-8") as f:
                 return jsonify(json.load(f))
     except Exception as e:
-        print(f"Error loading custom attribute options: {e}")
+        logger.error(f"Error loading custom attribute options: {e}")
     return jsonify({})
 
 @bp.put("/custom-attribute-options")
@@ -346,7 +348,7 @@ def update_custom_attribute_options():
             
         return ok({"success": True})
     except Exception as e:
-        print(f"Error updating custom attribute options: {e}")
+        logger.error(f"Error updating custom attribute options: {e}")
         return fail("Failed to update options", 500)
 
 

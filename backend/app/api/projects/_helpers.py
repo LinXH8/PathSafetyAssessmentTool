@@ -5,6 +5,8 @@ context (`get_ctx`), JSON envelopes (`ok`/`fail`), the `with_project` decorator,
 the GIS singleton (`_get_gis`), CV-model readiness, the incoming-request logger,
 and the shared `_INFERENCE_DEPTH` counter. Every route module imports from here."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -73,13 +75,13 @@ def _get_gis() -> "gis.GIS":
         if _GIS_INSTANCE is None:
             # backend/app/api/projects/routes.py -> backend is parents[3]
             shp_dir = (Path(__file__).resolve().parents[3] / "shapefiles").resolve()
-            print(f"[GIS] Initializing with shp_dir: {shp_dir}")
+            logger.info(f"[GIS] Initializing with shp_dir: {shp_dir}")
             if not shp_dir.exists():
-                print(f"[GIS] ERROR: Shapefile directory NOT FOUND at {shp_dir}")
+                logger.error(f"[GIS] ERROR: Shapefile directory NOT FOUND at {shp_dir}")
                 # Try fallback parent logic if needed, but resolve() should be correct
                 raise FileNotFoundError(f"Shapefile directory not found: {shp_dir}")
             _GIS_INSTANCE = gis.GIS(gis.LayerStore.default(base_dir=str(shp_dir)))
-            print(f"[GIS] Instance created successfully.")
+            logger.info(f"[GIS] Instance created successfully.")
     return _GIS_INSTANCE
 
 
@@ -162,12 +164,12 @@ def get_ctx():
         if _CTX["init_error"]:
             raise RuntimeError(f"Project context failed to initialise: {_CTX['init_error']}")
 
-        print("[Context] Initialising project context...")
+        logger.info("[Context] Initialising project context...")
         try:
             pm = project_manager()
         except Exception as exc:
             msg = f"project_manager() failed: {exc}\n{traceback.format_exc()}"
-            print(f"[Context] ERROR: {msg}")
+            logger.error(f"[Context] ERROR: {msg}")
             _CTX["init_error"] = msg
             raise RuntimeError(f"Project context failed to initialise: {msg}") from exc
 
@@ -180,7 +182,7 @@ def get_ctx():
             CRI.cycleRAP_interface.initialise(pm.src_path / "CycleRAP")
         except Exception as exc:
             msg = f"cycleRAP_interface.initialise() failed: {exc}\n{traceback.format_exc()}"
-            print(f"[Context] ERROR: {msg}")
+            logger.error(f"[Context] ERROR: {msg}")
             _CTX["init_error"] = msg
             raise RuntimeError(f"Project context failed to initialise: {msg}") from exc
 
@@ -195,10 +197,10 @@ def get_ctx():
                     pm.des_path = profile_projects_root
                     pm._discover_projects()
         except Exception as _exc:
-            print(f"[Context] Could not resolve profile projects root: {_exc}")
+            logger.warning(f"[Context] Could not resolve profile projects root: {_exc}")
 
         _CTX.update({"pm": pm, "ready": True, "init_error": None})
-        print("[Context] Project context ready.")
+        logger.info("[Context] Project context ready.")
         return _CTX
 
 
@@ -300,14 +302,14 @@ def _ensure_models_ready():
                     raise RuntimeError(f"Cannot find model_dir (missing path_segmentation.pt). Tried:\n{tried}")
 
                 # YOLO models load
-                print(f"[Autocode] Loading CV models from {model_dir} — this may take several minutes on CPU...")
+                logger.info(f"[Autocode] Loading CV models from {model_dir} — this may take several minutes on CPU...")
                 cv_pred.CycleRAP_Coding_Helper.initialise(model_dir)
                 _MODELS_READY["cv"] = True
-                print("[Autocode] CV models loaded successfully.")
+                logger.info("[Autocode] CV models loaded successfully.")
 
             except Exception as e:
                 _INIT_ERR["cv"] = f"CV init failed: {e}"
-                print(f"[Autocode] ERROR: CV model init failed: {e}")
+                logger.error(f"[Autocode] ERROR: CV model init failed: {e}")
                 # Next calls will short-circuit quickly
                 raise ServiceUnavailable(_INIT_ERR["cv"])
 
@@ -318,16 +320,16 @@ def _warmup_models_in_background():
     from concurrent.futures import ThreadPoolExecutor, as_completed
     # Small delay to let Flask finish starting up before we hammer the CPU
     time.sleep(2)
-    print("[Autocode] Background warmup: starting model pre-load...")
+    logger.info("[Autocode] Background warmup: starting model pre-load...")
     try:
         _ensure_models_ready()
-        print("[Autocode] Background warmup: CV models ready.")
+        logger.info("[Autocode] Background warmup: CV models ready.")
     except Exception as e:
-        print(f"[Autocode] Background warmup (CV) failed: {e}")
+        logger.error(f"[Autocode] Background warmup (CV) failed: {e}")
 
     # Pre-load GIS shapefiles in parallel threads (I/O + C extensions release GIL)
     try:
-        print("[GIS] Background warmup: loading shapefiles in parallel...")
+        logger.info("[GIS] Background warmup: loading shapefiles in parallel...")
         t_total = time.perf_counter()
         _inst = _get_gis()
         layer_names = list(_inst.store.paths.keys())
@@ -343,14 +345,14 @@ def _warmup_models_in_background():
                 name = futs[fut]
                 try:
                     elapsed = fut.result()
-                    print(f"[GIS] Loaded: {name} ({elapsed:.1f}s)")
+                    logger.info(f"[GIS] Loaded: {name} ({elapsed:.1f}s)")
                 except Exception as exc:
-                    print(f"[GIS] Warning: {name}: {exc}")
+                    logger.warning(f"[GIS] Warning: {name}: {exc}")
 
         elapsed_total = time.perf_counter() - t_total
-        print(f"[GIS] Background warmup complete ({elapsed_total:.1f}s total).")
+        logger.info(f"[GIS] Background warmup complete ({elapsed_total:.1f}s total).")
     except Exception as e:
-        print(f"[GIS] Background warmup failed: {e}")
+        logger.error(f"[GIS] Background warmup failed: {e}")
 
 
 # Kick off background warmup immediately when this module is imported (server start)
@@ -362,7 +364,7 @@ _warmup_thread.start()
 
 @bp.before_request
 def _log_incoming():
-    print(f"[Flask] >>> {request.method} {request.path}")
+    logger.debug(f"[Flask] >>> {request.method} {request.path}")
     try:
         get_ctx()
     except Exception as exc:
