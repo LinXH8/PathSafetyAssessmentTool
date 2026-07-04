@@ -10,25 +10,26 @@
 ## HOW TO USE THIS DOC (read first, every chat)
 
 1. **Pick the next session:** In the Dashboard below, find the first row whose box is `[ ]`. Respect `Depends on`.
-2. **Open that session block** (## S0.1, ## S1.2, …). Read its *Context to load* and open only those files.
-3. **Query the graph before reading further.** If the session has a `**Graph tools:**` line, run exactly
-   those tools/targets first. Otherwise, and for ANY session that moves, extracts, or renames a function/
-   hook/class/component, run `get_impact_radius_tool` and/or `query_graph_tool(pattern="callers_of")` on the
-   target symbol(s) before touching code — this replaces manual grep/AST-diffing for finding callers (see
-   `CLAUDE.md`'s "MCP Tools: code-review-graph" section for the full tool table).
-4. **Goal = pure refactor.** No behavior changes, no new features. If you find a real bug, note it under
+2. **Open that session block** (## S0.1, ## S1.2, …) and read its **Context to load** line TOP TO BOTTOM, in
+   order, before opening any file it names. Graph queries are written as the FIRST part of that line precisely
+   so they cannot be treated as an optional add-on — if the line opens with a graph tool call
+   (`get_impact_radius_tool`, `query_graph_tool(pattern="callers_of"/"tests_for")`, `semantic_search_nodes_tool`),
+   run it before you open a single file, and only then load the files named afterward. This replaces manual
+   grep/AST-diffing for finding callers (see `CLAUDE.md`'s "MCP Tools: code-review-graph" section for the full
+   tool table). A few sessions (e.g. S3.8) explicitly need no graph call — that's stated inline, not omitted.
+3. **Goal = pure refactor.** No behavior changes, no new features. If you find a real bug, note it under
    "Deferred findings" at the bottom — do NOT fix it inline.
-5. **Verify** with the session's checks, `detect_changes_tool` (risk-scored look at the diff), AND the global
+4. **Verify** with the session's checks, `detect_changes_tool` (risk-scored look at the diff), AND the global
    Regression Checklist (bottom) if it touched frontend UI.
-6. **Update this file:** flip `[ ]`→`[x]` in the Dashboard, set the `Done:` date in the session block, and
+5. **Update this file:** flip `[ ]`→`[x]` in the Dashboard, set the `Done:` date in the session block, and
    **add a SESSION LOG entry** following the SESSION LOG STANDARD below (one multi-line entry per session —
    see that section for the mandatory fields, including `GRAPH USAGE`). One-liners are no longer sufficient.
    Before moving on, call `build_or_update_graph_tool` (incremental, no args) so the graph reflects this
-   session's edits — the next session (and its own step 3) depends on it being current.
-7. **Commit** (per `CLAUDE.md`: prompt the user before committing/pushing to `xh_dev`). Suggested message is in
+   session's edits — the next session (and its own step 2) depends on it being current.
+6. **Commit** (per `CLAUDE.md`: prompt the user before committing/pushing to `xh_dev`). Suggested message is in
    each session — **every commit message must include the session tag `[Sx.y]`** (e.g. `[S0.1]`, `[S2.3]`).
    Commit this updated REFACTOR_PLAN.md together with the work.
-8. **Stop.** One session per chat keeps context small and reviewable.
+7. **Stop.** One session per chat keeps context small and reviewable.
 
 **Guardrails for every session:**
 
@@ -44,12 +45,15 @@
   hard to reverse), STOP and prompt the user for their preference rather than assuming. Present the options and a
   recommendation; proceed only after they choose. Do not silently pick a default on consequential decisions.
 - **Use the code-review-graph MCP tools before Grep/Glob for exploration, and before extracting or moving any
-  function/hook/class/component.** Run `get_impact_radius_tool` and/or `query_graph_tool(pattern="callers_of")`
-  on the target symbol BEFORE starting a move/extraction, so every caller that needs rewiring is known up
-  front — this replaces the ad-hoc grep/AST-diffing used in S3.1/S3.2. Use `detect_changes_tool` as part of
+  function/hook/class/component.** Each remaining session's **Context to load** line is written graph-call-first
+  for exactly this reason — treat that ordering as load-bearing, not stylistic. If you're ever tempted to jump
+  straight to reading a file "because it's faster," that's the signal you're about to skip the graph step; don't.
+  `get_impact_radius_tool` / `query_graph_tool(pattern="callers_of")` on the target symbol BEFORE starting a
+  move/extraction replaces the ad-hoc grep/AST-diffing used in S3.1/S3.2. Use `detect_changes_tool` as part of
   each session's Verify step. Full tool table lives in `CLAUDE.md`'s "MCP Tools: code-review-graph" section —
   this bullet points at it rather than repeating it. Record what you ran + found in the SESSION LOG's
-  `GRAPH USAGE` field.
+  `GRAPH USAGE` field — a session that skipped the call has to write that down too, not silently mark `n/a`
+  when a graph call was actually due.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
 - **`frontend/CLAUDE.md` is mandatory reading for every frontend-touching session.** It is the v2 UI
@@ -338,39 +342,41 @@ No behavior change. After each extraction: build + manual smoke + commit.
 fetching, server state, or sessionStorage into a shell. Keep each page's ViewModel interface intact (callbacks
 may be re-wired to new hooks, but the shell-facing contract must not change shape without updating both layouts).
 
-- **S2.1 PathAnalysisMapView** → `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`,
-  `<FilterPanel>`, map-event hooks. **Shared heavy component with gated `variant="v2"`** (plus `filtersPortalTarget` /
+- **S2.1 PathAnalysisMapView** — **Graph tools first:** `get_impact_radius_tool` on `PathAnalysisMapView.tsx`;
+  `query_graph_tool(pattern="callers_of")` on each inline helper being pulled into a hook (GIS layer toggle logic,
+  filter state, viewport persistence) to confirm no external caller is missed before it moves. **Then extract:**
+  `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`, `<FilterPanel>`,
+  map-event hooks. **Shared heavy component with gated `variant="v2"`** (plus `filtersPortalTarget` /
   `MaybePortal`) — preserve the variant gating and verify BOTH render paths (v1 and v2 chrome).
-  **Graph tools:** `get_impact_radius_tool` on `PathAnalysisMapView.tsx`; `query_graph_tool(pattern="callers_of")`
-  on each inline helper being pulled into a hook (GIS layer toggle logic, filter state, viewport persistence) to
-  confirm no external caller is missed before it moves.
-- **S2.2 GeoDataPanel** → `useGISToggleState`, `useCurvatureOverlay`, `useWidthVisualization`, `<DefectsLayer>`.
-  **Shared heavy component with gated `variant="v2"`** (floating tool cluster, `MapAutosize`) — same both-paths rule.
-  Also consumed by Treatment's Before/After map panels; smoke those too.
-  **Graph tools:** `get_impact_radius_tool` on `GeoDataPanel.tsx` — it should surface the Treatment Before/After
-  callers directly (confirm the graph finds them, rather than relying solely on this written reminder).
-- **S2.3 codingPage** → decompose the **container** (`CodingLayoutV1/V2.tsx` + `CodingViewModel.ts` already exist):
-  `useProjectDataCache`, `useFilterContext`, `useAutocode`, `useAttributeEditing`. Keep the `CodingViewModel`
-  contract intact.
-  **Graph tools:** `get_impact_radius_tool` on `codingPage.tsx`; `query_graph_tool(pattern="callers_of")` on
-  `CodingViewModel`'s exported members to verify the shell-facing contract shape stays intact after extraction.
-- **S2.4 treatmentDetailPage** → much of the old scope was done by the v2 split (`TreatmentDetailLayoutV1/V2.tsx` +
-  `TreatmentViewModel.ts`; container is now 1,387 lines). Remaining: extract `useProjectMapping`
-  (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis` from the container.
-  Fix the deferred pre-existing errors here: unused `TREATMENTS` import (line 38) and missing `Treatment` type
-  import (line 176).
-  **Graph tools:** `query_graph_tool(pattern="callers_of")` on `resolveIndex`/`projectMap` before extracting
-  `useProjectMapping`; `get_impact_radius_tool` on `treatmentDetailPage.tsx`.
-- **S2.5 reportBuilderPage** → `useReportData`, `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`.
-  No v2 layout exists for this page yet (it grew to 3,346 lines) — structure the decomposition as
-  container + view-model per `frontend/CLAUDE.md` so a future `ReportBuilderLayoutV2` can slot in.
-  **Graph tools:** `get_impact_radius_tool` + `get_affected_flows_tool` on `reportBuilderPage.tsx` — this file
-  is the largest and most tangled with no existing seam, so understanding affected flows matters more here than
-  a single-symbol caller lookup.
+- **S2.2 GeoDataPanel** — **Graph tools first:** `get_impact_radius_tool` on `GeoDataPanel.tsx` — it should
+  surface the Treatment Before/After callers directly (confirm the graph finds them, rather than relying solely
+  on this written reminder). **Then extract:** `useGISToggleState`, `useCurvatureOverlay`,
+  `useWidthVisualization`, `<DefectsLayer>`. **Shared heavy component with gated `variant="v2"`** (floating tool
+  cluster, `MapAutosize`) — same both-paths rule. Also consumed by Treatment's Before/After map panels; smoke
+  those too.
+- **S2.3 codingPage** — **Graph tools first:** `get_impact_radius_tool` on `codingPage.tsx`;
+  `query_graph_tool(pattern="callers_of")` on `CodingViewModel`'s exported members to verify the shell-facing
+  contract shape stays intact after extraction. **Then decompose** the **container** (`CodingLayoutV1/V2.tsx` +
+  `CodingViewModel.ts` already exist): `useProjectDataCache`, `useFilterContext`, `useAutocode`,
+  `useAttributeEditing`. Keep the `CodingViewModel` contract intact.
+- **S2.4 treatmentDetailPage** — **Graph tools first:** `query_graph_tool(pattern="callers_of")` on
+  `resolveIndex`/`projectMap` before extracting `useProjectMapping`; `get_impact_radius_tool` on
+  `treatmentDetailPage.tsx`. **Then extract:** much of the old scope was done by the v2 split
+  (`TreatmentDetailLayoutV1/V2.tsx` + `TreatmentViewModel.ts`; container is now 1,387 lines). Remaining: extract
+  `useProjectMapping` (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis`
+  from the container. Fix the deferred pre-existing errors here: unused `TREATMENTS` import (line 38) and
+  missing `Treatment` type import (line 176).
+- **S2.5 reportBuilderPage** — **Graph tools first:** `get_impact_radius_tool` + `get_affected_flows_tool` on
+  `reportBuilderPage.tsx` — this file is the largest and most tangled with no existing seam, so understanding
+  affected flows matters more here than a single-symbol caller lookup. **Then extract:** `useReportData`,
+  `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`. No v2 layout exists for this page yet (it
+  grew to 3,346 lines) — structure the decomposition as container + view-model per `frontend/CLAUDE.md` so a
+  future `ReportBuilderLayoutV2` can slot in.
 
-**Context to load (each):** the target file + `CLAUDE.md` + **`frontend/CLAUDE.md` (mandatory — §0 protocol)** +
-the page's `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1. Run the session's **Graph
-tools** line first (see per-session bullets above) before opening any file.
+**Context to load (each):** run this session's **Graph tools first** call (leading sentence of its bullet
+above) BEFORE opening any file — it is part of loading context, not an optional extra step. Then load: the
+target file + `CLAUDE.md` + **`frontend/CLAUDE.md` (mandatory — §0 protocol)** + the page's
+`layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1.
 **Verify (each):** frontend gate + `detect_changes_tool` + full Regression Checklist for that page's flows
 (including checklist item 7 — both layout variants render).
 **Commit (each):** `refactor(<page>): decompose into hooks and sub-components [S2.x]`
@@ -392,17 +398,17 @@ routes identical (register all blueprints).
 **Commit:** `refactor(backend): split projects routes.py into blueprint modules [S3.2]`
 
 ### S3.3 — `logging` over `print()`  · Done: ____
-**Graph tools:** `semantic_search_nodes_tool` for `print(` call sites across the 14 files named in S3.2's NOTES FOR
-NEXT — one call gets file+context instead of a flat grep pass.
+**Context to load (run this first, before opening any file):** `semantic_search_nodes_tool` for `print(` call
+sites across the 14 files named in S3.2's NOTES FOR NEXT — one call gets file+context instead of a flat grep pass.
 **Do:** Configure a logger; replace ~68 `print()` with leveled logs. Preserve any user-facing stdout the app relies on.
 **Verify:** Boot, run an autocode, confirm logs emit; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): replace print with logging [S3.3]`
 
 ### S3.4 — Extract Curvature/Width analyzers  · Done: ____
-**Context to load:** `backend/app/services/gis_mapping.py` (curvature ~900 lines; width logic), `backend/app/utils/path_width_curvature.py`.
-**Graph tools:** `query_graph_tool(pattern="callers_of")` on the curvature/width methods in `gis_mapping.py` BEFORE
-moving them out, so every internal and external caller is known ahead of the `GIS`-class delegation; `get_impact_radius_tool`
-on `gis_mapping.py`.
+**Context to load (run the graph queries first, before opening the files):** `query_graph_tool(pattern="callers_of")`
+on the curvature/width methods in `gis_mapping.py` BEFORE moving them out, so every internal and external caller is
+known ahead of the `GIS`-class delegation; `get_impact_radius_tool` on `gis_mapping.py`. Then open:
+`backend/app/services/gis_mapping.py` (curvature ~900 lines; width logic), `backend/app/utils/path_width_curvature.py`.
 **Do:** Move curvature → `services/curvature_analyzer.py` (`CurvatureAnalyzer`); width → `services/width_analyzer.py`.
 `GIS` class delegates. Keep numeric outputs identical (spot-check against a known segment).
 **Verify:** `backend/test_curvature_analysis.py` still passes; compare curvature/width on a sample project;
@@ -410,42 +416,42 @@ on `gis_mapping.py`.
 **Commit:** `refactor(gis): extract CurvatureAnalyzer and WidthAnalyzer [S3.4]`
 
 ### S3.5 — `query_nearby()` + unify proximity  · Done: ____
-**Context to load:** `gis_mapping.py` proximity methods (`is_mrt`/`is_bus_lane`/… ) + buffer/sindex/distance repeats.
-**Graph tools:** `semantic_search_nodes_tool` to enumerate the ~8 proximity-check methods (`is_mrt`, `is_bus_lane`,
-…) as extraction targets, instead of manually reading the file.
+**Context to load (run the graph query first):** `semantic_search_nodes_tool` to enumerate the ~8 proximity-check
+methods (`is_mrt`, `is_bus_lane`, …) as extraction targets, instead of manually reading the file. Then open:
+`gis_mapping.py` proximity methods (`is_mrt`/`is_bus_lane`/… ) + buffer/sindex/distance repeats.
 **Do:** Add `query_nearby(layer, point, buffer, max_dist)`; route the 8 near-identical proximity checks + ~20 repeated
 patterns through it.
 **Verify:** GIS autocode results unchanged on a sample project; `detect_changes_tool` on the diff.
 **Commit:** `refactor(gis): add query_nearby helper and unify proximity checks [S3.5]`
 
 ### S3.6 — Split `project_manager.py`  · Done: ____
-**Context to load:** `backend/app/services/project_manager.py`.
-**Graph tools:** `get_impact_radius_tool` on `project_manager.py`; `query_graph_tool(pattern="callers_of")` on
-`ProjectVersion`'s methods before splitting data/serialization/defaults concerns.
+**Context to load (run the graph queries first, before opening the file):** `get_impact_radius_tool` on
+`project_manager.py`; `query_graph_tool(pattern="callers_of")` on `ProjectVersion`'s methods before splitting
+data/serialization/defaults concerns. Then open: `backend/app/services/project_manager.py`.
 **Do:** Split `ProjectVersion` into data/serialization/defaults concerns; move image dedup/materialization to
 `services/image_storage.py`. Keep public API of `project_manager` stable.
 **Verify:** Create/open/list project + image dedup still work; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): modularize project_manager and extract image_storage [S3.6]`
 
 ### S3.7 — Organize backend tests  · Done: ____
-**Graph tools:** `query_graph_tool(pattern="tests_for")` to confirm the current test↔code coverage mapping before
-moving files, so nothing silently stops being collected after the move.
+**Context to load (run this first):** `query_graph_tool(pattern="tests_for")` to confirm the current
+test↔code coverage mapping before moving files, so nothing silently stops being collected after the move.
 **Do:** Move the ~24 root `backend/test_*.py` into `backend/tests/` + add `conftest.py` + `pytest.ini`. **Move only,
 do not rewrite** (per scope). Drop obviously-dead dependency-probe scripts (confirm via run first).
 **Verify:** `cd backend && pytest` collects from `tests/`.
 **Commit:** `chore(backend): consolidate tests into tests/ directory [S3.7]`
 
 ### S3.8 — Type-hint pass  · Done: ____
-**Graph tools:** none required — no code is moved or extracted this session (hints only); note this explicitly in
-the SESSION LOG's `GRAPH USAGE` field as `n/a`.
+**Context to load:** no graph query required — no code is moved or extracted this session (hints only); note
+this explicitly in the SESSION LOG's `GRAPH USAGE` field as `n/a` rather than skipping the field.
 **Do:** Add param/return hints to `routes.py` + `project_manager.py`; add `TypedDict`s for common payloads. No logic
 change.
 **Verify:** Optional `mypy`/boot; gate passes.
 **Commit:** `refactor(backend): add type hints to routes and project_manager [S3.8]`
 
 ### S4.1 — End-to-end manual QA  · Done: ____
-**Graph tools:** `detect_changes_tool` + `get_affected_flows_tool` across the full accumulated branch diff before
-starting manual QA, to risk-rank which flows to test first.
+**Context to load (run this first, before any manual click-through):** `detect_changes_tool` +
+`get_affected_flows_tool` across the full accumulated branch diff, to risk-rank which flows to test first.
 **Do:** Run the app (`docker-compose up` or local dev). Walk the full flow: project create → code → autocode → score →
 path analysis filters → treatment apply → report build/export → GIS layers. Fix regressions surfaced. Re-run the full
 Regression Checklist.
