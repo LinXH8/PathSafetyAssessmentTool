@@ -203,8 +203,8 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
 - [x] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
 - [x] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
-- [ ] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
-- [ ] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
+- [x] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
+- [x] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
 - [ ] **S3.7** Move root `test_*.py` → `backend/tests/` + `conftest.py` — 1d — *depends: none*
 - [ ] **S3.8** Type-hint pass on `routes.py` + `project_manager.py` — 2d — *depends: S3.2, S3.6*
 
@@ -415,7 +415,7 @@ known ahead of the `GIS`-class delegation; `get_impact_radius_tool` on `gis_mapp
 `detect_changes_tool` on the diff.
 **Commit:** `refactor(gis): extract CurvatureAnalyzer and WidthAnalyzer [S3.4]`
 
-### S3.5 — `query_nearby()` + unify proximity  · Done: ____
+### S3.5 — `query_nearby()` + unify proximity  · Done: 2026-07-05
 **Context to load (run the graph query first):** `semantic_search_nodes_tool` to enumerate the ~8 proximity-check
 methods (`is_mrt`, `is_bus_lane`, …) as extraction targets, instead of manually reading the file. Then open:
 `gis_mapping.py` proximity methods (`is_mrt`/`is_bus_lane`/… ) + buffer/sindex/distance repeats.
@@ -424,7 +424,7 @@ patterns through it.
 **Verify:** GIS autocode results unchanged on a sample project; `detect_changes_tool` on the diff.
 **Commit:** `refactor(gis): add query_nearby helper and unify proximity checks [S3.5]`
 
-### S3.6 — Split `project_manager.py`  · Done: ____
+### S3.6 — Split `project_manager.py`  · Done: 2026-07-05
 **Context to load (run the graph queries first, before opening the file):** `get_impact_radius_tool` on
 `project_manager.py`; `query_graph_tool(pattern="callers_of")` on `ProjectVersion`'s methods before splitting
 data/serialization/defaults concerns. Then open: `backend/app/services/project_manager.py`.
@@ -477,7 +477,7 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 ## DEFERRED FINDINGS (bugs/oddities spotted mid-refactor — do NOT fix inline)
 - 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
 - 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 38); `Treatment` type is used at line 176 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4. (Line numbers re-verified 2026-07-03 after the v2 merge from main; baseline still 37.)
-- 2026-07-05 · S3.4 · `gis_mapping.py` had `_remove_z_coordinate` defined **twice** on the old `GIS` class (former lines 220 and 2519); the second silently shadowed the first, so only the 2519 version was ever live. S3.4 moved the live (2519) copy into `CurvatureAnalyzer` alongside `_load_path_layer`; the dead 220 copy was left verbatim in `GIS` (now ~line 203) to keep the refactor behavior-preserving. It is unreferenced dead code and can be deleted in a later cleanup (e.g. S3.5/S3.8).
+- 2026-07-05 · S3.4 · `gis_mapping.py` had `_remove_z_coordinate` defined **twice** on the old `GIS` class (former lines 220 and 2519); the second silently shadowed the first, so only the 2519 version was ever live. S3.4 moved the live (2519) copy into `CurvatureAnalyzer` alongside `_load_path_layer`; the dead 220 copy was left verbatim in `GIS` (now ~line 203) to keep the refactor behavior-preserving. ~~It is unreferenced dead code and can be deleted in a later cleanup (e.g. S3.5/S3.8).~~ **CORRECTION (2026-07-05, S3.5):** it is NOT dead — `gis_queries.py:708` and `:870` call it statically as `gis.GIS._remove_z_coordinate(geom)` (the graph misses cross-module static-attribute access; found by grep). Deleting it requires repointing those two call sites to `CurvatureAnalyzer`'s copy (an `app/api/` edit) — fold into S3.8 or a follow-up, do not delete the `GIS` copy alone.
 - 2026-07-05 · S3.4 · `test_curvature_analysis.py` has **6 pre-existing failures** unrelated to the curvature/width logic itself: 4 reference `routes.autocode_gis` / `routes.get_curvature_visualization`, which moved out of `routes.py` during the S3.2 blueprint split (now in `app/api/projects/autocode.py` / `gis_queries.py`) and were never updated; 2 (`…uses_tight_bucket_for_sub_6_5m_radius`, `…uses_numeric_bucket_when_sharp_radius_and_junction_both_exist`) assert `has_path_junction is True` but get `False`. All 6 fail identically before and after S3.4. The 4 stale-route ones should be repointed when S3.7 organizes backend tests; the 2 junction-logic ones need a separate look (possible real logic drift — do NOT fix inline).
 
 ## SESSION LOG STANDARD (mandatory template for every entry)
@@ -1200,3 +1200,67 @@ gives for free — record what you found so the next session doesn't re-query fr
                    routing rule for the 4 monkeypatched methods (documented in both analyzer module docstrings and
                    `GIS.__init__`), or those tests will silently regress. `gis_mapping.py` is 682L — modestly over
                    the ~600 target; splitting proximity vs speed could close it but is out of S3.4 scope.
+- 2026-07-05 · S3.6 · Modularized `project_manager.py` into `image_storage` + `project_version` + `project` modules
+                   behind a stable facade. (Ran CONCURRENTLY with S3.5: two sub-agents in isolated git worktrees,
+                   orchestrator cherry-picked both onto `xh_dev` — commit `5181516e`. Worktree gotcha: the agent
+                   worktrees branched from stale `615cfd16`, not `xh_dev` HEAD; S3.6 survived because
+                   `project_manager.py` differed by only one comment line, reconciled during cherry-pick.)
+  FILES CREATED:   `services/image_storage.py` (161L), `services/project_version.py` (188L), `services/project.py` (570L)
+  FILES MODIFIED:  `services/project_manager.py` (1,231 → 391L; now facade + `project_manager` class + module utils)
+  SYMBOLS MOVED/EXTRACTED: `materialize_project_image`, `deduplicate_project_images` (+3 private helpers) →
+                   `image_storage.py`; `ProjectVersion` class → `project_version.py`; `Project` class → `project.py`.
+                   Layering: image_storage ← project_version ← project ← project_manager (no cycles).
+  IMPORT SITES UPDATED: none — facade re-exports keep every `from app.services.project_manager import ...` working
+                   (13 `app/api/projects/*` modules + 2 test files). All original top-level imports kept in
+                   `project_manager.py` so its namespace is byte-identical — do NOT prune those "unused" imports.
+  GRAPH USAGE:     query_graph_tool(importers_of project_manager.py) → 13 api modules + 2 test files;
+                   query_graph_tool on version methods → `.latest()`/`.save_all()`/`.create_new_version()` are the
+                   external version API; STR_* constants not referenced externally.
+  BUILD GATE:      py_compile clean ×4; import OK; asserted all 8 frozen public names resolve identically via facade.
+  REGRESSION CHECK: orchestrator, in main tree post-merge: pm discovery (20 projects), open project, geo_data
+                   (228 rows, "Image Reference" col intact), `latest()` → ProjectVersion, version attributes (228),
+                   metadata → ProjectMetadata; `materialize_project_image` hardlink verified by inode;
+                   `deduplicate_project_images` relinked a cross-project duplicate (bytes_reclaimed=17, content
+                   intact). Live backend boot: `/api/projects`, geodata/results/metadata/versions-latest-attributes
+                   all 200. (pytest not installed in venv — image tests exercised manually.)
+  ARCHITECTURAL DECISIONS: class-module granularity (one class per module) chosen over splitting ProjectVersion
+                   into data/serialization/defaults mixins — its lazy-load properties and save/delete share state,
+                   so a mixin split risked behavior drift for zero external benefit. `pm.os is image_storage.os`
+                   singleton preserved so the tests' `os.link` monkeypatch still reaches the moved code.
+  DEFERRED:        dead post-return filter block in `Project.copy_segments` (kept verbatim); `merge_project` uses
+                   `+` on Project which has no `__add__` (pre-existing latent bug, left as-is).
+  NOTES FOR NEXT:  S3.8's project_manager type-hint scope now spans 4 files (`project_manager`, `project`,
+                   `project_version`, `image_storage`), all with `from __future__ import annotations` (PEP 604 OK
+                   on py3.9). The facade's re-export imports are the frozen public surface — never prune.
+- 2026-07-05 · S3.5 · Added `GIS.query_nearby()` and routed 6 proximity/nearest-feature methods through it in
+                   `gis_mapping.py`; declined the `_remove_z_coordinate` deletion (NOT dead — see corrected
+                   DEFERRED FINDINGS entry). (Ran CONCURRENTLY with S3.6; cherry-picked onto `xh_dev` as `f88600bc`.
+                   Same worktree gotcha as S3.6, but here fatal-if-missed: the stale base predated S3.4's rewrite of
+                   `gis_mapping.py`; agent discarded uncommitted wrong-base work, `git reset --hard 5fb9612c`, redid.)
+  FILES MODIFIED:  `services/gis_mapping.py` (682 → 674L)
+  SYMBOLS MOVED/EXTRACTED: new `GIS.query_nearby(layer, point, buffer, max_dist=None, notna_only=False,
+                   distance_col=None)` → (candidates, distances): sindex bbox pre-filter + exact distance refine.
+                   Rewritten on it: `_near` (feeds is_mrt/is_bus_lane/is_bus_stop/is_road_crossing/
+                   is_bicycle_crossing/is_parking), `get_peak_pedestrian_flow`, `get_number_of_lane`,
+                   `get_road_operating_speed`, `get_road_speed_limit`, `get_heavy_vehicle_flow`.
+  IMPORT SITES UPDATED: none — no caller-visible signature changes.
+  GRAPH USAGE:     query_graph_tool(callers_of) on all 11 proximity/speed methods → each has exactly ONE caller:
+                   `autocode.py::_gis_autocode_core` (blast radius fully contained). callers_of on
+                   `_remove_z_coordinate` showed no internal callers, but grep found live static-access callers
+                   `gis.GIS._remove_z_coordinate(geom)` in `gis_queries.py:708,870` — the graph does not track
+                   cross-module static-attribute access; trust-but-grep before deleting "dead" methods.
+  BUILD GATE:      py_compile clean; module import OK; synthetic-GeoDataFrame parity script asserted old-vs-new
+                   code paths identical across buffer/max_dist combos incl. the get_heavy_vehicle_flow edge case.
+  REGRESSION CHECK: orchestrator, in main tree post-merge: 50 real segment midpoints (AMKAve4 Test) × 12
+                   proximity/speed methods captured pre-refactor and re-run post-merge — BYTE-IDENTICAL JSON.
+                   Live `POST /autocode/gis` on a PunggolDrive4Q25 segment returned a full plausible update set.
+  ARCHITECTURAL DECISIONS: query_nearby does NOT reproject — callers keep calling `store.to_metric_point()` first,
+                   matching every pre-refactor call site (avoids float noise). `_poly`/`get_area_type` (containment,
+                   not distance) and the `.intersects()`-pattern methods now living in CurvatureAnalyzer/
+                   WidthAnalyzer were deliberately left alone — normalizing them risks numeric drift in
+                   curvature-sensitive, monkeypatched code.
+  DEFERRED:        `_remove_z_coordinate` consolidation needs a `gis_queries.py` edit (2 call sites) — fold into
+                   S3.8 or follow-up.
+  NOTES FOR NEXT:  `_gis_autocode_core` (`autocode.py`) is the single caller of every method touched here — best
+                   smoke-test entry point. If unifying the `.intersects()` patterns later, do it inside the
+                   analyzers, not via gis_mapping's query_nearby.
