@@ -187,13 +187,77 @@ class GIS:
         self._curv = CurvatureAnalyzer(self)
         self._width = WidthAnalyzer(self)
 
+    def query_nearby(self, layer, point, buffer, max_dist=None, notna_only=False, distance_col=None):
+        """
+        Shared proximity-check helper used by the ~8 near-identical GIS proximity
+        methods (is_mrt, is_bus_lane, is_bus_stop, is_road_crossing,
+        is_bicycle_crossing, is_parking, get_peak_pedestrian_flow,
+        get_number_of_lane) plus the nearest-feature lookups
+        (get_road_operating_speed, get_road_speed_limit, get_heavy_vehicle_flow).
+
+        Captures the shared pattern: build a `point.buffer(buffer)` disk, use it
+        as a coarse spatial-index (bounding-box) pre-filter via `sindex.query`,
+        then refine to only rows whose *exact* distance to `point` is <= `max_dist`.
+
+        `gdf.sindex.query(buf)` (default predicate=None -> bounding-box test only)
+        is equivalent to the `gdf.sindex.intersection(buf.bounds)` form used at
+        some of the original call sites -- both compare against the same buffer
+        bounding box -- so unifying onto one form here does not change results.
+
+        Args:
+            layer: registered layer name (str, looked up via `self.store.get`)
+                   OR an already-loaded/pre-filtered GeoDataFrame.
+            point: a Point already in the store's metric CRS (callers convert via
+                   `self.store.to_metric_point()` beforehand, matching every
+                   pre-refactor call site -- `query_nearby` does not re-convert).
+            buffer: radius (metres) for the coarse spatial-index buffer/bbox query.
+            max_dist: radius (metres) for the exact distance filter. Defaults to
+                      `buffer` when omitted (the common case where one distance
+                      value gates both steps, e.g. `_near`).
+            notna_only: pre-filter out null geometries before indexing (some call
+                        sites do this, some don't -- parameterized rather than
+                        applied unconditionally to preserve exact behavior).
+            distance_col: if given, attach the exact distance as this column name
+                          on the returned candidates (only copies the frame in
+                          this case, to avoid SettingWithCopyWarning).
+
+        Returns:
+            (candidates, distances): `candidates` is the GeoDataFrame subset of
+            `layer` within `max_dist` of `point` (empty but column-preserving if
+            none found); `distances` is the aligned Series of exact distances.
+        """
+        gdf = self.store.get(layer) if isinstance(layer, str) else layer
+        if gdf is None or gdf.empty:
+            empty = gdf if gdf is not None else gpd.GeoDataFrame(geometry=[], crs=self.store.metric_crs)
+            return empty.iloc[0:0], pd.Series(dtype=float)
+
+        if notna_only:
+            gdf = gdf[gdf.geometry.notna()]
+            if gdf.empty:
+                return gdf, pd.Series(dtype=float)
+
+        if max_dist is None:
+            max_dist = buffer
+
+        idx = list(gdf.sindex.query(point.buffer(buffer)))
+        if not idx:
+            return gdf.iloc[0:0], pd.Series(dtype=float)
+
+        candidates = gdf.iloc[idx]
+        dists = candidates.geometry.distance(point)
+        within_mask = dists <= max_dist
+        result = candidates[within_mask]
+        result_dists = dists[within_mask]
+
+        if distance_col is not None and not result.empty:
+            result = result.copy()
+            result[distance_col] = result_dists
+
+        return result, result_dists
+
     def _near(self, layer, pt, dist):
-        gdf = self.store.get(layer)
-        idx = gdf.sindex.query(pt.buffer(dist))
-        if not len(idx):
-            return False
-        d = gdf.iloc[idx].distance(pt).min()
-        return d <= dist
+        candidates, _ = self.query_nearby(layer, pt, dist)
+        return not candidates.empty
 
     def _poly(self, layer, pt, tol):
         gdf = self.store.get(layer)
@@ -300,23 +364,9 @@ class GIS:
         gdf1 = gdf1[gdf1.geometry.notna() & (gdf1.geom_type == "Point")].copy()
         gdf2 = gdf2[gdf2.geometry.notna() & (gdf2.geom_type == "Point")].copy()
 
-        buf = pt.buffer(dist)
-
         # Coarse sindex candidate filter, then exact distance refinement
-        idx1 = gdf1.sindex.query(buf)
-        near1 = gdf1.iloc[idx1]
-        if len(near1):
-            near1 = near1[near1.geometry.distance(pt) <= dist]
-        else:
-            near1 = gdf1.iloc[0:0]  # empty GeoDataFrame that preserves column schema
-
-        idx2 = gdf2.sindex.query(buf)
-        near2 = gdf2.iloc[idx2]
-        if len(near2):
-            near2 = near2[near2.geometry.distance(pt) <= dist]
-        else:
-            near2 = gdf2.iloc[0:0]
-
+        near1, _ = self.query_nearby(gdf1, pt, dist)
+        near2, _ = self.query_nearby(gdf2, pt, dist)
 
         # Helper: aggregate to hourly peak by mode group
         before_peaks = (
@@ -357,22 +407,11 @@ class GIS:
         """
         pt = self.store.to_metric_point(point)
 
-        gdf = self.store.get("kerb_line")
-        if gdf is None or gdf.empty:
-            return None
-        gdf = gdf[gdf.geometry.notna()].copy()
-
-        candidates_idx = list(gdf.sindex.query(pt.buffer(dist)))
-        if not candidates_idx:
+        candidates, dists = self.query_nearby("kerb_line", pt, dist, notna_only=True)
+        if candidates.empty:
             return None
 
-        candidates = gdf.iloc[candidates_idx]
-        dists = candidates.geometry.distance(pt)
-        within = dists[dists <= dist]
-        if within.empty:
-            return None
-
-        nearest_row = candidates.loc[within.idxmin()]
+        nearest_row = candidates.loc[dists.idxmin()]
         lanes_str = str(nearest_row.get("LANES", "") or "").strip()
         if not lanes_str:
             return None
@@ -423,32 +462,16 @@ class GIS:
         if road_gdf.crs.to_epsg() != 3414:
             road_gdf = road_gdf.to_crs("EPSG:3414")
 
-        # Filter to only valid geometries
-        road_gdf = road_gdf[road_gdf.geometry.notna()].copy()
-
-        # Create buffer for spatial query
-        buffer_geom = pt.buffer(buffer_dist)
-
-        # Use spatial index to find candidate road links
-        candidate_indices = list(road_gdf.sindex.intersection(buffer_geom.bounds))
-
-        if not candidate_indices:
-            return default_speed
-
-        # Get candidate road links
-        candidates = road_gdf.iloc[candidate_indices].copy()
-
-        # Calculate distances to point
-        candidates['distance'] = candidates.geometry.distance(pt)
-
-        # Filter to only roads within max_dist
-        nearby_roads = candidates[candidates['distance'] <= max_dist]
+        # Coarse spatial-index buffer query + exact distance filter (shared helper)
+        nearby_roads, distances = self.query_nearby(
+            road_gdf, pt, buffer_dist, max_dist, notna_only=True
+        )
 
         if nearby_roads.empty:
             return default_speed
 
         # Find the nearest road link
-        nearest_idx = nearby_roads['distance'].idxmin()
+        nearest_idx = distances.idxmin()
         nearest_road = nearby_roads.loc[nearest_idx]
 
         # Extract Link ID (field name: LK_ID_NUM)
@@ -516,32 +539,16 @@ class GIS:
         if speed_limit_gdf.crs.to_epsg() != 3414:
             speed_limit_gdf = speed_limit_gdf.to_crs("EPSG:3414")
 
-        # Filter to only valid geometries
-        speed_limit_gdf = speed_limit_gdf[speed_limit_gdf.geometry.notna()].copy()
-
-        # Create buffer for spatial query
-        buffer_geom = pt.buffer(buffer_dist)
-
-        # Use spatial index to find candidate speed limit segments
-        candidate_indices = list(speed_limit_gdf.sindex.intersection(buffer_geom.bounds))
-
-        if not candidate_indices:
-            return default_limit
-
-        # Get candidate speed limit segments
-        candidates = speed_limit_gdf.iloc[candidate_indices].copy()
-
-        # Calculate distances to point
-        candidates['dist_to_pt'] = candidates.geometry.distance(pt)
-
-        # Filter to only segments within max_dist
-        nearby_segments = candidates[candidates['dist_to_pt'] <= max_dist]
+        # Coarse spatial-index buffer query + exact distance filter (shared helper)
+        nearby_segments, distances = self.query_nearby(
+            speed_limit_gdf, pt, buffer_dist, max_dist, notna_only=True
+        )
 
         if nearby_segments.empty:
             return default_limit
 
         # Find the nearest segment
-        nearest_idx = nearby_segments['dist_to_pt'].idxmin()
+        nearest_idx = distances.idxmin()
         nearest_segment = nearby_segments.loc[nearest_idx]
 
         # Extract SPEEDLIMIT value
@@ -603,29 +610,14 @@ class GIS:
         if bus_lane_gdf.crs.to_epsg() != 3414:
             bus_lane_gdf = bus_lane_gdf.to_crs("EPSG:3414")
 
-        # Filter to only valid geometries
-        bus_lane_gdf = bus_lane_gdf[bus_lane_gdf.geometry.notna()].copy()
+        # Coarse spatial-index buffer query + exact distance filter (shared helper).
+        # Original computed min(distance) over the bbox candidate pool and compared
+        # to max_dist; `query_nearby` already restricts candidates to those within
+        # max_dist, so "any candidate remains" is equivalent to "min distance <= max_dist".
+        nearby_lanes, _ = self.query_nearby(bus_lane_gdf, pt, buffer_dist, max_dist, notna_only=True)
 
-        # Create buffer for spatial query
-        buffer_geom = pt.buffer(buffer_dist)
-
-        # Use spatial index to find candidate bus lanes
-        candidate_indices = list(bus_lane_gdf.sindex.intersection(buffer_geom.bounds))
-
-        if not candidate_indices:
-            return default_value
-
-        # Get candidate bus lanes
-        candidates = bus_lane_gdf.iloc[candidate_indices].copy()
-
-        # Calculate distances to point
-        candidates['dist_to_pt'] = candidates.geometry.distance(pt)
-
-        # Find the minimum distance to any bus lane
-        min_distance = candidates['dist_to_pt'].min()
-
-        # If minimum distance is within threshold, return "Moderate to high" (2)
-        if min_distance <= max_dist:
+        # If a bus lane is within threshold, return "Moderate to high" (2)
+        if not nearby_lanes.empty:
             return 2  # Moderate to high
         else:
             return default_value  # Low (1)
