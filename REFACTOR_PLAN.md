@@ -202,7 +202,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
 - [x] **S3.2** Split `routes.py` into `projects/` blueprint package — 3d — *depends: S3.1*
 - [x] **S3.3** Replace `print()` with `logging` — 1d — *depends: none*
-- [ ] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
+- [x] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
 - [ ] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
 - [ ] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
 - [ ] **S3.7** Move root `test_*.py` → `backend/tests/` + `conftest.py` — 1d — *depends: none*
@@ -404,7 +404,7 @@ sites across the 14 files named in S3.2's NOTES FOR NEXT — one call gets file+
 **Verify:** Boot, run an autocode, confirm logs emit; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): replace print with logging [S3.3]`
 
-### S3.4 — Extract Curvature/Width analyzers  · Done: ____
+### S3.4 — Extract Curvature/Width analyzers  · Done: 2026-07-05
 **Context to load (run the graph queries first, before opening the files):** `query_graph_tool(pattern="callers_of")`
 on the curvature/width methods in `gis_mapping.py` BEFORE moving them out, so every internal and external caller is
 known ahead of the `GIS`-class delegation; `get_impact_radius_tool` on `gis_mapping.py`. Then open:
@@ -477,6 +477,8 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 ## DEFERRED FINDINGS (bugs/oddities spotted mid-refactor — do NOT fix inline)
 - 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
 - 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 38); `Treatment` type is used at line 176 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4. (Line numbers re-verified 2026-07-03 after the v2 merge from main; baseline still 37.)
+- 2026-07-05 · S3.4 · `gis_mapping.py` had `_remove_z_coordinate` defined **twice** on the old `GIS` class (former lines 220 and 2519); the second silently shadowed the first, so only the 2519 version was ever live. S3.4 moved the live (2519) copy into `CurvatureAnalyzer` alongside `_load_path_layer`; the dead 220 copy was left verbatim in `GIS` (now ~line 203) to keep the refactor behavior-preserving. It is unreferenced dead code and can be deleted in a later cleanup (e.g. S3.5/S3.8).
+- 2026-07-05 · S3.4 · `test_curvature_analysis.py` has **6 pre-existing failures** unrelated to the curvature/width logic itself: 4 reference `routes.autocode_gis` / `routes.get_curvature_visualization`, which moved out of `routes.py` during the S3.2 blueprint split (now in `app/api/projects/autocode.py` / `gis_queries.py`) and were never updated; 2 (`…uses_tight_bucket_for_sub_6_5m_radius`, `…uses_numeric_bucket_when_sharp_radius_and_junction_both_exist`) assert `has_path_junction is True` but get `False`. All 6 fail identically before and after S3.4. The 4 stale-route ones should be repointed when S3.7 organizes backend tests; the 2 junction-logic ones need a separate look (possible real logic drift — do NOT fix inline).
 
 ## SESSION LOG STANDARD (mandatory template for every entry)
 
@@ -1131,3 +1133,70 @@ gives for free — record what you found so the next session doesn't re-query fr
                    traces. The module-logger pattern (`import logging` + `logger = logging.getLogger(__name__)`
                    right after `from __future__ import annotations`) is established across the projects package —
                    match it when adding modules.
+
+- 2026-07-05 · S3.4 · extracted the curvature and facility-width logic out of the 2,600-line `gis_mapping.py`
+  `GIS` monolith into two dedicated analyzer classes, leaving `GIS` as a thin proximity/speed class that
+  delegates curvature/width to the analyzers via a back-reference. Numeric outputs verified byte-identical.
+  FILES CREATED:   `backend/app/services/curvature_analyzer.py` (1627L — CURVATURE_* constants + `CurvatureAnalyzer`:
+                   path-layer prep, snapping, triplet/angle radius calc, `analyze_curvature`, `get_curvature`,
+                   `get_curvature_visualization`, and the width+curvature hybrid `get_radius_and_width_at_point`);
+                   `backend/app/services/width_analyzer.py` (413L — `WidthAnalyzer`: `get_facility_width`,
+                   `get_width_visualization`, static `_standardize_width_column`)
+  FILES DELETED:   none
+  FILES MOVED:     logical moves only (no `git mv`): curvature methods gis_mapping.py→curvature_analyzer.py;
+                   width methods gis_mapping.py→width_analyzer.py; `CURVATURE_*` module constants →
+                   curvature_analyzer.py; `from app.utils.path_width_curvature import get_radius_and_width_at_point`
+                   → width_analyzer.py (its only remaining user)
+  FILES MODIFIED:  `backend/app/services/gis_mapping.py` 2600→682L — `GIS.__init__` now builds
+                   `self._curv = CurvatureAnalyzer(self)` / `self._width = WidthAnalyzer(self)`; added 10 thin
+                   delegation methods (`get_curvature`, `analyze_curvature`, `get_curvature_visualization`,
+                   `get_radius_and_width_at_point`, `_snap_point_to_path_network`, `_check_angle_curvature`,
+                   `_supports_sharp_curve_details`, `get_facility_width`, `get_width_visualization`,
+                   `_standardize_width_column`); dropped the now-orphaned `_prepared_path_layers` init and the
+                   `CURVATURE_*` block. `REFACTOR_PLAN.md` (this file).
+  SYMBOLS MOVED/EXTRACTED: ~30 curvature methods + hybrid `get_radius_and_width_at_point` → `CurvatureAnalyzer`;
+                   `get_facility_width`/`get_width_visualization`/`_standardize_width_column` → `WidthAnalyzer`.
+                   External callers (verified via graph, see below): `get_curvature` & `get_facility_width` ←
+                   `autocode.py::_gis_autocode_core`; `get_curvature_visualization` & `get_width_visualization` ←
+                   `gis_queries.py` routes; `analyze_curvature`/`get_radius_and_width_at_point` ← tests. All still
+                   call `gis.<method>()` unchanged — the delegation stubs keep the public surface identical.
+  IMPORT SITES UPDATED: 0 external. The 14 modules that do `from app.services import gis_mapping as gis` use
+                   `gis.GIS`/`gis.LayerStore`, both unchanged. `gis_mapping.py` gained two internal imports of the
+                   new analyzer modules (no import cycle: the analyzers never import `gis_mapping`).
+  GRAPH USAGE:     `query_graph_tool(pattern="callers_of")` on all six public curvature/width methods →
+                   external callers = `_gis_autocode_core` (get_curvature@195, get_facility_width@201), the two
+                   gis_queries routes, and 2 tests; `get_curvature_visualization`/`get_width_visualization`
+                   returned 0 graph callers, so a grep cross-check surfaced the two `gis_queries.py` route calls
+                   the graph missed (string-resolved) — recorded so the next session need not re-derive.
+                   `get_impact_radius_tool` on gis_mapping.py errored on arg name (schema mismatch) → substituted
+                   `query_graph_tool` + targeted grep. `detect_changes_tool` on the diff: risk 0.55, `GIS` flagged,
+                   no correctness warnings specific to the extraction.
+  BUILD GATE:      backend `python -c "import app"` OK; all three modules `ast.parse` clean. (No frontend touched;
+                   TSC/lint n/a.)
+  REGRESSION CHECK: n/a for the FE checklist (backend-only). Backend safety net instead: `pytest
+                   test_curvature_analysis.py` = 14 passed / 6 failed **identical to the pre-change baseline**
+                   (the 6 are pre-existing — see DEFERRED FINDINGS); old-vs-new numeric spot-check on a synthetic
+                   curved path (4 points) → radius, width, curvature category+subcategory, facility-width, and viz
+                   width ALL byte-identical.
+  ARCHITECTURAL DECISIONS: (1) Back-reference pattern (analyzers hold `self.gis`, read shared data via
+                   `self.gis.store`) chosen over passing `LayerStore` + a third shared-helpers module — lowest churn,
+                   safest for identical outputs (user-approved). (2) The width+curvature hybrid
+                   `get_radius_and_width_at_point` lives in `CurvatureAnalyzer` (it is mostly curvature machinery)
+                   and reaches the one width helper via `self.gis._standardize_width_column` (user-approved).
+                   (3) **Monkeypatch contract preserved without magic:** `test_curvature_analysis.py` patches four
+                   methods on the `gis` *instance* (`_snap_point_to_path_network`, `get_radius_and_width_at_point`,
+                   `_check_angle_curvature`, `analyze_curvature`) and expects internal callers to honor the patch.
+                   So inside `CurvatureAnalyzer` those four are called back through `self.gis.<method>` (all other
+                   inter-method calls stay analyzer-local `self.`), and `GIS` exposes explicit delegation stubs for
+                   the full test-referenced surface. This is why the extraction is a class-move but NOT a pure
+                   "self→self.gis everywhere" sweep — only the patched surface routes through gis.
+  DEFERRED:        Duplicate/dead `_remove_z_coordinate` in `GIS` (see DEFERRED FINDINGS 2026-07-05); the 6
+                   pre-existing `test_curvature_analysis.py` failures (see DEFERRED FINDINGS 2026-07-05) — 4 stale
+                   route refs for S3.7, 2 junction-logic assertions need a separate look. None fixed inline.
+  NOTES FOR NEXT:  S3.5 (`query_nearby()` + unify the ~8 proximity checks) now works on a much smaller
+                   `gis_mapping.py` (682L) whose `GIS` class is just LayerStore access + proximity/speed +
+                   delegation stubs — the proximity methods (`is_mrt`, `is_bus_lane`, …) it targets are all still
+                   there. When touching curvature/width internals in future sessions, remember the `self.gis`
+                   routing rule for the 4 monkeypatched methods (documented in both analyzer module docstrings and
+                   `GIS.__init__`), or those tests will silently regress. `gis_mapping.py` is 682L — modestly over
+                   the ~600 target; splitting proximity vs speed could close it but is out of S3.4 scope.
