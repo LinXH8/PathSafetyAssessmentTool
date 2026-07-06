@@ -56,9 +56,12 @@
   when a graph call was actually due.
 - Read `CLAUDE.md` first — it documents live gotchas (filter-color leak, viewport restore, `startIndex=0`
   coloring, Chakra dialog scroll-lock cleanup, autocode skip flags). These are your regression tripwires.
-- **`frontend/CLAUDE.md` is mandatory reading for every frontend-touching session.** It is the v2 UI
-  contributor rulebook (container/ViewModel/shell seam, shared primitives, design tokens, `variant="v2"`
-  gating). Where its rules conflict with an older per-session sketch in this plan, the rulebook wins.
+- **`UI_V2_REDESIGN_GUIDE.md` (repo root) is mandatory reading for every frontend-touching session.** It is
+  the v2 UI contributor rulebook — its §0 "ten rules" are the standing protocol for all `frontend/src/` work
+  (container/ViewModel/shell seam, shared primitives in `paV2Primitives.tsx`, design tokens in
+  `designTokens.ts`, scope-colour convention, `variant="v2"` gating, `DistTooltipBox` for distribution
+  readouts, the px→rem/vh/vw Sizing & Responsive-Unit Conversion Catalog, and the per-page implementation
+  log in §9). Where its rules conflict with an older per-session sketch in this plan, the rulebook wins.
 - **Sync with main first.** Before starting any Phase 2/3 session, merge `origin/main` into `xh_dev` and
   re-verify the target file's current state (line count, structure) — main is actively developing the v2 UI
   in the same files this plan decomposes, and session sketches can go stale between chats.
@@ -121,7 +124,7 @@ mixed); `gis_mapping.py` 2,583 lines (proximity+speed+curvature+width in one cla
 **v2 UI architecture (merged from main 2026-07-03, commit `d5613347`):** a parallel redesign effort on `main`
 already split six pages (Projects, Coding, Treatment, CreateProject, PathAnalysis, Help) along a
 **container / `*ViewModel.ts` / `*LayoutV1|V2.tsx` shell** seam (`frontend/src/pages/*/layouts/`), governed by
-the `frontend/CLAUDE.md` rulebook. Containers own ALL logic; shells are pure functions of the view-model.
+the `UI_V2_REDESIGN_GUIDE.md` rulebook. Containers own ALL logic; shells are pure functions of the view-model.
 `PathAnalysisMapView` and `GeoDataPanel` are shared heavy components with gated `variant="v2"` props.
 Phase 2 sessions below were re-scoped (2026-07-03) to build ON TOP of this seam, not against it.
 
@@ -327,7 +330,7 @@ strings to keep existing user sessions valid.
 **Note (2026-07-03, post-v2 merge):** `CreateProjectPage/folderSummaryCache.ts` (new from main) uses
 **localStorage** with its own key — register that key in the central registry (e.g. a parallel `LOCAL_KEYS`)
 for discoverability, but do **not** rewrite the file itself; it's fresh working main code. Also per
-`frontend/CLAUDE.md`, layout shells may never touch sessionStorage — `useSessionState` consumers must be
+`UI_V2_REDESIGN_GUIDE.md`, layout shells may never touch sessionStorage — `useSessionState` consumers must be
 containers/hooks.
 **Verify:** Viewport restore + filter persistence + filter-color context all survive back-nav (Regression items 1,2,4).
 **Commit:** `refactor(state): add useSessionState hook and typed session keys [S1.6]`
@@ -337,7 +340,7 @@ containers/hooks.
 No behavior change. After each extraction: build + manual smoke + commit.
 
 **v2-seam constraint (all — re-scoped 2026-07-03, see CONTEXT):** extractions must respect the
-`frontend/CLAUDE.md` container/shell rules. Extracted data/state hooks live in (and are called from) the
+`UI_V2_REDESIGN_GUIDE.md` container/shell rules. Extracted data/state hooks live in (and are called from) the
 **container** page file; `*LayoutV1/V2.tsx` shells remain pure functions of the `*ViewModel.ts` — never move
 fetching, server state, or sessionStorage into a shell. Keep each page's ViewModel interface intact (callbacks
 may be re-wired to new hooks, but the shell-facing contract must not change shape without updating both layouts).
@@ -370,12 +373,12 @@ may be re-wired to new hooks, but the shell-facing contract must not change shap
   `reportBuilderPage.tsx` — this file is the largest and most tangled with no existing seam, so understanding
   affected flows matters more here than a single-symbol caller lookup. **Then extract:** `useReportData`,
   `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`. No v2 layout exists for this page yet (it
-  grew to 3,346 lines) — structure the decomposition as container + view-model per `frontend/CLAUDE.md` so a
+  grew to 3,346 lines) — structure the decomposition as container + view-model per `UI_V2_REDESIGN_GUIDE.md` so a
   future `ReportBuilderLayoutV2` can slot in.
 
 **Context to load (each):** run this session's **Graph tools first** call (leading sentence of its bullet
 above) BEFORE opening any file — it is part of loading context, not an optional extra step. Then load: the
-target file + `CLAUDE.md` + **`frontend/CLAUDE.md` (mandatory — §0 protocol)** + the page's
+target file + `CLAUDE.md` + **`UI_V2_REDESIGN_GUIDE.md` (mandatory — §0 protocol)** + the page's
 `layouts/*ViewModel.ts` (if present) + hooks/components from Phase 1.
 **Verify (each):** frontend gate + `detect_changes_tool` + full Regression Checklist for that page's flows
 (including checklist item 7 — both layout variants render).
@@ -861,7 +864,7 @@ gives for free — record what you found so the next session doesn't re-query fr
   FILES MODIFIED:  `REFACTOR_PLAN.md` — updated CONTEXT section with new line counts post-merge
                    (`treatmentDetailPage` 2,197→1,387; `codingPage` 3,036→2,301; `reportBuilderPage` 3,092→3,346);
                    re-scoped S2.1–S2.5 session sketches to respect the `container/*ViewModel.ts/*LayoutV1|V2.tsx`
-                   seam; added two guardrails (`frontend/CLAUDE.md` mandatory reading; merge origin/main before
+                   seam; added two guardrails (`UI_V2_REDESIGN_GUIDE.md` mandatory reading; merge origin/main before
                    Phase 2/3 sessions); added Regression checklist item 7 (both layout variants must render);
                    noted `folderSummaryCache.ts` localStorage key for S1.6 registration
   SYMBOLS MOVED/EXTRACTED: n/a
@@ -873,7 +876,7 @@ gives for free — record what you found so the next session doesn't re-query fr
                    `*LayoutV1/V2.tsx` shells are pure functions of the ViewModel and must not receive new
                    logic. The v2 merge already did the container/shell split — we build on it, not against it.
   DEFERRED:        none
-  NOTES FOR NEXT:  `frontend/CLAUDE.md` is now mandatory reading for every frontend-touching session. Sync
+  NOTES FOR NEXT:  `UI_V2_REDESIGN_GUIDE.md` is now mandatory reading for every frontend-touching session. Sync
                    with `origin/main` at the start of each Phase 2/3 session — main actively develops the v2
                    UI in the same files.
 
@@ -917,7 +920,7 @@ gives for free — record what you found so the next session doesn't re-query fr
                    `LOCAL_KEYS` (localStorage) are registered in the same file for discoverability. `folderSummaryCache.ts`
                    (new from main merge) already uses `LOCAL_KEYS.FOLDER_SUMMARY_CACHE`; its key is registered
                    in the central constants but the file itself was not rewritten (it is fresh working-main code).
-                   Per `frontend/CLAUDE.md`, `useSessionState` may only be called from containers/hooks — never
+                   Per `UI_V2_REDESIGN_GUIDE.md`, `useSessionState` may only be called from containers/hooks — never
                    from layout shells.
   DEFERRED:        none
   NOTES FOR NEXT:  Before starting S2.1, merge `origin/main` and re-check `PathAnalysisMapView.tsx` line count /
