@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { COLOR } from "../../../features/ui/designTokens";
 import { Box, Text, Tabs, Button, Flex, Portal, Dialog } from "@chakra-ui/react";
@@ -436,7 +436,7 @@ export default function AttributeAnalysisMapView({
     })();
 
     return () => { aborted = true; };
-  }, [selectedProjects, projectColors, refreshTrigger]);
+  }, [selectedProjects, projectColors, refreshTrigger, savedViewport]);
 
   // O(1) lookup of a project's index in projectsData by name (avoids per-cell findIndex)
   const projectIndexByName = useMemo(() => {
@@ -1031,7 +1031,7 @@ export default function AttributeAnalysisMapView({
       newToggles[categoryFilterAttribute] = updatedAttributeToggles;
       return newToggles;
     });
-  }, [categoryFilterAttribute, availableCategories]);
+  }, [categoryFilterAttribute, availableCategories, setCategoryToggles]);
 
   // Initialise subcategory toggles when the sidebar attribute has subcategories
   useEffect(() => {
@@ -1051,7 +1051,7 @@ export default function AttributeAnalysisMapView({
       if (!changed) return prev;
       return { ...prev, [childAttr]: updated };
     });
-  }, [categoryFilterAttribute]);
+  }, [categoryFilterAttribute, setSubcategoryToggles]);
 
 
   // Calculate bounds for each project based on actual geodata

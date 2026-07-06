@@ -20,6 +20,9 @@ import { useEffect, useRef, useState } from "react";
 import type L from "leaflet";
 import { GIS_SEGMENT_RADIUS_M } from "./mapViewUtils";
 
+/** Fetched GIS layer geometry keyed by layer id. */
+export type GISLayersData = Record<string, any[]>;
+
 /** A single path-defect point returned by /api/defects/nearby. */
 export type PathDefect = { lat: number; lon: number; type_of_defect?: string; location?: string; date_of_inspection?: string };
 
@@ -41,7 +44,7 @@ export function useGISLayerToggles({
   mapViewportBounds: L.LatLngBounds | null;
 }) {
   const [isGisSidebarOpen, setIsGisSidebarOpen] = useState(false);
-  const [gisLayers, setGisLayers] = useState<Record<string, any[]> | null>(null);
+  const [gisLayers, setGisLayers] = useState<GISLayersData | null>(null);
   const [pathDefects, setPathDefects] = useState<PathDefect[] | null>(null);
   const [showFootpath, setShowFootpath] = useState(false);
   const [showCycling, setShowCycling] = useState(false);

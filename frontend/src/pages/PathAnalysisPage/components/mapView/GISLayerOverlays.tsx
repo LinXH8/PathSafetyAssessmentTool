@@ -17,11 +17,11 @@
 import { CircleMarker, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Tooltip } from "react-leaflet";
 import type L from "leaflet";
 import { GIS_LAYER_COLORS as gisLayerColors } from "../../../../constants/mapColors";
-import type { PathDefect } from "./useGISLayerToggles";
+import type { GISLayersData, PathDefect } from "./useGISLayerToggles";
 
 interface GISLayerOverlaysProps {
   /** Fetched layer geometry keyed by layer id (null until a fetch resolves). */
-  gisLayers: Record<string, any[]> | null;
+  gisLayers: GISLayersData | null;
   /** Viewport path defects (null while hidden / loading). */
   pathDefects: PathDefect[] | null;
   /** Shared canvas renderer with 50% padding so lines near the viewport edge
