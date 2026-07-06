@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { listShapefiles, deleteShapefile, renameShapefile, revertShapefile, type ShapefileInfo } from "../../api";
 import { Spinner, Text, Badge, Box, Flex, HStack, Button } from "@chakra-ui/react";
 import ShapefileModal from "../sidebar/components/ShapefileModal";
+import EditParametersModal from "./EditParametersModal";
 import { MapContainer, Polyline, CircleMarker, Polygon as LeafletPolygon, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -72,6 +73,7 @@ export default function GisLayersPage() {
   const [mapError, setMapError] = useState<string | null>(null);
   
   const [shapefileModalOpen, setShapefileModalOpen] = useState(false);
+  const [editingParamsFile, setEditingParamsFile] = useState<ShapefileInfo | null>(null);
 
   const [editingPath, setEditingPath] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
@@ -636,6 +638,15 @@ export default function GisLayersPage() {
                               >
                                 Edit
                               </Button>
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                colorPalette="purple"
+                                onClick={(e) => { e.stopPropagation(); setEditingParamsFile(file); }}
+                                title="Edit required columns / affected parameters"
+                              >
+                                Params
+                              </Button>
                               {file.is_renamed && (
                                 <Button
                                   size="xs"
@@ -720,6 +731,9 @@ export default function GisLayersPage() {
                         </Text>
                         <Text color={textColor} whiteSpace="normal" wordBreak="break-word">
                           <Text as="span" fontWeight="600">Affects:</Text> {file.affects || getLayerMetadata(file.base_name).affects}
+                          {file.is_custom_metadata && (
+                            <Text as="span" color="purple.500" fontStyle="italic"> (user-defined)</Text>
+                          )}
                         </Text>
                       </Box>
                     </Box>
@@ -809,12 +823,21 @@ export default function GisLayersPage() {
         </Box>
       </Flex>
 
-      <ShapefileModal 
-        open={shapefileModalOpen} 
+      <ShapefileModal
+        open={shapefileModalOpen}
         onClose={() => {
           setShapefileModalOpen(false);
           loadLayers();
-        }} 
+        }}
+      />
+
+      <EditParametersModal
+        file={editingParamsFile}
+        onClose={() => setEditingParamsFile(null)}
+        onSaved={() => {
+          setEditingParamsFile(null);
+          loadLayers();
+        }}
       />
     </Box>
   );

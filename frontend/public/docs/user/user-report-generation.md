@@ -121,9 +121,18 @@ A **legend** is displayed alongside the map, showing the colour coding for each 
 
 ### 5.4.4 Risk Bands
 
-Shows the distribution of segments across risk bands for all four crash types: **BB, BP, SB, VB**, and **Overall Risk**.
+**What it shows:** The distribution of segments across risk bands (Low / Medium / High / Extreme) for all **five risk types**: Overall Risk, Vehicle–Bicycle (VB), Bicycle–Bicycle (BB), Single-Bicycle (SB), and Bicycle–Pedestrian (BP).
 
-Each crash type is rendered as a horizontal bar chart — one bar per band, with segment count and percentage. The section loads automatically once projects are loaded and reflects any active filters.
+**How it looks:** Five donut charts (Overall, VB, BB, SB, BP), one per risk type, each showing how many segments fall into each band out of the total segment count, with segment count and percentage. The colour coding is:
+
+- 🟢 Low — green
+- 🟡 Medium — yellow
+- 🟠 High — orange
+- 🟣 Extreme — purple
+
+This section renders automatically once your projects are loaded — no manual steps required.
+
+> **Tip:** The Risk Bands section reflects your **active filters**. If you have filtered the Path Analysis page to only show certain segments (e.g. by road type or rating), only those segments appear in the bands.
 
 ### 5.4.5 Risk Factors
 

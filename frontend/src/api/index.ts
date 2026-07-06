@@ -968,6 +968,7 @@ export type ShapefileInfo = {
   files?: string[];
   required_columns?: string;
   affects?: string;
+  is_custom_metadata?: boolean;
   geom_type?: string;
   original_name?: string;
   is_renamed?: boolean;
@@ -1119,6 +1120,34 @@ export async function revertShapefile(shapefilePath: string): Promise<{ message:
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ path: shapefilePath }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return res.json();
+}
+
+/**
+ * Curated list of parameter tags offered when editing a layer's "Affects" metadata
+ */
+export async function getParameterOptions(): Promise<string[]> {
+  const res = await fetch("/api/shapefiles/parameter-options");
+  if (!res.ok) throw new Error(await readError(res));
+  return res.json();
+}
+
+/**
+ * Override the displayed "Required Columns" / "Affects" metadata for a layer.
+ * This only corrects the informational labels shown in the GIS Layers list —
+ * it does not change what columns the scoring engine reads.
+ */
+export async function setLayerMetadata(
+  shapefilePath: string,
+  requiredColumns: string,
+  affects: string[]
+): Promise<{ message: string; info: ShapefileInfo }> {
+  const res = await fetch("/api/shapefiles/metadata", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: shapefilePath, required_columns: requiredColumns, affects }),
   });
   if (!res.ok) throw new Error(await readError(res));
   return res.json();
