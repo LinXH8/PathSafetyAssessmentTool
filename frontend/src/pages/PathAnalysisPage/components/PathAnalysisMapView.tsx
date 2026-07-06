@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import type { ReactNode, CSSProperties } from "react";
-import { createPortal } from "react-dom";
+import type { CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { FONT, COLOR } from "../../../features/ui/designTokens";
 import { V2Segmented, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
 import { Box, Text, Tabs, Button, Flex, HStack, Portal, Input, IconButton, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
 import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
 import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
@@ -17,7 +16,7 @@ import { AnalysisSidebar } from "../../../components/visualization/AnalysisSideb
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon } from "geojson";
+import type { Feature, LineString } from "geojson";
 import { to4326 } from "../../../utils/projection";
 import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
 import { isPointInPolygon } from "../../../components/map/polygonUtils";
@@ -25,256 +24,31 @@ import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment,
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
-
-const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
-
-// Radius (metres) around each loaded segment within which GIS overlay features are
-// fetched. Matches the Coding page's single-point query radius.
-const GIS_SEGMENT_RADIUS_M = 200;
-
-// Attributes whose missing/blank value defaults to "Adequate" (code 1) per
-// backend/src/CycleRAP/defaults.json. Scoring applies the same default
-// (row.get(attr, 1)) and the coding panel renders "Adequate" for a blank cell,
-// so Path Analysis must treat blank as "Adequate" too — otherwise the many
-// segments that were never explicitly coded (null in attributes.csv) get dropped
-// from visibleSegments and never appear even when "Adequate" is toggled on.
-const ADEQUACY_DEFAULT_ATTRS = new Set(["Line of Sight", "Facility access"]);
-interface UploadedBoundaryFeature {
-  key: string;
-  label: string;
-  kind: "polygon" | "line";
-  coords?: [number, number][];
-  lineCoordsSets?: [number, number][][];
-}
-
-const FEATURE_LABEL_KEYS = [
-  "name", "Name", "NAME", "label", "Label", "LABEL",
-  "pln_area_n", "PLN_AREA_N", "subzone_n", "SUBZONE_N",
-  "region_n", "REGION_N", "id", "ID", "OBJECTID", "FID",
-];
-
-function getUploadedBoundaryLabel(properties: GeoJsonProperties | null | undefined, featureIndex: number): string {
-  if (properties) {
-    for (const key of FEATURE_LABEL_KEYS) {
-      const value = properties[key];
-      if (typeof value === "string" && value.trim()) return value.trim();
-      if (typeof value === "number" && Number.isFinite(value)) return String(value);
-    }
-  }
-  return `Feature ${featureIndex + 1}`;
-}
-
-function toShapefileLeafletCoords(ring: number[][]): [number, number][] {
-  return ring
-    .filter((coord) => coord.length >= 2 && Number.isFinite(coord[0]) && Number.isFinite(coord[1]))
-    .map(([lng, lat]) => [lat, lng]);
-}
-
-function extractUploadedBoundaryFeatures(collection: FeatureCollection): UploadedBoundaryFeature[] {
-  const boundaries: UploadedBoundaryFeature[] = [];
-  const aggregatedLineCoords: number[][][] = [];
-  const aggregatedLineLabels: string[] = [];
-
-  collection.features.forEach((feature, featureIndex) => {
-    const baseLabel = getUploadedBoundaryLabel(feature.properties, featureIndex);
-    const geometry = feature.geometry;
-    if (!geometry) return;
-
-    if (geometry.type === "Polygon") {
-      const coords = toShapefileLeafletCoords((geometry as Polygon).coordinates[0] as number[][]);
-      if (coords.length >= 3) boundaries.push({ key: `${featureIndex}-0`, label: baseLabel, kind: "polygon", coords });
-    } else if (geometry.type === "MultiPolygon") {
-      const multi = geometry as MultiPolygon;
-      multi.coordinates.forEach((polygonCoords, partIndex) => {
-        const coords = toShapefileLeafletCoords(polygonCoords[0] as number[][]);
-        if (coords.length >= 3) boundaries.push({
-          key: `${featureIndex}-${partIndex}`,
-          label: multi.coordinates.length > 1 ? `${baseLabel} (part ${partIndex + 1})` : baseLabel,
-          kind: "polygon", coords,
-        });
-      });
-    } else if (geometry.type === "LineString") {
-      const lineCoords = (geometry as LineString).coordinates as number[][];
-      const coords = toShapefileLeafletCoords(lineCoords);
-      if (coords.length >= 2) { aggregatedLineCoords.push(lineCoords); aggregatedLineLabels.push(baseLabel); }
-    } else if (geometry.type === "MultiLineString") {
-      (geometry as MultiLineString).coordinates.forEach((lineCoords) => {
-        const coords = toShapefileLeafletCoords(lineCoords as number[][]);
-        if (coords.length >= 2) { aggregatedLineCoords.push(lineCoords as number[][]); aggregatedLineLabels.push(baseLabel); }
-      });
-    }
-  });
-
-  if (aggregatedLineCoords.length > 0) {
-    const lineCoordsSets = aggregatedLineCoords.map((lc) => toShapefileLeafletCoords(lc)).filter((c) => c.length >= 2);
-    boundaries.push({
-      key: "uploaded-lines",
-      label: aggregatedLineLabels.length === 1 ? aggregatedLineLabels[0] : `Imported Lines (${aggregatedLineCoords.length} features)`,
-      kind: "line",
-      lineCoordsSets,
-    });
-  }
-
-  return boundaries;
-}
-
-type GradeBucket = {
-  label: string;
-  aliases: string[];
-  maxPercent?: number;
-};
-
-const GRADE_BUCKETS: GradeBucket[] = [
-  { label: "<=2% (1:25)", maxPercent: 2, aliases: ["<=2 degrees (1:25)", "<=4% (1:25)"] },
-  { label: "2.9% (1:20)", maxPercent: 2.9, aliases: ["2.9 degrees (1:20)", "5% (1:20)"] },
-  { label: "3.8% (1:15)", maxPercent: 3.8, aliases: ["3.8 degrees (1:15)", "6.7% (1:15)"] },
-  { label: "4.7% (1:12)", maxPercent: 4.7, aliases: ["4.7 degrees (1:12)", "8.3% (1:12)", "< 5 Degrees"] },
-  { label: ">=5%", aliases: [">=5 degrees", ">8.3% (>1:12)", "=/> 5 Degrees"] },
-];
-const GRADE_FILTER_OPTIONS = GRADE_BUCKETS.map(({ label }) => label);
-const ROAD_SPEED_LIMIT_FILTER_OPTIONS = ["NA", "30 km/h", "40 km/h", "50 km/h", "60 km/h", "70 km/h", "80 km/h", "90 km/h"];
-const CROSSING_TYPE_FILTER_OPTIONS = ["Zebra Crossing", "Signalised PC", "Bicycle Crossing", "Unsignalised Junction", "Development Access"];
-
-const compareByOrder = (left: string, right: string, order: string[]): number => {
-  const leftIndex = order.indexOf(left);
-  const rightIndex = order.indexOf(right);
-  if (leftIndex === -1 && rightIndex === -1) return 0;
-  if (leftIndex === -1) return 1;
-  if (rightIndex === -1) return -1;
-  return leftIndex - rightIndex;
-};
-
-const getSemanticCategoryOrder = (attributeName: string | null | undefined): string[] | null => {
-  if (!attributeName) return null;
-  if (SAFETY_FOCUS_ATTRIBUTES.has(attributeName)) return ["Low", "Medium", "High", "Extreme"];
-  if (attributeName === "Facility Width per Direction") return ["Very Narrow", "Narrow", "Wide"];
-  if (attributeName === "Grade") return GRADE_FILTER_OPTIONS;
-  if (attributeName === "Road speed limit") return ROAD_SPEED_LIMIT_FILTER_OPTIONS;
-  if (attributeName === "Crossing Type") return CROSSING_TYPE_FILTER_OPTIONS;
-  return null;
-};
-
-const getGradeBucketFromPercent = (gradientPct: number): string => {
-  const absoluteGradientPercent = Math.abs(gradientPct);
-  return GRADE_BUCKETS.find((bucket) => bucket.maxPercent === undefined || absoluteGradientPercent <= bucket.maxPercent)?.label ?? GRADE_BUCKETS[GRADE_BUCKETS.length - 1].label;
-};
-
-const normalizeGradeLabel = (value: string): string => {
-  const normalizedValue = value.trim();
-  const matchingBucket = GRADE_BUCKETS.find(({ label, aliases }) => label === normalizedValue || aliases.includes(normalizedValue));
-  return matchingBucket?.label ?? normalizedValue;
-};
-
-const normalizeCrossingTypeLabel = (value: string): string | null => {
-  const normalizedValue = value.trim().toLowerCase();
-  if (!normalizedValue) return null;
-  if (normalizedValue.includes("zebra")) return "Zebra Crossing";
-  if (normalizedValue.includes("signalised") || normalizedValue.includes("signalized")) return "Signalised PC";
-  if (normalizedValue.includes("bicycle crossing") || normalizedValue.includes("pedestrian cum bicycle crossing")) return "Bicycle Crossing";
-  if (normalizedValue.includes("unsignalised junction") || normalizedValue.includes("unsignalized junction")) return "Unsignalised Junction";
-  if (normalizedValue.includes("development access")) return "Development Access";
-  return null;
-};
-
-// Component to pan to specific bounds
-function PanToBounds({ bounds }: { bounds: L.LatLngBounds | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!bounds) return;
-    map.fitBounds(bounds, { padding: [24, 24] });
-  }, [bounds, map]);
-  return null;
-}
-
-// Component to auto-fit bounds based on points - only on initial load
-function FitBounds({ points, shouldFit }: { points: [number, number][]; shouldFit: boolean }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!points.length || !shouldFit) return;
-    const bounds = L.latLngBounds(points.map(([lat, lng]) => L.latLng(lat, lng)));
-    map.fitBounds(bounds, { padding: [24, 24] });
-  }, [points, map, shouldFit]);
-  return null;
-}
-
-// Reports live viewport bounds after pan/zoom so the parent can cull off-screen markers.
-// Uses a debounced state update so React batches marker mount/unmount after the gesture ends.
-function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBounds) => void }) {
-  const map = useMap();
-  const cbRef = useRef(onBoundsChange);
-  cbRef.current = onBoundsChange;
-
-  useEffect(() => { cbRef.current(map.getBounds()); }, [map]);
-
-  useMapEvents({
-    moveend: (e) => cbRef.current(e.target.getBounds()),
-    zoomend: (e) => cbRef.current(e.target.getBounds()),
-  });
-  return null;
-}
-
-// Shape of the persisted map viewport (center + zoom).
-// Key: SESSION_KEYS.PA_MAP_VIEWPORT ("pathAnalysisMap_viewport").
-type SavedViewport = { center: [number, number]; zoom: number };
-
-// Persists the live map center/zoom on every pan/zoom so returning from the
-// Coding page lands on the exact view the user left (rather than re-fitting to
-// all points). Cleared on a deliberate Projects-page reselect.
-function ViewportPersister() {
-  const map = useMap();
-  const save = () => {
-    try {
-      const c = map.getCenter();
-      sessionStorage.setItem(
-        SESSION_KEYS.PA_MAP_VIEWPORT,
-        JSON.stringify({ center: [c.lat, c.lng], zoom: map.getZoom() } as SavedViewport)
-      );
-    } catch { /* sessionStorage unavailable — ignore */ }
-  };
-  useMapEvents({ moveend: save, zoomend: save });
-  return null;
-}
-
-// Forces Leaflet to recalculate the container size after mount.
-// Necessary when the map is inside a flex/scroll container that applies
-// its final height after Leaflet has already initialised.
-function MapInvalidateSize() {
-  const map = useMap();
-  useEffect(() => {
-    // Initial pass (fires moveend so marker culling re-runs).
-    const id = setTimeout(() => { map.invalidateSize(); map.fire('moveend'); }, 0);
-    // Second pass once the v2 card height has settled + observe container resizes,
-    // mirroring the Coding / Create-Project fix for the half-grey-tiles bug.
-    const settle = window.setTimeout(() => map.invalidateSize(), 200);
-    let ro: ResizeObserver | null = null;
-    try {
-      ro = new ResizeObserver(() => map.invalidateSize());
-      ro.observe(map.getContainer());
-    } catch { /* ResizeObserver unsupported — the timeouts still cover mount */ }
-    return () => { clearTimeout(id); clearTimeout(settle); ro?.disconnect(); };
-  }, [map]);
-  return null;
-}
-
-
-/**
- * Renders `children` inline (`to === undefined`, the v1 default), into a portal
- * (`to` is a DOM node, v2 with the host mounted), or nothing (`to === null`, v2
- * before the host mounts). Lets the v2 layout relocate the project / category
- * toggle UI into the left "Current Filters" accordion while the map view keeps
- * owning all of its state — no state lift required.
- */
-function MaybePortal({
-  to,
-  children,
-}: {
-  to?: HTMLElement | null;
-  children: ReactNode;
-}) {
-  if (to === undefined) return <>{children}</>;
-  if (to === null) return null;
-  return createPortal(children, to);
-}
+import {
+  SAFETY_FOCUS_ATTRIBUTES,
+  GIS_SEGMENT_RADIUS_M,
+  ADEQUACY_DEFAULT_ATTRS,
+  CROSSING_TYPE_FILTER_OPTIONS,
+  compareByOrder,
+  getSemanticCategoryOrder,
+  getGradeBucketFromPercent,
+  normalizeGradeLabel,
+  normalizeCrossingTypeLabel,
+  extractUploadedBoundaryFeatures,
+  escapeCSV,
+  type UploadedBoundaryFeature,
+  type ProjectData,
+  type VisibleSegment,
+} from "./mapView/mapViewUtils";
+import {
+  PanToBounds,
+  FitBounds,
+  ViewportWatcher,
+  ViewportPersister,
+  MapInvalidateSize,
+  MaybePortal,
+} from "./mapView/leafletHelpers";
+import { useViewportPersistence } from "./mapView/useViewportPersistence";
 
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
@@ -310,24 +84,6 @@ interface AttributeAnalysisMapViewProps {
   filtersPortalTarget?: HTMLElement | null;
 }
 
-
-type ProjectData = {
-  projectName: string;
-  geoFeatures: Feature<LineString, any>[];
-  attributes: AttributeRow[];
-  scores: Record<string, any>[]; // Raw crash type scores (BB, SB, VB, BP)
-  color: string;
-};
-
-type VisibleSegment = {
-  idx: number;
-  latlng: [number, number];
-  f: Feature<LineString, any>;
-  attributes: AttributeRow;
-  projectName: string;
-  projectColor: string;
-  scores: Record<string, any> | null;
-};
 
 export default function AttributeAnalysisMapView({
   selectedProjects,
@@ -370,6 +126,10 @@ export default function AttributeAnalysisMapView({
 
   // Track live map viewport so we can cull off-screen markers before React touches them.
   const [mapViewportBounds, setMapViewportBounds] = useState<L.LatLngBounds | null>(null);
+
+  // Persisted viewport restore: seeds the map's initial center/zoom and lets the
+  // data-load effect skip the auto-fit when returning from the Coding page.
+  const { savedViewport, initialCenter, initialZoom } = useViewportPersistence();
   const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>(
     () => getCachedAttributeMappingsSync() ?? {}
   );
@@ -1807,21 +1567,6 @@ export default function AttributeAnalysisMapView({
     });
   };
 
-  // Default center (Singapore)
-  // Read the persisted viewport once at mount. When present (returning from the
-  // Coding page) the map opens there and skips the auto-fit; when absent (fresh
-  // Projects-page load) it falls back to the Singapore default and auto-fits.
-  const savedViewport = useRef<SavedViewport | null>(
-    (() => {
-      try {
-        const s = sessionStorage.getItem(SESSION_KEYS.PA_MAP_VIEWPORT);
-        return s ? (JSON.parse(s) as SavedViewport) : null;
-      } catch { return null; }
-    })()
-  );
-  const initialCenter = useRef<[number, number]>(savedViewport.current?.center ?? [1.3521, 103.8198]);
-  const initialZoom = useRef<number>(savedViewport.current?.zoom ?? 13);
-
   // Calculate bounds for each project based on actual geodata
   const projectBounds = useMemo(() => {
     const boundsMap: Record<string, L.LatLngBounds> = {};
@@ -1862,14 +1607,6 @@ export default function AttributeAnalysisMapView({
     if (row) {
       row.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
-  };
-
-  // CSV helper: escape CSV values with proper quoting
-  const escapeCSV = (value: string): string => {
-    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-      return `"${value.replace(/"/g, '""')}"`;
-    }
-    return value;
   };
 
   // Generate CSV content from sorted and filtered data
