@@ -196,6 +196,16 @@ export type VisibleSegment = {
   scores: Record<string, any> | null;
 };
 
+/** A visible segment as consumed by the table / CSV / marker layers: focus
+ *  colour resolved, project colour and raw scores dropped. */
+export type TablePoint = Omit<VisibleSegment, "projectColor" | "scores"> & { color: string };
+
+/** A `TablePoint` plus its resolved focus-attribute value (marker tooltips / legend). */
+export type MapPoint = TablePoint & { attributeValue: string };
+
+/** Multi-column sort configuration for the segments table. */
+export type TableSortConfig = Array<{ column: string; direction: "asc" | "desc" }>;
+
 /** CSV helper: escape CSV values with proper quoting. */
 export const escapeCSV = (value: string): string => {
   if (value.includes(",") || value.includes('"') || value.includes("\n")) {
