@@ -22,7 +22,7 @@ import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
 import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type CodingFilterContext, type FilteredProjectData } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
-import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
+import { PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 import {
   SAFETY_FOCUS_ATTRIBUTES,
@@ -45,6 +45,7 @@ import { useFilterState } from "./mapView/useFilterState";
 import { useAttributeText } from "./mapView/useAttributeText";
 import { useGISLayerToggles } from "./mapView/useGISLayerToggles";
 import { useImportedShapefile } from "./mapView/useImportedShapefile";
+import { GISLayerOverlays } from "./mapView/GISLayerOverlays";
 
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
@@ -2435,62 +2436,26 @@ export default function AttributeAnalysisMapView({
                   {/* GIS Layers — rendered below segments pane (zIndex < 450).
                       gisCanvasRenderer provides 50% padding so lines near the viewport
                       edge stay visible during pan/zoom without flickering. */}
-                  {gisLayers && showFootpath && gisLayers.footpath?.map((f, i) => (
-                    <LeafletPolyline key={`fp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.footpath, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showCycling && gisLayers.cycling?.map((f, i) => (
-                    <LeafletPolyline key={`cy-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.cycling, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showShared && gisLayers.shared?.map((f, i) => (
-                    <LeafletPolyline key={`sh-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.shared, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showRoadcrossing && gisLayers.roadcrossing?.map((f, i) => (
-                    <LeafletPolyline key={`rc-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.roadcrossing, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showKerbLine && gisLayers.kerb_line?.map((f, i) => (
-                    <LeafletPolyline key={`kl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.kerb_line, weight: 2, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showBusLane && gisLayers.bus_lane?.map((f, i) => {
-                    const isMulti = Array.isArray(f.coordinates[0]) && Array.isArray(f.coordinates[0][0]);
-                    if (isMulti) return (f.coordinates as any).map((line: any, j: number) => (
-                      <LeafletPolyline key={`bl-${i}-${j}`} renderer={gisCanvasRenderer} positions={line.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>
-                    ));
-                    return <LeafletPolyline key={`bl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>;
-                  })}
-                  {gisLayers && showMrtExit && gisLayers.mrt_exit?.map((f, i) => (
-                    <CircleMarker key={`mrt-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.mrt_exit, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>MRT Exit</Tooltip></CircleMarker>
-                  ))}
-                  {gisLayers && showBicycleCrossing && gisLayers.bicycle_crossing?.map((f, i) => (
-                    <CircleMarker key={`bc-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bicycle_crossing, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bicycle Crossing</Tooltip></CircleMarker>
-                  ))}
-                  {gisLayers && showBusStop && gisLayers.bus_stop?.map((f, i) =>
-                    f.geometry_type === "point"
-                      ? <CircleMarker key={`bs-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bus_stop, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bus Stop</Tooltip></CircleMarker>
-                      : <LeafletPolyline key={`bs-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_stop, weight: 4, opacity: 0.8 }}><Tooltip>Bus Shelter</Tooltip></LeafletPolyline>
-                  )}
-                  {gisLayers && showParkingLot && gisLayers.parking_lot?.map((f, i) =>
-                    f.geometry_type === "polygon"
-                      ? <LeafletPolygon key={`pk-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.8, fillOpacity: 0.3 }}><Tooltip>Parking Lot</Tooltip></LeafletPolygon>
-                      : <CircleMarker key={`pk-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Parking Lot</Tooltip></CircleMarker>
-                  )}
-                  {gisLayers && showStateLand && gisLayers.state_land?.map((f, i) => (
-                    <LeafletPolygon key={`sl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.state_land, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "State Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showStatBoard && gisLayers.stat_board?.map((f, i) => (
-                    <LeafletPolygon key={`sb-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.stat_board, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Stat Board"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showLandPrivate && gisLayers.land_private?.map((f, i) => (
-                    <LeafletPolygon key={`lp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_private, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Private Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showLandMinistry && gisLayers.land_ministry?.map((f, i) => (
-                    <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {showPathDefects && pathDefects?.map((d, i) => (
-                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: gisLayerColors.path_defects, weight: 2, opacity: 1, fillOpacity: 0.8 }}>
-                      <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
-                    </CircleMarker>
-                  ))}
-
+                  <GISLayerOverlays
+                    gisLayers={gisLayers}
+                    pathDefects={pathDefects}
+                    gisCanvasRenderer={gisCanvasRenderer}
+                    showFootpath={showFootpath}
+                    showCycling={showCycling}
+                    showShared={showShared}
+                    showRoadcrossing={showRoadcrossing}
+                    showMrtExit={showMrtExit}
+                    showBusStop={showBusStop}
+                    showBusLane={showBusLane}
+                    showParkingLot={showParkingLot}
+                    showKerbLine={showKerbLine}
+                    showBicycleCrossing={showBicycleCrossing}
+                    showPathDefects={showPathDefects}
+                    showStateLand={showStateLand}
+                    showStatBoard={showStatBoard}
+                    showLandPrivate={showLandPrivate}
+                    showLandMinistry={showLandMinistry}
+                  />
                   {/* Imported shapefile overlay — non-interactive so hover doesn't interfere with segment nodes */}
                   {importedBoundaries.map((boundary) =>
                     boundary.kind === "polygon" && boundary.coords ? (
