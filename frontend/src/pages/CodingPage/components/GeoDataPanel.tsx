@@ -10,29 +10,32 @@ import { Switch } from "../../../components/ui/switch";
 import { AddSegmentsDialog } from "../../PathAnalysisPage/components/AddSegmentsDialog";
 import { MapCursorController } from "../../../components/common/MapCursorController";
 // import { copySegments } from "../../../api"; // Removed unused import
-import type { Feature, FeatureCollection, LineString, Position } from "geojson";
+import type { Feature, FeatureCollection, LineString } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
 import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
-import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { CODING_FILTER_CONTEXT_KEY, gisLayerToggleKey } from "../../../constants/sessionKeys";
 import { useNavigate } from "react-router-dom";
 
 
-import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, useMapEvents, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
 import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import proj4 from "proj4";
+import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import type { CurvatureVisualizationResponse } from '../../../api/curvatureVisualization';
 import { GRADIENT_STATUS_NO_LIDAR_RESULT, getGradientDisplayState } from "../../../utils/gradientDisplay";
 
 type Props = {
   projectName: string;                       // Current project name from parent
-  feature: Feature<LineString, any> | null;  // 当前段（父组件传入）
-  index: number;                             // 当前页（父组件传入，0-based）
+  feature: Feature<LineString, any> | null;  // Current segment (passed from parent)
+  index: number;                             // Current page index (passed from parent, 0-based)
   onJump?: (idx: number) => void;            // Jump to segment callback
-  containerHeight?: number | string;         // 容器总高度（包括header）; number→px, or a CSS length string (e.g. clamp/vh) for fluid v2 maps
+  containerHeight?: number | string;         // Total container height (including header); number=px or a CSS length string (e.g. clamp/vh) for fluid v2 maps
   scores?: ScoreRow[];                       // Optional scores passed from parent for real-time updates
   subtitle?: string;                         // Optional subtitle to display next to "Map Preview"
   geoFeatures?: Feature<LineString, any>[];  // Optional pre-loaded geofeatures (for multi-project display)
@@ -67,27 +70,7 @@ type ScoreRow = {
   [key: string]: any;
 };
 
-// --- EPSG:3414 (SVY21 / Singapore TM) 定义 -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-const to4326 = (p: Position): [number, number] => {
-  const x = p[0];
-  const y = p[1];
-  
-  // If arguably already WGS84 (Singapore lon is ~103, lat is ~1.3)
-  // Newly created projects natively output EPSG:4326, so we must not project SVY21 -> WGS84.
-  if (x >= 90 && x <= 120 && y >= -10 && y <= 20) {
-    return [y, x]; // return [lat, lon]
-  }
-
-  // 返回 [lat, lng]
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
-};
-
-// 小组件：根据点集自动 fit bounds (only on initial load)
+// Helper component: auto-fit map bounds to a set of points (first load only)
 function FitBounds({ points }: { points: [number, number][] }) {
   const map = useMap();
   const hasFitRef = useRef(false);
@@ -185,168 +168,6 @@ const defectIcon = divIcon({
   iconAnchor: [12, 12],
 });
 
-// Polygon Drawing Tool Component
-// Custom icon to mimic CircleMarker but allow dragging
-const createCustomIcon = (color: string) => {
-  return divIcon({
-    className: "custom-polygon-marker",
-    html: `<div style="
-      background-color: ${color};
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 4px rgba(0,0,0,0.4);
-      cursor: grab;
-    "></div>`,
-    iconSize: [20, 20], // Hit box size
-    iconAnchor: [10, 10], // Centered (half of 20)
-  });
-};
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  color: string;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-// Polygon Drawing Tool Component
-function PolygonDrawingTool({ active, points, onAddPoint, onPointUpdate, color = "orange" }: {
-  active: boolean,
-  points: [number, number][],
-  onAddPoint: (latlng: [number, number]) => void,
-  onPointUpdate: (index: number, latlng: [number, number]) => void,
-  color?: string
-}) {
-  const activeRef = useRef(active);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-  const pointsRef = useRef(points);
-
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
-
-  useEffect(() => {
-    pointsRef.current = points;
-  }, [points]);
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  useMapEvents({
-    click(e) {
-      if (activeRef.current) {
-        onAddPoint([e.latlng.lat, e.latlng.lng]);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    onPointUpdate(index, [latlng.lat, latlng.lng]);
-  }, [onPointUpdate]);
-
-  if (!active || points.length === 0) return null;
-
-  return (
-    <>
-      {points.map((p, i) => (
-        <DraggableMarker
-          key={`poly-point-${i}`}
-          position={p}
-          index={i}
-          color={color}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <Polyline
-        ref={polylineRef}
-        positions={points}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {points.length >= 3 && (
-        <Polygon
-          ref={polygonRef}
-          positions={points}
-          pathOptions={{ color: color, fillOpacity: 0.2, stroke: false }}
-        />
-      )}
-    </>
-  );
-}
-
-// PIP Algorithm (Ray Casting)
-const isPointInPolygon = (point: [number, number], vs: [number, number][]) => {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  // x = lon, y = lat
-  const x = point[1], y = point[0];
-
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][1], yi = vs[i][0];
-    const xj = vs[j][1], yj = vs[j][0];
-
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-};
-
 // No global cache needed anymore as we use localStorage
 
 function StatPill({ label, value }: { label: string; value: string }) {
@@ -408,7 +229,7 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
   const cachedLayers = useMemo(() => {
     if (!projectName) return {};
     try {
-      const stored = localStorage.getItem(`gisLayerToggles_${projectName}`);
+      const stored = localStorage.getItem(gisLayerToggleKey(projectName));
       return stored ? JSON.parse(stored) : {};
     } catch {
       return {};
@@ -453,7 +274,7 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
       showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
     };
     layerTogglesRef.current = toggles;
-    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
+    localStorage.setItem(gisLayerToggleKey(projectName), JSON.stringify({
       ...toggles,
       overlayEnabled: showCurvatureOverlay ?? false,
     }));
@@ -630,7 +451,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
   };
   const [pathDefects, setPathDefects] = useState<PathDefect[] | null>(null);
 
-  // 拉取整条 geodata（如果没有 external geofeatures）
+  // Fetch the full geodata for this project (skipped when parent provides external geofeatures)
   useEffect(() => {
     // Skip if we have external geofeatures provided by parent
     if (hasExternalGeoFeatures) {
@@ -698,7 +519,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => window.removeEventListener("psat:scores:updated", handleScoresUpdated);
   }, [fetchScores, externalScores]);
 
-  // 取每条 LineString 的首点（转 4326），并保留原 feature
+  // Extract the first point of each LineString (reprojected to WGS84) and keep a reference to the original feature.
   // For multi-project display, localIdx is the index within geoFeatures,
   // and globalIdx is the index within the aggregated scores array
   const points = useMemo(() => {
@@ -756,7 +577,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     [verifiedByProject, decodedName]
   );
 
-  // 当前高亮点 - use globalIdx to match the index prop (global index)
+  // Currently highlighted point — use globalIdx to match the index prop (global index)
   const current = useMemo(() => points.find(p => p.globalIdx === index) ?? null, [points, index]);
 
   // GIS query point: starts at current segment, can be repositioned by clicking on the map
@@ -812,7 +633,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     { percentDigits: 1 },
   );
 
-  // 初始中心（无数据时默认新加坡中心点）
+  // Initial map centre (defaults to Singapore centre when no data is loaded)
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
 
   // Fetch GIS layers when any toggle is turned on and we have a current point
@@ -1372,7 +1193,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* CartoDB Light basemap - same as Curvature Analysis */}
               <ThemeAwareTileLayer />
 
-              {/* 数据范围自适应 (first load only) */}
+              {/* Auto-fit bounds to all data points (first load only) */}
               {allLatLngs.length > 0 && <FitBounds points={allLatLngs} />}
 
               {/* Auto-zoom to current point when GIS layers active */}
@@ -1384,7 +1205,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* Zoom to the 5m curvature circle when the overlay is enabled */}
               <ZoomToCurvature showCurvatureOverlay={showCurvatureOverlay ?? false} circleCoords={circleCoords} />
 
-              {/* 自动跟随当前选中点 */}
+              {/* Auto-pan to the currently selected segment point */}
               <MapAutoCenter
                 center={current?.latlng ?? null}
                 anyLayerOn={showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showPathDefects}

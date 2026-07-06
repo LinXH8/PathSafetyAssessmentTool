@@ -105,9 +105,9 @@ class BaseTable:
         self.df_dirty = False
 
     def parse(self, file_path: Path):
-        """从磁盘读取表；文件不存在或为空时，初始化空表并标记 dirty。"""
-        # 1) 不存在 / 空文件：初始化空 df
-        if not file_path.exists() or file_path.stat().st_size == 0:  # ← 关键：为空文件直接兜底
+        """Read table from disk; if the file is missing or empty, initialise an empty DataFrame and mark dirty."""
+        # 1) Missing or empty file: initialise an empty DataFrame
+        if not file_path.exists() or file_path.stat().st_size == 0:  # ← key: fall back cleanly for empty files
             self.df = pd.DataFrame()
             self.df_dirty = True
             return
@@ -118,7 +118,7 @@ class BaseTable:
                 self.df = pd.read_csv(file_path, encoding="utf-8")
             except UnicodeDecodeError:
                 self.df = pd.read_csv(file_path, encoding="latin1")
-            except EmptyDataError:  # ← 关键：即便遇到空内容也兜底
+            except EmptyDataError:  # ← key: fall back cleanly even when the CSV is empty
                 self.df = pd.DataFrame()
                 self.df_dirty = True
                 return

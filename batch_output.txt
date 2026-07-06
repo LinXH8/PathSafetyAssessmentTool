@@ -1,5 +1,0 @@
-BASE_DIR=C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\
-BACKEND =C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\backend
-FRONTEND=C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\frontend
-[Backend] Ensuring Python deps ...
-... was unexpected at this time.

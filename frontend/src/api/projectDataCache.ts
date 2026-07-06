@@ -1,3 +1,12 @@
+/**
+ * In-memory promise cache for PathAnalysisPage read endpoints (geodata, attributes,
+ * results). Eliminates duplicate fetches across sibling components and turns
+ * back-navigation from the Coding page into a pure cache hit.
+ *
+ * See CLAUDE.md §"PathAnalysisPage: Slow Reload + Flash + Lost View" for the
+ * full problem description and invalidation strategy.
+ */
+
 import type { FeatureCollection } from "geojson";
 import {
   fetchProjectGeoJSON,
@@ -7,7 +16,7 @@ import {
   type AttributesResponse,
   type CalculateScoreResult,
   type AttrMappings,
-} from "./index";
+} from "./projects";
 
 /**
  * Module-level in-memory cache for the per-project read endpoints used by the

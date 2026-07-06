@@ -20,30 +20,21 @@ import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
-import proj4 from "proj4";
-import type { FeatureCollection, Position } from "geojson";
+import type { FeatureCollection } from "geojson";
 import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants/mapColors";
+import { to4326 } from "../../utils/projection";
+import { RISK_COLORS, RISK_LABELS } from "../../utils/riskColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { saveGeneratedReport } from "../../api";
 import { getCachedResults } from "../../api/projectDataCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-
-// ── SVY21 (EPSG:3414) → WGS84 ───────────────────────────────────────────────
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-const to4326 = (p: Position): [number, number] => {
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", [p[0], p[1]]) as [number, number];
-  return [lat, lon];
-};
+import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const CANVAS_W = 794;
 const PAGE_H = 1123;
 const PAGE_GAP = 24;
-const LAYOUT_KEY = "psat_report_layout";
 
 // ── Project Details paging ───────────────────────────────────────────────────
 // Project Details renders ALL projects, chunked into pages of PROJ_PAGE_SIZE.
@@ -62,12 +53,6 @@ function dateToQuarterLabel(iso: string): string {
   return `Q${Math.ceil(month / 3)} ${year}`;
 }
 
-const RISK_COLORS: Record<number, string> = {
-  1: "#87C424", 2: "#FFCC1A", 3: "#FF5B1A", 4: "#CD1AFF",
-};
-const RISK_LABELS: Record<number, string> = {
-  1: "Low", 2: "Medium", 3: "High", 4: "Extreme",
-};
 const CRASH_TYPE_LABELS: Record<string, string> = {
   Overall: "Overall Risk", VB: "Vehicle–Bicycle", BB: "Bicycle–Bicycle",
   SB: "Single-Bicycle", BP: "Bicycle–Pedestrian",
@@ -488,7 +473,7 @@ function computeFlowLayout(
 // ── Read saved layout once (used by lazy state initialisers below) ──────────
 function _readSaved(): Record<string, unknown> | null {
   try {
-    const raw = localStorage.getItem(LAYOUT_KEY);
+    const raw = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 }
@@ -710,11 +695,11 @@ export default function ReportBuilderPage() {
   const [activeCategoryStatus, setActiveCategoryStatus] = useState<FilterCategoryStatus[]>([]);
 
   const [exporting, setExporting] = useState<"pdf" | "word" | null>(null);
-  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LAYOUT_KEY); } catch { return false; } });
+  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
   const [saveToastVisible, setSaveToastVisible] = useState(false);
   const saveToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // true when this mount auto-restored a previously saved layout
-  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LAYOUT_KEY); } catch { return false; } });
+  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
   const [restoreBannerVisible, setRestoreBannerVisible] = useState(wasAutoRestored);
 
   // ── Project picker (shown when session storage has no projects) ───────────
@@ -725,12 +710,12 @@ export default function ReportBuilderPage() {
 
   // ── Session storage ───────────────────────────────────────────────────────
   useEffect(() => {
-    const pa = sessionStorage.getItem("pathAnalysis_loadedProjects");
-    const tr = sessionStorage.getItem("treatment_loadedProjects");
-    const filters = sessionStorage.getItem("pathAnalysis_activeFilters");
-    const catStatus = sessionStorage.getItem("pathAnalysis_categoryStatus");
-    const filteredSegs = sessionStorage.getItem("pathAnalysis_filteredSegments");
-    const filteredVals = sessionStorage.getItem("pathAnalysis_filteredSegmentValues");
+    const pa = sessionStorage.getItem(SESSION_KEYS.PA_LOADED_PROJECTS);
+    const tr = sessionStorage.getItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
+    const filters = sessionStorage.getItem(SESSION_KEYS.PA_ACTIVE_FILTERS);
+    const catStatus = sessionStorage.getItem(SESSION_KEYS.PA_CATEGORY_STATUS);
+    const filteredSegs = sessionStorage.getItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+    const filteredVals = sessionStorage.getItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
     const paP: string[] = pa ? JSON.parse(pa) : [];
     const trP: string[] = tr ? JSON.parse(tr) : [];
     const flt: string[] = filters ? JSON.parse(filters) : [];
@@ -1318,7 +1303,7 @@ export default function ReportBuilderPage() {
   // ── Save / Restore layout ─────────────────────────────────────────────────
   const saveLayout = useCallback(() => {
     try {
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
         reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
@@ -1332,7 +1317,7 @@ export default function ReportBuilderPage() {
   // Auto-save layout on every change so navigation away never loses section arrangement.
   useEffect(() => {
     try {
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
         reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
@@ -1342,7 +1327,7 @@ export default function ReportBuilderPage() {
 
   const restoreLayout = useCallback(() => {
     try {
-      const saved = localStorage.getItem(LAYOUT_KEY);
+      const saved = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
       if (!saved) return;
       const l = JSON.parse(saved);
       if (l.elements) setElements(l.elements);
@@ -1359,7 +1344,7 @@ export default function ReportBuilderPage() {
 
   const resetLayout = useCallback(() => {
     if (window.confirm("Are you sure you want to reset the layout to default? All unsaved changes will be lost.")) {
-      localStorage.removeItem(LAYOUT_KEY);
+      localStorage.removeItem(LOCAL_KEYS.REPORT_LAYOUT);
       setElements(DEFAULT_ELEMENTS);
       setReportTitle("Path Safety Analysis Executive Summary");
       setOicName("");

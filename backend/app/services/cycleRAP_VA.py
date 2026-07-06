@@ -439,9 +439,21 @@ def create_video(image_dir, video_name, fps):
 #     display.display(IFrame(map_file, width='100%', height='500'))
 
 # TODO: Move to Utility
-def get_full_path(filename):
-    # Resolve relative to the backend directory (.../backend)
-    backend_root = Path(__file__).resolve().parents[2]
+def get_full_path(filename: str) -> str:
+    """Return an absolute path for a file located in the backend/ directory.
+
+    The canonical config file is ``backend/config.json``; it is the only copy
+    in the repo and is always resolved here rather than from the repository root.
+    Docker copies ``backend/`` to ``/app/``, so the container reads
+    ``/app/config.json`` via the same resolution.
+
+    Args:
+        filename: A filename or relative path to resolve under the backend root.
+
+    Returns:
+        Absolute path string (``<repo>/backend/<filename>``).
+    """
+    backend_root = Path(__file__).resolve().parents[2]  # .../backend/
     return str(backend_root / filename)
 
 # if __name__ == "__main__":

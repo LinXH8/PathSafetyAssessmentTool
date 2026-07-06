@@ -41,8 +41,6 @@ temp/
 Gradient Calculation/
 profiles/
 .Rhistory
-visualize_obstacles.py
-visualize_width_restriction.py
 run_attribute_inference.py
 visualise_width_restriction.py
 scripts/_v213_snapshot.json
@@ -74,12 +72,26 @@ completed.csv
 test.jpg
 frontend/test_puppeteer.js
 generate-summary-*.xlsx
+scratch/
+
+# Build / log / compile artifacts (never commit — see REFACTOR_PLAN.md S0.1)
+*.out
+*.err
+*_log.txt
+build_*.txt
+logs.txt
+output.txt
+batch_output.txt
+pytest_out.txt
+overlaps_*.txt
 
 # Documentation and explanations
 *.md
 !README.md
-# Standing contributor guides are tracked so teammates (and their Claude) receive them.
-!frontend/CLAUDE.md
+!REFACTOR_PLAN.md
 *.lnk
 CycleRAP_User_Guide.pdf
+# docs/ is the canonical source for all in-app and developer docs (see REFACTOR_PLAN S0.6)
+!docs/**
+# frontend/public/docs/ is populated by scripts/sync_docs.sh from docs/ — keep it tracked
 !frontend/public/docs/**

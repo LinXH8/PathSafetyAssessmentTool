@@ -6,7 +6,7 @@ import { FONT, COLOR } from "../../../features/ui/designTokens";
 import { V2Segmented, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
 import { Box, Text, Tabs, Button, Flex, HStack, Portal, Input, IconButton, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Marker, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
 import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
 import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
@@ -16,12 +16,15 @@ import { MapCursorController } from "../../../components/common/MapCursorControl
 import { AnalysisSidebar } from "../../../components/visualization/AnalysisSidebar";
 
 import "leaflet/dist/leaflet.css";
-import L, { divIcon } from "leaflet";
-import proj4 from "proj4";
-import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
-import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import L from "leaflet";
+import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon } from "geojson";
+import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
+import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 
 const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
 
@@ -173,19 +176,6 @@ const normalizeCrossingTypeLabel = (value: string): string | null => {
   return null;
 };
 
-// --- EPSG:3414 (SVY21 / Singapore TM) definition -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-
-
-
-const to4326 = (p: Position): [number, number] => {
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
-};
-
 // Component to pan to specific bounds
 function PanToBounds({ bounds }: { bounds: L.LatLngBounds | null }) {
   const map = useMap();
@@ -223,8 +213,8 @@ function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBound
   return null;
 }
 
-// sessionStorage key + shape for the persisted map viewport (center + zoom).
-const VIEWPORT_KEY = "pathAnalysisMap_viewport";
+// Shape of the persisted map viewport (center + zoom).
+// Key: SESSION_KEYS.PA_MAP_VIEWPORT ("pathAnalysisMap_viewport").
 type SavedViewport = { center: [number, number]; zoom: number };
 
 // Persists the live map center/zoom on every pan/zoom so returning from the
@@ -236,7 +226,7 @@ function ViewportPersister() {
     try {
       const c = map.getCenter();
       sessionStorage.setItem(
-        VIEWPORT_KEY,
+        SESSION_KEYS.PA_MAP_VIEWPORT,
         JSON.stringify({ center: [c.lat, c.lng], zoom: map.getZoom() } as SavedViewport)
       );
     } catch { /* sessionStorage unavailable — ignore */ }
@@ -266,167 +256,6 @@ function MapInvalidateSize() {
   return null;
 }
 
-// Helper: Point in Polygon Algorithm (Ray Casting)
-function isPointInPolygon(point: [number, number], vs: [number, number][]) {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  const x = point[0], y = point[1];
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][0], yi = vs[i][1];
-    const xj = vs[j][0], yj = vs[j][1];
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-interface PolygonDrawingToolProps {
-  isPolygonMode: boolean;
-  isPolygonAddMode: boolean;
-  onPolygonPoint: (latlng: L.LatLng) => void;
-  onPointUpdate: (index: number, latlng: L.LatLng) => void;
-  polygonPoints: [number, number][];
-}
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-function PolygonDrawingTool({ isPolygonMode, isPolygonAddMode, onPolygonPoint, onPointUpdate, polygonPoints }: PolygonDrawingToolProps) {
-  const modeRef = useRef(false);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-
-  // Keep latest points in a ref for access inside drag handler without re-binding
-  const pointsRef = useRef(polygonPoints);
-  useEffect(() => {
-    pointsRef.current = polygonPoints;
-  }, [polygonPoints]);
-
-  useEffect(() => {
-    modeRef.current = isPolygonMode || isPolygonAddMode;
-  }, [isPolygonMode, isPolygonAddMode]);
-
-  useMapEvents({
-    click(e) {
-      if (modeRef.current) {
-        onPolygonPoint(e.latlng);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    // Imperatively update the polygon/polyline shape during drag for performance
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects to be safe
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    // Commit the change to state on drag end
-    onPointUpdate(index, latlng);
-  }, [onPointUpdate]);
-
-  const color = isPolygonAddMode ? "blue" : "red";
-
-  // Custom icon to mimic CircleMarker but allow dragging
-  const createCustomIcon = (color: string) => {
-    return divIcon({
-      className: "custom-polygon-marker",
-      html: `<div style="
-        background-color: ${color};
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 4px rgba(0,0,0,0.4);
-        cursor: grab;
-      "></div>`,
-      iconSize: [20, 20], // Hit box size
-      iconAnchor: [10, 10], // Centered (half of 20)
-    });
-  };
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  if (polygonPoints.length === 0) return null;
-
-  return (
-    <>
-      {polygonPoints.map((pt, idx) => (
-        <DraggableMarker
-          key={`poly-point-${idx}`}
-          position={pt}
-          index={idx}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <LeafletPolyline
-        ref={polylineRef}
-        positions={polygonPoints}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {polygonPoints.length >= 3 && (
-        <LeafletPolygon
-          ref={polygonRef}
-          positions={polygonPoints}
-          pathOptions={{ color: color, fillOpacity: 0.2 }}
-        />
-      )}
-    </>
-  );
-}
 
 /**
  * Renders `children` inline (`to === undefined`, the v1 default), into a portal
@@ -516,7 +345,7 @@ export default function AttributeAnalysisMapView({
   // v2: a "Generate Report" button sits beside the Download dropdown (ported from
   // the v1 sidebar).
   const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+    try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; }
   }, []);
   // v2: the polygon / single-select tools move off the top bar into a floating
   // cluster over the map (mirrors Coding). This host is that overlay; the tools
@@ -548,7 +377,7 @@ export default function AttributeAnalysisMapView({
   // Category toggle states — tracks per-attribute per-value visibility
   const [categoryToggles, setCategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryToggles");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -556,7 +385,7 @@ export default function AttributeAnalysisMapView({
   // Subcategory toggle states — tracks per-child-attr per-value visibility (Layer 3)
   const [subcategoryToggles, setSubcategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_subcategoryToggles");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -564,7 +393,7 @@ export default function AttributeAnalysisMapView({
   // Range filter states for numeric attributes
   const [rangeFilters, setRangeFilters] = useState<Record<string, [number, number]>>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_rangeFilters");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS);
       return stored ? JSON.parse(stored) : {};
     } catch { return {}; }
   });
@@ -573,7 +402,7 @@ export default function AttributeAnalysisMapView({
   // Index -1 is reserved for the always-present "Projects" tab (colors by project).
   const [categoryFilterAttributeIndex, setCategoryFilterAttributeIndex] = useState<number>(() => {
     try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryFilterIndex");
+      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX);
       return stored !== null ? Number(stored) : -1;
     } catch { return -1; }
   });
@@ -584,33 +413,33 @@ export default function AttributeAnalysisMapView({
   // Track which attribute is the primary focus for coloring
   const [primaryFocusAttribute, setPrimaryFocusAttribute] = useState<string | null>(() => {
     try {
-      return sessionStorage.getItem("pathAnalysisMap_primaryFocus") || null;
+      return sessionStorage.getItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS) || null;
     } catch {
       return null;
     }
   });
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryToggles", JSON.stringify(categoryToggles));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES, JSON.stringify(categoryToggles));
   }, [categoryToggles]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_subcategoryToggles", JSON.stringify(subcategoryToggles));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES, JSON.stringify(subcategoryToggles));
   }, [subcategoryToggles]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_rangeFilters", JSON.stringify(rangeFilters));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS, JSON.stringify(rangeFilters));
   }, [rangeFilters]);
 
   useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryFilterIndex", String(categoryFilterAttributeIndex));
+    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX, String(categoryFilterAttributeIndex));
   }, [categoryFilterAttributeIndex]);
 
   useEffect(() => {
     if (primaryFocusAttribute) {
-      sessionStorage.setItem("pathAnalysisMap_primaryFocus", primaryFocusAttribute);
+      sessionStorage.setItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS, primaryFocusAttribute);
     } else {
-      sessionStorage.removeItem("pathAnalysisMap_primaryFocus");
+      sessionStorage.removeItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS);
     }
   }, [primaryFocusAttribute]);
 
@@ -755,14 +584,14 @@ export default function AttributeAnalysisMapView({
   const [sortConfig, setSortConfig] = useState<Array<{ column: string; direction: 'asc' | 'desc' }>>([]);
 
   // Handlers for Polygon Tool
-  const handlePolygonPoint = (latlng: L.LatLng) => {
-    setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
+  const handlePolygonPoint = (latlng: [number, number]) => {
+    setPolygonPoints((prev) => [...prev, latlng]);
   };
 
-  const handlePointUpdate = useCallback((index: number, latlng: L.LatLng) => {
+  const handlePointUpdate = useCallback((index: number, latlng: [number, number]) => {
     setPolygonPoints((prev) => {
       const newPoints = [...prev];
-      newPoints[index] = [latlng.lat, latlng.lng];
+      newPoints[index] = latlng;
       return newPoints;
     });
   }, []);
@@ -1517,8 +1346,8 @@ export default function AttributeAnalysisMapView({
   // toggle). Indices are 0-based, matching geoFeatures/attributes/scores order.
   useEffect(() => {
     if (activeFilters.length === 0) {
-      sessionStorage.removeItem("pathAnalysis_filteredSegments");
-      sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
       return;
     }
     // Per active-filter attribute, the resolved category VALUE for each filtered
@@ -1542,8 +1371,8 @@ export default function AttributeAnalysisMapView({
       });
       (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
-    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(visibleSegmentIndicesByProject));
-    sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENTS, JSON.stringify(visibleSegmentIndicesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES, JSON.stringify(valuesByProject));
   }, [visibleSegments, visibleSegmentIndicesByProject, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
@@ -1985,7 +1814,7 @@ export default function AttributeAnalysisMapView({
   const savedViewport = useRef<SavedViewport | null>(
     (() => {
       try {
-        const s = sessionStorage.getItem(VIEWPORT_KEY);
+        const s = sessionStorage.getItem(SESSION_KEYS.PA_MAP_VIEWPORT);
         return s ? (JSON.parse(s) as SavedViewport) : null;
       } catch { return null; }
     })()
@@ -2111,13 +1940,13 @@ export default function AttributeAnalysisMapView({
   const handleOpenInTreatment = (): void => {
     if (loadedProjects.length === 0) return;
     const ctx = buildFilterContext();
-    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(loadedProjects));
+    sessionStorage.setItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS, JSON.stringify(loadedProjects));
     const encoded = loadedProjects.map(name => encodeURIComponent(name)).join(',');
     if (ctx && ctx.projects.length > 0) {
-      sessionStorage.setItem("treatment_filterContext", JSON.stringify(ctx));
+      sessionStorage.setItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT, JSON.stringify(ctx));
       navigate(`/treatment/${encoded}?filtered=1`);
     } else {
-      sessionStorage.removeItem("treatment_filterContext");
+      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT);
       navigate(`/treatment/${encoded}`);
     }
   };
@@ -2712,12 +2541,12 @@ export default function AttributeAnalysisMapView({
                   <Button
                     size="sm"
                     onClick={() => {
-                      sessionStorage.removeItem("treatment_loadedProjects");
+                      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
                       navigate("/analysis/report");
                     }}
                     style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
                   >
-                    {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
+                    {"📄 Generate Report"}
                   </Button>
                   <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                     <Menu.Trigger asChild>
@@ -3238,11 +3067,11 @@ export default function AttributeAnalysisMapView({
                   />
                   {/* Render Polygon Tool */}
                   <PolygonDrawingTool
-                    isPolygonMode={isPolygonMode}
-                    isPolygonAddMode={isPolygonAddMode}
-                    onPolygonPoint={handlePolygonPoint}
+                    active={isPolygonMode || isPolygonAddMode}
+                    color={isPolygonAddMode ? "blue" : "red"}
+                    points={polygonPoints}
+                    onAddPoint={handlePolygonPoint}
                     onPointUpdate={handlePointUpdate}
-                    polygonPoints={polygonPoints}
                   />
 
                   {/* Tile Layer */}
@@ -3297,7 +3126,7 @@ export default function AttributeAnalysisMapView({
                               // If in polygon mode, add this point to the polygon and stop propagation
                               if (isPolygonMode || isPolygonAddMode) {
                                 L.DomEvent.stopPropagation(e as any);
-                                handlePolygonPoint(L.latLng(latlng[0], latlng[1]));
+                                handlePolygonPoint(latlng);
                                 return;
                               }
 
