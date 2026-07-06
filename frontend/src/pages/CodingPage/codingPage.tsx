@@ -15,9 +15,8 @@ import {
   updateProject,
 } from "../../api";
 
-import type { AttributeRow, AttributesResponse, CodingFilterContext } from "../../api";
+import type { AttributeRow, AttributesResponse } from "../../api";
 import { autocodeImage, autocodeGIS, autocodeAllStream } from "../../api";
-import { CODING_FILTER_CONTEXT_KEY } from "../../constants/sessionKeys";
 
 import { resolveContributorTabGroup } from "./components/AttributesPanel";
 import { saveAttributes } from "../../api";
@@ -42,6 +41,7 @@ import {
   normalizeAttributeValues,
   applyLogicChecks,
 } from "./codingHelpers";
+import { useFilterContext } from "./hooks/useFilterContext";
 import CodingLayoutV1 from "./layouts/CodingLayoutV1";
 import CodingLayoutV2 from "./layouts/CodingLayoutV2";
 import type { CodingViewModel } from "./layouts/CodingViewModel";
@@ -165,31 +165,8 @@ export default function CodingPage() {
   const hasInitializedSegmentRef = useRef(false);
 
   // Filter context from Path Analysis — persisted in sessionStorage for reload survival.
-  // Uses useState+useEffect so it re-evaluates on every in-app navigation (no remount).
-  const resolveFilterContext = (state: unknown): CodingFilterContext | null => {
-    const fromState = (state as any)?.filterContext as CodingFilterContext | null | undefined;
-    if (fromState !== undefined) {
-      if (fromState) sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(fromState));
-      else sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);
-      return fromState ?? null;
-    }
-    try {
-      const stored = sessionStorage.getItem(CODING_FILTER_CONTEXT_KEY);
-      return stored ? (JSON.parse(stored) as CodingFilterContext) : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const [filterContext, setFilterContext] = useState<CodingFilterContext | null>(() =>
-    resolveFilterContext(location.state)
-  );
-
-  useEffect(() => {
-    setFilterContext(resolveFilterContext(location.state));
-  // location.state reference changes on each navigation, which is exactly when we want to re-run
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state]);
+  // See useFilterContext for the priority-1/fallback logic (filter-colour leak fix).
+  const filterContext = useFilterContext(location.state);
 
   // Save confirmation dialog state
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
