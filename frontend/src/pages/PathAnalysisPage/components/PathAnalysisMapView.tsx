@@ -20,13 +20,12 @@ import type { Feature, LineString } from "geojson";
 import { to4326 } from "../../../utils/projection";
 import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
 import { isPointInPolygon } from "../../../components/map/polygonUtils";
-import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData } from "../../../api";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type AttributeRow, type CodingFilterContext, type FilteredProjectData } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 import {
   SAFETY_FOCUS_ATTRIBUTES,
-  GIS_SEGMENT_RADIUS_M,
   ADEQUACY_DEFAULT_ATTRS,
   CROSSING_TYPE_FILTER_OPTIONS,
   compareByOrder,
@@ -34,9 +33,7 @@ import {
   getGradeBucketFromPercent,
   normalizeGradeLabel,
   normalizeCrossingTypeLabel,
-  extractUploadedBoundaryFeatures,
   escapeCSV,
-  type UploadedBoundaryFeature,
   type ProjectData,
   type VisibleSegment,
 } from "./mapView/mapViewUtils";
@@ -49,6 +46,8 @@ import {
   MaybePortal,
 } from "./mapView/leafletHelpers";
 import { useViewportPersistence } from "./mapView/useViewportPersistence";
+import { useGISLayerToggles } from "./mapView/useGISLayerToggles";
+import { useImportedShapefile } from "./mapView/useImportedShapefile";
 
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
@@ -211,114 +210,22 @@ export default function AttributeAnalysisMapView({
     }
   }, [selectedAttributes]);
 
-  // GIS layer toggles
-  const [isGisSidebarOpen, setIsGisSidebarOpen] = useState(false);
-  const [gisLayers, setGisLayers] = useState<Record<string, any[]> | null>(null);
-  const [pathDefects, setPathDefects] = useState<{ lat: number; lon: number; type_of_defect?: string; location?: string; date_of_inspection?: string }[] | null>(null);
-  const [showFootpath, setShowFootpath] = useState(false);
-  const [showCycling, setShowCycling] = useState(false);
-  const [showShared, setShowShared] = useState(false);
-  const [showRoadcrossing, setShowRoadcrossing] = useState(false);
-  const [showMrtExit, setShowMrtExit] = useState(false);
-  const [showBusStop, setShowBusStop] = useState(false);
-  const [showBusLane, setShowBusLane] = useState(false);
-  const [showParkingLot, setShowParkingLot] = useState(false);
-  const [showKerbLine, setShowKerbLine] = useState(false);
-  const [showBicycleCrossing, setShowBicycleCrossing] = useState(false);
-  const [showPathDefects, setShowPathDefects] = useState(false);
-  const [showStateLand, setShowStateLand] = useState(false);
-  const [showStatBoard, setShowStatBoard] = useState(false);
-  const [showLandPrivate, setShowLandPrivate] = useState(false);
-  const [showLandMinistry, setShowLandMinistry] = useState(false);
-  const gisAbortRef = useRef<AbortController | null>(null);
-  const gisTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const defectsAbortRef = useRef<AbortController | null>(null);
-  const defectsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Imported shapefile overlay
-  const [importedBoundaries, setImportedBoundaries] = useState<UploadedBoundaryFeature[]>([]);
-  const [importedBoundaryName, setImportedBoundaryName] = useState<string | null>(null);
-  const [importedBoundaryLoading, setImportedBoundaryLoading] = useState(false);
-  const [importedBoundaryError, setImportedBoundaryError] = useState<string | null>(null);
-
-  const handleImportFiles = useCallback(async (files: File[]) => {
-    const sourceFile = files.find((f) => f.name.toLowerCase().endsWith(".shp") || f.name.toLowerCase().endsWith(".zip"));
-    if (!sourceFile) {
-      const message = "Upload a .zip shapefile or a .shp file with its companion files (.dbf, .shx, .prj).";
-      setImportedBoundaryError(message);
-      toaster.create({ title: "Import failed", description: message, type: "warning" });
-      return;
-    }
-    setImportedBoundaryLoading(true);
-    setImportedBoundaryError(null);
-    try {
-      const geojson = await previewUploadedShapefiles(files);
-      const boundaries = extractUploadedBoundaryFeatures(geojson);
-      if (boundaries.length === 0) {
-        throw new Error("No polygon or line features were found in the uploaded shapefile.");
-      }
-      setImportedBoundaryName(sourceFile.name);
-      setImportedBoundaries(boundaries);
-      toaster.create({ title: "Shapefile imported", description: `Loaded ${boundaries.length} feature(s) from ${sourceFile.name}.`, type: "success" });
-    } catch (err: any) {
-      const message = err?.message ?? "Failed to import shapefile.";
-      setImportedBoundaryError(message);
-      toaster.create({ title: "Import failed", description: message, type: "error" });
-    } finally {
-      setImportedBoundaryLoading(false);
-    }
-  }, []);
-
-  const handleClearImportedShapefile = useCallback(() => {
-    setImportedBoundaries([]);
-    setImportedBoundaryName(null);
-    setImportedBoundaryError(null);
-  }, []);
+  // Imported boundary shapefile overlay (state + upload/clear handlers).
+  const {
+    importedBoundaries,
+    importedBoundaryName,
+    importedBoundaryLoading,
+    importedBoundaryError,
+    handleImportFiles,
+    handleClearImportedShapefile,
+  } = useImportedShapefile();
 
   // gisLayerColors / PROJECT_POINT_COLORS now live in constants/mapColors.ts
   // (imported above) — single source shared with AnalysisSidebar.
 
-  // GIS overlay fetch is data-driven (within a radius of every loaded segment) rather
-  // than viewport-driven; see the effect defined after `allPoints` is computed.
-
-  // Viewport-center-based path defects fetch
-  useEffect(() => {
-    if (!showPathDefects || !mapViewportBounds) {
-      setPathDefects(null);
-      return;
-    }
-
-    if (defectsTimerRef.current) clearTimeout(defectsTimerRef.current);
-    defectsTimerRef.current = setTimeout(async () => {
-      if (defectsAbortRef.current) defectsAbortRef.current.abort();
-      const controller = new AbortController();
-      defectsAbortRef.current = controller;
-
-      try {
-        const sw = mapViewportBounds.getSouthWest();
-        const ne = mapViewportBounds.getNorthEast();
-        const centerLat = (sw.lat + ne.lat) / 2;
-        const centerLon = (sw.lng + ne.lng) / 2;
-        // Radius: half the viewport diagonal in metres (rough WGS84 → metres)
-        const diagDeg = Math.sqrt((ne.lat - sw.lat) ** 2 + (ne.lng - sw.lng) ** 2);
-        const radius = Math.min(Math.round((diagDeg / 2) * 111_000), 3000);
-
-        const res = await fetch('/api/defects/nearby', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ point: [centerLon, centerLat], radius }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setPathDefects(data.defects ?? []);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') console.error('[Defects Viewport] Fetch error:', e);
-      }
-    }, 500);
-
-    return () => { if (defectsTimerRef.current) clearTimeout(defectsTimerRef.current); };
-  }, [mapViewportBounds, showPathDefects]);
+  // GIS layer toggles + overlay fetches live in useGISLayerToggles, called
+  // after `gisQueryPoints` is computed (the near-segments fetch is data-driven,
+  // within a radius of every loaded segment, rather than viewport-driven).
 
   // Mode states (Single Point & Polygon)
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -1257,59 +1164,27 @@ export default function AttributeAnalysisMapView({
     return pts;
   }, [allPoints]);
 
-  // Data-driven GIS overlay fetch: one request pulls every enabled layer within
-  // GIS_SEGMENT_RADIUS_M of any loaded segment. Because it doesn't depend on the
-  // viewport, the overlays are fetched once per layer/project change and stay put while
-  // panning and zooming — Leaflet's canvas renderer culls off-screen geometry for free.
-  useEffect(() => {
-    const layers: string[] = [];
-    if (showCycling) layers.push('cycling');
-    if (showShared) layers.push('shared');
-    if (showFootpath) layers.push('footpath');
-    if (showRoadcrossing) layers.push('roadcrossing');
-    if (showMrtExit) layers.push('mrt_exit');
-    if (showBicycleCrossing) layers.push('bicycle_crossing');
-    if (showBusStop) layers.push('bus_stop');
-    if (showBusLane) layers.push('bus_lane');
-    if (showParkingLot) layers.push('parking_lot');
-    if (showKerbLine) layers.push('kerb_line');
-    if (showStateLand) layers.push('state_land');
-    if (showStatBoard) layers.push('stat_board');
-    if (showLandPrivate) layers.push('land_private');
-    if (showLandMinistry) layers.push('land_ministry');
-
-    if (layers.length === 0 || gisQueryPoints.length === 0) {
-      setGisLayers(null);
-      return;
-    }
-
-    if (gisTimerRef.current) clearTimeout(gisTimerRef.current);
-    gisTimerRef.current = setTimeout(async () => {
-      if (gisAbortRef.current) gisAbortRef.current.abort();
-      const controller = new AbortController();
-      gisAbortRef.current = controller;
-      try {
-        const res = await fetch('/api/projects/gis/near-segments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            points: gisQueryPoints,
-            radius: GIS_SEGMENT_RADIUS_M,
-            layers,
-            simplify_tol: 1.0,
-          }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setGisLayers(data.layers);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') console.error('[GIS NearSegments] Fetch error:', e);
-      }
-    }, 150);
-
-    return () => { if (gisTimerRef.current) clearTimeout(gisTimerRef.current); };
-  }, [gisQueryPoints, showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showStateLand, showStatBoard, showLandPrivate, showLandMinistry]);
+  // GIS overlay layer toggles + debounced near-segments / defects fetches.
+  const {
+    isGisSidebarOpen, setIsGisSidebarOpen,
+    gisLayers,
+    pathDefects,
+    showFootpath, setShowFootpath,
+    showCycling, setShowCycling,
+    showShared, setShowShared,
+    showRoadcrossing, setShowRoadcrossing,
+    showMrtExit, setShowMrtExit,
+    showBusStop, setShowBusStop,
+    showBusLane, setShowBusLane,
+    showParkingLot, setShowParkingLot,
+    showKerbLine, setShowKerbLine,
+    showBicycleCrossing, setShowBicycleCrossing,
+    showPathDefects, setShowPathDefects,
+    showStateLand, setShowStateLand,
+    showStatBoard, setShowStatBoard,
+    showLandPrivate, setShowLandPrivate,
+    showLandMinistry, setShowLandMinistry,
+  } = useGISLayerToggles({ gisQueryPoints, mapViewportBounds });
 
   // Cull off-screen markers before React renders them. A 20% padding around the
   // viewport keeps markers visible during small pans without mounting them all.
