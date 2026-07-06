@@ -8,7 +8,7 @@ import { toaster } from "../../../components/ui/toaster";
 import { MapContainer, TileLayer, CircleMarker, Tooltip, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
 import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { Slider } from "../../../components/ui/slider";
-import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
+import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
 import { Menu } from "@chakra-ui/react";
 import { MapCursorController } from "../../../components/common/MapCursorController";
@@ -20,19 +20,14 @@ import type { Feature, LineString } from "geojson";
 import { to4326 } from "../../../utils/projection";
 import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
 import { isPointInPolygon } from "../../../components/map/polygonUtils";
-import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type AttributeRow, type CodingFilterContext, type FilteredProjectData } from "../../../api";
-import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type CodingFilterContext, type FilteredProjectData } from "../../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 import {
   SAFETY_FOCUS_ATTRIBUTES,
-  ADEQUACY_DEFAULT_ATTRS,
-  CROSSING_TYPE_FILTER_OPTIONS,
   compareByOrder,
   getSemanticCategoryOrder,
-  getGradeBucketFromPercent,
-  normalizeGradeLabel,
-  normalizeCrossingTypeLabel,
   escapeCSV,
   type ProjectData,
   type VisibleSegment,
@@ -46,6 +41,8 @@ import {
   MaybePortal,
 } from "./mapView/leafletHelpers";
 import { useViewportPersistence } from "./mapView/useViewportPersistence";
+import { useFilterState } from "./mapView/useFilterState";
+import { useAttributeText } from "./mapView/useAttributeText";
 import { useGISLayerToggles } from "./mapView/useGISLayerToggles";
 import { useImportedShapefile } from "./mapView/useImportedShapefile";
 
@@ -129,86 +126,20 @@ export default function AttributeAnalysisMapView({
   // Persisted viewport restore: seeds the map's initial center/zoom and lets the
   // data-load effect skip the auto-fit when returning from the Coding page.
   const { savedViewport, initialCenter, initialZoom } = useViewportPersistence();
-  const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>(
-    () => getCachedAttributeMappingsSync() ?? {}
-  );
-
-  // Category toggle states — tracks per-attribute per-value visibility
-  const [categoryToggles, setCategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
-    try {
-      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES);
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Subcategory toggle states — tracks per-child-attr per-value visibility (Layer 3)
-  const [subcategoryToggles, setSubcategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
-    try {
-      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES);
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Range filter states for numeric attributes
-  const [rangeFilters, setRangeFilters] = useState<Record<string, [number, number]>>(() => {
-    try {
-      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS);
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Track which attribute to show categories for in the sidebar.
-  // Index -1 is reserved for the always-present "Projects" tab (colors by project).
-  const [categoryFilterAttributeIndex, setCategoryFilterAttributeIndex] = useState<number>(() => {
-    try {
-      const stored = sessionStorage.getItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX);
-      return stored !== null ? Number(stored) : -1;
-    } catch { return -1; }
-  });
+  // Filter / focus / toggle state (sessionStorage-backed) + attribute mappings.
+  const {
+    attrMappings,
+    categoryToggles, setCategoryToggles,
+    subcategoryToggles, setSubcategoryToggles,
+    rangeFilters, setRangeFilters,
+    categoryFilterAttributeIndex, setCategoryFilterAttributeIndex,
+    primaryFocusAttribute, setPrimaryFocusAttribute,
+    activeFilters,
+    categoryFilterAttribute,
+  } = useFilterState(selectedAttributes);
 
   // Track if we should auto-fit bounds (only on initial project load, not on category changes)
   const [shouldAutoFit, setShouldAutoFit] = useState(false);
-
-  // Track which attribute is the primary focus for coloring
-  const [primaryFocusAttribute, setPrimaryFocusAttribute] = useState<string | null>(() => {
-    try {
-      return sessionStorage.getItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS) || null;
-    } catch {
-      return null;
-    }
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_TOGGLES, JSON.stringify(categoryToggles));
-  }, [categoryToggles]);
-
-  useEffect(() => {
-    sessionStorage.setItem(SESSION_KEYS.PA_MAP_SUBCATEGORY_TOGGLES, JSON.stringify(subcategoryToggles));
-  }, [subcategoryToggles]);
-
-  useEffect(() => {
-    sessionStorage.setItem(SESSION_KEYS.PA_MAP_RANGE_FILTERS, JSON.stringify(rangeFilters));
-  }, [rangeFilters]);
-
-  useEffect(() => {
-    sessionStorage.setItem(SESSION_KEYS.PA_MAP_CATEGORY_FILTER_INDEX, String(categoryFilterAttributeIndex));
-  }, [categoryFilterAttributeIndex]);
-
-  useEffect(() => {
-    if (primaryFocusAttribute) {
-      sessionStorage.setItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS, primaryFocusAttribute);
-    } else {
-      sessionStorage.removeItem(SESSION_KEYS.PA_MAP_PRIMARY_FOCUS);
-    }
-  }, [primaryFocusAttribute]);
-
-  // When all filters are reset, revert coloring to by-project
-  useEffect(() => {
-    if (selectedAttributes.length === 0) {
-      setCategoryFilterAttributeIndex(-1);
-      setPrimaryFocusAttribute("Project");
-    }
-  }, [selectedAttributes]);
 
   // Imported boundary shapefile overlay (state + upload/clear handlers).
   const {
@@ -370,79 +301,6 @@ export default function AttributeAnalysisMapView({
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Active filters = the attributes selected via FilterPanel (passed as prop)
-  const activeFilters = useMemo(() => selectedAttributes, [selectedAttributes]);
-
-  // Auto-focus the newest filter when one is added; revert coloring when the focused
-  // filter is removed (otherwise primaryFocusAttribute goes stale and the map keeps
-  // coloring by a filter that is no longer active).
-  // Seed with the mount-time filters (restored from sessionStorage) so a remount
-  // does not treat already-active filters as "newly added" and snap focus to the
-  // first one — that would clobber the restored primaryFocusAttribute/index.
-  const prevFiltersRef = useRef<string[]>(selectedAttributes);
-  useEffect(() => {
-    const prev = prevFiltersRef.current;
-    const added = activeFilters.find(f => !prev.includes(f));
-    if (added) {
-      const idx = activeFilters.indexOf(added);
-      setCategoryFilterAttributeIndex(idx);
-      setPrimaryFocusAttribute(added);
-    } else if (
-      primaryFocusAttribute &&
-      primaryFocusAttribute !== "Project" &&
-      !activeFilters.includes(primaryFocusAttribute)
-    ) {
-      // The focused attribute was removed — revert to project-colour mode so that
-      // the tab (-1) and primaryFocusAttribute ("Project") always agree. Jumping to
-      // the first remaining filter here races with the out-of-bounds reset below,
-      // which forces the index to -1 and leaves primaryFocusAttribute stale.
-      setCategoryFilterAttributeIndex(-1);
-      setPrimaryFocusAttribute("Project");
-    }
-    prevFiltersRef.current = activeFilters;
-  }, [activeFilters, primaryFocusAttribute]);
-
-  // Reset sidebar index if out of bounds (fall back to the Projects tab at -1)
-  useEffect(() => {
-    if (categoryFilterAttributeIndex >= activeFilters.length) {
-      setCategoryFilterAttributeIndex(-1);
-    }
-  }, [activeFilters.length, categoryFilterAttributeIndex]);
-
-  // Load attribute mappings on mount. Served from the shared cache (adequacy
-  // augmentation applied inside the loader) so a remount initialises the state
-  // synchronously above and avoids the "all segments then filtered" flash.
-  useEffect(() => {
-    getCachedAttributeMappings()
-      .then(mappings => {
-        setAttrMappings(mappings);
-      })
-      .catch(() => {
-        // Minimal fallback so at least adequacy attributes work offline
-        setAttrMappings({
-          "Line of Sight": { "1": "Adequate", "2": "Inadequate" },
-          "Facility access": { "1": "Adequate", "2": "Inadequate" },
-        });
-      });
-  }, []);
-
-  // Initialize default toggles for all active filters when they change
-  useEffect(() => {
-    setCategoryToggles(prev => {
-      const updated = { ...prev };
-      for (const filterAttr of activeFilters) {
-        if (!updated[filterAttr]) updated[filterAttr] = {};
-      }
-      return updated;
-    });
-  }, [activeFilters]);
-
-  // The attribute whose categories are currently shown in the sidebar.
-  // Index -1 represents the always-present "Projects" tab (colour by project).
-  const categoryFilterAttribute = categoryFilterAttributeIndex === -1
-    ? "Project"
-    : activeFilters[categoryFilterAttributeIndex];
-
   // Helper function to get Overall Risk Score for a segment
   // Uses the "Overall Risk Level" field from the backend, which is the sum of BB + BP + SB + VB
   const getOverallRiskScore = (projectDataIndex: number, segmentIndex: number): number => {
@@ -494,232 +352,12 @@ export default function AttributeAnalysisMapView({
   }, [activeFilters, isV2]);
 
 
-  // Helper function to convert numeric attribute value to text using mappings
-  const getAttrText = (attrName: string, attrValue: any): string => {
-    // Subcategory child attrs: null/empty/undefined → "None"
-    if (SUBCATEGORY_CHILD_ATTRS.has(attrName)) {
-      if (attrValue === null || attrValue === undefined || attrValue === "" || attrValue === "null") {
-        return "None";
-      }
-    }
-
-    // Generic null/empty handling. The backend treats a missing attribute as its
-    // default code (backend/src/CycleRAP/defaults.json) rather than "unset", so we
-    // mirror those defaults here: adequacy attributes default to "Adequate" (1),
-    // and most presence attributes default to "Not Present" (2). Without this,
-    // default-valued segments are silently dropped from the map and filters.
-    if (attrValue === null || attrValue === undefined || attrValue === "" || String(attrValue).toLowerCase() === "null") {
-      if (ADEQUACY_DEFAULT_ATTRS.has(attrName)) return "Adequate";
-      const opts = ATTRIBUTE_OPTIONS[attrName];
-      if (opts && opts.includes("Not Present")) return "Not Present";
-      return ""; // no valid category — exclude this segment from toggle counts
-    }
-
-    // Handle safety score band values (VB Band, BB Band, SB Band, BP Band)
-    // These map to exactly 4 categories based on score thresholds:
-    // Low: <10, Medium: 10-25, High: 25-60, Extreme: >60
-    if (["VB Band", "BB Band", "SB Band", "BP Band"].includes(attrName)) {
-      const numValue = Number(attrValue);
-      if (isNaN(numValue)) {
-        return "Low"; // Default to Low if invalid
-      }
-
-      // Map backend bands to frontend categories: Low, Medium, High, Extreme
-      // Note: Band 5 may still exist in old data, map it to Extreme
-      const riskCategoryMap: Record<number, string> = {
-        1: "Low",      // Band 1: score <10
-        2: "Medium",   // Band 2: score 10-25
-        3: "High",     // Band 3: score 25-60
-        4: "Extreme",  // Band 4: score >60
-        5: "Extreme",  // Band 5 (legacy): score >60 - treat same as Band 4
-      };
-
-      return riskCategoryMap[numValue] || "Low"; // Default to Low if unknown
-    }
-
-    // Special handling for Overall Risk Level - calculated from actual score, not a band index
-    if (attrName === "Overall Risk Level") {
-      // This shouldn't happen as Overall Risk Level is calculated in the filter logic,
-      // but handle it gracefully just in case
-      const scoreValue = Number(attrValue);
-      if (isNaN(scoreValue)) return "Low";
-      if (scoreValue < 10) return "Low";
-      if (scoreValue <= 25) return "Medium";
-      if (scoreValue <= 60) return "High";
-      return "Extreme";
-    }
-
-    // If we have a mapping for this attribute, apply it (handles both string and number values from CSV)
-    if (attrMappings[attrName]) {
-      const key = String(attrValue);
-      if (attrMappings[attrName][key]) {
-        return attrMappings[attrName][key];
-      }
-      // Try numeric key if string key didn't work
-      const numKey = Number(attrValue);
-      if (!isNaN(numKey) && attrMappings[attrName][String(numKey)]) {
-        return attrMappings[attrName][String(numKey)];
-      }
-      // Fall through to return raw value
-    }
-
-    return String(attrValue);
-  };
-
-  const getSafetyAttributeText = useCallback((attributeName: string, segmentScores: Record<string, any> | null | undefined): string => {
-    if (!segmentScores) {
-      return "Low";
-    }
-
-    if (attributeName === "Overall Risk Level") {
-      let maxRiskLevel = 0;
-
-      if (segmentScores["Overall Risk Level Band"] !== undefined) {
-        maxRiskLevel = (segmentScores["Overall Risk Level Band"] as number) - 1;
-      } else {
-        ["BB", "BP", "SB", "VB"].forEach((type) => {
-          const scoreValue = Number(segmentScores[type] ?? 0);
-          let riskLevel = 0;
-
-          if (["BB", "BP", "SB"].includes(type)) {
-            if (scoreValue > 20) riskLevel = 3;
-            else if (scoreValue > 10) riskLevel = 2;
-            else if (scoreValue >= 5) riskLevel = 1;
-          } else {
-            if (scoreValue > 60) riskLevel = 3;
-            else if (scoreValue > 25) riskLevel = 2;
-            else if (scoreValue >= 10) riskLevel = 1;
-          }
-
-          if (riskLevel > maxRiskLevel) {
-            maxRiskLevel = riskLevel;
-          }
-        });
-      }
-
-      if (maxRiskLevel === 3) return "Extreme";
-      if (maxRiskLevel === 2) return "High";
-      if (maxRiskLevel === 1) return "Medium";
-      return "Low";
-    }
-
-    const crashTypeKey = attributeName.replace(" Band", "");
-    const scoreValue = Number(segmentScores[crashTypeKey] ?? 0);
-
-    if (["BB", "BP", "SB"].includes(crashTypeKey)) {
-      if (scoreValue < 5) return "Low";
-      if (scoreValue <= 10) return "Medium";
-      if (scoreValue <= 20) return "High";
-      return "Extreme";
-    }
-
-    if (scoreValue < 10) return "Low";
-    if (scoreValue <= 25) return "Medium";
-    if (scoreValue <= 60) return "High";
-    return "Extreme";
-  }, []);
-
-  const getGradeFilterText = useCallback((attributes: AttributeRow): string => {
-    const gradientPct = Number(attributes["Gradient %"]);
-    if (!Number.isNaN(gradientPct)) {
-      return getGradeBucketFromPercent(gradientPct);
-    }
-
-    const fallbackGrade = getAttrText("Grade", attributes["Grade"]);
-    return normalizeGradeLabel(fallbackGrade);
-  }, [attrMappings]);
-
-  const getDerivedCrossingTypes = useCallback((attributes: AttributeRow): string[] => {
-    const derivedTypes = new Set<string>();
-    const rawCrossingType = attributes["Crossing Type"];
-
-    if (rawCrossingType !== null && rawCrossingType !== undefined && String(rawCrossingType).trim() !== "") {
-      String(rawCrossingType)
-        .split(",")
-        .map((part) => part.trim())
-        .filter(Boolean)
-        .forEach((part) => {
-          const normalizedType = normalizeCrossingTypeLabel(part);
-          if (normalizedType) {
-            derivedTypes.add(normalizedType);
-          }
-        });
-    }
-
-    const hasIntersectionOrRoadCrossing = getAttrText("Intersection or Road Crossing", attributes["Intersection or Road Crossing"]) === "Present";
-    const hasPropertyAccess = getAttrText("Property Access", attributes["Property Access"]) === "Present";
-
-    if (hasPropertyAccess) {
-      derivedTypes.add("Development Access");
-    } else if (hasIntersectionOrRoadCrossing && derivedTypes.size === 0) {
-      derivedTypes.add("Unsignalised Junction");
-    }
-
-    return CROSSING_TYPE_FILTER_OPTIONS.filter((option) => derivedTypes.has(option));
-  }, [attrMappings]);
-
-  const getCrossingFacilityFilterText = useCallback((attributes: AttributeRow): string => {
-    const rawCrossingFacility = getAttrText("Crossing Facility", attributes["Crossing Facility"]);
-    if (rawCrossingFacility === "Present") {
-      return "Present";
-    }
-    return getDerivedCrossingTypes(attributes).length > 0 ? "Present" : rawCrossingFacility;
-  }, [attrMappings, getDerivedCrossingTypes]);
-
-  const getFilterAttributeText = useCallback((
-    attributeName: string,
-    projectName: string,
-    attributes: AttributeRow,
-    segmentScores: Record<string, any> | null,
-  ): string => {
-    if (attributeName === "Project") {
-      return projectName;
-    }
-
-    if (SAFETY_FOCUS_ATTRIBUTES.has(attributeName)) {
-      return getSafetyAttributeText(attributeName, segmentScores);
-    }
-
-    if (attributeName === "Grade") {
-      return getGradeFilterText(attributes);
-    }
-
-    if (attributeName === "Crossing Type") {
-      return getDerivedCrossingTypes(attributes).join(", ");
-    }
-
-    if (attributeName === "Crossing Facility") {
-      return getCrossingFacilityFilterText(attributes);
-    }
-
-
-
-    if (attributeName === "Delineation Type") {
-      const delineationType = getAttrText("Delineation Type", attributes["Delineation Type"]);
-      return delineationType === "None" ? "" : delineationType;
-    }
-
-    return getAttrText(attributeName, attributes[attributeName]);
-  }, [attrMappings, getCrossingFacilityFilterText, getDerivedCrossingTypes, getGradeFilterText, getSafetyAttributeText]);
-
-  const getFocusedAttributeValue = useCallback((attributeName: string, segment: VisibleSegment): string => {
-    const valueText = getFilterAttributeText(attributeName, segment.projectName, segment.attributes, segment.scores);
-    if (!valueText) {
-      return "";
-    }
-
-    if (MULTI_VALUE_ATTRS.has(attributeName) && valueText.includes(", ")) {
-      const parts = valueText.split(", ").map((part) => part.trim()).filter(Boolean);
-      const toggles = subcategoryToggles[attributeName];
-      return parts.find((part) => {
-        // Unknown values (not in the predefined toggle set) proxy through "Others"
-        const effectiveVal = (toggles && part in toggles) ? toggles[part] : toggles?.["Others"];
-        return effectiveVal !== false;
-      }) ?? parts[0] ?? "";
-    }
-
-    return valueText;
-  }, [getFilterAttributeText, subcategoryToggles]);
+  // Attribute code → display/filter text derivation (memoised callbacks).
+  const {
+    getAttrText,
+    getFilterAttributeText,
+    getFocusedAttributeValue,
+  } = useAttributeText(attrMappings, subcategoryToggles);
 
 
   // Generate distinct colors for each project
