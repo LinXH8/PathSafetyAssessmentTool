@@ -196,7 +196,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 
 ### Phase 2 — Frontend monolith decomposition (13–17 days) — *depends: Phase 1 done; re-scoped 2026-07-03 for the v2 container/shell seam*
 - [ ] **S2.1** Decompose `PathAnalysisMapView.tsx` (3,537; shared `variant="v2"` component) — 4d — *depends: S1.\**
-- [ ] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
+- [x] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
 - [ ] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
 - [ ] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
 - [ ] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
@@ -351,7 +351,7 @@ may be re-wired to new hooks, but the shell-facing contract must not change shap
   `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`, `<FilterPanel>`,
   map-event hooks. **Shared heavy component with gated `variant="v2"`** (plus `filtersPortalTarget` /
   `MaybePortal`) — preserve the variant gating and verify BOTH render paths (v1 and v2 chrome).
-- **S2.2 GeoDataPanel** — **Graph tools first:** `get_impact_radius_tool` on `GeoDataPanel.tsx` — it should
+- **S2.2 GeoDataPanel** (· Done: 2026-07-06) — **Graph tools first:** `get_impact_radius_tool` on `GeoDataPanel.tsx` — it should
   surface the Treatment Before/After callers directly (confirm the graph finds them, rather than relying solely
   on this written reminder). **Then extract:** `useGISToggleState`, `useCurvatureOverlay`,
   `useWidthVisualization`, `<DefectsLayer>`. **Shared heavy component with gated `variant="v2"`** (floating tool
@@ -1267,3 +1267,71 @@ gives for free — record what you found so the next session doesn't re-query fr
   NOTES FOR NEXT:  `_gis_autocode_core` (`autocode.py`) is the single caller of every method touched here — best
                    smoke-test entry point. If unifying the `.intersects()` patterns later, do it inside the
                    analyzers, not via gis_mapping's query_nearby.
+
+- 2026-07-06 · S2.2 · Decomposed GeoDataPanel.tsx (1,824L shared v1/v2 map panel) into an 803L orchestrator + 9
+                   single-responsibility modules under `components/GeoDataPanel/`; external prop contract
+                   byte-identical. (Ran as a concurrent sub-agent alongside S2.1 — Sonnet agent, commit
+                   `a2aec263` landed directly on `xh_dev`. Worktree gotcha AGAIN: both Wave-1 worktrees were
+                   provisioned one commit behind `xh_dev` HEAD `c0eeec59`; the embedded base-sha check caught it
+                   before any edit and agents fast-forwarded. After a usage-limit cutoff/resume, this agent's
+                   session continued in the MAIN checkout, not its worktree — hence the direct commit.)
+  FILES CREATED:   frontend/src/pages/CodingPage/components/GeoDataPanel/mapHelpers.tsx (155L);
+                   useGISToggleState.ts (210L); useGISLayerData.ts (199L); useSegmentEditTools.ts (236L);
+                   useCurvatureOverlay.ts (47L); CurvatureOverlay.tsx (103L); GISLayersOverlay.tsx (328L);
+                   DefectsLayer.tsx (41L); MapToolCluster.tsx (225L)
+  FILES DELETED:   none
+  FILES MOVED:     none (default export path frozen at components/GeoDataPanel.tsx; subfolder has NO index.ts,
+                   so "./GeoDataPanel" resolution is unambiguous)
+  FILES MODIFIED:  frontend/src/pages/CodingPage/components/GeoDataPanel.tsx 1,824 → 803 lines
+  SYMBOLS MOVED/EXTRACTED: FitBounds/PanToBounds/FitToFeatures/ZoomToGIS/MapAutosize/StatPill → mapHelpers.tsx
+                   (0 external callers; used only by GeoDataPanel); ZoomToCurvature + overlay JSX →
+                   CurvatureOverlay.tsx; triplet/circle proj4 memos → useCurvatureOverlay.ts (inline EPSG:3414
+                   def replaced with shared utils/projection.ts::to4326); 15-toggle block + localStorage +
+                   psat:gisLayers:sync → useGISToggleState.ts; GIS/defects fetch effects + GISLayers/PathDefect
+                   types → useGISLayerData.ts; delete/copy/polygon state + handlers (handleDeleteSegment,
+                   handleBatchDelete, finish*Selection, handlePolygonPoint/PointUpdate) → useSegmentEditTools.ts;
+                   toolbar/floating-cluster JSX → MapToolCluster.tsx; GIS layer JSX → GISLayersOverlay.tsx;
+                   defect markers + defectIcon → DefectsLayer.tsx. MapAutoCenter deliberately NOT extracted
+                   (nested component; hoisting changes remount/ref behaviour). GeoDataPanel default export: 4
+                   callers (CodingLayoutV1/V2, TreatmentDetailLayoutV1/V2), all unchanged.
+  IMPORT SITES UPDATED: 0 consumer files — only GeoDataPanel.tsx's own imports rewired.
+  GRAPH USAGE:     get_impact_radius_tool on GeoDataPanel.tsx: 19 changed nodes, 489 impacted within 2 hops,
+                   106 files; direct IMPORTS_FROM/CALLS edges surfaced CodingLayoutV1/V2 but NOT the Treatment
+                   layouts — grep found all 4 importers (trust-but-grep gotcha confirmed again; graph edge
+                   filter missed 2 of 4). query_graph_tool(callers_of) on getSegmentColor: 1 caller, internal.
+                   Post-commit build_or_update_graph_tool (incremental): dependents list now correctly shows
+                   all 4 layouts + codingPage + treatmentDetailPage. detect_changes_tool via commit hook:
+                   risk 0.40, no affected flows.
+  BUILD GATE:      tsc --noEmit: 0 → 0 errors. Lint: 375 problems (351E/24W) → 364 (341E/23W); diff is
+                   removals only, all in GeoDataPanel (9 any, 1 unused-var, 1 no-empty moved→typed properly;
+                   1 stale eslint-disable dropped). Build (tsc -b): FAIL → FAIL with a strictly smaller error
+                   list — the 24 pre-existing GeoDataPanel state_land/stat_board/land_private/land_ministry
+                   errors are gone (GISLayers type now declares those keys — type-only fix); every remaining
+                   error is byte-identical to baseline (codingPage, PathAnalysisMapView, reportBuilder,
+                   PostTreatmentImageUpload, Treatment*).
+  REGRESSION CHECK: compile-level only (no runtime smoke available in agent session): both v1 and v2 render
+                   paths typecheck; Props type byte-identical (verified via git diff); startIndex/filterColorMap/
+                   getSegmentColor segment-dot logic untouched in the diff. Manual smoke of Coding map + Treatment
+                   Before/After panels still owed (checklist items 3, 4, 7) before/with the Wave-1 push.
+  ARCHITECTURAL DECISIONS: (1) useWidthVisualization NOT created — no width seam exists in this file (widthM
+                   arrives as a prop, display-only via StatPill/cluster); plan seam adjusted. (2) MapAutoCenter
+                   left nested in the component body: it is redefined every render → React remounts it and
+                   resets its suppression refs; hoisting is a behaviour change, so out of scope. (3) Subfolder
+                   named GeoDataPanel/ without index.ts to keep the import path frozen. (4) useCurvatureOverlay
+                   split from CurvatureOverlay.tsx to satisfy react-refresh/only-export-components. (5) Typing
+                   the moved GIS/curvature code properly (instead of carrying `any`) shrank both lint and build
+                   baselines; behaviour unchanged.
+  DEFERRED:        (a) nested MapAutoCenter remount-per-render resets its 800ms suppression refs — works by
+                   accident, revisit deliberately; (b) useGISLayers keeps inert hasExternalGeoFeatures dep
+                   (commented-out multi-project skip) for parity — dead parameter; (c) ZoomToGIS all-layers-off
+                   branch is dead code; (d) Props.feature is declared but never used by GeoDataPanel;
+                   (e) fetchScores swallows errors in an empty catch; (f) 11 remaining pre-existing `any` lint
+                   errors in GeoDataPanel.tsx (Props/ScoreRow/fetch catches/L.DomEvent cast).
+  NOTES FOR NEXT:  S2.3 (codingPage): GeoDataPanel's home is UNCHANGED — `import GeoDataPanel from
+                   ".../components/GeoDataPanel"` still resolves to the .tsx file; extracted pieces live in
+                   components/GeoDataPanel/{mapHelpers,useGISToggleState,useGISLayerData,useSegmentEditTools,
+                   useCurvatureOverlay,CurvatureOverlay,GISLayersOverlay,DefectsLayer,MapToolCluster}. Do NOT
+                   add an index.ts to that folder (would make "./GeoDataPanel" resolution ambiguous). The
+                   gisLayerToggles_* localStorage keys and psat:gisLayers:sync event now live in
+                   useGISToggleState.ts. GISLayers/PathDefect types are exported from useGISLayerData.ts;
+                   SelectablePoint from useSegmentEditTools.ts.
