@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FONT, COLOR } from "../../../features/ui/designTokens";
-import { V2Segmented } from "./paV2Primitives";
-import { Box, Text, Tabs, Button, Flex, HStack, Portal, IconButton, Dialog } from "@chakra-ui/react";
+import { COLOR } from "../../../features/ui/designTokens";
+import { Box, Text, Tabs, Button, Flex, Portal, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
 import { MapContainer, TileLayer, CircleMarker, Tooltip, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
-import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
 import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
-import { Menu } from "@chakra-ui/react";
 import { MapCursorController } from "../../../components/common/MapCursorController";
 import { AnalysisSidebar } from "../../../components/visualization/AnalysisSidebar";
 
@@ -46,6 +43,7 @@ import { useImportedShapefile } from "./mapView/useImportedShapefile";
 import { GISLayerOverlays } from "./mapView/GISLayerOverlays";
 import { MapFiltersPanel } from "./mapView/MapFiltersPanel";
 import { SegmentsTableTab } from "./mapView/SegmentsTableTab";
+import { MapViewToolbar } from "./mapView/MapViewToolbar";
 
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
@@ -1569,233 +1567,36 @@ export default function AttributeAnalysisMapView({
         onValueChange={(e) => setActiveTab(e.value)}
         {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
       >
-        <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4" flexShrink={0}>
-          <HStack gap="4">
-            {isV2 ? (
-              <V2Segmented
-                options={[{ value: "map", label: "Map" }, { value: "table", label: "Table" }]}
-                value={activeTab === "table" ? "table" : "map"}
-                onChange={setActiveTab}
-              />
-            ) : (
-              <Tabs.List>
-                <Tabs.Trigger value="map">Map View</Tabs.Trigger>
-                <Tabs.Trigger value="table">Table View</Tabs.Trigger>
-              </Tabs.List>
-            )}
-
-            {allPoints.length > 0 && (
-              <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
-              <>
-                <HStack gap="1.5">
-                  <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <IconButton
-                        aria-label="Single Point Tools"
-                        size="sm"
-                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
-                        colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
-                        onClick={(e) => {
-                          if (isDeleteMode || isPointAddMode) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }
-                        }}
-                      >
-                        {isDeleteMode ? <FaTrash /> : isPointAddMode ? <FaPlus /> : <FaMousePointer />}
-                      </IconButton>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item
-                          value="delete"
-                          onClick={() => {
-                            setIsDeleteMode(true);
-                            setIsPointAddMode(false);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }}
-                        >
-                          <FaMousePointer /> Single Point Delete
-                        </Menu.Item>
-                        <Menu.Item
-                          value="add"
-                          onClick={() => {
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(true);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }}
-                        >
-                          <FaPlus /> Single Point Copy
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                  <Menu.Root positioning={{ placement: "bottom-start", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <IconButton
-                        aria-label="Polygon Tools"
-                        size="sm"
-                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
-                        colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "red" : "blue") : "gray"}
-                        onClick={(e) => {
-                          if (isPolygonMode || isPolygonAddMode) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                          }
-                        }}
-                      >
-                        {isPolygonMode ? <FaTrash /> : isPolygonAddMode ? <FaPlus /> : <FaDrawPolygon />}
-                      </IconButton>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item
-                          value="delete"
-                          onClick={() => {
-                            setIsPolygonMode(true);
-                            setIsPolygonAddMode(false);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                            setDeleteConfirmationOpen(false);
-                          }}
-                        >
-                          <FaTrash /> Delete Segments
-                        </Menu.Item>
-                        <Menu.Item
-                          value="add"
-                          onClick={() => {
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(true);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                            setDeleteConfirmationOpen(false);
-                          }}
-                        >
-                          <FaPlus /> Copy/Add Segments
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                </HStack>
-
-                {polygonPoints.length >= 3 && isPolygonMode && (
-                  <Button
-                    size="sm"
-                    colorPalette="red"
-                    onClick={finishPolygonSelection}
-                  >
-                    Delete Selected ({
-                      // Preview count
-                      allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length
-                    } segments)
-                  </Button>
-                )}
-
-                {polygonPoints.length >= 3 && isPolygonAddMode && (
-                  <Button
-                    size="sm"
-                    colorPalette="blue"
-                    onClick={finishAddSegmentsSelection}
-                  >
-                    Copy Selected ({
-                      allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length
-                    } segments)
-                  </Button>
-                )}
-              </>
-              </MaybePortal>
-            )}
-          </HStack>
-
-          {allPoints.length > 0 && (
-            <HStack gap="2">
-              <Button
-                size="sm"
-                onClick={handleOpenInTreatment}
-                {...(isV2
-                  ? { style: { background: COLOR.blue, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 } }
-                  : { colorPalette: "green" as const })}
-              >
-                {activeFilters.length > 0 ? "Treat Filtered Segments" : "Open in Treatment"}
-              </Button>
-              {isV2 ? (
-                // v2: a teal "Generate Report" button (global scope, §4) beside a single
-                // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
-                <HStack gap="2">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
-                      navigate("/analysis/report");
-                    }}
-                    style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                  >
-                    {"📄 Generate Report"}
-                  </Button>
-                  <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <Button
-                        size="sm"
-                        style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                      >
-                        Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
-                      </Button>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
-                        <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
-                        <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                </HStack>
-              ) : (
-                <>
-                  <Button
-                    colorPalette="blue"
-                    size="sm"
-                    onClick={handleDownloadCSV}
-                  >
-                    Download Table
-                  </Button>
-                  <Button
-                    colorPalette="teal"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleDownloadImages}
-                  >
-                    Download Images
-                  </Button>
-                  <Button
-                    colorPalette="green"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleDownloadShapefile}
-                  >
-                    Download Shapefile
-                  </Button>
-                </>
-              )}
-            </HStack>
-          )}
-        </Flex>
+        <MapViewToolbar
+          isV2={isV2}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          allPointsCount={allPoints.length}
+          activeFiltersCount={activeFilters.length}
+          toolsHost={toolsHost}
+          isDeleteMode={isDeleteMode}
+          setIsDeleteMode={setIsDeleteMode}
+          isPointAddMode={isPointAddMode}
+          setIsPointAddMode={setIsPointAddMode}
+          isPolygonMode={isPolygonMode}
+          setIsPolygonMode={setIsPolygonMode}
+          isPolygonAddMode={isPolygonAddMode}
+          setIsPolygonAddMode={setIsPolygonAddMode}
+          polygonPointsCount={polygonPoints.length}
+          clearPolygonPoints={() => setPolygonPoints([])}
+          closeDeleteConfirmation={() => setDeleteConfirmationOpen(false)}
+          polygonSelectionCount={allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length}
+          finishPolygonSelection={finishPolygonSelection}
+          finishAddSegmentsSelection={finishAddSegmentsSelection}
+          handleOpenInTreatment={handleOpenInTreatment}
+          onGenerateReport={() => {
+            sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
+            navigate("/analysis/report");
+          }}
+          handleDownloadCSV={handleDownloadCSV}
+          handleDownloadImages={handleDownloadImages}
+          handleDownloadShapefile={handleDownloadShapefile}
+        />
 
         {/* Map Tab Content */}
         <Tabs.Content value="map" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
