@@ -54,6 +54,7 @@ scripts/numerical_parity_v213.py
 scripts/verify_treatment12_donut.py
 scripts/segment_paths.py
 scripts/infer_obstacles.py
+scripts/visualize_path_segmentation.py
 
 # Generated reports (exported from the app)
 Generated Reports/
