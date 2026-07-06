@@ -51,6 +51,15 @@ def _shp_root() -> Path:
     """Absolute path to backend/shapefiles/."""
     return (Path(__file__).resolve().parents[3] / "shapefiles").resolve()
 
+
+# Subdirectories of backend/shapefiles/ that hold data for OTHER features, not GIS
+# layers to list here. ``gradient_profiles`` alone holds ~1300 cached ``.json`` road
+# gradient profiles (see routes.py::_load_gradient_profile_catalog) — since ``.json``
+# is one of the extensions list_shapefiles() treats as a candidate GIS file, every one
+# of those was being opened with fiona (geometry-type probe) + XML-metadata-checked on
+# every page load, which is what made /gis-layers slow to load.
+_NON_LAYER_DIRS = {"gradient_profiles"}
+
 # ── Metadata about each shapefile category ──────────────────────────────
 # Maps the folder/category name to its creation year and data source.
 # Edit this dictionary to keep the information up to date.
@@ -367,7 +376,8 @@ def list_shapefiles():
             continue
         if p.suffix.lower() not in gis_exts:
             continue
-        if any(part.startswith("temp") for part in p.parts):
+        rel_parts = p.relative_to(root).parts
+        if any(part.startswith("temp") or part in _NON_LAYER_DIRS for part in rel_parts):
             continue
         if p.name.startswith("."):
             continue
@@ -401,7 +411,7 @@ def list_categories():
 
     cats = []
     for d in sorted(root.iterdir()):
-        if not d.is_dir() or d.name.startswith("temp"):
+        if not d.is_dir() or d.name.startswith("temp") or d.name in _NON_LAYER_DIRS:
             continue
         count = sum(1 for _ in d.glob("*.shp"))
         cats.append({"name": d.name, "shapefile_count": count, "path": d.name})
