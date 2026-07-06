@@ -195,7 +195,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S1.6** `useSessionState` hook + typed `SESSION_KEYS`; migrate keys — 2d — *depends: S1.2*
 
 ### Phase 2 — Frontend monolith decomposition (13–17 days) — *depends: Phase 1 done; re-scoped 2026-07-03 for the v2 container/shell seam*
-- [ ] **S2.1** Decompose `PathAnalysisMapView.tsx` (3,537; shared `variant="v2"` component) — 4d — *depends: S1.\**
+- [x] **S2.1** Decompose `PathAnalysisMapView.tsx` (3,537; shared `variant="v2"` component) — 4d — *depends: S1.\**
 - [x] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
 - [ ] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
 - [ ] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
@@ -345,7 +345,7 @@ No behavior change. After each extraction: build + manual smoke + commit.
 fetching, server state, or sessionStorage into a shell. Keep each page's ViewModel interface intact (callbacks
 may be re-wired to new hooks, but the shell-facing contract must not change shape without updating both layouts).
 
-- **S2.1 PathAnalysisMapView** — **Graph tools first:** `get_impact_radius_tool` on `PathAnalysisMapView.tsx`;
+- **S2.1 PathAnalysisMapView** (· Done: 2026-07-06) — **Graph tools first:** `get_impact_radius_tool` on `PathAnalysisMapView.tsx`;
   `query_graph_tool(pattern="callers_of")` on each inline helper being pulled into a hook (GIS layer toggle logic,
   filter state, viewport persistence) to confirm no external caller is missed before it moves. **Then extract:**
   `useGISLayerToggles`, `useFilterState`, `useViewportPersistence`, `<GISLayerControls>`, `<FilterPanel>`,
@@ -1335,3 +1335,81 @@ gives for free — record what you found so the next session doesn't re-query fr
                    gisLayerToggles_* localStorage keys and psat:gisLayers:sync event now live in
                    useGISToggleState.ts. GISLayers/PathDefect types are exported from useGISLayerData.ts;
                    SelectablePoint from useSegmentEditTools.ts.
+
+- 2026-07-06 · S2.1 · decomposed PathAnalysisMapView.tsx (3,538 → 1,974 lines) into 11 single-responsibility
+                   hook/component modules under components/mapView/, preserving the v2 variant gating and all
+                   sessionStorage contracts. (Ran as a concurrent sub-agent alongside S2.2 — Opus agent in
+                   worktree branch `s2p1-map-decompose` off `c0eeec59`; 7 [S2.1] commits cherry-picked onto
+                   `xh_dev` as `706504b5..bfc3fb56` by the orchestrator. Same Wave-1 stale-worktree-base gotcha:
+                   caught by the embedded base-sha check, fixed by ff-merge before any edit.)
+  FILES CREATED:   frontend/src/pages/PathAnalysisPage/components/mapView/mapViewUtils.ts (215L),
+                   leafletHelpers.tsx (126L), useViewportPersistence.ts (47L),
+                   useGISLayerToggles.ts (182L), useImportedShapefile.ts (74L),
+                   useFilterState.ts (198L), useAttributeText.ts (291L),
+                   GISLayerOverlays.tsx (130L), MapFiltersPanel.tsx (447L),
+                   SegmentsTableTab.tsx (327L), MapViewToolbar.tsx (315L)
+  FILES DELETED:   none
+  FILES MOVED:     none (logical moves only — symbols relocated into the new mapView/ modules)
+  FILES MODIFIED:  frontend/src/pages/PathAnalysisPage/components/PathAnalysisMapView.tsx (3,538 → 1,974 lines)
+  SYMBOLS MOVED/EXTRACTED: pure helpers (getUploadedBoundaryLabel, toShapefileLeafletCoords,
+                   extractUploadedBoundaryFeatures, GRADE_BUCKETS + normalisers, compareByOrder,
+                   getSemanticCategoryOrder, escapeCSV, SAFETY_FOCUS_ATTRIBUTES/ADEQUACY_DEFAULT_ATTRS/
+                   CROSSING_TYPE_FILTER_OPTIONS, ProjectData/VisibleSegment/TablePoint/MapPoint/
+                   TableSortConfig types) → mapViewUtils.ts; PanToBounds/FitBounds/ViewportWatcher/
+                   ViewportPersister/MapInvalidateSize/MaybePortal → leafletHelpers.tsx; viewport
+                   restore refs → useViewportPersistence(); 16 GIS layer flags + near-segments/defects
+                   fetches → useGISLayerToggles(); shapefile import overlay → useImportedShapefile();
+                   5 sessionStorage filter states + coordination effects (incl. seeded prevFiltersRef)
+                   → useFilterState(); getAttrText…getFocusedAttributeValue chain → useAttributeText();
+                   GIS overlay JSX → <GISLayerOverlays>; filter tabs + toggle chips → <MapFiltersPanel>;
+                   table tab + handleHeaderClick/handleTableProjectJump/v2StickyStyle → <SegmentsTableTab>;
+                   header toolbar → <MapViewToolbar>. All had 0 callers outside PathAnalysisMapView.tsx.
+  IMPORT SITES UPDATED: 0 external files — the file's only importers (PathAnalysisLayoutV1/V2.tsx)
+                   consume the default export, which kept its name, props and behavior.
+  GRAPH USAGE:     get_impact_radius_tool on PathAnalysisMapView.tsx: 60 in-file nodes, 106 affected
+                   files at 2 hops (risk high — expected for a shared heavy component);
+                   query_graph_tool(importers_of): exactly 2 importers, PathAnalysisLayoutV1.tsx and
+                   PathAnalysisLayoutV2.tsx (both line 3, default import); file_summary: mapped the
+                   60 in-file symbols and the 332–3537 monolith component; callers_of on
+                   ViewportPersister / extractUploadedBoundaryFeatures / buildFilterContext: all
+                   callers in-file only. Trust-but-grep confirmed: same-named helpers in
+                   GeoDataPanel/SelectRoadsMap/GisLayersPage/ShapefileModal are independent local
+                   copies, not callers. detect_changes ran via the per-commit hook post-merge; graph
+                   auto-updated per commit.
+  BUILD GATE:      TSC (--noEmit) 0 → 0 errors; lint 375 problems (351 err/24 warn) → 371
+                   (351 err/20 warn) — error list unchanged (16 no-explicit-any moved with their
+                   code), 4 spurious exhaustive-deps warnings genuinely resolved; build (tsc -b)
+                   FAIL → FAIL with a byte-identical pre-existing 37-error list (ignoring line
+                   shifts). Combined post-integration tree (S2.1+S2.2 on xh_dev): tsc 0, lint 360
+                   (341E/19W), build 13 errors — all pre-existing (37 baseline minus S2.2's 24
+                   GeoDataPanel type fixes), none in refactored code.
+  REGRESSION CHECK: static only (agent session): both variant paths compile; props interface,
+                   MaybePortal/filtersPortalTarget gating, toolsHost portal, and all sessionStorage
+                   key strings (PA_MAP_* / TREATMENT_* / CODING_FILTER_CONTEXT_KEY) verified
+                   byte-identical; layouts/ and pathAnalysisPage.tsx untouched. Manual checklist
+                   items 1, 2, 3, 4, 7 owed before/with the Wave-1 push.
+  ARCHITECTURAL DECISIONS: (a) plan's <GISLayerControls> seam replaced by <GISLayerOverlays> — the
+                   toggle controls already live in the shared AnalysisSidebar; the inline seam that
+                   actually existed was overlay rendering. (b) plan's <FilterPanel> named
+                   MapFiltersPanel to avoid colliding with the existing FilterPanel.tsx (attribute
+                   selection). (c) useGISLayerToggles is called mid-component after gisQueryPoints
+                   is computed (its fetch input) — hook order is load-bearing. (d) three effect dep
+                   arrays gained referentially-stable hook-returned values (savedViewport ref, two
+                   setters) to satisfy exhaustive-deps across the new hook boundary — no runtime
+                   change. (e) stopped above the ~600-line target (main file 1,974): the remaining
+                   body is one interdependent derivation web (visibleSegments/allPoints/
+                   categoryStatus/filteredData) + map JSX; splitting it would force unnatural seams.
+  DEFERRED:        pre-existing unused hasSavedReport (TS6133 in tsc -b, kept — do not "fix" without
+                   deciding whether the v2 Generate Report button should use it); pre-existing
+                   console.log in finishPolygonSelection; filteredData memo's dep list includes
+                   projectsData/activeFilters/attrMappings as proxies for the non-memoised
+                   getColumnValue (works, but getColumnValue should become useCallback in a later
+                   pass); `npm run build` (tsc -b) was ALREADY failing at session start with 37
+                   errors in CodingPage/Treatment/ReportBuilder files — the plan's "frontend gate
+                   must pass" is unmet at baseline, not by this session.
+  NOTES FOR NEXT:  S2.3: the mapView/ hooks are map-view-local by design — do NOT import them
+                   from CodingPage; GeoDataPanel has its own FitBounds/PanToBounds copies (with
+                   panKey semantics that differ). S2.5: reportBuilderPage imports nothing from
+                   here, but plan line counts shift. Capture the `tsc -b` build baseline BEFORE the
+                   first edit — `tsc --noEmit` clean ≠ `tsc -b` clean (build config flags unused
+                   locals). Post-Wave-1 build baseline is 13 errors (see BUILD GATE).
