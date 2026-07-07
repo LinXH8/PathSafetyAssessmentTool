@@ -197,8 +197,8 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 ### Phase 2 — Frontend monolith decomposition (13–17 days) — *depends: Phase 1 done; re-scoped 2026-07-03 for the v2 container/shell seam*
 - [x] **S2.1** Decompose `PathAnalysisMapView.tsx` (3,537; shared `variant="v2"` component) — 4d — *depends: S1.\**
 - [x] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
-- [ ] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
-- [ ] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
+- [x] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
+- [x] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
 - [ ] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
 
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
@@ -357,12 +357,12 @@ may be re-wired to new hooks, but the shell-facing contract must not change shap
   `useWidthVisualization`, `<DefectsLayer>`. **Shared heavy component with gated `variant="v2"`** (floating tool
   cluster, `MapAutosize`) — same both-paths rule. Also consumed by Treatment's Before/After map panels; smoke
   those too.
-- **S2.3 codingPage** — **Graph tools first:** `get_impact_radius_tool` on `codingPage.tsx`;
+- **S2.3 codingPage** (· Done: 2026-07-07) — **Graph tools first:** `get_impact_radius_tool` on `codingPage.tsx`;
   `query_graph_tool(pattern="callers_of")` on `CodingViewModel`'s exported members to verify the shell-facing
   contract shape stays intact after extraction. **Then decompose** the **container** (`CodingLayoutV1/V2.tsx` +
   `CodingViewModel.ts` already exist): `useProjectDataCache`, `useFilterContext`, `useAutocode`,
   `useAttributeEditing`. Keep the `CodingViewModel` contract intact.
-- **S2.4 treatmentDetailPage** — **Graph tools first:** `query_graph_tool(pattern="callers_of")` on
+- **S2.4 treatmentDetailPage** (· Done: 2026-07-06) — **Graph tools first:** `query_graph_tool(pattern="callers_of")` on
   `resolveIndex`/`projectMap` before extracting `useProjectMapping`; `get_impact_radius_tool` on
   `treatmentDetailPage.tsx`. **Then extract:** much of the old scope was done by the v2 split
   (`TreatmentDetailLayoutV1/V2.tsx` + `TreatmentViewModel.ts`; container is now 1,387 lines). Remaining: extract
@@ -1413,3 +1413,121 @@ gives for free — record what you found so the next session doesn't re-query fr
                    here, but plan line counts shift. Capture the `tsc -b` build baseline BEFORE the
                    first edit — `tsc --noEmit` clean ≠ `tsc -b` clean (build config flags unused
                    locals). Post-Wave-1 build baseline is 13 errors (see BUILD GATE).
+
+- 2026-07-06 · S2.4 · decomposed treatmentDetailPage.tsx (1,388 → 933 lines) into 4 single-responsibility hooks
+                   under TreatmentPage/hooks/, fixed the two deferred pre-existing errors (unused TREATMENTS import,
+                   missing Treatment type import), preserving the TreatmentViewModel contract and the click-driven
+                   auto-save design exactly. (Ran as a concurrent Wave-2 sub-agent alongside S2.3 — Sonnet agent in
+                   a worktree off `ce517aa5`; base-sha check passed, no stale-worktree issue this wave. 5 [S2.4]
+                   commits cherry-picked onto `xh_dev` as `6d2468e8..709e3858` by the orchestrator.)
+  FILES CREATED:   frontend/src/pages/TreatmentPage/hooks/useProjectMapping.ts (62L),
+                   useTreatmentState.ts (233L), useTreatmentEngine.ts (154L),
+                   useTreatmentAnalysis.ts (361L)
+  FILES DELETED:   none
+  FILES MOVED:     none (logical moves only — symbols relocated into hooks/)
+  FILES MODIFIED:  frontend/src/pages/TreatmentPage/treatmentDetailPage.tsx (1,388 → 933 lines)
+  SYMBOLS MOVED/EXTRACTED: projectMap/setProjectMap/resolveIndex → useProjectMapping;
+                   treatmentState/setTreatmentState + 3 populating effects +
+                   appliedTreatmentIds/segmentHasTreatments → useTreatmentState;
+                   scheduleSegmentSave/persistSegmentTreatments/saveTimerRef/pendingSaveRef/autoSaveStatus +
+                   flush-on-navigate effect → useTreatmentEngine; perProjectEff/effectivenessLoading/
+                   effectivenessCounts/applicableCounts/segmentScoreDrops/allApplicableTreatments/
+                   fullyAppliedTreatments/beforeBandCounts/afterBandCounts/effectivenessLabel/
+                   improvedSegmentCount/afterTreatmentScores/modifiedAttrs/changedAttributes/
+                   changedFieldSources → useTreatmentAnalysis. getProjectSegmentCount/
+                   getProjectFirstSegmentIndex deliberately stayed in the container (see ARCHITECTURAL
+                   DECISIONS). All had 0 callers outside treatmentDetailPage.tsx.
+  IMPORT SITES UPDATED: 0 external files — TreatmentDetailLayoutV1/V2.tsx and TreatmentViewModel.ts
+                   consume the unchanged default export/contract.
+  GRAPH USAGE:     query_graph_tool(callers_of, "resolveIndex"): not_found — the graph doesn't track this
+                   closure as a distinct node (same blind-spot class noted in prior sessions);
+                   get_impact_radius_tool on treatmentDetailPage.tsx: 502 impacted nodes/112 files at 2 hops,
+                   but only 3 real Treatment-domain files, none referencing resolveIndex/projectMap directly.
+                   Trust-but-grep confirmed 0 external callers across layouts/ and components/.
+  BUILD GATE:      TSC (--noEmit) 0 → 0; lint 360 (341E/19W) → 360 (342E/18W) — same total, net +1E/-1W is an
+                   internal reclassification (a pre-existing missing-dep warning is now an explicit, documented
+                   eslint-disable); build (tsc -b) 13 → 11 errors — the two named pre-existing errors in this
+                   file are gone, the remaining 11 are byte-identical pre-existing errors in unrelated files.
+  REGRESSION CHECK: static only (agent session): both layout variants compile against the unchanged
+                   TreatmentViewModel; sessionStorage key strings (TREATMENT_FILTER_CONTEXT,
+                   TREATMENT_LOADED_PROJECTS, PA_LOADED_PROJECTS, REPORT_LAYOUT) verified byte-identical;
+                   clearScrollLock + its two effects untouched. Manual checklist items 5, 7 owed
+                   before/with the Wave-2 push.
+  ARCHITECTURAL DECISIONS: (a) getProjectSegmentCount/getProjectFirstSegmentIndex stayed in the container,
+                   not useProjectMapping — they depend on filterMode/filteredGlobalIndices, which are derived
+                   FROM projectMap, so moving them would create a circular dependency within one render pass.
+                   (b) caught and fixed a self-introduced bug during drafting: useTreatmentAnalysis originally
+                   tried to re-derive activeProject/isAllScope from scope.start, which is ambiguous (first
+                   project's startIndex is 0, same as all-scope) — fixed by passing them through explicitly.
+                   (c) several dep arrays keep hook-returned setters out (matching pre-extraction exactly)
+                   with an explicit comment + eslint-disable, since they're all referentially-stable setState
+                   setters/useCallback fns. (d) bulk apply-to-all and its live preview effect stayed in the
+                   container, not folded into useTreatmentEngine — the engine is scoped specifically to the
+                   click-driven segment-view auto-save design documented in CLAUDE.md; conflating it with the
+                   bulk-apply model would have expanded risk.
+  DEFERRED:        none new — the 11 remaining build errors are pre-existing and unrelated (CodingPage
+                   AttributeRow typing, ReportBuilder/PathAnalysisMapView unused vars,
+                   PostTreatmentImageUpload.tsx, currentPage unused in both Treatment layouts).
+  NOTES FOR NEXT:  TreatmentPage/hooks/ are page-local by design (mirrors S2.1's mapView/ and S2.2's
+                   GeoDataPanel sub-hooks) — do not import from CodingPage/PathAnalysisPage.
+                   useTreatmentAnalysis is the largest extraction (361L); a further split would need
+                   threading combinedTreatmentIds (container-only) through an awkward extra seam for little
+                   gain. node_modules was missing in the fresh worktree — npm install was run to capture
+                   baselines and touched package-lock.json, which was reverted before committing; future
+                   sessions in fresh worktrees should expect the same.
+
+- 2026-07-07 · S2.3 · Decomposed codingPage.tsx container (2,302 → 639 lines) into four single-responsibility
+                   hooks + a pure-helpers module under CodingPage/, with the CodingViewModel assembly byte-identical
+                   and both layout shells untouched. (Ran as a concurrent Wave-2 sub-agent alongside S2.4 — Opus
+                   agent, worktree branch off `ce517aa5`; survived a usage-limit cutoff/resume mid-session — the
+                   embedded resume-in-worktree check prevented the Wave-1 "continued in main checkout" gotcha.
+                   6 [S2.3] commits cherry-picked onto `xh_dev` as `915d8697..7b40ee1a` by the orchestrator.
+                   Combined post-integration tree (S2.3+S2.4 on xh_dev): tsc 0, lint 352 (342E/10W),
+                   build 11 errors — all pre-existing.)
+  FILES CREATED:   frontend/src/pages/CodingPage/codingHelpers.ts (226L);
+                   hooks/useFilterContext.ts (55L); hooks/useProjectDataCache.ts (530L);
+                   hooks/useAutocode.ts (722L); hooks/useAttributeEditing.ts (559L)
+  FILES DELETED:   none
+  FILES MOVED:     none (logical moves only)
+  FILES MODIFIED:  frontend/src/pages/CodingPage/codingPage.tsx 2,302 → 639 lines
+  SYMBOLS MOVED/EXTRACTED: applyLogicChecks/migrateAttrRows/normalizeAttributeValues/suggestion constants →
+                   codingHelpers.ts; resolveFilterContext (priority-1/fallback logic byte-identical per CLAUDE.md
+                   filter-color-leak fix) → useFilterContext.ts; projectDataCache/savedAttrsSnapshot/
+                   defaultProjectData module singletons + updateProjectData/currentData + load/baseline/scores/
+                   mappings effects + refreshCurrentProject + verified/autocoded count updaters + handleSaveOptions
+                   → useProjectDataCache.ts; the four psat:autocode:* event effects + overlay state +
+                   applyUpdatesToCurrentRow/updateAutocodeBaseline/saveAutocodeMetadata → useAutocode.ts;
+                   editCurrentAttr(Many)/onAttrChange/onEdit/saveAllProjects (invalidateProject-per-dirty-project
+                   KEPT) + psat:save/psat:discard listeners + psat_hasUnsavedChanges + six pending* modal flags →
+                   useAttributeEditing.ts. All moved symbols had 0 callers outside codingPage.tsx.
+  IMPORT SITES UPDATED: 0 external files — only importer is App.tsx (default export unchanged); layouts/ and
+                   CodingViewModel.ts untouched (vm object literal diff-verified byte-identical).
+  GRAPH USAGE:     get_impact_radius_tool on codingPage.tsx: 39 changed nodes, 490 impacted within 2 hops,
+                   110 files. query_graph_tool(importers_of): exactly 1 importer, App.tsx:5. Trust-but-grep
+                   confirmed helpers had no external callers (only a doc-comment mention in sessionKeys.ts).
+                   detect_changes ran per commit via hook (risk 0.30–0.40, 0 affected flows);
+                   build_or_update_graph_tool (incremental) after final commit.
+  BUILD GATE:      TSC 0 → 0 errors; lint 360 (341E/19W) → 352 (341E/11W) — errors byte-balanced (moved with
+                   code, verified 1:1 per rule), 8 warnings genuinely removed; build (tsc -b) FAIL → FAIL with
+                   13 → 13 errors in the worktree — the 3 pre-existing codingPage TS2322/TS2345 moved to
+                   useAutocode.ts, all others byte-identical (11 on xh_dev after S2.4's 2 fixes).
+  REGRESSION CHECK: static only (agent session): items 2/3 at contract level (filter-context priority logic and
+                   CODING_FILTER_CONTEXT_KEY usage byte-identical; invalidateProject retained in saveAllProjects);
+                   item 7: both layouts compile against a byte-identical vm; psat:* event code occurrences match
+                   baseline exactly. Manual smoke owed before/with the Wave-2 push.
+  ARCHITECTURAL DECISIONS: (1) added codingHelpers.ts beyond the plan's 4 hooks — react-refresh rule forbids
+                   exporting pure fns from hook files. (2) projectDataCache/savedAttrsSnapshot stayed MODULE-scope
+                   (cross-navigation cache semantics) but moved into and are exported from useProjectDataCache.ts.
+                   (3) pending* modal flags moved into useAttributeEditing (set only by onEdit's rules). (4) hook
+                   call order in container is load-bearing (cache → derivations → autocode → editing). (5) hook-
+                   boundary dep omissions use documented eslint-disables — updateProjectData is recreated per
+                   render; adding it to deps would change effect timing.
+  DEFERRED:        empty catch in updateAutocodeBaseline; 3 baseline AttributeRow[] type errors now in
+                   useAutocode.ts 138/484/491; all-projects handler `errors: any[]` + failure over-count of
+                   projectAttrsLength; future pass: useCallback-wrap updateProjectData to drop ~13 disables.
+  NOTES FOR NEXT:  The module cache singletons (projectDataCache, savedAttrsSnapshot, defaultProjectData) export
+                   from hooks/useProjectDataCache.ts — do not convert to React state (navigation-survival
+                   semantics). useAutocode/useAttributeEditing import them directly. Container hook order is
+                   load-bearing. GeoDataPanel import path still frozen at components/GeoDataPanel.tsx (no
+                   index.ts added). scores typed via ProjectDataState["scores"] indexed access to avoid new
+                   `any` lint errors. S2.5 (reportBuilderPage) has no dependency on either Wave-2 session.
