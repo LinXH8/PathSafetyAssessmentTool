@@ -28,6 +28,7 @@ export const COLOR = {
 
   danger: "#E53E3E",
   dangerHover: "#C53030",
+  dangerBg: "#FFF5F5", // soft-red highlight paired with a `danger` border
 
   rowDivider: "#EDF2F7",
 } as const;
