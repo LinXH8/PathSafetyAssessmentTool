@@ -19,11 +19,6 @@
  * in `layouts/ReportBuilderViewModel.ts`.
  */
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import {
-  PointerSensor, KeyboardSensor, useSensor, useSensors,
-} from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip as RechartTooltip } from "recharts";
 import { useNavigate } from "react-router-dom";
@@ -31,22 +26,23 @@ import { RISK_COLORS, RISK_LABELS } from "../../utils/riskColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
+import { SESSION_KEYS } from "../../constants/sessionKeys";
 import type {
   BandDist, ElementState, FilterCategoryStatus,
   ProjectTreatmentSummary, TopRiskRow,
 } from "./reportBuilderTypes";
 import {
-  CRASH_TYPE_LABELS, DEFAULT_ELEMENTS, FILTERED_ELEMENTS,
-  FILTERED_SECTIONS_ENABLED, METHODOLOGY_TEXT, PAGE_GAP, PAGE_H,
+  CRASH_TYPE_LABELS, FILTERED_ELEMENTS,
+  METHODOLOGY_TEXT, PAGE_GAP, PAGE_H,
   PROJ_CONT_HEADER_H, PROJ_HEADER_H, PROJ_PAGE_SIZE, PROJ_ROW_H,
   TREATMENT_NAMES, tdStyle, thStyle,
 } from "./reportBuilderConstants";
-import { computeFlowLayout, readSavedLayout } from "./reportBuilderHelpers";
+import { computeFlowLayout } from "./reportBuilderHelpers";
 import { AttrTag, EditableText, SegmentImage, TreatmentBadge } from "./components/reportPrimitives";
 import { ReportMiniMap } from "./components/ReportMiniMap";
 import { usePdfExport } from "./hooks/usePdfExport";
 import { useReportData } from "./hooks/useReportData";
+import { useReportLayout } from "./hooks/useReportLayout";
 import { ReportBuilderLayoutV1 } from "./layouts/ReportBuilderLayoutV1";
 import type { ReportBuilderViewModel } from "./layouts/ReportBuilderViewModel";
 
@@ -58,44 +54,21 @@ export default function ReportBuilderPage() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const hasAutoFit = useRef(false);
 
-  // ── State: auto-restored from localStorage if a saved layout exists ──────
-  const [elements, setElements] = useState<ElementState[]>(() => {
-    const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis"]);
-    const l = readSavedLayout();
-    if (Array.isArray(l?.elements)) {
-      const saved = (l.elements as ElementState[])
-        .filter((e) => !REMOVED_IDS.has(e.id));
-      // Inject any new default elements missing from the saved layout (e.g. benchmarkStats added after save)
-      const savedIds = new Set(saved.map((e: ElementState) => e.id));
-      const injected = DEFAULT_ELEMENTS.filter((e) => !savedIds.has(e.id));
-      return injected.length > 0 ? [...saved, ...injected] : saved;
-    }
-    return DEFAULT_ELEMENTS;
-  });
-  const [currentPage, setCurrentPage] = useState(0);
+  // ── Section layout / persistence / reorder / page-nav (see hooks/useReportLayout.ts) ──
+  const {
+    elements, setElements, visibleElements, sectionChecklist, updateElement, hideElement,
+    reportTitle, setReportTitle, projectNameOverrides, setProjectNameOverrides,
+    sectionTitles, setSectionTitles, oicName, setOicName, purpose, setPurpose,
+    recommendations, setRecommendations, reportDate, setReportDate,
+    includeFiltered, setIncludeFiltered,
+    hasSaved, saveLayout, restoreLayout, resetLayout,
+    saveToastVisible, setSaveToastVisible, restoreBannerVisible, setRestoreBannerVisible,
+    sensors, handleDragEnd,
+    currentPage, goToPage, scrollToSection, handleCanvasScroll,
+  } = useReportLayout({ canvasRef, canvasContainerRef });
 
-  // ── Editable metadata ────────────────────────────────────────────────────
-  const [reportTitle, setReportTitle] = useState(() => {
-    const l = readSavedLayout(); return typeof l?.reportTitle === "string" ? l.reportTitle : "Path Safety Analysis Executive Summary";
-  });
-  const [projectNameOverrides, setProjectNameOverrides] = useState<Record<string, string>>(() => {
-    const l = readSavedLayout(); return (l?.projectNameOverrides && typeof l.projectNameOverrides === "object") ? l.projectNameOverrides as Record<string, string> : {};
-  });
-  const [sectionTitles, setSectionTitles] = useState<Record<string, string>>(() => {
-    const l = readSavedLayout(); return (l?.sectionTitles && typeof l.sectionTitles === "object") ? l.sectionTitles as Record<string, string> : {};
-  });
-  const [oicName, setOicName] = useState(() => {
-    const l = readSavedLayout(); return typeof l?.oicName === "string" ? l.oicName : "";
-  });
-  const [purpose, setPurpose] = useState(() => {
-    const l = readSavedLayout(); return typeof l?.purpose === "string" ? l.purpose : "";
-  });
-  const [recommendations, setRecommendations] = useState(() => {
-    const l = readSavedLayout(); return typeof l?.recommendations === "string" ? l.recommendations : "";
-  });
-  const [reportDate, setReportDate] = useState(() => {
-    const l = readSavedLayout(); return typeof l?.reportDate === "string" ? l.reportDate : new Date().toISOString().split("T")[0];
-  });
+
+
   // ── Projects ─────────────────────────────────────────────────────────────
   const [loadedProjects, setLoadedProjects] = useState<string[]>([]);
 
@@ -112,20 +85,11 @@ export default function ReportBuilderPage() {
   // Drives the "Map (Filtered)" colour-by-attribute option (value → colour via
   // activeCategoryStatus, so the map matches the on-report legend).
   const [filteredSegValues, setFilteredSegValues] = useState<Record<string, Record<number, Record<string, string>>> | null>(null);
-  const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
-    const l = readSavedLayout(); return l?.includeFiltered === true;
-  });
 
   // ── Path Analysis filter sync ─────────────────────────────────────────────
   const [activeFilterNames, setActiveFilterNames] = useState<string[]>([]);
   const [activeCategoryStatus, setActiveCategoryStatus] = useState<FilterCategoryStatus[]>([]);
 
-  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
-  const [saveToastVisible, setSaveToastVisible] = useState(false);
-  const saveToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // true when this mount auto-restored a previously saved layout
-  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
-  const [restoreBannerVisible, setRestoreBannerVisible] = useState(wasAutoRestored);
 
   // ── Project picker (shown when session storage has no projects) ───────────
   const [showProjectPicker, setShowProjectPicker] = useState(false);
@@ -300,6 +264,7 @@ export default function ReportBuilderPage() {
     setElements((prev) =>
       prev.map((el) => (el.visible ? { ...el, height: computeIdealHeight(el) } : el)),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setters are referentially stable (deps match the pre-extraction code)
   }, [computeIdealHeight]);
 
   // ── Auto-fit on first data load ───────────────────────────────────────────
@@ -310,11 +275,6 @@ export default function ReportBuilderPage() {
     setTimeout(autoFitElements, 150);
   }, [fullDataset.distributions, autoFitElements]);
 
-  // ── Element helpers ───────────────────────────────────────────────────────
-  const updateElement = useCallback((id: string, changes: Partial<ElementState>) => {
-    setElements((prev) => prev.map((el) => (el.id === id ? { ...el, ...changes } : el)));
-  }, []);
-  const hideElement = useCallback((id: string) => updateElement(id, { visible: false }), [updateElement]);
   const showElement = useCallback((id: string) => {
     setElements((prev) => {
       const target = prev.find((e) => e.id === id);
@@ -333,6 +293,7 @@ export default function ReportBuilderPage() {
       }, 30);
       return updated;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setters are referentially stable (deps match the pre-extraction code)
   }, [computeIdealHeight]);
 
   // ── Filtered sections: master toggle ──────────────────────────────────────
@@ -350,23 +311,9 @@ export default function ReportBuilderPage() {
     });
     setIncludeFiltered((v) => !v);
     setTimeout(autoFitElements, 50);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setters are referentially stable (deps match the pre-extraction code)
   }, [autoFitElements]);
 
-  // ── Drag end: reorder the elements array (dnd-kit drives ordering) ─────────
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    setElements((prev) => {
-      const oldIndex = prev.findIndex((e) => e.id === active.id);
-      const newIndex = prev.findIndex((e) => e.id === over.id);
-      if (oldIndex === -1 || newIndex === -1) return prev;
-      return arrayMove(prev, oldIndex, newIndex);
-    });
-  }, []);
 
   // ── Display-name helpers ──────────────────────────────────────────────────
   const dispName = useCallback(
@@ -383,6 +330,7 @@ export default function ReportBuilderPage() {
   const setProjectName = useCallback(
     (orig: string, display: string) =>
       setProjectNameOverrides((prev) => ({ ...prev, [orig]: display })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setter is referentially stable (deps match the pre-extraction code)
     []
   );
   const secTitle = useCallback(
@@ -392,66 +340,10 @@ export default function ReportBuilderPage() {
   const setSecTitle = useCallback(
     (id: string, title: string) =>
       setSectionTitles((prev) => ({ ...prev, [id]: title })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setter is referentially stable (deps match the pre-extraction code)
     []
   );
 
-  // ── Save / Restore layout ─────────────────────────────────────────────────
-  const saveLayout = useCallback(() => {
-    try {
-      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
-        elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
-      }));
-      setHasSaved(true);
-      setSaveToastVisible(true);
-      if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
-      saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
-    } catch (e) { console.error("Save layout failed:", e); }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
-
-  // Auto-save layout on every change so navigation away never loses section arrangement.
-  useEffect(() => {
-    try {
-      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
-        elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
-      }));
-      setHasSaved(true);
-    } catch (e) { /* quota exceeded or private browsing — silent */ }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
-
-  const restoreLayout = useCallback(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
-      if (!saved) return;
-      const l = JSON.parse(saved);
-      if (l.elements) setElements(l.elements);
-      if (l.reportTitle !== undefined) setReportTitle(l.reportTitle);
-      if (l.oicName !== undefined) setOicName(l.oicName);
-      if (l.purpose !== undefined) setPurpose(l.purpose);
-      if (l.recommendations !== undefined) setRecommendations(l.recommendations);
-      if (l.reportDate !== undefined) setReportDate(l.reportDate);
-      if (l.projectNameOverrides !== undefined) setProjectNameOverrides(l.projectNameOverrides);
-      if (l.sectionTitles !== undefined) setSectionTitles(l.sectionTitles);
-      if (l.includeFiltered !== undefined) setIncludeFiltered(l.includeFiltered);
-    } catch (e) { console.error("Restore layout failed:", e); }
-  }, []);
-
-  const resetLayout = useCallback(() => {
-    if (window.confirm("Are you sure you want to reset the layout to default? All unsaved changes will be lost.")) {
-      localStorage.removeItem(LOCAL_KEYS.REPORT_LAYOUT);
-      setElements(DEFAULT_ELEMENTS);
-      setReportTitle("Path Safety Analysis Executive Summary");
-      setOicName("");
-      setPurpose("");
-      setRecommendations("");
-      setReportDate(new Date().toISOString().split("T")[0]);
-      setProjectNameOverrides({});
-      setSectionTitles({});
-      setIncludeFiltered(false);
-      setHasSaved(false);
-    }
-  }, []);
 
   // ── Project picker confirm ────────────────────────────────────────────────
   const loadSelectedProjects = useCallback(() => {
@@ -459,34 +351,6 @@ export default function ReportBuilderPage() {
     setShowProjectPicker(false);
   }, [pickerSelected]);
 
-  // ── Page navigation ───────────────────────────────────────────────────────
-  const goToPage = useCallback((page: number) => {
-    setCurrentPage(page);
-    if (!canvasContainerRef.current || !canvasRef.current) return;
-    const canvasTop = canvasRef.current.offsetTop;
-    canvasContainerRef.current.scrollTo({ top: canvasTop + page * PAGE_H, behavior: "smooth" });
-  }, []);
-
-  // Scroll the canvas so the start of the given section is brought into view.
-  const scrollToSection = useCallback((id: string) => {
-    const container = canvasContainerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-    const el = canvas.querySelector(`[data-element-id="${id}"]`) as HTMLElement | null;
-    if (!el) return;
-    const elRect = el.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const top = container.scrollTop + (elRect.top - containerRect.top) - 16;
-    container.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-  }, []);
-
-  const handleCanvasScroll = useCallback(() => {
-    if (!canvasContainerRef.current || !canvasRef.current) return;
-    const scrolled = canvasContainerRef.current.scrollTop;
-    const canvasTop = canvasRef.current.offsetTop;
-    const scrollInCanvas = Math.max(0, scrolled - canvasTop);
-    setCurrentPage(Math.floor(scrollInCanvas / PAGE_H));
-  }, []);
 
   // ── PDF / Word export (see hooks/usePdfExport.ts) ─────────────────────────
   const { exporting, handleDownloadPDF, handleDownloadWord } = usePdfExport({
@@ -1949,10 +1813,6 @@ export default function ReportBuilderPage() {
   };
 
   // ── Flow layout (single source of truth for heights + page-break spacing) ──
-  const visibleElements = useMemo(
-    () => elements.filter((e) => e.visible && (FILTERED_SECTIONS_ENABLED || !e.filtered)),
-    [elements],
-  );
   const layout = useMemo(
     () => computeFlowLayout(visibleElements, computeIdealHeight),
     [visibleElements, computeIdealHeight],
@@ -1971,13 +1831,6 @@ export default function ReportBuilderPage() {
   // Instead, visual page backdrops with spaces between them are rendered.
   const totalPages = useMemo(() => Math.max(1, Math.ceil(canvasH / PAGE_H)), [canvasH]);
 
-  // ── Checklist memo ────────────────────────────────────────────────────────
-  const sectionChecklist = useMemo(() =>
-    elements
-      .filter((el) => FILTERED_SECTIONS_ENABLED || !el.filtered)
-      .map((el) => ({ id: el.id, label: el.label, visible: el.visible, filtered: !!el.filtered })),
-    [elements]
-  );
 
   // ── Page ──────────────────────────────────────────────────────────────────
   // ── Assemble the shell-facing view-model (see layouts/ReportBuilderViewModel.ts) ──
