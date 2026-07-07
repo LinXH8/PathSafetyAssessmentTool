@@ -1,3 +1,19 @@
+/**
+ * CodingPage container (`/coding/:projectNames`) — the attribute-coding page.
+ *
+ * Owns ALL page logic per the container/ViewModel/shell architecture
+ * (UI_V2_REDESIGN_GUIDE.md §0): it composes the extracted hooks —
+ *   - hooks/useProjectDataCache — project load/cache spine, baseline, scores, mappings
+ *   - hooks/useFilterContext    — Path Analysis → Coding filter handshake (sessionStorage)
+ *   - hooks/useAutocode         — the four psat:autocode:* event-driven flows
+ *   - hooks/useAttributeEditing — row editors, parent/child rules, dirty tracking, save
+ * plus the container-only concerns kept here (tab/URL parsing, current-segment
+ * derivations, pagination, per-segment review verification, width/curvature fetches,
+ * Path-Analysis return flow) — and assembles the single CodingViewModel consumed by
+ * the pure layout shells CodingLayoutV1 / CodingLayoutV2.
+ *
+ * Pure helpers live in ./codingHelpers; shared types/constants in ./codingConstants.
+ */
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
