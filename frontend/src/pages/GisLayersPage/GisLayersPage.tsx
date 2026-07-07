@@ -721,9 +721,9 @@ export default function GisLayersPage() {
                         </HStack>
                         <Text>{formatBytes(file.size)}</Text>
                       </HStack>
-                      <HStack mt={1} fontSize="xs" color={mutedTextColor} gap="3">
-                        <Text><strong>Year:</strong> {file.year}</Text>
-                        <Text truncate title={file.source}><strong>Source:</strong> {file.source}</Text>
+                      <HStack mt={1} fontSize="xs" color={mutedTextColor} gap="3" align="flex-start">
+                        <Text flexShrink={0}><strong>Year:</strong> {file.year}</Text>
+                        <Text whiteSpace="normal" wordBreak="break-word"><strong>Source:</strong> {file.source}</Text>
                       </HStack>
                       <Box mt={2} p={2} bg={metaBg} borderRadius="md" fontSize="xs" border="1px solid" borderColor={metaBorder}>
                         <Text color={textColor} mb={1}>

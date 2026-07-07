@@ -12,7 +12,9 @@ Welcome to PSAT. The tool helps you create projects from geotagged survey images
 - [1.3 Open the Project List](#13-open-the-project-list)
 - [1.4 Create a Project](#14-create-a-project)
 - [1.5 Navigate Between Workflows](#15-navigate-between-workflows)
-- [1.6 Viewing and Updating GIS Layers](#16-viewing-and-updating-gis-layers)
+- [1.6 Quick Select — Jump to a Workflow from Anywhere](#16-quick-select--jump-to-a-workflow-from-anywhere)
+- [1.7 Viewing and Updating GIS Layers](#17-viewing-and-updating-gis-layers)
+- [1.8 Sharing a Project](#18-sharing-a-project)
 
 ---
 
@@ -127,8 +129,32 @@ From the project list, you can send selected projects for the following:
 | **Analyse Projects** | Multi-project filtering, charts, generate reports and export data, images, shp files |
 | **Treatment Application** | Before/after scenario testing |
 
-### 1.6 Viewing and Updating GIS Layers
+### 1.6 Quick Select — Jump to a Workflow from Anywhere
+
+**Quick Select** in the sidebar lets you jump straight into Coding, Path Analysis, or Treatment Application for a chosen set of projects **without first going back to the Home page**. It is available in the sidebar on every page, not just Home.
+
+1. Click **Quick Select** in the sidebar to expand the project list.
+2. Tick the projects you want to work with, or tick **All Projects** to select every project at once.
+3. The **Coding**, **Path Analysis**, and **Treatment Application** buttons below become enabled as soon as at least one project is ticked.
+4. Click whichever workflow you want — you are taken directly there with the ticked projects loaded, exactly as if you had selected them on the Home page.
+
+> If you currently have unsaved changes on a Coding or Treatment page, PSAT will prompt you to save or discard them before switching, the same as navigating away any other way.
+
+### 1.7 Viewing and Updating GIS Layers
 
 Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard, where you can browse, filter, rename, and update the spatial data layers that power PSAT's auto-coding.
 
 > For full instructions on adding, replacing, filtering, and renaming layers, see [Section 6: GIS Layer Management](#6-gis-layer-management).
+
+### 1.8 Sharing a Project
+
+Use **Share** on the Home page to give another account access to one or more of your projects.
+
+1. Select one or more projects using the checkboxes on the left of the project table.
+2. Click **Share**.
+3. In the **Share to profile** dropdown, choose the account you want to share the project(s) with (any profile other than your own).
+4. Click **Share** to confirm.
+
+The selected project(s) are copied into the target profile's project list, appearing exactly as they do in yours (same coding, verification, and autocode progress). If a project with the same name already exists in the target profile, it is **skipped** rather than overwritten, and PSAT tells you how many were skipped.
+
+> Sharing does not remove the project from your own account — both profiles have independent access to it afterwards.
