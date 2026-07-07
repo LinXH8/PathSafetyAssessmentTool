@@ -4,33 +4,22 @@ import { useParams, useLocation } from "react-router-dom";
 import type { Feature, LineString } from "geojson";
 import { toaster } from "../../components/ui/toaster";
 
-import {
-  calculateScoreForRow,
-  updateProject,
-} from "../../api";
-
 import type { AttributeRow } from "../../api";
 
 import { resolveContributorTabGroup } from "./components/AttributesPanel";
-import { saveAttributes } from "../../api";
 import "../../components/visualization/AnalysisPanel.css";
-import { invalidateProject } from "../../api/projectDataCache";
 import { fetchWidthVisualization } from "../../api/widthVisualization";
 import type { WidthVisualizationResponse } from "../../api/widthVisualization";
 import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
 import type { CurvatureVisualizationResponse } from "../../api/curvatureVisualization";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-import {
-  FO_TYPE_SUGGESTIONS,
-  NFO_TYPE_SUGGESTIONS,
-  FACILITY_WIDTH_SUBCATEGORY_MAP,
-} from "./codingConstants";
+import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS } from "./codingConstants";
 import {
   DELINEATION_PRESENT_SUGGESTIONS,
   SLIPPERY_ISSUE_TYPE_SUGGESTIONS,
-  applyLogicChecks,
 } from "./codingHelpers";
+import { useAttributeEditing } from "./hooks/useAttributeEditing";
 import { useFilterContext } from "./hooks/useFilterContext";
 import { useAutocode } from "./hooks/useAutocode";
 import { useProjectDataCache, savedAttrsSnapshot } from "./hooks/useProjectDataCache";
@@ -109,21 +98,7 @@ export default function CodingPage() {
 
   // Global state
   const [editingOptions, setEditingOptions] = useState<{ field: string; currentValue: string | null; delineationNotPresent?: boolean } | null>(null);
-  const [pendingPresentDelineationChange, setPendingPresentDelineationChange] = useState(false);
-  const [pendingNotPresentDelineationChange, setPendingNotPresentDelineationChange] = useState(false);
-  const [pendingPresentFOChange, setPendingPresentFOChange] = useState(false);
-  const [pendingPresentNFOChange, setPendingPresentNFOChange] = useState(false);
-  const [pendingPresentSlipperyChange, setPendingPresentSlipperyChange] = useState(false);
-  const [pendingFacilityWidthParentChange, setPendingFacilityWidthParentChange] = useState<{
-    categoryLabel: string;
-    subCategories: string[];
-    originalParentCode: string | number | null;
-    originalSubCategory: string | null;
-  } | null>(null);
   const [activeAttributeGroupTab, setActiveAttributeGroupTab] = useState<string | null>(null);
-
-  // Debounce handles for per-row score recalculation (attribute editing)
-  const scoreDebounceRef = useRef<Record<number, number>>({});
 
   // Handle query params for deep linking (e.g. ?segment=5)
   const location = useLocation();
@@ -188,18 +163,6 @@ export default function CodingPage() {
     error,
     editedRow,
   } = currentData;
-
-  // Cleanup score-recalc debounce timers on unmount
-  useEffect(() => {
-    return () => {
-      Object.values(scoreDebounceRef.current).forEach(timeout => {
-        if (timeout !== undefined) {
-          clearTimeout(timeout);
-        }
-      });
-      scoreDebounceRef.current = {};
-    };
-  }, []);
 
 
   const len = attrs.length;
@@ -327,45 +290,6 @@ export default function CodingPage() {
     currentFeature,
   });
 
-  /** Atomically update multiple fields on the current row, then debounce score recalculation. */
-  const editCurrentAttrMany = useCallback(
-    (updates: Record<string, string | number | boolean | null>) => {
-      if (!currentProjectName || !attrs?.[currentIndex]) return;
-      const updatedRow = { ...attrs[currentIndex], ...updates };
-      updateProjectData(currentProjectName, {
-        attrs: attrs.map((row, i) => (i === currentIndex ? updatedRow : row)),
-        isDirty: true,
-      });
-      // Dispatch for the first changed field (sufficient for validation listener)
-      const firstField = Object.keys(updates)[0];
-      if (firstField !== undefined) {
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field: firstField, value: updates[firstField] }
-        }));
-      }
-      const currentIdx = currentIndex;
-      if (scoreDebounceRef.current[currentIdx] !== undefined) {
-        clearTimeout(scoreDebounceRef.current[currentIdx]);
-      }
-      scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
-        if (!currentProjectName) return;
-        try {
-          const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
-          updateProjectData(currentProjectName, {
-            scores: scores.map((score, i) =>
-              i === currentIdx ? { ...score, ...newScore } : score
-            ),
-          });
-          window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-        } catch {}
-      }, 500);
-    },
-  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
-  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentIndex, currentProjectName, attrs, scores]
-  );
-
   // Get original autocode values for current row
   const originalCurrentAttr = useMemo<AttributeRow | null>(() => {
     if (currentIndex < 0 || currentIndex >= baselineRows.length) return null;
@@ -458,417 +382,38 @@ export default function CodingPage() {
     };
   }, [currentProjectName, currentIndex, currentFeature]);
 
-  // Reusable save function
-  const saveAllProjects = useCallback(async (): Promise<boolean> => {
-    if (projectList.length === 0) return true;
-
-    try {
-      // Only save projects that actually have unsaved changes
-      const dirtyProjects = projectList.filter(projName => projectData[projName]?.isDirty);
-
-      if (dirtyProjects.length > 0) {
-        const savePromises = dirtyProjects.map(projName => {
-          const projData = projectData[projName];
-          if (!projData?.attrs) return Promise.resolve();
-
-          const attrsAtSaveTime = projData.attrs;
-          return Promise.all([
-            saveAttributes(projName, attrsAtSaveTime),
-            updateProject(projName, {
-              autocoded_segment_count: projData.autocodedSegmentCount ?? 0,
-              verified_segment_count: projData.verifiedSegmentCount ?? 0
-            })
-          ]).then(() => {
-            savedAttrsSnapshot[projName] = attrsAtSaveTime;
-          });
-        });
-
-        await Promise.all(savePromises);
-
-        // Invalidate PathAnalysis cache so back-navigation sees fresh attributes/results
-        dirtyProjects.forEach(projName => invalidateProject(projName));
-
-        // Mark saved projects as clean
-        dirtyProjects.forEach(projName => {
-          updateProjectData(projName, { isDirty: false });
-        });
-
-        // Re-fetch scores for saved projects to reflect backend updates
-        for (const projName of dirtyProjects) {
-          try {
-            const res = await fetch(`/api/projects/${encodeURIComponent(projName)}/results`);
-            if (res.ok) {
-              const result = await res.json();
-              if (result.ok && result.result_rows) {
-                updateProjectData(projName, { scores: result.result_rows });
-              }
-            }
-          } catch (e) {
-            // Ignore fetch error, user just won't see updated scores immediately
-          }
-        }
-      }
-
-      // Dispatch events to update Projects page for all projects (counts may have changed)
-      projectList.forEach(projName => {
-        const projData = projectData[projName];
-        if (projData) {
-          window.dispatchEvent(new CustomEvent("psat:verified:updated", {
-            detail: { projectName: projName, verifiedSegmentCount: projData.verifiedSegmentCount ?? 0 }
-          }));
-          window.dispatchEvent(new CustomEvent("psat:autocoded:updated", {
-            detail: { projectName: projName, autocodedSegmentCount: projData.autocodedSegmentCount ?? 0 }
-          }));
-        }
-      });
-
-      toaster.create({
-        title: "Saved",
-        description: dirtyProjects.length > 0
-          ? `${dirtyProjects.length} project(s) saved successfully.`
-          : "Nothing to save.",
-        type: "success"
-      });
-      return true;
-
-    } catch (e: unknown) {
-      toaster.create({
-        title: "Save failed",
-        description: e instanceof Error ? e.message : String(e),
-        type: "error"
-      });
-      return false;
-    }
-  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
-  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectList, projectData]);
-
-  // Save handler - saves all loaded projects (attributes + metadata)
-  useEffect(() => {
-    function handleSaveEvent() {
-      saveAllProjects();
-    }
-
-    window.addEventListener("psat:save", handleSaveEvent);
-    return () => window.removeEventListener("psat:save", handleSaveEvent);
-  }, [saveAllProjects]);
-
-  // Keep window.psat_hasUnsavedChanges in sync so Sidebar can skip the dialog when there are no real changes
-  useEffect(() => {
-    (window as any).psat_hasUnsavedChanges = projectList.some(projName => {
-      const current = projectData[projName]?.attrs;
-      const snapshot = savedAttrsSnapshot[projName];
-      if (!current || !snapshot) return false;
-      return JSON.stringify(current) !== JSON.stringify(snapshot);
-    });
-  }, [projectData, projectList]);
-
-  // Revert all projects to their last-saved snapshot when the sidebar dispatches psat:discard
-  useEffect(() => {
-    function handleDiscard() {
-      projectList.forEach(projName => {
-        const snapshot = savedAttrsSnapshot[projName];
-        if (snapshot) updateProjectData(projName, { attrs: snapshot, isDirty: false });
-      });
-    }
-    window.addEventListener("psat:discard", handleDiscard);
-    return () => window.removeEventListener("psat:discard", handleDiscard);
-  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
-  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectList]);
-
-  // Update edited row when current row changes
-  useEffect(() => {
-    if (!currentProjectName) return;
-    updateProjectData(currentProjectName, {
-      editedRow: currentAttr ? { ...currentAttr } : null,
-    });
-  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
-  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAttr, currentProjectName]);
-
-  // Handlers for attribute editing
-  const onAttrChange = useCallback(
-    (key: string, value: string | number | boolean | null) => {
-      if (!currentProjectName) return;
-      updateProjectData(currentProjectName, {
-        editedRow: editedRow ? { ...editedRow, [key]: value } : null,
-      });
-    },
-  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
-  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-    [editedRow, currentProjectName]
-  );
-
-  const editCurrentAttr = (field: string, value: string | number | boolean | null) => {
-    if (!currentProjectName || !attrs || !attrs[currentIndex]) return;
-
-    const updatedRow = { ...attrs[currentIndex], [field]: value };
-
-    updateProjectData(currentProjectName, {
-      attrs: attrs.map((row, i) =>
-        i === currentIndex ? updatedRow : row
-      ),
-      isDirty: true,
-    });
-
-    // Dispatch event to notify validation component of attribute change
-    window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-      detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-    }));
-
-    const currentIdx = currentIndex;
-
-    if (scoreDebounceRef.current[currentIdx] !== undefined) {
-      clearTimeout(scoreDebounceRef.current[currentIdx]);
-    }
-
-    scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
-      if (!currentProjectName) return;
-
-      try {
-        const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
-
-        updateProjectData(currentProjectName, {
-          scores: scores.map((score, i) =>
-            i === currentIdx
-              ? { ...score, ...newScore }
-              : score
-          ),
-        });
-
-        window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-      } catch {
-      }
-    }, 500);
-  };
-
-  // Intercept "Delineation" transitions to force Delineation Type selection
-  const onEdit = useCallback((field: string, value: string | number | boolean | null) => {
-    if (field === "Delineation") {
-      const prevVal = attrs[currentIndex]?.["Delineation"];
-      if (value === 2 && Number(prevVal) === 1) {
-        // Present → Not Present: clear Delineation Type, then prompt for Absent/In Poor Condition
-        if (!currentProjectName || !attrs || !attrs[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Delineation": value, "Delineation Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field: "Delineation", value }
-        }));
-        setPendingNotPresentDelineationChange(true);
-        return;
-      }
-      if (value === 1 && Number(prevVal) === 2) {
-        // Not Present → Present: atomically set Delineation=Present and clear Delineation Type,
-        // then force category selection. Two separate editCurrentAttr calls would race on the
-        // same stale attrs snapshot, causing the second write to overwrite the first.
-        if (!currentProjectName || !attrs || !attrs[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Delineation": value, "Delineation Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field: "Delineation", value }
-        }));
-        setPendingPresentDelineationChange(true);
-        return;
-      }
-    }
-    // --- Fixed Obstacle on Facility ---
-    if (field === "Fixed Obstacle on Facility") {
-      const prevVal = attrs[currentIndex]?.["Fixed Obstacle on Facility"];
-      if (value === 2 && Number(prevVal) === 1) {
-        // Present → Not Present: null out FO Type atomically
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Fixed Obstacle on Facility": value, "FO Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        const currentIdx = currentIndex;
-        if (scoreDebounceRef.current[currentIdx] !== undefined) clearTimeout(scoreDebounceRef.current[currentIdx]);
-        scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
-          if (!currentProjectName) return;
-          try {
-            const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
-            updateProjectData(currentProjectName, {
-              scores: scores.map((score, i) => i === currentIdx ? { ...score, ...newScore } : score),
-            });
-            window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-          } catch {}
-        }, 500);
-        return;
-      }
-      if (value === 1 && Number(prevVal) === 2) {
-        // Not Present → Present: clear FO Type, force selection
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Fixed Obstacle on Facility": value, "FO Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        setPendingPresentFOChange(true);
-        return;
-      }
-    }
-
-    // --- Non-Fixed Obstacle on Facility ---
-    if (field === "Non-Fixed Obstacle on Facility") {
-      const prevVal = attrs[currentIndex]?.["Non-Fixed Obstacle on Facility"];
-      if (value === 2 && Number(prevVal) === 1) {
-        // Present → Not Present: null out NFO Type atomically
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Non-Fixed Obstacle on Facility": value, "NFO Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        const currentIdx = currentIndex;
-        if (scoreDebounceRef.current[currentIdx] !== undefined) clearTimeout(scoreDebounceRef.current[currentIdx]);
-        scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
-          if (!currentProjectName) return;
-          try {
-            const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
-            updateProjectData(currentProjectName, {
-              scores: scores.map((score, i) => i === currentIdx ? { ...score, ...newScore } : score),
-            });
-            window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-          } catch {}
-        }, 500);
-        return;
-      }
-      if (value === 1 && Number(prevVal) === 2) {
-        // Not Present → Present: clear NFO Type, force selection
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Non-Fixed Obstacle on Facility": value, "NFO Type": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        setPendingPresentNFOChange(true);
-        return;
-      }
-    }
-
-    // --- Loose or slippery surface ---
-    if (field === "Loose or slippery surface") {
-      const prevVal = attrs[currentIndex]?.["Loose or slippery surface"];
-      if (value === 2 && Number(prevVal) === 1) {
-        // Present → Not Present: null out Issue Type (Slippery) atomically
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Loose or slippery surface": value, "Issue Type (Slippery)": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        const currentIdx = currentIndex;
-        if (scoreDebounceRef.current[currentIdx] !== undefined) clearTimeout(scoreDebounceRef.current[currentIdx]);
-        scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
-          if (!currentProjectName) return;
-          try {
-            const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
-            updateProjectData(currentProjectName, {
-              scores: scores.map((score, i) => i === currentIdx ? { ...score, ...newScore } : score),
-            });
-            window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-          } catch {}
-        }, 500);
-        return;
-      }
-      if (value === 1 && Number(prevVal) === 2) {
-        // Not Present → Present: clear Issue Type (Slippery), force selection
-        if (!currentProjectName || !attrs?.[currentIndex]) return;
-        const updatedRow = { ...attrs[currentIndex], "Loose or slippery surface": value, "Issue Type (Slippery)": null };
-        updateProjectData(currentProjectName, {
-          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
-          isDirty: true,
-        });
-        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
-          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
-        }));
-        setPendingPresentSlipperyChange(true);
-        return;
-      }
-    }
-
-    // --- Facility Width per Direction ---
-    if (field === "Facility Width per Direction") {
-      const codeStr = String(value);
-      const dict = attrMappings["Facility Width per Direction"];
-      const newCategoryLabel = dict?.[codeStr] ?? null;
-      const subCategories = newCategoryLabel ? FACILITY_WIDTH_SUBCATEGORY_MAP[newCategoryLabel] : null;
-
-      if (newCategoryLabel && subCategories) {
-        const currentSubCat = (attrs[currentIndex]?.["Facility Width Sub-category"] as string | null) ?? null;
-        const isCompatible = !!currentSubCat && subCategories.includes(currentSubCat);
-
-        if (isCompatible) {
-          editCurrentAttr(field, value);
-          return;
-        }
-
-        const originalParentCode = (attrs[currentIndex]?.["Facility Width per Direction"] as string | number | null) ?? null;
-        editCurrentAttrMany({
-          "Facility Width per Direction": value,
-          "Facility Width Sub-category": null,
-        });
-        setPendingFacilityWidthParentChange({
-          categoryLabel: newCategoryLabel,
-          subCategories,
-          originalParentCode,
-          originalSubCategory: currentSubCat,
-        });
-        return;
-      }
-    }
-
-    const row = attrs[currentIndex];
-    const { extraUpdates, notifications: logicNotifs } = applyLogicChecks(field, value, row ?? {});
-    if (Object.keys(extraUpdates).length > 0) {
-      editCurrentAttrMany({ [field]: value, ...extraUpdates });
-    } else {
-      editCurrentAttr(field, value);
-    }
-    const infoNotifs = logicNotifs.filter(n => !n.isWarning);
-    const warnNotifs = logicNotifs.filter(n => n.isWarning);
-    if (infoNotifs.length > 0) {
-      toaster.create({
-        title: "Logic check",
-        description: infoNotifs.map(n => n.description).join(" · "),
-        type: "info",
-      });
-    }
-    for (const w of warnNotifs) {
-      toaster.create({
-        title: "Logic check warning",
-        description: w.description,
-        type: "warning",
-      });
-    }
-  }, [attrs, currentIndex, editCurrentAttr, editCurrentAttrMany, attrMappings, currentProjectName, updateProjectData]);
+  // Attribute editing: row editors, parent/child interception (onEdit), dirty
+  // tracking + saveAllProjects, and the forced multi-tag modal flags.
+  const {
+    editCurrentAttr,
+    editCurrentAttrMany,
+    onAttrChange,
+    onEdit,
+    saveAllProjects,
+    pendingPresentDelineationChange,
+    setPendingPresentDelineationChange,
+    pendingNotPresentDelineationChange,
+    setPendingNotPresentDelineationChange,
+    pendingPresentFOChange,
+    setPendingPresentFOChange,
+    pendingPresentNFOChange,
+    setPendingPresentNFOChange,
+    pendingPresentSlipperyChange,
+    setPendingPresentSlipperyChange,
+    pendingFacilityWidthParentChange,
+    setPendingFacilityWidthParentChange,
+  } = useAttributeEditing({
+    currentProjectName,
+    projectList,
+    projectData,
+    updateProjectData,
+    attrs,
+    scores,
+    editedRow,
+    currentAttr,
+    currentIndex,
+    attrMappings,
+  });
 
   // Pagination
   const gotoPage = useCallback((page: number) => {
