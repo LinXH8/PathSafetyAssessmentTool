@@ -290,7 +290,7 @@ def get_attribute_mappings():
     Return field mappings for Attributes (numeric -> text), e.g.:
     {
       "Area type": {"1":"Urban","2":"Suburban","3":"Rural","4":"Industrial"},
-      "Facility Type": {"1":"Sidewalk", "2":"Multi-Use Path", ...},
+      "Facility Type": {"1":"Footpath", "2":"Shared Path", ...},
       ...
     }
     Only fields with enumerations are included; continuous values (e.g., AADT, speed) are excluded.

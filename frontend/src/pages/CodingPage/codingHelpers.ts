@@ -152,9 +152,9 @@ export function applyLogicChecks(
     }
   }
 
-  // Rule 6: Facility Type = Sidewalk → Adjacent Sidewalk 0-1m = Not Present
+  // Rule 6: Facility Type = Footpath → Adjacent Sidewalk 0-1m = Not Present
   if (field === "Facility Type" && Number(value) === 1) {
-    autoDisable("Adjacent Sidewalk 0-1m", '"Adjacent Sidewalk 0-1m" cleared (facility is already a Sidewalk)');
+    autoDisable("Adjacent Sidewalk 0-1m", '"Adjacent Sidewalk 0-1m" cleared (facility is already a Footpath)');
   }
 
   // Rule 7: Facility Type = Mixed Traffic Road Lane → Adjacent Road Lane 0-1m = Present, 1-3m = Not Present
@@ -170,7 +170,7 @@ export function applyLogicChecks(
     }
   }
 
-  // Rule 10: Facility Type = Sidewalk/Multi-use/Off-road → Light Segregation = Present
+  // Rule 10: Facility Type = Footpath/Shared Path/Cycling Path → Light Segregation = Present
   if (field === "Facility Type" && [1, 2, 3].includes(Number(value))) {
     autoEnable("Light Segregation", '"Light Segregation" set to Present');
   }
