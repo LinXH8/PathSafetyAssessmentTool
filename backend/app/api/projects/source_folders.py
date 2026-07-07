@@ -54,7 +54,13 @@ from app.services import gis_mapping as gis
 import app.services.global_var as global_var
 
 from ._helpers import fail, get_ctx, ok
-from .image_utils import _IMAGE_EXTENSIONS, _build_project_geo_data_from_points, get_image_folder_geo
+from .image_utils import (
+    _IMAGE_EXTENSIONS,
+    _build_project_geo_data_from_points,
+    _get_project_source_folders,
+    get_image_folder_geo,
+    make_image_namespace,
+)
 from .roads_util import _QUARTER_SUFFIX_RE, _get_known_road_names
 
 
@@ -126,6 +132,78 @@ def _iter_source_image_files(source_dir: Path) -> list[Path]:
         for file_path in sorted(source_dir.rglob("*"))
         if file_path.is_file() and file_path.suffix.lower() in _IMAGE_EXTENSIONS
     ]
+
+
+def _collect_referenced_filenames(pm, folder_name: str) -> set[str]:
+    """Bare on-disk filenames under in/<folder_name>/ that are still referenced
+    by some project's geo_data 'Image Reference' column.
+
+    Mirrors the namespace resolution in image_utils._resolve_image_from_in:
+    single-source-folder projects store bare filenames; multi-folder projects
+    prefix with '{make_image_namespace(folder_name)}__'.
+    """
+    referenced: set[str] = set()
+    namespace_prefix = f"{make_image_namespace(folder_name)}__"
+
+    for proj in pm.projects:
+        source_folders = _get_project_source_folders(proj, pm)
+        if folder_name not in source_folders:
+            continue
+
+        try:
+            geo_df = proj.geo_data.df
+        except Exception:
+            continue
+        if geo_df is None or geo_df.empty or "Image Reference" not in geo_df.columns:
+            continue
+
+        refs = (r.strip() for r in geo_df["Image Reference"].dropna().astype(str))
+        if len(source_folders) == 1:
+            referenced.update(r for r in refs if r)
+        else:
+            for r in refs:
+                if r.startswith(namespace_prefix):
+                    referenced.add(r[len(namespace_prefix):])
+
+    return referenced
+
+
+def prune_source_folder(folder_name: str) -> dict:
+    """Permanently delete raw images under in/<folder_name>/ that no project
+    currently references (see the 10-15m distance-sampling in
+    _build_project_geo_data_from_points — most raw survey frames are never
+    selected as a project's segment anchor image).
+
+    Safe to call repeatedly / after every project created from this folder:
+    only files not referenced by ANY known project are removed.
+    """
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    in_root = pm.in_path.resolve()
+    source_dir = (in_root / folder_name).resolve()
+
+    result = {"folder_name": folder_name, "pruned": 0, "kept": 0, "bytes_freed": 0, "errors": []}
+    if not _path_is_within(source_dir, in_root) or not source_dir.is_dir():
+        return result
+
+    referenced = _collect_referenced_filenames(pm, folder_name)
+    image_files = _iter_source_image_files(source_dir)
+
+    for image_file in image_files:
+        rel = image_file.relative_to(source_dir).as_posix()
+        if rel in referenced or image_file.name in referenced:
+            result["kept"] += 1
+            continue
+        try:
+            size = image_file.stat().st_size
+            image_file.unlink()
+            result["pruned"] += 1
+            result["bytes_freed"] += size
+        except Exception as exc:
+            result["errors"].append(f"Failed to delete {rel}: {exc}")
+            result["kept"] += 1
+
+    return result
 
 
 def _read_modified_datetime(image_path: Path) -> datetime.datetime | None:
