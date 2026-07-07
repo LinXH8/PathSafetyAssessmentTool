@@ -1,5 +1,11 @@
 # Facility Width per Direction Attribute Implementation
 
+> **Post-refactor note (July 2026):** the width logic described below was extracted out of the
+> `GIS` class in `gis_mapping.py` into `backend/app/services/width_analyzer.py` (`WidthAnalyzer`);
+> the `GIS` class now delegates to it. The autocode integration that this doc attributes to
+> `routes.py` (`autocode_gis`) now lives in `backend/app/api/projects/autocode.py`. Behaviour is
+> unchanged; only the file locations and line numbers below have moved.
+
 ## Overview
 
 The **Facility Width per Direction** attribute represents the width of the cycling/pedestrian facility. It uses a categorical classification system based on actual width measurements extracted from path centerline shapefiles using spatial GIS data.

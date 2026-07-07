@@ -135,9 +135,7 @@ backend/
 After populating `in/`, generate the road-reference CSV used by the polygon road-selection tool:
 
 ```bash
-cd backend
-python generate_road_reference.py
-cd ..
+python scripts/generate_road_reference.py
 ```
 
 This writes `backend/shapefiles/road_reference.csv`. The map-based road selector can still work without it, but the CSV improves matching between the selection polygon and locally available road folders.

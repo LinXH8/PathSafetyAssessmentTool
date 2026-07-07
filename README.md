@@ -18,18 +18,21 @@ PSAT is used to:
 
 ## 1.2 Documentation
 
+Developer docs are canonical under `docs/developer/`; user and admin guides live under `docs/user/` and `docs/admin/`.
+
 | Document | Contents |
 |---|---|
-| [Installation](docs/installation.md) | Local setup, required assets, Docker and non-Docker run modes |
-| [Architecture](docs/architecture.md) | Two-container design, storage model, and key design decisions |
-| [API Reference](docs/api-reference.md) | All REST endpoints with payloads and response shapes |
-| [CV / ML Pipeline](docs/cv-pipeline.md) | Image ingestion, model loading, and auto-coding pipeline details |
-| [Scoring Logic](docs/scoring.md) | CycleRAP scoring inputs, risk-band thresholds, and treatment list |
-| [Frontend](docs/frontend.md) | Route map, page behaviour, and client-side data flow |
-| [Common Issues](docs/common-issues.md) | Setup, GIS, and project-creation troubleshooting |
-| [Contributing](docs/contributing.md) | Team conventions and contribution notes |
+| [Installation](docs/developer/installation.md) | Local setup, required assets, Docker and non-Docker run modes |
+| [Architecture](docs/developer/architecture.md) | Two-container design, storage model, and key design decisions |
+| [API Reference](docs/developer/api-reference.md) | All REST endpoints with payloads and response shapes |
+| [CV / ML Pipeline](docs/developer/cv-pipeline.md) | Image ingestion, model loading, and auto-coding pipeline details |
+| [Scoring Logic](docs/developer/scoring.md) | CycleRAP scoring inputs, risk-band thresholds, and treatment list |
+| [Treatments](docs/developer/treatments.md) | Treatment definitions and effectiveness ranking |
+| [Frontend](docs/developer/frontend.md) | Route map, page behaviour, and client-side data flow |
+| [Common Issues](docs/developer/common-issues.md) | Setup, GIS, and project-creation troubleshooting |
+| [Contributing](docs/developer/contributing.md) | Team conventions and contribution notes |
 
-> The in-app **Help** page loads mirrored markdown from `frontend/public/docs/`. When you update docs in `docs/`, resync the mirrored copies as well.
+> The in-app **Help** page loads mirrored markdown from `frontend/public/docs/`. `docs/` is the canonical source; after editing it, regenerate the mirror with `npm run docs:sync` (from `frontend/`) or `bash scripts/sync_docs.sh` (from the repo root), and commit both together.
 
 ---
 
@@ -217,11 +220,10 @@ in/
 After populating `in/`, run this once to improve polygon road-selection matching:
 
 ```bash
-cd backend
-python generate_road_reference.py
+python scripts/generate_road_reference.py
 ```
 
-This writes `backend/shapefiles/road_reference.csv`.
+This writes `backend/shapefiles/road_reference.csv`. (Dev utility scripts were consolidated under `scripts/` during the July 2026 refactor.)
 
 ---
 
@@ -354,6 +356,11 @@ data/
 
 ## 1.11 Repository layout
 
+> The July 2026 structural refactor split the two largest backend files and the frontend
+> API client / page monoliths into modules. `backend/app/api/projects/routes.py` is now a thin
+> backwards-compatibility shim; the real handlers live in per-domain blueprint modules that all
+> register on the same `projects` blueprint (URLs unchanged).
+
 ```text
 PathSafetyAssessmentTool/
 ├── backend/
@@ -361,18 +368,38 @@ PathSafetyAssessmentTool/
 │   │   ├── api/
 │   │   │   ├── health.py                # /api/ping and /api/health
 │   │   │   ├── gis_layers/routes.py     # /api/shapefiles/* endpoints
-│   │   │   └── projects/routes.py       # /api/projects/* — core API surface
+│   │   │   ├── profiles/                # /api/profiles/* — user profiles & login
+│   │   │   ├── report/                  # /api/report/* — report export endpoints
+│   │   │   ├── defects/                 # /api/defects/* — daily-defect summaries
+│   │   │   ├── admin/                   # /api/admin/* — telemetry & admin
+│   │   │   └── projects/               # /api/projects/* — split into blueprint modules:
+│   │   │       ├── routes.py            #   compat shim (re-exports get_ctx, warmup_gis, …)
+│   │   │       ├── _helpers.py          #   get_ctx(), invalidate_ctx(), ok()/fail()
+│   │   │       ├── crud.py              #   project list/metadata/create/delete
+│   │   │       ├── segments.py          #   segment edit / delete / copy
+│   │   │       ├── autocode.py          #   CV + GIS autocode + bulk autocode
+│   │   │       ├── gis_queries.py       #   GIS context / curvature / width lookups
+│   │   │       ├── treatments.py        #   treatment preview / apply / effectiveness
+│   │   │       ├── images.py            #   image + post-treatment image serving
+│   │   │       ├── source_folders.py    #   in/ folder listing, roads-in-polygon
+│   │   │       ├── export.py            #   CSV / shapefile / ZIP exports
+│   │   │       ├── baseline.py          #   autocode baseline save/compare
+│   │   │       └── gradient.py          #   gradient-profile injection
 │   │   ├── services/
 │   │   │   ├── prediction.py            # CV inference and bulk autocode helpers
 │   │   │   ├── cyclerap_scoring.py      # Native CycleRAP v2.11 scoring
-│   │   │   ├── project_manager.py       # Project and snapshot lifecycle
+│   │   │   ├── project_manager.py       # Project lifecycle (thin façade)
+│   │   │   ├── project_version.py       # ProjectVersion snapshot data/serialization
+│   │   │   ├── image_storage.py         # Image dedup / materialization
 │   │   │   ├── serializer.py            # Metadata / CSV / GPKG serialization
 │   │   │   ├── cycleRAP_VA.py           # GPS extraction and LineString generation
-│   │   │   └── gis_mapping.py           # GIS lookups, width, and curvature logic
+│   │   │   ├── gis_mapping.py           # GIS proximity/speed lookups (query_nearby)
+│   │   │   ├── curvature_analyzer.py    # CurvatureAnalyzer (extracted from gis_mapping)
+│   │   │   ├── width_analyzer.py        # WidthAnalyzer (extracted from gis_mapping)
+│   │   │   └── profile_store.py         # Active-profile persistence
 │   │   └── utils/
 │   │       └── path_width_curvature.py
 │   ├── app.py                           # Flask application entry point
-│   ├── generate_road_reference.py       # Builds shapefiles/road_reference.csv
 │   ├── models/                          # External YOLO .pt weight files (not in repo)
 │   ├── shapefiles/                      # External GIS layers (not in repo)
 │   ├── ONBOARDING.md                    # Manual setup notes for geospatial packages
@@ -383,22 +410,34 @@ PathSafetyAssessmentTool/
 │   │   ├── README.md                    # Help-page copy of this README
 │   │   └── docs/                        # Mirrored markdown for the in-app Help page
 │   └── src/
-│       ├── api/index.ts                 # Typed fetch helpers for all API calls
+│       ├── api/                         # Typed fetch helpers, split by domain
+│       │   ├── index.ts                 #   barrel — re-exports every domain module
+│       │   ├── _client.ts               #   shared fetch/error helper
+│       │   ├── projects.ts / geo.ts / attributes.ts (etc.)  # one file per domain
+│       │   └── projectDataCache.ts      #   session read-cache for path-analysis/coding
 │       ├── App.tsx                      # Router and route definitions
 │       ├── layouts/AppLayout.tsx        # Shared shell and sidebar
-│       ├── pages/
+│       ├── pages/                       # Each page: container + layouts/*ViewModel + *LayoutV1/V2
 │       │   ├── CreateProjectPage/       # Single-folder and polygon-based creation
-│       │   ├── CodingPage/              # Main coding workspace
+│       │   ├── CodingPage/              # Main coding workspace (hooks/ + components/)
 │       │   ├── GisLayersPage/           # GIS layer browser and manager
 │       │   ├── HelpPage/               # In-app documentation viewer
 │       │   ├── PathAnalysisPage/        # Multi-project analysis workspace
+│       │   ├── ReportBuilderPage/       # Report canvas + PDF/Word/PPTX export
 │       │   ├── Projects/                # Project listing and management
 │       │   └── TreatmentPage/           # Treatment overview and detail views
+│       ├── hooks/
+│       │   └── useSessionState.ts       # Typed sessionStorage hook (SESSION_KEYS)
+│       ├── components/map/              # Shared DraggableMarker / PolygonDrawing
 │       ├── constants/
-│       │   └── autocodeAttributes.ts    # Autocode field name aliases and groupings
+│       │   ├── autocodeAttributes.ts    # Autocode field name aliases and groupings
+│       │   └── sessionKeys.ts           # Central SESSION_KEYS registry
 │       └── utils/
-│           └── projectSearch.ts         # Shared fuzzy project-or-road matcher
-├── docs/                                # Canonical developer documentation
+│           ├── projectSearch.ts         # Shared fuzzy project-or-road matcher
+│           ├── riskColors.ts            # Shared risk-band colours / labels
+│           └── projection.ts            # Shared to4326 / to3414 CRS helpers
+├── docs/                                # Canonical documentation (developer/user/admin)
+├── scripts/                             # Dev utilities (generate_road_reference.py, sync_docs.sh, …)
 ├── data/                                # Persisted project storage (created at runtime)
 ├── in/                                  # Source image folders (create before first run)
 ├── Run-PSAT.bat                         # Windows one-click startup script
