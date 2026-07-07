@@ -116,6 +116,26 @@ person: `?ui=v1`; everyone: revert the one-line default flip. The px→responsiv
 is **applied** (not just catalogued — see that section's note). v1 removal is the terminal
 cleanup — **do not start it until v2 has been stable with no rollback** (§6).
 
+> **Update — Phase 2 decomposition (July 2026).** After the redesign landed, a structural refactor
+> (phases S2.1–S2.5, tracked in `REFACTOR_PLAN.md`) split each heavy **container** — which the §9 log
+> below describes as one "container-only, giant file" — into a page-local `hooks/` folder (data/state)
+> plus a sub-component folder, **while preserving the container/`*ViewModel.ts`/`*LayoutV1|V2` seam**.
+> This does not change rule §0.1: the container still owns all logic; it now *delegates* to hooks it
+> calls (which are still container-layer, never shell-layer). For new work, follow this structure:
+>
+> | Container | Now delegates to |
+> |---|---|
+> | `PathAnalysisPage/components/PathAnalysisMapView.tsx` | `components/mapView/` (`useFilterState`, `useGISLayerToggles`, `useViewportPersistence`, `MapFiltersPanel`, `SegmentsTableTab`, …) |
+> | `CodingPage/components/GeoDataPanel.tsx` | `components/GeoDataPanel/` (`useGISToggleState`, `useCurvatureOverlay`, `DefectsLayer`, `MapToolCluster`, …) |
+> | `CodingPage/codingPage.tsx` | `CodingPage/hooks/` (`useProjectDataCache`, `useFilterContext`, `useAutocode`, `useAttributeEditing`) |
+> | `TreatmentPage/treatmentDetailPage.tsx` | `TreatmentPage/hooks/` (`useProjectMapping`, `useTreatmentEngine`, `useTreatmentState`, `useTreatmentAnalysis`) |
+> | `ReportBuilderPage/reportBuilderPage.tsx` | `ReportBuilderPage/hooks/` (`useReportData`, `usePdfExport`, `useReportLayout`) + `ReportBuilderLayoutV1.tsx` shell |
+>
+> The API-client references throughout this guide (`../api`) are unchanged: `src/api/index.ts` is now
+> a re-export barrel over per-domain modules — imports still resolve. The §9 per-page log entries
+> below are **dated history**; where they say a container is one giant file, read the table above for
+> its current shape.
+
 ---
 
 ## 1. What this redesign is (and isn't)

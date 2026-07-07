@@ -46,7 +46,7 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 
 To add a new treatment to the system, follow these steps:
 
-1.  **Locate the Definitions**: Open `backend/app/api/projects/routes.py`.
+1.  **Locate the Definitions**: Open `backend/app/api/projects/treatments.py`.
 2.  **Find the `TREATMENTS` List**: Search for the `TREATMENTS = [...]` variable near the top of the file.
 3.  **Append a New Entry**: Add a new dictionary to the end of the list.
     - Ensure the `id` is the next available integer.

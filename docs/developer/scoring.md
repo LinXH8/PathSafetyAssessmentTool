@@ -385,7 +385,7 @@ The table below documents every field stored per segment. **39 fields are active
 
 ## 6.7 Treatment Logic
 
-The 25 predefined treatments (defined in `routes.py`) each have:
+The 25 predefined treatments (defined in the `TREATMENTS` list in `backend/app/api/projects/treatments.py`) each have:
 - **Triggers:** one or more sets of `{field: [allowed_values]}` conditions. If any trigger set matches, the treatment is applicable.
 - **Effects:** `{field: new_value}` pairs applied to the segment's attributes before re-scoring.
 
@@ -475,7 +475,7 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 
 To add a new treatment to the system:
 
-1. Open `backend/app/api/projects/routes.py`.
+1. Open `backend/app/api/projects/treatments.py`.
 2. Find the `TREATMENTS = [...]` variable near the top of the file.
 3. Append a new dictionary to the end of the list:
    - Ensure the `id` is the next available integer.
