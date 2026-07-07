@@ -24,6 +24,7 @@ The Coding page is the main review workspace. It can open one or more selected p
 - [2.10 Map Preview & Analysis](#210-map-preview--analysis)
 - [2.11 Save and Progress Tracking](#211-save-and-progress-tracking)
 - [2.12 Risk Colour Bands](#212-risk-colour-bands)
+- [2.13 Risk Score Rationale](#213-risk-score-rationale--what-drives-the-score)
 
 ---
 
@@ -456,7 +457,7 @@ PSAT calculates four independent risk scores per segment:
 
 > **Overall Risk Level Band** = the **highest** band across BB, BP, SB, and VB for that segment. A single Extreme sub-score makes the overall band Extreme regardless of the others.
 
-#### Risk Score Rationale — What Drives the Score
+### 2.13 Risk Score Rationale — What Drives the Score
 
 Each crash type score is built from a mix of attribute-based risk factors, combined using the CycleRAP methodology:
 
