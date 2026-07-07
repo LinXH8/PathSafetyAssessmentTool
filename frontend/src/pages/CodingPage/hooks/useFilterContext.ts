@@ -49,7 +49,6 @@ export function useFilterContext(locationState: unknown): CodingFilterContext | 
   useEffect(() => {
     setFilterContext(resolveFilterContext(locationState));
   // locationState reference changes on each navigation, which is exactly when we want to re-run
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationState]);
 
   return filterContext;

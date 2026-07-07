@@ -1,27 +1,21 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-import type { Feature, FeatureCollection, LineString } from "geojson";
+import type { Feature, LineString } from "geojson";
 import { toaster } from "../../components/ui/toaster";
 
 import {
-  fetchProjectDetail,
-  fetchProjectAttributes,
-  fetchProjectGeoJSON,
-  fetchCustomAttrOptions,
-  calculateScore,
   calculateScoreForRow,
-  fetchProjectMetadata,
   updateProject,
 } from "../../api";
 
-import type { AttributeRow, AttributesResponse } from "../../api";
+import type { AttributeRow } from "../../api";
 import { autocodeImage, autocodeGIS, autocodeAllStream } from "../../api";
 
 import { resolveContributorTabGroup } from "./components/AttributesPanel";
 import { saveAttributes } from "../../api";
 import "../../components/visualization/AnalysisPanel.css";
-import { getCachedAttributeMappingsSync, getCachedAttributeMappings, invalidateProject } from "../../api/projectDataCache";
+import { invalidateProject } from "../../api/projectDataCache";
 import { fetchWidthVisualization } from "../../api/widthVisualization";
 import type { WidthVisualizationResponse } from "../../api/widthVisualization";
 import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
@@ -33,7 +27,6 @@ import {
   NFO_TYPE_SUGGESTIONS,
   FACILITY_WIDTH_SUBCATEGORY_MAP,
 } from "./codingConstants";
-import type { AttrMappings, ProjectDataState } from "./codingConstants";
 import {
   DELINEATION_PRESENT_SUGGESTIONS,
   SLIPPERY_ISSUE_TYPE_SUGGESTIONS,
@@ -42,31 +35,15 @@ import {
   applyLogicChecks,
 } from "./codingHelpers";
 import { useFilterContext } from "./hooks/useFilterContext";
+import {
+  useProjectDataCache,
+  defaultProjectData,
+  projectDataCache,
+  savedAttrsSnapshot,
+} from "./hooks/useProjectDataCache";
 import CodingLayoutV1 from "./layouts/CodingLayoutV1";
 import CodingLayoutV2 from "./layouts/CodingLayoutV2";
 import type { CodingViewModel } from "./layouts/CodingViewModel";
-
-
-
-const defaultProjectData: ProjectDataState = {
-  detail: null,
-  attrs: [],
-  geoFeatures: [],
-  scores: [],
-  currentPage: 1,
-  changedFieldsByRow: {},
-  fieldSourcesByRow: {},
-  loading: true,
-  error: null,
-  editedRow: null,
-  isDirty: false,
-};
-
-// Global cache for project data to prevent reloading when navigating away and back (e.g. to Help page)
-const projectDataCache: Record<string, ProjectDataState> = {};
-
-// Snapshot of attrs as last loaded/saved from backend — used to detect real changes vs. isDirty flag
-const savedAttrsSnapshot: Record<string, AttributeRow[]> = {};
 
 
 export default function CodingPage() {
@@ -119,21 +96,29 @@ export default function CodingPage() {
   const currentProjectName = activeTab === "coding-guide" ? null : activeTab;
   const isShowingCodingGuide = activeTab === "coding-guide";
 
-  // State for each project: keyed by project name
-  const [projectData, setProjectData] = useState<Record<string, ProjectDataState>>(projectDataCache);
+  // Server-data spine: project load/cache, baseline, scores, counts, mappings.
+  // Owns projectData / updateProjectData / currentData, threaded to the other hooks.
+  const {
+    projectData,
+    setProjectData,
+    updateProjectData,
+    currentData,
+    refreshCurrentProject,
+    updateVerifiedSegmentCount,
+    updateAutocodedSegmentCount,
+    imagesLoaded,
+    imageLoadingProgress,
+    baselineRows,
+    baselineRowsRef,
+    attrMappings,
+    handleSaveOptions,
+  } = useProjectDataCache(currentProjectName);
 
   // Global state
   const [autoCoding, setAutoCoding] = useState(false);
   const [autoCodeMsg, setAutoCodeMsg] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [projectProgress, setProjectProgress] = useState<Record<string, { processed: number; total: number }>>({});
-  // Seed synchronously from the shared cache so attribute values render as text
-  // labels (not raw numeric codes) on the very first render after a remount /
-  // navigation — avoids the numeric-code flash. (Cold cache returns null → {}.)
-  const [attrMappings, setAttrMappings] = useState<AttrMappings>(
-    () => getCachedAttributeMappingsSync() ?? {}
-  );
-  const [customAttrOptions, setCustomAttrOptions] = useState<Record<string, string[]>>({});
   const [editingOptions, setEditingOptions] = useState<{ field: string; currentValue: string | null; delineationNotPresent?: boolean } | null>(null);
   const [pendingPresentDelineationChange, setPendingPresentDelineationChange] = useState(false);
   const [pendingNotPresentDelineationChange, setPendingNotPresentDelineationChange] = useState(false);
@@ -147,11 +132,6 @@ export default function CodingPage() {
     originalSubCategory: string | null;
   } | null>(null);
   const [activeAttributeGroupTab, setActiveAttributeGroupTab] = useState<string | null>(null);
-
-  // Image preloading state
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [imageLoadingProgress, setImageLoadingProgress] = useState(0);
-
 
   // Refs for cleanup
   const cleanupTimeoutRef = useRef<number | null>(null);
@@ -203,13 +183,10 @@ export default function CodingPage() {
       updateProjectData(currentProjectName, { currentPage: segmentIdx });
       hasInitializedSegmentRef.current = true;
     }
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialSegment, currentProjectName]);
-
-  // Get current project data with defaults
-  const currentData = useMemo<ProjectDataState>(() => {
-    if (!currentProjectName) return defaultProjectData;
-    return projectData[currentProjectName] || defaultProjectData;
-  }, [projectData, currentProjectName]);
 
   // Shorthand accessors
   const {
@@ -224,107 +201,6 @@ export default function CodingPage() {
     error,
     editedRow,
   } = currentData;
-
-  // Helper to update a specific project's data
-  const updateProjectData = (projectName: string, updates: Partial<ProjectDataState>) => {
-    setProjectData(prev => {
-      const newState = {
-        ...prev,
-        [projectName]: {
-          ...prev[projectName] || defaultProjectData,
-          ...updates,
-        },
-      };
-      projectDataCache[projectName] = newState[projectName];
-      return newState;
-    });
-  };
-
-  const refreshCurrentProject = useCallback(async () => {
-    if (!currentProjectName) return;
-
-    updateProjectData(currentProjectName, { loading: true, error: null });
-
-    try {
-      const [d, a, gjson, metadata, autoMeta] = await Promise.all([
-        fetchProjectDetail(currentProjectName),
-        fetchProjectAttributes(currentProjectName) as Promise<AttributesResponse>,
-        fetchProjectGeoJSON(currentProjectName) as Promise<FeatureCollection>,
-        fetchProjectMetadata(currentProjectName).catch(() => null),
-        fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/autocode-metadata`).then(r => r.ok ? r.json() : null).catch(() => null),
-      ]);
-
-      const attributes = migrateAttrRows(a?.rows ?? []);
-
-      savedAttrsSnapshot[currentProjectName] = attributes;
-      updateProjectData(currentProjectName, {
-        detail: d ?? null,
-        attrs: attributes,
-        geoFeatures: gjson?.features ?? [],
-        editedRow: null,
-        verified: metadata?.verified ?? false,
-        verifiedSegmentCount: metadata?.verified_segment_count ?? 0,
-        autocodedSegmentCount: metadata?.autocoded_segment_count ?? 0,
-        changedFieldsByRow: autoMeta?.changedFieldsByRow || {},
-        fieldSourcesByRow: autoMeta?.fieldSourcesByRow || {},
-        loading: false,
-        isDirty: false,
-      });
-
-    } catch (e: unknown) {
-      updateProjectData(currentProjectName, {
-        error: e instanceof Error ? e.message : "Unknown error",
-        loading: false,
-      });
-    }
-  }, [currentProjectName]);
-
-
-  // Update verified segment count for a project
-  const updateVerifiedSegmentCount = async (projectName: string | null, count: number) => {
-    if (!projectName) return;
-    try {
-      const totalSegments = projectData[projectName]?.attrs?.length ?? 0;
-      // Clamp the count to be between 0 and total segments
-      const clampedCount = Math.max(0, Math.min(count, totalSegments));
-
-      await updateProject(projectName, { verified_segment_count: clampedCount });
-      updateProjectData(projectName, { verifiedSegmentCount: clampedCount });
-      // Notify other pages of the change with segment count
-      window.dispatchEvent(new CustomEvent("psat:verified:updated", {
-        detail: { projectName, verifiedSegmentCount: clampedCount }
-      }));
-    } catch (e: unknown) {
-      toaster.create({
-        title: "Failed to update",
-        description: e instanceof Error ? e.message : "Failed to update verified segment count",
-        type: "error",
-      });
-    }
-  };
-
-  // Update autocoded segment count for a project
-  const updateAutocodedSegmentCount = async (projectName: string | null, count: number) => {
-    if (!projectName) return;
-    try {
-      const totalSegments = projectData[projectName]?.attrs?.length ?? 0;
-      // Clamp the count to be between 0 and total segments
-      const clampedCount = Math.max(0, Math.min(count, totalSegments));
-
-      await updateProject(projectName, { autocoded_segment_count: clampedCount });
-      updateProjectData(projectName, { autocodedSegmentCount: clampedCount });
-      // Notify other pages of the change with segment count
-      window.dispatchEvent(new CustomEvent("psat:autocoded:updated", {
-        detail: { projectName, autocodedSegmentCount: clampedCount }
-      }));
-    } catch (e: unknown) {
-      toaster.create({
-        title: "Failed to update",
-        description: e instanceof Error ? e.message : "Failed to update autocoded segment count",
-        type: "error",
-      });
-    }
-  };
 
   // Helper function to clear auto-coding state
   const clearAutoCodingState = useCallback(() => {
@@ -484,6 +360,9 @@ export default function CodingPage() {
         };
       });
     },
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentIndex, currentProjectName]
   );
 
@@ -520,6 +399,9 @@ export default function CodingPage() {
         } catch {}
       }, 500);
     },
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentIndex, currentProjectName, attrs, scores]
   );
 
@@ -563,6 +445,9 @@ export default function CodingPage() {
       } catch (e) {
       }
     },
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProjectName]
   );
 
@@ -687,6 +572,9 @@ export default function CodingPage() {
 
     window.addEventListener("psat:autocode:one", handler);
     return () => window.removeEventListener("psat:autocode:one", handler);
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProjectName, imgRef, currentFeature, applyUpdatesToCurrentRow, updateAutocodeBaseline, currentIndex, attrs, scores, changedFieldsByRow, fieldSourcesByRow]);
 
   // Auto-code all segments
@@ -803,6 +691,9 @@ export default function CodingPage() {
 
     window.addEventListener("psat:autocode:all", handler);
     return () => window.removeEventListener("psat:autocode:all", handler);
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProjectName, attrs.length, updateAutocodeBaseline, updateAutocodedSegmentCount]);
 
   // Auto-code all segments for selected attributes only
@@ -926,6 +817,9 @@ export default function CodingPage() {
 
     window.addEventListener("psat:autocode:by-field", handler);
     return () => window.removeEventListener("psat:autocode:by-field", handler);
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProjectName, attrs.length, updateAutocodeBaseline]);
 
   // Auto-code all segments in all loaded projects
@@ -1101,196 +995,10 @@ export default function CodingPage() {
 
     window.addEventListener("psat:autocode:all-projects", handler);
     return () => window.removeEventListener("psat:autocode:all-projects", handler);
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList, projectData, updateAutocodedSegmentCount]);
-
-  // Load project data
-  useEffect(() => {
-    if (!currentProjectName) return;
-
-    // If already loaded, don't reload
-    if (projectData[currentProjectName] && !projectData[currentProjectName].loading) {
-      setImagesLoaded(true);
-      return;
-    }
-
-    let cancelled = false;
-
-    (async () => {
-      try {
-        updateProjectData(currentProjectName, { loading: true, error: null });
-
-        const [d, a, gjson, metadata, autoMeta] = await Promise.all([
-          fetchProjectDetail(currentProjectName),
-          fetchProjectAttributes(currentProjectName) as Promise<AttributesResponse>,
-          fetchProjectGeoJSON(currentProjectName) as Promise<FeatureCollection>,
-          fetchProjectMetadata(currentProjectName).catch(() => null),
-          fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/autocode-metadata`).then(r => r.ok ? r.json() : null).catch(() => null),
-        ]);
-
-        if (cancelled) return;
-
-
-        const attributes = migrateAttrRows(a?.rows ?? []);
-
-        // Store original autocode values (baseline) for validation tracking
-        // This is version 0 of the baseline - created when project is first loaded
-        // IMPORTANT: Only create baseline if it doesn't exist - don't overwrite on subsequent loads
-        try {
-          const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
-          const baselineData = await res.json();
-          const baselineExists = baselineData?.rows && baselineData.rows.length > 0;
-
-          // Only save baseline if it doesn't already exist
-          if (!baselineExists) {
-            const normalized = attributes.map(row => {
-              const normalizedRow: AttributeRow = {};
-              for (const [key, value] of Object.entries(row)) {
-                if (value === null || value === undefined) {
-                  normalizedRow[key] = value;
-                } else if (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value)) {
-                  normalizedRow[key] = Number(value);
-                } else {
-                  normalizedRow[key] = value;
-                }
-              }
-              return normalizedRow;
-            });
-
-            // Save baseline to server (version 0 - default values) only on first load
-            fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ rows: normalized })
-            });
-          }
-        } catch {
-        }
-
-        // Start image preloading
-        const uniqueRefs = new Set<string>();
-        attributes.forEach(row => {
-          const r = row as any;
-          const ref = r["Image Reference"] ?? r["image"] ?? r["img"];
-          if (ref) uniqueRefs.add(ref);
-        });
-
-        // Also check geoFeatures for image refs if not in attributes
-        const features = gjson?.features || [];
-        features.forEach((f: any) => {
-          const p = f.properties || {};
-          const ref = p["Image Reference"] ?? p["Image_Reference"] ?? p["image"] ?? p["img"];
-          if (ref) uniqueRefs.add(ref);
-        });
-
-        const refList = Array.from(uniqueRefs);
-
-        if (refList.length === 0) {
-          setImagesLoaded(true);
-        } else {
-          let loadedCount = 0;
-          // Cap concurrent requests if needed, but browser handles queueing.
-          // Loop and fetch
-          refList.forEach(ref => {
-            const img = new Image();
-            img.src = `/api/projects/${encodeURIComponent(currentProjectName)}/images/${encodeURIComponent(ref)}`;
-
-            const onFinish = () => {
-              loadedCount++;
-              const pct = Math.round((loadedCount / refList.length) * 100);
-              setImageLoadingProgress(pct);
-              if (loadedCount >= refList.length) {
-                setImagesLoaded(true);
-              }
-            };
-
-            img.onload = onFinish;
-            img.onerror = onFinish; // Don't block on error
-          });
-        }
-
-        savedAttrsSnapshot[currentProjectName] = attributes;
-        updateProjectData(currentProjectName, {
-          detail: d ?? null,
-          attrs: attributes,
-          geoFeatures: gjson?.features ?? [],
-          editedRow: null,
-          verified: metadata?.verified ?? false,
-          verifiedSegmentCount: metadata?.verified_segment_count ?? 0,
-          autocodedSegmentCount: metadata?.autocoded_segment_count ?? 0,
-          changedFieldsByRow: autoMeta?.changedFieldsByRow || {},
-          fieldSourcesByRow: autoMeta?.fieldSourcesByRow || {},
-          loading: false,
-          isDirty: false,
-        });
-      } catch (e: unknown) {
-        if (!cancelled) {
-          updateProjectData(currentProjectName, {
-            error: e instanceof Error ? e.message : "Unknown error",
-            loading: false,
-          });
-        }
-      }
-    })();
-
-    return () => { cancelled = true; };
-  }, [currentProjectName]);
-
-  // Store baseline rows fetched from server
-  const [baselineRows, setBaselineRows] = useState<AttributeRow[]>([]);
-  const baselineRowsRef = useRef<AttributeRow[]>([]);
-
-  // Fetch baseline from server when project changes
-  useEffect(() => {
-    if (!currentProjectName) return;
-
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
-        if (!res.ok) {
-          setBaselineRows([]);
-          return;
-        }
-        const data = await res.json();
-        if (!cancelled) {
-          setBaselineRows(migrateAttrRows(data.rows || []));
-        }
-      } catch (e) {
-        setBaselineRows([]);
-      }
-    })();
-
-    return () => { cancelled = true; };
-  }, [currentProjectName]);
-
-  // Keep ref in sync so async handlers can read the current baseline without stale closures
-  useEffect(() => {
-    baselineRowsRef.current = baselineRows;
-  }, [baselineRows]);
-
-  // Listen for baseline updates from autocode operations and refetch
-  useEffect(() => {
-    const handleBaselineUpdate = async () => {
-      if (!currentProjectName) return;
-
-      try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
-        if (!res.ok) {
-          setBaselineRows([]);
-          return;
-        }
-        const data = await res.json();
-        setBaselineRows(data.rows || []);
-      } catch (e) {
-      }
-    };
-
-    window.addEventListener("psat:baseline:updated", handleBaselineUpdate);
-    return () => {
-      window.removeEventListener("psat:baseline:updated", handleBaselineUpdate);
-    };
-  }, [currentProjectName]);
 
   // Get original autocode values for current row
   const originalCurrentAttr = useMemo<AttributeRow | null>(() => {
@@ -1384,103 +1092,6 @@ export default function CodingPage() {
     };
   }, [currentProjectName, currentIndex, currentFeature]);
 
-  // Auto-calculate scores on project load
-  useEffect(() => {
-    if (!currentProjectName || attrs.length === 0) return;
-
-    let isMounted = true;
-
-    (async () => {
-      try {
-        const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/results`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch results");
-        }
-
-        const data = await res.json();
-
-        if (!data.ok || !Array.isArray(data.result_rows) || data.result_rows.length === 0) {
-          let loadingToastId: string | undefined;
-
-          if (isMounted) {
-            loadingToastId = toaster.create({
-              description: "Auto-calculating scores for all segments...",
-              type: "loading",
-            });
-          }
-
-          const result = await calculateScore(currentProjectName);
-
-          if (isMounted && result.ok && Array.isArray(result.result_rows)) {
-            if (loadingToastId) {
-              toaster.dismiss(loadingToastId);
-            }
-
-            updateProjectData(currentProjectName, {
-              scores: result.result_rows as any,
-            });
-            toaster.create({
-              title: "Scores calculated",
-              description: `Auto-calculated scores for ${result.result_rows.length} segments`,
-              type: "success",
-            });
-
-            window.dispatchEvent(new CustomEvent("psat:scores:updated"));
-          } else if (isMounted && loadingToastId) {
-            toaster.dismiss(loadingToastId);
-          }
-        } else if (isMounted) {
-          updateProjectData(currentProjectName, {
-            scores: data.result_rows as any,
-          });
-        }
-      } catch {
-      }
-    })();
-
-    return () => { isMounted = false; };
-  }, [currentProjectName, attrs.length]);
-
-  // Fetch attribute mappings (global, not per-project)
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const [cachedMap, customOpts] = await Promise.all([
-          getCachedAttributeMappings(),
-          fetchCustomAttrOptions().catch(() => ({} as Record<string, string[]>)),
-        ]);
-        // Clone so per-page augmentation (custom options below) doesn't mutate the
-        // shared cached object.
-        const map: AttrMappings = { ...cachedMap };
-        // Ensure "Line of Sight" always has a dropdown even if the backend hasn't been restarted
-        if (!map["Line of Sight"]) {
-          map["Line of Sight"] = { "1": "Adequate", "2": "Inadequate" };
-        }
-        // Merge custom sub-category options into mappings (identity key→label)
-        for (const [field, opts] of Object.entries(customOpts)) {
-          map[field] = Object.fromEntries(opts.map((o) => [o, o]));
-        }
-        if (!cancelled) {
-          setCustomAttrOptions(customOpts);
-          setAttrMappings(map);
-        }
-      } catch {
-        if (!cancelled) setAttrMappings({ "Line of Sight": { "1": "Adequate", "2": "Inadequate" } });
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
-
-  function handleSaveOptions(field: string, options: string[]) {
-    const updatedCustom = { ...customAttrOptions, [field]: options };
-    setCustomAttrOptions(updatedCustom);
-    setAttrMappings((prev) => ({
-      ...prev,
-      [field]: Object.fromEntries(options.map((o) => [o, o])),
-    }));
-  }
-
   // Reusable save function
   const saveAllProjects = useCallback(async (): Promise<boolean> => {
     if (projectList.length === 0) return true;
@@ -1562,6 +1173,9 @@ export default function CodingPage() {
       });
       return false;
     }
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList, projectData]);
 
   // Save handler - saves all loaded projects (attributes + metadata)
@@ -1594,6 +1208,9 @@ export default function CodingPage() {
     }
     window.addEventListener("psat:discard", handleDiscard);
     return () => window.removeEventListener("psat:discard", handleDiscard);
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
   // Update edited row when current row changes
@@ -1602,6 +1219,9 @@ export default function CodingPage() {
     updateProjectData(currentProjectName, {
       editedRow: currentAttr ? { ...currentAttr } : null,
     });
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAttr, currentProjectName]);
 
   // Handlers for attribute editing
@@ -1612,6 +1232,9 @@ export default function CodingPage() {
         editedRow: editedRow ? { ...editedRow, [key]: value } : null,
       });
     },
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     [editedRow, currentProjectName]
   );
 
@@ -1886,6 +1509,9 @@ export default function CodingPage() {
     if (len === 0 || !currentProjectName) return;
     const clamped = Math.min(Math.max(1, page), len);
     updateProjectData(currentProjectName, { currentPage: clamped });
+  // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
+  // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [len, currentProjectName]);
 
   useEffect(() => {
