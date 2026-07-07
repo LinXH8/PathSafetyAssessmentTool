@@ -9,7 +9,10 @@
   position: relative;
   min-height: 100svh;
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  /* Functional text is Inter to match the v2 app; brand text (logo name,
+     description, panel title, Start button) sets 'Big Noodle Titling' explicitly
+     and overrides this. */
+  font-family: "Inter", sans-serif;
   background-image: url("./assets/PSAT Landing Page BG.png");
   background-size: cover;
   background-position: center;
@@ -29,65 +32,69 @@
   z-index: 10;
   width: min(32vw, 560px);
   min-width: 320px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* The rail itself never scrolls — the profile list scrolls internally
+     (see .profile-scroll-shell). This guarantees the Start button below it
+     is always pinned in view and can never clip out of bounds. */
+  overflow: hidden;
 }
 
 .psat-logo {
-  max-width: clamp(160px, 28vw, 440px);
-  max-height: 20vh;
+  /* Fill the rail width so the wordmark isn't dwarfed by the profile card below. */
+  width: 100%;
+  max-width: 100%;
+  max-height: 24vh;
   height: auto;
   object-fit: contain;
-  align-self: flex-start;
+  object-position: left center;
+  align-self: stretch;
+  flex-shrink: 0;
 }
 
 .psat-logo.name {
-  font: 600 clamp(1.6rem, 2.5vw, 2.9rem)/1 'Big Noodle Titling', sans-serif;
+  /* Scale up to span the full rail width, matching the profile card. */
+  font: 600 clamp(2rem, 3.6vw, 3.7rem)/1.02 'Big Noodle Titling', sans-serif;
   text-transform: uppercase;
-  align-self: flex-start;
-}
-
-.psat-logo.description {
-  font: 500 clamp(1.1rem, 1.6vw, 2rem)/1.2 'Big Noodle Titling', sans-serif;
-  text-transform: uppercase;
-  align-self: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
 }
 
 .start-btn {
   width: 100%;
-  padding: 18px 0;
+  height: 52px;
   margin-top: auto;
+  flex-shrink: 0;
   border: 0;
-  border-radius: 30px;
-  font: 700 2.5rem/1 'Big Noodle Titling', sans-serif;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  border-radius: 6px;
+  /* v2 button type (Inter 700), solid green — no gradient, no shadow. */
+  font: 700 1.125rem/1 "Inter", sans-serif;
   color: #fff;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+  background: #2aa45f;
   cursor: pointer;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: background .2s ease;
   z-index: 20;
   align-self: stretch;
 }
 
 .start-btn:disabled {
   cursor: not-allowed;
-  opacity: 0.65;
-  transform: none;
-  box-shadow: 0 10px 30px rgba(24, 30, 27, 0.18);
+  background: #edf2f7;
+  color: #a0aec0;
 }
 
 .profile-panel {
-  flex-shrink: 0;
+  /* Fills the space between the branding and the Start button, and shrinks
+     when the viewport is short — its internal list (.profile-scroll-shell)
+     absorbs the overflow so nothing below it clips. */
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
-  padding: 18px;
-  border-radius: 24px;
+  padding: 20px;
+  /* v2 card: flat (no shadow), 10px radius to match the modal shell, solid green. */
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   background: #dff1e2;
   border: 1px solid #9fcaa9;
-  box-shadow: 0 18px 42px rgba(18, 48, 28, 0.14);
   color: #153824;
 }
 
@@ -100,33 +107,23 @@
 
 .profile-panel-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
 }
 
 .profile-panel-copy h2 {
-  font: 600 1.4rem/1 'Big Noodle Titling', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  /* v2 card title: Inter 700, 20px, normal case. */
+  font: 700 1.25rem/1.2 "Inter", sans-serif;
+  color: #153824;
+  margin-bottom: 4px;
 }
 
 .profile-panel-copy p,
 .profile-status,
-.profile-error,
-.profile-empty,
-.profile-option-meta,
-.profile-current-label,
-.landing-dialog-copy {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
-}
-
-.profile-panel-copy p,
-.profile-status,
-.profile-empty,
-.landing-dialog-copy {
-  font-size: 13px;
+.profile-empty {
+  font-size: 12px;
   line-height: 1.45;
   color: #365b42;
 }
@@ -134,45 +131,62 @@
 .profile-error {
   margin-top: 10px;
   padding: 10px 12px;
-  border-radius: 14px;
+  border-radius: 6px;
   background: #fde1e5;
   color: #8f2432;
-  font-size: 13px;
+  font-size: 12px;
 }
 
+/* v2 green ghost buttons: flat, white fill, green border + text, 6px radius. */
 .profile-create-btn,
 .profile-manage-btn {
-  min-width: 150px;
-  height: 42px;
-  border: none;
-  border-radius: 14px;
-  padding: 0 14px;
+  height: 40px;
+  border: 1px solid #2aa45f;
+  border-radius: 6px;
   cursor: pointer;
+  font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-size: 13px;
-  color: #fff;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.2);
+  font-size: 16px;
+  color: #1f7a45;
+  background: #fff;
+  transition: background .2s ease;
 }
 
 .profile-manage-btn {
-  color: #1a4f2f;
-  background: #f5fbf6;
-  border: 1px solid #8cc49a;
-  box-shadow: none;
+  padding: 0 16px;
+}
+
+/* Square "+" icon button, inline with Manage Selected. */
+.profile-create-btn {
+  width: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.profile-create-btn:hover:not(:disabled),
+.profile-manage-btn:hover:not(:disabled) {
+  background: #eaf6ec;
 }
 
 .profile-create-btn:disabled,
 .profile-manage-btn:disabled {
-  opacity: 0.6;
+  border-color: #cbd5e0;
+  color: #a0aec0;
   cursor: not-allowed;
 }
 
 .profile-scroll-shell {
   margin-top: 14px;
-  height: 180px;
+  /* Grows to fill the panel and scrolls internally instead of a fixed height,
+     so the list absorbs vertical overflow and the Start button never clips. */
+  flex: 1 1 auto;
+  min-height: 100px;
   overflow-y: auto;
-  border-radius: 18px;
+  border-radius: 6px;
   border: 1px solid #b8d8be;
   background: #f5fbf6;
 }
@@ -188,17 +202,16 @@
 .profile-option {
   width: 100%;
   border: 1px solid #c8dfcd;
-  border-radius: 16px;
+  border-radius: 6px;
   background: #eaf6ec;
   color: #173823;
   text-align: left;
-  padding: 12px 14px;
+  padding: 10px 12px;
   cursor: pointer;
-  transition: border-color .2s ease, transform .2s ease, background .2s ease;
+  transition: border-color .2s ease, background .2s ease;
 }
 
 .profile-option:hover {
-  transform: translateY(-1px);
   border-color: #8cc49a;
   background: #e0f1e4;
 }
@@ -215,8 +228,8 @@
 
 .profile-option-name {
   display: block;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .profile-option-meta {
@@ -236,20 +249,8 @@
   text-align: center;
 }
 
-.landing-dialog-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.landing-dialog-status {
-  margin-top: 10px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: #365b42;
-}
-
+/* The "Forgot PIN?" affordance inside the Enter-PIN modal. The rest of the
+   dialog chrome is now inline-styled via LandingModal (v2 tokens, light-only). */
 .landing-dialog-link {
   align-self: flex-start;
   margin-top: 2px;
@@ -272,41 +273,6 @@
   cursor: default;
 }
 
-.landing-dialog-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.landing-dialog-section-title {
-  font: 600 1rem/1 'Big Noodle Titling', sans-serif;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: #153824;
-}
-
-.landing-dialog-actions {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.landing-dialog-input {
-  height: 44px;
-  border: 1px solid var(--chakra-colors-border);
-  border-radius: 12px;
-  padding: 0 12px;
-  background: var(--chakra-colors-bg);
-  color: var(--chakra-colors-fg);
-  outline: none;
-}
-
-.landing-dialog-input:focus {
-  border-color: #27ae60;
-  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
-}
-
 @media (max-width: 1100px) {
   .right-rail {
     width: min(40vw, 560px);
@@ -326,7 +292,6 @@
 
   .psat-logo,
   .psat-logo.name,
-  .psat-logo.description,
   .start-btn {
     align-self: center;
     text-align: center;
@@ -342,22 +307,21 @@
 
   .profile-panel-actions {
     width: 100%;
-    justify-content: stretch;
+    justify-content: flex-start;
   }
 
-  .profile-create-btn,
+  /* Manage grows to fill the row; the "+" stays a fixed square beside it. */
   .profile-manage-btn {
-    flex: 1 1 180px;
+    flex: 1 1 auto;
+  }
+
+  .profile-create-btn {
+    flex: 0 0 40px;
   }
 }
 
-.start-btn:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 36px rgba(46, 204, 113, 0.55);
-}
-
-.start-btn:active {
-  transform: translateY(-2px);
+.start-btn:hover:not(:disabled) {
+  background: #23864c;
 }
 
 .landing-footer {
