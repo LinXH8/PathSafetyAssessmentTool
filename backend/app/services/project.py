@@ -20,7 +20,7 @@ from app.services.image_storage import materialize_project_image
 
 # In charge of the selection of project versions and project metadata
 class Project:
-    def __init__(self, project_path: Path = None):
+    def __init__(self, project_path: Path = None) -> None:
         self.project_path = project_path               #  …/ProjectA
         self._metadata : serializer.ProjectMetadata | None  = None
         self._geo_data : serializer.ProjectGeoData  | None  = None
@@ -34,7 +34,7 @@ class Project:
             self.versions.insert(0, ProjectVersion())
 
     # ─── Version handling ─────────────────────────────────────
-    def _discover_versions(self):
+    def _discover_versions(self) -> None:
         version_dir = self.project_path / "versions"
         self.versions: list[ProjectVersion] = [
             ProjectVersion(p)
@@ -97,7 +97,7 @@ class Project:
 
         return ver_obj
 
-    def save_all(self):
+    def save_all(self) -> Path:
         yyyymmdd = datetime.datetime.now().strftime("%Y%m%d")
         today_ver_path = self.project_path / "versions" / yyyymmdd
         if not today_ver_path.exists():
@@ -113,11 +113,11 @@ class Project:
         self.latest().save_all()
         return self.project_path
 
-    def _delete(self):
+    def _delete(self) -> None:
         # Delete project directory
         shutil.rmtree(self.project_path, ignore_errors=True)
 
-    def delete_segment(self, index: int):
+    def delete_segment(self, index: int) -> None:
         # 0. Delete Associated Image (from Geo Data info)
         try:
             if self.geo_data.df is not None and index < len(self.geo_data.df):
@@ -155,7 +155,7 @@ class Project:
 
         self.save_all()
 
-    def delete_segments(self, indices: list[int]):
+    def delete_segments(self, indices: list[int]) -> None:
         # 0. Delete Associated Images (from Geo Data info)
         try:
             if self.geo_data.df is not None:
@@ -257,7 +257,7 @@ class Project:
 
         return collisions
 
-    def copy_segments(self, indices: list[int], target_project: 'Project', replace: bool = False):
+    def copy_segments(self, indices: list[int], target_project: 'Project', replace: bool = False) -> int:
         """
         Copy segments (and their images) specified by indices from self (source) to target_project.
         """
@@ -299,7 +299,7 @@ class Project:
             target_name = target_project.metadata.project_name
 
             # Helper to predict name
-            def predict_name(img_ref):
+            def predict_name(img_ref) -> str | None:
                 if pd.isna(img_ref): return None
                 s_ref = str(img_ref).strip()
                 if not s_ref or s_ref.lower() == 'nan': return None
@@ -468,7 +468,7 @@ class Project:
         treat_mask = pd.Series([True] * len(treatment_df))
         result_mask = pd.Series([True] * len(results_df))
 
-        def map_labels_to_values(labels, value_map):
+        def map_labels_to_values(labels, value_map: dict) -> list:
             """Helper to normalize single/multi inputs and map to stored values."""
             if not labels:
                 return []
@@ -548,7 +548,7 @@ class Project:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, value: serializer.ProjectMetadata):
+    def metadata(self, value: serializer.ProjectMetadata) -> None:
         if not isinstance(value, serializer.ProjectMetadata):
             raise TypeError("metadata must be serializer.ProjectMetadata")
         self._metadata = value
@@ -563,7 +563,7 @@ class Project:
         return self._geo_data
 
     @geo_data.setter
-    def geo_data(self, value: serializer.ProjectGeoData):
+    def geo_data(self, value: serializer.ProjectGeoData) -> None:
         if not isinstance(value, serializer.ProjectGeoData):
             raise TypeError("metadata must be serializer.ProjectGeodata")
         self._geo_data = value

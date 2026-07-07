@@ -52,7 +52,7 @@ class project_manager:
         "current_project": None,
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Path variables
         self.des_path : Path            = None
         self.src_path : Path            = None
@@ -70,7 +70,7 @@ class project_manager:
         self._initialise()
 
     # Initialises all path and application-level variables
-    def _initialise(self):
+    def _initialise(self) -> None:
         # Create config if not existing
         if not get_config_path().exists():
             self.save_config(self.DEFAULT_CONFIG)
@@ -92,7 +92,7 @@ class project_manager:
 # ================================================================================================================
 # UTILITY
 # ================================================================================================================
-    def _discover_projects(self):
+    def _discover_projects(self) -> None:
         if self.des_path is None:
             raise ValueError("self.des_path is not set. Please initialise it before discovering projects.")
 
@@ -110,7 +110,7 @@ class project_manager:
             print(f"[PM] ERROR: Failed to discover projects: {e}", flush=True)
             self.projects = []
 
-    def delete_project(self, project_name: str):
+    def delete_project(self, project_name: str) -> bool:
         for proj in self.projects:
             if proj.metadata.project_name == project_name:
                 proj._delete()
@@ -119,7 +119,7 @@ class project_manager:
 
         raise KeyError(f"Project not found: {project_name}")
 
-    def list_names(self):
+    def list_names(self) -> list[str]:
         return [p.project_path.name for p in self.projects]
 
     def project(self, project_name: str) -> Project:
@@ -128,7 +128,14 @@ class project_manager:
                 return proj
         raise KeyError(f"Project not found: {project_name}")
 
-    def create_project(self, project_title, geo_data : gpd.geodataframe, dataset_name, tags=None, source_folders=None):
+    def create_project(
+        self,
+        project_title: str,
+        geo_data: gpd.GeoDataFrame,
+        dataset_name: str,
+        tags: list | None = None,
+        source_folders: list | None = None,
+    ) -> None:
         proj_root = self.des_path / project_title
 
         # Image references come directly from geo_data FILENAME — no copying or renaming.
@@ -299,7 +306,7 @@ class project_manager:
 # SERIALIZATION
 # ================================================================================================================
 
-    def load_config(self, config):
+    def load_config(self, config: dict) -> dict:
         # Set paths from config
         self.des_path   = Path(get_full_path(config.get("destination_folder")))
         self.src_path   = Path(get_full_path(config.get("source_folder")))
@@ -310,11 +317,11 @@ class project_manager:
 
         return config
 
-    def save_config(self, config):
+    def save_config(self, config: dict) -> None:
         with open(get_config_path(), "w") as json_file:
             json.dump(config, json_file, indent=4)
 
-    def write_config(self, key, value):
+    def write_config(self, key: str, value) -> None:
         with open(get_config_path(), "r") as json_file:
             data = json.load(json_file)
         data[key] = value
@@ -325,7 +332,7 @@ class project_manager:
         pass
 
     # TODO (ONCE ACTIVE VERSION CONTROL HAS BEEN IMPLEMENTED): Loads all project-level variables from project directory
-    def read_project(self, project_name: Path, best_before = None):
+    def read_project(self, project_name: Path, best_before=None) -> None:
         self.project.project_path = self.des_path / project_name
 
         if best_before is not None:
@@ -339,14 +346,14 @@ class project_manager:
 # LOCAL
 # ================================================================================================================
 
-def load_images_from_folder_cv(folder):
-    image_array = []
+def load_images_from_folder_cv(folder: str) -> list[str]:
+    image_array: list[str] = []
 
     for filename in os.listdir(folder):
         if filename.lower().endswith((".jpg", ".jpeg")):
             image_array.append(filename)
 
-    def extract_numeric_key(filename):
+    def extract_numeric_key(filename: str) -> int:
         # Search for "Cam" in the filename
         cam_match = re.search(r"Cam\d+", filename)
 
@@ -368,10 +375,10 @@ def load_images_from_folder_cv(folder):
 
     return sorted(image_array, key=extract_numeric_key)
 
-def get_config_path():
+def get_config_path() -> Path:
     return Path(get_full_path("config.json"))
 
-def rename_files_with_prefix(directory: str, prefix: str):
+def rename_files_with_prefix(directory: str, prefix: str) -> None:
     """
     Rename all files in the given directory by adding a prefix to their filenames.
 

@@ -28,7 +28,7 @@ class ProjectVersion:
     STR_RESULTS             = "results.csv"
     STR_TREATMENT           = "treatment.csv"
 
-    def __init__(self, version_path: Path = None):
+    def __init__(self, version_path: Path = None) -> None:
         self.path = version_path                      # …/ProjectA/20250416
         if version_path is not None:
             self.date = datetime.datetime.strptime(version_path.name, "%Y%m%d").date()
@@ -60,7 +60,7 @@ class ProjectVersion:
         return self._snapshot_metadata
 
     @snapshot_metadata.setter
-    def snapshot_metadata(self, value: serializer.SnapshotMetadata):
+    def snapshot_metadata(self, value: serializer.SnapshotMetadata) -> None:
         if not isinstance(value, serializer.SnapshotMetadata):
             raise TypeError("metadata must be serializer.SnapshotMetadata")
         self._snapshot_metadata = value
@@ -75,7 +75,7 @@ class ProjectVersion:
         return self._attributes
 
     @attributes.setter
-    def attributes(self, value: serializer.Attributes):
+    def attributes(self, value: serializer.Attributes) -> None:
         if not isinstance(value, serializer.Attributes):
             raise TypeError("metadata must be serializer.Attributes")
         self._attributes = value
@@ -91,7 +91,7 @@ class ProjectVersion:
         return self._results
 
     @results.setter
-    def results(self, value: serializer.Results):
+    def results(self, value: serializer.Results) -> None:
         if not isinstance(value, serializer.Results):
             raise TypeError("metadata must be serializer.Results")
         self._results = value
@@ -107,7 +107,7 @@ class ProjectVersion:
         return self._treatment
 
     @treatment.setter
-    def treatment(self, value: serializer.Treatment):
+    def treatment(self, value: serializer.Treatment) -> None:
         if not isinstance(value, serializer.Treatment):
             raise TypeError("metadata must be serializer.Treatment")
         self._treatment = value
@@ -115,7 +115,7 @@ class ProjectVersion:
         # print(f"SETTING TREATMENTS TO {value.df}")
 
     # ─── Convenience helpers ─────────────────────────────────
-    def load_all(self):
+    def load_all(self) -> None:
         _ = (
             self.snapshot_metadata,
             self.attributes,
@@ -123,7 +123,7 @@ class ProjectVersion:
             self.treatment,
         )
 
-    def save_all(self):
+    def save_all(self) -> None:
         if self.snapshot_metadata.df_dirty is True:
             self.snapshot_metadata.serialize(self.path / self.STR_SNAPSHOT_METADATA)
         if self.attributes.df_dirty is True:
@@ -135,7 +135,7 @@ class ProjectVersion:
 
 
 
-    def delete_segment(self, index: int):
+    def delete_segment(self, index: int) -> None:
         # 1. Delete from Snapshot Metadata
         if self.snapshot_metadata.df is not None and index < len(self.snapshot_metadata.df):
             self.snapshot_metadata.df = self.snapshot_metadata.df.drop(index).reset_index(drop=True)
@@ -155,7 +155,7 @@ class ProjectVersion:
         if self.treatment.df is not None and len(self.treatment.df) > index:
             self.treatment.df = self.treatment.df.drop(index).reset_index(drop=True)
             self.treatment.df_dirty = True
-    def delete_segments(self, indices: list[int]):
+    def delete_segments(self, indices: list[int]) -> None:
         # Batch delete from all dataframes
         # Filter indices to ensure they are valid for each dataframe if sizes differ (though they shouldn't)
 

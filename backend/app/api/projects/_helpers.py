@@ -95,7 +95,7 @@ def warmup_gis() -> None:
     """
     import threading
 
-    def _warm():
+    def _warm() -> None:
         try:
             g = _get_gis()
             # Pre-load all registered layers so the first toggle is instant
@@ -121,10 +121,10 @@ def warmup_gis() -> None:
 _INFERENCE_DEPTH = 0
 
 # util
-def ok(data, code=200):
+def ok(data, code: int = 200) -> tuple[Response, int]:
     return jsonify(data), code
 
-def fail(message, code=400):
+def fail(message: str, code: int = 400) -> tuple[Response, int]:
     return jsonify({"error": message}), code
 
 def df_to_records(df) -> list:
@@ -154,7 +154,7 @@ def invalidate_ctx() -> None:
         _CTX["init_error"] = None
 
 
-def get_ctx():
+def get_ctx() -> dict:
     """Lazy init: prepare the old-code dependencies the first time and reuse thereafter."""
     with _CTX_LOCK:
         if _CTX["ready"]:
@@ -260,7 +260,7 @@ def with_project(_fn=None, *, version=False):
 
 _MODELS_READY = {"cv": False}
 
-def _ensure_models_ready():
+def _ensure_models_ready() -> None:
     """Load CV / GIS only once (thread-safe). Memoize init errors as 503."""
     with _INIT_LOCK:
         # If CV init failed before, short-circuit with 503
@@ -314,7 +314,7 @@ def _ensure_models_ready():
                 raise ServiceUnavailable(_INIT_ERR["cv"])
 
 
-def _warmup_models_in_background():
+def _warmup_models_in_background() -> None:
     """Daemon thread: pre-load CV + GIS at server startup so the first autocode request is fast."""
     import time
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -334,7 +334,7 @@ def _warmup_models_in_background():
         _inst = _get_gis()
         layer_names = list(_inst.store.paths.keys())
 
-        def _load_one(name):
+        def _load_one(name: str) -> float:
             t0 = time.perf_counter()
             _inst.store.get(name)
             return time.perf_counter() - t0
@@ -363,7 +363,7 @@ _warmup_thread.start()
 # ───────────────────────── Endpoints ─────────────────────────
 
 @bp.before_request
-def _log_incoming():
+def _log_incoming() -> tuple[Response, int] | None:
     logger.debug(f"[Flask] >>> {request.method} {request.path}")
     try:
         get_ctx()
@@ -371,7 +371,7 @@ def _log_incoming():
         return jsonify({"error": f"Backend initialisation failed: {exc}"}), 500
 
 
-def _get_segment_midpoint(coords):
+def _get_segment_midpoint(coords: list) -> "Point":
     from shapely.geometry import LineString, Point
 
     if not coords:
