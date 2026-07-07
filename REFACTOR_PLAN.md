@@ -199,7 +199,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S2.2** Decompose `GeoDataPanel.tsx` (1,824; shared `variant="v2"` component) — 3d — *depends: S1.\**
 - [x] **S2.3** Decompose `codingPage.tsx` container (2,301) — 3d — *depends: S2.2*
 - [x] **S2.4** Decompose `treatmentDetailPage.tsx` container (1,387; partly done by v2 split) — 1.5–2d — *depends: S1.\**
-- [ ] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
+- [x] **S2.5** Decompose `reportBuilderPage.tsx` (3,346; no v2 layout yet) — 4d — *depends: S1.\**
 
 ### Phase 3 — Backend modularization (14–17 days) — *can interleave with Phase 2*
 - [x] **S3.1** Add `@with_project` decorator + standardize error→JSON — 1.5d — *depends: none*
@@ -369,7 +369,7 @@ may be re-wired to new hooks, but the shell-facing contract must not change shap
   `useProjectMapping` (resolveIndex/projectMap), `useTreatmentEngine`, `useTreatmentState`/`useTreatmentAnalysis`
   from the container. Fix the deferred pre-existing errors here: unused `TREATMENTS` import (line 38) and
   missing `Treatment` type import (line 176).
-- **S2.5 reportBuilderPage** — **Graph tools first:** `get_impact_radius_tool` + `get_affected_flows_tool` on
+- **S2.5 reportBuilderPage** (· Done: 2026-07-07) — **Graph tools first:** `get_impact_radius_tool` + `get_affected_flows_tool` on
   `reportBuilderPage.tsx` — this file is the largest and most tangled with no existing seam, so understanding
   affected flows matters more here than a single-symbol caller lookup. **Then extract:** `useReportData`,
   `usePDFExport`, `useReportLayout`, per-domain `<ReportSection*>`. No v2 layout exists for this page yet (it
@@ -1531,3 +1531,73 @@ gives for free — record what you found so the next session doesn't re-query fr
                    load-bearing. GeoDataPanel import path still frozen at components/GeoDataPanel.tsx (no
                    index.ts added). scores typed via ProjectDataState["scores"] indexed access to avoid new
                    `any` lint errors. S2.5 (reportBuilderPage) has no dependency on either Wave-2 session.
+
+- 2026-07-07 · S2.5 · Decomposed reportBuilderPage.tsx (3,346 → 1,468 lines) into 3 hooks + 7 modules +
+                   a container/ViewModel/LayoutV1 shell seam (the page's first — no v2 layout existed),
+                   preserving all four CLAUDE.md report-builder behaviors and every storage key
+                   byte-identical. (Ran as a Wave-3 sub-agent in a worktree; worktree was provisioned
+                   STALE at ce517aa5 — base-sha check caught it, hard-reset to 00c6ff01 before any edit.
+                   Survived a mid-session cutoff/resume; resume-in-worktree check passed. 6 [S2.5]
+                   commits cherry-picked onto `xh_dev` as `0d2f24d8..20d0b9e3` by the orchestrator.
+                   Post-integration gate on xh_dev: tsc 0, lint 351 (341E/10W), build 11 pre-existing.)
+  FILES CREATED:   frontend/src/pages/ReportBuilderPage/reportBuilderTypes.ts (108L);
+                   reportBuilderConstants.ts (105L); reportBuilderHelpers.ts (144L);
+                   components/reportPrimitives.tsx (90L); components/ReportMiniMap.tsx (96L);
+                   components/ReportSection.tsx (144L); components/reportSectionRenderers.tsx (461L);
+                   hooks/usePdfExport.ts (271L); hooks/useReportData.ts (443L);
+                   hooks/useReportLayout.ts (271L); layouts/ReportBuilderViewModel.ts (104L);
+                   layouts/ReportBuilderLayoutV1.tsx (308L)
+  FILES DELETED:   none
+  FILES MOVED:     none (logical moves only)
+  FILES MODIFIED:  frontend/src/pages/ReportBuilderPage/reportBuilderPage.tsx 3,346 → 1,468 lines
+  SYMBOLS MOVED/EXTRACTED: 13 types → reportBuilderTypes; geometry/labels/DEFAULT_ELEMENTS/
+                   FILTERED_ELEMENTS/table styles → reportBuilderConstants; dateToQuarterLabel/
+                   buildCoreDataset/avoidPageBreak/computeFlowLayout/_readSaved(→readSavedLayout) →
+                   reportBuilderHelpers; SegmentImage/AttrTag/TreatmentBadge/EditableText/FitAllBounds/
+                   ReportMiniMap/ReportSection/SortableSectionRow → components/; PDF+Word export +
+                   captureElementImage + exporting → usePdfExport; all fetches + datasets +
+                   getEnriched/getSegmentTreatments/buildMapColorMap + post-treatment upload (?t= buster
+                   KEPT) → useReportData; elements/metadata/includeFiltered/save-restore-reset/dnd-kit/
+                   page-nav/visibleElements/sectionChecklist → useReportLayout; band donut/badge +
+                   TopRisk full-page/grid/tabular + TreatmentSummary renderers (ctx-object pattern) →
+                   reportSectionRenderers. All moved symbols had 0 callers outside the page.
+  IMPORT SITES UPDATED: 0 external files — sole importer App.tsx:10 consumes the unchanged default export.
+  GRAPH USAGE:     get_impact_radius_tool: 52 changed nodes, 500 impacted/2 hops, 107 files (high — 2-hop
+                   backend fan-out noise). get_affected_flows_tool (plan-mandated): 3 flows — App,
+                   handleDownloadPDF, handleDownloadWord; the Word flow shaped usePdfExport to own both
+                   exports as one seam. query_graph_tool(importers_of): exactly 1 (App.tsx:10).
+                   Trust-but-grep verified every extraction. detect_changes per commit (risk 0.30–0.40,
+                   0 affected flows); build_or_update_graph_tool current after final commit.
+  BUILD GATE:      TSC 0 → 0; lint 352 (342E/10W) → 351 (341E/10W) — 1 error FEWER (moved renderDonutLabel
+                   `any` now has a documented line-level disable); 6 new hook-boundary exhaustive-deps
+                   warnings resolved with documented eslint-disables (stable setters/refs, per S2.3/S2.4
+                   precedent). Build (tsc -b) 11 → 11 pre-existing errors (incl. this file's
+                   setPickerLoading/safeColor, deliberately carried).
+  REGRESSION CHECK: static only (agent session): storage keys byte-identical (6 SESSION_KEYS uses;
+                   LOCAL_KEYS.REPORT_LAYOUT 7↔7 code uses, blob shape unchanged); the four CLAUDE.md
+                   behaviors grep-verified (segment-details enrichment; ?t= upload buster; captureScale
+                   clamp + img-decode guard + fail-loud alert; treatment>PA loaded-projects preference);
+                   LayoutV1 JSX diff-verified byte-identical to the old return block (html2canvas DOM
+                   unchanged). Manual checklist items 6, 7 owed before/with the push.
+  ARCHITECTURAL DECISIONS: (1) ViewModel seam taken all the way to a LayoutV1 shell (JSX verbatim,
+                   vm-destructured) so ReportBuilderLayoutV2 is a drop-in; section bodies remain container
+                   render-callbacks through the vm. (2) Section renderers stayed FUNCTIONS, not
+                   components — component boundaries would change the React element tree feeding
+                   html2canvas. (3) useReportLayout excludes the data-coupled height web
+                   (computeIdealHeight/autoFit/showElement/toggleIncludeFiltered) to avoid a circular
+                   hook-order with useReportData; container mutates via returned setters. (4) network
+                   fetch's elements dep became a container-computed benchmarkVisible boolean (identical
+                   gating). (5) usePDFExport renamed usePdfExport; owns Word too (affected-flows finding).
+  DEFERRED:        setPickerLoading dead (picker loading never wired); safeColor unused; pre-existing
+                   session-effect includeFiltered + computeIdealHeight networkDataset dep warnings left;
+                   topRiskCtx/treatmentSummaryCtx rebuilt per render (useMemo candidate); renderContent
+                   (~700L switch) is the next natural slice when a V2 layout lands.
+  NOTES FOR NEXT:  ReportBuilderPage now follows the container/ViewModel/shell pattern —
+                   ReportBuilderLayoutV2 should consume ReportBuilderViewModel unchanged (add fields to
+                   the interface + container, never fetch in the shell). hooks/ and components/ here are
+                   page-local by design. readSavedLayout (helpers) is the ONLY reader of the
+                   REPORT_LAYOUT blob's lazy-init path; useReportLayout owns all writers. The renderers
+                   are plain functions on purpose (html2canvas DOM identity) — do not "componentize" them
+                   without re-validating PDF export. Worktrees were provisioned stale AGAIN this wave —
+                   keep the base-sha check. Phase 2 is now COMPLETE; remaining sessions are S3.7, S3.8,
+                   S4.1.
