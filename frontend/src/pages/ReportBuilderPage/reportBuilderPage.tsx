@@ -1,28 +1,38 @@
+/**
+ * reportBuilderPage.tsx — the Report Builder container.
+ *
+ * Owns ALL report state and logic: session-restore of the loaded-project /
+ * Path-Analysis-filter context, every data fetch (scores, enrichment,
+ * treatments, project metadata, image date ranges, network benchmark), the
+ * derived full / filtered / network datasets, the section layout model
+ * (show / hide / reorder / auto-fit / save-restore), and PDF / Word export.
+ * It assembles these into the rendered report canvas + left "Sections" panel.
+ *
+ * Decomposed in S2.5: pure types → `reportBuilderTypes.ts`; constants + default
+ * layouts → `reportBuilderConstants.ts`; pure helpers (dataset build, flow
+ * layout, saved-layout read) → `reportBuilderHelpers.ts`; presentational pieces
+ * → `components/*`; the export pipeline → `hooks/usePdfExport.ts`. The container
+ * still owns the interdependent data ↔ layout derivation web (`computeIdealHeight`
+ * couples dataset sizes to section heights, and the mount effect reconciles the
+ * restored layout against the live filter), which is why that spine stays here.
+ * The view-model seam a future `ReportBuilderLayoutV2` would consume is defined
+ * in `layouts/ReportBuilderViewModel.ts`.
+ */
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
   DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors,
 } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import {
-  SortableContext, verticalListSortingStrategy, useSortable, arrayMove,
+  SortableContext, verticalListSortingStrategy, arrayMove,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip as RechartTooltip } from "recharts";
-import SectionErrorBoundary from "./SectionErrorBoundary";
-// html2canvas-pro is a maintained drop-in fork of html2canvas (^1.4.1) that fixes
-// the text-baseline bug which rendered text shifted *down* (form-control values,
-// pills, table cells all sat too low in the exported PDF — niklasvh/html2canvas
-// issues #2107 / #2775 / #2691, fix PR #2938). API-compatible: same default export.
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
-import L from "leaflet";
-import type { FeatureCollection } from "geojson";
 import { MAP_MISSING_SCORE_COLOR, CATEGORY_UNKNOWN_COLOR } from "../../constants/mapColors";
-import { to4326 } from "../../utils/projection";
 import { RISK_COLORS, RISK_LABELS } from "../../utils/riskColors";
 import "leaflet/dist/leaflet.css";
 import "./reportBuilderPage.css";
@@ -30,577 +40,22 @@ import { saveGeneratedReport } from "../../api";
 import { getCachedResults } from "../../api/projectDataCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
 import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
-
-// ── Constants ────────────────────────────────────────────────────────────────
-const CANVAS_W = 794;
-const PAGE_H = 1123;
-const PAGE_GAP = 24;
-
-// ── Project Details paging ───────────────────────────────────────────────────
-// Project Details renders ALL projects, chunked into pages of PROJ_PAGE_SIZE.
-// Each non-final chunk is sized to exactly one PAGE_H so its boundary lands on
-// the PDF page-break grid (a real page break in the report), instead of a
-// click-to-paginate widget. Heights below are generous per-project estimates
-// used both for chunk-fit and section sizing.
-const PROJ_PAGE_SIZE = 5;
-const PROJ_ROW_H = 188; // est. height of one project's detail block
-const PROJ_HEADER_H = 66;  // full section header (first chunk)
-const PROJ_CONT_HEADER_H = 30; // "(continued)" header (later chunks)
-
-// ── Quarter utilities ────────────────────────────────────────────────────────
-function dateToQuarterLabel(iso: string): string {
-  const [year, month] = iso.split("-").map(Number);
-  return `Q${Math.ceil(month / 3)} ${year}`;
-}
-
-const CRASH_TYPE_LABELS: Record<string, string> = {
-  Overall: "Overall Risk", VB: "Vehicle–Bicycle", BB: "Bicycle–Bicycle",
-  SB: "Single-Bicycle", BP: "Bicycle–Pedestrian",
-};
-const TREATMENT_NAMES: Record<number, string> = {
-  1: "Upgrade to on-road bicycle lane with light segregation",
-  2: "Safety barrier (Adjacent road 0-1m)",
-  3: "Safety barrier (Adjacent road 1-3m)",
-  4: "Upgrade to cycling-priority street",
-  5: "Upgrade to multi-use path",
-  6: "Upgrade to off-road bicycle path",
-  7: "Convert to one-way facility",
-  8: "Improve surface conditions",
-  9: "Install light segregation",
-  10: "Install street lighting",
-  11: "Remove fixed obstacles",
-  12: "Remove non-fixed obstacles",
-  13: "Remove width restriction",
-  14: "Improve facility access",
-  15: "Redesign sharp curves",
-  16: "Widen the facility",
-  17: "Install protective barrier",
-  18: "Improve delineation",
-  19: "Review intersection approach",
-  20: "Improve crossing facility",
-  21: "Evaluate grade separation",
-  22: "Reconfigure/remove parking",
-  23: "Review tram/train rails",
-  24: "Install traffic calming",
-  25: "Bicycle speed control",
-};
-
-const METHODOLOGY_TEXT = `This report uses the CycleRAP (Cycling Road Assessment Programme) methodology to assess the safety of cycling infrastructure. Each segment is evaluated against a set of risk attributes covering facility design, surface quality, hazards, intersections, and usage patterns. A risk multiplier is computed for each attribute based on its coded value, and the combined score determines the segment's risk band (Low / Medium / High / Extreme) for four crash types: Vehicle–Bicycle (VB), Bicycle–Bicycle (BB), Single-Bicycle (SB), and Bicycle–Pedestrian (BP). Higher scores and bands indicate greater risk exposure and a greater need for intervention.`;
-
-// ── Types ────────────────────────────────────────────────────────────────────
-type ElementType =
-  | "title" | "riskBands" | "map" | "summary" | "topRisk" | "treatmentSummary"
-  | "projectDetails" | "riskStats" | "topAttributes" | "recommendations" | "methodology" | "segmentGallery"
-  | "benchmarkStats";
-
-type ViewMode = "grid" | "tabular" | "full-page";
-
-interface ElementState {
-  id: string; type: ElementType; label: string;
-  x: number; y: number; width: number; height: number;
-  visible: boolean; viewMode?: ViewMode; topN?: number;
-  // When true this is a "(Filtered)" duplicate that renders from the
-  // Path-Analysis-filtered segment subset instead of all loaded segments.
-  filtered?: boolean;
-  // Map sections only: which filter attribute to colour segments by (a name from
-  // the active Path Analysis filters). Undefined ⇒ default risk-band colouring.
-  colorBy?: string;
-}
-type BandDist = Record<number, number>;
-interface Distributions {
-  VB: BandDist; BB: BandDist; SB: BandDist; BP: BandDist; Overall: BandDist;
-}
-interface TopRiskRow {
-  _project: string; _segIndex: number; _sumScore: number; _maxBand: number;
-  VB: number; "VB Band": number; BB: number; "BB Band": number;
-  SB: number; "SB Band": number; BP: number; "BP Band": number;
-  "Overall Risk Level Band"?: number;
-  "Top 1 Contributor"?: string; "Top 1 Contribution"?: number;
-  "Top 2 Contributor"?: string; "Top 2 Contribution"?: number;
-  "Top 3 Contributor"?: string; "Top 3 Contribution"?: number;
-  "Top 4 Contributor"?: string; "Top 4 Contribution"?: number;
-  "Top 5 Contributor"?: string; "Top 5 Contribution"?: number;
-}
-interface EnrichedDetail {
-  imageUrl?: string;
-  topAttributes: { name: string; multiplier: number }[];
-  postImageUrl?: string;
-  postScores?: {
-    VB: number; VB_Band: number;
-    BB: number; BB_Band: number;
-    SB: number; SB_Band: number;
-    BP: number; BP_Band: number;
-    Overall: number; Overall_Band: number;
-  };
-}
-interface ProjectTreatmentSummary {
-  project: string;
-  treatedSegments: number;
-  treatmentCounts: Record<number, number>;
-}
-interface GeoEntry { name: string; data: FeatureCollection }
-interface StatEntry { min: string; max: string; avg: string }
-interface ScoreStats {
-  VB: StatEntry; BB: StatEntry; SB: StatEntry; BP: StatEntry; Overall: StatEntry;
-}
-interface FilterSubcategoryItem { name: string; isActive: boolean; color: string }
-interface FilterCategoryItem { category: string; isActive: boolean; color: string; subcategories?: FilterSubcategoryItem[] }
-interface FilterCategoryStatus {
-  attribute: string;
-  categories: FilterCategoryItem[];
-  rangeFilter?: { min: number; max: number; currentMin: number; currentMax: number };
-}
-
-// ── Default layout ───────────────────────────────────────────────────────────
-// Page 1: title, summary (with filters), map
-// Page 2: risk bands, top risk stretches
-// Page 3+: treatments, supplementary (off by default)
-// Auto-fit corrects positions on first load.
-const DEFAULT_ELEMENTS: ElementState[] = [
-  // — Page 1 —
-  { id: "title", type: "title", label: "Title", x: 20, y: 20, width: 754, height: 205, visible: true },
-  { id: "summary", type: "summary", label: "Summary", x: 20, y: 240, width: 754, height: 150, visible: true },
-  { id: "map", type: "map", label: "Map", x: 20, y: 405, width: 754, height: 350, visible: true },
-  // — Page 2 —
-  { id: "benchmarkStats", type: "benchmarkStats", label: "Benchmarking Stats", x: 20, y: 1163, width: 754, height: 340, visible: false },
-  { id: "riskBands", type: "riskBands", label: "Risk Bands", x: 20, y: 1523, width: 754, height: 450, visible: true },
-  { id: "topAttributes", type: "topAttributes", label: "Risk Factors", x: 20, y: 1993, width: 754, height: 210, visible: true },
-  { id: "projectDetails", type: "projectDetails", label: "Project Details", x: 20, y: 2223, width: 754, height: 220, visible: true },
-  // — Page 3 —
-  { id: "topRisk", type: "topRisk", label: "Top Risk Stretches", x: 20, y: 2463, width: 754, height: 730, visible: true, viewMode: "full-page", topN: 10 },
-  { id: "treatmentSummary", type: "treatmentSummary", label: "Treatments", x: 20, y: 3213, width: 754, height: 360, visible: true },
-];
-
-// ── Filtered duplicate sections ──────────────────────────────────────────────
-// A clone of every default section EXCEPT the title, flagged `filtered` so it
-// renders from the Path-Analysis-filtered subset. These are injected into the
-// `elements` array only when the user enables the "Include filtered sections"
-// toggle (and a filter actually exists). See `toggleIncludeFiltered`.
-//
-// TEMPORARY: set to false to hide the "Include filtered sections" toggle and
-// suppress all filtered sections from the report (logic kept intact). Flip back
-// to true to re-enable the feature.
-const FILTERED_SECTIONS_ENABLED = true;
-const FILTERED_SUFFIX = "_filtered";
-const FILTERED_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
-  .filter((e) => e.id !== "title")
-  .map((e) => ({ ...e, id: `${e.id}${FILTERED_SUFFIX}`, label: `${e.label} (Filtered)`, filtered: true, visible: true }));
-
-// ── Report dataset bundle ────────────────────────────────────────────────────
-// All score-derived values a section needs. Computed once for the full segment
-// set and once for the filtered subset, so the same render code can serve both.
-interface ReportDataset {
-  rows: TopRiskRow[];
-  distributions: Distributions | null;
-  allBandMap: Map<string, number>;
-  totalSegments: number;
-  totalKm: number;
-  projectSegmentCounts: Record<string, number>;
-  projects: string[];               // loaded projects present in this dataset
-  topRiskRows: TopRiskRow[];        // top 10 by summed score
-  scoreStats: ScoreStats | null;
-  attributeFrequency: [string, number][];
-  treatmentSummaries: ProjectTreatmentSummary[];
-}
-
-// Pure derivation of every score-based value from a row set. `treatmentSummaries`
-// is added by the caller since it depends on async treatment state.
-function buildCoreDataset(
-  rows: TopRiskRow[],
-  loadedProjects: string[],
-): Omit<ReportDataset, "treatmentSummaries"> {
-  const projectSegmentCounts: Record<string, number> = {};
-  rows.forEach((r) => { projectSegmentCounts[r._project] = (projectSegmentCounts[r._project] || 0) + 1; });
-  const projects = loadedProjects.filter((p) => (projectSegmentCounts[p] ?? 0) > 0);
-  const totalSegments = rows.length;
-  const totalKm = totalSegments * 10 / 1000;
-
-  if (rows.length === 0) {
-    return { rows, distributions: null, allBandMap: new Map(), totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows: [], scoreStats: null, attributeFrequency: [] };
-  }
-
-  const dist: Distributions = {
-    VB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BB: { 1: 0, 2: 0, 3: 0, 4: 0 },
-    SB: { 1: 0, 2: 0, 3: 0, 4: 0 }, BP: { 1: 0, 2: 0, 3: 0, 4: 0 },
-    Overall: { 1: 0, 2: 0, 3: 0, 4: 0 },
-  };
-  const bMap = new Map<string, number>();
-  rows.forEach((row) => {
-    if (row["VB Band"] >= 1 && row["VB Band"] <= 4) dist.VB[row["VB Band"]]++;
-    if (row["BB Band"] >= 1 && row["BB Band"] <= 4) dist.BB[row["BB Band"]]++;
-    if (row["SB Band"] >= 1 && row["SB Band"] <= 4) dist.SB[row["SB Band"]]++;
-    if (row["BP Band"] >= 1 && row["BP Band"] <= 4) dist.BP[row["BP Band"]]++;
-    const overall = row["Overall Risk Level Band"] ??
-      Math.max(row["VB Band"] || 0, row["BB Band"] || 0, row["SB Band"] || 0, row["BP Band"] || 0);
-    if (overall >= 1 && overall <= 4) { dist.Overall[overall]++; bMap.set(`${row._project}_${row._segIndex}`, overall); }
-  });
-
-  const topRiskRows = [...rows].sort((a, b) => b._sumScore - a._sumScore).slice(0, 10);
-
-  const stat = (vals: number[]): StatEntry => {
-    const sorted = [...vals].sort((a, b) => a - b);
-    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
-    return { min: sorted[0].toFixed(1), max: sorted[sorted.length - 1].toFixed(1), avg: avg.toFixed(1) };
-  };
-  const scoreStats: ScoreStats = {
-    VB: stat(rows.map((r) => r.VB || 0)),
-    BB: stat(rows.map((r) => r.BB || 0)),
-    SB: stat(rows.map((r) => r.SB || 0)),
-    BP: stat(rows.map((r) => r.BP || 0)),
-    Overall: stat(rows.map((r) => r._sumScore || 0)),
-  };
-
-  const count = new Map<string, number>();
-  rows.forEach((row) => {
-    for (let i = 1; i <= 3; i++) {
-      const name = row[`Top ${i} Contributor` as keyof TopRiskRow] as string | undefined;
-      if (name) count.set(name, (count.get(name) || 0) + 1);
-    }
-  });
-  const attributeFrequency = [...count.entries()].sort(([, a], [, b]) => b - a).slice(0, 10) as [string, number][];
-
-  return { rows, distributions: dist, allBandMap: bMap, totalSegments, totalKm, projectSegmentCounts, projects, topRiskRows, scoreStats, attributeFrequency };
-}
-
-// ── Shared table styles ──────────────────────────────────────────────────────
-const thStyle: React.CSSProperties = {
-  padding: "5px 8px", textAlign: "left", fontWeight: 600,
-  fontSize: 10, color: "#555", borderBottom: "2px solid #e0d0f0", whiteSpace: "nowrap",
-};
-const tdStyle: React.CSSProperties = { padding: "3px 6px", fontSize: 10, color: "#333" };
-
-// ── Small components ─────────────────────────────────────────────────────────
-function SegmentImage({ src, width, height }: { src?: string; width: number | string; height: number | string }) {
-  const [errored, setErrored] = useState(false);
-  if (!src || errored) {
-    return (
-      <div style={{ width, height, background: "#eee", borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <span style={{ fontSize: 14, color: "#bbb" }}>No image available</span>
-      </div>
-    );
-  }
-  return <img src={src} alt="" onError={() => setErrored(true)} style={{ width, height, objectFit: "cover", borderRadius: 3, flexShrink: 0, display: "block" }} />;
-}
-
-function AttrTag({ name, multiplier }: { name: string; multiplier: number }) {
-  return (
-    <span style={{ fontSize: 9, color: "#555", display: "block", lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-      • {name} <span style={{ color: "#cc2200", fontWeight: 700 }}>+{multiplier.toFixed(1)}</span>
-    </span>
-  );
-}
-
-function TreatmentBadge({ ids }: { ids: number[] }) {
-  if (ids.length === 0) return null;
-  return (
-    <div style={{ marginTop: 4, paddingTop: 4, borderTop: "1px dashed #d0e8d0" }}>
-      <span style={{ fontSize: 8, fontWeight: 700, color: "#228833", letterSpacing: 0.3, display: "block", marginBottom: 2 }}>
-        TREATMENTS APPLIED ({ids.length})
-      </span>
-      {ids.map((id) => (
-        <span key={id} style={{ fontSize: 9, color: "#226633", display: "block", lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-          ✓ {id}. {TREATMENT_NAMES[id] ?? `Treatment ${id}`}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-// ── Inline editable text ─────────────────────────────────────────────────────
-function EditableText({ value, onChange, style, placeholder }: {
-  value: string; onChange: (v: string) => void;
-  style?: React.CSSProperties; placeholder?: string;
-}) {
-  const [editing, setEditing] = useState(false);
-  if (editing) {
-    return (
-      <input
-        defaultValue={value}
-        onBlur={(e) => { onChange(e.target.value.trim() || value); setEditing(false); }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") { onChange((e.target as HTMLInputElement).value.trim() || value); setEditing(false); }
-          if (e.key === "Escape") setEditing(false);
-        }}
-        onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        autoFocus
-        style={{ ...style, border: "1px solid #a020d0", borderRadius: 3, outline: "none", background: "#fff", padding: "1px 6px", fontFamily: "inherit", minWidth: 80, boxSizing: "border-box" }}
-      />
-    );
-  }
-  return (
-    <span
-      style={{ ...style, cursor: "text", borderRadius: 2 }}
-      title="Click to edit"
-      onClick={(e) => { e.stopPropagation(); setEditing(true); }}
-      onMouseDown={(e) => e.stopPropagation()}
-    >
-      {value || <span style={{ color: "#ccc", fontStyle: "italic" }}>{placeholder ?? "—"}</span>}
-      <span style={{ marginLeft: 3, fontSize: "0.65em", color: "#a020d0", opacity: 0.45, verticalAlign: "middle" }}>✎</span>
-    </span>
-  );
-}
-
-// ── Leaflet map sub-components ───────────────────────────────────────────────
-function FitAllBounds({ points }: { points: L.LatLngExpression[] }) {
-  const map = useMap();
-  useEffect(() => {
-    if (points.length === 0) return;
-    map.fitBounds(L.latLngBounds(points), { padding: [20, 20] });
-  }, [points, map]);
-  return null;
-}
-
-function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: string[]; colorMap: Map<string, string>; orderIndex: number }) {
-  const [geoEntries, setGeoEntries] = useState<GeoEntry[]>([]);
-  // The MapContainer key combines a per-mount random base with the section's
-  // position in the report (`orderIndex`). react-leaflet 5 creates the Leaflet
-  // map in a ref callback guarded by `!mapInstanceRef.current` and only removes
-  // it on unmount — so when a section reorder moves the map's subtree, React
-  // keeps the same fiber/<div> and Leaflet never re-inits cleanly, eventually
-  // throwing "Map container is being reused by another instance". Folding
-  // `orderIndex` into the key turns each reorder into a deliberate clean
-  // remount: the old MapContainer unmounts (its effect cleanup calls
-  // `map.remove()`, clearing `_leaflet_id`) and a brand-new <div> is created.
-  // `geoEntries` lives in this component's state (not remounted), so the
-  // reorder rebuilds only the Leaflet map — no geodata refetch.
-  const mapBase = useRef(`reportmap-${Math.random().toString(36).slice(2)}`);
-  const mapKey = `${mapBase.current}-${orderIndex}`;
-
-  useEffect(() => {
-    if (projects.length === 0) return;
-    setGeoEntries([]);
-    Promise.all(
-      projects.map(async (name) => {
-        try {
-          const res = await fetch(`/api/projects/${encodeURIComponent(name)}/geodata`);
-          return { name, data: await res.json() } as GeoEntry;
-        } catch { return null; }
-      })
-    ).then((r) => setGeoEntries(r.filter(Boolean) as GeoEntry[]));
-  }, [projects]);
-
-  // One point per scored segment, placed at the LineString's first coordinate —
-  // mirrors PathAnalysisPage's map (CircleMarker points, not lines).
-  const points = useMemo(() => {
-    const out: { key: string; latlng: [number, number]; color: string }[] = [];
-    geoEntries.forEach(({ name, data }) => {
-      data.features?.forEach((f, i) => {
-        const g = f.geometry;
-        if (g?.type !== "LineString" || !Array.isArray(g.coordinates) || g.coordinates.length === 0) return;
-        // Use array index (1-based) to look up colour — consistent with how _segIndex is set in score rows
-        const color = colorMap.get(`${name}_${i + 1}`);
-        // Skip features absent from the colour map — eliminates connector/padding
-        // features and (in the filtered map) segments outside the filter.
-        if (color === undefined) return;
-        out.push({ key: `${name}_${i}`, latlng: to4326(g.coordinates[0]), color });
-      });
-    });
-    return out;
-  }, [geoEntries, colorMap]);
-  const latlngs = useMemo(() => points.map((p) => p.latlng), [points]);
-
-  return (
-    <MapContainer key={mapKey} style={{ width: "100%", height: "100%" }} center={[1.35, 103.82]} zoom={12} scrollWheelZoom zoomControl>
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-      />
-      {points.map(({ key, latlng, color }) => (
-        <CircleMarker
-          key={key}
-          center={latlng}
-          radius={5}
-          pathOptions={{ color, weight: 1, opacity: 0.9, fillOpacity: 0.8 }}
-        />
-      ))}
-      <FitAllBounds points={latlngs} />
-    </MapContainer>
-  );
-}
-
-// ── Main page ────────────────────────────────────────────────────────────────
-// ── Page-break avoidance ──────────────────────────────────────────────────────
-// If placing an element at `y` with height `h` would straddle a page break,
-// push it to just after the break. Elements taller than a full page are left
-// as-is (nothing we can do without splitting them).
-function avoidPageBreak(y: number, h: number, margin = 20): number {
-  if (h >= PAGE_H) return y;
-  // Push sections that land inside the shadow zone at the top of a new page
-  const prevBreak = Math.floor(y / PAGE_H) * PAGE_H;
-  if (prevBreak > 0 && y < prevBreak + margin) {
-    return avoidPageBreak(prevBreak + margin, h, margin);
-  }
-  // Push sections that straddle the next page break, ONLY if they can fit on a single page
-  const nextBreak = Math.ceil(y / PAGE_H) * PAGE_H;
-  const usableH = PAGE_H - PAGE_GAP - margin;
-  if (nextBreak > y && y + h > nextBreak - PAGE_GAP && h <= usableH) {
-    return avoidPageBreak(nextBreak + margin, h, margin);
-  }
-  return y;
-}
-
-// ── Flow layout (replaces resolveOverlaps) ───────────────────────────────────
-// Sections now render in document flow in array order (dnd-kit drives the order).
-// This pass turns the ordered list + per-section heights into the `marginTop`
-// spacer each section needs: a constant 10px gap, plus any extra push required
-// so the section doesn't straddle a page break (avoidPageBreak). `top` is kept
-// for reference/debug; `bottom` is the total stacked height for canvas sizing.
-interface FlowEntry { height: number; top: number; marginTop: number }
-function computeFlowLayout(
-  visible: ElementState[],
-  heightOf: (el: ElementState) => number,
-): { map: Map<string, FlowEntry>; bottom: number } {
-  const map = new Map<string, FlowEntry>();
-  let cursor = 20;     // top padding before the first section
-  let prevBottom = 0;  // bottom edge of the previously placed section
-  for (const el of visible) {
-    const height = heightOf(el);
-    let top = avoidPageBreak(cursor, height);
-    // Project Details chunks projects into PAGE_H-tall pages. When it spans more
-    // than one page it must begin exactly on a page boundary so every internal
-    // chunk boundary coincides with the PDF slice grid (real page breaks).
-    if ((el.type === "projectDetails" || (el.type === "topRisk" && el.viewMode === "full-page")) && height > PAGE_H && prevBottom > 0) {
-      top = Math.ceil(cursor / PAGE_H) * PAGE_H;
-    }
-    map.set(el.id, { height, top, marginTop: top - prevBottom });
-    prevBottom = top + height;
-    cursor = prevBottom + 10;
-  }
-  return { map, bottom: prevBottom };
-}
-
-// ── Read saved layout once (used by lazy state initialisers below) ──────────
-function _readSaved(): Record<string, unknown> | null {
-  try {
-    const raw = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-
-// ── Report section (canvas) ──────────────────────────────────────────────────
-// One per visible section, laid out in normal document flow + a `marginTop`
-// spacer (page-break avoidance). Reordering is done from the left Sections panel,
-// so these are static — not draggable.
-function ReportSection({
-  id, label, height, marginTop, onHide, children,
-}: {
-  id: string; label: string; height: number; marginTop: number;
-  onHide: () => void; children: React.ReactNode;
-}) {
-  const style: React.CSSProperties = {
-    position: "relative",
-    marginLeft: 20,
-    width: CANVAS_W - 40,
-    height,
-    marginTop,
-    zIndex: 1,
-  };
-  return (
-    <div style={style}>
-      <div className="rb-element" data-element-id={id}>
-        <button
-          className="rb-element-close"
-          onClick={onHide}
-          title={`Hide ${label}`}
-          aria-label={`Hide ${label}`}
-        >×</button>
-        <div className="rb-element-body">
-          <SectionErrorBoundary label={label} resetKeys={[marginTop, height]}>
-            {children}
-          </SectionErrorBoundary>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Compact reorder-list row (the "Sections" panel) ──────────────────────────
-// A lightweight row — grip handle + visibility checkbox + label — for reordering
-// sections without dragging the full (map/chart-heavy) canvas section. Shares
-// the same `elements` array order, so reordering here reorders the report.
-function SortableSectionRow({
-  id, label, visible, onToggle, onSelect, children
-}: {
-  id: string; label: string; visible: boolean; onToggle: () => void; onSelect?: () => void; children?: React.ReactNode;
-}) {
-  const {
-    attributes, listeners, setNodeRef, setActivatorNodeRef,
-    transform, transition, isDragging,
-  } = useSortable({ id });
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 2 : 1,
-  };
-
-  if (children) {
-    return (
-      <div ref={setNodeRef} style={{ ...style, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0, padding: "6px 0 0 0" }} className={`rb-reorder-row${isDragging ? " rb-reorder-row-dragging" : ""}`}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 10px 6px", boxSizing: "border-box" }}>
-          <span
-            ref={setActivatorNodeRef}
-            {...attributes}
-            {...listeners}
-            className="rb-reorder-grip"
-            title="Drag to reorder"
-            aria-label={`Reorder ${label}`}
-            style={{ cursor: isDragging ? "grabbing" : "grab", touchAction: "none" }}
-          >
-            <GripVertical size={16} />
-          </span>
-          <input
-            type="checkbox"
-            checked={visible}
-            onChange={onToggle}
-            onPointerDown={(e) => e.stopPropagation()}
-            style={{ accentColor: "#a020d0", cursor: "pointer", flexShrink: 0 }}
-            title={visible ? "Hide section" : "Show section"}
-          />
-          <span
-            className="rb-reorder-label"
-            style={{ opacity: visible ? 1 : 0.45, cursor: onSelect && visible ? "pointer" : "default" }}
-            onClick={onSelect && visible ? onSelect : undefined}
-            title={onSelect && visible ? "Scroll to this section" : undefined}
-          >{label}</span>
-        </div>
-        <div style={{ width: "100%", boxSizing: "border-box" }}>
-          {children}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div ref={setNodeRef} style={style} className={`rb-reorder-row${isDragging ? " rb-reorder-row-dragging" : ""}`}>
-      <span
-        ref={setActivatorNodeRef}
-        {...attributes}
-        {...listeners}
-        className="rb-reorder-grip"
-        title="Drag to reorder"
-        aria-label={`Reorder ${label}`}
-        style={{ cursor: isDragging ? "grabbing" : "grab", touchAction: "none" }}
-      >
-        <GripVertical size={16} />
-      </span>
-      <input
-        type="checkbox"
-        checked={visible}
-        onChange={onToggle}
-        onPointerDown={(e) => e.stopPropagation()}
-        style={{ accentColor: "#a020d0", cursor: "pointer", flexShrink: 0 }}
-        title={visible ? "Hide section" : "Show section"}
-      />
-      <span
-        className="rb-reorder-label"
-        style={{ opacity: visible ? 1 : 0.45, cursor: onSelect && visible ? "pointer" : "default" }}
-        onClick={onSelect && visible ? onSelect : undefined}
-        title={onSelect && visible ? "Scroll to this section" : undefined}
-      >{label}</span>
-    </div>
-  );
-}
+import type {
+  BandDist, ElementState, EnrichedDetail, FilterCategoryStatus,
+  ProjectTreatmentSummary, ReportDataset, TopRiskRow,
+} from "./reportBuilderTypes";
+import {
+  CANVAS_W, CRASH_TYPE_LABELS, DEFAULT_ELEMENTS, FILTERED_ELEMENTS,
+  FILTERED_SECTIONS_ENABLED, METHODOLOGY_TEXT, PAGE_GAP, PAGE_H,
+  PROJ_CONT_HEADER_H, PROJ_HEADER_H, PROJ_PAGE_SIZE, PROJ_ROW_H,
+  TREATMENT_NAMES, tdStyle, thStyle,
+} from "./reportBuilderConstants";
+import {
+  buildCoreDataset, computeFlowLayout, dateToQuarterLabel, readSavedLayout,
+} from "./reportBuilderHelpers";
+import { AttrTag, EditableText, SegmentImage, TreatmentBadge } from "./components/reportPrimitives";
+import { ReportMiniMap } from "./components/ReportMiniMap";
+import { ReportSection, SortableSectionRow } from "./components/ReportSection";
 
 export default function ReportBuilderPage() {
   const navigate = useNavigate();
@@ -614,7 +69,7 @@ export default function ReportBuilderPage() {
   // ── State: auto-restored from localStorage if a saved layout exists ──────
   const [elements, setElements] = useState<ElementState[]>(() => {
     const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis"]);
-    const l = _readSaved();
+    const l = readSavedLayout();
     if (Array.isArray(l?.elements)) {
       const saved = (l.elements as ElementState[])
         .filter((e) => !REMOVED_IDS.has(e.id));
@@ -629,25 +84,25 @@ export default function ReportBuilderPage() {
 
   // ── Editable metadata ────────────────────────────────────────────────────
   const [reportTitle, setReportTitle] = useState(() => {
-    const l = _readSaved(); return typeof l?.reportTitle === "string" ? l.reportTitle : "Path Safety Analysis Executive Summary";
+    const l = readSavedLayout(); return typeof l?.reportTitle === "string" ? l.reportTitle : "Path Safety Analysis Executive Summary";
   });
   const [projectNameOverrides, setProjectNameOverrides] = useState<Record<string, string>>(() => {
-    const l = _readSaved(); return (l?.projectNameOverrides && typeof l.projectNameOverrides === "object") ? l.projectNameOverrides as Record<string, string> : {};
+    const l = readSavedLayout(); return (l?.projectNameOverrides && typeof l.projectNameOverrides === "object") ? l.projectNameOverrides as Record<string, string> : {};
   });
   const [sectionTitles, setSectionTitles] = useState<Record<string, string>>(() => {
-    const l = _readSaved(); return (l?.sectionTitles && typeof l.sectionTitles === "object") ? l.sectionTitles as Record<string, string> : {};
+    const l = readSavedLayout(); return (l?.sectionTitles && typeof l.sectionTitles === "object") ? l.sectionTitles as Record<string, string> : {};
   });
   const [oicName, setOicName] = useState(() => {
-    const l = _readSaved(); return typeof l?.oicName === "string" ? l.oicName : "";
+    const l = readSavedLayout(); return typeof l?.oicName === "string" ? l.oicName : "";
   });
   const [purpose, setPurpose] = useState(() => {
-    const l = _readSaved(); return typeof l?.purpose === "string" ? l.purpose : "";
+    const l = readSavedLayout(); return typeof l?.purpose === "string" ? l.purpose : "";
   });
   const [recommendations, setRecommendations] = useState(() => {
-    const l = _readSaved(); return typeof l?.recommendations === "string" ? l.recommendations : "";
+    const l = readSavedLayout(); return typeof l?.recommendations === "string" ? l.recommendations : "";
   });
   const [reportDate, setReportDate] = useState(() => {
-    const l = _readSaved(); return typeof l?.reportDate === "string" ? l.reportDate : new Date().toISOString().split("T")[0];
+    const l = readSavedLayout(); return typeof l?.reportDate === "string" ? l.reportDate : new Date().toISOString().split("T")[0];
   });
   // ── Projects ─────────────────────────────────────────────────────────────
   const [loadedProjects, setLoadedProjects] = useState<string[]>([]);
@@ -676,7 +131,7 @@ export default function ReportBuilderPage() {
   // activeCategoryStatus, so the map matches the on-report legend).
   const [filteredSegValues, setFilteredSegValues] = useState<Record<string, Record<number, Record<string, string>>> | null>(null);
   const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
-    const l = _readSaved(); return l?.includeFiltered === true;
+    const l = readSavedLayout(); return l?.includeFiltered === true;
   });
 
   // ── Treatment data ────────────────────────────────────────────────────────
