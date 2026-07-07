@@ -24,12 +24,15 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [customParam, setCustomParam] = useState("");
   const [requiredColumns, setRequiredColumns] = useState("");
+  // v2 only: the combined Edit modal also renames the layer (see LayerItem "Edit").
+  const [layerName, setLayerName] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!file) return;
     api.getParameterOptions().then(setParameterOptions).catch(() => setParameterOptions([]));
     setRequiredColumns(file.required_columns && file.required_columns !== "None" ? file.required_columns : "");
+    setLayerName(file.name);
     const existingAffects = (file.affects || "")
       .split(",")
       .map(s => s.trim())
@@ -59,17 +62,25 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
 
   async function handleSave() {
     if (!file) return;
-    if (selected.size === 0 && !requiredColumns.trim()) {
+    const trimmedName = layerName.trim();
+    const nameChanged = v2 && !!trimmedName && trimmedName !== file.name;
+    if (!nameChanged && selected.size === 0 && !requiredColumns.trim()) {
       toaster.create({ description: "Select at least one parameter or enter required columns", type: "warning" });
       return;
     }
     try {
       setSaving(true);
-      await api.setLayerMetadata(file.path, requiredColumns.trim(), Array.from(selected));
-      toaster.create({ description: "Layer metadata updated", type: "success" });
+      // Rename first (changes the path); then apply metadata to the resulting path.
+      let targetPath = file.path;
+      if (nameChanged) {
+        const res = await api.renameShapefile(file.path, trimmedName);
+        targetPath = res.new_path;
+      }
+      await api.setLayerMetadata(targetPath, requiredColumns.trim(), Array.from(selected));
+      toaster.create({ description: v2 ? "Layer updated" : "Layer metadata updated", type: "success" });
       onSaved();
     } catch (error: any) {
-      toaster.create({ description: error.message || "Failed to update layer metadata", type: "error" });
+      toaster.create({ description: error.message || "Failed to update layer", type: "error" });
     } finally {
       setSaving(false);
     }
@@ -85,11 +96,25 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
           >
             <Dialog.Header>
               <Dialog.Title style={v2 ? { fontFamily: FONT, fontWeight: 700, fontSize: "1.25rem", color: COLOR.text } : undefined}>
-                Edit Layer Parameters{file ? `: ${file.name}` : ""}
+                {v2 ? "Edit Layer" : "Edit Layer Parameters"}{file ? `: ${file.name}` : ""}
               </Dialog.Title>
               <Dialog.CloseTrigger />
             </Dialog.Header>
             <Dialog.Body>
+              {v2 && (
+                <>
+                  <Text fontWeight="600" mb={2} fontSize="sm" style={v2Label}>Layer Name</Text>
+                  <Input
+                    placeholder="Layer name"
+                    size="md"
+                    value={layerName}
+                    onChange={(e) => setLayerName(e.target.value)}
+                    mb={4}
+                    style={{ fontFamily: FONT, fontSize: "1rem", borderColor: COLOR.borderInput, borderRadius: RADIUS }}
+                  />
+                </>
+              )}
+
               <Text fontSize="sm" color="fg.muted" mb={4} style={v2 ? v2Caption : undefined}>
                 Choose which parameters this layer affects. This only corrects the labels shown
                 in the GIS Layers list — it does not change how the layer is used in scoring.

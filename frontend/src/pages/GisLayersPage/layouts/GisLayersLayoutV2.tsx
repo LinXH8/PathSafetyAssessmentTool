@@ -53,7 +53,7 @@ const inputStyle: CSSProperties = {
   color: COLOR.text,
 };
 
-/** Small inline row action (Edit / Params / Revert / Delete). */
+/** Small inline row action (Edit / Revert / Delete). */
 function RowBtn({
   label,
   color,
@@ -112,7 +112,6 @@ export default function GisLayersLayoutV2(vm: GisLayersViewModel) {
     filterMode, setFilterMode, filterText, setFilterText,
     dropdownOpen, setDropdownOpen, hoveredFilter, setHoveredFilter, tooltipPos, setTooltipPos, filterDropdownRef,
     selectedLayer, onSelectLayer, mapLoading, mapError, mapFeatures, initialCenter,
-    editingPath, editName, setEditName, onStartEdit, onCancelEdit, onSaveEdit,
     confirmDeletePath, onDeleteClick, onCancelDelete, onConfirmDelete,
     confirmRevertPath, onRevertClick, onCancelRevert, onConfirmRevert,
     actionLoading, actionError, onClearActionError,
@@ -328,8 +327,19 @@ export default function GisLayersLayoutV2(vm: GisLayersViewModel) {
             </div>
           )}
 
-          {/* Scrollable layer list */}
-          <div style={{ flex: 1, overflowY: "auto", borderTop: `1px solid ${COLOR.border}` }}>
+          {/* Scrollable layer list — each layer is its own v2 card */}
+          <div
+            style={{
+              flex: 1,
+              overflowY: "auto",
+              borderTop: `1px solid ${COLOR.border}`,
+              background: COLOR.canvas,
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.75rem",
+              padding: (loading || error || filtered.length === 0) ? 0 : "0.75rem",
+            }}
+          >
             {loading ? (
               <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", justifyContent: "center", padding: "2rem", fontFamily: FONT, fontSize: "1rem", color: COLOR.gray500 }}>
                 <Spinner size="sm" /> Loading files…
@@ -348,14 +358,8 @@ export default function GisLayersLayoutV2(vm: GisLayersViewModel) {
                   key={file.path}
                   file={file}
                   selected={selectedLayer?.path === file.path}
-                  editing={editingPath === file.path}
-                  editName={editName}
-                  setEditName={setEditName}
                   onSelect={onSelectLayer}
-                  onStartEdit={onStartEdit}
-                  onCancelEdit={onCancelEdit}
-                  onSaveEdit={onSaveEdit}
-                  onEditParams={onEditParams}
+                  onEdit={onEditParams}
                   confirmDelete={confirmDeletePath === file.path}
                   onDeleteClick={onDeleteClick}
                   onCancelDelete={onCancelDelete}
@@ -446,24 +450,18 @@ export default function GisLayersLayoutV2(vm: GisLayersViewModel) {
   );
 }
 
-// ── A single layer row in the list ──
+// ── A single layer card in the list ──
 function LayerItem({
-  file, selected, editing, editName, setEditName,
-  onSelect, onStartEdit, onCancelEdit, onSaveEdit, onEditParams,
+  file, selected,
+  onSelect, onEdit,
   confirmDelete, onDeleteClick, onCancelDelete, onConfirmDelete,
   confirmRevert, onRevertClick, onCancelRevert, onConfirmRevert,
   actionLoading,
 }: {
   file: ShapefileInfo;
   selected: boolean;
-  editing: boolean;
-  editName: string;
-  setEditName: (v: string) => void;
   onSelect: (f: ShapefileInfo | null) => void;
-  onStartEdit: (f: ShapefileInfo) => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (f: ShapefileInfo) => void;
-  onEditParams: (f: ShapefileInfo) => void;
+  onEdit: (f: ShapefileInfo) => void;
   confirmDelete: boolean;
   onDeleteClick: (f: ShapefileInfo) => void;
   onCancelDelete: () => void;
@@ -480,60 +478,29 @@ function LayerItem({
     <div
       onClick={() => onSelect(selected ? null : file)}
       style={{
-        padding: "0.75rem 1rem",
-        borderBottom: `1px solid ${COLOR.rowDivider}`,
+        ...v2CardStyle(),
+        padding: "0.75rem",
         cursor: "pointer",
-        background: selected ? COLOR.gray100 : "transparent",
-        transition: "background-color 0.15s",
+        border: `1px solid ${selected ? COLOR.blue : COLOR.border}`,
+        boxShadow: selected ? `0 0 0 1px ${COLOR.blue}` : "none",
+        transition: "border-color 0.15s, box-shadow 0.15s",
       }}
     >
       {/* Name row + actions */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
-        {editing ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", flex: 1 }} onClick={(e) => e.stopPropagation()}>
-            <input
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") onSaveEdit(file);
-                if (e.key === "Escape") onCancelEdit();
-              }}
-              autoFocus
-              style={{
-                flex: 1,
-                minWidth: 0,
-                fontFamily: FONT,
-                fontSize: "1rem",
-                fontWeight: 700,
-                border: `1px solid ${COLOR.blue}`,
-                borderRadius: "0.25rem",
-                padding: "0.25rem 0.5rem",
-                outline: "none",
-                background: COLOR.white,
-                color: COLOR.text,
-              }}
-            />
-            <MiniBtn label="Save" kind="primary" onClick={() => onSaveEdit(file)} disabled={actionLoading} />
-            <MiniBtn label="Cancel" kind="ghost" onClick={onCancelEdit} disabled={actionLoading} />
-          </div>
-        ) : (
-          <>
-            <span
-              title={file.name}
-              style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}
-            >
-              {file.name}
-            </span>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.125rem", flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
-              <RowBtn label="Edit" color={COLOR.blue} onClick={(e) => { e.stopPropagation(); onStartEdit(file); }} />
-              <RowBtn label="Params" color={COLOR.gray600} onClick={(e) => { e.stopPropagation(); onEditParams(file); }} />
-              {file.is_renamed && (
-                <RowBtn label="Revert" color={COLOR.gray600} onClick={(e) => { e.stopPropagation(); onRevertClick(file); }} />
-              )}
-              <RowBtn label="Delete" color={COLOR.danger} onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }} />
-            </div>
-          </>
-        )}
+        <span
+          title={file.name}
+          style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}
+        >
+          {file.name}
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.125rem", flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+          <RowBtn label="Edit" color={COLOR.blue} onClick={(e) => { e.stopPropagation(); onEdit(file); }} />
+          {file.is_renamed && (
+            <RowBtn label="Revert" color={COLOR.gray600} onClick={(e) => { e.stopPropagation(); onRevertClick(file); }} />
+          )}
+          <RowBtn label="Delete" color={COLOR.danger} onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }} />
+        </div>
       </div>
 
       {/* Inline delete confirmation */}
@@ -573,10 +540,10 @@ function LayerItem({
         <span style={{ ...captionStyle, flexShrink: 0 }}>{formatBytes(file.size)}</span>
       </div>
 
-      {/* Year / Source */}
-      <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.375rem", minWidth: 0 }}>
+      {/* Year / Source — each on its own row so long source names aren't truncated */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem", marginTop: "0.375rem", minWidth: 0 }}>
         <span style={captionStyle}><strong>Year:</strong> {file.year}</span>
-        <span title={file.source} style={{ ...captionStyle, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <span style={{ ...captionStyle, wordBreak: "break-word" }}>
           <strong>Source:</strong> {file.source}
         </span>
       </div>
