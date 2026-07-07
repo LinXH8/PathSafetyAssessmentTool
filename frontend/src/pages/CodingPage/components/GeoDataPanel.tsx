@@ -1,38 +1,63 @@
+/**
+ * GeoDataPanel.tsx — the shared map preview & analysis panel.
+ *
+ * Single responsibility: orchestrate the segment map — geodata/score loading,
+ * segment dots (risk-band coloured, filter/scope aware), the GIS layer /
+ * defects / curvature overlays, the segment editing tools and the analysis
+ * sidebar — behind a FROZEN external prop contract. Consumed by the Coding
+ * page layouts (CodingLayoutV1/V2) and the Treatment page's Before/After map
+ * panels (TreatmentDetailLayoutV1/V2); `variant="v2"` gates the redesigned
+ * chrome (floating tool cluster, no Leaflet zoom control).
+ *
+ * Decomposed in S2.2 — state hooks and overlay sub-components live in
+ * ./GeoDataPanel/ (useGISToggleState, useGISLayerData, useSegmentEditTools,
+ * GISLayersOverlay, DefectsLayer, CurvatureOverlay, MapToolCluster,
+ * mapHelpers).
+ */
 import ThemeAwareTileLayer from "../../../components/common/ThemeAwareTileLayer";
 import {
-  Card, CardBody, Text, Box, Flex, IconButton, Button,
-  Dialog, Portal, Menu
+  Card, CardBody, Text, Box, Flex, Button,
+  Dialog, Portal
 } from "@chakra-ui/react";
 import { AnalysisSidebar } from "../../../components/visualization/AnalysisSidebar";
-import { FaMousePointer, FaDrawPolygon, FaPlus, FaTrash } from "react-icons/fa";
-import { toaster } from "../../../components/ui/toaster";
 import { Switch } from "../../../components/ui/switch";
 import { AddSegmentsDialog } from "../../PathAnalysisPage/components/AddSegmentsDialog";
 import { MapCursorController } from "../../../components/common/MapCursorController";
-// import { copySegments } from "../../../api"; // Removed unused import
-import type { Feature, FeatureCollection, LineString, Position } from "geojson";
+import type { Feature, FeatureCollection, LineString } from "geojson";
 import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
-import { GIS_LAYER_COLORS as layerColors, MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
+import { MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
-import { CODING_FILTER_CONTEXT_KEY } from "../../../api";
+import { CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 import { useNavigate } from "react-router-dom";
 
 
-import { MapContainer, CircleMarker, Polyline, Polygon, Tooltip, useMap, useMapEvents, Marker, Circle, Pane, ZoomControl } from "react-leaflet";
-import L, { divIcon } from "leaflet";
+import { MapContainer, CircleMarker, Tooltip, useMap, Circle, Pane, ZoomControl } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import proj4 from "proj4";
+import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import type { CurvatureVisualizationResponse } from '../../../api/curvatureVisualization';
 import { GRADIENT_STATUS_NO_LIDAR_RESULT, getGradientDisplayState } from "../../../utils/gradientDisplay";
 
+import { FitBounds, FitToFeatures, MapAutosize, PanToBounds, StatPill, ZoomToGIS } from "./GeoDataPanel/mapHelpers";
+import { CurvatureOverlay, ZoomToCurvature } from "./GeoDataPanel/CurvatureOverlay";
+import { useCurvatureOverlay } from "./GeoDataPanel/useCurvatureOverlay";
+import { useGISToggleState } from "./GeoDataPanel/useGISToggleState";
+import { useGISLayers, usePathDefects } from "./GeoDataPanel/useGISLayerData";
+import { GISLayersOverlay } from "./GeoDataPanel/GISLayersOverlay";
+import { DefectsLayer } from "./GeoDataPanel/DefectsLayer";
+import { useSegmentEditTools } from "./GeoDataPanel/useSegmentEditTools";
+import { MapToolCluster } from "./GeoDataPanel/MapToolCluster";
+
 type Props = {
   projectName: string;                       // Current project name from parent
-  feature: Feature<LineString, any> | null;  // 当前段（父组件传入）
-  index: number;                             // 当前页（父组件传入，0-based）
+  feature: Feature<LineString, any> | null;  // Current segment (passed from parent)
+  index: number;                             // Current page index (passed from parent, 0-based)
   onJump?: (idx: number) => void;            // Jump to segment callback
-  containerHeight?: number | string;         // 容器总高度（包括header）; number→px, or a CSS length string (e.g. clamp/vh) for fluid v2 maps
+  containerHeight?: number | string;         // Total container height (including header); number=px or a CSS length string (e.g. clamp/vh) for fluid v2 maps
   scores?: ScoreRow[];                       // Optional scores passed from parent for real-time updates
   subtitle?: string;                         // Optional subtitle to display next to "Map Preview"
   geoFeatures?: Feature<LineString, any>[];  // Optional pre-loaded geofeatures (for multi-project display)
@@ -67,318 +92,9 @@ type ScoreRow = {
   [key: string]: any;
 };
 
-// --- EPSG:3414 (SVY21 / Singapore TM) 定义 -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-const to4326 = (p: Position): [number, number] => {
-  const x = p[0];
-  const y = p[1];
-  
-  // If arguably already WGS84 (Singapore lon is ~103, lat is ~1.3)
-  // Newly created projects natively output EPSG:4326, so we must not project SVY21 -> WGS84.
-  if (x >= 90 && x <= 120 && y >= -10 && y <= 20) {
-    return [y, x]; // return [lat, lon]
-  }
-
-  // 返回 [lat, lng]
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
-};
-
-// 小组件：根据点集自动 fit bounds (only on initial load)
-function FitBounds({ points }: { points: [number, number][] }) {
-  const map = useMap();
-  const hasFitRef = useRef(false);
-  useEffect(() => {
-    if (!points.length || hasFitRef.current) return;
-    const bounds = L.latLngBounds(points.map(([lat, lng]) => L.latLng(lat, lng)));
-    map.fitBounds(bounds, { padding: [24, 24] });
-    hasFitRef.current = true;
-  }, [points, map]);
-  return null;
-}
-
-// Flies map to given bounds whenever bounds/panKey change (not null).
-// panKey is a monotonic counter that forces React to re-fire the effect even when the
-// bounds reference hasn't changed (e.g. clicking the same project tab twice).
-// The fitBounds call is deferred by one tick (setTimeout 0) so that ALL other React
-// effects from the same render commit (MapAutoCenter, ZoomToGIS, etc.) have already
-// completed — preventing any animation race conditions.
-function PanToBounds({ bounds, panKey }: { bounds: L.LatLngBounds | null; panKey: number }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!bounds) return;
-    const timerId = setTimeout(() => {
-      // Re-measure the container size — critical for small / side-by-side panels
-      // where the layout may have shifted between renders.
-      map.invalidateSize();
-      // Cancel any in-flight Leaflet animation (setView / flyTo) so fitBounds wins.
-      map.stop();
-      map.fitBounds(bounds, { padding: [20, 20], maxZoom: 18 });
-    }, 0);
-    return () => clearTimeout(timerId);
-  }, [bounds, panKey, map]);
-  return null;
-}
-
-// Refits the map to a set of latlngs whenever `fitKey` changes (e.g. project tab
-// switch). Unlike FitBounds (which only fires once on initial load), this re-fires
-// on every token bump. Deferred by a tick so other effects from the same commit settle.
-function FitToFeatures({ latlngs, fitKey }: { latlngs: [number, number][]; fitKey: number }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!latlngs.length) return;
-    const timerId = setTimeout(() => {
-      map.invalidateSize();
-      map.stop();
-      map.fitBounds(L.latLngBounds(latlngs.map(([lat, lng]) => L.latLng(lat, lng))), { padding: [20, 20], maxZoom: 18 });
-    }, 0);
-    return () => clearTimeout(timerId);
-    // Intentionally only re-fire on fitKey change, not when latlngs reference updates.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fitKey]);
-  return null;
-}
-
-// Zoom to current point when GIS layers are active
-function ZoomToGIS({ center, anyLayerOn }: { center: [number, number] | null; anyLayerOn: boolean }) {
-  const map = useMap();
-  const prevLayerOnRef = useRef(false);
-  useEffect(() => {
-    // Zoom in when a layer is turned on (transition from off->on)
-    if (anyLayerOn && !prevLayerOnRef.current && center) {
-      map.setView(center, 17, { animate: true });
-    }
-    // When all layers turned off, fit the full route again
-    if (!anyLayerOn && prevLayerOnRef.current && center) {
-      // Don't force re-fit — just let user navigate freely
-    }
-    prevLayerOnRef.current = anyLayerOn;
-  }, [anyLayerOn, center, map]);
-  return null;
-}
-
-// Zooms to the curvature analysis 5m circle when the overlay is toggled on.
-function ZoomToCurvature({ showCurvatureOverlay, circleCoords }: { showCurvatureOverlay: boolean; circleCoords: [number, number][] | null }) {
-  const map = useMap();
-  const hasZoomedRef = useRef(false);
-  useEffect(() => {
-    if (!showCurvatureOverlay) {
-      hasZoomedRef.current = false;
-      return;
-    }
-    if (hasZoomedRef.current || !circleCoords || circleCoords.length === 0) return;
-    const bounds = L.latLngBounds(circleCoords.map(([lat, lng]) => L.latLng(lat, lng)));
-    map.fitBounds(bounds, { padding: [30, 30] });
-    hasZoomedRef.current = true;
-  }, [showCurvatureOverlay, circleCoords, map]);
-  return null;
-}
-
-// Path Defect marker — ⚠️ emoji used in the "Path Defects" overlay.
-const defectIcon = divIcon({
-  className: "path-defect-marker",
-  html: `<div style="font-size:20px;line-height:20px;text-align:center;opacity:0.5;filter:drop-shadow(0 0 2px rgba(0,0,0,0.5));pointer-events:auto;">⚠️</div>`,
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-});
-
-// Polygon Drawing Tool Component
-// Custom icon to mimic CircleMarker but allow dragging
-const createCustomIcon = (color: string) => {
-  return divIcon({
-    className: "custom-polygon-marker",
-    html: `<div style="
-      background-color: ${color};
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 4px rgba(0,0,0,0.4);
-      cursor: grab;
-    "></div>`,
-    iconSize: [20, 20], // Hit box size
-    iconAnchor: [10, 10], // Centered (half of 20)
-  });
-};
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  color: string;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-// Polygon Drawing Tool Component
-function PolygonDrawingTool({ active, points, onAddPoint, onPointUpdate, color = "orange" }: {
-  active: boolean,
-  points: [number, number][],
-  onAddPoint: (latlng: [number, number]) => void,
-  onPointUpdate: (index: number, latlng: [number, number]) => void,
-  color?: string
-}) {
-  const activeRef = useRef(active);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-  const pointsRef = useRef(points);
-
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
-
-  useEffect(() => {
-    pointsRef.current = points;
-  }, [points]);
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  useMapEvents({
-    click(e) {
-      if (activeRef.current) {
-        onAddPoint([e.latlng.lat, e.latlng.lng]);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    onPointUpdate(index, [latlng.lat, latlng.lng]);
-  }, [onPointUpdate]);
-
-  if (!active || points.length === 0) return null;
-
-  return (
-    <>
-      {points.map((p, i) => (
-        <DraggableMarker
-          key={`poly-point-${i}`}
-          position={p}
-          index={i}
-          color={color}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <Polyline
-        ref={polylineRef}
-        positions={points}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {points.length >= 3 && (
-        <Polygon
-          ref={polygonRef}
-          positions={points}
-          pathOptions={{ color: color, fillOpacity: 0.2, stroke: false }}
-        />
-      )}
-    </>
-  );
-}
-
-// PIP Algorithm (Ray Casting)
-const isPointInPolygon = (point: [number, number], vs: [number, number][]) => {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  // x = lon, y = lat
-  const x = point[1], y = point[0];
-
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][1], yi = vs[i][0];
-    const xj = vs[j][1], yj = vs[j][0];
-
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-};
-
-// No global cache needed anymore as we use localStorage
-
-function StatPill({ label, value }: { label: string; value: string }) {
-  return (
-    <Flex direction="column" align="center" lineHeight="1.1">
-      <Text fontSize="9px" color="gray.400" fontWeight="medium" letterSpacing="wide" textTransform="uppercase">
-        {label}
-      </Text>
-      <Text fontSize="xs" fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
-        {value}
-      </Text>
-    </Flex>
-  );
-}
-// Leaflet caches the container size at init; if the map mounts before the
-// surrounding flex/page layout has settled to its final height it paints a
-// half-grey tile area. Re-measure once layout settles and on any container
-// resize. (Same root cause seen on the Create-project v2 map.)
-function MapAutosize() {
-  const map = useMap();
-  useEffect(() => {
-    const fix = () => map.invalidateSize();
-    const t = window.setTimeout(fix, 200);
-    let ro: ResizeObserver | null = null;
-    try {
-      ro = new ResizeObserver(() => map.invalidateSize());
-      ro.observe(map.getContainer());
-    } catch { /* ResizeObserver unsupported — the timeout still covers mount */ }
-    return () => { clearTimeout(t); ro?.disconnect(); };
-  }, [map]);
-  return null;
-}
+// Map behaviour helpers (fit/pan/zoom/resize) + StatPill extracted to
+// ./GeoDataPanel/mapHelpers.tsx in S2.2. MapAutoCenter intentionally remains
+// nested inside the component body below (see its comment).
 
 export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
   const navigate = useNavigate();
@@ -404,130 +120,20 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
     return (externalScores && externalScores.length > 0) ? externalScores : internalScores;
   }, [externalScores, internalScores]);
 
-  // Read initial toggle states from localStorage if available
-  const cachedLayers = useMemo(() => {
-    if (!projectName) return {};
-    try {
-      const stored = localStorage.getItem(`gisLayerToggles_${projectName}`);
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  }, [projectName]);
-  
-  // GIS Layer toggles (matching curvature analysis colors)
-  // If the overlay was on when the session ended (overlayEnabled !== false), the 3 path layers
-  // were in "overlay-managed" mode — reset them to false because the overlay always starts off.
-  // Treating a missing key (old localStorage entries) the same as true migrates stale data.
-  const overlayWasOn = cachedLayers.overlayEnabled !== false;
-  const [showFootpath, setShowFootpath] = useState(overlayWasOn ? false : (cachedLayers.showFootpath ?? false));  // Blue
-  const [showCycling, setShowCycling] = useState(overlayWasOn ? false : (cachedLayers.showCycling ?? false));     // Red
-  const [showShared, setShowShared] = useState(overlayWasOn ? false : (cachedLayers.showShared ?? false));       // Orange
-  const [showRoadcrossing, setShowRoadcrossing] = useState(cachedLayers.showRoadcrossing ?? false);  // Red
-  const [showMrtExit, setShowMrtExit] = useState(cachedLayers.showMrtExit ?? false);     // Cyan
-  const [showBusStop, setShowBusStop] = useState(cachedLayers.showBusStop ?? false);     // Purple
-  const [showBusLane, setShowBusLane] = useState(cachedLayers.showBusLane ?? false);     // Yellow
-  const [showParkingLot, setShowParkingLot] = useState(cachedLayers.showParkingLot ?? false); // Gold
-  const [showKerbLine, setShowKerbLine] = useState(cachedLayers.showKerbLine ?? false);   // Deep Pink
-  const [showBicycleCrossing, setShowBicycleCrossing] = useState(cachedLayers.showBicycleCrossing ?? false); // Orange
-  const [showPathDefects, setShowPathDefects] = useState(cachedLayers.showPathDefects ?? false); // Red
-  const [showStateLand, setShowStateLand] = useState(cachedLayers.showStateLand ?? false);
-  const [showStatBoard, setShowStatBoard] = useState(cachedLayers.showStatBoard ?? false);
-  const [showLandPrivate, setShowLandPrivate] = useState(cachedLayers.showLandPrivate ?? false);
-  const [showLandMinistry, setShowLandMinistry] = useState(cachedLayers.showLandMinistry ?? false);
-
-  // Cross-panel GIS layer sync: when two panels show the same project (e.g. the
-  // Treatment page's Before/After maps), toggling a layer on either mirrors to both.
-  // A stable per-instance id lets a panel ignore its own broadcasts, and the last
-  // persisted toggle snapshot lets it skip no-op events (preventing feedback loops).
-  const layerSyncIdRef = useRef(Math.random().toString(36).slice(2));
-  const layerTogglesRef = useRef<Record<string, boolean>>({});
-
-  // Update localStorage whenever these toggles change.
-  // overlayEnabled is persisted so the next session knows whether the 3 path layers were
-  // in "overlay-managed" mode and should be reset (rather than restored as stale trues).
-  useEffect(() => {
-    if (!projectName) return;
-    const toggles: Record<string, boolean> = {
-      showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects,
-      showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
-    };
-    layerTogglesRef.current = toggles;
-    localStorage.setItem(`gisLayerToggles_${projectName}`, JSON.stringify({
-      ...toggles,
-      overlayEnabled: showCurvatureOverlay ?? false,
-    }));
-    // Broadcast to any sibling panel showing the same project so its toggles mirror.
-    window.dispatchEvent(new CustomEvent("psat:gisLayers:sync", {
-      detail: { projectName, source: layerSyncIdRef.current, toggles },
-    }));
-  }, [showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, showCurvatureOverlay, projectName]);
-
-  // Mirror GIS layer toggles broadcast by a sibling panel for the same project.
-  // The source-id and equality checks make this self-terminating: a panel ignores
-  // its own events and any event whose toggles already match its current state.
-  useEffect(() => {
-    if (!projectName) return;
-    const handler = (event: Event) => {
-      const detail = (event as CustomEvent).detail as
-        | { projectName?: string; source?: string; toggles?: Record<string, boolean> }
-        | undefined;
-      if (!detail || detail.projectName !== projectName) return;
-      if (detail.source === layerSyncIdRef.current) return;
-      const incoming = detail.toggles;
-      if (!incoming) return;
-      const current = layerTogglesRef.current;
-      if (!Object.keys(incoming).some((key) => incoming[key] !== current[key])) return;
-      layerTogglesRef.current = { ...current, ...incoming };
-      setShowFootpath(!!incoming.showFootpath);
-      setShowCycling(!!incoming.showCycling);
-      setShowShared(!!incoming.showShared);
-      setShowRoadcrossing(!!incoming.showRoadcrossing);
-      setShowMrtExit(!!incoming.showMrtExit);
-      setShowBusStop(!!incoming.showBusStop);
-      setShowBusLane(!!incoming.showBusLane);
-      setShowParkingLot(!!incoming.showParkingLot);
-      setShowKerbLine(!!incoming.showKerbLine);
-      setShowBicycleCrossing(!!incoming.showBicycleCrossing);
-      setShowPathDefects(!!incoming.showPathDefects);
-      setShowStateLand(!!incoming.showStateLand);
-      setShowStatBoard(!!incoming.showStatBoard);
-      setShowLandPrivate(!!incoming.showLandPrivate);
-      setShowLandMinistry(!!incoming.showLandMinistry);
-    };
-    window.addEventListener("psat:gisLayers:sync", handler);
-    return () => window.removeEventListener("psat:gisLayers:sync", handler);
-  }, [projectName]);
-
-  // Sync GIS toggle states when the project changes. useState initializers only fire
-  // on first mount; without this effect, switching projects leaves stale toggle values
-  // from the previous project (e.g. footpath/cycling/shared left on by Analysis Overlay).
-  useEffect(() => {
-    const wasOn = cachedLayers.overlayEnabled !== false;
-    setShowFootpath(wasOn ? false : (cachedLayers.showFootpath ?? false));
-    setShowCycling(wasOn ? false : (cachedLayers.showCycling ?? false));
-    setShowShared(wasOn ? false : (cachedLayers.showShared ?? false));
-    setShowRoadcrossing(cachedLayers.showRoadcrossing ?? false);
-    setShowMrtExit(cachedLayers.showMrtExit ?? false);
-    setShowBusStop(cachedLayers.showBusStop ?? false);
-    setShowBusLane(cachedLayers.showBusLane ?? false);
-    setShowParkingLot(cachedLayers.showParkingLot ?? false);
-    setShowKerbLine(cachedLayers.showKerbLine ?? false);
-    setShowBicycleCrossing(cachedLayers.showBicycleCrossing ?? false);
-    setShowPathDefects(cachedLayers.showPathDefects ?? false);
-    setShowStateLand(cachedLayers.showStateLand ?? false);
-    setShowStatBoard(cachedLayers.showStatBoard ?? false);
-    setShowLandPrivate(cachedLayers.showLandPrivate ?? false);
-    setShowLandMinistry(cachedLayers.showLandMinistry ?? false);
-  }, [cachedLayers]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Auto-enable path layers when Analysis Overlay is turned on; never auto-disable them
-  useEffect(() => {
-    if (!showCurvatureOverlay) return;
-    if (!showFootpath) setShowFootpath(true);
-    if (!showCycling) setShowCycling(true);
-    if (!showShared) setShowShared(true);
-  }, [showCurvatureOverlay]); // eslint-disable-line react-hooks/exhaustive-deps
+  // GIS layer toggles — localStorage-backed, cross-panel-synced (extracted to
+  // ./GeoDataPanel/useGISToggleState in S2.2). Destructured so the JSX below
+  // (AnalysisSidebar wiring, layer gating) stays identical to pre-extraction.
+  const { toggles: gisToggles, setters: gisToggleSetters } = useGISToggleState(projectName, showCurvatureOverlay);
+  const {
+    showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop,
+    showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showPathDefects,
+    showStateLand, showStatBoard, showLandPrivate, showLandMinistry,
+  } = gisToggles;
+  const {
+    setShowFootpath, setShowCycling, setShowShared, setShowRoadcrossing, setShowMrtExit,
+    setShowBusStop, setShowBusLane, setShowParkingLot, setShowKerbLine, setShowBicycleCrossing,
+    setShowPathDefects, setShowStateLand, setShowStatBoard, setShowLandPrivate, setShowLandMinistry,
+  } = gisToggleSetters;
 
 // Sub-component to pan map to current selection.
 // When panKey changes (project tab clicked), MapAutoCenter suppresses its setView
@@ -572,65 +178,14 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
   // Layer View starts collapsed in both v1 and v2; expand via the edge tab.
   const [isAnalysisSidebarOpen, setIsAnalysisSidebarOpen] = useState(false);
 
-  // Delete Mode State
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [isPointAddMode, setIsPointAddMode] = useState(false);
-  const [isPolygonMode, setIsPolygonMode] = useState(false); // Polygon batch delete mode
-  const [isPolygonAddMode, setIsPolygonAddMode] = useState(false); // Polygon batch copy mode
-  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [isAddSegmentsDialogOpen, setIsAddSegmentsDialogOpen] = useState(false);
-  const [segmentToDelete, setSegmentToDelete] = useState<number | null>(null);
-  const [segmentToAdd, setSegmentToAdd] = useState<number | null>(null);
-  const [segmentsToDelete, setSegmentsToDelete] = useState<number[]>([]); // For batch delete
-  const cancelRef = useRef<HTMLButtonElement>(null);
+  // Segment editing tools (single/polygon delete & copy) are extracted to
+  // ./GeoDataPanel/useSegmentEditTools in S2.2 and instantiated after the
+  // `points` memo below (the polygon tools hit-test against it).
 
-  // Clear single selections when toggling point modes
-  useEffect(() => {
-    if (!isDeleteMode && !isPointAddMode) {
-      setSegmentToDelete(null);
-      setSegmentToAdd(null);
-    }
-  }, [isDeleteMode, isPointAddMode]);
+  // GIS layer + path-defect data are fetched by ./GeoDataPanel/useGISLayerData
+  // hooks, instantiated after the active query point is derived below.
 
-  // Clear polygon points and close dialog when toggling polygon mode
-  useEffect(() => {
-    setPolygonPoints([]);
-    setDeleteConfirmationOpen(false);
-    setSegmentsToDelete([]);
-  }, [isPolygonMode]);
-
-  // GIS Layer data
-  type GISLayerFeature = {
-    coordinates: [number, number][];
-    properties: { width?: number };
-    geometry_type?: "line" | "point" | "polygon";
-  };
-  type GISLayers = {
-    footpath: GISLayerFeature[];
-    cycling: GISLayerFeature[];
-    shared: GISLayerFeature[];
-    roadcrossing: GISLayerFeature[];
-    mrt_exit: GISLayerFeature[];
-    bicycle_crossing: GISLayerFeature[];
-    bus_stop: GISLayerFeature[];
-    bus_lane: GISLayerFeature[];
-    parking_lot: GISLayerFeature[];
-    kerb_line: GISLayerFeature[];
-  };
-  const [gisLayers, setGisLayers] = useState<GISLayers | null>(null);
-
-  // Path Defects overlay (xlsx-backed defect inspection records)
-  type PathDefect = {
-    lat: number;
-    lon: number;
-    type_of_defect: string;
-    location: string;
-    date_of_inspection: string;
-  };
-  const [pathDefects, setPathDefects] = useState<PathDefect[] | null>(null);
-
-  // 拉取整条 geodata（如果没有 external geofeatures）
+  // Fetch the full geodata for this project (skipped when parent provides external geofeatures)
   useEffect(() => {
     // Skip if we have external geofeatures provided by parent
     if (hasExternalGeoFeatures) {
@@ -698,7 +253,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     return () => window.removeEventListener("psat:scores:updated", handleScoresUpdated);
   }, [fetchScores, externalScores]);
 
-  // 取每条 LineString 的首点（转 4326），并保留原 feature
+  // Extract the first point of each LineString (reprojected to WGS84) and keep a reference to the original feature.
   // For multi-project display, localIdx is the index within geoFeatures,
   // and globalIdx is the index within the aggregated scores array
   const points = useMemo(() => {
@@ -756,7 +311,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     [verifiedByProject, decodedName]
   );
 
-  // 当前高亮点 - use globalIdx to match the index prop (global index)
+  // Currently highlighted point — use globalIdx to match the index prop (global index)
   const current = useMemo(() => points.find(p => p.globalIdx === index) ?? null, [points, index]);
 
   // GIS query point: starts at current segment, can be repositioned by clicking on the map
@@ -783,142 +338,37 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
   const activeQueryPoint: [number, number] | null =
     (activeGisLat !== null && activeGisLon !== null) ? [activeGisLat, activeGisLon] : null;
 
-  // Convert triplet points from EPSG:3414 to WGS84 (lat, lon) for display
-  const tripletPoints: [number, number][] | null = useMemo(() => {
-    if (!curvData?.diagnostics?.min_triplet?.points) return null;
-
-    try {
-      if (!proj4.defs('EPSG:3414')) {
-        proj4.defs('EPSG:3414', '+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs');
-      }
-      return curvData.diagnostics.min_triplet.points.map(([x, y]: [number, number]) => {
-        const [lon, lat] = proj4('EPSG:3414', 'WGS84', [x, y]);
-        return [lat, lon] as [number, number];
-      });
-    } catch (error) {
-      return null;
-    }
-  }, [curvData]);
-  
-  const circleCoords: [number, number][] | null = useMemo(() => {
-    if (!curvData?.circle_geojson?.geometry?.coordinates?.[0]) return null;
-    return curvData.circle_geojson.geometry.coordinates[0].map(
-      ([lon, lat]: [number, number]) => [lat, lon] as [number, number]
-    );
-  }, [curvData]);
+  // Curvature overlay geometry (EPSG:3414 → WGS84 via the shared projection util).
+  const { tripletPoints, circleCoords } = useCurvatureOverlay(curvData);
 
   const gradientState = getGradientDisplayState(
     { grade, gradientPct, gradientStatus },
     { percentDigits: 1 },
   );
 
-  // 初始中心（无数据时默认新加坡中心点）
+  // Initial map centre (defaults to Singapore centre when no data is loaded)
   const initialCenter = useRef<[number, number]>([1.3521, 103.8198]);
 
-  // Fetch GIS layers when any toggle is turned on and we have a current point
-  // Skip GIS layers when using external geofeatures from multiple projects
-  useEffect(() => {
-    // Don't fetch GIS layers for multi-project display
-    // if (hasExternalGeoFeatures) {
-    //   setGisLayers(null);
-    //   return;
-    // }
+  // GIS layer features + path defects around the active query point
+  // (fetch effects extracted to ./GeoDataPanel/useGISLayerData in S2.2).
+  const gisLayers = useGISLayers(decodedName, activeGisLat, activeGisLon, gisToggles, hasExternalGeoFeatures);
+  const pathDefects = usePathDefects(activeGisLat, activeGisLon, showPathDefects);
 
-    if (!decodedName || activeGisLat === null || activeGisLon === null) return;
-
-    const anyLayerEnabled = showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showStateLand || showStatBoard || showLandPrivate || showLandMinistry;
-    if (!anyLayerEnabled) {
-      setGisLayers(null);
-      return;
-    }
-
-    const controller = new AbortController();
-    (async () => {
-      try {
-        const lat = activeGisLat;
-        const lon = activeGisLon;
-
-        const layers = [];
-        if (showCycling) layers.push('cycling');
-        if (showShared) layers.push('shared');
-        if (showFootpath) layers.push('footpath');
-        if (showRoadcrossing) layers.push('roadcrossing');
-        if (showMrtExit) layers.push('mrt_exit');
-        if (showBicycleCrossing) layers.push('bicycle_crossing');
-        if (showBusStop) layers.push('bus_stop');
-        if (showBusLane) layers.push('bus_lane');
-        if (showParkingLot) layers.push('parking_lot');
-        if (showKerbLine) layers.push('kerb_line');
-        if (showStateLand) layers.push('state_land');
-        if (showStatBoard) layers.push('stat_board');
-        if (showLandPrivate) layers.push('land_private');
-        if (showLandMinistry) layers.push('land_ministry');
-
-        // Fetch GIS layers near the active query point
-        const res = await fetch(`/api/projects/${encodeURIComponent(decodedName)}/gis/layers`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            point: [lon, lat],  // API expects [lon, lat]
-            radius: 200,
-            layers: layers
-          }),
-          signal: controller.signal
-        });
-
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-
-        if (data.ok) {
-          setGisLayers(data.layers);
-        }
-      } catch (e: any) {
-        if (e.name !== 'AbortError') {
-          console.error("[GIS] Fetch error:", e);
-        }
-      }
-    })();
-
-    return () => { controller.abort(); };
-  }, [decodedName, activeGisLat, activeGisLon, showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showStateLand, showStatBoard, showLandPrivate, showLandMinistry, hasExternalGeoFeatures]);
-
-  // Fetch Path Defects within the search radius around the active query point.
-  // Kept separate from the GIS layers fetch so toggling defects doesn't refetch
-  // every GIS layer (and vice versa).
-  useEffect(() => {
-    if (activeGisLat === null || activeGisLon === null) return;
-    if (!showPathDefects) {
-      setPathDefects(null);
-      return;
-    }
-
-    const controller = new AbortController();
-    (async () => {
-      try {
-        const res = await fetch(`/api/defects/nearby`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            point: [activeGisLon, activeGisLat],
-            radius: 200,
-          }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setPathDefects(data.defects ?? []);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') {
-          console.error("[Defects] Fetch error:", e);
-        }
-      }
-    })();
-
-    return () => { controller.abort(); };
-  }, [activeGisLat, activeGisLon, showPathDefects]);
-
-  // GIS layer colors now sourced from constants/mapColors.ts (imported above as
-  // layerColors) — single source shared with PathAnalysisMapView + AnalysisSidebar.
+  // Segment editing tools (modes, polygon selection, delete/copy actions).
+  const editTools = useSegmentEditTools(decodedName, points, onDataChange);
+  const {
+    isDeleteMode, isPointAddMode, isPolygonMode, isPolygonAddMode,
+    polygonPoints, setPolygonPoints,
+    deleteConfirmationOpen, setDeleteConfirmationOpen,
+    isAddSegmentsDialogOpen, setIsAddSegmentsDialogOpen,
+    segmentToDelete, setSegmentToDelete,
+    segmentToAdd, setSegmentToAdd,
+    segmentsToDelete,
+    cancelRef,
+    handleDeleteSegment, handlePolygonPoint, handlePointUpdate,
+    handleBatchDelete,
+    setIsPointAddMode, setIsPolygonAddMode,
+  } = editTools;
 
   // Get segment color based on the crash type with the highest score
   const getSegmentColor = (segmentIndex: number): string => {
@@ -965,155 +415,6 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
       default: return RISK_BAND_COLORS.LOW;
     }
   };
-
-  const handleDeleteSegment = useCallback(async () => {
-    if (segmentToDelete === null || !decodedName) return;
-
-    try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(decodedName)}/segments/${segmentToDelete}`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        throw new Error(await res.text().catch(() => res.statusText));
-      }
-
-      toaster.create({
-        title: "Point Deleted",
-        description: `Segment #${segmentToDelete + 1} deleted successfully.`,
-        type: "success",
-      });
-
-      // Clear selection and close dialog
-      setSegmentToDelete(null);
-      setDeleteConfirmationOpen(false);
-      setIsDeleteMode(false);
-
-      // Trigger data refresh if callback provided
-      if (onDataChange) {
-        onDataChange();
-      } else {
-        // Fallback: reload page? Or maybe just re-fetch Geodata? 
-        // Re-fetching geodata isn't enough as indices shift globally.
-        // Ideally parent should handle this.
-        window.location.reload();
-      }
-
-    } catch (e: any) {
-      toaster.create({
-        title: "Delete Failed",
-        description: e?.message ?? "Failed to delete segment",
-        type: "error",
-      });
-    }
-  }, [segmentToDelete, decodedName, onDataChange]);
-
-  // Handle adding points to polygon
-  const handlePolygonPoint = useCallback((latlng: [number, number]) => {
-    setPolygonPoints(prev => {
-      // Double click logic is hard with simple click handler, using a Close button instead usually better
-      // But let's check if clicked near first point to close?
-      // Or just let user click a "Finish" button.
-      // Let's rely on a "Finish Selection" button in the header instead of complex map interaction.
-      return [...prev, latlng];
-    });
-  }, []);
-
-  // Handle updating points when dragged
-  const handlePointUpdate = useCallback((index: number, latlng: [number, number]) => {
-    setPolygonPoints(prev => {
-      const newPoints = [...prev];
-      newPoints[index] = latlng;
-      return newPoints;
-    });
-  }, []);
-
-  // Finish Polygon Selection: Find points inside and confirm
-  const finishPolygonSelection = useCallback(() => {
-    if (polygonPoints.length < 3) {
-      toaster.create({ title: "Invalid Polygon", description: "Need at least 3 points.", type: "warning" });
-      return;
-    }
-
-    // Find all points inside
-    const indicesInside: number[] = [];
-    points.forEach(p => {
-      if (isPointInPolygon(p.latlng, polygonPoints)) {
-        indicesInside.push(p.globalIdx);
-      }
-    });
-
-    if (indicesInside.length === 0) {
-      toaster.create({ title: "No Points Selected", description: "No points found inside the polygon.", type: "info" });
-      setPolygonPoints([]);
-      setIsPolygonMode(false);
-      return;
-    }
-
-    setSegmentsToDelete(indicesInside);
-    setDeleteConfirmationOpen(true);
-  }, [polygonPoints, points]);
-
-  // Handle Batch Deletion
-  const handleBatchDelete = useCallback(async () => {
-    if (segmentsToDelete.length === 0 || !decodedName) return;
-
-    try {
-      const res = await fetch(`/api/projects/${encodeURIComponent(decodedName)}/segments/delete-batch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ indices: segmentsToDelete })
-      });
-
-      if (!res.ok) {
-        throw new Error(await res.text().catch(() => res.statusText));
-      }
-
-      toaster.create({
-        title: "Batch Delete Successful",
-        description: `Deleted ${segmentsToDelete.length} segments.`,
-        type: "success",
-      });
-
-      // Reset states
-      setSegmentsToDelete([]);
-      setPolygonPoints([]);
-      setDeleteConfirmationOpen(false);
-      setIsPolygonMode(false);
-      setIsDeleteMode(false); // also turn off single delete mode if on
-
-      // Refresh
-      if (onDataChange) {
-        onDataChange();
-      } else {
-        window.location.reload();
-      }
-
-    } catch (e: any) {
-      toaster.create({
-        title: "Delete Failed",
-        description: e?.message ?? "Failed to delete segments",
-        type: "error",
-      });
-    }
-  }, [segmentsToDelete, decodedName, onDataChange]);
-
-  const finishAddSegmentsSelection = useCallback(() => {
-    if (polygonPoints.length < 3) {
-      toaster.create({ title: "Invalid Polygon", description: "Need at least 3 points.", type: "warning" });
-      return;
-    }
-    const indices = points
-      .filter(p => isPointInPolygon(p.latlng, polygonPoints))
-      .map(p => p.globalIdx);
-
-    if (indices.length === 0) {
-      toaster.create({ title: "No Segments", description: "No segments selected.", type: "warning" });
-      return;
-    }
-
-    setIsAddSegmentsDialogOpen(true);
-  }, [polygonPoints, points]);
 
   // Metric readouts shared by the v1 header pills and the v2 floating map cluster.
   const curvDisplay = curvData?.radius != null ? `${curvData.radius.toFixed(1)} m` : "—";
@@ -1170,180 +471,17 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
         )}
       </Box>
 
-          {/* Tools + GIS layer toggles. v1: a bordered toolbar row under the header.
-              v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map —
-              Curv./Width/Grade metrics, a divider, then the two tool buttons. */}
-          <Box
-            px={variant === "v2" ? "0" : "4"}
-            pt={variant === "v2" ? "0" : "2"}
-            pb={variant === "v2" ? "0" : "2"}
-            borderBottom={variant === "v2" ? undefined : "1px solid"}
-            borderColor="gray.200"
-            _dark={{ borderColor: "gray.700" }}
-            {...(variant === "v2"
-              ? { position: "absolute", top: "60px", right: "12px", zIndex: 1000, bg: "white", borderWidth: "1px", borderRadius: "6px", boxShadow: "sm", display: "flex", alignItems: "stretch", overflow: "hidden" }
-              : {})}
-          >
-            {/* v2: floating metric readouts (Curv./Width/Grade) ahead of the tools. */}
-            {variant === "v2" && (
-              <Flex align="stretch">
-                {([["Curv.", curvDisplay], ["Width", widthDisplay], ["Grade", gradeDisplay]] as const).map(([label, value]) => (
-                  <Flex key={label} direction="column" align="center" justify="center" gap="2px" px="12px" py="5px">
-                    <Text fontSize="12px" color="#718096" lineHeight="1">{label}</Text>
-                    <Text fontSize="16px" color="#4A5568" lineHeight="1" whiteSpace="nowrap">{value}</Text>
-                  </Flex>
-                ))}
-              </Flex>
-            )}
-            {/* Tool icon buttons */}
-            <Flex
-              align="center"
-              gap={variant === "v2" ? "1.5" : "2"}
-              wrap="wrap"
-              mb={variant === "v2" ? "0" : "2"}
-              onClick={(e) => e.stopPropagation()}
-              {...(variant === "v2"
-                ? { px: "6px", borderLeft: "1px solid", borderColor: "gray.200" }
-                : {})}
-            >
-              <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                <Menu.Trigger asChild>
-                  <IconButton
-                    aria-label="Single Point Tools"
-                    size="xs"
-                    variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
-                    colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
-                    onClick={(e) => {
-                      if (isDeleteMode || isPointAddMode) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDeleteMode(false);
-                        setIsPointAddMode(false);
-                        setIsPolygonMode(false);
-                        setIsPolygonAddMode(false);
-                        setPolygonPoints([]);
-                      }
-                    }}
-                    title="Single Point Tools"
-                  >
-                    {isPointAddMode ? <FaPlus /> : (isDeleteMode ? <FaTrash /> : <FaMousePointer />)}
-                  </IconButton>
-                </Menu.Trigger>
-                <Menu.Positioner>
-                  <Menu.Content zIndex={1500}>
-                    <Menu.Item
-                      value="delete"
-                      onClick={() => {
-                        setIsDeleteMode(true);
-                        setIsPointAddMode(false);
-                        setIsPolygonMode(false);
-                        setIsPolygonAddMode(false);
-                        setPolygonPoints([]);
-                      }}
-                    >
-                      <FaMousePointer /> Single Point Delete
-                    </Menu.Item>
-                    <Menu.Item
-                      value="add"
-                      onClick={() => {
-                        setIsDeleteMode(false);
-                        setIsPointAddMode(true);
-                        setIsPolygonMode(false);
-                        setIsPolygonAddMode(false);
-                        setPolygonPoints([]);
-                      }}
-                    >
-                      <FaPlus /> Single Point Copy
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Menu.Root>
-
-              <Menu.Root positioning={{ placement: "bottom-start", strategy: "fixed" }}>
-                <Menu.Trigger asChild>
-                  <IconButton
-                    aria-label="Polygon Tools"
-                    variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
-                    size="xs"
-                    colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "orange" : "blue") : "gray"}
-                    title="Polygon Tools"
-                    onClick={(e) => {
-                      if (isPolygonMode || isPolygonAddMode) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsPolygonMode(false);
-                        setIsPolygonAddMode(false);
-                        setIsDeleteMode(false);
-                        setIsPointAddMode(false);
-                        setPolygonPoints([]);
-                      }
-                    }}
-                  >
-                    {isPolygonAddMode ? <FaPlus /> : (isPolygonMode ? <FaTrash /> : <FaDrawPolygon />)}
-                  </IconButton>
-                </Menu.Trigger>
-                <Menu.Positioner>
-                  <Menu.Content zIndex={1500}>
-                    <Menu.Item
-                      value="delete"
-                      onClick={() => {
-                        setIsPolygonMode(true);
-                        setIsPolygonAddMode(false);
-                        setIsDeleteMode(false);
-                        setIsPointAddMode(false);
-                        setPolygonPoints([]);
-                        setDeleteConfirmationOpen(false);
-                      }}
-                    >
-                      <FaTrash /> Delete Segments
-                    </Menu.Item>
-                    <Menu.Item
-                      value="add"
-                      onClick={() => {
-                        setIsPolygonMode(false);
-                        setIsPolygonAddMode(true);
-                        setIsDeleteMode(false);
-                        setIsPointAddMode(false);
-                        setPolygonPoints([]);
-                        setDeleteConfirmationOpen(false);
-                      }}
-                    >
-                      <FaPlus /> Copy/Add Segments
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Menu.Root>
-
-              {isPolygonMode && (
-                <Button
-                  size="xs"
-                  variant="outline"
-                  colorPalette="orange"
-                  disabled={polygonPoints.length < 3}
-                  onClick={finishPolygonSelection}
-                >
-                  Delete Selected ({
-                    points.filter(p => isPointInPolygon(p.latlng, polygonPoints)).length
-                  } segments)
-                </Button>
-              )}
-
-              {isPolygonAddMode && (
-                <Button
-                  size="xs"
-                  variant="outline"
-                  colorPalette="blue"
-                  disabled={polygonPoints.length < 3}
-                  onClick={finishAddSegmentsSelection}
-                >
-                  Copy Selected ({
-                    points.filter(p => isPointInPolygon(p.latlng, polygonPoints)).length
-                  } segments)
-                </Button>
-              )}
-            </Flex>
-
-        </Box>
+      {/* Tools + GIS layer toggles. v1: a bordered toolbar row under the header.
+          v2 (Home.dc.html FRAME 4): a floating cluster over the top-right of the map.
+          Extracted to ./GeoDataPanel/MapToolCluster in S2.2. */}
+      <MapToolCluster
+        variant={variant}
+        edit={editTools}
+        points={points}
+        curvDisplay={curvDisplay}
+        widthDisplay={widthDisplay}
+        gradeDisplay={gradeDisplay}
+      />
       <CardBody flex="1" minH={0} p={0} position="relative">
         {loading && <Text color="gray.500">Loading map…</Text>}
         {err && <Text color="red.600">Failed: {err}</Text>}
@@ -1372,7 +510,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* CartoDB Light basemap - same as Curvature Analysis */}
               <ThemeAwareTileLayer />
 
-              {/* 数据范围自适应 (first load only) */}
+              {/* Auto-fit bounds to all data points (first load only) */}
               {allLatLngs.length > 0 && <FitBounds points={allLatLngs} />}
 
               {/* Auto-zoom to current point when GIS layers active */}
@@ -1384,7 +522,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               {/* Zoom to the 5m curvature circle when the overlay is enabled */}
               <ZoomToCurvature showCurvatureOverlay={showCurvatureOverlay ?? false} circleCoords={circleCoords} />
 
-              {/* 自动跟随当前选中点 */}
+              {/* Auto-pan to the currently selected segment point */}
               <MapAutoCenter
                 center={current?.latlng ?? null}
                 anyLayerOn={showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showPathDefects}
@@ -1416,355 +554,17 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                 );
               })()}
 
-              {/* GIS Layers - Render below the segment points */}
-              {gisLayers && showFootpath && gisLayers.footpath && (
-                gisLayers.footpath.map((feature, i) => (
-                  <Polyline
-                    key={`footpath-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon])}
-                    pathOptions={{
-                      color: layerColors.footpath,
-                      weight: 3,
-                      opacity: 0.8
-                    }}
-                  />
-                ))
-              )}
-
-              {gisLayers && showCycling && gisLayers.cycling && (
-                gisLayers.cycling.map((feature, i) => (
-                  <Polyline
-                    key={`cycling-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon])}
-                    pathOptions={{
-                      color: layerColors.cycling,
-                      weight: 3,
-                      opacity: 0.8
-                    }}
-                  />
-                ))
-              )}
-
-              {gisLayers && showShared && gisLayers.shared && (
-                gisLayers.shared.map((feature, i) => (
-                  <Polyline
-                    key={`shared-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon])}
-                    pathOptions={{
-                      color: layerColors.shared,
-                      weight: 3,
-                      opacity: 0.8
-                    }}
-                  />
-                ))
-              )}
-
-              {gisLayers && showRoadcrossing && gisLayers.roadcrossing && (
-                gisLayers.roadcrossing.map((feature, i) => (
-                  <Polyline
-                    key={`roadcrossing-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon])}
-                    pathOptions={{
-                      color: layerColors.roadcrossing,
-                      weight: 3,
-                      opacity: 0.8
-                    }}
-                  />
-                ))
-              )}
-
-              {/* MRT Exit - Point layer rendered as CircleMarkers */}
-              {gisLayers && showMrtExit && gisLayers.mrt_exit && (
-                gisLayers.mrt_exit.map((feature, i) => (
-                  <CircleMarker
-                    key={`mrt_exit-${i}`}
-
-                    center={[feature.coordinates[0][1], feature.coordinates[0][0]]}
-                    radius={6}
-                    pathOptions={{
-                      color: layerColors.mrt_exit,
-                      weight: 2,
-                      opacity: 0.9,
-                      fillOpacity: 0.7
-                    }}
-                  >
-                    <Tooltip>MRT Exit</Tooltip>
-                  </CircleMarker>
-                ))
-              )}
-
-              {/* Bus Stop - Point or Line (Shelters) */}
-              {gisLayers && showBusStop && gisLayers.bus_stop && (
-                gisLayers.bus_stop.map((feature, i) => {
-                  if (feature.geometry_type === "point") {
-                    return (
-                      <CircleMarker
-                        key={`bus_stop-${i}`}
-    
-                        center={[feature.coordinates[0][1], feature.coordinates[0][0]]}
-                        radius={6}
-                        pathOptions={{
-                          color: layerColors.bus_stop,
-                          weight: 2,
-                          opacity: 0.9,
-                          fillOpacity: 0.7
-                        }}
-                      >
-                        <Tooltip>Bus Stop</Tooltip>
-                      </CircleMarker>
-                    );
-                  } else if (feature.geometry_type === "line") {
-                    return (
-                      <Polyline
-                        key={`bus_shelter-${i}`}
-    
-                        positions={feature.coordinates.map(c => [c[1], c[0]])}
-                        pathOptions={{
-                          color: layerColors.bus_stop,
-                          weight: 4,
-                          opacity: 0.8
-                        }}
-                      >
-                        <Tooltip>Bus Shelter</Tooltip>
-                      </Polyline>
-                    );
-                  }
-                  return null;
-                })
-              )}
-
-              {/* Bus Lane - LineString or MultiLineString layer */}
-              {gisLayers && showBusLane && gisLayers.bus_lane && (
-                gisLayers.bus_lane.map((feature, i) => {
-                  const coords = feature.coordinates;
-                  // If it's a MultiLineString structure (array of arrays of coordinates)
-                  const isMulti = Array.isArray(coords[0]) && Array.isArray(coords[0][0]);
-                  
-                  if (isMulti) {
-                    return (coords as any).map((line: any, j: number) => (
-                      <Polyline
-                        key={`bus_lane-${i}-${j}`}
-    
-                        positions={line.map((c: any) => [c[1], c[0]])}
-                        pathOptions={{
-                          color: layerColors.bus_lane,
-                          weight: 4,
-                          opacity: 0.8,
-                          dashArray: "5, 10"
-                        }}
-                      >
-                         <Tooltip>Bus Lane</Tooltip>
-                      </Polyline>
-                    ));
-                  }
-
-                  return (
-                    <Polyline
-                      key={`bus_lane-${i}`}
-  
-                      positions={coords.map((c: any) => [c[1], c[0]])}
-                      pathOptions={{
-                        color: layerColors.bus_lane,
-                        weight: 4,
-                        opacity: 0.8,
-                        dashArray: "5, 10"
-                      }}
-                    >
-                       <Tooltip>Bus Lane</Tooltip>
-                    </Polyline>
-                  );
-                })
-              )}
-
-              {/* Parking Lot - Polygon layer */}
-              {gisLayers && showParkingLot && gisLayers.parking_lot && (
-                gisLayers.parking_lot.map((feature, i) => {
-                  const geomType = feature.geometry_type;
-                  if (geomType === "polygon") {
-                    return (
-                      <Polygon
-                        key={`parking_lot-${i}`}
-    
-                        positions={feature.coordinates.map(([lon, lat]) => [lat, lon] as [number, number])}
-                        pathOptions={{
-                          color: layerColors.parking_lot,
-                          weight: 2,
-                          opacity: 0.8,
-                          fillOpacity: 0.3
-                        }}
-                      >
-                        <Tooltip>Parking Lot</Tooltip>
-                      </Polygon>
-                    );
-                  }
-                  // Fallback: render as point if geometry_type is "point"
-                  return (
-                    <CircleMarker
-                      key={`parking_lot-${i}`}
-  
-                      center={[feature.coordinates[0][1], feature.coordinates[0][0]]}
-                      radius={6}
-                      pathOptions={{
-                        color: layerColors.parking_lot,
-                        weight: 2,
-                        opacity: 0.9,
-                        fillOpacity: 0.7
-                      }}
-                    >
-                      <Tooltip>Parking Lot</Tooltip>
-                    </CircleMarker>
-                  );
-                })
-              )}
-
-              {/* Kerb Line - LineString layer */}
-              {gisLayers && showKerbLine && gisLayers.kerb_line && (
-                gisLayers.kerb_line.map((feature, i) => (
-                  <Polyline
-                    key={`kerb_line-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon])}
-                    pathOptions={{
-                      color: layerColors.kerb_line,
-                      weight: 3,
-                      opacity: 0.8
-                    }}
-                  />
-                ))
-              )}
-
-              {/* Bicycle Crossing - Point layer rendered as CircleMarkers */}
-              {gisLayers && showBicycleCrossing && gisLayers.bicycle_crossing && (
-                gisLayers.bicycle_crossing.map((feature, i) => (
-                  <CircleMarker
-                    key={`bicycle_crossing-${i}`}
-
-                    center={[feature.coordinates[0][1], feature.coordinates[0][0]]}
-                    radius={6}
-                    pathOptions={{
-                      color: layerColors.bicycle_crossing,
-                      weight: 2,
-                      opacity: 0.9,
-                      fillOpacity: 0.7
-                    }}
-                  >
-                    <Tooltip>Bicycle Crossing</Tooltip>
-                  </CircleMarker>
-                ))
-              )}
-
-              {/* Land Ownership - Polygon layers */}
-              {gisLayers && showStateLand && gisLayers.state_land && (
-                gisLayers.state_land.map((feature, i) => (
-                  <Polygon
-                    key={`state_land-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon] as [number, number])}
-                    pathOptions={{ color: layerColors.state_land, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-                  >
-                    <Tooltip>{feature.properties?.OWNRSHP_CL ?? "State Land"}</Tooltip>
-                  </Polygon>
-                ))
-              )}
-
-              {gisLayers && showStatBoard && gisLayers.stat_board && (
-                gisLayers.stat_board.map((feature, i) => (
-                  <Polygon
-                    key={`stat_board-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon] as [number, number])}
-                    pathOptions={{ color: layerColors.stat_board, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-                  >
-                    <Tooltip>{feature.properties?.OWNRSHP_CL ?? "Stat Board"}</Tooltip>
-                  </Polygon>
-                ))
-              )}
-
-              {gisLayers && showLandPrivate && gisLayers.land_private && (
-                gisLayers.land_private.map((feature, i) => (
-                  <Polygon
-                    key={`land_private-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon] as [number, number])}
-                    pathOptions={{ color: layerColors.land_private, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-                  >
-                    <Tooltip>{feature.properties?.OWNRSHP_CL ?? "Private Land"}</Tooltip>
-                  </Polygon>
-                ))
-              )}
-
-              {gisLayers && showLandMinistry && gisLayers.land_ministry && (
-                gisLayers.land_ministry.map((feature, i) => (
-                  <Polygon
-                    key={`land_ministry-${i}`}
-
-                    positions={feature.coordinates.map(([lon, lat]) => [lat, lon] as [number, number])}
-                    pathOptions={{ color: layerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-                  >
-                    <Tooltip>{feature.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip>
-                  </Polygon>
-                ))
-              )}
+              {/* GIS layer features (paths, transit, parking, land ownership) —
+                  extracted to ./GeoDataPanel/GISLayersOverlay in S2.2 */}
+              <GISLayersOverlay gisLayers={gisLayers} toggles={gisToggles} />
 
               {/* Path Defects - ⚠️ markers within the 200m search radius */}
-              {showPathDefects && pathDefects?.map((d, i) => (
-                <Marker
-                  key={`defect-${i}`}
-                  position={[d.lat, d.lon]}
-                  icon={defectIcon}
-                >
-                  <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
-                </Marker>
-              ))}
+              {showPathDefects && <DefectsLayer defects={pathDefects} />}
 
               
-              {/* === Curvature Analysis Overlays === */}
+              {/* Curvature analysis overlays — extracted to ./GeoDataPanel/CurvatureOverlay in S2.2 */}
               {showCurvatureOverlay && curvData && (
-                <>
-                  {/* Black circle outline (5m analysis window) */}
-                  {circleCoords && (
-                    <Polyline
-                      positions={circleCoords}
-                      pathOptions={{ color: '#000000', weight: 5, fill: false, opacity: 1 }}
-                    />
-                  )}
-                  {/* Path centerlines (color-coded) */}
-                  {curvData.paths?.map((path: any, pathIdx: number) => {
-                    const pathCoords = path.coordinates.map(([lon, lat]: [number, number]) => [lat, lon] as [number, number]);
-                    return (
-                      <Polyline
-                        key={`curv-path-${pathIdx}`}
-                        positions={pathCoords}
-                        pathOptions={{
-                          color: `rgb(${path.color.join(',')})`,
-                          weight: path.is_analysis_layer ? 6 : 4,
-                          opacity: path.is_analysis_layer ? 1 : 0.8,
-                        }}
-                      />
-                    );
-                  })}
-                  {/* Red dot (analysis point) */}
-                  {curvData.point && (
-                    <CircleMarker
-                      center={[curvData.point.lat, curvData.point.lon]}
-                      radius={12}
-                      pathOptions={{ fillColor: '#ff0000', fillOpacity: 1, color: '#ffffff', weight: 3 }}
-                    />
-                  )}
-                  {/* Blue triplet points (P1, P2, P3) */}
-                  {tripletPoints?.map((pt, ptIdx) => (
-                    <CircleMarker
-                      key={`triplet-${ptIdx}`}
-                      center={pt}
-                      radius={8}
-                      pathOptions={{ fillColor: '#1E90FF', fillOpacity: 1, color: '#ffffff', weight: 2 }}
-                    />
-                  ))}
-                </>
+                <CurvatureOverlay curvData={curvData} circleCoords={circleCoords} tripletPoints={tripletPoints} />
               )}
 
               {/* 所有起点 — rendered in a dedicated pane above GIS overlay layers */}

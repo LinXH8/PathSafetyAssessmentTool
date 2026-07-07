@@ -2,27 +2,31 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { fetchProjectList } from "../../api";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import { SESSION_KEYS } from "../../constants/sessionKeys";
+import { useSessionState } from "../../hooks/useSessionState";
 import PathAnalysisLayoutV1 from "./layouts/PathAnalysisLayoutV1";
 import PathAnalysisLayoutV2 from "./layouts/PathAnalysisLayoutV2";
 import type { PathAnalysisChartData, PathAnalysisViewModel } from "./layouts/PathAnalysisViewModel";
 
-const SESSION_KEY_PREFIX = "pathAnalysis_";
-
-
-const loadState = <T,>(key: string, defaultVal: T): T => {
+/**
+ * Reads the initial set of projects to load. Prefers the `loadedProjects` key
+ * (set on each visit) and falls back to `selectedProjects` (set when the user
+ * picks projects on the Home page) so a fresh navigation always opens the right
+ * set even if the loadedProjects key hasn't been written yet.
+ */
+function getInitialLoadedProjects(): string[] {
   try {
-    const stored = sessionStorage.getItem(SESSION_KEY_PREFIX + key);
-    return stored ? JSON.parse(stored) : defaultVal;
+    const loaded = sessionStorage.getItem(SESSION_KEYS.PA_LOADED_PROJECTS);
+    if (loaded) {
+      const arr = JSON.parse(loaded) as string[];
+      if (arr.length > 0) return arr;
+    }
+    const selected = sessionStorage.getItem(SESSION_KEYS.PA_SELECTED_PROJECTS);
+    return selected ? (JSON.parse(selected) as string[]) : [];
   } catch {
-    return defaultVal;
+    return [];
   }
-};
-
-const getStoredLoadedProjects = (): string[] => {
-  const loaded = loadState<string[]>("loadedProjects", []);
-  if (loaded.length > 0) return loaded;
-  return loadState<string[]>("selectedProjects", []);
-};
+}
 
 /**
  * Path Analysis container. Owns all server state, sessionStorage keys and the
@@ -34,16 +38,19 @@ export default function PathAnalysisPage() {
   const ui = useUiVersion();
   const location = useLocation();
 
-  const [loadedProjects, setLoadedProjects] = useState<string[]>(() =>
-    getStoredLoadedProjects()
+  // `loadedProjects` uses a custom init (fallback from selectedProjects) so it
+  // stays as plain useState; the write-back is handled by an explicit useEffect.
+  const [loadedProjects, setLoadedProjects] = useState<string[]>(
+    getInitialLoadedProjects
   );
 
-  const [activeFilters, setActiveFilters] = useState<string[]>(() =>
-    loadState("activeFilters", [])
+  // `activeFilters` and `hiddenProjects` follow the simple read-init/write-on-update
+  // pattern that useSessionState handles — no extra useEffect needed.
+  const [activeFilters, setActiveFilters] = useSessionState<string[]>(
+    SESSION_KEYS.PA_ACTIVE_FILTERS, []
   );
-
-  const [hiddenProjects, setHiddenProjects] = useState<string[]>(() =>
-    loadState("hiddenProjects", [])
+  const [hiddenProjects, setHiddenProjects] = useSessionState<string[]>(
+    SESSION_KEYS.PA_HIDDEN_PROJECTS, []
   );
 
   // Per-project visible (filtered) segment indices, reported by the map view so the
@@ -66,6 +73,8 @@ export default function PathAnalysisPage() {
     totalSegmentsViewed: 0,
   });
 
+  // Fallback: when no projects have been loaded yet (e.g. the user navigates
+  // directly to /analysis/path), fetch the full list from the backend.
   useEffect(() => {
     if (loadedProjects.length > 0) return;
     fetchProjectList()
@@ -73,7 +82,7 @@ export default function PathAnalysisPage() {
         if (data?.projects) {
           const availableProjects = data.projects.map((project) => project.name);
           setLoadedProjects((prev) => {
-            const restoredProjects = (prev.length > 0 ? prev : getStoredLoadedProjects())
+            const restoredProjects = (prev.length > 0 ? prev : getInitialLoadedProjects())
               .filter((name) => availableProjects.includes(name));
 
             return restoredProjects.length > 0 ? restoredProjects : availableProjects;
@@ -83,21 +92,23 @@ export default function PathAnalysisPage() {
       .catch(() => {});
   }, [loadedProjects.length]);
 
+  // Persist loadedProjects whenever it changes so back-navigation restores it.
   useEffect(() => {
-    sessionStorage.setItem(SESSION_KEY_PREFIX + "loadedProjects", JSON.stringify(loadedProjects));
-    sessionStorage.setItem(SESSION_KEY_PREFIX + "activeFilters", JSON.stringify(activeFilters));
-    sessionStorage.setItem(SESSION_KEY_PREFIX + "hiddenProjects", JSON.stringify(hiddenProjects));
-  }, [activeFilters, loadedProjects, hiddenProjects]);
+    sessionStorage.setItem(SESSION_KEYS.PA_LOADED_PROJECTS, JSON.stringify(loadedProjects));
+  }, [loadedProjects]);
 
+  // Persist categoryStatus for the Report Builder (only when non-empty so a
+  // stale value doesn't persist from a previous session).
   useEffect(() => {
     if (chartData.categoryStatus.length > 0) {
-      sessionStorage.setItem(SESSION_KEY_PREFIX + "categoryStatus", JSON.stringify(chartData.categoryStatus));
+      sessionStorage.setItem(SESSION_KEYS.PA_CATEGORY_STATUS, JSON.stringify(chartData.categoryStatus));
     }
   }, [chartData.categoryStatus]);
 
+  // Drop any hidden project that is no longer loaded.
   useEffect(() => {
     setHiddenProjects((prev) => prev.filter((projectName) => loadedProjects.includes(projectName)));
-  }, [loadedProjects]);
+  }, [loadedProjects, setHiddenProjects]);
 
   // Keep `?ui=<version>` pinned on the URL so the toggle is always visible in the
   // address bar (mirrors the Projects / Create Project pilots). Path Analysis does

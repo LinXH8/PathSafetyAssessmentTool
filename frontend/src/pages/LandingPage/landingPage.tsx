@@ -358,7 +358,7 @@ export default function LandingPage() {
 
   return (
     <main className="landing-root" role="main">
-      {/* 右侧品牌区：logo + 文字 */}
+      {/* Right rail: brand logo and tagline */}
       <aside className="right-rail" aria-label="PSAT branding">
         <img
           src={psatLogo2}

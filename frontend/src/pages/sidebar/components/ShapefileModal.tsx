@@ -4,6 +4,7 @@ import { LuPlus, LuRefreshCw, LuUpload, LuFile, LuX, LuFolderInput, LuCheck } fr
 import { toaster } from "../../../components/ui/toaster";
 import * as api from "../../../api";
 import "../../ShapefileManagement/shapefileManagement.css";
+import "../../ShapefileManagement/shapefileManagement-v2.css";
 import { MapContainer, GeoJSON, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -27,11 +28,15 @@ function FitBoundsGeoJSON({ data }: { data: any }) {
 interface ShapefileModalProps {
   open: boolean;
   onClose: () => void;
+  /** v1 stays byte-identical (default); v2 applies DESIGN_GUIDE.md tokens only — no structural change. */
+  variant?: "v1" | "v2";
 }
 
 type WorkflowStep = "choice" | "add" | "replace" | "success";
 
-export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
+export default function ShapefileModal({ open, onClose, variant = "v1" }: ShapefileModalProps) {
+  const v2 = variant === "v2";
+  const v2ModalClass = v2 ? "psat-shapefile-modal--v2" : "";
   const [step, setStep] = useState<WorkflowStep>("choice");
   const [allShapefiles, setAllShapefiles] = useState<api.ShapefileInfo[]>([]);
 
@@ -480,9 +485,9 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content className={v2ModalClass} style={v2 ? { fontFamily: "Inter, sans-serif", borderRadius: "0.375rem", border: "1px solid #E2E8F0" } : undefined}>
             <Dialog.Header>
-              <Dialog.Title>
+              <Dialog.Title style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.25rem", color: "#2D3748" } : undefined}>
                 {step === "choice" && "Update GIS Layers"}
                 {step === "add" && "Add GIS Layer"}
                 {step === "replace" && "Replace GIS Layer"}
@@ -533,7 +538,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                 <Box>
                   {/* New Category Name Input (Now always visible) */}
                   <Box mb={4}>
-                    <Text fontWeight="600" mb={2}>New Category Name</Text>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>New Category Name</Text>
                     <Box display="flex" alignItems="center" gap={2}>
                       <LuFolderInput />
                       <Input
@@ -556,10 +561,10 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                     <div className="dropzone-icon">
                       <LuUpload />
                     </div>
-                    <Text fontWeight="600" mb={2}>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
                       Drag and drop files here
                     </Text>
-                    <Text fontSize="sm" color="fg.muted" mb={3}>
+                    <Text fontSize={v2 ? "md" : "sm"} color="fg.muted" mb={3}>
                       or click to browse
                     </Text>
                     <Text fontSize="xs" color="fg.muted">
@@ -578,7 +583,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                   {/* File List */}
                   {uploadFiles.length > 0 && (
                     <div className="file-list">
-                      <Text fontWeight="600" mb={2}>
+                      <Text fontWeight={v2 ? "700" : "600"} mb={2}>
                         Selected Files ({uploadFiles.length})
                       </Text>
                       {uploadFiles.map((file, index) => (
@@ -607,7 +612,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
                   {/* Map Preview – always visible */}
                   <Box mt={4}>
-                    <Text fontWeight="600" fontSize="sm" mb={2}>
+                    <Text fontWeight={v2 ? "700" : "600"} fontSize={v2 ? "md" : "sm"} mb={2}>
                       Layer Preview
                       {!previewGeoJSON && !previewLoading && (
                         <Text as="span" fontWeight="400" color="gray.400" fontSize="xs" ml={2}>
@@ -620,7 +625,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                         <Box position="absolute" inset="0" zIndex={500} bg="whiteAlpha.800"
                           display="flex" alignItems="center" justifyContent="center" flexDirection="column" gap={2}>
                           <Spinner size="lg" color="blue.500" />
-                          <Text fontSize="sm" color="gray.600">Generating preview...</Text>
+                          <Text fontSize={v2 ? "md" : "sm"} color="gray.600">Generating preview...</Text>
                         </Box>
                       )}
                       {previewError && !previewLoading && (
@@ -653,7 +658,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
                   {uploading && (
                     <Box mt={4}>
-                      <Text fontSize="sm" color="fg.muted" textAlign="center">
+                      <Text fontSize={v2 ? "md" : "sm"} color="fg.muted" textAlign="center">
                         Uploading GIS layers...
                       </Text>
                     </Box>
@@ -680,10 +685,10 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                     <div className="dropzone-icon">
                       <LuUpload />
                     </div>
-                    <Text fontWeight="600" mb={2}>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
                       Drag and drop file here
                     </Text>
-                    <Text fontSize="sm" color="fg.muted" mb={3}>
+                    <Text fontSize={v2 ? "md" : "sm"} color="fg.muted" mb={3}>
                       or click to browse
                     </Text>
                     <Text fontSize="xs" color="fg.muted">
@@ -705,7 +710,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                   {/* Selected Files Display */}
                   {replaceFiles.length > 0 && (
                     <div className="file-list">
-                      <Text fontWeight="600" mb={2}>
+                      <Text fontWeight={v2 ? "700" : "600"} mb={2}>
                         Selected Files ({replaceFiles.length})
                       </Text>
                       {replaceFiles.map((file, index) => (
@@ -734,7 +739,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
                   {/* Select Target Shapefile (Searchable) */}
                   <Box mb={4} mt={6} position="relative" ref={targetSearchRef}>
-                    <Text fontWeight="600" mb={2}>Select GIS Layer to Replace</Text>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>Select GIS Layer to Replace</Text>
                     <Input
                       placeholder="Type to filter layers by folder or name..."
                         value={targetShapefileSearch}
@@ -777,14 +782,14 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                                 alignItems="center"
                                 justifyContent="space-between"
                               >
-                                <Text fontSize="sm">{shp.category} / {shp.name}</Text>
+                                <Text fontSize={v2 ? "md" : "sm"}>{shp.category} / {shp.name}</Text>
                                 {selectedTargetShapefile === shp.path && (
                                   <Box color="blue.500"><LuCheck /></Box>
                                 )}
                               </Box>
                             ))
                           ) : (
-                            <Box px={3} py={2} color="fg.muted" fontSize="sm">
+                            <Box px={3} py={2} color="fg.muted" fontSize={v2 ? "md" : "sm"}>
                               No layers match your search
                             </Box>
                           )}
@@ -795,7 +800,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
 
                   {replacing && (
                     <Box mt={4}>
-                      <Text fontSize="sm" color="fg.muted" textAlign="center">
+                      <Text fontSize={v2 ? "md" : "sm"} color="fg.muted" textAlign="center">
                         Replacing GIS layer...
                       </Text>
                     </Box>
@@ -809,20 +814,35 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                   <Box fontSize="4xl" color="green.500" mb={4}>
                     <LuCheck />
                   </Box>
-                  <Text fontSize="xl" fontWeight="600" mb={2}>
+                  <Text fontSize="xl" fontWeight={v2 ? "700" : "600"} mb={2}>
                     Operation Completed!
                   </Text>
                   <Text color="fg.muted" mb={6}>
                     What would you like to do next?
                   </Text>
                   <Box display="flex" flexDirection="column" gap={2}>
-                    <Button onClick={() => setStep("add")} colorPalette="blue" variant="outline">
+                    <Button
+                      onClick={() => setStep("add")}
+                      colorPalette="blue"
+                      variant="outline"
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined}
+                    >
                       Add More GIS Layers
                     </Button>
-                    <Button onClick={() => setStep("replace")} colorPalette="blue" variant="outline">
+                    <Button
+                      onClick={() => setStep("replace")}
+                      colorPalette="blue"
+                      variant="outline"
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined}
+                    >
                       Replace More GIS Layers
                     </Button>
-                    <Button onClick={handleClose} colorPalette="gray" variant="solid">
+                    <Button
+                      onClick={handleClose}
+                      colorPalette="gray"
+                      variant="solid"
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", background: "#1A202C", color: "#fff" } : undefined}
+                    >
                       Done
                     </Button>
                   </Box>
@@ -834,12 +854,20 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
               <Dialog.Footer>
                 <Box display="flex" gap={3} width="100%" justifyContent="flex-end">
                   {step !== "choice" && (
-                    <Button variant="outline" onClick={handleBackToChoice}>
+                    <Button
+                      variant="outline"
+                      onClick={handleBackToChoice}
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined}
+                    >
                       Back
                     </Button>
                   )}
                   {step === "choice" && (
-                    <Button variant="outline" onClick={handleClose}>
+                    <Button
+                      variant="outline"
+                      onClick={handleClose}
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined}
+                    >
                       Cancel
                     </Button>
                   )}
@@ -848,6 +876,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                       colorPalette="blue"
                       onClick={() => setShowUploadConfirm(true)}
                       disabled={uploadFiles.length === 0 || uploading}
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem" } : undefined}
                     >
                       Upload {uploadFiles.length > 0 && `(${uploadFiles.length})`}
                     </Button>
@@ -857,6 +886,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                       colorPalette="blue"
                       onClick={handleReplaceSubmit}
                       disabled={replaceFiles.length === 0 || !selectedTargetShapefile || replacing}
+                      style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem" } : undefined}
                     >
                       Replace {replaceFiles.length > 0 && `(${replaceFiles.length} file${replaceFiles.length > 1 ? 's' : ''})`}
                     </Button>
@@ -878,47 +908,51 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content className={v2ModalClass} style={v2 ? { fontFamily: "Inter, sans-serif", borderRadius: "0.375rem", border: "1px solid #E2E8F0" } : undefined}>
               <Dialog.Header>
-                <Dialog.Title>Before You Upload</Dialog.Title>
+                <Dialog.Title style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.25rem", color: "#2D3748" } : undefined}>Before You Upload</Dialog.Title>
                 <Dialog.CloseTrigger />
               </Dialog.Header>
               <Dialog.Body>
-                <Text mb={3} color="fg.muted">
+                <Text mb={3} color="fg.muted" fontSize={v2 ? "md" : undefined}>
                   Please confirm that the shapefile you are about to upload meets <strong>all</strong> of the following requirements:
                 </Text>
                 <Box as="ul" pl={5} mb={4} style={{ listStyleType: "disc" }}>
                   <Box as="li" mb={2}>
-                    <Text fontSize="sm">
+                    <Text fontSize={v2 ? "md" : "sm"}>
                       <strong>Exact file name</strong> — The file name must exactly match what the system expects.
                     </Text>
                   </Box>
                   <Box as="li" mb={2}>
-                    <Text fontSize="sm">
+                    <Text fontSize={v2 ? "md" : "sm"}>
                       <strong>Exact columns and numbers</strong> — The shapefile must contain the correct number of columns, with no extras or omissions.
                     </Text>
                   </Box>
                   <Box as="li" mb={2}>
-                    <Text fontSize="sm">
+                    <Text fontSize={v2 ? "md" : "sm"}>
                       <strong>Exact attribute names</strong> — Every column/attribute name must match exactly, including capitalisation.
                     </Text>
                   </Box>
                   <Box as="li" mb={2}>
-                    <Text fontSize="sm">
+                    <Text fontSize={v2 ? "md" : "sm"}>
                       <strong>Exact sequence</strong> — The columns must appear in exactly the same order as specified.
                     </Text>
                   </Box>
                 </Box>
-                <Text fontSize="sm" color="orange.600" fontWeight="500">
+                <Text fontSize={v2 ? "md" : "sm"} color="orange.600" fontWeight={v2 ? "700" : "500"}>
                   Uploading an incompatible shapefile may cause system errors or incorrect data rendering.
                 </Text>
-                <Text fontSize="sm" color="fg.muted" mt={3}>
+                <Text fontSize={v2 ? "md" : "sm"} color="fg.muted" mt={3}>
                   If you are unsure of the expected format, refer to the existing shapefiles in the GIS Layers list as a reference.
                 </Text>
               </Dialog.Body>
               <Dialog.Footer>
                 <Box display="flex" gap={3} width="100%" justifyContent="flex-end">
-                  <Button variant="outline" onClick={() => setShowUploadConfirm(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowUploadConfirm(false)}
+                    style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined}
+                  >
                     Cancel
                   </Button>
                   <Button
@@ -927,6 +961,7 @@ export default function ShapefileModal({ open, onClose }: ShapefileModalProps) {
                       setShowUploadConfirm(false);
                       handleAddUpload();
                     }}
+                    style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem" } : undefined}
                   >
                     Confirm &amp; Upload
                   </Button>

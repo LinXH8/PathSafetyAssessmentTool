@@ -5,7 +5,7 @@ geopandas>=0.13.2
 shapely>=2.0
 pyproj>=3.5
 fiona>=1.9
-rtree>=1.2    # 可选但强烈推荐：加速 sindex
+rtree>=1.2    # Optional but strongly recommended: speeds up sindex spatial indexing
 
 # --- Viz ---
 matplotlib>=3.7
@@ -19,7 +19,7 @@ geopy>=2.3
 
 # --- Excel / Windows COM ---
 openpyxl>=3.1
-pywin32>=306; sys_platform == 'win32'   # 提供 pythoncom / win32com
+pywin32>=306; sys_platform == 'win32'   # Provides pythoncom / win32com (Windows only)
 
 # --- Networking ---
 requests>=2.31
@@ -30,12 +30,12 @@ streamlit>=1.32
 # --- Optional: CV auto-coding (prediction.py) ---
 ultralytics>=8.0
 
-# 如果 ultralytics 自动装 torch 不成功，手动解开下一行并选合适的版本/平台轮子：
-# torch==2.2.*  # CPU: pip 官方轮子；GPU: 请用对应 CUDA/cuDNN 的 torch 轮子
+# If ultralytics fails to auto-install torch, uncomment the next line and select the right version/platform wheel:
+# torch==2.2.*  # CPU: official pip wheel; GPU: use the torch wheel matching your CUDA/cuDNN version
 
 Flask>=3.0
 flask-cors>=4.0
-exifread>=3.0    # 你后端 routes 里有 import exifread
+exifread>=3.0    # Required: backend routes.py imports exifread for EXIF metadata extraction
 python-pptx>=0.6
 python-docx>=1.1
 

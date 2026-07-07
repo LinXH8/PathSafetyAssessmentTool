@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
 import { invalidateAll } from "../../api/projectDataCache";
 import { useProjectSelection } from "../../features/projectSelection";
+import { SESSION_KEYS } from "../../constants/sessionKeys";
 import { matchesProjectSearch } from "../../utils/projectSearch";
 import { useNavigate } from "react-router-dom";
 import { toaster } from "../../components/ui/toaster";
@@ -306,13 +307,13 @@ export default function Home() {
   const loadPathAnalysis = () => {
     if (selected.size === 0) return;
     const projectNames = Array.from(selected);
-    sessionStorage.setItem("pathAnalysis_selectedProjects", JSON.stringify(projectNames));
-    sessionStorage.setItem("pathAnalysis_loadedProjects", JSON.stringify(projectNames));
+    sessionStorage.setItem(SESSION_KEYS.PA_SELECTED_PROJECTS, JSON.stringify(projectNames));
+    sessionStorage.setItem(SESSION_KEYS.PA_LOADED_PROJECTS, JSON.stringify(projectNames));
     // Deliberate "start over" reset point: loading a project set into Path
     // Analysis always fetches fresh data, never the cached session data, and
     // re-fits the map to the new set rather than restoring the old viewport.
     invalidateAll();
-    sessionStorage.removeItem("pathAnalysisMap_viewport");
+    sessionStorage.removeItem(SESSION_KEYS.PA_MAP_VIEWPORT);
     navigate("/analysis/path");
   };
 

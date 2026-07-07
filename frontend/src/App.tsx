@@ -12,7 +12,6 @@ import GisLayersPage from "./pages/GisLayersPage/GisLayersPage"
 import GeneratedReportsPage from "./pages/GeneratedReportsPage/GeneratedReportsPage"
 
 import AppLayout from "./layouts/AppLayout";
-import HelpButton from "./components/common/HelpButton";
 import HelpPage from "./pages/HelpPage/helpPage";
 import RequireProfile from "./features/profile/RequireProfile";
 import { recordProfileActivity } from "./api";
@@ -45,7 +44,6 @@ function NavigationTelemetry() {
 export default function App() {
   return (
     <>
-      <HelpButton />
       <NavigationTelemetry />
       <Routes>
 

@@ -1,5 +1,6 @@
 import type { NavigateFunction } from "react-router-dom";
 import { invalidateAll } from "../api/projectDataCache";
+import { SESSION_KEYS } from "../constants/sessionKeys";
 
 /**
  * Single source of truth for the cross-page "open these projects in <tool>"
@@ -24,11 +25,11 @@ export function openTreatment(navigate: NavigateFunction, names: string[]) {
 
 export function openPathAnalysis(navigate: NavigateFunction, names: string[]) {
   if (names.length === 0) return;
-  sessionStorage.setItem("pathAnalysis_selectedProjects", JSON.stringify(names));
-  sessionStorage.setItem("pathAnalysis_loadedProjects", JSON.stringify(names));
+  sessionStorage.setItem(SESSION_KEYS.PA_SELECTED_PROJECTS, JSON.stringify(names));
+  sessionStorage.setItem(SESSION_KEYS.PA_LOADED_PROJECTS, JSON.stringify(names));
   // Deliberate "start over" reset point: always fetch fresh data and re-fit the
   // map to the new set rather than restoring the old viewport.
   invalidateAll();
-  sessionStorage.removeItem("pathAnalysisMap_viewport");
+  sessionStorage.removeItem(SESSION_KEYS.PA_MAP_VIEWPORT);
   navigate("/analysis/path");
 }

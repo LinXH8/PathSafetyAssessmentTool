@@ -1,451 +1,49 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import type { ReactNode, CSSProperties } from "react";
-import { createPortal } from "react-dom";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FONT, COLOR } from "../../../features/ui/designTokens";
-import { V2Segmented, v2TabStyle, v2TabRowStyle } from "./paV2Primitives";
-import { Box, Text, Tabs, Button, Flex, HStack, Portal, Input, IconButton, Dialog } from "@chakra-ui/react";
+import { COLOR } from "../../../features/ui/designTokens";
+import { Box, Text, Tabs, Button, Flex, Portal, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Marker, Pane, ZoomControl } from "react-leaflet";
-import { FaDrawPolygon, FaMousePointer, FaPlus, FaTrash, FaChevronDown } from "react-icons/fa";
-import { Slider } from "../../../components/ui/slider";
-import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS, SUBCATEGORY_CHILD_ATTRS } from "./AttributesDropdown";
+import { MapContainer, TileLayer, CircleMarker, Tooltip, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
+import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
-import { Menu } from "@chakra-ui/react";
 import { MapCursorController } from "../../../components/common/MapCursorController";
 import { AnalysisSidebar } from "../../../components/visualization/AnalysisSidebar";
 
 import "leaflet/dist/leaflet.css";
-import L, { divIcon } from "leaflet";
-import proj4 from "proj4";
-import type { Feature, FeatureCollection, GeoJsonProperties, LineString, MultiLineString, MultiPolygon, Polygon, Position } from "geojson";
-import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, previewUploadedShapefiles, type AttributeRow, type CodingFilterContext, type FilteredProjectData, CODING_FILTER_CONTEXT_KEY } from "../../../api";
-import { getCachedGeoJSON, getCachedAttributes, getCachedResults, getCachedAttributeMappings, getCachedAttributeMappingsSync, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
-import { GIS_LAYER_COLORS as gisLayerColors, PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
-
-const SAFETY_FOCUS_ATTRIBUTES = new Set(["VB Band", "BB Band", "SB Band", "BP Band", "Overall Risk Level"]);
-
-// Radius (metres) around each loaded segment within which GIS overlay features are
-// fetched. Matches the Coding page's single-point query radius.
-const GIS_SEGMENT_RADIUS_M = 200;
-
-// Attributes whose missing/blank value defaults to "Adequate" (code 1) per
-// backend/src/CycleRAP/defaults.json. Scoring applies the same default
-// (row.get(attr, 1)) and the coding panel renders "Adequate" for a blank cell,
-// so Path Analysis must treat blank as "Adequate" too — otherwise the many
-// segments that were never explicitly coded (null in attributes.csv) get dropped
-// from visibleSegments and never appear even when "Adequate" is toggled on.
-const ADEQUACY_DEFAULT_ATTRS = new Set(["Line of Sight", "Facility access"]);
-interface UploadedBoundaryFeature {
-  key: string;
-  label: string;
-  kind: "polygon" | "line";
-  coords?: [number, number][];
-  lineCoordsSets?: [number, number][][];
-}
-
-const FEATURE_LABEL_KEYS = [
-  "name", "Name", "NAME", "label", "Label", "LABEL",
-  "pln_area_n", "PLN_AREA_N", "subzone_n", "SUBZONE_N",
-  "region_n", "REGION_N", "id", "ID", "OBJECTID", "FID",
-];
-
-function getUploadedBoundaryLabel(properties: GeoJsonProperties | null | undefined, featureIndex: number): string {
-  if (properties) {
-    for (const key of FEATURE_LABEL_KEYS) {
-      const value = properties[key];
-      if (typeof value === "string" && value.trim()) return value.trim();
-      if (typeof value === "number" && Number.isFinite(value)) return String(value);
-    }
-  }
-  return `Feature ${featureIndex + 1}`;
-}
-
-function toShapefileLeafletCoords(ring: number[][]): [number, number][] {
-  return ring
-    .filter((coord) => coord.length >= 2 && Number.isFinite(coord[0]) && Number.isFinite(coord[1]))
-    .map(([lng, lat]) => [lat, lng]);
-}
-
-function extractUploadedBoundaryFeatures(collection: FeatureCollection): UploadedBoundaryFeature[] {
-  const boundaries: UploadedBoundaryFeature[] = [];
-  const aggregatedLineCoords: number[][][] = [];
-  const aggregatedLineLabels: string[] = [];
-
-  collection.features.forEach((feature, featureIndex) => {
-    const baseLabel = getUploadedBoundaryLabel(feature.properties, featureIndex);
-    const geometry = feature.geometry;
-    if (!geometry) return;
-
-    if (geometry.type === "Polygon") {
-      const coords = toShapefileLeafletCoords((geometry as Polygon).coordinates[0] as number[][]);
-      if (coords.length >= 3) boundaries.push({ key: `${featureIndex}-0`, label: baseLabel, kind: "polygon", coords });
-    } else if (geometry.type === "MultiPolygon") {
-      const multi = geometry as MultiPolygon;
-      multi.coordinates.forEach((polygonCoords, partIndex) => {
-        const coords = toShapefileLeafletCoords(polygonCoords[0] as number[][]);
-        if (coords.length >= 3) boundaries.push({
-          key: `${featureIndex}-${partIndex}`,
-          label: multi.coordinates.length > 1 ? `${baseLabel} (part ${partIndex + 1})` : baseLabel,
-          kind: "polygon", coords,
-        });
-      });
-    } else if (geometry.type === "LineString") {
-      const lineCoords = (geometry as LineString).coordinates as number[][];
-      const coords = toShapefileLeafletCoords(lineCoords);
-      if (coords.length >= 2) { aggregatedLineCoords.push(lineCoords); aggregatedLineLabels.push(baseLabel); }
-    } else if (geometry.type === "MultiLineString") {
-      (geometry as MultiLineString).coordinates.forEach((lineCoords) => {
-        const coords = toShapefileLeafletCoords(lineCoords as number[][]);
-        if (coords.length >= 2) { aggregatedLineCoords.push(lineCoords as number[][]); aggregatedLineLabels.push(baseLabel); }
-      });
-    }
-  });
-
-  if (aggregatedLineCoords.length > 0) {
-    const lineCoordsSets = aggregatedLineCoords.map((lc) => toShapefileLeafletCoords(lc)).filter((c) => c.length >= 2);
-    boundaries.push({
-      key: "uploaded-lines",
-      label: aggregatedLineLabels.length === 1 ? aggregatedLineLabels[0] : `Imported Lines (${aggregatedLineCoords.length} features)`,
-      kind: "line",
-      lineCoordsSets,
-    });
-  }
-
-  return boundaries;
-}
-
-type GradeBucket = {
-  label: string;
-  aliases: string[];
-  maxPercent?: number;
-};
-
-const GRADE_BUCKETS: GradeBucket[] = [
-  { label: "<=2% (1:25)", maxPercent: 2, aliases: ["<=2 degrees (1:25)", "<=4% (1:25)"] },
-  { label: "2.9% (1:20)", maxPercent: 2.9, aliases: ["2.9 degrees (1:20)", "5% (1:20)"] },
-  { label: "3.8% (1:15)", maxPercent: 3.8, aliases: ["3.8 degrees (1:15)", "6.7% (1:15)"] },
-  { label: "4.7% (1:12)", maxPercent: 4.7, aliases: ["4.7 degrees (1:12)", "8.3% (1:12)", "< 5 Degrees"] },
-  { label: ">=5%", aliases: [">=5 degrees", ">8.3% (>1:12)", "=/> 5 Degrees"] },
-];
-const GRADE_FILTER_OPTIONS = GRADE_BUCKETS.map(({ label }) => label);
-const ROAD_SPEED_LIMIT_FILTER_OPTIONS = ["NA", "30 km/h", "40 km/h", "50 km/h", "60 km/h", "70 km/h", "80 km/h", "90 km/h"];
-const CROSSING_TYPE_FILTER_OPTIONS = ["Zebra Crossing", "Signalised PC", "Bicycle Crossing", "Unsignalised Junction", "Development Access"];
-
-const compareByOrder = (left: string, right: string, order: string[]): number => {
-  const leftIndex = order.indexOf(left);
-  const rightIndex = order.indexOf(right);
-  if (leftIndex === -1 && rightIndex === -1) return 0;
-  if (leftIndex === -1) return 1;
-  if (rightIndex === -1) return -1;
-  return leftIndex - rightIndex;
-};
-
-const getSemanticCategoryOrder = (attributeName: string | null | undefined): string[] | null => {
-  if (!attributeName) return null;
-  if (SAFETY_FOCUS_ATTRIBUTES.has(attributeName)) return ["Low", "Medium", "High", "Extreme"];
-  if (attributeName === "Facility Width per Direction") return ["Very Narrow", "Narrow", "Wide"];
-  if (attributeName === "Grade") return GRADE_FILTER_OPTIONS;
-  if (attributeName === "Road speed limit") return ROAD_SPEED_LIMIT_FILTER_OPTIONS;
-  if (attributeName === "Crossing Type") return CROSSING_TYPE_FILTER_OPTIONS;
-  return null;
-};
-
-const getGradeBucketFromPercent = (gradientPct: number): string => {
-  const absoluteGradientPercent = Math.abs(gradientPct);
-  return GRADE_BUCKETS.find((bucket) => bucket.maxPercent === undefined || absoluteGradientPercent <= bucket.maxPercent)?.label ?? GRADE_BUCKETS[GRADE_BUCKETS.length - 1].label;
-};
-
-const normalizeGradeLabel = (value: string): string => {
-  const normalizedValue = value.trim();
-  const matchingBucket = GRADE_BUCKETS.find(({ label, aliases }) => label === normalizedValue || aliases.includes(normalizedValue));
-  return matchingBucket?.label ?? normalizedValue;
-};
-
-const normalizeCrossingTypeLabel = (value: string): string | null => {
-  const normalizedValue = value.trim().toLowerCase();
-  if (!normalizedValue) return null;
-  if (normalizedValue.includes("zebra")) return "Zebra Crossing";
-  if (normalizedValue.includes("signalised") || normalizedValue.includes("signalized")) return "Signalised PC";
-  if (normalizedValue.includes("bicycle crossing") || normalizedValue.includes("pedestrian cum bicycle crossing")) return "Bicycle Crossing";
-  if (normalizedValue.includes("unsignalised junction") || normalizedValue.includes("unsignalized junction")) return "Unsignalised Junction";
-  if (normalizedValue.includes("development access")) return "Development Access";
-  return null;
-};
-
-// --- EPSG:3414 (SVY21 / Singapore TM) definition -> EPSG:4326 ---
-proj4.defs(
-  "EPSG:3414",
-  "+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +units=m +no_defs"
-);
-
-
-
-const to4326 = (p: Position): [number, number] => {
-  const [lon, lat] = proj4("EPSG:3414", "EPSG:4326", p as [number, number]) as [number, number];
-  return [lat, lon];
-};
-
-// Component to pan to specific bounds
-function PanToBounds({ bounds }: { bounds: L.LatLngBounds | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!bounds) return;
-    map.fitBounds(bounds, { padding: [24, 24] });
-  }, [bounds, map]);
-  return null;
-}
-
-// Component to auto-fit bounds based on points - only on initial load
-function FitBounds({ points, shouldFit }: { points: [number, number][]; shouldFit: boolean }) {
-  const map = useMap();
-  useEffect(() => {
-    if (!points.length || !shouldFit) return;
-    const bounds = L.latLngBounds(points.map(([lat, lng]) => L.latLng(lat, lng)));
-    map.fitBounds(bounds, { padding: [24, 24] });
-  }, [points, map, shouldFit]);
-  return null;
-}
-
-// Reports live viewport bounds after pan/zoom so the parent can cull off-screen markers.
-// Uses a debounced state update so React batches marker mount/unmount after the gesture ends.
-function ViewportWatcher({ onBoundsChange }: { onBoundsChange: (b: L.LatLngBounds) => void }) {
-  const map = useMap();
-  const cbRef = useRef(onBoundsChange);
-  cbRef.current = onBoundsChange;
-
-  useEffect(() => { cbRef.current(map.getBounds()); }, [map]);
-
-  useMapEvents({
-    moveend: (e) => cbRef.current(e.target.getBounds()),
-    zoomend: (e) => cbRef.current(e.target.getBounds()),
-  });
-  return null;
-}
-
-// sessionStorage key + shape for the persisted map viewport (center + zoom).
-const VIEWPORT_KEY = "pathAnalysisMap_viewport";
-type SavedViewport = { center: [number, number]; zoom: number };
-
-// Persists the live map center/zoom on every pan/zoom so returning from the
-// Coding page lands on the exact view the user left (rather than re-fitting to
-// all points). Cleared on a deliberate Projects-page reselect.
-function ViewportPersister() {
-  const map = useMap();
-  const save = () => {
-    try {
-      const c = map.getCenter();
-      sessionStorage.setItem(
-        VIEWPORT_KEY,
-        JSON.stringify({ center: [c.lat, c.lng], zoom: map.getZoom() } as SavedViewport)
-      );
-    } catch { /* sessionStorage unavailable — ignore */ }
-  };
-  useMapEvents({ moveend: save, zoomend: save });
-  return null;
-}
-
-// Forces Leaflet to recalculate the container size after mount.
-// Necessary when the map is inside a flex/scroll container that applies
-// its final height after Leaflet has already initialised.
-function MapInvalidateSize() {
-  const map = useMap();
-  useEffect(() => {
-    // Initial pass (fires moveend so marker culling re-runs).
-    const id = setTimeout(() => { map.invalidateSize(); map.fire('moveend'); }, 0);
-    // Second pass once the v2 card height has settled + observe container resizes,
-    // mirroring the Coding / Create-Project fix for the half-grey-tiles bug.
-    const settle = window.setTimeout(() => map.invalidateSize(), 200);
-    let ro: ResizeObserver | null = null;
-    try {
-      ro = new ResizeObserver(() => map.invalidateSize());
-      ro.observe(map.getContainer());
-    } catch { /* ResizeObserver unsupported — the timeouts still cover mount */ }
-    return () => { clearTimeout(id); clearTimeout(settle); ro?.disconnect(); };
-  }, [map]);
-  return null;
-}
-
-// Helper: Point in Polygon Algorithm (Ray Casting)
-function isPointInPolygon(point: [number, number], vs: [number, number][]) {
-  // point: [lat, lon], vs: [[lat, lon], ...]
-  const x = point[0], y = point[1];
-  let inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][0], yi = vs[i][1];
-    const xj = vs[j][0], yj = vs[j][1];
-    const intersect = ((yi > y) !== (yj > y))
-      && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-interface PolygonDrawingToolProps {
-  isPolygonMode: boolean;
-  isPolygonAddMode: boolean;
-  onPolygonPoint: (latlng: L.LatLng) => void;
-  onPointUpdate: (index: number, latlng: L.LatLng) => void;
-  polygonPoints: [number, number][];
-}
-
-interface DraggableMarkerProps {
-  position: [number, number];
-  index: number;
-  icon: L.DivIcon;
-  onDrag: (index: number, latlng: L.LatLng) => void;
-  onDragEnd: (index: number, latlng: L.LatLng) => void;
-}
-
-function DraggableMarker({ position, index, icon, onDrag, onDragEnd }: DraggableMarkerProps) {
-  const eventHandlers = useMemo(
-    () => ({
-      drag: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDrag(index, pos);
-      },
-      dragend: (e: L.LeafletEvent) => {
-        const marker = e.target;
-        const pos = marker.getLatLng();
-        onDragEnd(index, pos);
-      },
-      click: (e: L.LeafletEvent) => {
-        L.DomEvent.stopPropagation(e as any);
-      },
-    }),
-    [index, onDrag, onDragEnd]
-  );
-
-  return (
-    <Marker
-      position={position}
-      draggable={true}
-      icon={icon}
-      eventHandlers={eventHandlers}
-    />
-  );
-}
-
-function PolygonDrawingTool({ isPolygonMode, isPolygonAddMode, onPolygonPoint, onPointUpdate, polygonPoints }: PolygonDrawingToolProps) {
-  const modeRef = useRef(false);
-  const polygonRef = useRef<L.Polygon>(null);
-  const polylineRef = useRef<L.Polyline>(null);
-
-  // Keep latest points in a ref for access inside drag handler without re-binding
-  const pointsRef = useRef(polygonPoints);
-  useEffect(() => {
-    pointsRef.current = polygonPoints;
-  }, [polygonPoints]);
-
-  useEffect(() => {
-    modeRef.current = isPolygonMode || isPolygonAddMode;
-  }, [isPolygonMode, isPolygonAddMode]);
-
-  useMapEvents({
-    click(e) {
-      if (modeRef.current) {
-        onPolygonPoint(e.latlng);
-      }
-    },
-  });
-
-  const handleDrag = useCallback((index: number, latlng: L.LatLng) => {
-    // Imperatively update the polygon/polyline shape during drag for performance
-    const currentPoints = pointsRef.current;
-    if (!currentPoints) return;
-
-    // Create new array with updated point
-    const newPoints = [...currentPoints];
-    newPoints[index] = [latlng.lat, latlng.lng];
-
-    // Convert to Leaflet LatLng objects to be safe
-    const latLngs = newPoints.map(p => L.latLng(p[0], p[1]));
-
-    // Update Leaflet layers directly
-    if (polygonRef.current) {
-      polygonRef.current.setLatLngs(latLngs);
-    }
-    if (polylineRef.current) {
-      polylineRef.current.setLatLngs(latLngs);
-    }
-  }, []);
-
-  const handleDragEnd = useCallback((index: number, latlng: L.LatLng) => {
-    // Commit the change to state on drag end
-    onPointUpdate(index, latlng);
-  }, [onPointUpdate]);
-
-  const color = isPolygonAddMode ? "blue" : "red";
-
-  // Custom icon to mimic CircleMarker but allow dragging
-  const createCustomIcon = (color: string) => {
-    return divIcon({
-      className: "custom-polygon-marker",
-      html: `<div style="
-        background-color: ${color};
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 4px rgba(0,0,0,0.4);
-        cursor: grab;
-      "></div>`,
-      iconSize: [20, 20], // Hit box size
-      iconAnchor: [10, 10], // Centered (half of 20)
-    });
-  };
-
-  const icon = useMemo(() => createCustomIcon(color), [color]);
-
-  if (polygonPoints.length === 0) return null;
-
-  return (
-    <>
-      {polygonPoints.map((pt, idx) => (
-        <DraggableMarker
-          key={`poly-point-${idx}`}
-          position={pt}
-          index={idx}
-          icon={icon}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        />
-      ))}
-      <LeafletPolyline
-        ref={polylineRef}
-        positions={polygonPoints}
-        pathOptions={{ color: color, dashArray: "5, 5" }}
-      />
-      {polygonPoints.length >= 3 && (
-        <LeafletPolygon
-          ref={polygonRef}
-          positions={polygonPoints}
-          pathOptions={{ color: color, fillOpacity: 0.2 }}
-        />
-      )}
-    </>
-  );
-}
-
-/**
- * Renders `children` inline (`to === undefined`, the v1 default), into a portal
- * (`to` is a DOM node, v2 with the host mounted), or nothing (`to === null`, v2
- * before the host mounts). Lets the v2 layout relocate the project / category
- * toggle UI into the left "Current Filters" accordion while the map view keeps
- * owning all of its state — no state lift required.
- */
-function MaybePortal({
-  to,
-  children,
-}: {
-  to?: HTMLElement | null;
-  children: ReactNode;
-}) {
-  if (to === undefined) return <>{children}</>;
-  if (to === null) return null;
-  return createPortal(children, to);
-}
+import L from "leaflet";
+import type { Feature, LineString } from "geojson";
+import { to4326 } from "../../../utils/projection";
+import { PolygonDrawingTool } from "../../../components/map/PolygonDrawing";
+import { isPointInPolygon } from "../../../components/map/polygonUtils";
+import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type CodingFilterContext, type FilteredProjectData } from "../../../api";
+import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
+import { PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
+import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
+import {
+  SAFETY_FOCUS_ATTRIBUTES,
+  compareByOrder,
+  getSemanticCategoryOrder,
+  escapeCSV,
+  type ProjectData,
+  type VisibleSegment,
+} from "./mapView/mapViewUtils";
+import {
+  PanToBounds,
+  FitBounds,
+  ViewportWatcher,
+  ViewportPersister,
+  MapInvalidateSize,
+  MaybePortal,
+} from "./mapView/leafletHelpers";
+import { useViewportPersistence } from "./mapView/useViewportPersistence";
+import { useFilterState } from "./mapView/useFilterState";
+import { useAttributeText } from "./mapView/useAttributeText";
+import { useGISLayerToggles } from "./mapView/useGISLayerToggles";
+import { useImportedShapefile } from "./mapView/useImportedShapefile";
+import { GISLayerOverlays } from "./mapView/GISLayerOverlays";
+import { MapFiltersPanel } from "./mapView/MapFiltersPanel";
+import { SegmentsTableTab } from "./mapView/SegmentsTableTab";
+import { MapViewToolbar } from "./mapView/MapViewToolbar";
 
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
@@ -482,24 +80,6 @@ interface AttributeAnalysisMapViewProps {
 }
 
 
-type ProjectData = {
-  projectName: string;
-  geoFeatures: Feature<LineString, any>[];
-  attributes: AttributeRow[];
-  scores: Record<string, any>[]; // Raw crash type scores (BB, SB, VB, BP)
-  color: string;
-};
-
-type VisibleSegment = {
-  idx: number;
-  latlng: [number, number];
-  f: Feature<LineString, any>;
-  attributes: AttributeRow;
-  projectName: string;
-  projectColor: string;
-  scores: Record<string, any> | null;
-};
-
 export default function AttributeAnalysisMapView({
   selectedProjects,
   selectedAttributes,
@@ -516,14 +96,13 @@ export default function AttributeAnalysisMapView({
   // v2: a "Generate Report" button sits beside the Download dropdown (ported from
   // the v1 sidebar).
   const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem("psat_report_layout"); } catch { return false; }
+    try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; }
   }, []);
   // v2: the polygon / single-select tools move off the top bar into a floating
   // cluster over the map (mirrors Coding). This host is that overlay; the tools
   // portal into it. Null until it mounts (then they simply aren't shown).
   const [toolsHost, setToolsHost] = useState<HTMLElement | null>(null);
   const toolsHostRef = useCallback((n: HTMLDivElement | null) => setToolsHost(n), []);
-  const tableContainerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<string>("map");
   const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -541,195 +120,41 @@ export default function AttributeAnalysisMapView({
 
   // Track live map viewport so we can cull off-screen markers before React touches them.
   const [mapViewportBounds, setMapViewportBounds] = useState<L.LatLngBounds | null>(null);
-  const [attrMappings, setAttrMappings] = useState<Record<string, Record<string, string>>>(
-    () => getCachedAttributeMappingsSync() ?? {}
-  );
 
-  // Category toggle states — tracks per-attribute per-value visibility
-  const [categoryToggles, setCategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
-    try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryToggles");
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Subcategory toggle states — tracks per-child-attr per-value visibility (Layer 3)
-  const [subcategoryToggles, setSubcategoryToggles] = useState<Record<string, Record<string, boolean>>>(() => {
-    try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_subcategoryToggles");
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Range filter states for numeric attributes
-  const [rangeFilters, setRangeFilters] = useState<Record<string, [number, number]>>(() => {
-    try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_rangeFilters");
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
-
-  // Track which attribute to show categories for in the sidebar.
-  // Index -1 is reserved for the always-present "Projects" tab (colors by project).
-  const [categoryFilterAttributeIndex, setCategoryFilterAttributeIndex] = useState<number>(() => {
-    try {
-      const stored = sessionStorage.getItem("pathAnalysisMap_categoryFilterIndex");
-      return stored !== null ? Number(stored) : -1;
-    } catch { return -1; }
-  });
+  // Persisted viewport restore: seeds the map's initial center/zoom and lets the
+  // data-load effect skip the auto-fit when returning from the Coding page.
+  const { savedViewport, initialCenter, initialZoom } = useViewportPersistence();
+  // Filter / focus / toggle state (sessionStorage-backed) + attribute mappings.
+  const {
+    attrMappings,
+    categoryToggles, setCategoryToggles,
+    subcategoryToggles, setSubcategoryToggles,
+    rangeFilters, setRangeFilters,
+    categoryFilterAttributeIndex, setCategoryFilterAttributeIndex,
+    primaryFocusAttribute, setPrimaryFocusAttribute,
+    activeFilters,
+    categoryFilterAttribute,
+  } = useFilterState(selectedAttributes);
 
   // Track if we should auto-fit bounds (only on initial project load, not on category changes)
   const [shouldAutoFit, setShouldAutoFit] = useState(false);
 
-  // Track which attribute is the primary focus for coloring
-  const [primaryFocusAttribute, setPrimaryFocusAttribute] = useState<string | null>(() => {
-    try {
-      return sessionStorage.getItem("pathAnalysisMap_primaryFocus") || null;
-    } catch {
-      return null;
-    }
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryToggles", JSON.stringify(categoryToggles));
-  }, [categoryToggles]);
-
-  useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_subcategoryToggles", JSON.stringify(subcategoryToggles));
-  }, [subcategoryToggles]);
-
-  useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_rangeFilters", JSON.stringify(rangeFilters));
-  }, [rangeFilters]);
-
-  useEffect(() => {
-    sessionStorage.setItem("pathAnalysisMap_categoryFilterIndex", String(categoryFilterAttributeIndex));
-  }, [categoryFilterAttributeIndex]);
-
-  useEffect(() => {
-    if (primaryFocusAttribute) {
-      sessionStorage.setItem("pathAnalysisMap_primaryFocus", primaryFocusAttribute);
-    } else {
-      sessionStorage.removeItem("pathAnalysisMap_primaryFocus");
-    }
-  }, [primaryFocusAttribute]);
-
-  // When all filters are reset, revert coloring to by-project
-  useEffect(() => {
-    if (selectedAttributes.length === 0) {
-      setCategoryFilterAttributeIndex(-1);
-      setPrimaryFocusAttribute("Project");
-    }
-  }, [selectedAttributes]);
-
-  // GIS layer toggles
-  const [isGisSidebarOpen, setIsGisSidebarOpen] = useState(false);
-  const [gisLayers, setGisLayers] = useState<Record<string, any[]> | null>(null);
-  const [pathDefects, setPathDefects] = useState<{ lat: number; lon: number; type_of_defect?: string; location?: string; date_of_inspection?: string }[] | null>(null);
-  const [showFootpath, setShowFootpath] = useState(false);
-  const [showCycling, setShowCycling] = useState(false);
-  const [showShared, setShowShared] = useState(false);
-  const [showRoadcrossing, setShowRoadcrossing] = useState(false);
-  const [showMrtExit, setShowMrtExit] = useState(false);
-  const [showBusStop, setShowBusStop] = useState(false);
-  const [showBusLane, setShowBusLane] = useState(false);
-  const [showParkingLot, setShowParkingLot] = useState(false);
-  const [showKerbLine, setShowKerbLine] = useState(false);
-  const [showBicycleCrossing, setShowBicycleCrossing] = useState(false);
-  const [showPathDefects, setShowPathDefects] = useState(false);
-  const [showStateLand, setShowStateLand] = useState(false);
-  const [showStatBoard, setShowStatBoard] = useState(false);
-  const [showLandPrivate, setShowLandPrivate] = useState(false);
-  const [showLandMinistry, setShowLandMinistry] = useState(false);
-  const gisAbortRef = useRef<AbortController | null>(null);
-  const gisTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const defectsAbortRef = useRef<AbortController | null>(null);
-  const defectsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Imported shapefile overlay
-  const [importedBoundaries, setImportedBoundaries] = useState<UploadedBoundaryFeature[]>([]);
-  const [importedBoundaryName, setImportedBoundaryName] = useState<string | null>(null);
-  const [importedBoundaryLoading, setImportedBoundaryLoading] = useState(false);
-  const [importedBoundaryError, setImportedBoundaryError] = useState<string | null>(null);
-
-  const handleImportFiles = useCallback(async (files: File[]) => {
-    const sourceFile = files.find((f) => f.name.toLowerCase().endsWith(".shp") || f.name.toLowerCase().endsWith(".zip"));
-    if (!sourceFile) {
-      const message = "Upload a .zip shapefile or a .shp file with its companion files (.dbf, .shx, .prj).";
-      setImportedBoundaryError(message);
-      toaster.create({ title: "Import failed", description: message, type: "warning" });
-      return;
-    }
-    setImportedBoundaryLoading(true);
-    setImportedBoundaryError(null);
-    try {
-      const geojson = await previewUploadedShapefiles(files);
-      const boundaries = extractUploadedBoundaryFeatures(geojson);
-      if (boundaries.length === 0) {
-        throw new Error("No polygon or line features were found in the uploaded shapefile.");
-      }
-      setImportedBoundaryName(sourceFile.name);
-      setImportedBoundaries(boundaries);
-      toaster.create({ title: "Shapefile imported", description: `Loaded ${boundaries.length} feature(s) from ${sourceFile.name}.`, type: "success" });
-    } catch (err: any) {
-      const message = err?.message ?? "Failed to import shapefile.";
-      setImportedBoundaryError(message);
-      toaster.create({ title: "Import failed", description: message, type: "error" });
-    } finally {
-      setImportedBoundaryLoading(false);
-    }
-  }, []);
-
-  const handleClearImportedShapefile = useCallback(() => {
-    setImportedBoundaries([]);
-    setImportedBoundaryName(null);
-    setImportedBoundaryError(null);
-  }, []);
+  // Imported boundary shapefile overlay (state + upload/clear handlers).
+  const {
+    importedBoundaries,
+    importedBoundaryName,
+    importedBoundaryLoading,
+    importedBoundaryError,
+    handleImportFiles,
+    handleClearImportedShapefile,
+  } = useImportedShapefile();
 
   // gisLayerColors / PROJECT_POINT_COLORS now live in constants/mapColors.ts
   // (imported above) — single source shared with AnalysisSidebar.
 
-  // GIS overlay fetch is data-driven (within a radius of every loaded segment) rather
-  // than viewport-driven; see the effect defined after `allPoints` is computed.
-
-  // Viewport-center-based path defects fetch
-  useEffect(() => {
-    if (!showPathDefects || !mapViewportBounds) {
-      setPathDefects(null);
-      return;
-    }
-
-    if (defectsTimerRef.current) clearTimeout(defectsTimerRef.current);
-    defectsTimerRef.current = setTimeout(async () => {
-      if (defectsAbortRef.current) defectsAbortRef.current.abort();
-      const controller = new AbortController();
-      defectsAbortRef.current = controller;
-
-      try {
-        const sw = mapViewportBounds.getSouthWest();
-        const ne = mapViewportBounds.getNorthEast();
-        const centerLat = (sw.lat + ne.lat) / 2;
-        const centerLon = (sw.lng + ne.lng) / 2;
-        // Radius: half the viewport diagonal in metres (rough WGS84 → metres)
-        const diagDeg = Math.sqrt((ne.lat - sw.lat) ** 2 + (ne.lng - sw.lng) ** 2);
-        const radius = Math.min(Math.round((diagDeg / 2) * 111_000), 3000);
-
-        const res = await fetch('/api/defects/nearby', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ point: [centerLon, centerLat], radius }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setPathDefects(data.defects ?? []);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') console.error('[Defects Viewport] Fetch error:', e);
-      }
-    }, 500);
-
-    return () => { if (defectsTimerRef.current) clearTimeout(defectsTimerRef.current); };
-  }, [mapViewportBounds, showPathDefects]);
+  // GIS layer toggles + overlay fetches live in useGISLayerToggles, called
+  // after `gisQueryPoints` is computed (the near-segments fetch is data-driven,
+  // within a radius of every loaded segment, rather than viewport-driven).
 
   // Mode states (Single Point & Polygon)
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -755,14 +180,14 @@ export default function AttributeAnalysisMapView({
   const [sortConfig, setSortConfig] = useState<Array<{ column: string; direction: 'asc' | 'desc' }>>([]);
 
   // Handlers for Polygon Tool
-  const handlePolygonPoint = (latlng: L.LatLng) => {
-    setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
+  const handlePolygonPoint = (latlng: [number, number]) => {
+    setPolygonPoints((prev) => [...prev, latlng]);
   };
 
-  const handlePointUpdate = useCallback((index: number, latlng: L.LatLng) => {
+  const handlePointUpdate = useCallback((index: number, latlng: [number, number]) => {
     setPolygonPoints((prev) => {
       const newPoints = [...prev];
-      newPoints[index] = [latlng.lat, latlng.lng];
+      newPoints[index] = latlng;
       return newPoints;
     });
   }, []);
@@ -874,79 +299,6 @@ export default function AttributeAnalysisMapView({
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Active filters = the attributes selected via FilterPanel (passed as prop)
-  const activeFilters = useMemo(() => selectedAttributes, [selectedAttributes]);
-
-  // Auto-focus the newest filter when one is added; revert coloring when the focused
-  // filter is removed (otherwise primaryFocusAttribute goes stale and the map keeps
-  // coloring by a filter that is no longer active).
-  // Seed with the mount-time filters (restored from sessionStorage) so a remount
-  // does not treat already-active filters as "newly added" and snap focus to the
-  // first one — that would clobber the restored primaryFocusAttribute/index.
-  const prevFiltersRef = useRef<string[]>(selectedAttributes);
-  useEffect(() => {
-    const prev = prevFiltersRef.current;
-    const added = activeFilters.find(f => !prev.includes(f));
-    if (added) {
-      const idx = activeFilters.indexOf(added);
-      setCategoryFilterAttributeIndex(idx);
-      setPrimaryFocusAttribute(added);
-    } else if (
-      primaryFocusAttribute &&
-      primaryFocusAttribute !== "Project" &&
-      !activeFilters.includes(primaryFocusAttribute)
-    ) {
-      // The focused attribute was removed — revert to project-colour mode so that
-      // the tab (-1) and primaryFocusAttribute ("Project") always agree. Jumping to
-      // the first remaining filter here races with the out-of-bounds reset below,
-      // which forces the index to -1 and leaves primaryFocusAttribute stale.
-      setCategoryFilterAttributeIndex(-1);
-      setPrimaryFocusAttribute("Project");
-    }
-    prevFiltersRef.current = activeFilters;
-  }, [activeFilters, primaryFocusAttribute]);
-
-  // Reset sidebar index if out of bounds (fall back to the Projects tab at -1)
-  useEffect(() => {
-    if (categoryFilterAttributeIndex >= activeFilters.length) {
-      setCategoryFilterAttributeIndex(-1);
-    }
-  }, [activeFilters.length, categoryFilterAttributeIndex]);
-
-  // Load attribute mappings on mount. Served from the shared cache (adequacy
-  // augmentation applied inside the loader) so a remount initialises the state
-  // synchronously above and avoids the "all segments then filtered" flash.
-  useEffect(() => {
-    getCachedAttributeMappings()
-      .then(mappings => {
-        setAttrMappings(mappings);
-      })
-      .catch(() => {
-        // Minimal fallback so at least adequacy attributes work offline
-        setAttrMappings({
-          "Line of Sight": { "1": "Adequate", "2": "Inadequate" },
-          "Facility access": { "1": "Adequate", "2": "Inadequate" },
-        });
-      });
-  }, []);
-
-  // Initialize default toggles for all active filters when they change
-  useEffect(() => {
-    setCategoryToggles(prev => {
-      const updated = { ...prev };
-      for (const filterAttr of activeFilters) {
-        if (!updated[filterAttr]) updated[filterAttr] = {};
-      }
-      return updated;
-    });
-  }, [activeFilters]);
-
-  // The attribute whose categories are currently shown in the sidebar.
-  // Index -1 represents the always-present "Projects" tab (colour by project).
-  const categoryFilterAttribute = categoryFilterAttributeIndex === -1
-    ? "Project"
-    : activeFilters[categoryFilterAttributeIndex];
-
   // Helper function to get Overall Risk Score for a segment
   // Uses the "Overall Risk Level" field from the backend, which is the sum of BB + BP + SB + VB
   const getOverallRiskScore = (projectDataIndex: number, segmentIndex: number): number => {
@@ -998,232 +350,12 @@ export default function AttributeAnalysisMapView({
   }, [activeFilters, isV2]);
 
 
-  // Helper function to convert numeric attribute value to text using mappings
-  const getAttrText = (attrName: string, attrValue: any): string => {
-    // Subcategory child attrs: null/empty/undefined → "None"
-    if (SUBCATEGORY_CHILD_ATTRS.has(attrName)) {
-      if (attrValue === null || attrValue === undefined || attrValue === "" || attrValue === "null") {
-        return "None";
-      }
-    }
-
-    // Generic null/empty handling. The backend treats a missing attribute as its
-    // default code (backend/src/CycleRAP/defaults.json) rather than "unset", so we
-    // mirror those defaults here: adequacy attributes default to "Adequate" (1),
-    // and most presence attributes default to "Not Present" (2). Without this,
-    // default-valued segments are silently dropped from the map and filters.
-    if (attrValue === null || attrValue === undefined || attrValue === "" || String(attrValue).toLowerCase() === "null") {
-      if (ADEQUACY_DEFAULT_ATTRS.has(attrName)) return "Adequate";
-      const opts = ATTRIBUTE_OPTIONS[attrName];
-      if (opts && opts.includes("Not Present")) return "Not Present";
-      return ""; // no valid category — exclude this segment from toggle counts
-    }
-
-    // Handle safety score band values (VB Band, BB Band, SB Band, BP Band)
-    // These map to exactly 4 categories based on score thresholds:
-    // Low: <10, Medium: 10-25, High: 25-60, Extreme: >60
-    if (["VB Band", "BB Band", "SB Band", "BP Band"].includes(attrName)) {
-      const numValue = Number(attrValue);
-      if (isNaN(numValue)) {
-        return "Low"; // Default to Low if invalid
-      }
-
-      // Map backend bands to frontend categories: Low, Medium, High, Extreme
-      // Note: Band 5 may still exist in old data, map it to Extreme
-      const riskCategoryMap: Record<number, string> = {
-        1: "Low",      // Band 1: score <10
-        2: "Medium",   // Band 2: score 10-25
-        3: "High",     // Band 3: score 25-60
-        4: "Extreme",  // Band 4: score >60
-        5: "Extreme",  // Band 5 (legacy): score >60 - treat same as Band 4
-      };
-
-      return riskCategoryMap[numValue] || "Low"; // Default to Low if unknown
-    }
-
-    // Special handling for Overall Risk Level - calculated from actual score, not a band index
-    if (attrName === "Overall Risk Level") {
-      // This shouldn't happen as Overall Risk Level is calculated in the filter logic,
-      // but handle it gracefully just in case
-      const scoreValue = Number(attrValue);
-      if (isNaN(scoreValue)) return "Low";
-      if (scoreValue < 10) return "Low";
-      if (scoreValue <= 25) return "Medium";
-      if (scoreValue <= 60) return "High";
-      return "Extreme";
-    }
-
-    // If we have a mapping for this attribute, apply it (handles both string and number values from CSV)
-    if (attrMappings[attrName]) {
-      const key = String(attrValue);
-      if (attrMappings[attrName][key]) {
-        return attrMappings[attrName][key];
-      }
-      // Try numeric key if string key didn't work
-      const numKey = Number(attrValue);
-      if (!isNaN(numKey) && attrMappings[attrName][String(numKey)]) {
-        return attrMappings[attrName][String(numKey)];
-      }
-      // Fall through to return raw value
-    }
-
-    return String(attrValue);
-  };
-
-  const getSafetyAttributeText = useCallback((attributeName: string, segmentScores: Record<string, any> | null | undefined): string => {
-    if (!segmentScores) {
-      return "Low";
-    }
-
-    if (attributeName === "Overall Risk Level") {
-      let maxRiskLevel = 0;
-
-      if (segmentScores["Overall Risk Level Band"] !== undefined) {
-        maxRiskLevel = (segmentScores["Overall Risk Level Band"] as number) - 1;
-      } else {
-        ["BB", "BP", "SB", "VB"].forEach((type) => {
-          const scoreValue = Number(segmentScores[type] ?? 0);
-          let riskLevel = 0;
-
-          if (["BB", "BP", "SB"].includes(type)) {
-            if (scoreValue > 20) riskLevel = 3;
-            else if (scoreValue > 10) riskLevel = 2;
-            else if (scoreValue >= 5) riskLevel = 1;
-          } else {
-            if (scoreValue > 60) riskLevel = 3;
-            else if (scoreValue > 25) riskLevel = 2;
-            else if (scoreValue >= 10) riskLevel = 1;
-          }
-
-          if (riskLevel > maxRiskLevel) {
-            maxRiskLevel = riskLevel;
-          }
-        });
-      }
-
-      if (maxRiskLevel === 3) return "Extreme";
-      if (maxRiskLevel === 2) return "High";
-      if (maxRiskLevel === 1) return "Medium";
-      return "Low";
-    }
-
-    const crashTypeKey = attributeName.replace(" Band", "");
-    const scoreValue = Number(segmentScores[crashTypeKey] ?? 0);
-
-    if (["BB", "BP", "SB"].includes(crashTypeKey)) {
-      if (scoreValue < 5) return "Low";
-      if (scoreValue <= 10) return "Medium";
-      if (scoreValue <= 20) return "High";
-      return "Extreme";
-    }
-
-    if (scoreValue < 10) return "Low";
-    if (scoreValue <= 25) return "Medium";
-    if (scoreValue <= 60) return "High";
-    return "Extreme";
-  }, []);
-
-  const getGradeFilterText = useCallback((attributes: AttributeRow): string => {
-    const gradientPct = Number(attributes["Gradient %"]);
-    if (!Number.isNaN(gradientPct)) {
-      return getGradeBucketFromPercent(gradientPct);
-    }
-
-    const fallbackGrade = getAttrText("Grade", attributes["Grade"]);
-    return normalizeGradeLabel(fallbackGrade);
-  }, [attrMappings]);
-
-  const getDerivedCrossingTypes = useCallback((attributes: AttributeRow): string[] => {
-    const derivedTypes = new Set<string>();
-    const rawCrossingType = attributes["Crossing Type"];
-
-    if (rawCrossingType !== null && rawCrossingType !== undefined && String(rawCrossingType).trim() !== "") {
-      String(rawCrossingType)
-        .split(",")
-        .map((part) => part.trim())
-        .filter(Boolean)
-        .forEach((part) => {
-          const normalizedType = normalizeCrossingTypeLabel(part);
-          if (normalizedType) {
-            derivedTypes.add(normalizedType);
-          }
-        });
-    }
-
-    const hasIntersectionOrRoadCrossing = getAttrText("Intersection or Road Crossing", attributes["Intersection or Road Crossing"]) === "Present";
-    const hasPropertyAccess = getAttrText("Property Access", attributes["Property Access"]) === "Present";
-
-    if (hasPropertyAccess) {
-      derivedTypes.add("Development Access");
-    } else if (hasIntersectionOrRoadCrossing && derivedTypes.size === 0) {
-      derivedTypes.add("Unsignalised Junction");
-    }
-
-    return CROSSING_TYPE_FILTER_OPTIONS.filter((option) => derivedTypes.has(option));
-  }, [attrMappings]);
-
-  const getCrossingFacilityFilterText = useCallback((attributes: AttributeRow): string => {
-    const rawCrossingFacility = getAttrText("Crossing Facility", attributes["Crossing Facility"]);
-    if (rawCrossingFacility === "Present") {
-      return "Present";
-    }
-    return getDerivedCrossingTypes(attributes).length > 0 ? "Present" : rawCrossingFacility;
-  }, [attrMappings, getDerivedCrossingTypes]);
-
-  const getFilterAttributeText = useCallback((
-    attributeName: string,
-    projectName: string,
-    attributes: AttributeRow,
-    segmentScores: Record<string, any> | null,
-  ): string => {
-    if (attributeName === "Project") {
-      return projectName;
-    }
-
-    if (SAFETY_FOCUS_ATTRIBUTES.has(attributeName)) {
-      return getSafetyAttributeText(attributeName, segmentScores);
-    }
-
-    if (attributeName === "Grade") {
-      return getGradeFilterText(attributes);
-    }
-
-    if (attributeName === "Crossing Type") {
-      return getDerivedCrossingTypes(attributes).join(", ");
-    }
-
-    if (attributeName === "Crossing Facility") {
-      return getCrossingFacilityFilterText(attributes);
-    }
-
-
-
-    if (attributeName === "Delineation Type") {
-      const delineationType = getAttrText("Delineation Type", attributes["Delineation Type"]);
-      return delineationType === "None" ? "" : delineationType;
-    }
-
-    return getAttrText(attributeName, attributes[attributeName]);
-  }, [attrMappings, getCrossingFacilityFilterText, getDerivedCrossingTypes, getGradeFilterText, getSafetyAttributeText]);
-
-  const getFocusedAttributeValue = useCallback((attributeName: string, segment: VisibleSegment): string => {
-    const valueText = getFilterAttributeText(attributeName, segment.projectName, segment.attributes, segment.scores);
-    if (!valueText) {
-      return "";
-    }
-
-    if (MULTI_VALUE_ATTRS.has(attributeName) && valueText.includes(", ")) {
-      const parts = valueText.split(", ").map((part) => part.trim()).filter(Boolean);
-      const toggles = subcategoryToggles[attributeName];
-      return parts.find((part) => {
-        // Unknown values (not in the predefined toggle set) proxy through "Others"
-        const effectiveVal = (toggles && part in toggles) ? toggles[part] : toggles?.["Others"];
-        return effectiveVal !== false;
-      }) ?? parts[0] ?? "";
-    }
-
-    return valueText;
-  }, [getFilterAttributeText, subcategoryToggles]);
+  // Attribute code → display/filter text derivation (memoised callbacks).
+  const {
+    getAttrText,
+    getFilterAttributeText,
+    getFocusedAttributeValue,
+  } = useAttributeText(attrMappings, subcategoryToggles);
 
 
   // Generate distinct colors for each project
@@ -1304,7 +436,7 @@ export default function AttributeAnalysisMapView({
     })();
 
     return () => { aborted = true; };
-  }, [selectedProjects, projectColors, refreshTrigger]);
+  }, [selectedProjects, projectColors, refreshTrigger, savedViewport]);
 
   // O(1) lookup of a project's index in projectsData by name (avoids per-cell findIndex)
   const projectIndexByName = useMemo(() => {
@@ -1517,8 +649,8 @@ export default function AttributeAnalysisMapView({
   // toggle). Indices are 0-based, matching geoFeatures/attributes/scores order.
   useEffect(() => {
     if (activeFilters.length === 0) {
-      sessionStorage.removeItem("pathAnalysis_filteredSegments");
-      sessionStorage.removeItem("pathAnalysis_filteredSegmentValues");
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
       return;
     }
     // Per active-filter attribute, the resolved category VALUE for each filtered
@@ -1542,8 +674,8 @@ export default function AttributeAnalysisMapView({
       });
       (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
-    sessionStorage.setItem("pathAnalysis_filteredSegments", JSON.stringify(visibleSegmentIndicesByProject));
-    sessionStorage.setItem("pathAnalysis_filteredSegmentValues", JSON.stringify(valuesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENTS, JSON.stringify(visibleSegmentIndicesByProject));
+    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES, JSON.stringify(valuesByProject));
   }, [visibleSegments, visibleSegmentIndicesByProject, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
@@ -1668,59 +800,27 @@ export default function AttributeAnalysisMapView({
     return pts;
   }, [allPoints]);
 
-  // Data-driven GIS overlay fetch: one request pulls every enabled layer within
-  // GIS_SEGMENT_RADIUS_M of any loaded segment. Because it doesn't depend on the
-  // viewport, the overlays are fetched once per layer/project change and stay put while
-  // panning and zooming — Leaflet's canvas renderer culls off-screen geometry for free.
-  useEffect(() => {
-    const layers: string[] = [];
-    if (showCycling) layers.push('cycling');
-    if (showShared) layers.push('shared');
-    if (showFootpath) layers.push('footpath');
-    if (showRoadcrossing) layers.push('roadcrossing');
-    if (showMrtExit) layers.push('mrt_exit');
-    if (showBicycleCrossing) layers.push('bicycle_crossing');
-    if (showBusStop) layers.push('bus_stop');
-    if (showBusLane) layers.push('bus_lane');
-    if (showParkingLot) layers.push('parking_lot');
-    if (showKerbLine) layers.push('kerb_line');
-    if (showStateLand) layers.push('state_land');
-    if (showStatBoard) layers.push('stat_board');
-    if (showLandPrivate) layers.push('land_private');
-    if (showLandMinistry) layers.push('land_ministry');
-
-    if (layers.length === 0 || gisQueryPoints.length === 0) {
-      setGisLayers(null);
-      return;
-    }
-
-    if (gisTimerRef.current) clearTimeout(gisTimerRef.current);
-    gisTimerRef.current = setTimeout(async () => {
-      if (gisAbortRef.current) gisAbortRef.current.abort();
-      const controller = new AbortController();
-      gisAbortRef.current = controller;
-      try {
-        const res = await fetch('/api/projects/gis/near-segments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            points: gisQueryPoints,
-            radius: GIS_SEGMENT_RADIUS_M,
-            layers,
-            simplify_tol: 1.0,
-          }),
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-        const data = await res.json();
-        if (data.ok) setGisLayers(data.layers);
-      } catch (e: any) {
-        if (e.name !== 'AbortError') console.error('[GIS NearSegments] Fetch error:', e);
-      }
-    }, 150);
-
-    return () => { if (gisTimerRef.current) clearTimeout(gisTimerRef.current); };
-  }, [gisQueryPoints, showFootpath, showCycling, showShared, showRoadcrossing, showMrtExit, showBusStop, showBusLane, showParkingLot, showKerbLine, showBicycleCrossing, showStateLand, showStatBoard, showLandPrivate, showLandMinistry]);
+  // GIS overlay layer toggles + debounced near-segments / defects fetches.
+  const {
+    isGisSidebarOpen, setIsGisSidebarOpen,
+    gisLayers,
+    pathDefects,
+    showFootpath, setShowFootpath,
+    showCycling, setShowCycling,
+    showShared, setShowShared,
+    showRoadcrossing, setShowRoadcrossing,
+    showMrtExit, setShowMrtExit,
+    showBusStop, setShowBusStop,
+    showBusLane, setShowBusLane,
+    showParkingLot, setShowParkingLot,
+    showKerbLine, setShowKerbLine,
+    showBicycleCrossing, setShowBicycleCrossing,
+    showPathDefects, setShowPathDefects,
+    showStateLand, setShowStateLand,
+    showStatBoard, setShowStatBoard,
+    showLandPrivate, setShowLandPrivate,
+    showLandMinistry, setShowLandMinistry,
+  } = useGISLayerToggles({ gisQueryPoints, mapViewportBounds });
 
   // Cull off-screen markers before React renders them. A 20% padding around the
   // viewport keeps markers visible during small pans without mounting them all.
@@ -1931,7 +1031,7 @@ export default function AttributeAnalysisMapView({
       newToggles[categoryFilterAttribute] = updatedAttributeToggles;
       return newToggles;
     });
-  }, [categoryFilterAttribute, availableCategories]);
+  }, [categoryFilterAttribute, availableCategories, setCategoryToggles]);
 
   // Initialise subcategory toggles when the sidebar attribute has subcategories
   useEffect(() => {
@@ -1951,47 +1051,8 @@ export default function AttributeAnalysisMapView({
       if (!changed) return prev;
       return { ...prev, [childAttr]: updated };
     });
-  }, [categoryFilterAttribute]);
+  }, [categoryFilterAttribute, setSubcategoryToggles]);
 
-  // Handle column header click for sorting
-  const handleHeaderClick = (columnKey: string) => {
-    setSortConfig(prevConfig => {
-      // Find if this column is already in sort config
-      const existingIndex = prevConfig.findIndex(s => s.column === columnKey);
-
-      if (existingIndex === 0) {
-        // If it's the primary sort, toggle direction
-        const currentDirection = prevConfig[0].direction;
-        return [
-          { column: columnKey, direction: currentDirection === 'asc' ? 'desc' : 'asc' },
-          ...prevConfig.slice(1) // Keep other sort criteria
-        ];
-      } else if (existingIndex > 0) {
-        // If it's a secondary sort, move it to primary and set to 'asc'
-        const updated = [...prevConfig];
-        updated.splice(existingIndex, 1);
-        return [{ column: columnKey, direction: 'asc' }, ...updated];
-      } else {
-        // Not in config, add as primary sort
-        return [{ column: columnKey, direction: 'asc' }, ...prevConfig];
-      }
-    });
-  };
-
-  // Default center (Singapore)
-  // Read the persisted viewport once at mount. When present (returning from the
-  // Coding page) the map opens there and skips the auto-fit; when absent (fresh
-  // Projects-page load) it falls back to the Singapore default and auto-fits.
-  const savedViewport = useRef<SavedViewport | null>(
-    (() => {
-      try {
-        const s = sessionStorage.getItem(VIEWPORT_KEY);
-        return s ? (JSON.parse(s) as SavedViewport) : null;
-      } catch { return null; }
-    })()
-  );
-  const initialCenter = useRef<[number, number]>(savedViewport.current?.center ?? [1.3521, 103.8198]);
-  const initialZoom = useRef<number>(savedViewport.current?.zoom ?? 13);
 
   // Calculate bounds for each project based on actual geodata
   const projectBounds = useMemo(() => {
@@ -2026,22 +1087,6 @@ export default function AttributeAnalysisMapView({
     }
   };
 
-  const handleTableProjectJump = (projectName: string) => {
-    const container = tableContainerRef.current;
-    if (!container) return;
-    const row = container.querySelector<HTMLTableRowElement>(`tr[data-project="${CSS.escape(projectName)}"]`);
-    if (row) {
-      row.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-  };
-
-  // CSV helper: escape CSV values with proper quoting
-  const escapeCSV = (value: string): string => {
-    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-      return `"${value.replace(/"/g, '""')}"`;
-    }
-    return value;
-  };
 
   // Generate CSV content from sorted and filtered data
   const generateCSV = (): string => {
@@ -2111,13 +1156,13 @@ export default function AttributeAnalysisMapView({
   const handleOpenInTreatment = (): void => {
     if (loadedProjects.length === 0) return;
     const ctx = buildFilterContext();
-    sessionStorage.setItem("treatment_loadedProjects", JSON.stringify(loadedProjects));
+    sessionStorage.setItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS, JSON.stringify(loadedProjects));
     const encoded = loadedProjects.map(name => encodeURIComponent(name)).join(',');
     if (ctx && ctx.projects.length > 0) {
-      sessionStorage.setItem("treatment_filterContext", JSON.stringify(ctx));
+      sessionStorage.setItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT, JSON.stringify(ctx));
       navigate(`/treatment/${encoded}?filtered=1`);
     } else {
-      sessionStorage.removeItem("treatment_filterContext");
+      sessionStorage.removeItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT);
       navigate(`/treatment/${encoded}`);
     }
   };
@@ -2500,24 +1545,6 @@ export default function AttributeAnalysisMapView({
     setIsAddSegmentsDialogOpen(true);
   };
 
-  // v2 table: Project Name + Segment No. are frozen (sticky) while side-scrolling.
-  const V2_COL_W: Record<string, number> = { "Project": 200, "Segment #": 130 };
-  const v2StickyStyle = (key: string, isHeader: boolean): CSSProperties => {
-    if (!isV2) return {};
-    if (key !== "Project" && key !== "Segment #") return {};
-    const left = key === "Segment #" ? V2_COL_W["Project"] : 0;
-    const w = V2_COL_W[key];
-    return {
-      position: "sticky",
-      left,
-      width: w,
-      minWidth: w,
-      maxWidth: w,
-      background: "#fff",
-      // header sticky-corner sits above both the other headers and the body sticky cells
-      zIndex: isHeader ? 5 : 3,
-    };
-  };
 
   return (
     <Box
@@ -2540,233 +1567,36 @@ export default function AttributeAnalysisMapView({
         onValueChange={(e) => setActiveTab(e.value)}
         {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}
       >
-        <Flex justify="space-between" align="center" borderBottom="1px solid" borderColor="gray.200" bg="white" _dark={{ bg: "gray.800" }} py="3" px="4" flexShrink={0}>
-          <HStack gap="4">
-            {isV2 ? (
-              <V2Segmented
-                options={[{ value: "map", label: "Map" }, { value: "table", label: "Table" }]}
-                value={activeTab === "table" ? "table" : "map"}
-                onChange={setActiveTab}
-              />
-            ) : (
-              <Tabs.List>
-                <Tabs.Trigger value="map">Map View</Tabs.Trigger>
-                <Tabs.Trigger value="table">Table View</Tabs.Trigger>
-              </Tabs.List>
-            )}
-
-            {allPoints.length > 0 && (
-              <MaybePortal to={isV2 ? (toolsHost ?? null) : undefined}>
-              <>
-                <HStack gap="1.5">
-                  <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <IconButton
-                        aria-label="Single Point Tools"
-                        size="sm"
-                        variant={(isDeleteMode || isPointAddMode) ? "solid" : "ghost"}
-                        colorPalette={(isDeleteMode || isPointAddMode) ? (isDeleteMode ? "red" : "blue") : "gray"}
-                        onClick={(e) => {
-                          if (isDeleteMode || isPointAddMode) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }
-                        }}
-                      >
-                        {isDeleteMode ? <FaTrash /> : isPointAddMode ? <FaPlus /> : <FaMousePointer />}
-                      </IconButton>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item
-                          value="delete"
-                          onClick={() => {
-                            setIsDeleteMode(true);
-                            setIsPointAddMode(false);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }}
-                        >
-                          <FaMousePointer /> Single Point Delete
-                        </Menu.Item>
-                        <Menu.Item
-                          value="add"
-                          onClick={() => {
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(true);
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setPolygonPoints([]);
-                          }}
-                        >
-                          <FaPlus /> Single Point Copy
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                  <Menu.Root positioning={{ placement: "bottom-start", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <IconButton
-                        aria-label="Polygon Tools"
-                        size="sm"
-                        variant={(isPolygonMode || isPolygonAddMode) ? "solid" : "ghost"}
-                        colorPalette={(isPolygonMode || isPolygonAddMode) ? (isPolygonMode ? "red" : "blue") : "gray"}
-                        onClick={(e) => {
-                          if (isPolygonMode || isPolygonAddMode) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(false);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                          }
-                        }}
-                      >
-                        {isPolygonMode ? <FaTrash /> : isPolygonAddMode ? <FaPlus /> : <FaDrawPolygon />}
-                      </IconButton>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item
-                          value="delete"
-                          onClick={() => {
-                            setIsPolygonMode(true);
-                            setIsPolygonAddMode(false);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                            setDeleteConfirmationOpen(false);
-                          }}
-                        >
-                          <FaTrash /> Delete Segments
-                        </Menu.Item>
-                        <Menu.Item
-                          value="add"
-                          onClick={() => {
-                            setIsPolygonMode(false);
-                            setIsPolygonAddMode(true);
-                            setIsDeleteMode(false);
-                            setIsPointAddMode(false);
-                            setPolygonPoints([]);
-                            setDeleteConfirmationOpen(false);
-                          }}
-                        >
-                          <FaPlus /> Copy/Add Segments
-                        </Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                </HStack>
-
-                {polygonPoints.length >= 3 && isPolygonMode && (
-                  <Button
-                    size="sm"
-                    colorPalette="red"
-                    onClick={finishPolygonSelection}
-                  >
-                    Delete Selected ({
-                      // Preview count
-                      allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length
-                    } segments)
-                  </Button>
-                )}
-
-                {polygonPoints.length >= 3 && isPolygonAddMode && (
-                  <Button
-                    size="sm"
-                    colorPalette="blue"
-                    onClick={finishAddSegmentsSelection}
-                  >
-                    Copy Selected ({
-                      allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length
-                    } segments)
-                  </Button>
-                )}
-              </>
-              </MaybePortal>
-            )}
-          </HStack>
-
-          {allPoints.length > 0 && (
-            <HStack gap="2">
-              <Button
-                size="sm"
-                onClick={handleOpenInTreatment}
-                {...(isV2
-                  ? { style: { background: COLOR.blue, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 } }
-                  : { colorPalette: "green" as const })}
-              >
-                {activeFilters.length > 0 ? "Treat Filtered Segments" : "Open in Treatment"}
-              </Button>
-              {isV2 ? (
-                // v2: a teal "Generate Report" button (global scope, §4) beside a single
-                // dark "Download" dropdown (DESIGN_GUIDE §4 dropdown button).
-                <HStack gap="2">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      sessionStorage.removeItem("treatment_loadedProjects");
-                      navigate("/analysis/report");
-                    }}
-                    style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                  >
-                    {hasSavedReport ? "📄 Continue Report" : "📄 Generate Report"}
-                  </Button>
-                  <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
-                    <Menu.Trigger asChild>
-                      <Button
-                        size="sm"
-                        style={{ background: COLOR.gray800, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
-                      >
-                        Download <FaChevronDown style={{ marginLeft: 6 }} size={10} />
-                      </Button>
-                    </Menu.Trigger>
-                    <Menu.Positioner>
-                      <Menu.Content zIndex={2000}>
-                        <Menu.Item value="table" onClick={handleDownloadCSV}>Download Table</Menu.Item>
-                        <Menu.Item value="images" onClick={handleDownloadImages}>Download Images</Menu.Item>
-                        <Menu.Item value="shapefile" onClick={handleDownloadShapefile}>Download Shapefile</Menu.Item>
-                      </Menu.Content>
-                    </Menu.Positioner>
-                  </Menu.Root>
-                </HStack>
-              ) : (
-                <>
-                  <Button
-                    colorPalette="blue"
-                    size="sm"
-                    onClick={handleDownloadCSV}
-                  >
-                    Download Table
-                  </Button>
-                  <Button
-                    colorPalette="teal"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleDownloadImages}
-                  >
-                    Download Images
-                  </Button>
-                  <Button
-                    colorPalette="green"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleDownloadShapefile}
-                  >
-                    Download Shapefile
-                  </Button>
-                </>
-              )}
-            </HStack>
-          )}
-        </Flex>
+        <MapViewToolbar
+          isV2={isV2}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          allPointsCount={allPoints.length}
+          activeFiltersCount={activeFilters.length}
+          toolsHost={toolsHost}
+          isDeleteMode={isDeleteMode}
+          setIsDeleteMode={setIsDeleteMode}
+          isPointAddMode={isPointAddMode}
+          setIsPointAddMode={setIsPointAddMode}
+          isPolygonMode={isPolygonMode}
+          setIsPolygonMode={setIsPolygonMode}
+          isPolygonAddMode={isPolygonAddMode}
+          setIsPolygonAddMode={setIsPolygonAddMode}
+          polygonPointsCount={polygonPoints.length}
+          clearPolygonPoints={() => setPolygonPoints([])}
+          closeDeleteConfirmation={() => setDeleteConfirmationOpen(false)}
+          polygonSelectionCount={allPoints.filter(pt => isPointInPolygon(pt.latlng, polygonPoints)).length}
+          finishPolygonSelection={finishPolygonSelection}
+          finishAddSegmentsSelection={finishAddSegmentsSelection}
+          handleOpenInTreatment={handleOpenInTreatment}
+          onGenerateReport={() => {
+            sessionStorage.removeItem(SESSION_KEYS.TREATMENT_LOADED_PROJECTS);
+            navigate("/analysis/report");
+          }}
+          handleDownloadCSV={handleDownloadCSV}
+          handleDownloadImages={handleDownloadImages}
+          handleDownloadShapefile={handleDownloadShapefile}
+        />
 
         {/* Map Tab Content */}
         <Tabs.Content value="map" {...(isV2 ? { p: 0, flex: "1", minH: 0, display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
@@ -2802,362 +1632,27 @@ export default function AttributeAnalysisMapView({
               keeps owning the toggle state). `to=undefined` in v1 → renders here. */}
           {selectedProjects.length > 0 && (
             <MaybePortal to={isV2 ? (filtersPortalTarget ?? null) : undefined}>
-            <Box borderBottom="1px solid" borderColor="gray.200">
-              {/* Tabs: always-present "Projects" tab + one per active filter */}
-              <Tabs.Root
-                value={categoryFilterAttributeIndex === -1 ? "project" : String(categoryFilterAttributeIndex)}
-                onValueChange={e => {
-                  if (e.value === "project") {
-                    setCategoryFilterAttributeIndex(-1);
-                    setPrimaryFocusAttribute("Project");
-                    return;
-                  }
-                  const idx = Number(e.value);
-                  setCategoryFilterAttributeIndex(idx);
-                  setPrimaryFocusAttribute(activeFilters[idx]);
-                }}
-                variant="line"
-              >
-                {isV2 ? (
-                  // v2: design-guide tab style (§6), single row + horizontal scroll.
-                  <div style={{ ...v2TabRowStyle, padding: "0 4px" }}>
-                    <div
-                      onClick={() => { setCategoryFilterAttributeIndex(-1); setPrimaryFocusAttribute("Project"); }}
-                      style={v2TabStyle(categoryFilterAttributeIndex === -1)}
-                    >
-                      Projects
-                    </div>
-                    {selectedAttributes.map((attr, idx) => (
-                      <div
-                        key={attr}
-                        onClick={() => { setCategoryFilterAttributeIndex(idx); setPrimaryFocusAttribute(activeFilters[idx]); }}
-                        style={v2TabStyle(categoryFilterAttributeIndex === idx)}
-                      >
-                        {(ATTRIBUTE_LABELS[attr] ?? attr).slice(0, 22)}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <Box>
-                    <Tabs.List px="4" flexWrap="wrap">
-                      <Tabs.Trigger value="project" fontSize="sm" whiteSpace="nowrap">
-                        1. Projects
-                      </Tabs.Trigger>
-                      {selectedAttributes.map((attr, idx) => (
-                        <Tabs.Trigger key={attr} value={String(idx)} fontSize="sm" whiteSpace="nowrap">
-                          {idx + 2}. {(ATTRIBUTE_LABELS[attr] ?? attr).slice(0, 22)}
-                        </Tabs.Trigger>
-                      ))}
-                    </Tabs.List>
-                  </Box>
-                )}
-
-                {[null, ...selectedAttributes].map((attr, i) => {
-                  const isProjectsTab = attr === null;
-                  const idx = i - 1; // -1 for projects, 0..n for attrs
-                  const tabValue = isProjectsTab ? "project" : String(idx);
-                  return (
-                    <Tabs.Content key={tabValue} value={tabValue} p="4">
-                      {isProjectsTab ? (
-                        <>
-                          <Flex align="center" justify="space-between" mb="2">
-                            <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
-                              Projects (toggle to show/hide on the map)
-                            </Text>
-                            {hiddenProjects.length > 0 && (
-                              <Button
-                                size="xs"
-                                variant="ghost"
-                                colorPalette="gray"
-                                onClick={() => onHiddenProjectsChange([])}
-                              >
-                                Show all
-                              </Button>
-                            )}
-                          </Flex>
-                          <Flex flexWrap="wrap" gap="2">
-                            {loadedProjects.map(projectName => {
-                              const hex = projectColors[projectName];
-                              const isOn = !hiddenProjects.includes(projectName);
-                              return (
-                                <Flex
-                                  key={projectName}
-                                  as="button"
-                                  align="center"
-                                  gap="2"
-                                  px="3"
-                                  py="1.5"
-                                  borderWidth="1px"
-                                  borderRadius="md"
-                                  cursor="pointer"
-                                  userSelect="none"
-                                  transition="all 0.15s"
-                                  style={isOn
-                                    ? { backgroundColor: hex + "22", borderColor: hex }
-                                    : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                                  }
-                                  onClick={() => {
-                                    if (isOn) {
-                                      onHiddenProjectsChange([...hiddenProjects, projectName]);
-                                    } else {
-                                      onHiddenProjectsChange(hiddenProjects.filter(p => p !== projectName));
-                                    }
-                                  }}
-                                >
-                                  <Text
-                                    fontSize="sm"
-                                    fontWeight={isOn ? "semibold" : "normal"}
-                                    color={isOn ? "gray.800" : "gray.400"}
-                                    _dark={{ color: isOn ? "gray.100" : "gray.500" }}
-                                    userSelect="none"
-                                  >
-                                    {projectName}
-                                  </Text>
-                                  <Box
-                                    w="30px"
-                                    h="17px"
-                                    borderRadius="full"
-                                    position="relative"
-                                    flexShrink={0}
-                                    transition="background 0.15s"
-                                    style={{ backgroundColor: isOn ? hex : "#CBD5E0" }}
-                                  >
-                                    <Box
-                                      position="absolute"
-                                      w="13px"
-                                      h="13px"
-                                      borderRadius="full"
-                                      bg="white"
-                                      top="2px"
-                                      transition="left 0.15s"
-                                      style={{ left: isOn ? "15px" : "2px" }}
-                                    />
-                                  </Box>
-                                </Flex>
-                              );
-                            })}
-                          </Flex>
-                        </>
-                      ) : (
-                        /* Per-category toggles for the selected attribute */
-                        categoryFilterAttribute && (
-                          <>
-                            {/* Header row: label + reset button */}
-                            <Flex align="center" justify="space-between" mb="2">
-                              <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
-                                {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}
-                              </Text>
-                              <Button
-                                size="xs"
-                                variant="ghost"
-                                colorPalette="gray"
-                                onClick={() => {
-                                  const opts = ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories;
-                                  setCategoryToggles(prev => ({
-                                    ...prev,
-                                    [categoryFilterAttribute]: Object.fromEntries(opts.map(c => [c, true])),
-                                  }));
-                                  const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
-                                  if (subcatConfig) {
-                                    const allChildOpts = Object.values(subcatConfig.parentCategories).flat();
-                                    setSubcategoryToggles(prev => ({
-                                      ...prev,
-                                      [subcatConfig.childAttr]: Object.fromEntries(allChildOpts.map(c => [c, true])),
-                                    }));
-                                  }
-                                }}
-                              >
-                                Reset
-                              </Button>
-                            </Flex>
-                            {NUMERIC_FILTER_ATTRIBUTES.has(categoryFilterAttribute) ? (
-                              /* Numeric range filter: slider inputs */
-                              <Box>
-                                <Text fontSize="xs" color="gray.500" mb="2">
-                                  Range filter for {ATTRIBUTE_LABELS[categoryFilterAttribute] ?? categoryFilterAttribute}:
-                                </Text>
-                                {(() => {
-                                  const bounds = dataRangeBounds[categoryFilterAttribute];
-                                  const [rMin, rMax] = rangeFilters[categoryFilterAttribute] ?? [bounds?.min ?? 0, bounds?.max ?? 100];
-                                  return (
-                                    <Box px="2">
-                                      <Slider
-                                        min={bounds?.min ?? 0}
-                                        max={bounds?.max ?? 100}
-                                        step={1}
-                                        value={[rMin, rMax]}
-                                        onValueChange={({ value }) => {
-                                          setRangeFilters(prev => ({
-                                            ...prev,
-                                            [categoryFilterAttribute]: [value[0], value[1]] as [number, number],
-                                          }));
-                                        }}
-                                      />
-                                      <Flex justify="space-between" mt="1">
-                                        <Text fontSize="xs" color="gray.500">{rMin}</Text>
-                                        <Text fontSize="xs" color="gray.500">{rMax}</Text>
-                                      </Flex>
-                                    </Box>
-                                  );
-                                })()}
-                              </Box>
-                            ) : (
-                              /* Layer 2 chips each followed immediately by their Layer 3 children */
-                              <Flex direction="column" gap="2">
-                                {(ATTRIBUTE_OPTIONS[categoryFilterAttribute] ?? availableCategories).map(category => {
-                                  const isOn = categoryToggles[categoryFilterAttribute]?.[category] ?? true;
-                                  const hexColor = getCategoryColor(categoryFilterAttribute, category);
-                                  const subcatConfig = SUBCATEGORY_MAP[categoryFilterAttribute];
-                                  const childAttr = subcatConfig?.childAttr;
-                                  const subcats = subcatConfig?.parentCategories[category];
-                                  const hasSubcats = isOn && subcats?.length;
-                                  return (
-                                    <Box key={category}>
-                                      {/* Layer 2 chip */}
-                                      <Flex
-                                        as="button"
-                                        align="center"
-                                        gap="2"
-                                        px="3"
-                                        py="1.5"
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        cursor="pointer"
-                                        userSelect="none"
-                                        transition="all 0.15s"
-                                        style={isOn
-                                          ? { backgroundColor: hexColor + "22", borderColor: hexColor }
-                                          : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                                        }
-                                        onClick={() => {
-                                          setCategoryToggles(prev => ({
-                                            ...prev,
-                                            [categoryFilterAttribute]: {
-                                              ...prev[categoryFilterAttribute],
-                                              [category]: !isOn,
-                                            },
-                                          }));
-                                        }}
-                                      >
-                                        <Text
-                                          fontSize="sm"
-                                          fontWeight={isOn ? "semibold" : "normal"}
-                                          color={isOn ? "gray.800" : "gray.400"}
-                                          _dark={{ color: isOn ? "gray.100" : "gray.500" }}
-                                          userSelect="none"
-                                        >
-                                          {category}
-                                        </Text>
-                                        <Box
-                                          w="30px"
-                                          h="17px"
-                                          borderRadius="full"
-                                          position="relative"
-                                          flexShrink={0}
-                                          transition="background 0.15s"
-                                          style={{ backgroundColor: isOn ? hexColor : "#CBD5E0" }}
-                                        >
-                                          <Box
-                                            position="absolute"
-                                            w="13px"
-                                            h="13px"
-                                            borderRadius="full"
-                                            bg="white"
-                                            top="2px"
-                                            transition="left 0.15s"
-                                            style={{ left: isOn ? "15px" : "2px" }}
-                                          />
-                                        </Box>
-                                      </Flex>
-
-                                      {/* Layer 3 chips — only visible when parent is ON */}
-                                      {hasSubcats && childAttr && (
-                                        <Box
-                                          mt="1.5"
-                                          ml="3"
-                                          pl="3"
-                                          borderLeft="2px solid"
-                                          style={{ borderColor: hexColor + "66" }}
-                                        >
-                                          <Flex gap="1.5" flexWrap="wrap">
-                                            {subcats!.map(sub => {
-                                              const subOn = subcategoryToggles[childAttr]?.[sub] ?? true;
-                                              const subColor = getCategoryColor(childAttr, sub);
-                                              return (
-                                                <Flex
-                                                  key={sub}
-                                                  as="button"
-                                                  align="center"
-                                                  gap="1.5"
-                                                  px="2.5"
-                                                  py="1"
-                                                  borderWidth="1px"
-                                                  borderRadius="md"
-                                                  cursor="pointer"
-                                                  userSelect="none"
-                                                  transition="all 0.15s"
-                                                  style={subOn
-                                                    ? { backgroundColor: subColor + "22", borderColor: subColor }
-                                                    : { backgroundColor: "transparent", borderColor: "#E2E8F0" }
-                                                  }
-                                                  onClick={() => {
-                                                    setSubcategoryToggles(prev => ({
-                                                      ...prev,
-                                                      [childAttr]: {
-                                                        ...prev[childAttr],
-                                                        [sub]: !subOn,
-                                                      },
-                                                    }));
-                                                  }}
-                                                >
-                                                  <Text
-                                                    fontSize="xs"
-                                                    fontWeight={subOn ? "semibold" : "normal"}
-                                                    color={subOn ? "gray.700" : "gray.400"}
-                                                    _dark={{ color: subOn ? "gray.200" : "gray.500" }}
-                                                    userSelect="none"
-                                                  >
-                                                    {sub}
-                                                  </Text>
-                                                  <Box
-                                                    w="24px"
-                                                    h="14px"
-                                                    borderRadius="full"
-                                                    position="relative"
-                                                    flexShrink={0}
-                                                    transition="background 0.15s"
-                                                    style={{ backgroundColor: subOn ? subColor : "#CBD5E0" }}
-                                                  >
-                                                    <Box
-                                                      position="absolute"
-                                                      w="10px"
-                                                      h="10px"
-                                                      borderRadius="full"
-                                                      bg="white"
-                                                      top="2px"
-                                                      transition="left 0.15s"
-                                                      style={{ left: subOn ? "12px" : "2px" }}
-                                                    />
-                                                  </Box>
-                                                </Flex>
-                                              );
-                                            })}
-                                          </Flex>
-                                        </Box>
-                                      )}
-                                    </Box>
-                                  );
-                                })}
-                              </Flex>
-                            )}
-                          </>
-                        )
-                      )}
-                    </Tabs.Content>
-                  );
-                })}
-              </Tabs.Root>
-            </Box>
+            <MapFiltersPanel
+              isV2={isV2}
+              selectedAttributes={selectedAttributes}
+              activeFilters={activeFilters}
+              categoryFilterAttribute={categoryFilterAttribute}
+              categoryFilterAttributeIndex={categoryFilterAttributeIndex}
+              setCategoryFilterAttributeIndex={setCategoryFilterAttributeIndex}
+              setPrimaryFocusAttribute={setPrimaryFocusAttribute}
+              loadedProjects={loadedProjects}
+              hiddenProjects={hiddenProjects}
+              onHiddenProjectsChange={onHiddenProjectsChange}
+              projectColors={projectColors}
+              availableCategories={availableCategories}
+              categoryToggles={categoryToggles}
+              setCategoryToggles={setCategoryToggles}
+              subcategoryToggles={subcategoryToggles}
+              setSubcategoryToggles={setSubcategoryToggles}
+              rangeFilters={rangeFilters}
+              setRangeFilters={setRangeFilters}
+              dataRangeBounds={dataRangeBounds}
+            />
             </MaybePortal>
           )}
 
@@ -3238,11 +1733,11 @@ export default function AttributeAnalysisMapView({
                   />
                   {/* Render Polygon Tool */}
                   <PolygonDrawingTool
-                    isPolygonMode={isPolygonMode}
-                    isPolygonAddMode={isPolygonAddMode}
-                    onPolygonPoint={handlePolygonPoint}
+                    active={isPolygonMode || isPolygonAddMode}
+                    color={isPolygonAddMode ? "blue" : "red"}
+                    points={polygonPoints}
+                    onAddPoint={handlePolygonPoint}
                     onPointUpdate={handlePointUpdate}
-                    polygonPoints={polygonPoints}
                   />
 
                   {/* Tile Layer */}
@@ -3297,7 +1792,7 @@ export default function AttributeAnalysisMapView({
                               // If in polygon mode, add this point to the polygon and stop propagation
                               if (isPolygonMode || isPolygonAddMode) {
                                 L.DomEvent.stopPropagation(e as any);
-                                handlePolygonPoint(L.latLng(latlng[0], latlng[1]));
+                                handlePolygonPoint(latlng);
                                 return;
                               }
 
@@ -3356,62 +1851,26 @@ export default function AttributeAnalysisMapView({
                   {/* GIS Layers — rendered below segments pane (zIndex < 450).
                       gisCanvasRenderer provides 50% padding so lines near the viewport
                       edge stay visible during pan/zoom without flickering. */}
-                  {gisLayers && showFootpath && gisLayers.footpath?.map((f, i) => (
-                    <LeafletPolyline key={`fp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.footpath, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showCycling && gisLayers.cycling?.map((f, i) => (
-                    <LeafletPolyline key={`cy-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.cycling, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showShared && gisLayers.shared?.map((f, i) => (
-                    <LeafletPolyline key={`sh-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.shared, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showRoadcrossing && gisLayers.roadcrossing?.map((f, i) => (
-                    <LeafletPolyline key={`rc-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.roadcrossing, weight: 3, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showKerbLine && gisLayers.kerb_line?.map((f, i) => (
-                    <LeafletPolyline key={`kl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.kerb_line, weight: 2, opacity: 0.8 }} />
-                  ))}
-                  {gisLayers && showBusLane && gisLayers.bus_lane?.map((f, i) => {
-                    const isMulti = Array.isArray(f.coordinates[0]) && Array.isArray(f.coordinates[0][0]);
-                    if (isMulti) return (f.coordinates as any).map((line: any, j: number) => (
-                      <LeafletPolyline key={`bl-${i}-${j}`} renderer={gisCanvasRenderer} positions={line.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>
-                    ));
-                    return <LeafletPolyline key={`bl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_lane, weight: 4, opacity: 0.8, dashArray: "5, 10" }}><Tooltip>Bus Lane</Tooltip></LeafletPolyline>;
-                  })}
-                  {gisLayers && showMrtExit && gisLayers.mrt_exit?.map((f, i) => (
-                    <CircleMarker key={`mrt-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.mrt_exit, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>MRT Exit</Tooltip></CircleMarker>
-                  ))}
-                  {gisLayers && showBicycleCrossing && gisLayers.bicycle_crossing?.map((f, i) => (
-                    <CircleMarker key={`bc-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bicycle_crossing, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bicycle Crossing</Tooltip></CircleMarker>
-                  ))}
-                  {gisLayers && showBusStop && gisLayers.bus_stop?.map((f, i) =>
-                    f.geometry_type === "point"
-                      ? <CircleMarker key={`bs-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.bus_stop, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Bus Stop</Tooltip></CircleMarker>
-                      : <LeafletPolyline key={`bs-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map((c: any) => [c[1], c[0]])} pathOptions={{ color: gisLayerColors.bus_stop, weight: 4, opacity: 0.8 }}><Tooltip>Bus Shelter</Tooltip></LeafletPolyline>
-                  )}
-                  {gisLayers && showParkingLot && gisLayers.parking_lot?.map((f, i) =>
-                    f.geometry_type === "polygon"
-                      ? <LeafletPolygon key={`pk-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.8, fillOpacity: 0.3 }}><Tooltip>Parking Lot</Tooltip></LeafletPolygon>
-                      : <CircleMarker key={`pk-${i}`} renderer={gisCanvasRenderer} center={[f.coordinates[0][1], f.coordinates[0][0]]} radius={6} pathOptions={{ color: gisLayerColors.parking_lot, weight: 2, opacity: 0.9, fillOpacity: 0.7 }}><Tooltip>Parking Lot</Tooltip></CircleMarker>
-                  )}
-                  {gisLayers && showStateLand && gisLayers.state_land?.map((f, i) => (
-                    <LeafletPolygon key={`sl-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.state_land, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "State Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showStatBoard && gisLayers.stat_board?.map((f, i) => (
-                    <LeafletPolygon key={`sb-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.stat_board, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Stat Board"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showLandPrivate && gisLayers.land_private?.map((f, i) => (
-                    <LeafletPolygon key={`lp-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_private, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Private Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {gisLayers && showLandMinistry && gisLayers.land_ministry?.map((f, i) => (
-                    <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
-                  ))}
-                  {showPathDefects && pathDefects?.map((d, i) => (
-                    <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: gisLayerColors.path_defects, weight: 2, opacity: 1, fillOpacity: 0.8 }}>
-                      <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
-                    </CircleMarker>
-                  ))}
-
+                  <GISLayerOverlays
+                    gisLayers={gisLayers}
+                    pathDefects={pathDefects}
+                    gisCanvasRenderer={gisCanvasRenderer}
+                    showFootpath={showFootpath}
+                    showCycling={showCycling}
+                    showShared={showShared}
+                    showRoadcrossing={showRoadcrossing}
+                    showMrtExit={showMrtExit}
+                    showBusStop={showBusStop}
+                    showBusLane={showBusLane}
+                    showParkingLot={showParkingLot}
+                    showKerbLine={showKerbLine}
+                    showBicycleCrossing={showBicycleCrossing}
+                    showPathDefects={showPathDefects}
+                    showStateLand={showStateLand}
+                    showStatBoard={showStatBoard}
+                    showLandPrivate={showLandPrivate}
+                    showLandMinistry={showLandMinistry}
+                  />
                   {/* Imported shapefile overlay — non-interactive so hover doesn't interfere with segment nodes */}
                   {importedBoundaries.map((boundary) =>
                     boundary.kind === "polygon" && boundary.coords ? (
@@ -3439,214 +1898,20 @@ export default function AttributeAnalysisMapView({
         </Tabs.Content>
 
         {/* Table Tab Content */}
-        <Tabs.Content value="table" {...(isV2 ? { p: 0, flex: "1", minH: 0, minW: 0, maxW: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
-          <Box {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%", display: "flex", flexDirection: "column", overflow: "hidden" } : {})}>
-            {selectedProjects.length > 0 && allPoints.length > 0 && (
-              <Box p="4" borderBottom="1px solid" borderColor="gray.200">
-                <Text fontSize="sm" fontWeight="semibold" mb="2">
-                  Jump to Project:
-                </Text>
-                <Flex gap="2" flexWrap="wrap">
-                  {selectedProjects.map((proj) => (
-                    <Button
-                      key={proj}
-                      size="sm"
-                      colorPalette={isV2 ? undefined : "blue"}
-                      variant={isV2 ? "solid" : "outline"}
-                      borderRadius={isV2 ? "999px" : undefined}
-                      bg={isV2 ? projectColors[proj] : undefined}
-                      color={isV2 ? "white" : undefined}
-                      _hover={isV2 ? { opacity: 0.85 } : undefined}
-                      onClick={() => handleTableProjectJump(proj)}
-                    >
-                      {proj}
-                    </Button>
-                  ))}
-                </Flex>
-              </Box>
-            )}
-            {allPoints.length === 0 ? (
-              <Box p="6">
-                <Text color="gray.500">No data to display. Please select projects and load them.</Text>
-              </Box>
-            ) : (
-              <>
-                {/* Above-table controls */}
-                <Box p="4" borderBottom="1px solid" borderColor="gray.200" bg="gray.50" _dark={{ bg: "gray.700" }}>
-                  {/* Sort Controls */}
-                  {sortConfig.length > 0 && (
-                    <Box>
-                      <Text fontSize="sm" fontWeight="semibold" mb="2">Active Sort Order:</Text>
-                      <Flex gap="2" flexWrap="wrap">
-                        {sortConfig.map((sort, index) => (
-                          <Flex key={sort.column} align="center" gap="2" px="3" py="1" bg="blue.50" borderRadius="md" _dark={{ bg: "blue.900" }}>
-                            <Text fontSize="sm" fontWeight="500">
-                              {index + 1}. {sort.column} {sort.direction === 'asc' ? '↑' : '↓'}
-                            </Text>
-                            <Button
-                              size="xs"
-                              variant="ghost"
-                              onClick={() => {
-                                setSortConfig(prev => prev.filter((_, i) => i !== index));
-                              }}
-                            >
-                              ✕
-                            </Button>
-                          </Flex>
-                        ))}
-                      </Flex>
-                    </Box>
-                  )}
-
-                  {/* Filtered count + clear */}
-                  <Flex align="center" gap="3" mt="3">
-                    <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
-                      Showing {sortedData.length} of {allPoints.length} segments
-                    </Text>
-                    {(sortConfig.length > 0 || Object.keys(columnFilters).length > 0) && (
-                      <Button
-                        size="xs"
-                        variant="outline"
-                        onClick={() => {
-                          setGlobalSearch("");
-                          setColumnFilters({});
-                          setSortConfig([]);
-                        }}
-                      >
-                        Clear All
-                      </Button>
-                    )}
-                  </Flex>
-                </Box>
-
-                {/* Table */}
-                <Box ref={tableContainerRef} overflowX="auto" overflowY="auto" maxH={isV2 ? undefined : "650px"} {...(isV2 ? { flex: "1", minH: 0, minW: 0, maxW: "100%", w: "100%" } : {})}>
-                  <table
-                    style={{
-                      width: "100%",
-                      // Sticky cells render reliably with separate borders (collapse glitches).
-                      borderCollapse: isV2 ? "separate" : "collapse",
-                      borderSpacing: 0,
-                      border: isV2 ? "none" : "1px solid #e2e8f0",
-                      fontFamily: isV2 ? FONT : undefined,
-                    }}
-                  >
-                    <thead>
-                      <tr style={{ backgroundColor: "var(--chakra-colors-bg-subtle)" }}>
-                        {tableColumns.map(col => {
-                          const sortIndex = sortConfig.findIndex(s => s.column === col.key);
-                          const sortDirection = sortIndex >= 0 ? sortConfig[sortIndex].direction : null;
-
-                          return (
-                            <th
-                              key={col.key}
-                              style={{
-                                padding: "8px 12px",
-                                textAlign: "left",
-                                borderBottom: isV2 ? "1px solid #E2E8F0" : "2px solid var(--chakra-colors-border-subtle)",
-                                cursor: "pointer",
-                                userSelect: "none",
-                                position: "sticky",
-                                top: 0,
-                                zIndex: isV2 ? 2 : 1,
-                                backgroundColor: isV2 ? "#fff" : "var(--chakra-colors-bg-subtle)",
-                                whiteSpace: isV2 ? "nowrap" : undefined,
-                                ...v2StickyStyle(col.key, true),
-                              }}
-                              onClick={() => handleHeaderClick(col.key)}
-                            >
-                              <Flex align="center" gap="2" mb="1" flexWrap="nowrap">
-                                <Text fontWeight={isV2 ? "700" : "600"} fontSize={isV2 ? "16px" : "sm"} fontFamily={isV2 ? FONT : undefined} whiteSpace={isV2 ? "nowrap" : undefined}>
-                                  {col.label}
-                                </Text>
-                                {isV2 ? (
-                                  // Home/Create-style sort glyph: ↕ when unsorted, ▲/▼ (+priority) when sorted.
-                                  sortDirection ? (
-                                    <span style={{ fontSize: 12, color: "#4A5568", display: "inline-flex", alignItems: "center", gap: 2 }}>
-                                      {sortDirection === "asc" ? "▲" : "▼"}
-                                      {sortConfig.length > 1 && <span style={{ fontSize: 10, fontWeight: 700 }}>{sortIndex + 1}</span>}
-                                    </span>
-                                  ) : (
-                                    <span style={{ fontSize: 12, color: "#A0AEC0" }}>↕</span>
-                                  )
-                                ) : (
-                                  sortDirection && (
-                                    <Text fontSize="xs" color="blue.600">
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                      {sortIndex > 0 && <sup>{sortIndex + 1}</sup>}
-                                    </Text>
-                                  )
-                                )}
-                              </Flex>
-                              {/* Per-column filter input */}
-                              <Input
-                                size="xs"
-                                placeholder={`Filter ${col.label}...`}
-                                value={columnFilters[col.key] || ""}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                  e.stopPropagation();
-                                  setColumnFilters(prev => ({
-                                    ...prev,
-                                    [col.key]: e.target.value
-                                  }));
-                                }}
-                                onClick={(e: React.MouseEvent<HTMLInputElement>) => e.stopPropagation()}
-                              />
-                            </th>
-                          );
-                        })}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedData.length === 0 ? (
-                        <tr>
-                          <td colSpan={tableColumns.length} style={{ padding: "12px", textAlign: "center", borderBottom: "1px solid #e2e8f0" }}>
-                            <Text color="gray.500" fontSize="sm">No results found</Text>
-                          </td>
-                        </tr>
-                      ) : (
-                        sortedData.map(({ idx, latlng, f, projectName, color, attributes }, globalIdx) => (
-                          <tr key={`${projectName}-${idx}-${globalIdx}`} data-project={projectName}>
-                            {tableColumns.map(col => {
-                              const value = getColumnValue(
-                                { idx, latlng, f, projectName, color, attributes },
-                                col.key
-                              );
-
-                              return (
-                                <td
-                                  key={col.key}
-                                  style={{
-                                    padding: isV2 ? "8px 12px" : "12px",
-                                    borderBottom: isV2 ? "1px solid #EDF2F7" : "1px solid #e2e8f0",
-                                    ...v2StickyStyle(col.key, false),
-                                  }}
-                                >
-                                  {col.key === "Project" ? (
-                                    <Flex align="center" gap="2">
-                                      <Box w="8px" h="8px" borderRadius="full" bg={color} />
-                                      <Text fontSize={isV2 ? "16px" : "sm"}>{value}</Text>
-                                    </Flex>
-                                  ) : col.key === "Coordinates" ? (
-                                    <Text fontSize="xs" fontFamily="mono">{value}</Text>
-                                  ) : col.key === "Overall Risk Score" ? (
-                                    <Text fontSize={isV2 ? "16px" : "sm"} fontWeight={isV2 ? "700" : "600"}>{value}</Text>
-                                  ) : (
-                                    <Text fontSize={isV2 ? "16px" : "sm"}>{value}</Text>
-                                  )}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </Box>
-              </>
-            )}
-          </Box>
-        </Tabs.Content>
+        <SegmentsTableTab
+          isV2={isV2}
+          selectedProjects={selectedProjects}
+          projectColors={projectColors}
+          allPointsCount={allPoints.length}
+          sortedData={sortedData}
+          tableColumns={tableColumns}
+          getColumnValue={getColumnValue}
+          sortConfig={sortConfig}
+          setSortConfig={setSortConfig}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          setGlobalSearch={setGlobalSearch}
+        />
       </Tabs.Root>
       <Dialog.Root open={deleteConfirmationOpen} onOpenChange={(e) => setDeleteConfirmationOpen(e.open)}>
         <Portal>

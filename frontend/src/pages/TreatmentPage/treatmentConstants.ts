@@ -6,10 +6,9 @@
  * `CodingPage/codingConstants.ts`).
  */
 
-import type { AttributeRow } from "../../api";
+// Re-export canonical shared types (single source of truth in api/projects).
+export type { ProjectDetail, AttributesResponse } from "../../api/projects";
 
-export type ProjectDetail = { name: string; versions: string[]; latest: string };
-export type AttributesResponse = { rows: AttributeRow[] };
 export type ScoreType = {
   BB: number;
   BP: number;

@@ -24,14 +24,14 @@ interface SidebarV2Props {
 const ghostBase: React.CSSProperties = {
   boxSizing: "border-box",
   width: "100%",
-  height: 40,
-  padding: "0 16px",
+  height: "2.5rem",
+  padding: "0 1rem",
   background: COLOR.white,
   border: `1px solid ${COLOR.borderInput}`,
-  borderRadius: 6,
+  borderRadius: "0.375rem",
   fontFamily: FONT,
   fontWeight: 700,
-  fontSize: 16,
+  fontSize: "1rem",
   color: COLOR.text,
   cursor: "pointer",
   textAlign: "center",
@@ -143,13 +143,13 @@ export default function SidebarV2({
   return (
     <aside className="psat-sidebar psat-sidebar--v2" aria-label="PSAT sidebar">
       <div
-        style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 14, overflowY: "auto" }}
+        style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: "0.875rem", overflowY: "auto" }}
         className="psat-v2-scroll"
       >
         <img
           src={psatLogo}
           alt="PSAT"
-          style={{ width: 196, height: "auto", alignSelf: "center", marginBottom: 6, objectFit: "contain" }}
+          style={{ width: "12.25rem", height: "auto", alignSelf: "center", marginBottom: "0.375rem", objectFit: "contain" }}
         />
 
         {navButton("Home", () => go("/home"))}
@@ -163,17 +163,17 @@ export default function SidebarV2({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 8,
-              height: 40,
-              padding: "0 16px",
+              gap: "0.5rem",
+              height: "2.5rem",
+              padding: "0 1rem",
               background: COLOR.white,
               border: `1px solid ${COLOR.borderInput}`,
-              borderRadius: qsOpen ? "6px 6px 0 0" : 6,
+              borderRadius: qsOpen ? "0.375rem 0.375rem 0 0" : "0.375rem",
               cursor: "pointer",
               userSelect: "none",
             }}
           >
-            <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, color: COLOR.text, lineHeight: 1.2 }}>
+            <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, lineHeight: 1.2 }}>
               Quick Select
             </span>
             <svg
@@ -210,12 +210,12 @@ export default function SidebarV2({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
-                  padding: "7px 10px",
+                  gap: "0.5rem",
+                  padding: "0.4375rem 0.625rem",
                   fontFamily: FONT,
-                  fontSize: 16,
+                  fontSize: "1rem",
                   cursor: "pointer",
-                  borderRadius: 6,
+                  borderRadius: "0.375rem",
                   color: COLOR.text,
                 }}
               >
@@ -230,12 +230,12 @@ export default function SidebarV2({
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
-                    padding: "7px 10px",
+                    gap: "0.5rem",
+                    padding: "0.4375rem 0.625rem",
                     fontFamily: FONT,
-                    fontSize: 16,
+                    fontSize: "1rem",
                     cursor: "pointer",
-                    borderRadius: 6,
+                    borderRadius: "0.375rem",
                     color: COLOR.text,
                   }}
                 >
@@ -244,7 +244,7 @@ export default function SidebarV2({
                 </div>
               ))}
               {projects.length === 0 && (
-                <div style={{ padding: "7px 10px", fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+                <div style={{ padding: "0.4375rem 0.625rem", fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 }}>
                   No projects
                 </div>
               )}
@@ -262,7 +262,7 @@ export default function SidebarV2({
         {children}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 14 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", paddingTop: "0.875rem" }}>
         {navButton("GIS Layers", () => go("/gis-layers"))}
         {navButton("User Guide", () => go("/help"))}
         {activeProfile && (
@@ -270,13 +270,13 @@ export default function SidebarV2({
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: 8,
+              gap: "0.5rem",
               border: `1px solid ${COLOR.borderInput}`,
-              borderRadius: 6,
-              padding: 10,
+              borderRadius: "0.375rem",
+              padding: "0.625rem",
             }}
           >
-            <div style={{ textAlign: "center", fontFamily: FONT, fontSize: 16, fontWeight: 700, color: COLOR.text, lineHeight: 1.4 }}>
+            <div style={{ textAlign: "center", fontFamily: FONT, fontSize: "1rem", fontWeight: 700, color: COLOR.text, lineHeight: 1.4 }}>
               {activeProfile.name}
             </div>
             <button

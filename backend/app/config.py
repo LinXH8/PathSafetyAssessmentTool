@@ -1,5 +1,5 @@
 from pathlib import Path
 
 class Config:
-    # data 目录位于项目根目录（和 app.py 同级）
+    # data/ sits at the backend root alongside app.py
     DATA_DIR = str((Path(__file__).resolve().parents[1] / "data"))
