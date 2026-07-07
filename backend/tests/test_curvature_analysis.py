@@ -7,7 +7,7 @@ from flask import Flask
 from shapely.geometry import LineString, Point
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.api.projects import routes  # noqa: E402
 from app.services.gis_mapping import GIS, LayerStore  # noqa: E402

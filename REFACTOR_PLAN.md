@@ -208,7 +208,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S3.4** Extract `CurvatureAnalyzer` + `WidthAnalyzer` from `gis_mapping.py` — 3d — *depends: none*
 - [x] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
 - [x] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
-- [ ] **S3.7** Move root `test_*.py` → `backend/tests/` + `conftest.py` — 1d — *depends: none*
+- [x] **S3.7** Move root `test_*.py` → `backend/tests/` + `conftest.py` — 1d — *depends: none*
 - [ ] **S3.8** Type-hint pass on `routes.py` + `project_manager.py` — 2d — *depends: S3.2, S3.6*
 
 ### Phase 4 — Verification (3–4 days) — *depends: all above*
@@ -436,7 +436,7 @@ data/serialization/defaults concerns. Then open: `backend/app/services/project_m
 **Verify:** Create/open/list project + image dedup still work; `detect_changes_tool` on the diff.
 **Commit:** `refactor(backend): modularize project_manager and extract image_storage [S3.6]`
 
-### S3.7 — Organize backend tests  · Done: ____
+### S3.7 — Organize backend tests  · Done: 2026-07-07
 **Context to load (run this first):** `query_graph_tool(pattern="tests_for")` to confirm the current
 test↔code coverage mapping before moving files, so nothing silently stops being collected after the move.
 **Do:** Move the ~24 root `backend/test_*.py` into `backend/tests/` + add `conftest.py` + `pytest.ini`. **Move only,
@@ -481,7 +481,9 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-02 · S0.5 · `serializer.py:475` opens `config.json` with a bare relative path (`open("config.json")`), making it CWD-dependent. Works today because the app always runs from `backend/`, but fragile. Should switch to `get_full_path("config.json")` in a later session.
 - 2026-07-03 · S1.2 · `treatmentDetailPage.tsx`: `TREATMENTS` is imported but never used (line 38); `Treatment` type is used at line 176 (`new Map<number, Treatment>()`) but not imported. Both are pre-existing errors in the 37-error baseline. Fix inline when decomposing this file in S2.4. (Line numbers re-verified 2026-07-03 after the v2 merge from main; baseline still 37.)
 - 2026-07-05 · S3.4 · `gis_mapping.py` had `_remove_z_coordinate` defined **twice** on the old `GIS` class (former lines 220 and 2519); the second silently shadowed the first, so only the 2519 version was ever live. S3.4 moved the live (2519) copy into `CurvatureAnalyzer` alongside `_load_path_layer`; the dead 220 copy was left verbatim in `GIS` (now ~line 203) to keep the refactor behavior-preserving. ~~It is unreferenced dead code and can be deleted in a later cleanup (e.g. S3.5/S3.8).~~ **CORRECTION (2026-07-05, S3.5):** it is NOT dead — `gis_queries.py:708` and `:870` call it statically as `gis.GIS._remove_z_coordinate(geom)` (the graph misses cross-module static-attribute access; found by grep). Deleting it requires repointing those two call sites to `CurvatureAnalyzer`'s copy (an `app/api/` edit) — fold into S3.8 or a follow-up, do not delete the `GIS` copy alone.
-- 2026-07-05 · S3.4 · `test_curvature_analysis.py` has **6 pre-existing failures** unrelated to the curvature/width logic itself: 4 reference `routes.autocode_gis` / `routes.get_curvature_visualization`, which moved out of `routes.py` during the S3.2 blueprint split (now in `app/api/projects/autocode.py` / `gis_queries.py`) and were never updated; 2 (`…uses_tight_bucket_for_sub_6_5m_radius`, `…uses_numeric_bucket_when_sharp_radius_and_junction_both_exist`) assert `has_path_junction is True` but get `False`. All 6 fail identically before and after S3.4. The 4 stale-route ones should be repointed when S3.7 organizes backend tests; the 2 junction-logic ones need a separate look (possible real logic drift — do NOT fix inline).
+- 2026-07-05 · S3.4 · `test_curvature_analysis.py` has **6 pre-existing failures** unrelated to the curvature/width logic itself: 4 reference `routes.autocode_gis` / `routes.get_curvature_visualization`, which moved out of `routes.py` during the S3.2 blueprint split (now in `app/api/projects/autocode.py` / `gis_queries.py`) and were never updated; 2 (`…uses_tight_bucket_for_sub_6_5m_radius`, `…uses_numeric_bucket_when_sharp_radius_and_junction_both_exist`) assert `has_path_junction is True` but get `False`. All 6 fail identically before and after S3.4. **NOT repointed in S3.7** — that session's scope was move-only (see below); the 2 junction-logic ones still need a separate look (possible real logic drift — do NOT fix inline).
+- 2026-07-07 · S3.7 · ~~`backend/tests/test_routes.py` fails to **collect**...~~ **RESOLVED (2026-07-07, same session, follow-up):** the user asked whether the 19 moved files were used by the application; grep confirmed none are imported anywhere (app runtime, CI, scripts, config). Of the 19, 12 were confirmed-dead debug/probe scripts (no `test_*` functions, print-based, some hardcoded to nonexistent Windows paths) vs. 7 real pytest suites (real `assert`s). User chose to delete the 12 probe scripts (including this file and `test_gis_layers.py`, below) and keep the 7 real suites. `git rm -f` applied to: `test_fiona.py`, `test_gpd_fiona.py`, `test_gpd_fiona2.py`, `test_flask_endpoint.py`, `test_routes.py`, `test_routes2.py`, `test_routes_with_gpd.py`, `test_list_shapefiles.py`, `test_payload.py`, `test_serialization.py`, `test_gis_mock.py`, `test_gis_layers.py`. Both collection errors below are now moot (their files are gone); re-ran `pytest --collect-only` after deletion: **65 tests collected, 0 errors**.
+- ~~2026-07-07 · S3.7 · `backend/tests/test_gis_layers.py` fails to **collect**...~~ **RESOLVED** — see entry above (file deleted).
 
 ## SESSION LOG STANDARD (mandatory template for every entry)
 
@@ -1601,3 +1603,108 @@ gives for free — record what you found so the next session doesn't re-query fr
                    without re-validating PDF export. Worktrees were provisioned stale AGAIN this wave —
                    keep the base-sha check. Phase 2 is now COMPLETE; remaining sessions are S3.7, S3.8,
                    S4.1.
+
+- 2026-07-07 · S3.7 · moved all 19 root `backend/test_*.py` into `backend/tests/`, added `conftest.py` +
+  `pytest.ini` so `pytest` collects them; confirmed via `git fetch`/`git merge origin/main` that `xh_dev`
+  and `main` were already identical (no-op merge, no conflicts) before starting.
+  FILES CREATED:   `backend/conftest.py` (11L) — inserts `backend/` onto `sys.path` for pytest collection
+                   (rootdir-relative import fix, doc'd inline); `backend/pytest.ini` (2L) — `testpaths = tests`
+  FILES DELETED:   none
+  FILES MOVED:     all via `git mv` (renames, not delete+add): `backend/test_curvature_analysis.py`,
+                   `test_fiona.py`, `test_flask_endpoint.py`, `test_gis_layers.py`, `test_gis_mock.py`,
+                   `test_gpd_fiona.py`, `test_gpd_fiona2.py`, `test_legacy_project_migration.py`,
+                   `test_list_shapefiles.py`, `test_payload.py`, `test_profile_store.py`,
+                   `test_project_image_dedup.py`, `test_project_image_storage.py`, `test_routes.py`,
+                   `test_routes2.py`, `test_routes_with_gpd.py`, `test_selection_geometry.py`,
+                   `test_serialization.py`, `test_telemetry_store.py` → `backend/tests/<same name>`
+                   (19 files total, all git-recognized as renames)
+  FILES MODIFIED:  7 of the 19 moved files needed a 1-line fix (not a rewrite): each had
+                   `sys.path.insert(0, str(Path(__file__).resolve().parent))` to reach the `backend/`
+                   root for `from app import ...` imports; since the file's own directory changed from
+                   `backend/` to `backend/tests/`, `.parent` → `.parent.parent` in each:
+                   `test_curvature_analysis.py`, `test_legacy_project_migration.py`, `test_profile_store.py`,
+                   `test_project_image_dedup.py`, `test_project_image_storage.py`, `test_selection_geometry.py`,
+                   `test_telemetry_store.py`. The other 12 files either had no `app` import, no sys.path
+                   manipulation at all (relying on the new `conftest.py` instead), or were already broken
+                   (hardcoded Windows paths) independent of the move.
+  SYMBOLS MOVED/EXTRACTED: none (file relocation only, per session scope — "move only, do not rewrite")
+  IMPORT SITES UPDATED: 0 — nothing outside `backend/tests/` imports these files by path; no other code
+                   references the old `backend/test_*.py` locations (confirmed by the 65/67 collection
+                   result showing only 2 PRE-EXISTING problems, not new ones from the move)
+  GRAPH USAGE:     `query_graph_tool(pattern="tests_for")` on `backend/app/services/project_manager.py` and
+                   `backend/app/services/gis_mapping.py`: 0 results both times — the graph has no
+                   test↔source coverage edges for this codebase (these are ad-hoc/pytest scripts without
+                   the call-graph shape the tool expects, not a sign anything is untested). Also ran
+                   `file_summary` on `test_curvature_analysis.py`/`test_routes.py` to confirm the graph
+                   already tags all 19 files `is_test: true`. Net finding: the graph could not substitute
+                   for direct inspection here, so file contents were read directly (grep for
+                   `^def test_\|assert` across all 19) to classify real-pytest-suite vs. probe-script,
+                   surfaced to the user for the move-scope decision (see ARCHITECTURAL DECISIONS).
+  BUILD GATE:      backend gate not run (no `app/` source touched); `cd backend && pytest --collect-only`:
+                   65 tests collected, 2 collection ERRORS (both pre-existing, see DEFERRED) — this IS the
+                   session's verify step per its own spec ("pytest collects from tests/"), and it passed
+                   in the sense that collection now works at all (previously never verified as a whole
+                   directory). No frontend touched.
+  REGRESSION CHECK: n/a — backend test-file relocation only, no app/UI behavior touched
+  ARCHITECTURAL DECISIONS: User was asked whether to (a) move all 19 files as-is or (b) also `git rm` the
+                   12 confirmed-dead probe scripts (no `test_*` functions, print-based, some with
+                   hardcoded nonexistent Windows paths) per the session's "drop obviously-dead
+                   dependency-probe scripts" allowance. User chose (a) — move all 19 as-is, deferring
+                   pruning to a future session with more scrutiny. `conftest.py` was added at `backend/`
+                   root (not inside `tests/`) so pytest's rootdir-based sys.path insertion covers even the
+                   3 probe scripts that had no sys.path handling of their own (`test_flask_endpoint.py`,
+                   `test_list_shapefiles.py`, `test_gis_mock.py`) — belt-and-suspenders alongside the
+                   per-file `.parent.parent` fix in the 7 real suites.
+  DEFERRED:        2 new collection-time errors added to DEFERRED FINDINGS (both pre-existing, exposed —
+                   not caused — by this move): `test_routes.py` imports a function
+                   (`_read_shapefile_as_geojson`) that no longer exists at that path in
+                   `app/api/shapefiles/routes.py` (likely stale since the S3.2 blueprint split);
+                   `test_gis_layers.py` makes a live top-level `requests.post` to `127.0.0.1:5000` with no
+                   server running, so collection itself throws `ConnectionError`. Also noted that the
+                   existing DEFERRED FINDINGS line from S3.4 ("stale-route [test_curvature_analysis.py
+                   failures] should be repointed when S3.7 organizes backend tests") was NOT addressed —
+                   out of this session's move-only scope; updated that line to say so explicitly rather
+                   than silently drop it.
+  NOTES FOR NEXT:  S3.8 (type-hint pass) depends on S3.2+S3.6, both already done, so it's next in the
+                   Dashboard and has no blocking dependency on this session. **SUPERSEDED same-session,
+                   see follow-up log entry immediately below** — the 12 probe scripts were pruned before
+                   this chat ended, so the "if a future session prunes" note above is now moot; both
+                   collection errors are resolved (files deleted).
+
+- 2026-07-07 · S3.7 (follow-up, same session) · deleted the 12 confirmed-dead debug/probe scripts after
+  the user asked whether the 19 moved files were actually used by the application.
+  FILES CREATED:   none
+  FILES DELETED:   12 files via `git rm -f` (already staged as renames from the earlier `git mv`, hence
+                   `-f`): `backend/tests/test_fiona.py`, `test_gpd_fiona.py`, `test_gpd_fiona2.py`,
+                   `test_flask_endpoint.py`, `test_routes.py`, `test_routes2.py`, `test_routes_with_gpd.py`,
+                   `test_list_shapefiles.py`, `test_payload.py`, `test_serialization.py`, `test_gis_mock.py`,
+                   `test_gis_layers.py`. None were imported by app runtime, CI, or any script/config
+                   (grepped for each filename across `.py/.ts/.tsx/.json/.yml/.yaml/Dockerfile*/.sh` — zero
+                   hits outside the files themselves and this plan doc).
+  FILES MOVED:     none (this is a follow-up to the earlier move in the same session)
+  FILES MODIFIED:  none
+  SYMBOLS MOVED/EXTRACTED: n/a
+  IMPORT SITES UPDATED: 0 — confirmed via grep before deleting, not just assumed
+  GRAPH USAGE:     n/a — no graph query re-run for this follow-up; the classification (real suite vs.
+                   probe script) was already established earlier in this session via direct grep
+                   (`^def test_\|assert`) and confirmed unchanged since no files were touched in between.
+  BUILD GATE:      `cd backend && pytest --collect-only`: **65 tests collected, 0 errors** (down from
+                   65/2-errors) — both previously-reported collection errors are gone because their files
+                   no longer exist. The 7 real suites (`test_curvature_analysis.py`,
+                   `test_legacy_project_migration.py`, `test_profile_store.py`,
+                   `test_project_image_dedup.py`, `test_project_image_storage.py`,
+                   `test_selection_geometry.py`, `test_telemetry_store.py`) are untouched and still collect.
+  REGRESSION CHECK: n/a — test-file deletion only
+  ARCHITECTURAL DECISIONS: Initially asked a broader question ("delete all 19?") since technically none
+                   of the 19 are imported by the app; the auto-mode permission classifier correctly
+                   flagged that a bare `git rm tests/*.py` would also destroy the 7 real pytest suites
+                   (which have genuine assertions and regression value, unlike the probe scripts), so a
+                   narrower confirmation was sought before acting. User confirmed: delete only the 12
+                   non-test probe scripts, keep the 7 real suites.
+  DEFERRED:        The two DEFERRED FINDINGS entries above for `test_routes.py` / `test_gis_layers.py`
+                   collection errors are now resolved (files deleted) — marked as such in place rather
+                   than removed, to preserve the historical record of why they existed.
+  NOTES FOR NEXT:  `backend/tests/` now holds exactly 7 files, all real pytest suites, all collecting
+                   cleanly with 0 errors. `conftest.py` and `pytest.ini` (added earlier this session) are
+                   still needed and unaffected by this deletion — they serve the 7 remaining suites, not
+                   the deleted scripts. S3.8 remains next in the Dashboard.

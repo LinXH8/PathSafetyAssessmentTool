@@ -3,7 +3,7 @@ import json
 import sys
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.services import legacy_project_migration  # noqa: E402
 

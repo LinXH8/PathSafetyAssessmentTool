@@ -8,7 +8,7 @@ import pandas as pd
 from shapely.geometry import LineString, Point
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.api.projects import routes  # noqa: E402
 

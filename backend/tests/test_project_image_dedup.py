@@ -2,7 +2,7 @@ from pathlib import Path
 import sys
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.services import global_var  # noqa: E402
 from app.services.project_manager import deduplicate_project_images  # noqa: E402
