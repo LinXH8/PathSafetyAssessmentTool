@@ -128,12 +128,12 @@ function Stepper({ value, onChange, onCommit, onStep, width = 54 }: {
 // Per-crash-type band colour (RSB hues from colorConstants; thresholds mirror SegmentScoresCard).
 function bandColor(score: number, key: string): string {
   if (key === "BB" || key === "BP" || key === "SB") {
-    if (score < 5) return RISK_BAND_COLORS.LOW;
+    if (score <= 5) return RISK_BAND_COLORS.LOW;
     if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 20) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
   }
-  if (score < 10) return RISK_BAND_COLORS.LOW;
+  if (score <= 10) return RISK_BAND_COLORS.LOW;
   if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 60) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;

@@ -90,7 +90,7 @@ export function useAttributeText(
       // but handle it gracefully just in case
       const scoreValue = Number(attrValue);
       if (isNaN(scoreValue)) return "Low";
-      if (scoreValue < 10) return "Low";
+      if (scoreValue <= 10) return "Low";
       if (scoreValue <= 25) return "Medium";
       if (scoreValue <= 60) return "High";
       return "Extreme";
@@ -132,11 +132,11 @@ export function useAttributeText(
           if (["BB", "BP", "SB"].includes(type)) {
             if (scoreValue > 20) riskLevel = 3;
             else if (scoreValue > 10) riskLevel = 2;
-            else if (scoreValue >= 5) riskLevel = 1;
+            else if (scoreValue > 5) riskLevel = 1;
           } else {
             if (scoreValue > 60) riskLevel = 3;
             else if (scoreValue > 25) riskLevel = 2;
-            else if (scoreValue >= 10) riskLevel = 1;
+            else if (scoreValue > 10) riskLevel = 1;
           }
 
           if (riskLevel > maxRiskLevel) {
@@ -155,13 +155,13 @@ export function useAttributeText(
     const scoreValue = Number(segmentScores[crashTypeKey] ?? 0);
 
     if (["BB", "BP", "SB"].includes(crashTypeKey)) {
-      if (scoreValue < 5) return "Low";
+      if (scoreValue <= 5) return "Low";
       if (scoreValue <= 10) return "Medium";
       if (scoreValue <= 20) return "High";
       return "Extreme";
     }
 
-    if (scoreValue < 10) return "Low";
+    if (scoreValue <= 10) return "Low";
     if (scoreValue <= 25) return "Medium";
     if (scoreValue <= 60) return "High";
     return "Extreme";

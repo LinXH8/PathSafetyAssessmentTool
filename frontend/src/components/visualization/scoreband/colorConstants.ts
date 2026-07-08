@@ -2,10 +2,11 @@
  * STANDARDIZED RISK BAND THRESHOLDS
  * This is the single source of truth for all safety band categorization in the application.
  *
- * All pages must use these exact thresholds:
- * - Low: <10
- * - Medium: 10-25
- * - High: 25-60
+ * All pages must use these exact thresholds (CycleRAP v2.14 — inclusive
+ * upper bounds; VB/overall shown, BB/BP/SB use 5/10/20):
+ * - Low: <=10
+ * - Medium: >10-25
+ * - High: >25-60
  * - Extreme: >60
  *
  * Used consistently throughout the application for:
@@ -23,10 +24,10 @@ export const RISK_BAND_COLORS = {
 
 /**
  * Get risk band color based on score
- * Thresholds: Low (<10), Medium (10-25), High (25-60), Extreme (>60)
+ * Thresholds: Low (<=10), Medium (>10-25), High (>25-60), Extreme (>60)
  */
 export function getRiskBandColor(score: number): string {
-  if (score < 10) return RISK_BAND_COLORS.LOW;
+  if (score <= 10) return RISK_BAND_COLORS.LOW;
   if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 60) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;
@@ -34,10 +35,10 @@ export function getRiskBandColor(score: number): string {
 
 /**
  * Get risk band label based on score
- * Thresholds: Low (<10), Medium (10-25), High (25-60), Extreme (>60)
+ * Thresholds: Low (<=10), Medium (>10-25), High (>25-60), Extreme (>60)
  */
 export function getRiskBandLabel(score: number): 'Low' | 'Medium' | 'High' | 'Extreme' {
-  if (score < 10) return 'Low';
+  if (score <= 10) return 'Low';
   if (score <= 25) return 'Medium';
   if (score <= 60) return 'High';
   return 'Extreme';
@@ -48,7 +49,7 @@ export function getRiskBandLabel(score: number): 'Low' | 'Medium' | 'High' | 'Ex
  * Returns 1-4 for band indices: 1=Low, 2=Medium, 3=High, 4=Extreme
  */
 export function getRiskBandIndex(score: number): 1 | 2 | 3 | 4 {
-  if (score < 10) return 1;    // Low: <10
+  if (score <= 10) return 1;    // Low: <10
   if (score <= 25) return 2;   // Medium: 10-25
   if (score <= 60) return 3;   // High: 25-60
   return 4;                     // Extreme: >60
@@ -57,8 +58,8 @@ export function getRiskBandIndex(score: number): 1 | 2 | 3 | 4 {
 /**
  * Get segment risk band color using per-crash-type thresholds.
  * Mirrors GeoDataPanel.getSegmentColor:
- *   BB/BP/SB: Extreme>20, High>10, Medium≥5
- *   VB:       Extreme>60, High>25, Medium≥10
+ *   BB/BP/SB: Extreme>20, High>10, Medium>5
+ *   VB:       Extreme>60, High>25, Medium>10
  * Returns the colour of the worst crash type.
  */
 export function getSegmentRiskBandColor(scores: Record<string, any> | null | undefined): string {

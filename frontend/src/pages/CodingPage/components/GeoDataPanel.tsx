@@ -393,13 +393,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
       if (['BB', 'BP', 'SB'].includes(crashType)) {
         if (score > 20) riskLevel = 3;       // Extreme
         else if (score > 10) riskLevel = 2;  // High
-        else if (score >= 5) riskLevel = 1;  // Medium
+        else if (score > 5) riskLevel = 1;  // Medium
         else riskLevel = 0;                  // Low
       } else {
         // VB
         if (score > 60) riskLevel = 3;       // Extreme
         else if (score > 25) riskLevel = 2;  // High
-        else if (score >= 10) riskLevel = 1; // Medium
+        else if (score > 10) riskLevel = 1; // Medium
         else riskLevel = 0;                  // Low
       }
 

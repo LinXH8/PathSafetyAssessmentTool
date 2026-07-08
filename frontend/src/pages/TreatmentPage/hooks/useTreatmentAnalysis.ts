@@ -44,6 +44,8 @@ export interface UseTreatmentAnalysisParams {
   resolveIndex: (globalIndex: number) => { name: string; localIndex: number } | null;
   /** Applied + staged treatment ids for the current segment (used for the attribute preview). */
   combinedTreatmentIds: number[];
+  /** Bumped when the async treatment catalog finishes loading, so applicability memos recompute. */
+  catalogVersion: number;
 }
 
 export interface BandCounts {
@@ -94,6 +96,7 @@ export function useTreatmentAnalysis(params: UseTreatmentAnalysisParams): UseTre
     currentIndex,
     resolveIndex,
     combinedTreatmentIds,
+    catalogVersion,
   } = params;
 
   // Effectiveness = # of segments whose Overall Risk Level Band improves when the
@@ -144,7 +147,7 @@ export function useTreatmentAnalysis(params: UseTreatmentAnalysisParams): UseTre
       if (eb !== ea) return eb - ea;
       return a.id - b.id;
     });
-  }, [attrs, effectivenessCounts, scope, filterMode, filteredGlobalIndexSet]);
+  }, [attrs, effectivenessCounts, scope, filterMode, filteredGlobalIndexSet, catalogVersion]);
 
   const fullyAppliedTreatments = useMemo(() => {
     const fullyApplied = new Set<number>();
