@@ -300,7 +300,8 @@ export default function GisLayersLayoutV1(vm: GisLayersViewModel) {
                                 variant="ghost"
                                 colorPalette="purple"
                                 onClick={(e) => { e.stopPropagation(); onEditParams(file); }}
-                                title="Edit required columns / affected parameters"
+                                disabled={!file.user_created}
+                                title={file.user_created ? "Edit required columns / affected parameters" : "Only newly uploaded layers can have their required columns / affected parameters edited"}
                               >
                                 Params
                               </Button>
