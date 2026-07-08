@@ -48,11 +48,11 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
         onChange={handlePostTreatmentFileChange}
       />
       <div className="rb-toolbar">
-        <button className="rb-btn rb-btn-secondary" onClick={() => navigate(-1)}>← Back</button>
-        <button className="rb-btn rb-btn-secondary" onClick={() => navigate("/analysis/path")} title="Go to Path Analysis to download table or image exports">↗ Path Analysis</button>
+        <button className="rb-btn rb-btn-secondary" onClick={() => navigate(-1)}>Back</button>
+        <button className="rb-btn rb-btn-secondary" onClick={() => navigate("/analysis/path")} title="Go to Path Analysis to download table or image exports">Path Analysis</button>
 
         <button className="rb-btn rb-btn-secondary" onClick={autoFitElements} title="Auto-resize all sections to fit their content and remove gaps">
-          ⇅ Auto-fit
+          Auto-fit
         </button>
 
         <button className="rb-btn rb-btn-secondary" onClick={saveLayout} title="Save your report layout, section arrangement, and text to this browser. The layout will be automatically restored the next time you open the Report Builder.">
@@ -63,7 +63,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
         </button>
         {hasSaved && (
           <button className="rb-btn rb-btn-secondary" onClick={restoreLayout} title="Revert to the last manually saved layout (does not affect live project data)">
-            ↩ Restore saved
+            Restore saved
           </button>
         )}
 
@@ -75,10 +75,10 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
 
         <div className="rb-export-group">
           <button className="rb-btn" onClick={handleDownloadPDF} disabled={!!exporting}>
-            {exporting === "pdf" ? "Generating…" : "↓ PDF"}
+            {exporting === "pdf" ? "Generating…" : "PDF"}
           </button>
           <button className="rb-btn rb-btn-primary" onClick={handleDownloadWord} disabled={!!exporting}>
-            {exporting === "word" ? "Generating…" : "↓ Word"}
+            {exporting === "word" ? "Generating…" : "Word"}
           </button>
         </div>
       </div>
@@ -90,7 +90,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
           <span style={{ flex: 1 }}>
             <strong>Layout saved</strong> — your section arrangement, titles, and settings have been saved to this browser.
             {" "}This layout will be <strong>automatically restored</strong> the next time you open the Report Builder.
-            {" "}Use <strong>↩ Restore saved</strong> in the toolbar to revert to this state at any time.
+            {" "}Use <strong>Restore saved</strong> in the toolbar to revert to this state at any time.
           </span>
           <button
             onClick={() => setSaveToastVisible(false)}
@@ -114,7 +114,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
             onClick={autoFitElements}
             style={{ padding: "3px 10px", borderRadius: 8, border: "1px solid #b090d8", background: "#fff", color: "#7030b8", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
           >
-            ⇅ Re-fit
+            Re-fit
           </button>
           <button
             onClick={() => setRestoreBannerVisible(false)}
@@ -295,7 +295,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
               </>
             )}
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button className="rb-btn rb-btn-secondary" onClick={() => navigate("/analysis/path")} style={{ fontSize: 13 }}>← Path Analysis</button>
+              <button className="rb-btn rb-btn-secondary" onClick={() => navigate("/analysis/path")} style={{ fontSize: 13 }}>Path Analysis</button>
               <button className="rb-btn" disabled={pickerSelected.size === 0} onClick={loadSelectedProjects} style={{ fontSize: 13 }}>
                 Load {pickerSelected.size > 0 ? `${pickerSelected.size} Project${pickerSelected.size > 1 ? "s" : ""}` : "Projects"}
               </button>

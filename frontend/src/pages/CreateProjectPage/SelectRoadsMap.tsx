@@ -18,6 +18,7 @@ import {
 } from "react-leaflet";
 import { FaDrawPolygon, FaFileImport, FaMapMarkedAlt, FaRoad, FaTrash } from "react-icons/fa";
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import { LuCheck } from "react-icons/lu";
 import ThemeAwareTileLayer from "../../components/common/ThemeAwareTileLayer";
 import { MapCursorController } from "../../components/common/MapCursorController";
 import {
@@ -973,14 +974,14 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                 title="Clear polygon"
                 style={v2ToolBtn(false)}
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={COLOR.danger} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                <FaTrash size={14} color={COLOR.danger} />
               </button>
               <button
                 onClick={() => setIsDrawing((v) => !v)}
                 title={isDrawing ? "Drawing… click map to add points" : "Draw polygon"}
                 style={v2ToolBtn(isDrawing)}
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={isDrawing ? COLOR.white : COLOR.text} strokeWidth="2" strokeLinejoin="round"><polygon points="12 3 20 9 17 19 7 19 4 9" /></svg>
+                <FaDrawPolygon size={15} color={isDrawing ? COLOR.white : COLOR.text} />
               </button>
             </div>
           </div>
@@ -1286,11 +1287,7 @@ function v2Checkbox(checked: boolean): React.CSSProperties {
     : { width: 16, height: 16, border: `1px solid ${COLOR.borderInput}`, borderRadius: 2, flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
 }
 
-const v2Check = (
-  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-    <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const v2Check = <LuCheck size={10} color="#fff" strokeWidth={3} />;
 
 // Small black glyph signifying how the layer draws on the map (line / polygon).
 // Fixed 14px box so the row height never shifts.

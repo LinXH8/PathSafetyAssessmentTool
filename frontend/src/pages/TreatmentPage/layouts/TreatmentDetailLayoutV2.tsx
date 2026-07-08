@@ -9,6 +9,7 @@
  */
 import { type CSSProperties, type ReactNode, useState } from "react";
 import { Box, Flex, Spinner, Text, Dialog, Portal, Button, CloseButton } from "@chakra-ui/react";
+import { LuCheck } from "react-icons/lu";
 import type { Feature, LineString } from "geojson";
 
 import ImagePanel from "../../CodingPage/components/ImagePanel";
@@ -513,14 +514,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                       >
                         <div style={{ width: "1.125rem", height: "1.125rem", borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: cbBg, border: `1px solid ${cbBorder}` }}>
                           {(showAppliedStyle || isSel) && (
-                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            <LuCheck size={10} color="#fff" strokeWidth={3} />
                           )}
                         </div>
                         <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                           <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.text }}>{t.name}</span>
                           {metric && <span style={CAPTION}>{metric}</span>}
                         </div>
-                        {showAppliedStyle && <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#38A169" }}>✓</span>}
+                        {showAppliedStyle && <LuCheck size={14} color="#38A169" strokeWidth={3} style={{ flexShrink: 0 }} />}
                       </div>
                     );
                   })}

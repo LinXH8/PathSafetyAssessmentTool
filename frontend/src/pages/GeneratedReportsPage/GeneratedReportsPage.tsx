@@ -5,6 +5,7 @@ import {
   type GeneratedReportInfo,
 } from "../../api";
 import { Spinner, Text, Badge, Box, Flex, HStack, Button } from "@chakra-ui/react";
+import { LuX, LuDownload } from "react-icons/lu";
 import { useColorModeValue } from "../../components/ui/color-mode";
 import { useUiVersion } from "../../features/ui/useUiVersion";
 
@@ -211,7 +212,7 @@ export default function GeneratedReportsPage() {
                   colorPalette="red"
                   onClick={() => setActionError(null)}
                 >
-                  ✕
+                  <LuX />
                 </Button>
               </Flex>
             </Box>
@@ -282,7 +283,7 @@ export default function GeneratedReportsPage() {
                               onClick={() => handleDownload(report.name)}
                               title="Download"
                             >
-                              ↓
+                              <LuDownload />
                             </Button>
                             <Button
                               size="xs"
@@ -291,7 +292,7 @@ export default function GeneratedReportsPage() {
                               onClick={() => handleDeleteClick(report.name)}
                               title="Delete"
                             >
-                              ✕
+                              <LuX />
                             </Button>
                           </>
                         ) : (

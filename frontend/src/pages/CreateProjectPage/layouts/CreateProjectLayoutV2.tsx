@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Spinner } from "@chakra-ui/react";
+import { LuCheck, LuChevronsUpDown } from "react-icons/lu";
 import ImageUploadModal from "../../sidebar/components/ImageUploadModal";
 import SelectRoadsMap from "../SelectRoadsMap";
 import { getTagColor } from "../../Projects/tagColor";
@@ -49,18 +50,14 @@ function checkboxBox(checked: boolean): React.CSSProperties {
     ? { width: "1rem", height: "1rem", background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
     : { width: "1rem", height: "1rem", border: `1px solid ${COLOR.borderInput}`, borderRadius: "0.125rem", flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
 }
-const checkSvg = (
-  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-    <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const checkSvg = <LuCheck size={10} color="#fff" strokeWidth={3} />;
 
 // Header cell with sort glyph placeholder (§7 / §1a — icon pending).
 function headerCell(label: string, width: number) {
   return (
     <div style={{ width, flexShrink: 0, display: "flex", gap: "0.3125rem", alignItems: "center", justifyContent: "center" }}>
       <span style={labelStyle}>{label}</span>
-      <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+      <LuChevronsUpDown size={13} color={COLOR.gray400} style={{ cursor: "pointer", flexShrink: 0 }} />
     </div>
   );
 }
@@ -253,7 +250,7 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                 <div style={{ flex: 1, display: "flex", gap: "0.5rem", alignItems: "center" }}>
                   <div onClick={toggleSelectAllVisible} style={checkboxBox(allVisibleSelected)}>{allVisibleSelected && checkSvg}</div>
                   <span style={labelStyle}>Folder Name</span>
-                  <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+                  <LuChevronsUpDown size={13} color={COLOR.gray400} style={{ cursor: "pointer", flexShrink: 0 }} />
                 </div>
                 {headerCell("Segments", W_SEG)}
                 {headerCell("Quarter", W_QTR)}

@@ -17,6 +17,7 @@
 import { useRef } from "react";
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
 import { Box, Button, Flex, Input, Tabs, Text } from "@chakra-ui/react";
+import { LuChevronsUpDown, LuChevronUp, LuChevronDown } from "react-icons/lu";
 import { FONT } from "../../../../features/ui/designTokens";
 import type { MapPoint, TablePoint, TableSortConfig } from "./mapViewUtils";
 
@@ -236,14 +237,16 @@ export function SegmentsTableTab({
                               {col.label}
                             </Text>
                             {isV2 ? (
-                              // Home/Create-style sort glyph: ↕ when unsorted, ▲/▼ (+priority) when sorted.
+                              // Home/Create-style sort glyph: stacked chevrons when unsorted, single chevron (+priority) when sorted.
                               sortDirection ? (
-                                <span style={{ fontSize: 12, color: "#4A5568", display: "inline-flex", alignItems: "center", gap: 2 }}>
-                                  {sortDirection === "asc" ? "▲" : "▼"}
+                                <span style={{ color: "#4A5568", display: "inline-flex", alignItems: "center", gap: 2 }}>
+                                  {sortDirection === "asc"
+                                    ? <LuChevronUp size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
+                                    : <LuChevronDown size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />}
                                   {sortConfig.length > 1 && <span style={{ fontSize: 10, fontWeight: 700 }}>{sortIndex + 1}</span>}
                                 </span>
                               ) : (
-                                <span style={{ fontSize: 12, color: "#A0AEC0" }}>↕</span>
+                                <LuChevronsUpDown size={13} color="#A0AEC0" style={{ flexShrink: 0 }} />
                               )
                             ) : (
                               sortDirection && (
