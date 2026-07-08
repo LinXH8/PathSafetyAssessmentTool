@@ -14,6 +14,7 @@ PSAT uses external GIS shapefiles and GeoJSON layers to provide spatial context 
 - [6.6 Filtering Shapefiles](#66-filtering-shapefiles)
 - [6.7 Renaming a Shapefile](#67-renaming-a-shapefile)
 - [6.8 Reverting a Shapefile to Its Original Name](#68-reverting-a-shapefile-to-its-original-name)
+- [6.9 Editing Required Columns and Affects](#69-editing-required-columns-and-affects)
 
 ---
 
@@ -67,9 +68,13 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 
 Use the **Add GIS Layer** workflow to upload entirely new datasets.
 
+- **File Upload**: Drag and drop your GIS files, or click to browse. For shapefiles, ensure you upload all companion files together (`.shp`, `.shx`, `.dbf`, `.prj`).
+- **Preview**: Once files are selected, you can preview the geometry on the map before finalising.
 - **New Category**: You must provide a name for the category folder (e.g., `school_zones`). Every upload is assigned to a specific category.
-- **File Upload**: Drag and drop your GIS files. For shapefiles, ensure you upload all companion files together (`.shp`, `.shx`, `.dbf`, `.prj`).
-- **Preview**: Once uploaded, you can preview the geometry on the map before finalising.
+- **Required Columns** *(optional)*: Enter the column name(s) the new layer contains, e.g. `WIDTH, SURFACE_TYPE`. This field can be left blank if you don't need to record any.
+- **Affects** *(mandatory)*: First choose which category this layer belongs to — **For Auto Coding**, **For Area Based Reports**, or **For Analysis** — then tick the specific attribute(s) within that category that this layer affects (e.g. Facility Width, Curvature). To add an attribute that isn't listed, type it into **Add a custom parameter to "…"** and click **Add**. Each tick is recorded together with its category, e.g. `For Auto Coding: Facility Width`, and appears as a removable tag below the checklist. You can switch categories and tick attributes from more than one — at least one attribute must be selected in total before uploading.
+
+> The **Upload** button stays disabled until you have selected a file and ticked at least one **Affects** attribute.
 
 ### Before You Upload — Confirmation Prompt
 
@@ -162,3 +167,17 @@ If a layer has been renamed and you want to restore its original filename as the
 4. Confirm the action — the display name immediately reverts to the layer's original filename
 
 > The **Revert** button only appears on layers that have been given a custom name. Layers still showing their original name will not have this option.
+
+## 6.9 Editing Required Columns and Affects
+
+The **Required Columns** and **Affects** values you entered while uploading a layer (see [Section 6.3](#63-adding-a-new-gis-layer)) can be corrected later if needed.
+
+**Steps:**
+
+1. Open the **GIS Layers** page from the sidebar
+2. Locate the layer you want to update
+3. Click the **Params** (or **Edit**) button on the layer row
+4. Update the **Affects** selections and/or **Required Columns** text
+5. Click **Save**
+
+> **Only layers you have uploaded through Add GIS Layer can have their Required Columns / Affects edited.** The built-in shapefiles that ship with PSAT, and any layer that already existed before this feature, are read-only for these two fields — the **Params** button is disabled for them. This does not change what columns the scoring engine actually reads; it only corrects the informational labels shown in the GIS Layers list.
