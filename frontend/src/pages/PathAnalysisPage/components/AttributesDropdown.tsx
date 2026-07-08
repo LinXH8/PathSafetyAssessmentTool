@@ -191,7 +191,7 @@ const cyclerapAttributes: AttributeConfig[] = [
   {
     name: "Facility Type",
     group: "Facility configuration",
-    options: ["Not Selected", "Sidewalk", "Multi-Use Path", "Off-Road Bicycle Path", "On-road Bicycle Lane", "Road Shoulder", "Mixed Traffic Road Lane"]
+    options: ["Not Selected", "Footpath", "Shared Path", "Cycling Path", "On-road Bicycle Lane", "Road Shoulder", "Mixed Traffic Road Lane"]
   },
   {
     name: "Facility access",
@@ -528,8 +528,8 @@ export const MULTI_VALUE_ATTRS = new Set(["FO Type", "NFO Type", "Delineation Ty
  */
 export const ATTRIBUTE_SUBCATEGORIES: Record<string, Record<string, string>> = {
   "Facility Type": {
-    "Sidewalk": "Standalone or beside cycling path (GIS)",
-    "Off-Road Bicycle Path": "Side by side footpath (adj. sidewalk 0–1 m) or split path (adj. sidewalk 1–3 m)",
+    "Footpath": "Standalone or beside cycling path (GIS)",
+    "Cycling Path": "Side by side footpath (adj. sidewalk 0–1 m) or split path (adj. sidewalk 1–3 m)",
     "Mixed Traffic Road Lane": "Shared space, side road, development access, signalised pedestrian crossing, pedestrian cum bicycle crossing, zebra crossing, kerb cut ramp",
   },
   "Loose or slippery surface": {

@@ -36,10 +36,10 @@ export const GIS_LAYER_COLORS = {
   bus_stop:         "#BE185D", // rose    (was #8B5CF6 violet ≈ RSB Extreme)
   parking_lot:      "#047857", // emerald (was #D97706 amber  ≈ RSB Medium)
   path_defects:     "#EF4444", // red     (unchanged — danger convention, RSB-safe)
-  // ── Lines (Polylines) — lower priority; moved the 3 RSB look-alikes ──
-  footpath:         "#1E90FF", // blue     (unchanged)
-  cycling:          "#B91C1C", // crimson  (unchanged — dark red, distinct from RSB orange)
-  shared:           "#0891B2", // teal     (was #A855F7 violet  ≈ RSB Extreme)
+  // ── Lines (Polylines) — synced to Facility Type attribute colors ──
+  footpath:         "#2563EB", // blue     (matches "Footpath" Facility Type attribute color)
+  cycling:          "#16A34A", // green    (matches "Cycling Path" Facility Type attribute color)
+  shared:           "#9333EA", // purple   (matches "Shared Path" Facility Type attribute color)
   roadcrossing:     "#10B981", // emerald  (unchanged)
   bus_lane:         "#4F46E5", // indigo   (was #EAB308 yellow  ≈ RSB Medium)
   kerb_line:        "#64748B", // slate    (was #D946EF fuchsia ≈ RSB Extreme; kerb = concrete)
@@ -214,9 +214,9 @@ export const CATEGORY_COLORS: Record<string, string | Record<string, string>> = 
     },
     "Flow Direction": { "One Way": "#2563EB", "Two Way": "#9333EA" },
     "Facility Type": {
-      "Sidewalk": "#2563EB",
-      "Multi-Use Path": "#9333EA",
-      "Off-Road Bicycle Path": "#16A34A",
+      "Footpath": "#2563EB",
+      "Shared Path": "#9333EA",
+      "Cycling Path": "#16A34A",
       "On-road Bicycle Lane": "#CA8A04",
       "Road Shoulder": "#F59E0B",
       "Mixed Traffic Road Lane": "#DC2626",

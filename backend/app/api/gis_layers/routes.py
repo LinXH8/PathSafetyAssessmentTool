@@ -38,6 +38,7 @@ from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 
 from app.services.shapefile_validator import ShapefileValidator
+from app.services.gis_layer_definition import get_layer_definition
 
 bp = Blueprint("gis_layers", __name__)
 
@@ -59,6 +60,36 @@ def _shp_root() -> Path:
 # of those was being opened with fiona (geometry-type probe) + XML-metadata-checked on
 # every page load, which is what made /gis-layers slow to load.
 _NON_LAYER_DIRS = {"gradient_profiles"}
+
+# In-memory cache of the GET /api/shapefiles response body. list_shapefiles() is hit
+# repeatedly (every /gis-layers mount, React StrictMode double-invoke in dev, etc.) and
+# the underlying scan is expensive (fiona.open() per file), so the result is cached
+# until one of the mutating endpoints below (upload/replace/delete/rename/revert/metadata)
+# invalidates it. Safe because those endpoints are the only supported way to change
+# backend/shapefiles/ layer content.
+_LIST_CACHE: list | None = None
+
+
+def _invalidate_list_cache() -> None:
+    global _LIST_CACHE
+    _LIST_CACHE = None
+
+
+def _dir_size_index(parent: Path) -> dict:
+    """One scandir call per directory: {lowercased filename: size in bytes}.
+
+    Used to sum a shapefile's companion-file sizes without doing an exists()+stat()
+    syscall pair per companion extension (20 extensions x every .shp file adds up).
+    """
+    idx: dict = {}
+    try:
+        with os.scandir(parent) as it:
+            for entry in it:
+                if entry.is_file():
+                    idx[entry.name.lower()] = entry.stat().st_size
+    except OSError:
+        pass
+    return idx
 
 # ── Metadata about each shapefile category ──────────────────────────────
 # Maps the folder/category name to its creation year and data source.
@@ -219,6 +250,28 @@ def _save_metadata_overrides(data: dict) -> None:
     _metadata_overrides_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
+# ── User-created layer tracking ─────────────────────────────────────────
+# Layers uploaded through POST /api/shapefiles/upload are recorded here so
+# that only newly-added layers (not the built-in/pre-existing shapefiles)
+# can have their Required Columns / Affects metadata edited afterwards.
+def _user_created_path() -> Path:
+    return _shp_root() / ".psat_user_created.json"
+
+
+def _load_user_created() -> set:
+    p = _user_created_path()
+    if p.exists():
+        try:
+            return set(json.loads(p.read_text(encoding="utf-8")))
+        except Exception:
+            return set()
+    return set()
+
+
+def _save_user_created(paths: set) -> None:
+    _user_created_path().write_text(json.dumps(sorted(paths), indent=2), encoding="utf-8")
+
+
 def _detect_geom_type(shp_path: Path) -> str | None:
     """Read the geometry type from a spatial file's schema without loading all features."""
     try:
@@ -238,19 +291,36 @@ def _save_originals(data: dict) -> None:
     _originals_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def _file_info(shp_path: Path, root: Path) -> dict:
-    """Build a ShapefileInfo dict for one GIS file."""
+def _file_info(
+    shp_path: Path,
+    root: Path,
+    overrides: dict | None = None,
+    dir_cache: dict | None = None,
+    user_created: set | None = None,
+) -> dict:
+    """Build a ShapefileInfo dict for one GIS file.
+
+    ``overrides`` (the parsed `.psat_layer_metadata.json`) and ``dir_cache`` (a
+    per-directory filename→size index, see `_dir_size_index`) may be preloaded and
+    shared across many calls by the caller (`list_shapefiles`) to avoid re-reading the
+    same override file and re-stat'ing the same directory once per shapefile. Both
+    default to None so single-shot callers (`set_layer_metadata`) still work standalone.
+    """
     rel = shp_path.relative_to(root)
     category = rel.parts[0] if len(rel.parts) > 1 else "uncategorised"
     stat = shp_path.stat()
 
     # For shapefiles (.shp) sum all companion files; for others just use file size
     if shp_path.suffix.lower() == ".shp":
-        total_size = sum(
-            shp_path.with_suffix(ext).stat().st_size
-            for ext in _companion_extensions()
-            if shp_path.with_suffix(ext).exists()
-        )
+        if dir_cache is not None:
+            idx = dir_cache.get(shp_path.parent)
+            if idx is None:
+                idx = _dir_size_index(shp_path.parent)
+                dir_cache[shp_path.parent] = idx
+        else:
+            idx = _dir_size_index(shp_path.parent)
+        stem_lower = shp_path.stem.lower()
+        total_size = sum(idx.get(stem_lower + ext, 0) for ext in _companion_extensions())
     else:
         total_size = stat.st_size
     
@@ -269,8 +339,6 @@ def _file_info(shp_path: Path, root: Path) -> dict:
     else:
         # 3. File upload/mtime fallback year
         year = str(datetime.fromtimestamp(stat.st_mtime).year)
-    
-    from app.services.gis_layer_definition import get_layer_definition
     
     # Resolve detailed layer definition
     # Use category as the key, but handle the 'path' subfolder specifically
@@ -311,7 +379,7 @@ def _file_info(shp_path: Path, root: Path) -> dict:
     # A user-set override (via /api/shapefiles/metadata) always wins over the
     # guessed/hardcoded values above — needed for layers that don't fit any
     # known LayerDefinition.
-    override = _load_metadata_overrides().get(rel.as_posix())
+    override = (overrides if overrides is not None else _load_metadata_overrides()).get(rel.as_posix())
     is_custom_metadata = False
     if override:
         req_cols = override.get("required_columns") or req_cols
@@ -352,6 +420,7 @@ def _file_info(shp_path: Path, root: Path) -> dict:
         "required_columns": req_cols,
         "affects": affects,
         "is_custom_metadata": is_custom_metadata,
+        "user_created": rel.as_posix() in (user_created if user_created is not None else _load_user_created()),
     }
 
 
@@ -362,11 +431,18 @@ def _file_info(shp_path: Path, root: Path) -> dict:
 @bp.get("")
 def list_shapefiles():
     """Return metadata for every .shp file found under backend/shapefiles/."""
+    global _LIST_CACHE
+    if _LIST_CACHE is not None:
+        return jsonify(_LIST_CACHE)
+
     root = _shp_root()
     if not root.exists():
         return jsonify([])
 
     originals = _load_originals()
+    overrides = _load_metadata_overrides()
+    user_created = _load_user_created()
+    dir_cache: dict = {}
     changed = False
     results = []
 
@@ -381,8 +457,8 @@ def list_shapefiles():
             continue
         if p.name.startswith("."):
             continue
-        
-        info = _file_info(p, root)
+
+        info = _file_info(p, root, overrides=overrides, dir_cache=dir_cache, user_created=user_created)
         rel_posix = info["path"]
         if rel_posix not in originals:
             originals[rel_posix] = p.stem
@@ -395,6 +471,7 @@ def list_shapefiles():
     if changed:
         _save_originals(originals)
 
+    _LIST_CACHE = results
     return jsonify(results)
 
 
@@ -701,6 +778,11 @@ def upload_shapefiles():
     finally:
         shutil.rmtree(str(tmp_dir), ignore_errors=True)
 
+    if uploaded:
+        user_created = _load_user_created()
+        user_created.update(item["path"] for item in uploaded)
+        _save_user_created(user_created)
+        _invalidate_list_cache()
     return jsonify({"uploaded": uploaded, "errors": errors, "count": len(uploaded)})
 
 
@@ -759,6 +841,8 @@ def replace_shapefiles():
         except Exception as e:
             errors.append(f"{tgt_rel}: {e}")
 
+    if replaced:
+        _invalidate_list_cache()
     return jsonify({"replaced": replaced, "errors": errors, "count": len(replaced)})
 
 
@@ -794,6 +878,13 @@ def delete_shapefile(shapefile_path: str):
         overrides.pop(shapefile_path)
         _save_metadata_overrides(overrides)
 
+    user_created = _load_user_created()
+    if shapefile_path in user_created:
+        user_created.discard(shapefile_path)
+        _save_user_created(user_created)
+
+    if deleted:
+        _invalidate_list_cache()
     return jsonify({"message": f"Deleted {len(deleted)} file(s)", "deleted_files": deleted})
 
 
@@ -838,6 +929,11 @@ def set_layer_metadata():
     if abs_path is None or not abs_path.exists():
         return jsonify({"error": f"Shapefile not found: {shapefile_path}"}), 404
 
+    if shapefile_path not in _load_user_created():
+        return jsonify({
+            "error": "Only newly uploaded layers can have their Required Columns / Affects edited."
+        }), 403
+
     affects_str = ", ".join(str(a).strip() for a in affects_list if str(a).strip())
     if not required_columns and not affects_str:
         return jsonify({"error": "Provide at least one of required_columns or affects"}), 400
@@ -848,6 +944,7 @@ def set_layer_metadata():
         "affects": affects_str,
     }
     _save_metadata_overrides(overrides)
+    _invalidate_list_cache()
 
     root = _shp_root()
     return jsonify({"message": "Layer metadata updated", "info": _file_info(abs_path, root)})
@@ -919,6 +1016,14 @@ def rename_shapefile():
         overrides[new_rel] = overrides.pop(shapefile_path)
         _save_metadata_overrides(overrides)
 
+    # Remap the user-created marker so the layer stays editable under its new path
+    user_created = _load_user_created()
+    if shapefile_path in user_created:
+        user_created.discard(shapefile_path)
+        user_created.add(new_rel)
+        _save_user_created(user_created)
+
+    _invalidate_list_cache()
     return jsonify({"message": f"Renamed {len(renamed)} file(s)", "new_path": new_rel, "renamed_files": renamed})
 
 
@@ -951,6 +1056,7 @@ def revert_shapefile():
     if abs_path.stem == original_stem:
         originals.pop(shapefile_path, None)
         _save_originals(originals)
+        _invalidate_list_cache()
         return jsonify({"message": "Already at original name", "new_path": shapefile_path})
 
     parent = abs_path.parent
@@ -971,4 +1077,11 @@ def revert_shapefile():
         overrides[new_rel] = overrides.pop(shapefile_path)
         _save_metadata_overrides(overrides)
 
+    user_created = _load_user_created()
+    if shapefile_path in user_created:
+        user_created.discard(shapefile_path)
+        user_created.add(new_rel)
+        _save_user_created(user_created)
+
+    _invalidate_list_cache()
     return jsonify({"message": f"Reverted {len(renamed)} file(s)", "new_path": new_rel, "renamed_files": renamed})

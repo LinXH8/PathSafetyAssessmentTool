@@ -128,7 +128,7 @@ export function AnalysisSidebar({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const layers: GISLayerToggle[] = [
     { key: 'footpath',          label: 'Footpath',          color: GIS_LAYER_COLORS.footpath,         colorPalette: 'blue',   geometry: 'line',    value: showFootpath,          onChange: setShowFootpath },
-    { key: 'cycling',           label: 'Cycling Path',      color: GIS_LAYER_COLORS.cycling,          colorPalette: 'red',    geometry: 'line',    value: showCycling,           onChange: setShowCycling },
+    { key: 'cycling',           label: 'Cycling Path',      color: GIS_LAYER_COLORS.cycling,          colorPalette: 'green',  geometry: 'line',    value: showCycling,           onChange: setShowCycling },
     { key: 'shared',            label: 'Shared Path',       color: GIS_LAYER_COLORS.shared,           colorPalette: 'purple', geometry: 'line',    value: showShared,            onChange: setShowShared },
     { key: 'roadcrossing',      label: 'Road Crossing',     color: GIS_LAYER_COLORS.roadcrossing,     colorPalette: 'green',  geometry: 'line',    value: showRoadcrossing,      onChange: setShowRoadcrossing },
     { key: 'bicycle_crossing',  label: 'Bicycle Crossing',  color: GIS_LAYER_COLORS.bicycle_crossing, colorPalette: 'orange', geometry: 'point',   value: showBicycleCrossing,   onChange: setShowBicycleCrossing },

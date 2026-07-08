@@ -47,7 +47,7 @@ const CHILD_REQUIRES_PARENT_PRESENT: Record<string, string> = {
 const ATTRIBUTE_TOOLTIPS: Record<string, string> = {
   // Facility configuration
   "Area type": "Classify the surrounding land use. Singapore paths are mostly Suburban (HDB/residential). Use Urban for city area and dense commercial zones, Industrial for business parks and logistics areas, Recreational for parks. Not scored directly but provides environmental context.",
-  "Facility Type": "The type of cycling facility at this segment. Off-Road Bicycle Path (dedicated red tarmac) carries the lowest risk; Mixed Traffic Road Lane the highest. Most Singapore cycling facility segments are Multi-Use Path or Off-Road Bicycle Path. Drives VB and BP scores significantly.",
+  "Facility Type": "The type of cycling facility at this segment. Cycling Path (dedicated red tarmac) carries the lowest risk; Mixed Traffic Road Lane the highest. Most Singapore cycling facility segments are Shared Path or Cycling Path. Drives VB and BP scores significantly.",
   "Adjacent Sidewalk 0-1m": "Is there a footpath or pedestrian walkway within arm's reach of the cycling path? Common in Singapore where footpath/ covered linkways run immediately beside cycling tracks. Increases BP (cyclist–pedestrian conflict) risk.",
   "Adjacent Sidewalk 1-3m": "Pedestrian footpath further away but still within the risk zone. Contributes to BP score when pedestrians are likely to stray into the cycling lane at lower severity.",
   "Adjacent Road Lane 0-1m": "Is there a motor vehicle lane essentially directly beside the path? Look for road surface, kerb edge, or live traffic in the image. A primary VB trigger. CV auto-codes this for most segments — verify when ambiguous.",

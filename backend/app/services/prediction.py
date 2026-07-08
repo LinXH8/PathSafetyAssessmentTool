@@ -373,9 +373,9 @@ class CycleRAP_Coding_Helper:
         )
         adj_01, adj_13 = cls._compute_adjroad(masks["road"], crossing_mask, img_h, img_w)
 
-        # Step 1 – Defaults (Sidewalk)
+        # Step 1 – Defaults (Footpath)
         attrs = {
-            "Facility Type":                    "Sidewalk",
+            "Facility Type":                    "Footpath",
             "Light Segregation":                "Present",
             "Delineation":                      "Not Present",
             "Adjacent Road Lane 0-1m":          adj_01,
@@ -395,14 +395,14 @@ class CycleRAP_Coding_Helper:
 
         # Step 2 – Cycling Path in bottom 20 %
         if cls._check_bottom_presence(masks["cycling"], img_h, fraction=0.20):
-            attrs["Facility Type"] = "Off-Road Bicycle Path"
+            attrs["Facility Type"] = "Cycling Path"
             attrs["Delineation"] = "Present"
             attrs["Adjacent Sidewalk 0-1m"] = "Present"
             delineation_triggers.append("Cycling Path")
 
         # Step 3 – Red Stripe in bottom 20 %
         if cls._check_bottom_presence(masks["red_stripe"], img_h, fraction=0.20):
-            attrs["Facility Type"] = "Multi-Use Path"
+            attrs["Facility Type"] = "Shared Path"
             attrs["Delineation"] = "Present"
             delineation_triggers.append("Red Stripe")
 

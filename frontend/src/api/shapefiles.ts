@@ -36,6 +36,8 @@ export type ShapefileInfo = {
   geom_type?: string;
   original_name?: string;
   is_renamed?: boolean;
+  /** True only for layers uploaded via the Add GIS Layer flow — only these may have their Required Columns / Affects edited. */
+  user_created?: boolean;
 };
 
 export type ShapefileCategoryInfo = {

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import "./landingPage.css";
 
 import psatLogo2 from "./assets/PSAT Logo (Black).png";
@@ -8,6 +7,17 @@ import cyclerapLogo from "./assets/CycleRAP-logo.png";
 import { APP_META } from "../../appMeta";
 import { toaster } from "../../components/ui/toaster";
 import { useProfile } from "../../features/profile/ProfileProvider";
+import { FONT, COLOR } from "../../features/ui/designTokens";
+import LandingModal, {
+  modalCopyStyle,
+  modalLabelStyle,
+  modalInputStyle,
+  modalSectionTitleStyle,
+  ghostBtnStyle,
+  primaryBtnStyle,
+  dangerBtnStyle,
+  dangerGhostBtnStyle,
+} from "./LandingModal";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -16,6 +26,7 @@ export default function LandingPage() {
     activeProfile,
     loading,
     error,
+    retry,
     createProfile,
     login,
     resetProfilePin,
@@ -82,10 +93,10 @@ export default function LandingPage() {
   const canManageSelectedProfile = Boolean(selectedProfile && busyAction === null && !loading);
   const canUseStartButton = Boolean((selectedProfile || canOpenFirstProfileSetup) && busyAction === null && !loading);
   const startButtonLabel = selectedProfile
-    ? `START AS ${selectedProfileLabel}`
+    ? `Start as ${selectedProfileLabel}`
     : profiles.length === 0
-      ? "CREATE FIRST PROFILE"
-      : "SELECT A PROFILE";
+      ? "Create First Profile"
+      : "Select a Profile";
 
   const openPinDialog = () => {
     setLoginPin("");
@@ -371,8 +382,6 @@ export default function LandingPage() {
 
         <h1 className="psat-logo name">path safety assessment tool</h1>
 
-        <p className="psat-logo description">an evidence-based risk evaluation model for active mobility users</p>
-
         <section className="profile-panel" aria-label="Profile access">
           <div className="profile-panel-header">
             <div className="profile-panel-copy">
@@ -394,17 +403,29 @@ export default function LandingPage() {
                 className="profile-create-btn"
                 onClick={openCreateDialog}
                 disabled={busyAction !== null}
+                aria-label="Create Profile"
+                title="Create Profile"
               >
-                Create Profile
+                +
               </button>
             </div>
           </div>
 
           {loading ? (
-            <div className="profile-status">Loading profiles...</div>
+            <div className="profile-status" role="status" aria-live="polite">
+              <span className="profile-spinner" aria-hidden="true" />
+              <span>Loading profiles…</span>
+            </div>
           ) : (
             <>
-              {error && <div className="profile-error">{error}</div>}
+              {error && (
+                <div className="profile-error">
+                  <span>{error}</span>
+                  <button type="button" className="profile-retry-btn" onClick={() => void retry()}>
+                    Try again
+                  </button>
+                </div>
+              )}
 
               <div className="profile-scroll-shell">
                 {profiles.length > 0 ? (
@@ -448,400 +469,390 @@ export default function LandingPage() {
         </button>
       </aside>
 
-      <Dialog.Root open={pinDialogOpen} onOpenChange={(details) => !details.open && closePinDialog()} size="sm" unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Enter PIN</Dialog.Title>
-              </Dialog.Header>
+      {/* Enter PIN */}
+      <LandingModal
+        open={pinDialogOpen}
+        title="Enter PIN"
+        onClose={closePinDialog}
+        busy={busyAction === "login"}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closePinDialog}
+              disabled={busyAction === "login"}
+              style={ghostBtnStyle(busyAction === "login")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleLogin()}
+              disabled={loginPin.trim().length === 0 || busyAction === "login"}
+              style={primaryBtnStyle(loginPin.trim().length === 0 || busyAction === "login")}
+            >
+              {busyAction === "login" ? "Starting…" : `Start As ${selectedProfileLabel || "Profile"}`}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          Enter the PIN for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong> to continue.
+        </p>
+        <input
+          id="profilePin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={loginPin}
+          onChange={(event) => setLoginPin(event.target.value)}
+          placeholder="PIN"
+          autoFocus
+          style={modalInputStyle}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              void handleLogin();
+            }
+          }}
+        />
+        {selectedProfile?.has_email && (
+          <button
+            type="button"
+            className="landing-dialog-link"
+            onClick={openRecoverDialog}
+            disabled={busyAction === "login"}
+          >
+            Forgot PIN?
+          </button>
+        )}
+      </LandingModal>
 
-              <Dialog.Body>
-                <div className="landing-dialog-copy">
-                  Enter the PIN for <strong>{selectedProfileLabel || "the selected profile"}</strong> to continue.
-                </div>
-                <div className="landing-dialog-form">
-                  <input
-                    id="profilePin"
-                    className="landing-dialog-input"
-                    type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={loginPin}
-                    onChange={(event) => setLoginPin(event.target.value)}
-                    placeholder="PIN"
-                    autoFocus
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        void handleLogin();
-                      }
-                    }}
-                  />
-                  {selectedProfile?.has_email && (
-                    <button
-                      type="button"
-                      className="landing-dialog-link"
-                      onClick={openRecoverDialog}
-                      disabled={busyAction === "login"}
-                    >
-                      Forgot PIN?
-                    </button>
-                  )}
-                </div>
-              </Dialog.Body>
+      {/* Create Profile */}
+      <LandingModal
+        open={createDialogOpen}
+        title="Create Profile"
+        onClose={closeCreateDialog}
+        busy={busyAction === "create"}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeCreateDialog}
+              disabled={busyAction === "create"}
+              style={ghostBtnStyle(busyAction === "create")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleCreate()}
+              disabled={
+                busyAction === "create"
+                || newProfileUsername.trim().length === 0
+                || newProfileEmail.trim().length === 0
+                || newProfileDivision.trim().length === 0
+                || newProfilePin.trim().length === 0
+              }
+              style={primaryBtnStyle(
+                busyAction === "create"
+                || newProfileUsername.trim().length === 0
+                || newProfileEmail.trim().length === 0
+                || newProfileDivision.trim().length === 0
+                || newProfilePin.trim().length === 0
+              )}
+            >
+              {busyAction === "create" ? "Creating…" : "Create Profile"}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          Create a local profile for this device. Your username is the display name shown here, while your
+          email stays private and is only used to reset a forgotten PIN. The PIN is stored in obfuscated form.
+        </p>
+        <input
+          id="newProfileUsername"
+          type="text"
+          value={newProfileUsername}
+          onChange={(event) => setNewProfileUsername(event.target.value)}
+          placeholder="Username"
+          autoFocus
+          style={modalInputStyle}
+        />
+        <input
+          id="newProfileEmail"
+          type="email"
+          value={newProfileEmail}
+          onChange={(event) => setNewProfileEmail(event.target.value)}
+          placeholder="LTA Employee Email (private, for PIN recovery)"
+          style={modalInputStyle}
+        />
+        <input
+          id="newProfileDivision"
+          type="text"
+          value={newProfileDivision}
+          onChange={(event) => setNewProfileDivision(event.target.value)}
+          placeholder="Division"
+          style={modalInputStyle}
+        />
+        <input
+          id="newProfilePin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={newProfilePin}
+          onChange={(event) => setNewProfilePin(event.target.value)}
+          placeholder="4 to 12 digit PIN"
+          style={modalInputStyle}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              void handleCreate();
+            }
+          }}
+        />
+      </LandingModal>
 
-              <Dialog.Footer>
-                <Button variant="outline" onClick={closePinDialog} disabled={busyAction === "login"}>
-                  Cancel
-                </Button>
-                <Button
-                  colorPalette="green"
-                  onClick={() => void handleLogin()}
-                  loading={busyAction === "login"}
-                  disabled={loginPin.trim().length === 0 || busyAction === "login"}
-                >
-                  {busyAction === "login" ? "Starting..." : `Start As ${selectedProfileLabel || "Profile"}`}
-                </Button>
-              </Dialog.Footer>
+      {/* Manage Profile */}
+      <LandingModal
+        open={manageDialogOpen}
+        title="Manage Profile"
+        onClose={closeManageDialog}
+        busy={busyAction === "update" || busyAction === "reset-pin" || busyAction === "delete"}
+        width={560}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeManageDialog}
+              disabled={busyAction === "update" || busyAction === "reset-pin"}
+              style={ghostBtnStyle(busyAction === "update" || busyAction === "reset-pin")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={openDeleteDialog}
+              disabled={busyAction === "update" || busyAction === "reset-pin"}
+              style={dangerGhostBtnStyle(busyAction === "update" || busyAction === "reset-pin")}
+            >
+              Delete Profile
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleUpdateProfile()}
+              disabled={
+                busyAction === "update"
+                || busyAction === "reset-pin"
+                || manageProfileUsername.trim().length === 0
+                || manageProfileDivision.trim().length === 0
+                || manageCurrentPin.trim().length === 0
+              }
+              style={ghostBtnStyle(
+                busyAction === "update"
+                || busyAction === "reset-pin"
+                || manageProfileUsername.trim().length === 0
+                || manageProfileDivision.trim().length === 0
+                || manageCurrentPin.trim().length === 0
+              )}
+            >
+              {busyAction === "update" ? "Saving…" : "Save Details"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleResetPin()}
+              disabled={
+                busyAction === "update"
+                || busyAction === "reset-pin"
+                || manageCurrentPin.trim().length === 0
+                || manageNewPin.trim().length === 0
+              }
+              style={primaryBtnStyle(
+                busyAction === "update"
+                || busyAction === "reset-pin"
+                || manageCurrentPin.trim().length === 0
+                || manageNewPin.trim().length === 0
+              )}
+            >
+              {busyAction === "reset-pin" ? "Updating…" : "Reset PIN"}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          Update the selected profile details or rotate the PIN. The current PIN is required for both actions.
+          Leave the recovery email blank to keep the current one.
+        </p>
+        <p style={{ fontFamily: FONT, fontSize: 12, lineHeight: 1.45, color: COLOR.gray500, margin: 0 }}>
+          Last active: {selectedProfileLastActive}
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={modalSectionTitleStyle}>Profile details</div>
+          <input
+            id="manageProfileUsername"
+            type="text"
+            value={manageProfileUsername}
+            onChange={(event) => setManageProfileUsername(event.target.value)}
+            placeholder="Username"
+            autoFocus
+            style={modalInputStyle}
+          />
+          <input
+            id="manageProfileEmail"
+            type="email"
+            value={manageProfileEmail}
+            onChange={(event) => setManageProfileEmail(event.target.value)}
+            placeholder={selectedProfile?.has_email ? "New recovery email (leave blank to keep current)" : "Recovery email (private, for PIN recovery)"}
+            style={modalInputStyle}
+          />
+          <input
+            id="manageProfileDivision"
+            type="text"
+            value={manageProfileDivision}
+            onChange={(event) => setManageProfileDivision(event.target.value)}
+            placeholder="Division"
+            style={modalInputStyle}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={modalSectionTitleStyle}>PIN confirmation</div>
+          <input
+            id="manageCurrentPin"
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={manageCurrentPin}
+            onChange={(event) => setManageCurrentPin(event.target.value)}
+            placeholder="Current PIN"
+            style={modalInputStyle}
+          />
+          <input
+            id="manageNewPin"
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={manageNewPin}
+            onChange={(event) => setManageNewPin(event.target.value)}
+            placeholder="New 4 to 12 digit PIN"
+            style={modalInputStyle}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && manageNewPin.trim().length > 0) {
+                event.preventDefault();
+                void handleResetPin();
+              }
+            }}
+          />
+        </div>
+      </LandingModal>
 
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+      {/* Delete Profile */}
+      <LandingModal
+        open={deleteDialogOpen}
+        title="Delete Profile"
+        onClose={closeDeleteDialog}
+        busy={busyAction === "delete"}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeDeleteDialog}
+              disabled={busyAction === "delete"}
+              style={ghostBtnStyle(busyAction === "delete")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleDeleteProfile()}
+              disabled={deletePin.trim().length === 0 || busyAction === "delete"}
+              style={dangerBtnStyle(deletePin.trim().length === 0 || busyAction === "delete")}
+            >
+              {busyAction === "delete" ? "Deleting…" : "Delete Profile"}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          This will permanently delete <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "this profile"}</strong> and all its
+          data. This action cannot be undone. Enter the profile PIN to confirm.
+        </p>
+        <input
+          id="deletePin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={deletePin}
+          onChange={(event) => setDeletePin(event.target.value)}
+          placeholder="PIN"
+          autoFocus
+          style={modalInputStyle}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && deletePin.trim().length > 0) {
+              event.preventDefault();
+              void handleDeleteProfile();
+            }
+          }}
+        />
+      </LandingModal>
 
-      <Dialog.Root open={createDialogOpen} onOpenChange={(details) => !details.open && closeCreateDialog()} size="sm" unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Create Profile</Dialog.Title>
-              </Dialog.Header>
-
-              <Dialog.Body>
-                <div className="landing-dialog-copy">
-                  Create a local profile for this device. Your username is the display name shown here, while your
-                  email stays private and is only used to reset a forgotten PIN. The PIN is stored in obfuscated form.
-                </div>
-                <div className="landing-dialog-form">
-                  <input
-                    id="newProfileUsername"
-                    className="landing-dialog-input"
-                    type="text"
-                    value={newProfileUsername}
-                    onChange={(event) => setNewProfileUsername(event.target.value)}
-                    placeholder="Username"
-                    autoFocus
-                  />
-                  <input
-                    id="newProfileEmail"
-                    className="landing-dialog-input"
-                    type="email"
-                    value={newProfileEmail}
-                    onChange={(event) => setNewProfileEmail(event.target.value)}
-                    placeholder="LTA Employee Email (private, for PIN recovery)"
-                  />
-                  <input
-                    id="newProfileDivision"
-                    className="landing-dialog-input"
-                    type="text"
-                    value={newProfileDivision}
-                    onChange={(event) => setNewProfileDivision(event.target.value)}
-                    placeholder="Division"
-                  />
-                  <input
-                    id="newProfilePin"
-                    className="landing-dialog-input"
-                    type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={newProfilePin}
-                    onChange={(event) => setNewProfilePin(event.target.value)}
-                    placeholder="4 to 12 digit PIN"
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        void handleCreate();
-                      }
-                    }}
-                  />
-                </div>
-              </Dialog.Body>
-
-              <Dialog.Footer>
-                <Button variant="outline" onClick={closeCreateDialog} disabled={busyAction === "create"}>
-                  Cancel
-                </Button>
-                <Button
-                  colorPalette="green"
-                  onClick={() => void handleCreate()}
-                  loading={busyAction === "create"}
-                  disabled={busyAction === "create" || newProfileUsername.trim().length === 0 || newProfileEmail.trim().length === 0 || newProfileDivision.trim().length === 0 || newProfilePin.trim().length === 0}
-                >
-                  {busyAction === "create" ? "Creating..." : "Create Profile"}
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-
-      <Dialog.Root open={manageDialogOpen} onOpenChange={(details) => !details.open && closeManageDialog()} size="lg" unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Manage Profile</Dialog.Title>
-              </Dialog.Header>
-
-              <Dialog.Body>
-                <div className="landing-dialog-copy">
-                  Update the selected profile details or rotate the PIN. The current PIN is required for both actions.
-                  Leave the recovery email blank to keep the current one.
-                </div>
-                <div className="landing-dialog-status">Last active: {selectedProfileLastActive}</div>
-                <div className="landing-dialog-form">
-                  <div className="landing-dialog-section">
-                    <div className="landing-dialog-section-title">Profile details</div>
-                    <input
-                      id="manageProfileUsername"
-                      className="landing-dialog-input"
-                      type="text"
-                      value={manageProfileUsername}
-                      onChange={(event) => setManageProfileUsername(event.target.value)}
-                      placeholder="Username"
-                      autoFocus
-                    />
-                    <input
-                      id="manageProfileEmail"
-                      className="landing-dialog-input"
-                      type="email"
-                      value={manageProfileEmail}
-                      onChange={(event) => setManageProfileEmail(event.target.value)}
-                      placeholder={selectedProfile?.has_email ? "New recovery email (leave blank to keep current)" : "Recovery email (private, for PIN recovery)"}
-                    />
-                    <input
-                      id="manageProfileDivision"
-                      className="landing-dialog-input"
-                      type="text"
-                      value={manageProfileDivision}
-                      onChange={(event) => setManageProfileDivision(event.target.value)}
-                      placeholder="Division"
-                    />
-                  </div>
-                  <div className="landing-dialog-section">
-                    <div className="landing-dialog-section-title">PIN confirmation</div>
-                    <input
-                      id="manageCurrentPin"
-                      className="landing-dialog-input"
-                      type="password"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={manageCurrentPin}
-                      onChange={(event) => setManageCurrentPin(event.target.value)}
-                      placeholder="Current PIN"
-                    />
-                    <input
-                      id="manageNewPin"
-                      className="landing-dialog-input"
-                      type="password"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={manageNewPin}
-                      onChange={(event) => setManageNewPin(event.target.value)}
-                      placeholder="New 4 to 12 digit PIN"
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" && manageNewPin.trim().length > 0) {
-                          event.preventDefault();
-                          void handleResetPin();
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </Dialog.Body>
-
-              <Dialog.Footer className="landing-dialog-actions">
-                <Button variant="outline" onClick={closeManageDialog} disabled={busyAction === "update" || busyAction === "reset-pin"}>
-                  Cancel
-                </Button>
-                <Button
-                  colorPalette="red"
-                  variant="outline"
-                  onClick={openDeleteDialog}
-                  disabled={busyAction === "update" || busyAction === "reset-pin"}
-                >
-                  Delete Profile
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => void handleUpdateProfile()}
-                  loading={busyAction === "update"}
-                  disabled={
-                    busyAction === "update"
-                    || busyAction === "reset-pin"
-                    || manageProfileUsername.trim().length === 0
-                    || manageProfileDivision.trim().length === 0
-                    || manageCurrentPin.trim().length === 0
-                  }
-                >
-                  {busyAction === "update" ? "Saving..." : "Save Details"}
-                </Button>
-                <Button
-                  colorPalette="green"
-                  onClick={() => void handleResetPin()}
-                  loading={busyAction === "reset-pin"}
-                  disabled={
-                    busyAction === "update"
-                    || busyAction === "reset-pin"
-                    || manageCurrentPin.trim().length === 0
-                    || manageNewPin.trim().length === 0
-                  }
-                >
-                  {busyAction === "reset-pin" ? "Updating..." : "Reset PIN"}
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-
-
-      <Dialog.Root open={deleteDialogOpen} onOpenChange={(details) => !details.open && closeDeleteDialog()} size="sm" unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Delete Profile</Dialog.Title>
-              </Dialog.Header>
-
-              <Dialog.Body>
-                <div className="landing-dialog-copy">
-                  This will permanently delete <strong>{selectedProfileLabel || "this profile"}</strong> and all its
-                  data. This action cannot be undone. Enter the profile PIN to confirm.
-                </div>
-                <div className="landing-dialog-form">
-                  <input
-                    id="deletePin"
-                    className="landing-dialog-input"
-                    type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={deletePin}
-                    onChange={(event) => setDeletePin(event.target.value)}
-                    placeholder="PIN"
-                    autoFocus
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && deletePin.trim().length > 0) {
-                        event.preventDefault();
-                        void handleDeleteProfile();
-                      }
-                    }}
-                  />
-                </div>
-              </Dialog.Body>
-
-              <Dialog.Footer>
-                <Button variant="outline" onClick={closeDeleteDialog} disabled={busyAction === "delete"}>
-                  Cancel
-                </Button>
-                <Button
-                  colorPalette="red"
-                  onClick={() => void handleDeleteProfile()}
-                  loading={busyAction === "delete"}
-                  disabled={deletePin.trim().length === 0 || busyAction === "delete"}
-                >
-                  {busyAction === "delete" ? "Deleting..." : "Delete Profile"}
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-
-      <Dialog.Root open={recoverDialogOpen} onOpenChange={(details) => !details.open && closeRecoverDialog()} size="sm" unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Reset Forgotten PIN</Dialog.Title>
-              </Dialog.Header>
-
-              <Dialog.Body>
-                <div className="landing-dialog-copy">
-                  Verify your identity for <strong>{selectedProfileLabel || "the selected profile"}</strong> by entering
-                  the private recovery email on file, then choose a new PIN.
-                </div>
-                <div className="landing-dialog-form">
-                  <input
-                    id="recoverEmail"
-                    className="landing-dialog-input"
-                    type="email"
-                    value={recoverEmail}
-                    onChange={(event) => setRecoverEmail(event.target.value)}
-                    placeholder="Recovery email"
-                    autoFocus
-                  />
-                  <input
-                    id="recoverNewPin"
-                    className="landing-dialog-input"
-                    type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={recoverNewPin}
-                    onChange={(event) => setRecoverNewPin(event.target.value)}
-                    placeholder="New 4 to 12 digit PIN"
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && recoverEmail.trim().length > 0 && recoverNewPin.trim().length > 0) {
-                        event.preventDefault();
-                        void handleRecoverPin();
-                      }
-                    }}
-                  />
-                </div>
-              </Dialog.Body>
-
-              <Dialog.Footer>
-                <Button variant="outline" onClick={closeRecoverDialog} disabled={busyAction === "recover"}>
-                  Cancel
-                </Button>
-                <Button
-                  colorPalette="green"
-                  onClick={() => void handleRecoverPin()}
-                  loading={busyAction === "recover"}
-                  disabled={recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover"}
-                >
-                  {busyAction === "recover" ? "Resetting..." : "Reset PIN"}
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+      {/* Reset Forgotten PIN */}
+      <LandingModal
+        open={recoverDialogOpen}
+        title="Reset Forgotten PIN"
+        onClose={closeRecoverDialog}
+        busy={busyAction === "recover"}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeRecoverDialog}
+              disabled={busyAction === "recover"}
+              style={ghostBtnStyle(busyAction === "recover")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleRecoverPin()}
+              disabled={recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover"}
+              style={primaryBtnStyle(recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover")}
+            >
+              {busyAction === "recover" ? "Resetting…" : "Reset PIN"}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          Verify your identity for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong> by entering
+          the private recovery email on file, then choose a new PIN.
+        </p>
+        <input
+          id="recoverEmail"
+          type="email"
+          value={recoverEmail}
+          onChange={(event) => setRecoverEmail(event.target.value)}
+          placeholder="Recovery email"
+          autoFocus
+          style={modalInputStyle}
+        />
+        <input
+          id="recoverNewPin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={recoverNewPin}
+          onChange={(event) => setRecoverNewPin(event.target.value)}
+          placeholder="New 4 to 12 digit PIN"
+          style={modalInputStyle}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && recoverEmail.trim().length > 0 && recoverNewPin.trim().length > 0) {
+              event.preventDefault();
+              void handleRecoverPin();
+            }
+          }}
+        />
+      </LandingModal>
 
       <footer className="landing-footer">
         <span className="version-info">v{APP_META.version} ({APP_META.buildDate})</span>
