@@ -237,7 +237,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
           style={{
             ...card,
             borderRadius: "0 0.375rem 0.375rem 0.375rem",
-            marginTop: "-0.0625rem",
+            marginTop: `calc(-1 * ${CARD_GAP} - 0.0625rem)`,
             height: "calc(100vh - 11.25rem)",
             display: "flex",
             flexDirection: "column",
