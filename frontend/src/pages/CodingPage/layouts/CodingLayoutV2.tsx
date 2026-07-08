@@ -399,7 +399,7 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
               <div style={{ display: "flex", gap: "0.375rem", flexShrink: 0 }}>
                 {crashCards.map((c) => (
                   <div key={c.key} style={{ flex: 1, borderRadius: RADIUS, display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.625rem", gap: "0.5rem", minHeight: "3.625rem", background: c.color }}>
-                    <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: "1.875rem", height: "1.875rem", objectFit: "contain", flexShrink: 0 }} />
+                    <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: "2.5rem", height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
                     <div>
                       <div style={{ fontFamily: FONT, fontSize: "1rem", fontWeight: 500, color: COLOR.white }}>{c.key}</div>
                       <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{c.value.toFixed(1)}</div>

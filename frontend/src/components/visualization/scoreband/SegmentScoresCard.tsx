@@ -304,7 +304,7 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
                       <Image
                         src={type.icon}
                         alt={type.shortLabel}
-                        h="32px"
+                        h="44px"
                         objectFit="contain"
                       />
 

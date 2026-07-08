@@ -601,7 +601,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                       style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" }}
                     >
                       {!isScore && c.icon && (
-                        <img src={c.icon} alt={c.label} style={{ height: "1.75rem", objectFit: "contain", flexShrink: 0 }} />
+                        <img src={c.icon} alt={c.label} style={{ height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
                       )}
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div style={{ fontSize: "1rem", fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{isScore ? "Risk Score" : c.label}</div>
