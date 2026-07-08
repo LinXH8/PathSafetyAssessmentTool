@@ -58,7 +58,7 @@ class CycleRAP_Coding_Helper:
         _ul_tasks.BaseModel.fuse = _safe_fuse
 
         models_to_load = {
-            "path_segmentation_model": "path_segmentation.pt",
+            "path_segmentation_model": "path_segmentation_6July.pt",
             "obstacle_detector_model": "obstacle_detector_ema.pt",
         }
 
