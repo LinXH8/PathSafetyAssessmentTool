@@ -26,6 +26,7 @@ export default function LandingPage() {
     activeProfile,
     loading,
     error,
+    retry,
     createProfile,
     login,
     resetProfilePin,
@@ -411,10 +412,20 @@ export default function LandingPage() {
           </div>
 
           {loading ? (
-            <div className="profile-status">Loading profiles...</div>
+            <div className="profile-status" role="status" aria-live="polite">
+              <span className="profile-spinner" aria-hidden="true" />
+              <span>Loading profiles…</span>
+            </div>
           ) : (
             <>
-              {error && <div className="profile-error">{error}</div>}
+              {error && (
+                <div className="profile-error">
+                  <span>{error}</span>
+                  <button type="button" className="profile-retry-btn" onClick={() => void retry()}>
+                    Try again
+                  </button>
+                </div>
+              )}
 
               <div className="profile-scroll-shell">
                 {profiles.length > 0 ? (

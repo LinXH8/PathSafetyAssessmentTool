@@ -128,6 +128,35 @@
   color: #365b42;
 }
 
+/* Loading row: spinner + "Loading profiles…" text on one baseline. */
+.profile-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-spinner {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 2px solid rgba(42, 164, 95, 0.25);
+  border-top-color: #2aa45f;
+  animation: profile-spinner-rotate 0.7s linear infinite;
+}
+
+@keyframes profile-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-spinner {
+    animation-duration: 1.4s;
+  }
+}
+
 .profile-error {
   margin-top: 10px;
   padding: 10px 12px;
@@ -135,6 +164,28 @@
   background: #fde1e5;
   color: #8f2432;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.profile-retry-btn {
+  flex: 0 0 auto;
+  border: 1px solid #8f2432;
+  border-radius: 6px;
+  background: #fff;
+  color: #8f2432;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-retry-btn:hover {
+  background: #fbd0d6;
 }
 
 /* v2 green ghost buttons: flat, white fill, green border + text, 6px radius. */

@@ -4,11 +4,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 
 import {
+  checkBackendHealth,
   createProfile as apiCreateProfile,
   deleteProfile as apiDeleteProfile,
   fetchProfilesOverview,
@@ -36,6 +38,8 @@ type ProfileContextValue = {
   loading: boolean;
   error: string | null;
   refreshOverview: () => Promise<ProfilesOverview | null>;
+  /** Re-run the initial load (with startup retry). Used by the "Try again" affordance. */
+  retry: () => Promise<void>;
   createProfile: (username: string, email: string, pin: string, division: string) => Promise<CreateProfileResult>;
   login: (profileId: string, pin: string) => Promise<LoginProfileResult>;
   logout: () => Promise<void>;
@@ -80,9 +84,75 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
   }, [applyOverview]);
 
+  // Guards against a load loop resolving after the provider unmounts (or after a
+  // newer load has superseded it, e.g. React StrictMode double-invoking effects).
+  const loadTokenRef = useRef(0);
+
+  /**
+   * Initial profile load, resilient to a cold backend.
+   *
+   * On startup the browser (Vite dev server / static bundle) is ready well before
+   * Flask finishes its heavy imports and starts listening on :8000, so the first
+   * `GET /api/profiles` used to fail at the proxy (ECONNREFUSED) and leave the page
+   * stuck in an error state until the user manually refreshed.
+   *
+   * Instead we run two phases:
+   *   1. Poll the cheap, side-effect-free `/api/ping` readiness probe with capped
+   *      exponential backoff (keeping the spinner up) until the backend is online.
+   *   2. Fetch the profiles overview exactly once. A failure here means the server
+   *      is up but genuinely errored (e.g. unreadable registry), so we surface it
+   *      immediately rather than retrying a doomed request.
+   */
+  const loadProfiles = useCallback(async () => {
+    const token = ++loadTokenRef.current;
+    const isCurrent = () => loadTokenRef.current === token;
+
+    setLoading(true);
+    setError(null);
+
+    // Phase 1 — wait for readiness. ~34s window (300ms → 2s cap) is long enough
+    // for a cold backend (torch/geopandas imports) to come online.
+    const maxAttempts = 20;
+    let ready = false;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (await checkBackendHealth()) {
+        ready = true;
+        break;
+      }
+      if (!isCurrent()) return;
+      const delay = Math.min(2000, 300 * 2 ** (attempt - 1));
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      if (!isCurrent()) return;
+    }
+
+    if (!ready) {
+      setError("Backend is not responding. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    // Phase 2 — backend is up; load the overview once.
+    try {
+      const nextOverview = await fetchProfilesOverview();
+      if (!isCurrent()) return;
+      applyOverview(nextOverview);
+      setError(null);
+    } catch (nextError) {
+      if (!isCurrent()) return;
+      const message = nextError instanceof Error ? nextError.message : "Failed to load profiles.";
+      setError(message);
+    } finally {
+      if (isCurrent()) setLoading(false);
+    }
+  }, [applyOverview]);
+
   useEffect(() => {
-    void refreshOverview();
-  }, [refreshOverview]);
+    void loadProfiles();
+    return () => {
+      // Supersede any in-flight retry loop so it stops touching state.
+      loadTokenRef.current += 1;
+    };
+  }, [loadProfiles]);
 
   const createProfile = useCallback(async (username: string, email: string, pin: string, division: string) => {
     const result = await apiCreateProfile(username, email, pin, division);
@@ -146,6 +216,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     loading,
     error,
     refreshOverview,
+    retry: loadProfiles,
     createProfile,
     login,
     logout,
@@ -154,7 +225,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     recoverProfilePin,
     deleteProfile,
     migrateLegacyProjects,
-  }), [overview, loading, error, refreshOverview, createProfile, login, logout, updateProfile, resetProfilePin, recoverProfilePin, deleteProfile, migrateLegacyProjects]);
+  }), [overview, loading, error, refreshOverview, loadProfiles, createProfile, login, logout, updateProfile, resetProfilePin, recoverProfilePin, deleteProfile, migrateLegacyProjects]);
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }
