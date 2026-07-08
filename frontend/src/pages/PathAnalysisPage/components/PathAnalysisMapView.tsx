@@ -1374,12 +1374,12 @@ export default function AttributeAnalysisMapView({
                 const scoreValue = segmentScores?.[crashTypeKey] !== undefined ? segmentScores[crashTypeKey] : 0;
                 let attrValueText = "Low";
                 if (['BB', 'BP', 'SB'].includes(crashTypeKey)) {
-                  if (scoreValue < 5) attrValueText = "Low";
+                  if (scoreValue <= 5) attrValueText = "Low";
                   else if (scoreValue <= 10) attrValueText = "Medium";
                   else if (scoreValue <= 20) attrValueText = "High";
                   else attrValueText = "Extreme";
                 } else {
-                  if (scoreValue < 10) attrValueText = "Low";
+                  if (scoreValue <= 10) attrValueText = "Low";
                   else if (scoreValue <= 25) attrValueText = "Medium";
                   else if (scoreValue <= 60) attrValueText = "High";
                   else attrValueText = "Extreme";

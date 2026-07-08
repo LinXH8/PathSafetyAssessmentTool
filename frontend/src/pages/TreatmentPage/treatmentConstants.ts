@@ -26,248 +26,109 @@ export const MAP_HEIGHT = 500;
 // Sentinel for the "All Projects" tab — scopes the page to every loaded project.
 export const ALL_PROJECTS = "__ALL__";
 
-// Treatment definitions using application's native attribute names
+// ---------------------------------------------------------------------------
+// Treatment catalog (CycleRAP v2.14 STM)
+//
+// The catalog is no longer hardcoded here: the backend is the single source
+// of truth (`backend/app/services/data/stm_v214_treatments.json`, served via
+// `GET /api/projects/:name/treatments/catalog`). Call `loadTreatmentCatalog`
+// once per session (the Treatment page container does this on mount); the
+// module-level `TREATMENTS` array is filled in place so the existing pure
+// helpers keep working.
+// ---------------------------------------------------------------------------
+
+export type TriggerRange = { ge?: number; gt?: number; lt?: number; le?: number };
+
+export type TriggerSet = {
+  // AND across attributes; OR across the listed category codes per attribute
+  attrs: Record<string, number[]>;
+  aadt?: TriggerRange;   // Road AADT range bounds
+  speed?: TriggerRange;  // Road operating speed (mean) range bounds
+};
+
 export type Treatment = {
   id: number;
   name: string;
   description?: string;
-  // Attributes to check if treatment is applicable
-  triggers: Record<string, number[]>[];
-  // Attribute changes to apply when treatment is selected
+  unit_scope?: "kmh" | "mph" | null;
+  requires_manual_value?: boolean;
+  // Applicable when ANY trigger set fully matches
+  trigger_sets: TriggerSet[];
+  // Attribute overrides applied when the treatment is selected
   effects: Record<string, number>;
 };
 
-export const TREATMENTS: Treatment[] = [
-  {
-    id: 1,
-    name: "Upgrade to on-road bicycle lane with light segregation",
-    triggers: [
-      { "Facility Type": [5], "Light Segregation": [2] },
-      { "Facility Type": [6], "Light Segregation": [2] },
-      { "Facility Type": [1, 2], "Number of lanes – adjacent road": [1], "Peak pedestrian flow along or across facility": [3] },
-      { "Facility Type": [1, 2], "Number of lanes – adjacent road": [1] },
-    ],
-    effects: { "Facility Type": 4, "Light Segregation": 1, "Facility access": 1 },
-  },
-  {
-    id: 2,
-    name: "Safety barrier (Adjacent road 0-1m)",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Curvature": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2] },
-    ],
-    effects: { "Adjacent Road Lane 0-1m": 2, "Facility access": 1 },
-  },
-  {
-    id: 3,
-    name: "Safety barrier (Adjacent road 1-3m)",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2] },
-      { "Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2] },
-    ],
-    effects: { "Adjacent Road Lane 1-3m": 2, "Facility access": 1 },
-  },
-  {
-    id: 4,
-    name: "Upgrade to cycling-priority street",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility access": 1 },
-  },
-  {
-    id: 5,
-    name: "Upgrade to multi-use path",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility Type": 2, "Facility Width per Direction": 3, "Facility access": 1 },
-  },
-  {
-    id: 6,
-    name: "Upgrade to off-road bicycle path",
-    triggers: [
-      { "Facility Type": [1, 2, 5, 6], "Property Access": [1] },
-    ],
-    effects: { "Facility Type": 3, "Facility access": 1 },
-  },
-  {
-    id: 7,
-    name: "Convert to one-way facility",
-    triggers: [
-      { "Facility Type": [4, 5, 6], "Flow Direction": [2] },
-    ],
-    effects: { "Flow Direction": 1, "Facility access": 1 },
-  },
-  {
-    id: 8,
-    name: "Improve surface conditions",
-    triggers: [
-      { "Loose or slippery surface": [1] },
-    ],
-    effects: { "Loose or slippery surface": 2, "Major Surface Deformation or Drain Opening": 2 },
-  },
-  {
-    id: 9,
-    name: "Install light segregation",
-    triggers: [
-      { "Light Segregation": [2] },
-    ],
-    effects: { "Light Segregation": 1 },
-  },
-  {
-    id: 10,
-    name: "Install street lighting",
-    triggers: [
-      { "Street Lighting": [2] },
-    ],
-    effects: { "Street Lighting": 1 },
-  },
-  {
-    id: 11,
-    name: "Remove fixed obstacles",
-    triggers: [
-      { "Fixed Obstacle on Facility": [1] },
-    ],
-    effects: { "Fixed Obstacle on Facility": 2 },
-  },
-  {
-    id: 12,
-    name: "Remove non-fixed obstacles",
-    triggers: [
-      { "Non-Fixed Obstacle on Facility": [1] },
-    ],
-    effects: { "Non-Fixed Obstacle on Facility": 2 },
-  },
-  {
-    id: 13,
-    name: "Remove width restriction",
-    triggers: [
-      { "Width Restriction": [1] },
-    ],
-    effects: { "Width Restriction": 2 },
-  },
-  {
-    id: 14,
-    name: "Improve facility access",
-    triggers: [
-      { "Facility access": [2] },
-    ],
-    effects: { "Facility access": 1 },
-  },
-  {
-    id: 15,
-    name: "Redesign sharp curves",
-    triggers: [
-      { "Curvature": [1] },
-    ],
-    effects: { "Curvature": 2 },
-  },
-  {
-    id: 16,
-    name: "Widen the facility",
-    triggers: [
-      { "Facility Width per Direction": [1, 2] },
-    ],
-    effects: { "Facility Width per Direction": 3 },
-  },
-  {
-    id: 17,
-    name: "Install protective barrier",
-    triggers: [
-      { "Adjacent Severe Hazard 0-1m": [1] },
-    ],
-    effects: { "Adjacent Severe Hazard 0-1m": 2 },
-  },
-  {
-    id: 18,
-    name: "Improve delineation",
-    triggers: [
-      { "Delineation": [2] },
-    ],
-    effects: { "Delineation": 1 },
-  },
-  {
-    id: 19,
-    name: "Review intersection approach",
-    triggers: [
-      { "Intersection Approach": [1] },
-    ],
-    effects: { "Intersection Approach": 2 },
-  },
-  {
-    id: 20,
-    name: "Improve crossing facility",
-    triggers: [
-      { "Crossing Facility": [2] },
-      { "Property Access": [1], "Crossing Facility": [2] },
-    ],
-    effects: { "Crossing Facility": 1 },
-  },
-  {
-    id: 21,
-    name: "Evaluate grade separation",
-    triggers: [
-      { "Intersection or Road Crossing": [1] },
-    ],
-    effects: { "Intersection or Road Crossing": 2 },
-  },
-  {
-    id: 22,
-    name: "Reconfigure/remove parking",
-    triggers: [
-      { "Adjacent Vehicle Parking 0-1m": [1] },
-    ],
-    effects: { "Adjacent Vehicle Parking 0-1m": 2 },
-  },
-  {
-    id: 23,
-    name: "Review tram/train rails",
-    triggers: [
-      { "Tram or Train Rails": [1] },
-    ],
-    effects: { "Tram or Train Rails": 2 },
-  },
-  {
-    id: 24,
-    name: "Install traffic calming",
-    triggers: [
-      { "Facility Type": [4], "Intersection or Road Crossing": [2], "Adjacent Road Lane 0-1m": [1] },
-    ],
-    effects: {},
-  },
-  {
-    id: 25,
-    name: "Bicycle speed control",
-    triggers: [
-      { "Bicycle/LV speed – average": [2] },
-    ],
-    effects: { "Bicycle/LV speed – average": 1 },
-  },
-];
+/** Filled by `loadTreatmentCatalog()`; empty until the catalog has loaded. */
+export const TREATMENTS: Treatment[] = [];
+
+let catalogPromise: Promise<Treatment[]> | null = null;
+
+/**
+ * Fetch the v2.14 treatment catalog from the backend (once per SPA session)
+ * and populate the module-level `TREATMENTS` array in place.
+ */
+export const loadTreatmentCatalog = (project: string): Promise<Treatment[]> => {
+  if (!catalogPromise) {
+    catalogPromise = fetch(
+      `/api/projects/${encodeURIComponent(project)}/treatments/catalog`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        TREATMENTS.length = 0;
+        TREATMENTS.push(...(data.treatments as Treatment[]));
+        return TREATMENTS;
+      })
+      .catch((err) => {
+        catalogPromise = null; // allow retry
+        throw err;
+      });
+  }
+  return catalogPromise;
+};
+
+const SPEED_UNIT_ATTR = "Road operating speed (unit)";
+const ROAD_AADT_ATTR = "Road AADT";
+const ROAD_SPEED_ATTR = "Road operating speed (mean)";
+
+const rangeHolds = (value: number, r: TriggerRange): boolean =>
+  !(
+    (r.ge !== undefined && !(value >= r.ge)) ||
+    (r.gt !== undefined && !(value > r.gt)) ||
+    (r.lt !== undefined && !(value < r.lt)) ||
+    (r.le !== undefined && !(value <= r.le))
+  );
+
+const asNumber = (v: unknown): number | null => {
+  if (v === null || v === undefined || v === "") return null;
+  const n = typeof v === "number" ? v : parseFloat(String(v));
+  return Number.isNaN(n) ? null : n;
+};
 
 export const TREATMENT_COPY_BASE_PROMPT =
   "Using this image, create an image with the following recommendations to improve the cycling or pedestrian facility shown, but do not change the original structure of the facility, such that renovations can be done quickly and efficiently. Important markings and delineation marks on the pathways and roads should be preserved. Use Singapore context of cycling path red markings and shared path dashed red lines where appropriate:";
 
-export const TREATMENT_COPY_PRIORITY = [16, 22, 18, 15, 7, 5, 11, 21, 1, 4, 6, 9, 12, 13, 20];
+// NOTE: keyed by CycleRAP v2.14 STM treatment IDs.
+export const TREATMENT_COPY_PRIORITY = [19, 25, 21, 17, 8, 6, 13, 24, 1, 4, 7, 11, 14, 15, 23];
 
 export const TREATMENT_COPY_LINES: Partial<Record<number, string>> = {
   1: "* Upgrade to on-road bicycle lane with light segregation - Convert one lane of the road space into a dedicated on-road bicycle lane, separated from moving traffic using light segregation measures. In the Singapore context, this includes flexible delineator posts, kerb or low-profile armadillo kerbs.",
   4: "* Upgrade to cycling-priority street - Redesign the road to give cyclists primary right of way, with motor vehicles as guests. Apply surface treatments, signage, and traffic calming measures consistent with a cycling-priority or bicycle street layout, referencing overseas's low-traffic, low speed neighbourhood concepts e.g. in Netherlands, UK.",
-  5: "* Upgrade to multi-use path - Convert the existing facility into a clearly designated shared path for both cyclists and pedestrians. Apply shared path markings, the standard cyclist-and-pedestrian dual-symbol signage used on Singapore LTA cycling shared paths, and appropriate surface treatments.",
-  6: "* Upgrade to off-road bicycle path - Physically separate the cycling facility from motor traffic by constructing a dedicated off-road path. This may involve a new alignment set back from the road, kerb separation, or a fully independent corridor consistent with Singapore's Park Connector Network or Cycling Path Network standards.",
-  7: "* Convert to one-way facility - Redesign the facility to carry cyclists in a single direction only. Apply appropriate one-way signage, directional road markings, and physical channelling for one-way cycling paths.",
-  9: "* Install light segregation - Add low-profile physical separators between the cycling facility and adjacent motor traffic or pedestrian zones. In the Singapore context, this includes flexible delineator posts, painted islands, kerb segments, vegetation planting.",
-  11: "* Remove fixed obstacles - Remove permanently installed objects that obstruct or reduce the usable width of the path or road. In the Singapore context, this includes lamp posts, traffic signal poles, bollards, fire hydrant boxes, bus shelter pillars, sheltered walkway columns, utility cabinets, and permanently anchored signage poles.",
-  12: "* Remove non-fixed obstacles - Clear temporary or moveable objects that are obstructing the path or road. This includes traffic cones, water-filled barriers, bicycles, PMDs or motorcycles parked across the path, food cart trolleys, potted plants, rubbish bins, construction hoarding or construction equipment that has not been permanently installed.",
-  13: "* Remove width restrictions - Eliminate physical pinch points that artificially narrow the usable width of the facility. In the Singapore context, this includes swing gates, narrow cattle-grid barriers at park connector entry points, and overgrown vegetation or signage encroaching on path edges. At bus stop, bypass path can be created behind the bus stops for cyclists to pass by instead of cycling in front of the bus stop.",
-  15: "* Redesign sharp curves - Smooth out tight bends or acute-angle turns in the path or road. In the Singapore context, this applies to 90 degree path connections, underpass entry/exit curves, and path corners near road crossings that create blind spots or force cyclists to slow sharply.",
-  16: "* Widen the facility - Increase the width of the existing path, track, or road shown in this image. In the Singapore context, this may involve extending footpath edges, expanding shared paths along LTA cycling paths or park connectors, or widening cycling strips adjacent to roads.",
-  18: "* Improve delineation - Add or refresh visual markings that separate cyclists from pedestrians or vehicles. This includes painted centrelines, shared path symbols, directional arrows, colour-differentiated surfaces (e.g. red), zebra crossing markings, dashed white lines for signalised crossings and tactile guidance strips commonly found on Singapore cycling paths and footpaths.",
-  20: "* Improve crossing facility - Upgrade the provision for cyclists or pedestrians to cross a road or junction. In the Singapore context, this includes adding demarcated crossings, extending crossing times at signalised junctions, adding kerb cut ramps, or introducing a dedicated cycling crossing at signalised intersections. Can consider more advance feature like adaptive signals for pedestrian/cyclist crossing, or scramble walk crossing, if there is already existing crossing.",
-  21: "* Evaluate grade separation - Assess the feasibility of introducing a dedicated cycling overpass or underpass to eliminate at-grade conflicts between cyclists/pedestrians and motor vehicles. Reference existing Singapore examples such as underpasses, overhead cycling bridges.",
-  22: "* Reconfigure/remove parking - Remove or relocate on-street parking lots, motorcycle bays, or loading/unloading zones that encroach on or are adjacent to the cycling or pedestrian facility. This includes HDB estate carpark aprons, street-side parking lots marked with yellow kerb lines, and illegally parked vehicles.",
+  6: "* Upgrade to multi-use path - Convert the existing facility into a clearly designated shared path for both cyclists and pedestrians. Apply shared path markings, the standard cyclist-and-pedestrian dual-symbol signage used on Singapore LTA cycling shared paths, and appropriate surface treatments.",
+  7: "* Upgrade to off-road bicycle path - Physically separate the cycling facility from motor traffic by constructing a dedicated off-road path. This may involve a new alignment set back from the road, kerb separation, or a fully independent corridor consistent with Singapore's Park Connector Network or Cycling Path Network standards.",
+  8: "* Convert to one-way facility - Redesign the facility to carry cyclists in a single direction only. Apply appropriate one-way signage, directional road markings, and physical channelling for one-way cycling paths.",
+  11: "* Install light segregation - Add low-profile physical separators between the cycling facility and adjacent motor traffic or pedestrian zones. In the Singapore context, this includes flexible delineator posts, painted islands, kerb segments, vegetation planting.",
+  13: "* Remove fixed obstacles - Remove permanently installed objects that obstruct or reduce the usable width of the path or road. In the Singapore context, this includes lamp posts, traffic signal poles, bollards, fire hydrant boxes, bus shelter pillars, sheltered walkway columns, utility cabinets, and permanently anchored signage poles.",
+  14: "* Remove non-fixed obstacles - Clear temporary or moveable objects that are obstructing the path or road. This includes traffic cones, water-filled barriers, bicycles, PMDs or motorcycles parked across the path, food cart trolleys, potted plants, rubbish bins, construction hoarding or construction equipment that has not been permanently installed.",
+  15: "* Remove width restrictions - Eliminate physical pinch points that artificially narrow the usable width of the facility. In the Singapore context, this includes swing gates, narrow cattle-grid barriers at park connector entry points, and overgrown vegetation or signage encroaching on path edges. At bus stop, bypass path can be created behind the bus stops for cyclists to pass by instead of cycling in front of the bus stop.",
+  17: "* Redesign sharp curves - Smooth out tight bends or acute-angle turns in the path or road. In the Singapore context, this applies to 90 degree path connections, underpass entry/exit curves, and path corners near road crossings that create blind spots or force cyclists to slow sharply.",
+  19: "* Widen the facility - Increase the width of the existing path, track, or road shown in this image. In the Singapore context, this may involve extending footpath edges, expanding shared paths along LTA cycling paths or park connectors, or widening cycling strips adjacent to roads.",
+  21: "* Improve delineation - Add or refresh visual markings that separate cyclists from pedestrians or vehicles. This includes painted centrelines, shared path symbols, directional arrows, colour-differentiated surfaces (e.g. red), zebra crossing markings, dashed white lines for signalised crossings and tactile guidance strips commonly found on Singapore cycling paths and footpaths.",
+  23: "* Improve crossing facility - Upgrade the provision for cyclists or pedestrians to cross a road or junction. In the Singapore context, this includes adding demarcated crossings, extending crossing times at signalised junctions, adding kerb cut ramps, or introducing a dedicated cycling crossing at signalised intersections. Can consider more advance feature like adaptive signals for pedestrian/cyclist crossing, or scramble walk crossing, if there is already existing crossing.",
+  24: "* Evaluate grade separation - Assess the feasibility of introducing a dedicated cycling overpass or underpass to eliminate at-grade conflicts between cyclists/pedestrians and motor vehicles. Reference existing Singapore examples such as underpasses, overhead cycling bridges.",
+  25: "* Reconfigure/remove parking - Remove or relocate on-street parking lots, motorcycle bays, or loading/unloading zones that encroach on or are adjacent to the cycling or pedestrian facility. This includes HDB estate carpark aprons, street-side parking lots marked with yellow kerb lines, and illegally parked vehicles.",
 };
 
 export const getTreatmentDescription = (t: Treatment): string => {
@@ -428,24 +289,37 @@ export const copyRichContentToClipboard = async ({
   throw new Error("Nothing to copy.");
 };
 
-// Helper to check if treatment is applicable based on current attributes
+// Helper to check if treatment is applicable based on current attributes.
+// Mirrors backend `treatment_catalog.is_treatment_applicable` (STM rows
+// 5/6/7/8/9): missing values fail the set, except the speed unit which
+// defaults to 1 (km/h).
 export const isTreatmentApplicable = (treatment: Treatment, attrs: Record<string, any>): boolean => {
-  if (!treatment.triggers || treatment.triggers.length === 0) return false;
-  // OR between trigger sets: at least one set must match
-  return treatment.triggers.some(set =>
-    // AND within a set: all attributes in the set must match
-    Object.entries(set).every(([attrName, validValues]) => {
-      const attrValue = attrs[attrName];
-      // Convert to number if it's a string
-      const numValue = typeof attrValue === 'string' ? parseInt(attrValue, 10) : attrValue;
-      return validValues.includes(numValue);
-    })
-  );
+  if (!treatment.trigger_sets || treatment.trigger_sets.length === 0) return false;
+  return treatment.trigger_sets.some((set) => {
+    for (const [attrName, validValues] of Object.entries(set.attrs)) {
+      let value = asNumber(attrs[attrName]);
+      if (value === null && attrName === SPEED_UNIT_ATTR) value = 1;
+      if (value === null || !validValues.includes(Math.trunc(value))) return false;
+    }
+    if (set.aadt) {
+      const aadt = asNumber(attrs[ROAD_AADT_ATTR]);
+      if (aadt === null || !rangeHolds(aadt, set.aadt)) return false;
+    }
+    if (set.speed) {
+      const speed = asNumber(attrs[ROAD_SPEED_ATTR]);
+      if (speed === null || !rangeHolds(speed, set.speed)) return false;
+    }
+    return true;
+  });
 };
 
-// Helper to get all applicable treatments for current segment
+// Helper to get all applicable treatments for current segment. Treatments
+// whose outcome needs a manually chosen value (e.g. "Vehicles speed control")
+// are hidden; mph variants are inert on km/h data via their unit trigger.
 export const getApplicableTreatments = (attrs: Record<string, any>): Treatment[] => {
-  return TREATMENTS.filter(t => isTreatmentApplicable(t, attrs));
+  return TREATMENTS.filter(
+    (t) => !t.requires_manual_value && isTreatmentApplicable(t, attrs)
+  );
 };
 
 // Apply treatment effects to attributes
@@ -471,18 +345,20 @@ export const applyTreatmentEffects = (
   return { modifiedRow: modified, changedAttributes: changed };
 };
 
-// Convert score to band (1-4) based on crash type
+// Convert score to band (1-4) based on crash type.
+// v2.14 thresholds are INCLUSIVE upper bounds (must match the backend
+// `calculate_risk_band_for_type`).
 export const calculateBandFromScore = (score: number, type: 'BB' | 'BP' | 'SB' | 'VB' = 'VB'): number => {
-  // BB, BP, SB thresholds: 5, 10, 20
+  // BB, BP, SB thresholds: <=5, <=10, <=20
   if (type === 'BB' || type === 'BP' || type === 'SB') {
-    if (score < 5) return 1;
+    if (score <= 5) return 1;
     if (score <= 10) return 2;
     if (score <= 20) return 3;
     return 4;
   }
 
-  // VB and default thresholds: 10, 25, 60
-  if (score < 10) return 1;
+  // VB and default thresholds: <=10, <=25, <=60
+  if (score <= 10) return 1;
   if (score <= 25) return 2;
   if (score <= 60) return 3;
   return 4;

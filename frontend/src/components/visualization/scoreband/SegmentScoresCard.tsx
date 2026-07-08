@@ -78,9 +78,9 @@ const CRASH_TYPES = [
 const BB_BP_SB_TOOLTIP = (
   <Box fontSize="xs" lineHeight="1.6">
     <Text fontWeight="bold" mb="1">Risk Banding</Text>
-    <Text>• Low: &lt; 5</Text>
-    <Text>• Medium: 5 – 10</Text>
-    <Text>• High: 10 – 20</Text>
+    <Text>• Low: &le; 5</Text>
+    <Text>• Medium: &gt; 5 – 10</Text>
+    <Text>• High: &gt; 10 – 20</Text>
     <Text>• Extreme: &gt; 20</Text>
   </Box>
 );
@@ -88,9 +88,9 @@ const BB_BP_SB_TOOLTIP = (
 const VB_TOOLTIP = (
   <Box fontSize="xs" lineHeight="1.6">
     <Text fontWeight="bold" mb="1">Risk Banding</Text>
-    <Text>• Low: &lt; 10</Text>
-    <Text>• Medium: 10 – 25</Text>
-    <Text>• High: 25 – 60</Text>
+    <Text>• Low: &le; 10</Text>
+    <Text>• Medium: &gt; 10 – 25</Text>
+    <Text>• High: &gt; 25 – 60</Text>
     <Text>• Extreme: &gt; 60</Text>
   </Box>
 );
@@ -100,9 +100,9 @@ const RISK_SCORE_TOOLTIP = (
     <Text fontWeight="bold" mb="1">Risk Score</Text>
     <Text mb="1">Sum of all crash type scores. Banding colour takes the worst case across crash types.</Text>
     <Text fontWeight="semibold" mt="1">BB / BP / SB:</Text>
-    <Text whiteSpace="nowrap">• Low: &lt; 5 · Medium: 5–10 · High: 10–20 · Extreme: &gt; 20</Text>
+    <Text whiteSpace="nowrap">• Low: &le; 5 · Medium: &gt;5–10 · High: &gt;10–20 · Extreme: &gt; 20</Text>
     <Text fontWeight="semibold" mt="1">VB:</Text>
-    <Text whiteSpace="nowrap">• Low: &lt; 10 · Medium: 10–25 · High: 25–60 · Extreme: &gt; 60</Text>
+    <Text whiteSpace="nowrap">• Low: &le; 10 · Medium: &gt;10–25 · High: &gt;25–60 · Extreme: &gt; 60</Text>
   </Box>
 );
 
@@ -116,14 +116,14 @@ const CRASH_TYPE_TOOLTIPS: Record<string, React.ReactNode> = {
 const getBandColor = (score: number, type: string): string => {
   // BB, BP, SB use stricter thresholds
   if (['BB', 'BP', 'SB'].includes(type)) {
-    if (score < 5) return RISK_BAND_COLORS.LOW;
+    if (score <= 5) return RISK_BAND_COLORS.LOW;
     if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 20) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
   }
 
   // VB and others (default)
-  if (score < 10) return RISK_BAND_COLORS.LOW;
+  if (score <= 10) return RISK_BAND_COLORS.LOW;
   if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 60) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;
@@ -131,13 +131,13 @@ const getBandColor = (score: number, type: string): string => {
 
 const getLightBgColor = (score: number, type: string): string => {
   if (['BB', 'BP', 'SB'].includes(type)) {
-    if (score < 5) return RISK_BAND_COLORS.LOW;
+    if (score <= 5) return RISK_BAND_COLORS.LOW;
     if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 20) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
   }
 
-  if (score < 10) return RISK_BAND_COLORS.LOW;
+  if (score <= 10) return RISK_BAND_COLORS.LOW;
   if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 60) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;
@@ -145,13 +145,13 @@ const getLightBgColor = (score: number, type: string): string => {
 
 const getDarkBgColor = (score: number, type: string): string => {
   if (['BB', 'BP', 'SB'].includes(type)) {
-    if (score < 5) return RISK_BAND_COLORS.LOW;
+    if (score <= 5) return RISK_BAND_COLORS.LOW;
     if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 20) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
   }
 
-  if (score < 10) return RISK_BAND_COLORS.LOW;
+  if (score <= 10) return RISK_BAND_COLORS.LOW;
   if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 60) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;
@@ -159,13 +159,13 @@ const getDarkBgColor = (score: number, type: string): string => {
 
 const getBandLabel = (score: number, type: string): string => {
   if (['BB', 'BP', 'SB'].includes(type)) {
-    if (score < 5) return "Low";
+    if (score <= 5) return "Low";
     if (score <= 10) return "Medium";
     if (score <= 20) return "High";
     return "Extreme";
   }
 
-  if (score < 10) return "Low";
+  if (score <= 10) return "Low";
   if (score <= 25) return "Medium";
   if (score <= 60) return "High";
   return "Extreme";
@@ -202,13 +202,13 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
       if (['BB', 'BP', 'SB'].includes(type.key)) {
         if (score > 20) riskLevel = 3;       // Extreme
         else if (score > 10) riskLevel = 2;  // High
-        else if (score >= 5) riskLevel = 1;  // Medium
+        else if (score > 5) riskLevel = 1;  // Medium
         else riskLevel = 0;                  // Low
       } else {
         // VB and others (default)
         if (score > 60) riskLevel = 3;       // Extreme
         else if (score > 25) riskLevel = 2;  // High
-        else if (score >= 10) riskLevel = 1; // Medium
+        else if (score > 10) riskLevel = 1; // Medium
         else riskLevel = 0;                  // Low
       }
 

@@ -9,14 +9,14 @@ const RISK_BAND_COLORS = {
 const getBandColor = (score, type) => {
     // BB, BP, SB use stricter thresholds
     if (['BB', 'BP', 'SB'].includes(type)) {
-        if (score < 5) return RISK_BAND_COLORS.LOW;
+        if (score <= 5) return RISK_BAND_COLORS.LOW;
         if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
         if (score <= 20) return RISK_BAND_COLORS.HIGH;
         return RISK_BAND_COLORS.EXTREME;
     }
 
     // VB and others (default)
-    if (score < 10) return RISK_BAND_COLORS.LOW;
+    if (score <= 10) return RISK_BAND_COLORS.LOW;
     if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 60) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
@@ -25,7 +25,8 @@ const getBandColor = (score, type) => {
 const testCases = [
     // BB tests
     { score: 4, type: 'BB', expected: RISK_BAND_COLORS.LOW },
-    { score: 5, type: 'BB', expected: RISK_BAND_COLORS.MEDIUM },
+    { score: 5, type: 'BB', expected: RISK_BAND_COLORS.LOW },
+    { score: 5.1, type: 'BB', expected: RISK_BAND_COLORS.MEDIUM },
     { score: 10, type: 'BB', expected: RISK_BAND_COLORS.MEDIUM },
     { score: 11, type: 'BB', expected: RISK_BAND_COLORS.HIGH },
     { score: 20, type: 'BB', expected: RISK_BAND_COLORS.HIGH },
@@ -33,7 +34,8 @@ const testCases = [
 
     // VB tests
     { score: 9, type: 'VB', expected: RISK_BAND_COLORS.LOW },
-    { score: 10, type: 'VB', expected: RISK_BAND_COLORS.MEDIUM },
+    { score: 10, type: 'VB', expected: RISK_BAND_COLORS.LOW },
+    { score: 10.1, type: 'VB', expected: RISK_BAND_COLORS.MEDIUM },
     { score: 25, type: 'VB', expected: RISK_BAND_COLORS.MEDIUM },
     { score: 26, type: 'VB', expected: RISK_BAND_COLORS.HIGH },
     { score: 60, type: 'VB', expected: RISK_BAND_COLORS.HIGH },

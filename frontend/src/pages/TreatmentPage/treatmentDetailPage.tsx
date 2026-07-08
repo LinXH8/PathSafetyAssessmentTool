@@ -35,6 +35,7 @@ import {
   buildTreatmentCopyMessage,
   copyTextToClipboard,
   copyRichContentToClipboard,
+  loadTreatmentCatalog,
   type ScoreType,
   type CopyButtonState,
 } from "./treatmentConstants";
@@ -318,6 +319,20 @@ export default function TreatmentDetailPage() {
   }, [attrs, currentIndex, currentFeature]);
 
   // Fetch project data
+  // Load the v2.14 treatment catalog once per session (fills the module-level
+  // TREATMENTS array consumed by getApplicableTreatments etc.), then bump a
+  // counter so components re-render with the populated catalog.
+  const [catalogVersion, setCatalogVersion] = useState(0);
+  useEffect(() => {
+    if (projectNames.length === 0) return;
+    loadTreatmentCatalog(projectNames[0])
+      .then(() => setCatalogVersion((v) => v + 1))
+      .catch((err) => {
+        console.error("Failed to load treatment catalog", err);
+        toaster.create({ title: "Failed to load treatment catalog", type: "error" });
+      });
+  }, [projectNames]);
+
   const fetchData = useCallback(async () => {
     if (projectNames.length === 0) return;
     setLoading(true);
@@ -547,6 +562,7 @@ export default function TreatmentDetailPage() {
     currentIndex,
     resolveIndex,
     combinedTreatmentIds,
+    catalogVersion,
   });
 
   // Pagination

@@ -36,12 +36,12 @@ const dispatch = (name: string, detail?: unknown) =>
 // Per-crash-type RSB band color (mirrors SegmentScoresCard thresholds — guide §11/§3).
 function bandColor(score: number, type: string): string {
   if (type === "VB") {
-    if (score < 10) return RISK_BAND_COLORS.LOW;
+    if (score <= 10) return RISK_BAND_COLORS.LOW;
     if (score <= 25) return RISK_BAND_COLORS.MEDIUM;
     if (score <= 60) return RISK_BAND_COLORS.HIGH;
     return RISK_BAND_COLORS.EXTREME;
   }
-  if (score < 5) return RISK_BAND_COLORS.LOW;
+  if (score <= 5) return RISK_BAND_COLORS.LOW;
   if (score <= 10) return RISK_BAND_COLORS.MEDIUM;
   if (score <= 20) return RISK_BAND_COLORS.HIGH;
   return RISK_BAND_COLORS.EXTREME;
