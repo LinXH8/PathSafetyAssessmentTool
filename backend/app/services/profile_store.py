@@ -390,11 +390,19 @@ def _require_profile(state: dict, profile_id: str) -> dict:
     return profile
 
 
+def _serialize_profiles_from_state(state: dict) -> list[dict]:
+    """Serialize + sort every profile in an already-loaded state.
+
+    Split out so callers that already hold `state` (e.g. `get_overview`) don't
+    re-read the registry from disk.
+    """
+    profiles = [_serialize_profile(profile) for profile in state.get("profiles", [])]
+    return sorted(profiles, key=lambda profile: profile["name"].lower())
+
+
 def list_profiles() -> list[dict]:
     with _STATE_LOCK:
-        state = _load_state()
-        profiles = [_serialize_profile(profile) for profile in state.get("profiles", [])]
-    return sorted(profiles, key=lambda profile: profile["name"].lower())
+        return _serialize_profiles_from_state(_load_state())
 
 
 def list_legacy_projects() -> list[str]:
@@ -435,38 +443,58 @@ def create_profile(username: str, email: str, pin: str, division: str) -> dict:
         return _serialize_profile(profile)
 
 
-def get_active_profile_id() -> str | None:
+def _adopt_persisted_active_id(state: dict, persisted: str) -> str | None:
+    """Validate a disk-persisted active id against an already-loaded `state`.
+
+    Caches it in memory when it names a real profile, or clears it (memory +
+    disk) when the profile is gone. Caller must hold `_STATE_LOCK`.
+    """
     global _ACTIVE_PROFILE_ID
-    if _ACTIVE_PROFILE_ID is not None:
-        return _ACTIVE_PROFILE_ID
-
-    # In-memory global was reset (fresh process / Flask reload). Restore the
-    # last active profile from disk so project resolution keeps working.
-    persisted = _read_persisted_active_id()
-    if not persisted:
+    if _find_profile(state, persisted) is None:
+        _write_persisted_active_id(None)
         return None
-
-    # Drop the persisted id if that profile no longer exists in the registry.
-    with _STATE_LOCK:
-        state = _load_state()
-        if _find_profile(state, persisted) is None:
-            _write_persisted_active_id(None)
-            return None
-
     _ACTIVE_PROFILE_ID = persisted
     return _ACTIVE_PROFILE_ID
 
 
-def get_active_profile() -> dict | None:
-    profile_id = get_active_profile_id()
+def _resolve_active_id(state: dict) -> str | None:
+    """Return the active profile id, restoring from disk against `state` when the
+    in-memory global was reset (fresh process / Flask reload). Caller must hold
+    `_STATE_LOCK`."""
+    if _ACTIVE_PROFILE_ID is not None:
+        return _ACTIVE_PROFILE_ID
+    persisted = _read_persisted_active_id()
+    if not persisted:
+        return None
+    return _adopt_persisted_active_id(state, persisted)
+
+
+def get_active_profile_id() -> str | None:
+    if _ACTIVE_PROFILE_ID is not None:
+        return _ACTIVE_PROFILE_ID
+
+    # In-memory global was reset (fresh process / Flask reload). Only pay for a
+    # registry read when there is a persisted id to validate.
+    persisted = _read_persisted_active_id()
+    if not persisted:
+        return None
+
+    with _STATE_LOCK:
+        return _adopt_persisted_active_id(_load_state(), persisted)
+
+
+def _active_profile_from_state(state: dict) -> dict | None:
+    """Serialize the active profile from an already-loaded `state` (no extra read)."""
+    profile_id = _resolve_active_id(state)
     if profile_id is None:
         return None
+    profile = _find_profile(state, profile_id)
+    return _serialize_profile(profile) if profile is not None else None
+
+
+def get_active_profile() -> dict | None:
     with _STATE_LOCK:
-        state = _load_state()
-        profile = _find_profile(state, profile_id)
-        if profile is None:
-            return None
-        return _serialize_profile(profile)
+        return _active_profile_from_state(_load_state())
 
 
 def login_profile(profile_id: str, pin: str) -> dict:
@@ -700,8 +728,16 @@ def delete_profile(profile_id: str, pin: str) -> None:
 
 
 def get_overview() -> dict:
+    # Load the registry once and derive both the profile list and the active
+    # profile from it, instead of each accessor re-reading + re-parsing the file.
+    with _STATE_LOCK:
+        state = _load_state()
+        profiles = _serialize_profiles_from_state(state)
+        active_profile = _active_profile_from_state(state)
+    # `list_legacy_projects` scans a different directory (no registry read), so it
+    # stays outside the lock to keep the critical section small.
     return {
-        "profiles": list_profiles(),
-        "active_profile": get_active_profile(),
+        "profiles": profiles,
+        "active_profile": active_profile,
         "legacy_projects": list_legacy_projects(),
     }

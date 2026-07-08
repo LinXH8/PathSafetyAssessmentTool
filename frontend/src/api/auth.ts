@@ -5,7 +5,7 @@
  * Used by: LandingPage, ProfileSettingsPage, and the profile-aware context wrapper.
  */
 
-import { readError } from "./_client";
+import { fetchWithTimeout, readError } from "./_client";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -84,9 +84,26 @@ export interface ShareProjectsResult {
 
 // ── API functions ─────────────────────────────────────────────────────────────
 
+/**
+ * GET /api/ping — lightweight, side-effect-free readiness probe.
+ *
+ * Returns `true` only when the backend answers 200. Used to gate the initial
+ * profile load during a cold start (the browser is ready before Flask finishes
+ * its heavy imports and starts listening). Never throws — any error/timeout is a
+ * "not ready yet" signal.
+ */
+export async function checkBackendHealth(timeoutMs = 8000): Promise<boolean> {
+  try {
+    const res = await fetchWithTimeout("/api/ping", { cache: "no-store" }, timeoutMs);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** GET /api/profiles — list all profiles and the currently active one. */
 export async function fetchProfilesOverview(): Promise<ProfilesOverview> {
-  const res = await fetch("/api/profiles");
+  const res = await fetchWithTimeout("/api/profiles");
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as ProfilesOverview;
 }
