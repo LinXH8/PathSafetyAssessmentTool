@@ -20,6 +20,9 @@ const v2Body = { fontFamily: FONT, fontWeight: 400, fontSize: "1rem", color: COL
 
 export default function EditParametersModal({ file, onClose, onSaved, variant = "v1" }: EditParametersModalProps) {
   const v2 = variant === "v2";
+  // Required Columns / Affects can only be edited for layers uploaded via
+  // the Add GIS Layer flow — built-in and previously-existing layers are read-only here.
+  const editable = !!file?.user_created;
   const [parameterOptions, setParameterOptions] = useState<string[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [customParam, setCustomParam] = useState("");
@@ -64,8 +67,12 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
     if (!file) return;
     const trimmedName = layerName.trim();
     const nameChanged = v2 && !!trimmedName && trimmedName !== file.name;
-    if (!nameChanged && selected.size === 0 && !requiredColumns.trim()) {
+    if (!nameChanged && editable && selected.size === 0 && !requiredColumns.trim()) {
       toaster.create({ description: "Select at least one parameter or enter required columns", type: "warning" });
+      return;
+    }
+    if (!nameChanged && !editable) {
+      onClose();
       return;
     }
     try {
@@ -76,7 +83,9 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
         const res = await api.renameShapefile(file.path, trimmedName);
         targetPath = res.new_path;
       }
-      await api.setLayerMetadata(targetPath, requiredColumns.trim(), Array.from(selected));
+      if (editable) {
+        await api.setLayerMetadata(targetPath, requiredColumns.trim(), Array.from(selected));
+      }
       toaster.create({ description: v2 ? "Layer updated" : "Layer metadata updated", type: "success" });
       onSaved();
     } catch (error: any) {
@@ -116,17 +125,19 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
               )}
 
               <Text fontSize="sm" color="fg.muted" mb={4} style={v2 ? v2Caption : undefined}>
-                Choose which parameters this layer affects. This only corrects the labels shown
-                in the GIS Layers list — it does not change how the layer is used in scoring.
+                {editable
+                  ? "Choose which parameters this layer affects. This only corrects the labels shown in the GIS Layers list — it does not change how the layer is used in scoring."
+                  : "Required Columns and Affects can only be edited for layers you've newly uploaded. This built-in / existing layer's values are read-only."}
               </Text>
 
               <Text fontWeight="600" mb={2} fontSize="sm" style={v2 ? v2Label : undefined}>Affects (select one or more)</Text>
-              <Box maxH="220px" overflowY="auto" borderWidth="1px" borderRadius="md" p={2} mb={3} style={v2 ? { borderColor: COLOR.border, borderRadius: RADIUS } : undefined}>
+              <Box maxH="220px" overflowY="auto" borderWidth="1px" borderRadius="md" p={2} mb={3} opacity={editable ? 1 : 0.6} style={v2 ? { borderColor: COLOR.border, borderRadius: RADIUS } : undefined}>
                 {parameterOptions.map(opt => (
                   <Box key={opt} py="4px">
                     <Checkbox.Root
                       checked={selected.has(opt)}
                       onCheckedChange={() => toggleParam(opt)}
+                      disabled={!editable}
                       colorPalette={v2 ? "blue" : undefined}
                     >
                       <Checkbox.HiddenInput />
@@ -137,25 +148,27 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
                 ))}
               </Box>
 
-              <Box display="flex" gap={2} mb={4}>
-                <Input
-                  placeholder="Add a custom parameter..."
-                  size={v2 ? "md" : "sm"}
-                  value={customParam}
-                  onChange={(e) => setCustomParam(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomParam(); } }}
-                  style={v2 ? { fontFamily: FONT, fontSize: "1rem", borderColor: COLOR.borderInput, borderRadius: RADIUS } : undefined}
-                />
-                <Button
-                  size={v2 ? "md" : "sm"}
-                  colorPalette={v2 ? "blue" : undefined}
-                  onClick={addCustomParam}
-                  disabled={!customParam.trim()}
-                  style={v2 ? { fontFamily: FONT, fontWeight: 700, fontSize: "1rem", borderRadius: RADIUS } : undefined}
-                >
-                  Add
-                </Button>
-              </Box>
+              {editable && (
+                <Box display="flex" gap={2} mb={4}>
+                  <Input
+                    placeholder="Add a custom parameter..."
+                    size={v2 ? "md" : "sm"}
+                    value={customParam}
+                    onChange={(e) => setCustomParam(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomParam(); } }}
+                    style={v2 ? { fontFamily: FONT, fontSize: "1rem", borderColor: COLOR.borderInput, borderRadius: RADIUS } : undefined}
+                  />
+                  <Button
+                    size={v2 ? "md" : "sm"}
+                    colorPalette={v2 ? "blue" : undefined}
+                    onClick={addCustomParam}
+                    disabled={!customParam.trim()}
+                    style={v2 ? { fontFamily: FONT, fontWeight: 700, fontSize: "1rem", borderRadius: RADIUS } : undefined}
+                  >
+                    Add
+                  </Button>
+                </Box>
+              )}
 
               <Text fontWeight="600" mb={2} fontSize="sm" style={v2 ? v2Label : undefined}>Required Columns (optional, informational)</Text>
               <Input
@@ -163,6 +176,7 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
                 size={v2 ? "md" : "sm"}
                 value={requiredColumns}
                 onChange={(e) => setRequiredColumns(e.target.value)}
+                disabled={!editable}
                 style={v2 ? { fontFamily: FONT, fontSize: "1rem", borderColor: COLOR.borderInput, borderRadius: RADIUS } : undefined}
               />
             </Dialog.Body>
