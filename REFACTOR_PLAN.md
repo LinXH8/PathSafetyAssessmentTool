@@ -209,7 +209,7 @@ generate_user_guide_pdf,setup_test_project,visualize_facility_width}.py`, `front
 - [x] **S3.5** Add `query_nearby()` helper; unify proximity checks — 2d — *depends: S3.4*
 - [x] **S3.6** Split `project_manager.py` (+ `image_storage` module) — 2.5d — *depends: none*
 - [x] **S3.7** Move root `test_*.py` → `backend/tests/` + `conftest.py` — 1d — *depends: none*
-- [ ] **S3.8** Type-hint pass on `routes.py` + `project_manager.py` — 2d — *depends: S3.2, S3.6*
+- [x] **S3.8** Type-hint pass on `routes.py` + `project_manager.py` — 2d — *depends: S3.2, S3.6*
 
 ### Phase 4 — Verification (3–4 days) — *depends: all above*
 - [ ] **S4.1** Full end-to-end manual QA + fix regressions — 3–4d
@@ -444,11 +444,22 @@ do not rewrite** (per scope). Drop obviously-dead dependency-probe scripts (conf
 **Verify:** `cd backend && pytest` collects from `tests/`.
 **Commit:** `chore(backend): consolidate tests into tests/ directory [S3.7]`
 
-### S3.8 — Type-hint pass  · Done: ____
+### S3.8 — Type-hint pass  · Done: 2026-07-07
 **Context to load:** no graph query required — no code is moved or extracted this session (hints only); note
 this explicitly in the SESSION LOG's `GRAPH USAGE` field as `n/a` rather than skipping the field.
 **Do:** Add param/return hints to `routes.py` + `project_manager.py`; add `TypedDict`s for common payloads. No logic
 change.
+**Re-scope note (2026-07-07):** by the time this session ran, `routes.py` (post-S3.2) was a 20-line
+re-export shim and `project_manager.py` (post-S3.6) was a 391-line facade delegating to
+`project.py`/`project_version.py`/`image_storage.py`. Hinted the actual current successors instead:
+`project_manager.py` + `project.py` + `project_version.py` (image_storage.py was already fully
+hinted) for the "project_manager.py" half, and `_helpers.py` (the module `routes.py` directly
+re-exports from — `get_ctx`/`ok`/`fail`/`warmup_gis`/`_get_gis`) for the "routes.py" half. Did NOT
+touch the other ~13 blueprint modules (`crud.py`, `treatments.py`, `gis_queries.py`, `autocode.py`,
+etc. — ~124 defs missing return hints across those) — that's a much larger scope than the original
+2-file estimate and is logged as deferred below. No `TypedDict`s added (no single common payload
+shape stood out in the touched files; the JSON payloads in `_helpers.py`'s `ok`/`fail` are generic
+passthroughs).
 **Verify:** Optional `mypy`/boot; gate passes.
 **Commit:** `refactor(backend): add type hints to routes and project_manager [S3.8]`
 
@@ -484,6 +495,28 @@ From `CLAUDE.md` documented gotchas — these are the known-fragile behaviors:
 - 2026-07-05 · S3.4 · `test_curvature_analysis.py` has **6 pre-existing failures** unrelated to the curvature/width logic itself: 4 reference `routes.autocode_gis` / `routes.get_curvature_visualization`, which moved out of `routes.py` during the S3.2 blueprint split (now in `app/api/projects/autocode.py` / `gis_queries.py`) and were never updated; 2 (`…uses_tight_bucket_for_sub_6_5m_radius`, `…uses_numeric_bucket_when_sharp_radius_and_junction_both_exist`) assert `has_path_junction is True` but get `False`. All 6 fail identically before and after S3.4. **NOT repointed in S3.7** — that session's scope was move-only (see below); the 2 junction-logic ones still need a separate look (possible real logic drift — do NOT fix inline).
 - 2026-07-07 · S3.7 · ~~`backend/tests/test_routes.py` fails to **collect**...~~ **RESOLVED (2026-07-07, same session, follow-up):** the user asked whether the 19 moved files were used by the application; grep confirmed none are imported anywhere (app runtime, CI, scripts, config). Of the 19, 12 were confirmed-dead debug/probe scripts (no `test_*` functions, print-based, some hardcoded to nonexistent Windows paths) vs. 7 real pytest suites (real `assert`s). User chose to delete the 12 probe scripts (including this file and `test_gis_layers.py`, below) and keep the 7 real suites. `git rm -f` applied to: `test_fiona.py`, `test_gpd_fiona.py`, `test_gpd_fiona2.py`, `test_flask_endpoint.py`, `test_routes.py`, `test_routes2.py`, `test_routes_with_gpd.py`, `test_list_shapefiles.py`, `test_payload.py`, `test_serialization.py`, `test_gis_mock.py`, `test_gis_layers.py`. Both collection errors below are now moot (their files are gone); re-ran `pytest --collect-only` after deletion: **65 tests collected, 0 errors**.
 - ~~2026-07-07 · S3.7 · `backend/tests/test_gis_layers.py` fails to **collect**...~~ **RESOLVED** — see entry above (file deleted).
+- 2026-07-07 · S3.8 · `gis_mapping.py`'s dead `_remove_z_coordinate` copy (see S3.4 entry above) was
+  **NOT** folded into S3.8 — this session's scope was type hints only (annotation-only edits, no
+  logic/call-site changes), and repointing `gis_queries.py:708`/`:870` to `CurvatureAnalyzer`'s copy
+  is a real code change. Still needs a follow-up session.
+- 2026-07-07 · S3.8 · `project.py::Project.copy_segments` (lines 260–534) has an **unreachable code
+  block** after its `return count_added` at line ~453: roughly 80 lines (former lines 454–534,
+  referencing `filter_attributes`/`filter_treatment`/`filter_results`/a nested
+  `map_labels_to_values` helper) that look like a leftover fragment of a different, never-merged
+  method (a project-level filter/search operation) accidentally concatenated onto the end of
+  `copy_segments`. It can never execute. Left untouched (adding return-type hints to
+  `map_labels_to_values` inside it was harmless since it's dead either way) — do NOT delete inline
+  per refactor scope; flag for a follow-up cleanup session to confirm intent and remove or restore
+  as a standalone method.
+- 2026-07-07 · S3.8 · Type hints were only added to `project_manager.py` + its S3.6 split modules
+  (`project.py`, `project_version.py`) and to `_helpers.py` (routes.py's re-export source). The
+  other ~13 blueprint modules under `backend/app/api/projects/` (`crud.py` 21 defs/19 missing,
+  `treatments.py` 13/13, `gis_queries.py` 11/11, `autocode.py` 12/8, `source_folders.py` 25/8,
+  `_ = image_utils.py` 16/6, `baseline.py` 5/5, `images.py` 5/5, `segments.py` 4/4,
+  `width_visualization.py` 3/2, `export.py` 3/2 — roughly 124 missing return-hints total) still lack
+  return-type hints. This is a large follow-up if the type-hint pass is to be considered complete
+  across the whole former `routes.py` surface — worth its own session (or split across a few) rather
+  than folding into S3.8's estimate.
 
 ## SESSION LOG STANDARD (mandatory template for every entry)
 
@@ -1708,3 +1741,73 @@ gives for free — record what you found so the next session doesn't re-query fr
                    cleanly with 0 errors. `conftest.py` and `pytest.ini` (added earlier this session) are
                    still needed and unaffected by this deletion — they serve the 7 remaining suites, not
                    the deleted scripts. S3.8 remains next in the Dashboard.
+
+- 2026-07-07 · S3.8 · added param/return type hints (annotation-only, `from __future__ import
+  annotations` already present in every touched file so nothing is evaluated at import time) to the
+  `project_manager.py` family and to the module `routes.py` re-exports from; re-scoped from the
+  session's original 2-file description because both named files had shrunk to thin facades by S3.2/S3.6.
+  FILES CREATED:   none
+  FILES DELETED:   none
+  FILES MOVED:     none
+  FILES MODIFIED:  `backend/app/services/project_manager.py` (13 defs hinted: `__init__`,
+                   `_initialise`, `_discover_projects`, `delete_project`, `list_names`,
+                   `create_project` — also fixed the annotation typo `gpd.geodataframe` →
+                   `gpd.GeoDataFrame`, safe because it's never evaluated — `load_config`,
+                   `save_config`, `write_config`, `read_project`, `load_images_from_folder_cv` +
+                   nested `extract_numeric_key`, `get_config_path`, `rename_files_with_prefix`);
+                   `backend/app/services/project.py` (11 defs/properties hinted: `__init__`,
+                   `_discover_versions`, `save_all`, `_delete`, `delete_segment`, `delete_segments`,
+                   `copy_segments`, nested `predict_name`, nested `map_labels_to_values` (inside the
+                   dead-code block — see DEFERRED), `metadata` setter, `geo_data` setter);
+                   `backend/app/services/project_version.py` (7 defs/properties hinted: `__init__`,
+                   `load_all`, `save_all`, `delete_segment`, `delete_segments`, and the
+                   `snapshot_metadata`/`attributes`/`results`/`treatment` setters);
+                   `backend/app/api/projects/_helpers.py` (8 defs hinted: `ok`, `fail`, `get_ctx`,
+                   `_ensure_models_ready`, `_warmup_models_in_background`, `_log_incoming`,
+                   `_get_segment_midpoint`, nested `_warm` and `_load_one`).
+                   `backend/app/services/image_storage.py` checked — already fully hinted from S3.6,
+                   no changes needed. `routes.py` itself is a 6-line re-export shim (`from ._helpers
+                   import get_ctx, invalidate_ctx, warmup_gis, _get_gis, ok, fail`) — nothing to hint
+                   there beyond what `_helpers.py` already provides.
+  SYMBOLS MOVED/EXTRACTED: n/a — hints only, no code moved
+  IMPORT SITES UPDATED: 0 — annotations don't change call sites; verified via app import + boot
+  GRAPH USAGE:     n/a — per the session's own instructions (hint-only, nothing moved/extracted).
+                   Ran `build_or_update_graph_tool` (incremental) both before starting (confirmed
+                   graph already reflected the merge commit `82e24e81`, only doc files had drifted)
+                   and after finishing (23 files re-parsed: the 4 touched files + their ~19
+                   dependents in `app/api/projects/` and `backend/tests/`, 0 node/edge count change
+                   as expected for annotation-only edits).
+  BUILD GATE:      no tsc/lint (backend-only session). Backend: `python -c "import app"` → OK;
+                   `from app import create_app; create_app()` → OK, 96 routes registered (unchanged
+                   route count confirms no accidental behavior change). No mypy available in the
+                   venv (optional per session spec) — skipped.
+  REGRESSION CHECK: n/a — backend-only, annotation-only change; no UI-observable behavior touched.
+  ARCHITECTURAL DECISIONS: Re-scoped the session's target files (see "Re-scope note" in the S3.8
+                   session block above) rather than literally hinting the now-tiny `routes.py` and
+                   stopping there, since that would have delivered near-zero value. Chose the direct
+                   successor modules (project_manager.py's S3.6 split + routes.py's S3.2
+                   re-export source) as the closest match to original intent, and explicitly did NOT
+                   expand into the other ~13 blueprint modules (`crud.py`, `treatments.py`,
+                   `gis_queries.py`, etc., ~124 missing return hints) to keep this a single
+                   reviewable commit matching the session's ~2-day estimate — logged as a deferred
+                   follow-up rather than silently expanding scope. No `TypedDict`s added: neither
+                   `_helpers.py`'s generic `ok(data)`/`fail(message)` envelopes nor the touched
+                   service-layer methods have a single recurring payload shape that would benefit
+                   from one (the per-endpoint response shapes live in the blueprint modules that were
+                   out of scope this session).
+  DEFERRED:        see the three new DEFERRED FINDINGS entries dated 2026-07-07/S3.8 above: (1) the
+                   `gis_mapping.py` dead `_remove_z_coordinate` repoint from S3.4/S3.5 was NOT folded
+                   in here (real code change, out of hints-only scope); (2) `project.py::copy_segments`
+                   has an ~80-line unreachable code block after its `return count_added` that looks
+                   like an accidentally-concatenated fragment of a different method — flagged for a
+                   follow-up, not touched; (3) the ~124 missing return hints across the other
+                   blueprint modules under `app/api/projects/` remain — candidate for a dedicated
+                   follow-up session (or a few, given the size).
+  NOTES FOR NEXT:  S4.1 (End-to-end manual QA) is now the only unchecked Dashboard row, and its
+                   `Depends on: all above` is satisfied on paper — but the DEFERRED FINDINGS above
+                   (dead code block, dead `_remove_z_coordinate`, untyped blueprint modules, the 2
+                   pre-existing `test_curvature_analysis.py` junction-logic failures from S3.4) are
+                   still open. Recommend deciding before S4.1 whether any of those deferred items
+                   should become their own follow-up session(s) first, since S4.1 is meant to be the
+                   final verification pass and finding pre-known issues there just re-discovers what's
+                   already logged here.
