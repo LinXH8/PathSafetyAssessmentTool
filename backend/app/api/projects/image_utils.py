@@ -415,11 +415,28 @@ def _build_project_geo_data_from_points(
     df = df.rename(columns={"latitude": "LATITUDE", "longitude": "LONGITUDE", "filename": "FILENAME"})
     df = cycleRAP_VA.geoCode(df)
     df = cycleRAP_VA.get_geo_points_by_distance(df, min_distance=10)
-    if "geometry" not in df.columns:
-        raise ValueError(f"Missing 'geometry' after geocoding for folder '{source_name}'")
+
+    # get_geo_points_by_distance returns a bare, geometry-less DataFrame when the
+    # input is too short/sparse to yield any 10 m sample point — e.g. a map or
+    # shapefile selection that clips only a brief slice of a road — and
+    # convert_points_to_linestrings needs >= 2 sampled points. Treat either
+    # degenerate case as "no usable segments here" and return an EMPTY
+    # GeoDataFrame (not a raise, not None) so a multi-source create SKIPS this
+    # source instead of aborting the whole request. A single clipped road must
+    # not roll back a creation whose other roads have plenty of data.
+    empty = gpd.GeoDataFrame(
+        columns=["LATITUDE", "LONGITUDE", "FILENAME", "geometry"],
+        geometry="geometry",
+        crs="EPSG:4326",
+    )
+    if df is None or "geometry" not in df.columns or len(df) < 2:
+        return empty
 
     gdf = gpd.GeoDataFrame(df, geometry="geometry", crs="EPSG:4326")
-    return cycleRAP_VA.convert_points_to_linestrings(gdf)
+    lines = cycleRAP_VA.convert_points_to_linestrings(gdf)
+    if lines is None or lines.empty:
+        return empty
+    return lines
 
 def apply_image_namespaces(filename_df, filename_prefix=None):
     """Apply source-folder namespace prefix to FILENAME for multi-folder projects.

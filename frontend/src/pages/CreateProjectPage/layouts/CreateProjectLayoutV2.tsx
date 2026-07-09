@@ -376,6 +376,10 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                 Project will be created from nodes inside the boundary across {selectedRoadFolders.length} selected road{selectedRoadFolders.length === 1 ? "" : "s"}.
               </span>
             )}
+            {/* Create failures must surface here too — the folder-mode error line
+                above is not rendered in map mode, so a failed create otherwise
+                looked like the button did nothing. */}
+            {err && <span style={{ ...captionStyle, color: COLOR.danger }}>{err}</span>}
           </div>
         )}
 
