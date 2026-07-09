@@ -187,11 +187,6 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
       {/* Sticky right cluster: Coding Guide stays reachable from any project without
           horizontal scrolling (safety: jump to the guide from e.g. project #20). */}
       <div style={{ display: "flex", alignItems: "flex-end", flexShrink: 0, gap: "0.25rem" }}>
-        {returnToAnalysis && (
-          <button onClick={onBackToAnalysis} style={{ ...btnBase, height: "2rem", padding: "0 0.75rem", marginBottom: "0.25rem", background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.blue }}>
-            ← Back to Path Analysis
-          </button>
-        )}
         <div onClick={() => setActiveTab("coding-guide")} style={tabStyle(isShowingCodingGuide)}>Coding Guide</div>
         <div onClick={() => window.open("https://irap.org/cyclerap/", "_blank", "noopener,noreferrer")} style={{ padding: "0.5rem 1rem", fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, cursor: "pointer", whiteSpace: "nowrap" }}>CycleRAP ↗</div>
       </div>
@@ -376,6 +371,14 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
               </div>
             </div>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              {returnToAnalysis && (
+                <button
+                  onClick={onBackToAnalysis}
+                  style={{ background: "transparent", border: "none", padding: 0, marginRight: "0.75rem", fontFamily: FONT, fontWeight: 700, fontSize: "0.875rem", color: COLOR.blue, cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  ← Back to Path Analysis
+                </button>
+              )}
               <Stepper
                 value={pageInput}
                 onChange={(v) => setPageInput(v.replace(/^0+/, ""))}

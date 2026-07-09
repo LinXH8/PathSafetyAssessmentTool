@@ -361,6 +361,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
         {/* top row: segment selector + page actions (right) */}
         <Flex align="center" justify="flex-end" gap="1rem" wrap="wrap">
           <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            {vm.cameFromPathAnalysis && (
+              <button
+                onClick={vm.onBackToAnalysis}
+                style={{ background: "transparent", border: "none", padding: 0, marginRight: "0.75rem", fontFamily: FONT, fontWeight: 700, fontSize: "0.875rem", color: COLOR.blue, cursor: "pointer", whiteSpace: "nowrap" }}
+              >
+                ← Back to Path Analysis
+              </button>
+            )}
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Stepper
                 value={pageInput}

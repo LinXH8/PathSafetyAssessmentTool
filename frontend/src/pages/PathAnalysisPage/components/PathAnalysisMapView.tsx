@@ -1160,10 +1160,10 @@ export default function AttributeAnalysisMapView({
     const encoded = loadedProjects.map(name => encodeURIComponent(name)).join(',');
     if (ctx && ctx.projects.length > 0) {
       sessionStorage.setItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT, JSON.stringify(ctx));
-      navigate(`/treatment/${encoded}?filtered=1`);
+      navigate(`/treatment/${encoded}?filtered=1`, { state: { returnToAnalysis: true } });
     } else {
       sessionStorage.removeItem(SESSION_KEYS.TREATMENT_FILTER_CONTEXT);
-      navigate(`/treatment/${encoded}`);
+      navigate(`/treatment/${encoded}`, { state: { returnToAnalysis: true } });
     }
   };
 
