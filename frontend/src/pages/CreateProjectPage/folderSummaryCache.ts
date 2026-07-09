@@ -13,12 +13,19 @@ import type { SourceFolderSummary } from "../../api";
  * folders; already-cached folders are skipped so they don't re-fetch.
  */
 
-const KEY = "psat:create:folderSummaries:v1";
+// v2: bumped from v1 to flush client caches that may hold segment counts recorded
+// before the pruning-recompute fix (a folder pruned after project creation could
+// have persisted an under-counted value). Bumping forces a one-time re-pull of the
+// now-authoritative backend summaries.
+const KEY = "psat:create:folderSummaries:v2";
+const LEGACY_KEYS = ["psat:create:folderSummaries:v1"];
 
 type Store = Record<string, SourceFolderSummary>;
 
 export function loadFolderSummaryCache(): Store {
   try {
+    // Drop superseded cache versions so stale (possibly under-counted) rows can't linger.
+    for (const legacy of LEGACY_KEYS) localStorage.removeItem(legacy);
     const raw = localStorage.getItem(KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);

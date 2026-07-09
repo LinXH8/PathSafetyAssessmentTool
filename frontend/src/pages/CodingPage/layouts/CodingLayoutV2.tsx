@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Box, Flex, Text, Spinner, Portal, Progress, Card, CardBody } from "@chakra-ui/react";
+import { Tooltip } from "../../../components/ui/tooltip";
 
 import ImagePanel from "../components/ImagePanel";
 import AttributesPanel from "../components/AttributesPanel";
@@ -53,6 +54,44 @@ const RSB_LEGEND: Array<[string, string]> = [
   ["High", RISK_BAND_COLORS.HIGH],
   ["Extreme", RISK_BAND_COLORS.EXTREME],
 ];
+
+// Risk-band tooltips — thresholds match the v2.14 model (backend
+// cyclerap_scoring.py `BAND_THRESHOLDS` / data/cyclerap_v214_model.json "bands"):
+// BB/BP/SB [5,10,20], VB [10,25,60]; Overall band = worst case across crash types.
+const BB_BP_SB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 5</Text>
+    <Text>• Medium: &gt; 5 – 10</Text>
+    <Text>• High: &gt; 10 – 20</Text>
+    <Text>• Extreme: &gt; 20</Text>
+  </Box>
+);
+const VB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 10</Text>
+    <Text>• Medium: &gt; 10 – 25</Text>
+    <Text>• High: &gt; 25 – 60</Text>
+    <Text>• Extreme: &gt; 60</Text>
+  </Box>
+);
+const RISK_SCORE_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Score</Text>
+    <Text mb="1">Sum of all crash type scores. Banding colour takes the worst case across crash types.</Text>
+    <Text fontWeight="semibold" mt="1">BB / BP / SB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;5 · Medium: &gt;5–10 · High: &gt;10–20 · Extreme: &gt; 20</Text>
+    <Text fontWeight="semibold" mt="1">VB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;10 · Medium: &gt;10–25 · High: &gt;25–60 · Extreme: &gt; 60</Text>
+  </Box>
+);
+const CRASH_TYPE_TOOLTIPS: Record<string, ReactNode> = {
+  BB: BB_BP_SB_TOOLTIP,
+  BP: BB_BP_SB_TOOLTIP,
+  SB: BB_BP_SB_TOOLTIP,
+  VB: VB_TOOLTIP,
+};
 
 // ── shared style fragments ──
 const card: CSSProperties = { background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: RADIUS };
@@ -401,18 +440,22 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
               </div>
               <div style={{ display: "flex", gap: "0.375rem", flexShrink: 0 }}>
                 {crashCards.map((c) => (
-                  <div key={c.key} style={{ flex: 1, borderRadius: RADIUS, display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.625rem", gap: "0.5rem", minHeight: "3.625rem", background: c.color }}>
-                    <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: "2.5rem", height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
-                    <div>
-                      <div style={{ fontFamily: FONT, fontSize: "1rem", fontWeight: 500, color: COLOR.white }}>{c.key}</div>
-                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{c.value.toFixed(1)}</div>
+                  <Tooltip key={c.key} content={CRASH_TYPE_TOOLTIPS[c.key]} showArrow portalled openDelay={0} closeOnClick={false}>
+                    <div style={{ flex: 1, borderRadius: RADIUS, display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.625rem", gap: "0.5rem", minHeight: "3.625rem", background: c.color, cursor: "default" }}>
+                      <img src={CRASH_ICONS[c.key]} alt={c.key} style={{ width: "2.5rem", height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontFamily: FONT, fontSize: "1rem", fontWeight: 500, color: COLOR.white }}>{c.key}</div>
+                        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{c.value.toFixed(1)}</div>
+                      </div>
                     </div>
-                  </div>
+                  </Tooltip>
                 ))}
-                <div style={{ flex: 1, borderRadius: RADIUS, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.5rem", minHeight: "3.625rem", background: riskColor }}>
-                  <div style={{ fontFamily: FONT, fontWeight: 500, fontSize: "1rem", color: COLOR.white, textAlign: "center" }}>Risk Score</div>
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{riskScore.toFixed(1)}</div>
-                </div>
+                <Tooltip content={RISK_SCORE_TOOLTIP} showArrow portalled openDelay={0} closeOnClick={false} contentProps={{ maxW: "420px" }}>
+                  <div style={{ flex: 1, borderRadius: RADIUS, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.5rem", minHeight: "3.625rem", background: riskColor, cursor: "default" }}>
+                    <div style={{ fontFamily: FONT, fontWeight: 500, fontSize: "1rem", color: COLOR.white, textAlign: "center" }}>Risk Score</div>
+                    <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.white, lineHeight: 1 }}>{riskScore.toFixed(1)}</div>
+                  </div>
+                </Tooltip>
               </div>
 
               {/* Street View Photo + brightness (reused ImagePanel). flex:1 lets the
@@ -513,22 +556,28 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
                     }}
                   />
                 </div>
-                {attrCoding ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flexShrink: 0 }}>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <button onClick={() => setSelectedAttrKeys(new Set())} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select None</button>
-                      <button onClick={() => setSelectedAttrKeys(new Set(allAttrKeys))} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select All</button>
+                {/* Fixed-height control block so entering select mode (1 button →
+                    2 rows) does not grow the card and shift the cursor off the
+                    button. Bottom-aligned so the idle button lines up with the
+                    active run button's position. */}
+                <div style={{ minHeight: "5.5rem", display: "flex", flexDirection: "column", justifyContent: "flex-end", flexShrink: 0 }}>
+                  {attrCoding ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button onClick={() => setSelectedAttrKeys(new Set())} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select None</button>
+                        <button onClick={() => setSelectedAttrKeys(new Set(allAttrKeys))} style={{ ...btnBase, flex: 1, background: COLOR.gray800 }}>Select All</button>
+                      </div>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button onClick={() => { setAttrCoding(false); setSelectedAttrKeys(new Set()); }} style={{ ...btnBase, flex: 1, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.text }}>Cancel</button>
+                        <button onClick={runAutocodeByAttributes} disabled={selectedAttrKeys.size === 0} style={{ ...btnBase, flex: 1, background: COLOR.teal, opacity: selectedAttrKeys.size === 0 ? 0.5 : 1, cursor: selectedAttrKeys.size === 0 ? "not-allowed" : "pointer" }}>Auto-code by Attributes</button>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <button onClick={() => { setAttrCoding(false); setSelectedAttrKeys(new Set()); }} style={{ ...btnBase, flex: 1, background: "transparent", border: `1px solid ${COLOR.borderInput}`, color: COLOR.text }}>Cancel</button>
-                      <button onClick={runAutocodeByAttributes} disabled={selectedAttrKeys.size === 0} style={{ ...btnBase, flex: 1, background: COLOR.teal, opacity: selectedAttrKeys.size === 0 ? 0.5 : 1, cursor: selectedAttrKeys.size === 0 ? "not-allowed" : "pointer" }}>Auto-code by Attributes</button>
-                    </div>
-                  </div>
-                ) : (
-                  <button onClick={() => { setSelectedAttrKeys(new Set()); setAttrCoding(true); }} style={{ ...btnBase, width: "100%", background: COLOR.teal, flexShrink: 0 }}>
-                    Auto-code by Attributes
-                  </button>
-                )}
+                  ) : (
+                    <button onClick={() => { setSelectedAttrKeys(new Set()); setAttrCoding(true); }} style={{ ...btnBase, width: "100%", background: COLOR.teal }}>
+                      Auto-code by Attributes
+                    </button>
+                  )}
+                </div>
               </>
             </div>
           </div>

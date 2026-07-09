@@ -540,7 +540,7 @@ export default function AttributesPanel({
                 // An autocoded field appends its source tag — (CV)/(GIS) — in regular
                 // weight, coloured to match the highlight border (e.g. the deeper yellow).
                 const titleNode = (
-                  <Box as="span" style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: isEdited ? "#C53030" : COLOR.text, cursor: ATTRIBUTE_TOOLTIPS[k] ? "help" : "default" }}>
+                  <Box as="span" style={{ display: "inline-block", maxWidth: "100%", verticalAlign: "bottom", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: isEdited ? "#C53030" : COLOR.text, cursor: ATTRIBUTE_TOOLTIPS[k] ? "help" : "default" }}>
                     {k}
                     {isChanged && source && (
                       <span style={{ fontWeight: 400, color: hl?.border ?? COLOR.gray500 }}> ({source})</span>

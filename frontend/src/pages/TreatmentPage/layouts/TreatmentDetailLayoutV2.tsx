@@ -18,6 +18,7 @@ import AttributesPanel from "../../CodingPage/components/AttributesPanel";
 import PostTreatmentImageUpload from "../components/PostTreatmentImageUpload";
 import ResetConfirmationDialog from "../../sidebar/components/ResetConfirmationDialog";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { Tooltip } from "../../../components/ui/tooltip";
 import { FONT, COLOR, RADIUS } from "../../../features/ui/designTokens";
 import { V2Segmented, V2Switch, v2TabStyle, v2TabRowStyle, DistTooltipBox } from "../../PathAnalysisPage/components/paV2Primitives";
 
@@ -159,6 +160,45 @@ const RSB_LEGEND: Array<{ c: string; label: string }> = [
   { c: RISK_BAND_COLORS.HIGH, label: "High" },
   { c: RISK_BAND_COLORS.EXTREME, label: "Extreme" },
 ];
+
+// Risk-band tooltips — thresholds match the v2.14 model (backend
+// cyclerap_scoring.py `BAND_THRESHOLDS` / data/cyclerap_v214_model.json "bands"):
+// BB/BP/SB [5,10,20], VB [10,25,60]; Overall band = worst case across crash types.
+const BB_BP_SB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 5</Text>
+    <Text>• Medium: &gt; 5 – 10</Text>
+    <Text>• High: &gt; 10 – 20</Text>
+    <Text>• Extreme: &gt; 20</Text>
+  </Box>
+);
+const VB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 10</Text>
+    <Text>• Medium: &gt; 10 – 25</Text>
+    <Text>• High: &gt; 25 – 60</Text>
+    <Text>• Extreme: &gt; 60</Text>
+  </Box>
+);
+const RISK_SCORE_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Score</Text>
+    <Text mb="1">Sum of all crash type scores. Banding colour takes the worst case across crash types.</Text>
+    <Text fontWeight="semibold" mt="1">BB / BP / SB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;5 · Medium: &gt;5–10 · High: &gt;10–20 · Extreme: &gt; 20</Text>
+    <Text fontWeight="semibold" mt="1">VB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;10 · Medium: &gt;10–25 · High: &gt;25–60 · Extreme: &gt; 60</Text>
+  </Box>
+);
+const CRASH_TYPE_TOOLTIPS: Record<string, ReactNode> = {
+  BB: BB_BP_SB_TOOLTIP,
+  BP: BB_BP_SB_TOOLTIP,
+  SB: BB_BP_SB_TOOLTIP,
+  VB: VB_TOOLTIP,
+  Overall: RISK_SCORE_TOOLTIP,
+};
 
 // Bottom Before/After Overall Risk Level cards: per-crash-type stacked bars.
 const DIST_ROWS: Array<{ key: "Overall" | "VB" | "BB" | "SB" | "BP"; label: string }> = [
@@ -604,9 +644,17 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   const color = bandColor(c.value, c.key);
                   const isScore = c.key === "Overall";
                   return (
-                    <div
+                    <Tooltip
                       key={c.key}
-                      style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" }}
+                      content={CRASH_TYPE_TOOLTIPS[c.key]}
+                      showArrow
+                      portalled
+                      openDelay={0}
+                      closeOnClick={false}
+                      contentProps={isScore ? { maxW: "420px" } : undefined}
+                    >
+                    <div
+                      style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box", cursor: "default" }}
                     >
                       {!isScore && c.icon && (
                         <img src={c.icon} alt={c.label} style={{ height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
@@ -621,6 +669,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         </div>
                       </div>
                     </div>
+                    </Tooltip>
                   );
                 })}
               </div>
