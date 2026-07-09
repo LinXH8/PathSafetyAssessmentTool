@@ -50,12 +50,13 @@ import { usePdfExport } from "./hooks/usePdfExport";
 import { useReportData } from "./hooks/useReportData";
 import { useReportLayout } from "./hooks/useReportLayout";
 import { ReportBuilderLayoutV1 } from "./layouts/ReportBuilderLayoutV1";
+import { ReportBuilderLayoutV2 } from "./layouts/ReportBuilderLayoutV2";
 import type { ReportBuilderViewModel } from "./layouts/ReportBuilderViewModel";
 
 export default function ReportBuilderPage() {
   const navigate = useNavigate();
   const isV2 = useUiVersion() === "v2";
-  const accent = isV2 ? "#319795" : "#a020d0";
+  const accent = isV2 ? "#3182CE" : "#a020d0";
   const canvasRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const hasAutoFit = useRef(false);
@@ -67,8 +68,7 @@ export default function ReportBuilderPage() {
     sectionTitles, setSectionTitles, oicName, setOicName, purpose, setPurpose,
     recommendations, setRecommendations, reportDate, setReportDate,
     includeFiltered, setIncludeFiltered,
-    hasSaved, saveLayout, restoreLayout, resetLayout,
-    saveToastVisible, setSaveToastVisible, restoreBannerVisible, setRestoreBannerVisible,
+    resetLayout,
     sensors, handleDragEnd,
     currentPage, goToPage, scrollToSection, handleCanvasScroll,
   } = useReportLayout({ canvasRef, canvasContainerRef });
@@ -369,14 +369,14 @@ export default function ReportBuilderPage() {
   const renderViewToggle = (el: ElementState) => {
     const topN = el.topN ?? 10;
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "8px 10px 8px", borderTop: "1px dashed #e0d8f0", background: "transparent" }} onPointerDown={(e) => e.stopPropagation()}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "8px 10px 8px", borderTop: `1px dashed ${isV2 ? "#e2e8f0" : "#e0d8f0"}`, background: "transparent" }} onPointerDown={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
           <span style={{ fontSize: 10, color: "#aaa", marginRight: 2, width: 30 }}>Top:</span>
           {[3, 5, 10].map((n) => {
             const active = topN === n;
             return (
               <button key={n}
-                style={{ padding: "2px 5px", borderRadius: 10, border: `1px solid ${active ? "#a020d0" : "#ddd"}`, background: active ? "#f0e4f8" : "#fff", color: active ? "#a020d0" : "#777", cursor: "pointer", fontSize: 10, fontWeight: active ? 700 : 400, minWidth: 20 }}
+                style={{ padding: "2px 5px", borderRadius: 10, border: `1px solid ${active ? accent : "#ddd"}`, background: active ? (isV2 ? "#EBF8FF" : "#f0e4f8") : "#fff", color: active ? accent : "#777", cursor: "pointer", fontSize: 10, fontWeight: active ? 700 : 400, minWidth: 20 }}
                 onClick={(e) => { e.stopPropagation(); updateElement(el.id, { topN: n }); setTimeout(autoFitElements, 50); }}
                 onMouseDown={(e) => e.stopPropagation()}>{n}
               </button>
@@ -391,7 +391,7 @@ export default function ReportBuilderPage() {
   const renderMapColorToggle = (el: ElementState) => {
     const current = el.colorBy && activeFilterNames.includes(el.colorBy) ? el.colorBy : "__risk__";
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderTop: "1px dashed #e0d8f0" }} onPointerDown={(e) => e.stopPropagation()}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderTop: `1px dashed ${isV2 ? "#e2e8f0" : "#e0d8f0"}` }} onPointerDown={(e) => e.stopPropagation()}>
         <span style={{ fontSize: 10, color: "#aaa", flexShrink: 0 }}>Color by:</span>
         <select
           value={current}
@@ -1453,10 +1453,9 @@ export default function ReportBuilderPage() {
   const vm: ReportBuilderViewModel = {
     isV2, accent, navigate,
     canvasRef, canvasContainerRef, postTreatmentUploadRef, handlePostTreatmentFileChange,
-    autoFitElements, saveLayout, resetLayout, restoreLayout, hasSaved,
+    autoFitElements, resetLayout,
     goToPage, currentPage, totalPages,
     handleDownloadPDF, handleDownloadWord, exporting,
-    saveToastVisible, setSaveToastVisible, restoreBannerVisible, setRestoreBannerVisible,
     hasFilter, includeFiltered, toggleIncludeFiltered,
     sensors, handleDragEnd, sectionChecklist, elements, hideElement, showElement, scrollToSection,
     renderViewToggle, renderMapColorToggle,
@@ -1464,5 +1463,5 @@ export default function ReportBuilderPage() {
     showProjectPicker, pickerLoading, availableProjects, pickerSelected, setPickerSelected, loadSelectedProjects,
   };
 
-  return <ReportBuilderLayoutV1 vm={vm} />;
+  return isV2 ? <ReportBuilderLayoutV2 vm={vm} /> : <ReportBuilderLayoutV1 vm={vm} />;
 }

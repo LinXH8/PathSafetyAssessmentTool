@@ -27,10 +27,9 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
   const {
     isV2, accent, navigate,
     canvasRef, canvasContainerRef, postTreatmentUploadRef, handlePostTreatmentFileChange,
-    autoFitElements, saveLayout, resetLayout, restoreLayout, hasSaved,
+    autoFitElements, resetLayout,
     goToPage, currentPage, totalPages,
     handleDownloadPDF, handleDownloadWord, exporting,
-    saveToastVisible, setSaveToastVisible, restoreBannerVisible, setRestoreBannerVisible,
     hasFilter, includeFiltered, toggleIncludeFiltered,
     sensors, handleDragEnd, sectionChecklist, elements, hideElement, showElement, scrollToSection,
     renderViewToggle, renderMapColorToggle,
@@ -55,17 +54,9 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
           Auto-fit
         </button>
 
-        <button className="rb-btn rb-btn-secondary" onClick={saveLayout} title="Save your report layout, section arrangement, and text to this browser. The layout will be automatically restored the next time you open the Report Builder.">
-          Save layout
-        </button>
         <button className="rb-btn rb-btn-secondary" onClick={resetLayout} title="Reset all sections and text to their default values">
           Reset layout
         </button>
-        {hasSaved && (
-          <button className="rb-btn rb-btn-secondary" onClick={restoreLayout} title="Revert to the last manually saved layout (does not affect live project data)">
-            Restore saved
-          </button>
-        )}
 
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 4 }}>
           <button className="rb-btn rb-btn-secondary" onClick={() => goToPage(Math.max(0, currentPage - 1))} disabled={currentPage === 0} style={{ padding: "6px 10px" }}>◀</button>
@@ -82,49 +73,6 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
           </button>
         </div>
       </div>
-
-      {/* ── Save confirmation toast ─────────────────────────────────────── */}
-      {saveToastVisible && (
-        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", background: "#e8f8e8", borderBottom: "1px solid #b8e0b8", fontSize: 13, color: "#1a5a1a", flexShrink: 0 }}>
-          <span style={{ fontSize: 16 }}>✓</span>
-          <span style={{ flex: 1 }}>
-            <strong>Layout saved</strong> — your section arrangement, titles, and settings have been saved to this browser.
-            {" "}This layout will be <strong>automatically restored</strong> the next time you open the Report Builder.
-            {" "}Use <strong>Restore saved</strong> in the toolbar to revert to this state at any time.
-          </span>
-          <button
-            onClick={() => setSaveToastVisible(false)}
-            style={{ padding: "3px 8px", borderRadius: 8, border: "1px solid #90c890", background: "transparent", color: "#2a7a2a", fontSize: 12, cursor: "pointer" }}
-            title="Dismiss"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* ── Restore banner ──────────────────────────────────────────────── */}
-      {restoreBannerVisible && (
-        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", background: "#f0e8fc", borderBottom: "1px solid #d8c4f4", fontSize: 13, color: "#5a2a8a", flexShrink: 0 }}>
-          <span style={{ fontSize: 16 }}>↩</span>
-          <span style={{ flex: 1 }}>
-            <strong>Layout restored</strong> — your previously saved report layout has been applied automatically.
-            {" "}New data from the current session will be loaded into the existing sections.
-          </span>
-          <button
-            onClick={autoFitElements}
-            style={{ padding: "3px 10px", borderRadius: 8, border: "1px solid #b090d8", background: "#fff", color: "#7030b8", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
-          >
-            Re-fit
-          </button>
-          <button
-            onClick={() => setRestoreBannerVisible(false)}
-            style={{ padding: "3px 8px", borderRadius: 8, border: "1px solid #d0c0e8", background: "transparent", color: "#a080c0", fontSize: 12, cursor: "pointer" }}
-            title="Dismiss"
-          >
-            ✕
-          </button>
-        </div>
-      )}
 
       <div className="rb-main">
         <aside className="rb-sections-sidebar">
