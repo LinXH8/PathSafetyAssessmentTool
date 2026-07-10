@@ -30,7 +30,7 @@ import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
 import type { CurvatureVisualizationResponse } from "../../api/curvatureVisualization";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS } from "./codingConstants";
+import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS, DEFECT_TYPE_SUGGESTIONS } from "./codingConstants";
 import {
   DELINEATION_PRESENT_SUGGESTIONS,
   SLIPPERY_ISSUE_TYPE_SUGGESTIONS,
@@ -349,6 +349,18 @@ export default function CodingPage() {
     return Array.from(new Set([...NFO_TYPE_SUGGESTIONS, ...projectValues])).sort();
   }, [projectData]);
 
+  const defectTypeOptions = useMemo(() => {
+    const projectValues = Array.from(new Set(
+      Object.values(projectData).flatMap((pd) => pd?.attrs ?? [])
+        .flatMap((row) => {
+          const v = row["Defect Type"];
+          if (!v) return [];
+          return String(v).split(",").map((s) => s.trim()).filter(Boolean);
+        })
+    ));
+    return Array.from(new Set([...DEFECT_TYPE_SUGGESTIONS, ...projectValues])).sort();
+  }, [projectData]);
+
   const slipperyIssueTypeOptions = useMemo(() => {
     const projectValues = Array.from(new Set(
       Object.values(projectData).flatMap((pd) => pd?.attrs ?? [])
@@ -416,6 +428,8 @@ export default function CodingPage() {
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   } = useAttributeEditing({
@@ -621,6 +635,7 @@ export default function CodingPage() {
     foTypeOptions,
     nfoTypeOptions,
     slipperyIssueTypeOptions,
+    defectTypeOptions,
     pendingPresentDelineationChange,
     setPendingPresentDelineationChange,
     pendingNotPresentDelineationChange,
@@ -631,6 +646,8 @@ export default function CodingPage() {
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   };

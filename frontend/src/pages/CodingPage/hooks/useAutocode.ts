@@ -144,6 +144,7 @@ export function useAutocode({
               // Mirror alias pairs that the patchedAttrs builder also applies
               if (field === "Grade" && "Gradient %" in updatedRow) patch["Gradient %"] = updatedRow["Gradient %"];
               if (field === "Delineation" && "Delineation Type" in updatedRow) patch["Delineation Type"] = updatedRow["Delineation Type"];
+              if (field === "Major Surface Deformation or Drain Opening" && "Defect Type" in updatedRow) patch["Defect Type"] = updatedRow["Defect Type"];
             }
             return { ...baselineRow, ...patch };
           });
@@ -476,6 +477,7 @@ export function useAutocode({
                 // Mirror the alias pairs the backend's _bulk_gen filter uses
                 if (field === "Grade" && "Gradient %" in newRow) patch["Gradient %"] = newRow["Gradient %"];
                 if (field === "Delineation" && "Delineation Type" in newRow) patch["Delineation Type"] = newRow["Delineation Type"];
+                if (field === "Major Surface Deformation or Drain Opening" && "Defect Type" in newRow) patch["Defect Type"] = newRow["Defect Type"];
               }
               return { ...oldRow, ...patch };
             });

@@ -150,6 +150,7 @@ class Attributes(BaseTable):
         LOOSE_SLIPPERY_SURFACE_STR      = "Loose or slippery surface"
         TRAM_TRAIN_RAIL_STR             = "Tram or Train Rails"
         DEFORMATION_DRAIN_STR           = "Major Surface Deformation or Drain Opening"
+        DEFECT_TYPE_STR                 = "Defect Type"
         FIXED_OBSTACLE_STR              = "Fixed Obstacle on Facility"
         FIXED_OBSTACLE_TYPE_STR         = "FO Type"
         NON_FIXED_OBSTACLE_STR          = "Non-Fixed Obstacle on Facility"
@@ -208,6 +209,7 @@ class Attributes(BaseTable):
         Fields.LOOSE_SLIPPERY_SURFACE_STR:      presence_mapping,
         Fields.TRAM_TRAIN_RAIL_STR:             presence_mapping,
         Fields.DEFORMATION_DRAIN_STR:           presence_mapping,
+        Fields.DEFECT_TYPE_STR:                 None,
         Fields.FIXED_OBSTACLE_STR:              presence_mapping,
         Fields.FIXED_OBSTACLE_TYPE_STR:         None,
         Fields.NON_FIXED_OBSTACLE_STR:          presence_mapping,

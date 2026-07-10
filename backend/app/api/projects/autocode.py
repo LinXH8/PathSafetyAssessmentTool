@@ -210,7 +210,8 @@ def _gis_autocode_core(coords, fields_filter=None) -> dict:
 
     _DEFORM = "Major Surface Deformation or Drain Opening"
     _SLIP = "Loose or slippery surface"
-    if _needs(_DEFORM, _SLIP, "Delineation", "Delineation Type"):
+    _DEFECT_TYPE = "Defect Type"
+    if _needs(_DEFORM, _SLIP, "Delineation", "Delineation Type", _DEFECT_TYPE):
         try:
             from shapely.geometry import LineString as _LineString
             import geopandas as _gpd
@@ -222,16 +223,25 @@ def _gis_autocode_core(coords, fields_filter=None) -> dict:
                 line_metric = line_raw
             nearby = get_defects_store().query_near_line(line_metric, 5.0)
             has_deform = has_slip = has_faded_marking = False
+            defect_types: list[str] = []
             for d in nearby:
-                dt = d["type_of_defect"].strip().lower()
+                raw = d["type_of_defect"].strip()
+                dt = raw.lower()
                 if dt == "algae":
                     has_slip = True
                 elif dt == "faded marking":
                     has_faded_marking = True
                 else:
                     has_deform = True
-            if has_deform and _needs(_DEFORM):
-                updates[_DEFORM] = 1
+                    if raw not in defect_types:
+                        defect_types.append(raw)
+            # Authoritative on the Red/Amber-filtered defects source: explicitly
+            # downgrades to Not Present (2) when nothing matches nearby, instead of
+            # only ever adding a Present flag — otherwise a Present coded under an
+            # older/less-filtered defects source can never self-correct on rerun.
+            if _needs(_DEFORM, _DEFECT_TYPE):
+                updates[_DEFORM] = 1 if has_deform else 2
+                updates[_DEFECT_TYPE] = ", ".join(defect_types) if (has_deform and defect_types) else None
             if has_slip and _needs(_SLIP):
                 updates[_SLIP] = 1
             if has_faded_marking and _needs("Delineation", "Delineation Type"):
@@ -579,6 +589,8 @@ def autocode_all(project_name: str, pm, proj, ver):
                                 actual_filter.append("Gradient %")
                             if "Delineation" in actual_filter:
                                 actual_filter.append("Delineation Type")
+                            if "Major Surface Deformation or Drain Opening" in actual_filter:
+                                actual_filter.append("Defect Type")
                             merged = {k: v for k, v in (merged or {}).items() if k in actual_filter}
                             sources = {k: v for k, v in (sources or {}).items() if k in actual_filter}
 

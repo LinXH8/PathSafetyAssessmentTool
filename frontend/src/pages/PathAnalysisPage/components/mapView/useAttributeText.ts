@@ -252,6 +252,11 @@ export function useAttributeText(
       return delineationType === "None" ? "" : delineationType;
     }
 
+    if (attributeName === "Defect Type") {
+      const defectType = getAttrText("Defect Type", attributes["Defect Type"]);
+      return defectType === "None" ? "" : defectType;
+    }
+
     return getAttrText(attributeName, attributes[attributeName]);
   }, [getAttrText, getCrossingFacilityFilterText, getDerivedCrossingTypes, getGradeFilterText, getSafetyAttributeText]);
 
