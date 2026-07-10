@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import type { Feature, LineString } from "geojson";
 
@@ -66,6 +66,17 @@ export default function TreatmentDetailPage() {
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // True when opened from Path Analysis's "Treat Filtered Segments"/treatment button,
+  // which navigates with `state: { returnToAnalysis: true }`. Drives the on-canvas
+  // "← Back to Path Analysis" link, which uses browser history to return to the prior
+  // Path Analysis view with its filters/viewport intact (mirrors the Coding page flow).
+  const cameFromPathAnalysis = Boolean((location.state as any)?.returnToAnalysis);
+  const onBackToAnalysis = () => {
+    if (window.history.length > 1) window.history.back();
+    else navigate("/analysis/path");
+  };
 
   // Filter mode: opened from the Path Analysis page's "Treat Filtered Segments" button.
   // The ?filtered=1 query param is the authoritative switch — only when present do we honor
@@ -930,6 +941,8 @@ export default function TreatmentDetailPage() {
     setOpenConfirmAlert,
     onConfirmApplyToAll: handleConfirmApplyToAll,
     onBack: () => navigate("/analysis/path"),
+    cameFromPathAnalysis,
+    onBackToAnalysis,
     effectivenessLabel,
     improvedSegmentCount,
     onResetAll: () => setResetAllConfirmOpen(true),

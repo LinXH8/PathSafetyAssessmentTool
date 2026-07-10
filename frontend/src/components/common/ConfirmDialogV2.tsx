@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { LuX } from "react-icons/lu";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 
 /**
@@ -131,13 +132,13 @@ export default function ConfirmDialogV2({
               background: "transparent",
               border: "none",
               cursor: loading ? "not-allowed" : "pointer",
-              fontSize: 24,
+              display: "inline-flex",
               lineHeight: 1,
               color: COLOR.gray500,
               padding: 0,
             }}
           >
-            ×
+            <LuX size={20} />
           </button>
         </div>
 

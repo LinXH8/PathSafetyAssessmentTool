@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent } from "react";
+import { LuX } from "react-icons/lu";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 import { getTagColor } from "../../pages/Projects/tagColor";
 
@@ -95,9 +96,9 @@ export default function TagInputV2({
               type="button"
               onClick={() => removeTag(tag)}
               aria-label={`Remove ${tag}`}
-              style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}
+              style={{ background: "transparent", border: "none", color: COLOR.white, cursor: "pointer", display: "inline-flex", lineHeight: 1, padding: 0 }}
             >
-              ×
+              <LuX size={14} strokeWidth={2.5} />
             </button>
           </span>
         ))}

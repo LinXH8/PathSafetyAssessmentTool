@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import React from "react";
 import { Box, Flex, Grid, GridItem, Text, Image } from "@chakra-ui/react";
+import { LuArrowDown } from "react-icons/lu";
 import { RISK_BAND_COLORS } from "./colorConstants";
 import { Tooltip } from "../../ui/tooltip";
 
@@ -303,7 +304,7 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
                       <Image
                         src={type.icon}
                         alt={type.shortLabel}
-                        h="32px"
+                        h="44px"
                         objectFit="contain"
                       />
 
@@ -324,8 +325,8 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
 
                         {/* Reduction indicator */}
                         {reduction !== null && improved && (
-                          <Text fontSize="xs" color="inherit" _dark={{ color: "inherit" }} lineHeight="1">
-                            ↓ {reduction.toFixed(2)}
+                          <Text fontSize="xs" color="inherit" _dark={{ color: "inherit" }} lineHeight="1" display="flex" alignItems="center" gap="2px">
+                            <LuArrowDown size={11} /> {reduction.toFixed(2)}
                           </Text>
                         )}
                       </Flex>
@@ -373,8 +374,8 @@ export default function SegmentScoresCard({ scores, beforeScores, showPreviewBac
 
                       {/* Reduction indicator */}
                       {totalReduction !== null && totalImproved && (
-                        <Text fontSize="xs" color="inherit" _dark={{ color: "inherit" }} lineHeight="1">
-                          ↓ {totalReduction.toFixed(2)}
+                        <Text fontSize="xs" color="inherit" _dark={{ color: "inherit" }} lineHeight="1" display="flex" alignItems="center" gap="2px">
+                          <LuArrowDown size={11} /> {totalReduction.toFixed(2)}
                         </Text>
                       )}
                     </Flex>

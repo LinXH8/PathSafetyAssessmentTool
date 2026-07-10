@@ -18,7 +18,7 @@
  * Side effects: reads/writes localStorage key `LOCAL_KEYS.REPORT_LAYOUT`
  * (byte-identical blob shape); smooth-scrolls the canvas container on page nav.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   PointerSensor, KeyboardSensor, useSensor, useSensors,
 } from "@dnd-kit/core";
@@ -58,15 +58,9 @@ export interface UseReportLayoutResult {
   reportDate: string; setReportDate: React.Dispatch<React.SetStateAction<string>>;
   includeFiltered: boolean;
   setIncludeFiltered: React.Dispatch<React.SetStateAction<boolean>>;
-  // Persistence
-  hasSaved: boolean;
-  saveLayout: () => void;
-  restoreLayout: () => void;
+  // Persistence — the layout auto-saves on every change (see effect below), so
+  // there is no manual "Save"/"Restore" surface; only an explicit reset remains.
   resetLayout: () => void;
-  saveToastVisible: boolean;
-  setSaveToastVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  restoreBannerVisible: boolean;
-  setRestoreBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
   // dnd-kit reorder
   sensors: ReturnType<typeof useSensors>;
   handleDragEnd: (event: DragEndEvent) => void;
@@ -124,13 +118,6 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
     const l = readSavedLayout(); return l?.includeFiltered === true;
   });
 
-  const [hasSaved, setHasSaved] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
-  const [saveToastVisible, setSaveToastVisible] = useState(false);
-  const saveToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // true when this mount auto-restored a previously saved layout
-  const [wasAutoRestored] = useState(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } });
-  const [restoreBannerVisible, setRestoreBannerVisible] = useState(wasAutoRestored);
-
   // ── Element helpers ───────────────────────────────────────────────────────
   const updateElement = useCallback((id: string, changes: Partial<ElementState>) => {
     setElements((prev) => prev.map((el) => (el.id === id ? { ...el, ...changes } : el)));
@@ -153,47 +140,20 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
     });
   }, []);
 
-  // ── Save / Restore layout ─────────────────────────────────────────────────
-  const saveLayout = useCallback(() => {
-    try {
-      localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
-        elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
-      }));
-      setHasSaved(true);
-      setSaveToastVisible(true);
-      if (saveToastTimerRef.current) clearTimeout(saveToastTimerRef.current);
-      saveToastTimerRef.current = setTimeout(() => setSaveToastVisible(false), 4000);
-    } catch (e) { console.error("Save layout failed:", e); }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
-
-  // Auto-save layout on every change so navigation away never loses section arrangement.
+  // ── Persistence: continuous auto-save ─────────────────────────────────────
+  // The layout blob is written to localStorage on every change, so navigating
+  // away (Back / any nav) never loses the section arrangement — no manual "Save"
+  // button is needed, and there is nothing to "restore" to (the saved state is
+  // always the current state). It is auto-restored on next mount by the state
+  // initializers above.
   useEffect(() => {
     try {
       localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
         reportDate, projectNameOverrides, sectionTitles, includeFiltered,
       }));
-      setHasSaved(true);
-    } catch (e) { /* quota exceeded or private browsing — silent */ }
+    } catch { /* quota exceeded or private browsing — silent */ }
   }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
-
-  const restoreLayout = useCallback(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT);
-      if (!saved) return;
-      const l = JSON.parse(saved);
-      if (l.elements) setElements(l.elements);
-      if (l.reportTitle !== undefined) setReportTitle(l.reportTitle);
-      if (l.oicName !== undefined) setOicName(l.oicName);
-      if (l.purpose !== undefined) setPurpose(l.purpose);
-      if (l.recommendations !== undefined) setRecommendations(l.recommendations);
-      if (l.reportDate !== undefined) setReportDate(l.reportDate);
-      if (l.projectNameOverrides !== undefined) setProjectNameOverrides(l.projectNameOverrides);
-      if (l.sectionTitles !== undefined) setSectionTitles(l.sectionTitles);
-      if (l.includeFiltered !== undefined) setIncludeFiltered(l.includeFiltered);
-    } catch (e) { console.error("Restore layout failed:", e); }
-  }, []);
 
   const resetLayout = useCallback(() => {
     if (window.confirm("Are you sure you want to reset the layout to default? All unsaved changes will be lost.")) {
@@ -207,7 +167,6 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
       setProjectNameOverrides({});
       setSectionTitles({});
       setIncludeFiltered(false);
-      setHasSaved(false);
     }
   }, []);
 
@@ -263,8 +222,7 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
     sectionTitles, setSectionTitles, oicName, setOicName, purpose, setPurpose,
     recommendations, setRecommendations, reportDate, setReportDate,
     includeFiltered, setIncludeFiltered,
-    hasSaved, saveLayout, restoreLayout, resetLayout,
-    saveToastVisible, setSaveToastVisible, restoreBannerVisible, setRestoreBannerVisible,
+    resetLayout,
     sensors, handleDragEnd,
     currentPage, goToPage, scrollToSection, handleCanvasScroll,
   };

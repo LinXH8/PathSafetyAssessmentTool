@@ -162,6 +162,45 @@ def _pretty_folder_label(folder_name: str) -> str:
     return f"{base} ({suffix})" if base and suffix else folder_name
 
 
+# Parse the quarter token itself out of a matched suffix so quarters can be
+# compared chronologically. Accepts both "1Q2026" and "Q12026" orderings.
+_QUARTER_TOKEN_RE = re.compile(r"([1-4])Q(\d{4})|Q([1-4])(\d{4})", re.IGNORECASE)
+
+
+def _folder_quarter_key(folder_name: str) -> tuple[int, int] | None:
+    """Return a sortable ``(year, quarter)`` tuple for a download folder's survey
+    quarter suffix, or ``None`` when the folder carries no parseable quarter."""
+    match = _QUARTER_SUFFIX_RE.search(folder_name)
+    if not match:
+        return None
+    token = _QUARTER_TOKEN_RE.search(match.group(0))
+    if not token:
+        return None
+    if token.group(1):        # "[1-4]Q\d{4}"
+        quarter, year = int(token.group(1)), int(token.group(2))
+    else:                     # "Q[1-4]\d{4}"
+        quarter, year = int(token.group(3)), int(token.group(4))
+    return (year, quarter)
+
+
+def _select_latest_quarter_folders(folders: list[str]) -> list[str]:
+    """Collapse a road's download folders to only the latest survey quarter.
+
+    A road surveyed across several quarters has one folder per quarter
+    (``TPY Lor 4_1Q2026``, ``TPY Lor 4_2Q2026``, …). The map's "Roads Found"
+    table should surface only the most recent survey, so older-quarter and
+    unquartered folders are dropped whenever a quartered folder exists. Folders
+    sharing the latest quarter (e.g. multi-segment ``__1``/``__2`` splits) are all
+    kept. When no folder carries a quarter at all, every folder is returned
+    unchanged so the road is never hidden entirely."""
+    keyed = [(folder, _folder_quarter_key(folder)) for folder in folders]
+    quartered = [(folder, key) for folder, key in keyed if key is not None]
+    if not quartered:
+        return list(folders)
+    latest = max(key for _, key in quartered)
+    return [folder for folder, key in quartered if key == latest]
+
+
 def _get_known_road_names() -> list[str]:
     global _KNOWN_ROAD_NAMES
     if _KNOWN_ROAD_NAMES is not None:

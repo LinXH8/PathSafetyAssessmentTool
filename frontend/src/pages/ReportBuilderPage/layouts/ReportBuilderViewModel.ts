@@ -48,11 +48,10 @@ export interface ReportBuilderViewModel {
   handlePostTreatmentFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
   // ── Toolbar actions ────────────────────────────────────────────────────────
+  // The layout auto-saves continuously (see useReportLayout), so there is no
+  // manual Save / Restore — only Auto-fit and Reset.
   autoFitElements: () => void;
-  saveLayout: () => void;
   resetLayout: () => void;
-  restoreLayout: () => void;
-  hasSaved: boolean;
 
   // ── Page navigation ────────────────────────────────────────────────────────
   goToPage: (page: number) => void;
@@ -63,12 +62,6 @@ export interface ReportBuilderViewModel {
   handleDownloadPDF: () => Promise<void> | void;
   handleDownloadWord: () => Promise<void> | void;
   exporting: "pdf" | "word" | null;
-
-  // ── Toasts / banners ───────────────────────────────────────────────────────
-  saveToastVisible: boolean;
-  setSaveToastVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  restoreBannerVisible: boolean;
-  setRestoreBannerVisible: React.Dispatch<React.SetStateAction<boolean>>;
 
   // ── Filtered-sections master toggle ───────────────────────────────────────
   hasFilter: boolean;

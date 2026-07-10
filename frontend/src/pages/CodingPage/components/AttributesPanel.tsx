@@ -14,7 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FaSyncAlt } from "react-icons/fa";
-import { LuPencil, LuInfo } from "react-icons/lu";
+import { LuPencil, LuInfo, LuChevronDown } from "react-icons/lu";
 import { Tooltip } from "../../../components/ui/tooltip";
 import { useState } from "react";
 import { toaster } from "../../../components/ui/toaster";
@@ -540,7 +540,7 @@ export default function AttributesPanel({
                 // An autocoded field appends its source tag — (CV)/(GIS) — in regular
                 // weight, coloured to match the highlight border (e.g. the deeper yellow).
                 const titleNode = (
-                  <Box as="span" style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: isEdited ? "#C53030" : COLOR.text, cursor: ATTRIBUTE_TOOLTIPS[k] ? "help" : "default" }}>
+                  <Box as="span" style={{ display: "inline-block", maxWidth: "100%", verticalAlign: "bottom", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: FONT, fontWeight: 700, fontSize: 16, color: isEdited ? "#C53030" : COLOR.text, cursor: ATTRIBUTE_TOOLTIPS[k] ? "help" : "default" }}>
                     {k}
                     {isChanged && source && (
                       <span style={{ fontWeight: 400, color: hl?.border ?? COLOR.gray500 }}> ({source})</span>
@@ -602,9 +602,7 @@ export default function AttributesPanel({
                                 .filter(Boolean)
                             : Object.entries(dict || {}).map(([code, label]) => <option key={code} value={code}>{label}</option>)}
                         </select>
-                        <svg width="9" height="6" viewBox="0 0 10 6" fill="none" style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-                          <path d="M1 1l4 4 4-4" stroke="#718096" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <LuChevronDown size={13} color="#718096" strokeWidth={2} style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                       </div>
                     ) : (
                       <input

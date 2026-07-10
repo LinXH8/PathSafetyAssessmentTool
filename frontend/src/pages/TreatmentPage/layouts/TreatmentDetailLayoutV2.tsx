@@ -9,6 +9,7 @@
  */
 import { type CSSProperties, type ReactNode, useState } from "react";
 import { Box, Flex, Spinner, Text, Dialog, Portal, Button, CloseButton } from "@chakra-ui/react";
+import { LuCheck } from "react-icons/lu";
 import type { Feature, LineString } from "geojson";
 
 import ImagePanel from "../../CodingPage/components/ImagePanel";
@@ -17,6 +18,7 @@ import AttributesPanel from "../../CodingPage/components/AttributesPanel";
 import PostTreatmentImageUpload from "../components/PostTreatmentImageUpload";
 import ResetConfirmationDialog from "../../sidebar/components/ResetConfirmationDialog";
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
+import { Tooltip } from "../../../components/ui/tooltip";
 import { FONT, COLOR, RADIUS } from "../../../features/ui/designTokens";
 import { V2Segmented, V2Switch, v2TabStyle, v2TabRowStyle, DistTooltipBox } from "../../PathAnalysisPage/components/paV2Primitives";
 
@@ -158,6 +160,45 @@ const RSB_LEGEND: Array<{ c: string; label: string }> = [
   { c: RISK_BAND_COLORS.HIGH, label: "High" },
   { c: RISK_BAND_COLORS.EXTREME, label: "Extreme" },
 ];
+
+// Risk-band tooltips — thresholds match the v2.14 model (backend
+// cyclerap_scoring.py `BAND_THRESHOLDS` / data/cyclerap_v214_model.json "bands"):
+// BB/BP/SB [5,10,20], VB [10,25,60]; Overall band = worst case across crash types.
+const BB_BP_SB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 5</Text>
+    <Text>• Medium: &gt; 5 – 10</Text>
+    <Text>• High: &gt; 10 – 20</Text>
+    <Text>• Extreme: &gt; 20</Text>
+  </Box>
+);
+const VB_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Banding</Text>
+    <Text>• Low: &le; 10</Text>
+    <Text>• Medium: &gt; 10 – 25</Text>
+    <Text>• High: &gt; 25 – 60</Text>
+    <Text>• Extreme: &gt; 60</Text>
+  </Box>
+);
+const RISK_SCORE_TOOLTIP = (
+  <Box fontSize="xs" lineHeight="1.6">
+    <Text fontWeight="bold" mb="1">Risk Score</Text>
+    <Text mb="1">Sum of all crash type scores. Banding colour takes the worst case across crash types.</Text>
+    <Text fontWeight="semibold" mt="1">BB / BP / SB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;5 · Medium: &gt;5–10 · High: &gt;10–20 · Extreme: &gt; 20</Text>
+    <Text fontWeight="semibold" mt="1">VB:</Text>
+    <Text whiteSpace="nowrap">• Low: &le;10 · Medium: &gt;10–25 · High: &gt;25–60 · Extreme: &gt; 60</Text>
+  </Box>
+);
+const CRASH_TYPE_TOOLTIPS: Record<string, ReactNode> = {
+  BB: BB_BP_SB_TOOLTIP,
+  BP: BB_BP_SB_TOOLTIP,
+  SB: BB_BP_SB_TOOLTIP,
+  VB: VB_TOOLTIP,
+  Overall: RISK_SCORE_TOOLTIP,
+};
 
 // Bottom Before/After Overall Risk Level cards: per-crash-type stacked bars.
 const DIST_ROWS: Array<{ key: "Overall" | "VB" | "BB" | "SB" | "BP"; label: string }> = [
@@ -360,6 +401,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
         {/* top row: segment selector + page actions (right) */}
         <Flex align="center" justify="flex-end" gap="1rem" wrap="wrap">
           <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            {vm.cameFromPathAnalysis && (
+              <button
+                onClick={vm.onBackToAnalysis}
+                style={{ background: "transparent", border: "none", padding: 0, marginRight: "0.75rem", fontFamily: FONT, fontWeight: 700, fontSize: "0.875rem", color: COLOR.blue, cursor: "pointer", whiteSpace: "nowrap" }}
+              >
+                ← Back to Path Analysis
+              </button>
+            )}
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Stepper
                 value={pageInput}
@@ -513,14 +562,14 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                       >
                         <div style={{ width: "1.125rem", height: "1.125rem", borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: cbBg, border: `1px solid ${cbBorder}` }}>
                           {(showAppliedStyle || isSel) && (
-                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            <LuCheck size={10} color="#fff" strokeWidth={3} />
                           )}
                         </div>
                         <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.125rem" }}>
                           <span style={{ fontSize: "1rem", fontWeight: 700, color: COLOR.text }}>{t.name}</span>
                           {metric && <span style={CAPTION}>{metric}</span>}
                         </div>
-                        {showAppliedStyle && <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#38A169" }}>✓</span>}
+                        {showAppliedStyle && <LuCheck size={14} color="#38A169" strokeWidth={3} style={{ flexShrink: 0 }} />}
                       </div>
                     );
                   })}
@@ -595,12 +644,20 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   const color = bandColor(c.value, c.key);
                   const isScore = c.key === "Overall";
                   return (
-                    <div
+                    <Tooltip
                       key={c.key}
-                      style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" }}
+                      content={CRASH_TYPE_TOOLTIPS[c.key]}
+                      showArrow
+                      portalled
+                      openDelay={0}
+                      closeOnClick={false}
+                      contentProps={isScore ? { maxW: "420px" } : undefined}
+                    >
+                    <div
+                      style={{ flex: 1, minHeight: "3.625rem", background: color, borderRadius: RADIUS, padding: "0.5rem 0.625rem", gap: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box", cursor: "default" }}
                     >
                       {!isScore && c.icon && (
-                        <img src={c.icon} alt={c.label} style={{ height: "1.75rem", objectFit: "contain", flexShrink: 0 }} />
+                        <img src={c.icon} alt={c.label} style={{ height: "2.5rem", objectFit: "contain", flexShrink: 0 }} />
                       )}
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div style={{ fontSize: "1rem", fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{isScore ? "Risk Score" : c.label}</div>
@@ -612,6 +669,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                         </div>
                       </div>
                     </div>
+                    </Tooltip>
                   );
                 })}
               </div>

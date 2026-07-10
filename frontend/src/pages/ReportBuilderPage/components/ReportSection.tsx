@@ -15,6 +15,7 @@ import { GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import SectionErrorBoundary from "../SectionErrorBoundary";
+import { V2Checkbox } from "../../../components/common/V2Checkbox";
 import { CANVAS_W } from "../reportBuilderConstants";
 
 /**
@@ -61,9 +62,11 @@ export function ReportSection({
  * the same `elements` array order, so reordering here reorders the report.
  */
 export function SortableSectionRow({
-  id, label, visible, onToggle, onSelect, children
+  id, label, visible, onToggle, onSelect, children, variant = "v1",
 }: {
   id: string; label: string; visible: boolean; onToggle: () => void; onSelect?: () => void; children?: React.ReactNode;
+  /** "v2" renders the shared blue `V2Checkbox`; "v1" keeps the native purple box. */
+  variant?: "v1" | "v2";
 }) {
   const {
     attributes, listeners, setNodeRef, setActivatorNodeRef,
@@ -74,6 +77,18 @@ export function SortableSectionRow({
     transition,
     zIndex: isDragging ? 2 : 1,
   };
+  const checkbox = variant === "v2"
+    ? <V2Checkbox checked={visible} onToggle={onToggle} />
+    : (
+      <input
+        type="checkbox"
+        checked={visible}
+        onChange={onToggle}
+        onPointerDown={(e) => e.stopPropagation()}
+        style={{ accentColor: "#a020d0", cursor: "pointer", flexShrink: 0 }}
+        title={visible ? "Hide section" : "Show section"}
+      />
+    );
 
   if (children) {
     return (
@@ -90,14 +105,7 @@ export function SortableSectionRow({
           >
             <GripVertical size={16} />
           </span>
-          <input
-            type="checkbox"
-            checked={visible}
-            onChange={onToggle}
-            onPointerDown={(e) => e.stopPropagation()}
-            style={{ accentColor: "#a020d0", cursor: "pointer", flexShrink: 0 }}
-            title={visible ? "Hide section" : "Show section"}
-          />
+          {checkbox}
           <span
             className="rb-reorder-label"
             style={{ opacity: visible ? 1 : 0.45, cursor: onSelect && visible ? "pointer" : "default" }}
@@ -125,14 +133,7 @@ export function SortableSectionRow({
       >
         <GripVertical size={16} />
       </span>
-      <input
-        type="checkbox"
-        checked={visible}
-        onChange={onToggle}
-        onPointerDown={(e) => e.stopPropagation()}
-        style={{ accentColor: "#a020d0", cursor: "pointer", flexShrink: 0 }}
-        title={visible ? "Hide section" : "Show section"}
-      />
+      {checkbox}
       <span
         className="rb-reorder-label"
         style={{ opacity: visible ? 1 : 0.45, cursor: onSelect && visible ? "pointer" : "default" }}

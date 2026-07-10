@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Spinner } from "@chakra-ui/react";
+import { LuCheck, LuChevronsUpDown, LuChevronUp, LuChevronDown } from "react-icons/lu";
 import ImageUploadModal from "../../sidebar/components/ImageUploadModal";
 import SelectRoadsMap from "../SelectRoadsMap";
 import { getTagColor } from "../../Projects/tagColor";
@@ -49,21 +50,9 @@ function checkboxBox(checked: boolean): React.CSSProperties {
     ? { width: "1rem", height: "1rem", background: COLOR.blue, border: `1px solid ${COLOR.blue}`, borderRadius: "0.125rem", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
     : { width: "1rem", height: "1rem", border: `1px solid ${COLOR.borderInput}`, borderRadius: "0.125rem", flexShrink: 0, background: COLOR.white, cursor: "pointer", display: "flex" };
 }
-const checkSvg = (
-  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-    <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const checkSvg = <LuCheck size={10} color="#fff" strokeWidth={3} />;
 
-// Header cell with sort glyph placeholder (§7 / §1a — icon pending).
-function headerCell(label: string, width: number) {
-  return (
-    <div style={{ width, flexShrink: 0, display: "flex", gap: "0.3125rem", alignItems: "center", justifyContent: "center" }}>
-      <span style={labelStyle}>{label}</span>
-      <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
-    </div>
-  );
-}
+type SortKey = "name" | "segments" | "quarter" | "distance" | "projects";
 
 // Segmented control segment (§5): selected = white/#1A202C/700, unselected = #EDF2F7/#718096/400.
 function segStyle(selected: boolean): React.CSSProperties {
@@ -134,6 +123,58 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
   };
 
   const visibleFolders = folders.filter((f) => f.toLowerCase().includes(folderSearch.trim().toLowerCase()));
+
+  // Column sorting. Click a header to sort asc; click again to flip desc.
+  // Rows whose summary hasn't resolved yet (pending spinner) sort to the bottom.
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const onSort = (key: SortKey) => {
+    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortKey(key); setSortDir("asc"); }
+  };
+  const sortValue = (f: string, key: SortKey): string | number | undefined => {
+    const s = folderSummaries[f];
+    switch (key) {
+      case "name": return f.toLowerCase();
+      case "segments": return s?.segment_count;
+      case "quarter": return s?.survey_quarter ?? (s?.survey_quarters?.length ? s.survey_quarters.join(", ") : undefined);
+      case "distance": return s?.total_distance_km;
+      case "projects": return folderProjectCounts[f] ?? 0;
+    }
+  };
+  const sortedFolders = (() => {
+    if (!sortKey) return visibleFolders;
+    const dir = sortDir === "asc" ? 1 : -1;
+    return [...visibleFolders].sort((a, b) => {
+      const va = sortValue(a, sortKey);
+      const vb = sortValue(b, sortKey);
+      const aNil = va === undefined || va === null || va === "";
+      const bNil = vb === undefined || vb === null || vb === "";
+      if (aNil && bNil) return 0;
+      if (aNil) return 1;   // unresolved rows always last
+      if (bNil) return -1;
+      if (typeof va === "number" && typeof vb === "number") return (va - vb) * dir;
+      return String(va).localeCompare(String(vb)) * dir;
+    });
+  })();
+
+  // Header cell (guide §7 / §1a): label + a clickable sort glyph that reflects state.
+  const sortGlyph = (key: SortKey) =>
+    sortKey !== key
+      ? <LuChevronsUpDown size={13} color={COLOR.gray400} style={{ flexShrink: 0 }} />
+      : sortDir === "asc"
+        ? <LuChevronUp size={13} color={COLOR.blue} style={{ flexShrink: 0 }} />
+        : <LuChevronDown size={13} color={COLOR.blue} style={{ flexShrink: 0 }} />;
+  const headerCell = (label: string, width: number, key: SortKey) => (
+    <div
+      onClick={() => onSort(key)}
+      style={{ width, flexShrink: 0, display: "flex", gap: "0.3125rem", alignItems: "center", justifyContent: "center", cursor: "pointer", userSelect: "none" }}
+    >
+      <span style={labelStyle}>{label}</span>
+      {sortGlyph(key)}
+    </div>
+  );
+
   const toggleFolderRow = (f: string) =>
     setSelectedFolders(selectedFolders.includes(f) ? selectedFolders.filter((x) => x !== f) : [...selectedFolders, f]);
   const allVisibleSelected = visibleFolders.length > 0 && visibleFolders.every((f) => selectedFolders.includes(f));
@@ -252,13 +293,15 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
               <div style={{ display: "flex", alignItems: "center", padding: "0 0.75rem", flexShrink: 0 }}>
                 <div style={{ flex: 1, display: "flex", gap: "0.5rem", alignItems: "center" }}>
                   <div onClick={toggleSelectAllVisible} style={checkboxBox(allVisibleSelected)}>{allVisibleSelected && checkSvg}</div>
-                  <span style={labelStyle}>Folder Name</span>
-                  <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>
+                  <div onClick={() => onSort("name")} style={{ display: "flex", gap: "0.3125rem", alignItems: "center", cursor: "pointer", userSelect: "none" }}>
+                    <span style={labelStyle}>Folder Name</span>
+                    {sortGlyph("name")}
+                  </div>
                 </div>
-                {headerCell("Segments", W_SEG)}
-                {headerCell("Quarter", W_QTR)}
-                {headerCell("Distance (km)", W_DIST)}
-                {headerCell("Projects", W_PROJ)}
+                {headerCell("Segments", W_SEG, "segments")}
+                {headerCell("Quarter", W_QTR, "quarter")}
+                {headerCell("Distance (km)", W_DIST, "distance")}
+                {headerCell("Projects", W_PROJ, "projects")}
               </div>
               {/* Body */}
               <div style={{ border: `1px solid ${COLOR.border}`, borderRadius: "0.375rem", overflowY: "auto", flex: 1, minHeight: 0 }}>
@@ -267,7 +310,7 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                     {folders.length === 0 ? "No source folders found." : `No folders match "${folderSearch.trim()}".`}
                   </div>
                 ) : (
-                  visibleFolders.map((f) => {
+                  sortedFolders.map((f) => {
                     const isSelected = selectedFolders.includes(f);
                     return (
                       <div
@@ -333,6 +376,10 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                 Project will be created from nodes inside the boundary across {selectedRoadFolders.length} selected road{selectedRoadFolders.length === 1 ? "" : "s"}.
               </span>
             )}
+            {/* Create failures must surface here too — the folder-mode error line
+                above is not rendered in map mode, so a failed create otherwise
+                looked like the button did nothing. */}
+            {err && <span style={{ ...captionStyle, color: COLOR.danger }}>{err}</span>}
           </div>
         )}
 
