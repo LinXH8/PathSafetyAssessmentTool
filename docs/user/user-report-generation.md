@@ -24,7 +24,7 @@ Access it from the **sidebar** on the Path Analysis or Treatment page.
   - [5.4.8 Benchmarking Stats](#548-benchmarking-stats)
   - [5.4.9 Treatments](#549-treatments)
 - [5.5 Saving, Exporting and Reusing Your Report](#55-saving-exporting-and-reusing-your-report)
-- [5.6 Saved Reports](#56-saved-reports)
+- [5.6 Generated Reports](#56-generated-reports)
 - [5.7 Quick-start Steps](#57-quick-start-steps)
 
 ---
@@ -121,9 +121,18 @@ A **legend** is displayed alongside the map, showing the colour coding for each 
 
 ### 5.4.4 Risk Bands
 
-Shows the distribution of segments across risk bands for all four crash types: **BB, BP, SB, VB**, and **Overall Risk**.
+**What it shows:** The distribution of segments across risk bands (Low / Medium / High / Extreme) for all **five risk types**: Overall Risk, Vehicle–Bicycle (VB), Bicycle–Bicycle (BB), Single-Bicycle (SB), and Bicycle–Pedestrian (BP).
 
-Each crash type is rendered as a horizontal bar chart — one bar per band, with segment count and percentage. The section loads automatically once projects are loaded and reflects any active filters.
+**How it looks:** Five donut charts (Overall, VB, BB, SB, BP), one per risk type, each showing how many segments fall into each band out of the total segment count, with segment count and percentage. The colour coding is:
+
+- 🟢 Low — green
+- 🟡 Medium — yellow
+- 🟠 High — orange
+- 🟣 Extreme — purple
+
+This section renders automatically once your projects are loaded — no manual steps required.
+
+> **Tip:** The Risk Bands section reflects your **active filters**. If you have filtered the Path Analysis page to only show certain segments (e.g. by road type or rating), only those segments appear in the bands.
 
 ### 5.4.5 Risk Factors
 
@@ -189,25 +198,30 @@ Treatments must be applied first in the **Treatment Page** before they appear he
 | Action | How |
 |---|---|
 | **Save layout** | Click **Save layout** in the toolbar to persist section order, visibility, and field values to the browser |
-| **Hard Save** | Use **Save Report** to permanently save the report to the system — it will persist across sessions and can be revisited at any time |
 | **Reset layout** | Click **Reset layout** to restore the default section order and visibility |
 | **Export as PDF** | Click **↓ PDF** — renders the current preview sliced into pages |
 | **Export as Word** | Click **↓ Word** — generates a `.docx` file suitable for editing in Microsoft Word |
 
-> **Hard Save vs. Layout Save:** *Save layout* stores your preferences locally in the browser only (cleared if you clear browser data). *Hard Save* writes the report to the server so you can return to it from any device or session.
+> **PDF exports are auto-archived.** Every time you click **↓ PDF**, PSAT downloads the file to your browser **and** silently saves a timestamped copy to the server's **Generated Reports** page (see [Section 5.6](#56-generated-reports)), so you can come back and re-download or preview it later without regenerating it. This auto-save only happens for **↓ PDF** — **↓ Word** downloads are not archived.
 
 ---
 
-## 5.6 Saved Reports
+## 5.6 Generated Reports
 
-A **Saved Reports** list shows all reports that have been hard-saved for your projects. From this list you can:
+Every PDF you export from the Report Builder is saved here automatically, so you don't need to keep track of downloaded files yourself. Access it from the **Generated Reports** button in the sidebar (below **GIS Layers** / **User Guide**).
 
-- **Browse** previously saved reports, shown with their report name, associated project(s), and the date last saved
-- **Open** any saved report to reload it in the Report Builder — your section layout, field values, and visibility settings are restored exactly as saved
-- **Re-export** a revisited report to PDF or Word without rebuilding it from scratch
-- **Delete** a saved report you no longer need
+**Saved Reports list (left panel):**
 
-> Saved reports capture a snapshot of the data at the time of saving. If you update project data or re-code segments after saving, re-open the report and save again to refresh it.
+- Each entry shows the saved **filename** (auto-named `PSAT_Report_<timestamp>.pdf`), a **PDF** badge, the **file size**, and the **date/time it was saved** — newest first
+- Use the **Filter reports…** box to narrow the list by filename
+- Click a report to select it and load a **preview** in the right panel (an embedded PDF viewer)
+- Click the **↓** icon on a report row, or **Download** in the preview header, to download that file
+- Click the **✕** icon on a report row, or **Delete** in the preview header, to remove a report — you'll be asked to confirm (**Yes** / **No**) before it's deleted
+- Click **Refresh** (top-right of the page) to reload the list, e.g. after exporting a new report from another tab
+
+If no reports have been saved yet, the list shows: *"No reports found. Download a PDF from the Report Builder to save one here."*
+
+> **Note:** Only **↓ PDF** exports are archived here — **↓ Word** (.docx) exports download directly to your browser and are not saved to this page. Deleting a report here only removes the saved copy on the server; it does not affect any copy you've already downloaded to your computer.
 
 ---
 
@@ -220,4 +234,4 @@ A **Saved Reports** list shows all reports that have been hard-saved for your pr
 5. Set **Top Risk Stretches** to your preferred Top N (3, 5, or 10).
 6. (Optional) Check **Include filtered sections** if you want a filtered-subset report.
 7. (Optional) Paste AI-generated after images into top-risk segment image areas.
-8. Click **Save Report** (hard save) to persist the report for future revisiting, or go straight to **↓ PDF** / **↓ Word** to export.
+8. Click **↓ PDF** to export and automatically archive a copy to **Generated Reports**, or **↓ Word** for a directly-downloaded, editable .docx (not archived).

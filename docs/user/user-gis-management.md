@@ -24,7 +24,8 @@ Click the **View GIS Layers** button in the sidebar to open the GIS Layers dashb
 
 - Browse all current GIS layers (sorted in alphabetical order)
 - View last updated date, required columns, and metadata for each layer
-- **Required Columns**: Inspect the mandatory column names needed for PSAT to process the layer. The number in parentheses, e.g., `LU_DESC (1)`, indicates the expected column index in the source data
+- **Required Columns**: Inspect the mandatory column names needed for PSAT to process the layer. The number in parentheses, e.g., `LU_DESC (1)`, indicates the expected column index in the source data. Layers uploaded with this field left blank show `Required Columns: None`
+- **Affects**: See which PSAT attribute(s) the layer feeds into, and under which category (**For Auto Coding**, **For Area Based Reports**, or **For Analysis**) — shown as `Category: Attribute`, e.g. `For Auto Coding: Facility Width`
 - Preview any layer on an interactive map by clicking it
 - **Filter** the list instantly by typing a keyword into the filter box (see [Section 6.6](#66-filtering-shapefiles))
 - **Rename** any layer to a custom display name or **revert** it back to its original name (see [Sections 6.7](#67-renaming-a-shapefile) and [6.8](#68-reverting-a-shapefile-to-its-original-name))
@@ -75,6 +76,20 @@ Use the **Add GIS Layer** workflow to upload entirely new datasets.
 - **Affects** *(mandatory)*: First choose which category this layer belongs to — **For Auto Coding**, **For Area Based Reports**, or **For Analysis** — then tick the specific attribute(s) within that category that this layer affects (e.g. Facility Width, Curvature). To add an attribute that isn't listed, type it into **Add a custom parameter to "…"** and click **Add**. Each tick is recorded together with its category, e.g. `For Auto Coding: Facility Width`, and appears as a removable tag below the checklist. You can switch categories and tick attributes from more than one — at least one attribute must be selected in total before uploading.
 
 > The **Upload** button stays disabled until you have selected a file and ticked at least one **Affects** attribute.
+
+### What You'll See After Uploading
+
+The layer's card on the GIS Layers page displays exactly what you entered on the upload form:
+
+- If **Required Columns** was left blank, the card shows `Required Columns: None`.
+- **Affects** shows every `Category: Attribute` pair you ticked, e.g. `For Auto Coding: Facility Width`. If you ticked attributes from more than one category, all of them are listed.
+
+**Example:** You leave Required Columns empty, select the **For Auto Coding** category, and tick **Facility Width**. After uploading, the layer's card reads:
+
+```
+Required Columns: None
+Affects: For Auto Coding: Facility Width
+```
 
 ### Before You Upload — Confirmation Prompt
 
