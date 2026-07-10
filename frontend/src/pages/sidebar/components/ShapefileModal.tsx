@@ -628,64 +628,6 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
               {/* Add Shapefile Screen */}
               {step === "add" && (
                 <Box>
-                  {/* New Category Name Input (Now always visible) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>New Category Name</Text>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <LuFolderInput />
-                      <Input
-                        placeholder="e.g., area_type, bus_stop"
-                        value={newCategoryName}
-                        onChange={(e) => setNewCategoryName(e.target.value)}
-                      />
-                    </Box>
-                  </Box>
-
-                  {/* Required Columns (mandatory for new layers) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
-                      Required Columns <Text as="span" color="red.500">*</Text>
-                    </Text>
-                    <Input
-                      placeholder="e.g. WIDTH, SURFACE_TYPE"
-                      value={addRequiredColumns}
-                      onChange={(e) => setAddRequiredColumns(e.target.value)}
-                    />
-                  </Box>
-
-                  {/* Affects (mandatory for new layers) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
-                      Affects <Text as="span" color="red.500">*</Text>
-                    </Text>
-                    <Box maxH="180px" overflowY="auto" borderWidth="1px" borderRadius="md" p={2} mb={2}>
-                      {addParameterOptions.map((opt) => (
-                        <Box key={opt} py="4px">
-                          <Checkbox.Root
-                            checked={addAffectsSelected.has(opt)}
-                            onCheckedChange={() => toggleAddAffect(opt)}
-                          >
-                            <Checkbox.HiddenInput />
-                            <Checkbox.Control />
-                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
-                          </Checkbox.Root>
-                        </Box>
-                      ))}
-                    </Box>
-                    <Box display="flex" gap={2}>
-                      <Input
-                        placeholder="Add a custom parameter..."
-                        size="sm"
-                        value={addCustomAffect}
-                        onChange={(e) => setAddCustomAffect(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAffectParam(); } }}
-                      />
-                      <Button size="sm" onClick={addCustomAffectParam} disabled={!addCustomAffect.trim()}>
-                        Add
-                      </Button>
-                    </Box>
-                  </Box>
-
                   {/* Dropzone */}
                   <div
                     className={`dropzone ${dragActive ? "drag-active" : ""}`}
