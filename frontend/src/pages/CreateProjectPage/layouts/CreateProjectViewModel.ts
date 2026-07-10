@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from "react";
-import type { SourceFolderPreview, SourceFolderSummary, ProjectSelectionGeometry } from "../../../api";
+import type { SourceFolderPreview, SourceFolderSummary, ProjectSelectionGeometry, ImportProjectsResult } from "../../../api";
 import type { SelectedRoad } from "../SelectRoadsMap";
 
 /**
@@ -61,9 +61,16 @@ export interface CreateProjectViewModel {
   onCreate: () => void;
   onCancel: () => void;
 
-  // ── image-upload modal ──
+  // ── image-upload modal (Import Source) ──
   imageUploadModalOpen: boolean;
   openImageUploadModal: () => void;
   closeImageUploadModal: () => void;
   onImageUploadSuccess: (details: { folderName: string }) => void;
+
+  // ── import-project modal (upload a .psat.zip bundle) ──
+  importProjectModalOpen: boolean;
+  openImportProjectModal: () => void;
+  closeImportProjectModal: () => void;
+  onProjectsImported: (result: ImportProjectsResult) => void;
+  onViewImportedProjects: () => void;
 }

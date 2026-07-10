@@ -97,6 +97,238 @@ def _shorten_field_names(columns: list[str]) -> dict[str, str]:
     return mapping
 
 
+def _bundle_project_names(zf: "zipfile.ZipFile") -> tuple[list[str], dict]:
+    """Resolve the project folder names inside an uploaded bundle.
+
+    Prefers the ``psat_export.json`` manifest's ``projects`` list; falls back to
+    every top-level directory that contains a ``project_metadata.json``. Returns
+    ``(names, manifest)`` — ``manifest`` is ``{}`` when absent."""
+    manifest: dict = {}
+    try:
+        with zf.open("psat_export.json") as mf:
+            loaded = json.load(mf)
+            if isinstance(loaded, dict):
+                manifest = loaded
+    except KeyError:
+        pass
+    except Exception as exc:
+        logger.warning(f"[import] could not read manifest: {exc}")
+
+    # Top-level dirs that actually hold a project (metadata file present).
+    valid_dirs: set[str] = set()
+    for entry in zf.namelist():
+        parts = Path(entry).parts
+        if len(parts) == 2 and parts[1] == "project_metadata.json":
+            valid_dirs.add(parts[0])
+
+    manifest_names = manifest.get("projects") if isinstance(manifest.get("projects"), list) else None
+    if manifest_names:
+        names = [str(n) for n in manifest_names if str(n) in valid_dirs]
+    else:
+        names = sorted(valid_dirs)
+    return names, manifest
+
+
+@bp.post("/import")
+def import_projects():
+    """Import projects from an uploaded ``.psat.zip`` bundle (see ``/export``).
+
+    Multipart form upload with the bundle under the ``file`` field. Each project
+    folder inside the bundle is extracted into the active profile's project area.
+    Projects whose name already exists are skipped (never overwritten). Returns
+    ``{ imported, skipped, errors }`` plus the resolved project list.
+    """
+    upload = request.files.get("file") or request.files.get("bundle")
+    if upload is None or not upload.filename:
+        return fail("No bundle file uploaded", 400)
+
+    raw = upload.read()
+    if not raw:
+        return fail("Uploaded bundle is empty", 400)
+
+    buf = io.BytesIO(raw)
+    if not zipfile.is_zipfile(buf):
+        return fail("Uploaded file is not a valid .zip bundle", 400)
+    buf.seek(0)
+
+    ctx = get_ctx()
+    pm = ctx["pm"]
+    dest_root = Path(pm.des_path).resolve()
+    dest_root.mkdir(parents=True, exist_ok=True)
+
+    imported: list[str] = []
+    skipped: list[dict[str, str]] = []
+    errors: list[dict[str, str]] = []
+
+    with zipfile.ZipFile(buf) as zf:
+        names, _manifest = _bundle_project_names(zf)
+        if not names:
+            return fail(
+                "This ZIP is not a PSAT project bundle (no project folders found).",
+                400,
+            )
+
+        for name in names:
+            destination = dest_root / name
+            if destination.exists():
+                skipped.append({"name": name, "reason": "already_exists"})
+                continue
+
+            # Extract every file under "<name>/" with zip-slip protection. Write
+            # to a temp dir first, then move into place so a mid-extract failure
+            # never leaves a half-written project behind.
+            staged = dest_root / f".importing_{name}"
+            try:
+                if staged.exists():
+                    shutil.rmtree(staged, ignore_errors=True)
+                prefix = f"{name}/"
+                for entry in zf.namelist():
+                    if entry.endswith("/") or not entry.startswith(prefix):
+                        continue
+                    rel = entry[len(prefix):]
+                    target = (staged / rel).resolve()
+                    if not str(target).startswith(str(staged.resolve()) + os.sep):
+                        raise ValueError(f"unsafe path in bundle: {entry}")
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    with zf.open(entry) as src, open(target, "wb") as out:
+                        shutil.copyfileobj(src, out)
+
+                shutil.move(str(staged), str(destination))
+                imported.append(name)
+            except Exception as exc:
+                logger.warning(f"[import] failed to import '{name}': {exc}")
+                shutil.rmtree(staged, ignore_errors=True)
+                shutil.rmtree(destination, ignore_errors=True)
+                errors.append({"name": name, "reason": str(exc)})
+
+    # Refresh the project manager so the newly-imported projects are discoverable.
+    if imported:
+        try:
+            pm._discover_projects()
+        except Exception as exc:
+            logger.warning(f"[import] project rediscovery failed: {exc}")
+
+    status = 200 if imported or skipped else 400
+    if status == 400 and not errors:
+        return fail("No projects were imported from the bundle.", 400)
+
+    return jsonify({
+        "imported": imported,
+        "skipped": skipped,
+        "errors": errors,
+    }), status
+
+
+@bp.post("/export")
+def export_projects():
+    """Export one or more whole projects as a single downloadable ZIP bundle.
+
+    Request body::
+
+        {
+            "project_names": ["ProjectA", "ProjectB"],
+            "include_tags": true,            # keep project tags in the bundle
+            "include_source_folder": true    # bundle the raw survey images (in/)
+        }
+
+    Each project directory is copied verbatim into ``<ProjectName>/`` inside the
+    ZIP, so the bundle is a faithful, re-importable snapshot (Create Project →
+    Import, subgoal 2). When ``include_tags`` is false the copied
+    ``project_metadata.json`` has its ``tags`` cleared; when
+    ``include_source_folder`` is false the ``in/`` image folder is omitted (a much
+    lighter bundle). A root ``psat_export.json`` manifest identifies the bundle
+    and records the options used, so the importer can validate it.
+    """
+    data = request.get_json(silent=True) or {}
+    raw_names = data.get("project_names")
+    if raw_names is None:
+        raw_names = data.get("projects")  # tolerate the shapefile-style key
+    include_tags = bool(data.get("include_tags", True))
+    include_source_folder = bool(data.get("include_source_folder", True))
+
+    if not isinstance(raw_names, list) or not raw_names:
+        return fail("project_names must be a non-empty array", 400)
+
+    ctx = get_ctx()
+    pm = ctx["pm"]
+
+    exported: list[str] = []
+    missing: list[str] = []
+    memory_file = io.BytesIO()
+
+    with zipfile.ZipFile(memory_file, "w", zipfile.ZIP_DEFLATED) as zf:
+        for raw_name in raw_names:
+            name = str(raw_name or "").strip()
+            if not name:
+                continue
+            try:
+                proj = pm.project(name)
+                project_dir = Path(proj.project_path)
+            except Exception as exc:
+                logger.warning(f"[export] skipping '{name}': {exc}")
+                missing.append(name)
+                continue
+            if not project_dir.is_dir():
+                missing.append(name)
+                continue
+
+            for path in project_dir.rglob("*"):
+                if not path.is_file():
+                    continue
+                rel = path.relative_to(project_dir)
+                parts = rel.parts
+
+                # Skip the raw survey images unless explicitly requested.
+                if not include_source_folder and parts and parts[0] == "in":
+                    continue
+
+                arcname = str(Path(name) / rel)
+
+                # Strip tags from the top-level metadata when not including them,
+                # rewriting the JSON in place rather than copying the file.
+                if not include_tags and rel.name == "project_metadata.json" and len(parts) == 1:
+                    try:
+                        meta = json.loads(path.read_text(encoding="utf-8"))
+                        meta["tags"] = []
+                        zf.writestr(arcname, json.dumps(meta, indent=4))
+                        continue
+                    except Exception as exc:
+                        logger.warning(f"[export] could not rewrite metadata for '{name}': {exc}")
+
+                zf.write(path, arcname)
+
+            exported.append(name)
+
+        if exported:
+            manifest = {
+                "format": "psat-project-export",
+                "version": 1,
+                "exported_at": datetime.datetime.now().isoformat(timespec="seconds"),
+                "projects": exported,
+                "include_tags": include_tags,
+                "include_source_folder": include_source_folder,
+            }
+            zf.writestr("psat_export.json", json.dumps(manifest, indent=2))
+
+    if not exported:
+        return fail("No matching projects found to export", 404)
+
+    memory_file.seek(0)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    if len(exported) == 1:
+        base = re.sub(r"[^\w.-]+", "_", exported[0]).strip("_") or "project"
+        download_name = f"{base}_{timestamp}.psat.zip"
+    else:
+        download_name = f"projects_export_{timestamp}.psat.zip"
+
+    return send_file(
+        memory_file,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=download_name,
+    )
+
+
 @bp.post("/export-shapefile")
 def export_shapefile():
     """

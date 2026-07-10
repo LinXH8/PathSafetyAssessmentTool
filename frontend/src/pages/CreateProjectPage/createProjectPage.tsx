@@ -9,6 +9,7 @@ import {
   type SourceFolderPreview,
   type SourceFolderSummary,
   type ProjectSelectionGeometry,
+  type ImportProjectsResult,
 } from "../../api";
 import { type SelectedRoad } from "./SelectRoadsMap";
 import { loadFolderSummaryCache, saveFolderSummaries } from "./folderSummaryCache";
@@ -33,6 +34,7 @@ export default function CreateProjectPage() {
   const [creating, setCreating] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [imageUploadModalOpen, setImageUploadModalOpen] = useState(false);
+  const [importProjectModalOpen, setImportProjectModalOpen] = useState(false);
   const [roadAvailabilityVersion, setRoadAvailabilityVersion] = useState(0);
   const [folderPreview, setFolderPreview] = useState<SourceFolderPreview | null>(null);
   const [loadingFolderPreview, setLoadingFolderPreview] = useState(false);
@@ -301,6 +303,17 @@ export default function CreateProjectPage() {
     loadFolders();
   }, []);
 
+  // Import Project: after a bundle is imported, refresh the folder/project data
+  // so the newly-imported projects' source-folder counts are reflected here.
+  const onProjectsImported = useCallback((_result: ImportProjectsResult) => {
+    loadFolders();
+  }, []);
+
+  const onViewImportedProjects = useCallback(() => {
+    setImportProjectModalOpen(false);
+    nav("/home");
+  }, [nav]);
+
   // ── Assemble the view-model: the single typed seam both shells consume. ──
   const vm: CreateProjectViewModel = {
     name,
@@ -344,6 +357,11 @@ export default function CreateProjectPage() {
     openImageUploadModal: () => setImageUploadModalOpen(true),
     closeImageUploadModal: () => setImageUploadModalOpen(false),
     onImageUploadSuccess,
+    importProjectModalOpen,
+    openImportProjectModal: () => setImportProjectModalOpen(true),
+    closeImportProjectModal: () => setImportProjectModalOpen(false),
+    onProjectsImported,
+    onViewImportedProjects,
   };
 
   const ui = useUiVersion();

@@ -80,7 +80,6 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     loadPathAnalysis,
     loadTreatment,
     askShare,
-    shareTargets,
     sortConfig,
     getSortMeta,
     handleSort,
@@ -367,7 +366,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
           {actionBtn("Treatment", loadTreatment, { disabled: noSelection })}
         </div>
         <div style={{ flex: 1, display: "flex", gap: "1rem" }}>
-          {actionBtn("Share", askShare, { disabled: noSelection || shareTargets.length === 0 })}
+          {actionBtn("Share", askShare, { disabled: noSelection })}
           {actionBtn("Edit", onEditSelected, { disabled: noSelection })}
           {actionBtn("Delete", askDelete, { disabled: noSelection, danger: true })}
         </div>

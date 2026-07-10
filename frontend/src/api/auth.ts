@@ -278,12 +278,17 @@ export async function migrateLegacyProjects(
  */
 export async function shareProjects(
   targetProfileId: string,
-  projectNames: string[]
+  projectNames: string[],
+  options?: { includeTags?: boolean }
 ): Promise<ShareProjectsResult> {
   const res = await fetch("/api/profiles/share-projects", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ target_profile_id: targetProfileId, project_names: projectNames }),
+    body: JSON.stringify({
+      target_profile_id: targetProfileId,
+      project_names: projectNames,
+      include_tags: options?.includeTags ?? true,
+    }),
   });
   if (!res.ok) throw new Error(await readError(res));
   return (await res.json()) as ShareProjectsResult;

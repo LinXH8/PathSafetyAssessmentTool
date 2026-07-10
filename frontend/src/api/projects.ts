@@ -42,6 +42,66 @@ export async function fetchProjectList(): Promise<FileResponse> {
   return res.json();
 }
 
+/**
+ * POST /api/projects/export — download one or more projects as a single ZIP
+ * bundle and trigger a browser download. The bundle is re-importable via the
+ * Create Project page.
+ *
+ * @param projectNames        - Projects to bundle
+ * @param options.includeTags - Keep project tags in the bundle (default true)
+ * @param options.includeSourceFolder - Bundle the raw survey images (default true)
+ * @returns the number of projects exported
+ */
+export async function exportProjects(
+  projectNames: string[],
+  options?: { includeTags?: boolean; includeSourceFolder?: boolean }
+): Promise<void> {
+  const res = await fetch("/api/projects/export", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      project_names: projectNames,
+      include_tags: options?.includeTags ?? true,
+      include_source_folder: options?.includeSourceFolder ?? true,
+    }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+
+  // Derive the filename from the Content-Disposition header when present.
+  const disposition = res.headers.get("Content-Disposition") || "";
+  const match = /filename\*?=(?:UTF-8'')?"?([^\";]+)"?/i.exec(disposition);
+  const filename = match ? decodeURIComponent(match[1]) : "projects_export.psat.zip";
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+export interface ImportProjectsResult {
+  imported: string[];
+  skipped: Array<{ name: string; reason: string }>;
+  errors: Array<{ name: string; reason: string }>;
+}
+
+/**
+ * POST /api/projects/import — import projects from an uploaded .psat.zip bundle
+ * (produced by {@link exportProjects}). The projects are unpacked into the active
+ * profile; existing names are skipped, never overwritten.
+ */
+export async function importProjects(file: File): Promise<ImportProjectsResult> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch("/api/projects/import", { method: "POST", body: formData });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as ImportProjectsResult;
+}
+
 // ── Project detail ────────────────────────────────────────────────────────────
 
 export type ProjectDetail = {

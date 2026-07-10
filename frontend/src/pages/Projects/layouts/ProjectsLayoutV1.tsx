@@ -42,7 +42,6 @@ export default function ProjectsLayoutV1(vm: ProjectsViewModel) {
     loadPathAnalysis,
     loadTreatment,
     askShare,
-    shareTargets,
     sortConfig,
     getSortMeta,
     handleSort,
@@ -275,7 +274,7 @@ export default function ProjectsLayoutV1(vm: ProjectsViewModel) {
               onClick={askShare}
               colorPalette="teal"
               variant="outline"
-              disabled={!selected || selected.size === 0 || shareTargets.length === 0}
+              disabled={!selected || selected.size === 0}
             >
               Share
             </Button>

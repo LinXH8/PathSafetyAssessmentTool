@@ -87,11 +87,13 @@ export interface ProjectsViewModel {
   deleting: boolean;
   confirmDelete: () => void;
 
-  // ── share dialog ──
+  // ── share / export dialog ──
   openShare: boolean;
   setOpenShare: (open: boolean) => void;
   sharing: boolean;
-  shareTargetId: string;
-  setShareTargetId: (id: string) => void;
-  confirmShare: () => void;
+  exporting: boolean;
+  /** Copy the selection into another profile (optionally keeping tags). */
+  confirmShare: (targetProfileId: string, includeTags: boolean) => void;
+  /** Download the selection as a re-importable .psat.zip bundle. */
+  confirmExport: (includeTags: boolean, includeSourceFolder: boolean) => void;
 }
