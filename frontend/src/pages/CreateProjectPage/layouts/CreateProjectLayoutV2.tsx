@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Spinner } from "@chakra-ui/react";
 import { LuCheck, LuChevronsUpDown, LuChevronUp, LuChevronDown } from "react-icons/lu";
 import ImageUploadModal from "../../sidebar/components/ImageUploadModal";
+import ImportProjectModalV2 from "../components/ImportProjectModalV2";
 import SelectRoadsMap from "../SelectRoadsMap";
 import { getTagColor } from "../../Projects/tagColor";
 import { FONT, COLOR } from "../../../features/ui/designTokens";
@@ -104,6 +105,11 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
     openImageUploadModal,
     closeImageUploadModal,
     onImageUploadSuccess,
+    importProjectModalOpen,
+    openImportProjectModal,
+    closeImportProjectModal,
+    onProjectsImported,
+    onViewImportedProjects,
   } = vm;
 
   // V2-only presentation state: which source mode + the table search query.
@@ -251,6 +257,12 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
               )}
             </div>
           </div>
+
+          {/* Import an exported .psat.zip bundle instead of creating from source. */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+            <label style={{ ...labelStyle, visibility: "hidden" }} aria-hidden>Import</label>
+            <button onClick={openImportProjectModal} style={secondaryInlineBtn}>Import Project</button>
+          </div>
         </div>
 
         {/* ── Create by: segmented control ── */}
@@ -276,7 +288,7 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
                   style={{ ...inputStyle, width: "28.75rem", maxWidth: "100%" }}
                 />
               </div>
-              <button onClick={openImageUploadModal} style={secondaryInlineBtn}>Import Folder</button>
+              <button onClick={openImageUploadModal} style={secondaryInlineBtn}>Import Source</button>
               {loadingFolderSummaries && (
                 <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.375rem" }}>
                   <Spinner size="sm" color={COLOR.blue} />
@@ -393,6 +405,12 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
       </div>
 
       <ImageUploadModal open={imageUploadModalOpen} onClose={closeImageUploadModal} onSuccess={onImageUploadSuccess} />
+      <ImportProjectModalV2
+        open={importProjectModalOpen}
+        onClose={closeImportProjectModal}
+        onImported={onProjectsImported}
+        onViewProjects={onViewImportedProjects}
+      />
     </div>
   );
 }

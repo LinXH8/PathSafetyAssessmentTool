@@ -186,11 +186,14 @@ export async function revertShapefile(
   return res.json();
 }
 
+/** Parameter tags offered in the "Affects" picker, grouped by category (e.g. "For Auto Coding"). */
+export type ParameterOptionGroups = Record<string, string[]>;
+
 /**
- * GET /api/shapefiles/parameter-options — curated list of parameter tags
- * offered when editing a layer's "Affects" metadata.
+ * GET /api/shapefiles/parameter-options — curated parameter tags offered when
+ * editing a layer's "Affects" metadata, grouped by category.
  */
-export async function getParameterOptions(): Promise<string[]> {
+export async function getParameterOptions(): Promise<ParameterOptionGroups> {
   const res = await fetch("/api/shapefiles/parameter-options");
   if (!res.ok) throw new Error(await readError(res));
   return res.json();

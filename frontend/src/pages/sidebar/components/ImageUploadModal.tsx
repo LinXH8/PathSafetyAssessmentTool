@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  Box,
-  Button,
-  Combobox,
-  createListCollection,
-  Dialog,
-  Input,
-  Portal,
-  Text,
-} from "@chakra-ui/react";
-import { LuCheck, LuFolderSearch, LuImport, LuSearch } from "react-icons/lu";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { LuFolderSearch, LuSearch, LuCheck, LuImport } from "react-icons/lu";
+import { Spinner } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
 import * as api from "../../../api";
+import { FONT, COLOR } from "../../../features/ui/designTokens";
+import V2ModalShell, {
+  modalLabelStyle,
+  modalInputStyle,
+  modalPrimaryBtn,
+  modalGhostBtn,
+} from "../../../components/common/V2ModalShell";
+
+/**
+ * Import Source modal (v2) — copy a local folder of survey images into an `in/`
+ * source folder that project creation can read. Rebuilt on the shared
+ * V2ModalShell (portal, no Chakra Dialog) so it matches the Import Project modal.
+ */
 
 interface ImageUploadModalProps {
   open: boolean;
@@ -26,7 +30,7 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
   const [sourcePath, setSourcePath] = useState("");
   const [folderName, setFolderName] = useState("");
   const [folderInputValue, setFolderInputValue] = useState("");
-  const [folderComboboxOpen, setFolderComboboxOpen] = useState(false);
+  const [comboOpen, setComboOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<api.SourceFolderSuggestion[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [loadedSuggestions, setLoadedSuggestions] = useState(false);
@@ -34,28 +38,37 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
   const [uploading, setUploading] = useState(false);
   const [renamedFrom, setRenamedFrom] = useState<string | null>(null);
   const [importPreview, setImportPreview] = useState<api.SourceFolderPreview | null>(null);
+  const comboRef = useRef<HTMLDivElement>(null);
 
   const filteredSuggestions = useMemo(
     () => suggestions.filter((item) => item.name.toLowerCase().includes(folderInputValue.toLowerCase())),
-    [folderInputValue, suggestions],
+    [folderInputValue, suggestions]
   );
   const exactSuggestion = useMemo(
     () => suggestions.find((item) => item.name.toLowerCase() === folderName.trim().toLowerCase()),
-    [folderName, suggestions],
+    [folderName, suggestions]
   );
 
   useEffect(() => {
-    if (!open) {
-      resetState();
-    }
+    if (!open) resetState();
   }, [open]);
+
+  // Close the combobox dropdown on an outside click.
+  useEffect(() => {
+    if (!comboOpen) return;
+    const onDocClick = (e: MouseEvent) => {
+      if (comboRef.current && !comboRef.current.contains(e.target as Node)) setComboOpen(false);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [comboOpen]);
 
   function resetState() {
     setStep("upload");
     setSourcePath("");
     setFolderName("");
     setFolderInputValue("");
-    setFolderComboboxOpen(false);
+    setComboOpen(false);
     setSuggestions([]);
     setLoadedSuggestions(false);
     setLoadingSuggestions(false);
@@ -66,29 +79,21 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
   }
 
   async function ensureSuggestionsLoaded() {
-    if (loadedSuggestions || loadingSuggestions) {
-      return;
-    }
-
+    if (loadedSuggestions || loadingSuggestions) return;
     try {
       setLoadingSuggestions(true);
       const items = await api.listSourceFolderSuggestions();
       setSuggestions(items);
       setLoadedSuggestions(true);
     } catch (error) {
-      toaster.create({
-        description: `Failed to load folder suggestions: ${error}`,
-        type: "error",
-      });
+      toaster.create({ description: `Failed to load folder suggestions: ${error}`, type: "error" });
     } finally {
       setLoadingSuggestions(false);
     }
   }
 
   function handleClose() {
-    if (step === "success" && onSuccess) {
-      onSuccess({ folderName });
-    }
+    if (step === "success" && onSuccess) onSuccess({ folderName });
     resetState();
     onClose();
   }
@@ -97,20 +102,14 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
     try {
       setBrowsing(true);
       const result = await api.pickLocalSourceFolder();
-      if (!result.path) {
-        return;
-      }
-
+      if (!result.path) return;
       setSourcePath(result.path);
       if (!folderName.trim() && result.suggested_folder_name) {
         setFolderName(result.suggested_folder_name);
         setFolderInputValue(result.suggested_folder_name);
       }
     } catch (error) {
-      toaster.create({
-        description: `Browse failed: ${error}`,
-        type: "error",
-      });
+      toaster.create({ description: `Browse failed: ${error}`, type: "error" });
     } finally {
       setBrowsing(false);
     }
@@ -118,18 +117,11 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
 
   async function handleUpload() {
     if (!sourcePath.trim()) {
-      toaster.create({
-        description: "Please choose or paste a local folder path",
-        type: "warning",
-      });
+      toaster.create({ description: "Please choose or paste a local folder path.", type: "warning" });
       return;
     }
-
     if (!folderName.trim()) {
-      toaster.create({
-        description: "Please choose a destination folder name",
-        type: "warning",
-      });
+      toaster.create({ description: "Please choose a destination source folder name.", type: "warning" });
       return;
     }
 
@@ -158,225 +150,262 @@ export default function ImageUploadModal({ open, onClose, onSuccess }: ImageUplo
       setImportPreview(result.preview);
       setStep("success");
     } catch (error) {
-      toaster.create({
-        description: `Import failed: ${error}`,
-        type: "error",
-      });
+      toaster.create({ description: `Import failed: ${error}`, type: "error" });
     } finally {
       setUploading(false);
     }
   }
 
+  const selectSuggestion = (name: string) => {
+    setFolderName(name);
+    setFolderInputValue(name);
+    setComboOpen(false);
+  };
+
+  const footer = step === "success" ? (
+    <button type="button" style={modalPrimaryBtn(false)} onClick={handleClose}>
+      Done
+    </button>
+  ) : (
+    <>
+      <button
+        type="button"
+        style={modalGhostBtn(uploading || browsing)}
+        disabled={uploading || browsing}
+        onClick={handleClose}
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        style={{
+          ...modalPrimaryBtn(!sourcePath.trim() || !folderName.trim() || uploading || browsing),
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+        disabled={!sourcePath.trim() || !folderName.trim() || uploading || browsing}
+        onClick={handleUpload}
+      >
+        <LuImport size={16} />
+        {uploading ? "Importing…" : "Import Source"}
+      </button>
+    </>
+  );
+
   return (
-    <Dialog.Root open={open} onOpenChange={(details) => !details.open && handleClose()} size="xl">
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>
-                {step === "upload" ? "Import Source Folder" : "Success!"}
-              </Dialog.Title>
-              <Dialog.CloseTrigger />
-            </Dialog.Header>
+    <V2ModalShell
+      open={open}
+      onClose={handleClose}
+      title={step === "upload" ? "Import Source" : "Source imported"}
+      width={560}
+      busy={uploading}
+      footer={footer}
+    >
+      {step === "upload" ? (
+        <>
+          <span style={{ fontFamily: FONT, fontSize: 13, color: COLOR.gray600, lineHeight: 1.5 }}>
+            Copy survey images straight from a folder on this machine into <code style={codeStyle}>in/</code>.
+            This avoids slow browser uploads and keeps everything as one source folder instead of hundreds of
+            individual files.
+          </span>
 
-            <Dialog.Body>
-              {step === "upload" && (
-                <Box display="grid" gap={5}>
-                  <Text color="fg.muted">
-                    Copy images directly from a local folder on this machine into in/. This avoids slow browser uploads and keeps the import as one source folder instead of hundreds of individual files.
-                  </Text>
+          {/* Local folder path */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <label style={modalLabelStyle}>Local folder path</label>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <LuFolderSearch size={18} color={COLOR.gray500} style={{ flexShrink: 0 }} />
+              <input
+                style={{ ...modalInputStyle, flex: 1 }}
+                placeholder="e.g. C:\path\to\ANG MO KIO AVENUE 1"
+                value={sourcePath}
+                onChange={(e) => setSourcePath(e.target.value)}
+              />
+              <button
+                type="button"
+                style={{ ...modalGhostBtn(browsing || uploading), flexShrink: 0 }}
+                onClick={handleBrowse}
+                disabled={browsing || uploading}
+              >
+                {browsing ? "Browsing…" : "Browse"}
+              </button>
+            </div>
+            <span style={captionStyle}>
+              Local folder browsing works only when the backend runs on this same machine.
+            </span>
+          </div>
 
-                  <Box>
-                    <Text fontWeight="600" mb={2}>Local Folder Path</Text>
-                    <Box display="flex" gap={2} alignItems="center">
-                      <LuFolderSearch />
-                      <Input
-                        placeholder="e.g., C:\\path\\to\\ANG MO KIO AVENUE 1"
-                        value={sourcePath}
-                        onChange={(e) => setSourcePath(e.target.value)}
-                      />
-                      <Button
-                        variant="outline"
-                        onClick={handleBrowse}
-                        loading={browsing}
-                        disabled={uploading}
-                      >
-                        Browse
-                      </Button>
-                    </Box>
-                    <Text fontSize="xs" color="fg.muted" mt={1}>
-                      Local folder browsing works only when the backend is running on this same machine.
-                    </Text>
-                  </Box>
-
-                  <Box>
-                    <Text fontWeight="600" mb={2}>Destination Source Folder</Text>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <LuSearch />
-                      <Box flex={1}>
-                        <Combobox.Root
-                          collection={createListCollection({
-                            items: filteredSuggestions.map((item) => ({
-                              label: item.exists ? `${item.name} (existing)` : item.name,
-                              value: item.name,
-                            })),
-                          })}
-                          inputValue={folderInputValue}
-                          onInputValueChange={({ inputValue }) => {
-                            setFolderInputValue(inputValue);
-                            setFolderName(inputValue);
-                          }}
-                          onValueChange={({ value }) => {
-                            if (value.length > 0) {
-                              setFolderName(value[0]);
-                              setFolderInputValue(value[0]);
-                              setFolderComboboxOpen(false);
-                            }
-                          }}
-                          open={folderComboboxOpen}
-                          onOpenChange={(details) => {
-                            setFolderComboboxOpen(details.open);
-                            if (details.open) {
-                              void ensureSuggestionsLoaded();
-                            }
-                          }}
-                          disabled={uploading}
-                        >
-                          <Combobox.Control onClick={() => {
-                            setFolderComboboxOpen(true);
-                            void ensureSuggestionsLoaded();
-                          }}>
-                            <Combobox.Input placeholder={loadingSuggestions ? "Loading roads and folders..." : "Search road or source folder"} />
-                          </Combobox.Control>
-                          <Combobox.Positioner zIndex={2000}>
-                            <Combobox.Content>
-                              {loadingSuggestions && filteredSuggestions.length === 0 && (
-                                <Box px={3} py={2}>
-                                  <Text fontSize="sm" color="gray.500">Loading roads and folders...</Text>
-                                </Box>
-                              )}
-                              {!loadingSuggestions && filteredSuggestions.length === 0 && folderInputValue.trim() !== "" && (
-                                <Box px={3} py={2}>
-                                  <Text fontSize="sm" color="gray.500">No matching roads or folders.</Text>
-                                </Box>
-                              )}
-                              {filteredSuggestions.map((item) => (
-                                <Combobox.Item
-                                  key={item.name}
-                                  item={{
-                                    label: item.exists ? `${item.name} (existing)` : item.name,
-                                    value: item.name,
-                                  }}
-                                >
-                                  <Box display="flex" justifyContent="space-between" width="100%" gap={3}>
-                                    <span>{item.name}</span>
-                                    <Text fontSize="xs" color={item.exists ? "green.600" : "gray.500"}>
-                                      {item.exists ? "existing" : "new"}
-                                    </Text>
-                                  </Box>
-                                </Combobox.Item>
-                              ))}
-                            </Combobox.Content>
-                          </Combobox.Positioner>
-                        </Combobox.Root>
-                      </Box>
-                    </Box>
-                    <Text fontSize="xs" color="fg.muted" mt={1}>
-                      Search an existing source folder or road name. You can still type a new folder name if needed.
-                    </Text>
-                    {folderName.trim() && (
-                      <Text fontSize="xs" color={exactSuggestion?.exists ? "green.600" : "gray.600"} mt={2}>
-                        {exactSuggestion?.exists
-                          ? "Images will be copied into an existing source folder."
-                          : "A new source folder will be created under in/."}
-                      </Text>
+          {/* Destination source folder combobox */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <label style={modalLabelStyle}>Destination source folder</label>
+            <div ref={comboRef} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <LuSearch size={18} color={COLOR.gray500} style={{ flexShrink: 0 }} />
+              <div style={{ position: "relative", flex: 1 }}>
+                <input
+                  style={modalInputStyle}
+                  placeholder={loadingSuggestions ? "Loading roads and folders…" : "Search a road or source folder, or type a new name"}
+                  value={folderInputValue}
+                  disabled={uploading}
+                  onChange={(e) => {
+                    setFolderInputValue(e.target.value);
+                    setFolderName(e.target.value);
+                    setComboOpen(true);
+                  }}
+                  onFocus={() => {
+                    setComboOpen(true);
+                    void ensureSuggestionsLoaded();
+                  }}
+                />
+                {comboOpen && (
+                  <div style={dropdownStyle}>
+                    {loadingSuggestions && filteredSuggestions.length === 0 && (
+                      <div style={dropdownEmptyStyle}>Loading roads and folders…</div>
                     )}
-                  </Box>
-
-                  <Box borderWidth="1px" borderRadius="md" p={4} bg="bg.subtle">
-                    <Text fontWeight="600" mb={2}>What this does</Text>
-                    <Text fontSize="sm" color="fg.muted">
-                      The backend copies image files directly from the selected folder into the destination source folder. Nested folders are flattened automatically so project creation can read the images cleanly.
-                    </Text>
-                  </Box>
-
-                  {uploading && (
-                    <Box>
-                      <Text fontSize="sm" color="fg.muted" textAlign="center">
-                        Copying images into the source folder...
-                      </Text>
-                    </Box>
-                  )}
-                </Box>
-              )}
-
-              {step === "success" && (
-                <Box textAlign="center" py={6}>
-                  <Box fontSize="4xl" color="green.500" mb={4}>
-                    <LuCheck />
-                  </Box>
-                  <Text fontSize="xl" fontWeight="600" mb={2}>
-                    Import Completed!
-                  </Text>
-                  <Text color="fg.muted" mb={6}>
-                    The destination folder <strong>{folderName}</strong> is ready to use in project creation.
-                  </Text>
-
-                  {renamedFrom && (
-                    <Text fontSize="sm" color="blue.600" mb={4}>
-                      Renamed from <strong>{renamedFrom}</strong> to include the detected survey quarter.
-                    </Text>
-                  )}
-
-                  <Text fontSize="sm" color="fg.muted" mb={4}>
-                    A folder summary metadata file was generated so the next load can reuse the cached segment and quarter summary.
-                  </Text>
-
-                  {importPreview && (
-                    <Box borderWidth="1px" borderRadius="md" p={4} bg="bg.subtle" textAlign="left">
-                      <Text fontWeight="600" mb={3}>Imported Folder Summary</Text>
-                      <Text fontSize="sm" color="fg.muted">
-                        Segments: {importPreview.segment_count}
-                      </Text>
-                      <Text fontSize="sm" color="fg.muted">
-                        Survey Quarter: {importPreview.survey_quarter ?? (importPreview.survey_quarters.length > 0 ? importPreview.survey_quarters.join(", ") : "Unknown")}
-                      </Text>
-                      <Text fontSize="sm" color="fg.muted">
-                        Source Images: {importPreview.image_count} ({importPreview.geotagged_image_count} geotagged)
-                      </Text>
-                      {importPreview.mixed_quarters && (
-                        <Text fontSize="sm" color="orange.600" mt={3}>
-                          This folder spans multiple quarters. Keep quarter batches separated where possible.
-                        </Text>
-                      )}
-                    </Box>
-                  )}
-                </Box>
-              )}
-            </Dialog.Body>
-
-            {step !== "success" && (
-              <Dialog.Footer>
-                <Box display="flex" gap={3} width="100%" justifyContent="flex-end">
-                  <Button variant="outline" onClick={handleClose} disabled={uploading || browsing}>
-                    Cancel
-                  </Button>
-                  <Button
-                    colorPalette="blue"
-                    onClick={handleUpload}
-                    disabled={!sourcePath.trim() || !folderName.trim() || uploading || browsing}
-                    loading={uploading}
-                  >
-                    <LuImport />
-                    Import Folder
-                  </Button>
-                </Box>
-              </Dialog.Footer>
+                    {!loadingSuggestions && filteredSuggestions.length === 0 && (
+                      <div style={dropdownEmptyStyle}>
+                        {folderInputValue.trim() ? "No matches — a new folder will be created." : "No source folders yet."}
+                      </div>
+                    )}
+                    {filteredSuggestions.map((item) => (
+                      <button
+                        key={item.name}
+                        type="button"
+                        onMouseDown={(e) => { e.preventDefault(); selectSuggestion(item.name); }}
+                        style={dropdownItemStyle}
+                      >
+                        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
+                        <span style={{ fontSize: 12, color: item.exists ? "#2F855A" : COLOR.gray500, flexShrink: 0 }}>
+                          {item.exists ? "existing" : "new"}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <span style={captionStyle}>
+              Search an existing source folder or road name, or type a new name to create one.
+            </span>
+            {folderName.trim() && (
+              <span style={{ ...captionStyle, color: exactSuggestion?.exists ? "#2F855A" : COLOR.gray600 }}>
+                {exactSuggestion?.exists
+                  ? "Images will be copied into an existing source folder."
+                  : "A new source folder will be created under in/."}
+              </span>
             )}
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+          </div>
+
+          {/* What this does */}
+          <div style={infoBoxStyle}>
+            <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: COLOR.text }}>What this does</span>
+            <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray600, lineHeight: 1.5 }}>
+              The backend copies image files directly from the selected folder into the destination source
+              folder. Nested folders are flattened so project creation can read the images cleanly.
+            </span>
+          </div>
+
+          {uploading && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <Spinner size="sm" color={COLOR.blue} />
+              <span style={captionStyle}>Copying images into the source folder…</span>
+            </div>
+          )}
+        </>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "center", textAlign: "center" }}>
+          <span
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              background: "#E6F4EA",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <LuCheck size={24} color="#2F855A" />
+          </span>
+          <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 18, color: COLOR.text }}>Import completed</span>
+          <span style={{ fontFamily: FONT, fontSize: 13, color: COLOR.gray600, lineHeight: 1.5 }}>
+            Source folder <strong style={{ color: COLOR.text }}>{folderName}</strong> is ready to use in
+            project creation.
+          </span>
+
+          {renamedFrom && (
+            <span style={{ fontFamily: FONT, fontSize: 12, color: COLOR.blue }}>
+              Renamed from <strong>{renamedFrom}</strong> to include the detected survey quarter.
+            </span>
+          )}
+
+          {importPreview && (
+            <div style={{ ...infoBoxStyle, width: "100%", textAlign: "left" }}>
+              <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: COLOR.text }}>Imported folder summary</span>
+              <span style={summaryLine}>Segments: {importPreview.segment_count}</span>
+              <span style={summaryLine}>
+                Survey quarter: {importPreview.survey_quarter ?? (importPreview.survey_quarters.length > 0 ? importPreview.survey_quarters.join(", ") : "Unknown")}
+              </span>
+              <span style={summaryLine}>
+                Source images: {importPreview.image_count} ({importPreview.geotagged_image_count} geotagged)
+              </span>
+              {importPreview.mixed_quarters && (
+                <span style={{ ...summaryLine, color: COLOR.danger }}>
+                  This folder spans multiple quarters. Keep quarter batches separated where possible.
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </V2ModalShell>
   );
 }
+
+const captionStyle: React.CSSProperties = { fontFamily: FONT, fontSize: 12, color: COLOR.gray500, lineHeight: 1.4 };
+const codeStyle: React.CSSProperties = { fontFamily: "monospace", fontSize: 12, background: COLOR.gray100, padding: "1px 5px", borderRadius: 4, color: COLOR.text };
+const summaryLine: React.CSSProperties = { fontFamily: FONT, fontSize: 13, color: COLOR.gray600, lineHeight: 1.6 };
+
+const infoBoxStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 6,
+  background: COLOR.canvas,
+  border: `1px solid ${COLOR.border}`,
+  borderRadius: 6,
+  padding: "12px 14px",
+};
+
+const dropdownStyle: React.CSSProperties = {
+  position: "absolute",
+  top: "calc(100% + 4px)",
+  left: 0,
+  right: 0,
+  background: COLOR.white,
+  border: `1px solid ${COLOR.border}`,
+  borderRadius: 6,
+  boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+  maxHeight: 220,
+  overflowY: "auto",
+  zIndex: 3100,
+};
+const dropdownItemStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  width: "100%",
+  padding: "9px 12px",
+  textAlign: "left",
+  background: "transparent",
+  border: "none",
+  cursor: "pointer",
+  color: COLOR.text,
+  fontFamily: FONT,
+  fontSize: 14,
+};
+const dropdownEmptyStyle: React.CSSProperties = {
+  padding: "9px 12px",
+  fontFamily: FONT,
+  fontSize: 13,
+  color: COLOR.gray500,
+};

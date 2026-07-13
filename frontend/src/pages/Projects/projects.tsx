@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, type ProjectListItem } from "../../api";
+import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, exportProjects as apiExportProjects, type ProjectListItem } from "../../api";
 import { invalidateAll } from "../../api/projectDataCache";
 import { useProjectSelection } from "../../features/projectSelection";
 import { SESSION_KEYS } from "../../constants/sessionKeys";
@@ -61,10 +61,10 @@ export default function Home() {
   const [openDelete, setOpenDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Share dialog state
+  // Share / export dialog state
   const [openShare, setOpenShare] = useState(false);
   const [sharing, setSharing] = useState(false);
-  const [shareTargetId, setShareTargetId] = useState<string>("");
+  const [exporting, setExporting] = useState(false);
 
   // Edit dialog state
   const [openEdit, setOpenEdit] = useState(false);
@@ -393,20 +393,19 @@ export default function Home() {
     [profiles, activeProfile],
   );
 
-  // Open share dialog for selected projects
+  // Open share / export dialog for selected projects
   const askShare = () => {
     if (selected.size === 0) return;
-    setShareTargetId(shareTargets[0]?.id ?? "");
     setOpenShare(true);
   };
 
   // Share selected projects into the chosen profile
-  const confirmShare = async () => {
-    if (selected.size === 0 || !shareTargetId) return;
+  const confirmShare = async (targetProfileId: string, includeTags: boolean) => {
+    if (selected.size === 0 || !targetProfileId) return;
     try {
       setSharing(true);
-      const result = await apiShareProjects(shareTargetId, Array.from(selected));
-      const targetName = shareTargets.find((p) => p.id === shareTargetId)?.name ?? "the selected profile";
+      const result = await apiShareProjects(targetProfileId, Array.from(selected), { includeTags });
+      const targetName = shareTargets.find((p) => p.id === targetProfileId)?.name ?? "the selected profile";
       const skippedNote = result.skipped.length > 0
         ? ` ${result.skipped.length} already existed there and ${result.skipped.length === 1 ? "was" : "were"} skipped.`
         : "";
@@ -427,6 +426,30 @@ export default function Home() {
       });
     } finally {
       setSharing(false);
+    }
+  };
+
+  // Export selected projects as a downloadable .psat.zip bundle
+  const confirmExport = async (includeTags: boolean, includeSourceFolder: boolean) => {
+    if (selected.size === 0) return;
+    const count = selected.size;
+    try {
+      setExporting(true);
+      await apiExportProjects(Array.from(selected), { includeTags, includeSourceFolder });
+      toaster.create({
+        title: "Export ready",
+        description: `${count} project${count === 1 ? "" : "s"} downloaded as a bundle.`,
+        type: "success",
+      });
+      setOpenShare(false);
+    } catch (nextError) {
+      toaster.create({
+        title: "Export failed",
+        description: nextError instanceof Error ? nextError.message : "Failed to export projects.",
+        type: "error",
+      });
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -534,9 +557,9 @@ export default function Home() {
     openShare,
     setOpenShare,
     sharing,
-    shareTargetId,
-    setShareTargetId,
+    exporting,
     confirmShare,
+    confirmExport,
   };
 
   const ui = useUiVersion();

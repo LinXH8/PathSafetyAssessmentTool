@@ -34,6 +34,9 @@ interface ShapefileModalProps {
 
 type WorkflowStep = "choice" | "add" | "replace" | "success";
 
+// Preferred display order for Affects categories (API response key order isn't guaranteed).
+const AFFECTS_CATEGORY_ORDER = ["For Auto Coding", "For Area Based Reports", "For Analysis"];
+
 export default function ShapefileModal({ open, onClose, variant = "v1" }: ShapefileModalProps) {
   const v2 = variant === "v2";
   const v2ModalClass = v2 ? "psat-shapefile-modal--v2" : "";
@@ -52,11 +55,18 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
   const [showUploadConfirm, setShowUploadConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Add Shapefile State — Required Columns / Affects (mandatory for new layers)
+  // Add Shapefile State — Required Columns (optional) / Affects (mandatory; pick a
+  // category first, then attributes within it — stored as "Category: Attribute")
   const [addRequiredColumns, setAddRequiredColumns] = useState("");
   const [addAffectsSelected, setAddAffectsSelected] = useState<Set<string>>(new Set());
   const [addCustomAffect, setAddCustomAffect] = useState("");
-  const [addParameterOptions, setAddParameterOptions] = useState<string[]>([]);
+  const [addParameterGroups, setAddParameterGroups] = useState<api.ParameterOptionGroups>({});
+  const [addActiveAffectsCategory, setAddActiveAffectsCategory] = useState("");
+
+  const addAffectsCategoryNames = [
+    ...AFFECTS_CATEGORY_ORDER.filter((name) => name in addParameterGroups),
+    ...Object.keys(addParameterGroups).filter((name) => !AFFECTS_CATEGORY_ORDER.includes(name)),
+  ];
 
   function resetAddMetadataState() {
     setAddRequiredColumns("");
@@ -64,24 +74,40 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
     setAddCustomAffect("");
   }
 
-  function toggleAddAffect(param: string) {
+  function affectsKey(category: string, param: string) {
+    return `${category}: ${param}`;
+  }
+
+  function toggleAddAffect(category: string, param: string) {
+    const key = affectsKey(category, param);
     setAddAffectsSelected(prev => {
       const next = new Set(prev);
-      if (next.has(param)) next.delete(param);
-      else next.add(param);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function removeAddAffect(key: string) {
+    setAddAffectsSelected(prev => {
+      const next = new Set(prev);
+      next.delete(key);
       return next;
     });
   }
 
   function addCustomAffectParam() {
     const trimmed = addCustomAffect.trim();
-    if (!trimmed) return;
-    setAddAffectsSelected(prev => new Set(prev).add(trimmed));
-    if (!addParameterOptions.includes(trimmed)) {
-      setAddParameterOptions(prev => [...prev, trimmed]);
-    }
+    if (!trimmed || !addActiveAffectsCategory) return;
+    setAddAffectsSelected(prev => new Set(prev).add(affectsKey(addActiveAffectsCategory, trimmed)));
     setAddCustomAffect("");
   }
+
+  // Custom (not in the known list) attributes already selected under the active category.
+  const addCustomAffectsForActiveCategory = Array.from(addAffectsSelected)
+    .filter((k) => k.startsWith(`${addActiveAffectsCategory}: `))
+    .map((k) => k.slice(addActiveAffectsCategory.length + 2))
+    .filter((opt) => !(addParameterGroups[addActiveAffectsCategory] || []).includes(opt));
 
   // Replace Shapefile State
   const [replaceFiles, setReplaceFiles] = useState<File[]>([]);
@@ -109,7 +135,12 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
   useEffect(() => {
     if (open) {
       loadAllShapefiles();
-      api.getParameterOptions().then(setAddParameterOptions).catch(() => setAddParameterOptions([]));
+      api.getParameterOptions().then((groups) => {
+        setAddParameterGroups(groups);
+        const ordered = AFFECTS_CATEGORY_ORDER.filter((name) => name in groups);
+        const first = ordered[0] || Object.keys(groups)[0] || "";
+        setAddActiveAffectsCategory(first);
+      }).catch(() => setAddParameterGroups({}));
     }
   }, [open]);
 
@@ -295,9 +326,9 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
     }
 
     const requiredColumnsTrimmed = addRequiredColumns.trim();
-    if (!requiredColumnsTrimmed || addAffectsSelected.size === 0) {
+    if (addAffectsSelected.size === 0) {
       toaster.create({
-        description: "Required Columns and Affects are both required for a new GIS layer",
+        description: "Select at least one Affects parameter for the new GIS layer",
         type: "warning",
       });
       return;
@@ -597,88 +628,6 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
               {/* Add Shapefile Screen */}
               {step === "add" && (
                 <Box>
-                  {/* New Category Name Input (Now always visible) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>New Category Name</Text>
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <LuFolderInput />
-                      <Input
-                        placeholder="e.g., area_type, bus_stop"
-                        value={newCategoryName}
-                        onChange={(e) => setNewCategoryName(e.target.value)}
-                        style={v2InputStyle}
-                      />
-                    </Box>
-                  </Box>
-
-                  {/* Required Columns (mandatory for new layers) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
-                      Required Columns <Text as="span" color="red.500">*</Text>
-                    </Text>
-                    <Text fontSize="xs" color="fg.muted" mb={2}>
-                      Attribute column(s) this layer must contain, comma-separated. Required for a new GIS layer.
-                    </Text>
-                    <Input
-                      placeholder="e.g. WIDTH, SURFACE_TYPE"
-                      value={addRequiredColumns}
-                      onChange={(e) => setAddRequiredColumns(e.target.value)}
-                      style={v2InputStyle}
-                    />
-                  </Box>
-
-                  {/* Affects (mandatory for new layers) */}
-                  <Box mb={4}>
-                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
-                      Affects <Text as="span" color="red.500">*</Text>
-                    </Text>
-                    <Text fontSize="xs" color="fg.muted" mb={2}>
-                      Which safety parameter(s) this layer informs. Select one or more.
-                    </Text>
-                    <Box
-                      maxH="180px"
-                      overflowY="auto"
-                      borderWidth="1px"
-                      borderRadius="md"
-                      p={2}
-                      mb={2}
-                      style={v2 ? { borderColor: "#E2E8F0", borderRadius: "0.375rem" } : undefined}
-                    >
-                      {addParameterOptions.map((opt) => (
-                        <Box key={opt} py="4px">
-                          <Checkbox.Root
-                            checked={addAffectsSelected.has(opt)}
-                            onCheckedChange={() => toggleAddAffect(opt)}
-                            colorPalette={v2 ? "blue" : undefined}
-                          >
-                            <Checkbox.HiddenInput />
-                            <Checkbox.Control />
-                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
-                          </Checkbox.Root>
-                        </Box>
-                      ))}
-                    </Box>
-                    <Box display="flex" gap={2}>
-                      <Input
-                        placeholder="Add a custom parameter..."
-                        size="sm"
-                        value={addCustomAffect}
-                        onChange={(e) => setAddCustomAffect(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAffectParam(); } }}
-                        style={v2InputStyle}
-                      />
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={addCustomAffectParam}
-                        disabled={!addCustomAffect.trim()}
-                        style={v2OutlineBtnStyle}
-                      >
-                        Add
-                      </Button>
-                    </Box>
-                  </Box>
-
                   {/* Dropzone */}
                   <div
                     className={`dropzone ${dragActive ? "drag-active" : ""}`}
@@ -784,6 +733,122 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
                         )}
                       </MapContainer>
                     </Box>
+                  </Box>
+
+                  {/* New Category Name Input (Now always visible) */}
+                  <Box mt={4} mb={4}>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>New Category Name</Text>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <LuFolderInput />
+                      <Input
+                        placeholder="e.g., area_type, bus_stop"
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                      />
+                    </Box>
+                  </Box>
+
+                  {/* Required Columns (optional) */}
+                  <Box mb={4}>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>Required Columns</Text>
+                    <Input
+                      placeholder="e.g. WIDTH, SURFACE_TYPE"
+                      value={addRequiredColumns}
+                      onChange={(e) => setAddRequiredColumns(e.target.value)}
+                    />
+                  </Box>
+
+                  {/* Affects (mandatory for new layers) — pick a category, then attributes within it */}
+                  <Box mb={4}>
+                    <Text fontWeight={v2 ? "700" : "600"} mb={2}>
+                      Affects <Text as="span" color="red.500">*</Text>
+                    </Text>
+
+                    {/* Step 1: choose a category */}
+                    <Box display="flex" gap={2} flexWrap="wrap" mb={2}>
+                      {addAffectsCategoryNames.map((cat) => (
+                        <Button
+                          key={cat}
+                          size="xs"
+                          variant={addActiveAffectsCategory === cat ? "solid" : "outline"}
+                          colorPalette="blue"
+                          onClick={() => setAddActiveAffectsCategory(cat)}
+                        >
+                          {cat}
+                        </Button>
+                      ))}
+                    </Box>
+
+                    {/* Step 2: choose attributes within the selected category */}
+                    <Box maxH="180px" overflowY="auto" borderWidth="1px" borderRadius="md" p={2} mb={2}>
+                      {(addParameterGroups[addActiveAffectsCategory] || []).map((opt) => (
+                        <Box key={opt} py="4px">
+                          <Checkbox.Root
+                            checked={addAffectsSelected.has(affectsKey(addActiveAffectsCategory, opt))}
+                            onCheckedChange={() => toggleAddAffect(addActiveAffectsCategory, opt)}
+                          >
+                            <Checkbox.HiddenInput />
+                            <Checkbox.Control />
+                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
+                          </Checkbox.Root>
+                        </Box>
+                      ))}
+                      {addCustomAffectsForActiveCategory.map((opt) => (
+                        <Box key={opt} py="4px">
+                          <Checkbox.Root
+                            checked={addAffectsSelected.has(affectsKey(addActiveAffectsCategory, opt))}
+                            onCheckedChange={() => toggleAddAffect(addActiveAffectsCategory, opt)}
+                          >
+                            <Checkbox.HiddenInput />
+                            <Checkbox.Control />
+                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
+                          </Checkbox.Root>
+                        </Box>
+                      ))}
+                    </Box>
+                    <Box display="flex" gap={2}>
+                      <Input
+                        placeholder={`Add a custom parameter to "${addActiveAffectsCategory}"...`}
+                        size="sm"
+                        value={addCustomAffect}
+                        onChange={(e) => setAddCustomAffect(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAffectParam(); } }}
+                      />
+                      <Button size="sm" onClick={addCustomAffectParam} disabled={!addCustomAffect.trim()}>
+                        Add
+                      </Button>
+                    </Box>
+
+                    {/* Selected affects across all categories */}
+                    {addAffectsSelected.size > 0 && (
+                      <Box display="flex" flexWrap="wrap" gap={2} mt={3}>
+                        {Array.from(addAffectsSelected).map((key) => (
+                          <Box
+                            key={key}
+                            display="flex"
+                            alignItems="center"
+                            gap={1}
+                            px={2}
+                            py={1}
+                            bg="blue.50"
+                            border="1px solid"
+                            borderColor="blue.200"
+                            borderRadius="md"
+                          >
+                            <Text fontSize="xs" color="blue.700">{key}</Text>
+                            <Button
+                              size="2xs"
+                              variant="ghost"
+                              colorPalette="blue"
+                              onClick={() => removeAddAffect(key)}
+                              aria-label={`Remove ${key}`}
+                            >
+                              <LuX />
+                            </Button>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
                   </Box>
 
                   {uploading && (
@@ -1005,7 +1070,7 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
                     <Button
                       colorPalette="blue"
                       onClick={() => setShowUploadConfirm(true)}
-                      disabled={uploadFiles.length === 0 || uploading || !addRequiredColumns.trim() || addAffectsSelected.size === 0}
+                      disabled={uploadFiles.length === 0 || uploading || addAffectsSelected.size === 0}
                       style={v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem" } : undefined}
                     >
                       Upload {uploadFiles.length > 0 && `(${uploadFiles.length})`}
