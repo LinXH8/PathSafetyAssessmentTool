@@ -91,6 +91,8 @@ overlaps_*.txt
 !README.md
 !REFACTOR_PLAN.md
 !UI_V2_REDESIGN_GUIDE.md
+!gradient-runner.md
+!prompt.md
 *.lnk
 CycleRAP_User_Guide.pdf
 # docs/ is the canonical source for all in-app and developer docs (see REFACTOR_PLAN S0.6)
