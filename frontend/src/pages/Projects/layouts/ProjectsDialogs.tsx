@@ -1,6 +1,6 @@
-import { Button, Dialog, Portal, CloseButton } from "@chakra-ui/react";
 import EditProjectModal from "../components/EditProjectModal";
 import ConfirmDialogV2 from "../../../components/common/ConfirmDialogV2";
+import ShareProjectModalV2 from "../components/ShareProjectModalV2";
 import type { ProjectsViewModel } from "./ProjectsViewModel";
 
 /**
@@ -21,9 +21,9 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
     openShare,
     setOpenShare,
     sharing,
-    shareTargetId,
-    setShareTargetId,
+    exporting,
     confirmShare,
+    confirmExport,
     shareTargets,
   } = vm;
 
@@ -63,68 +63,16 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
         onCancel={() => setOpenDelete(false)}
       />
 
-      {/* Share to profile Dialog */}
-      <Dialog.Root open={openShare} onOpenChange={(d) => setOpenShare(d.open)} unmountOnExit>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>Share {selected.size} project(s)</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <div>Send a copy of the following projects to another profile:</div>
-                <ul style={{ margin: "12px 0", paddingLeft: "20px" }}>
-                  {Array.from(selected).map((name) => (
-                    <li key={name}><strong>{name}</strong></li>
-                  ))}
-                </ul>
-                <label htmlFor="shareTargetProfile" style={{ display: "block", fontWeight: 600, marginBottom: "6px" }}>
-                  Share to profile
-                </label>
-                <select
-                  id="shareTargetProfile"
-                  value={shareTargetId}
-                  onChange={(e) => setShareTargetId(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "8px 10px",
-                    borderRadius: "8px",
-                    border: "1px solid var(--chakra-colors-border)",
-                    background: "var(--chakra-colors-bg)",
-                    color: "var(--chakra-colors-fg)",
-                  }}
-                >
-                  {shareTargets.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline" disabled={sharing}>
-                    Cancel
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button
-                  colorPalette="teal"
-                  onClick={confirmShare}
-                  loading={sharing}
-                  disabled={!shareTargetId}
-                >
-                  Share
-                </Button>
-              </Dialog.Footer>
-
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
+      {/* Share to profile / Export — v2 modal. */}
+      <ShareProjectModalV2
+        open={openShare}
+        onClose={() => setOpenShare(false)}
+        projectNames={Array.from(selected)}
+        shareTargets={shareTargets}
+        busy={sharing || exporting}
+        onShare={confirmShare}
+        onExport={confirmExport}
+      />
     </>
   );
 }

@@ -293,13 +293,13 @@ def _ensure_models_ready() -> None:
 
                 model_dir = None
                 for d in candidates:
-                    if (d / "path_segmentation.pt").exists():
+                    if (d / "path_segmentation_6July.pt").exists():
                         model_dir = d.resolve()
                         break
 
                 if model_dir is None:
                     tried = "\n".join(str(p) for p in candidates)
-                    raise RuntimeError(f"Cannot find model_dir (missing path_segmentation.pt). Tried:\n{tried}")
+                    raise RuntimeError(f"Cannot find model_dir (missing path_segmentation_6July.pt). Tried:\n{tried}")
 
                 # YOLO models load
                 logger.info(f"[Autocode] Loading CV models from {model_dir} — this may take several minutes on CPU...")

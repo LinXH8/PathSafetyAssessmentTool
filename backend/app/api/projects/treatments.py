@@ -1,7 +1,8 @@
-"""Treatment definition, application, preview and effectiveness routes.
+"""Treatment application, preview and effectiveness routes.
 
-Holds the canonical `TREATMENTS` catalogue (must match the frontend) and every
-`/treatments/*` endpoint."""
+The canonical treatment catalogue (CycleRAP v2.14 STM) lives in
+`app.services.treatment_catalog` (loaded from `data/stm_v214_treatments.json`);
+the frontend fetches it via `GET /<project>/treatments/catalog`."""
 from __future__ import annotations
 from flask import (
     Blueprint,
@@ -47,8 +48,15 @@ from werkzeug.exceptions import ServiceUnavailable
 # —— Reuse your existing service layer —— #
 from app.services.project_manager import project_manager, Project   # If the path is different, change to your real package path
 import app.services.serializer as serializer
-import app.services.cycleRAP_interface as CRI
-import app.services.cycleRAP_VA as cycleRAP_VA
+from app.services.treatment_catalog import (
+    CATALOG_VERSION,
+    TREATMENTS,
+    TREATMENT_BY_ID,
+    applicable_treatments,
+    apply_treatment_effects,
+    is_treatment_applicable,
+    treatment_mask,
+)
 
 from pathlib import Path
 from app.services import prediction as cv_pred
@@ -60,231 +68,52 @@ from ._helpers import df_to_records, fail, with_project
 
 
 
-# ===== Treatment Definitions (must match frontend exactly) =====
-TREATMENTS = [
-    {
-        "id": 1,
-        "name": "Upgrade to on-road bicycle lane with light segregation",
-        "triggers": [
-            {"Facility Type": [5], "Light Segregation": [2]},
-            {"Facility Type": [6], "Light Segregation": [2]},
-            {"Facility Type": [1, 2], "Number of lanes – adjacent road": [1], "Peak pedestrian flow along or across facility": [3]},
-            {"Facility Type": [1, 2], "Number of lanes – adjacent road": [1]},
-        ],
-        "effects": {"Facility Type": 4, "Light Segregation": 1, "Facility access": 1}
-    },
-    {
-        "id": 2,
-        "name": "Safety barrier (Adjacent road 0-1m)",
-        "triggers": [
-            {"Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2]},
-            {"Facility Type": [4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Curvature": [1], "Intersection or Road Crossing": [2]},
-            {"Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 0-1m": [1], "Intersection or Road Crossing": [2]},
-        ],
-        "effects": {"Adjacent Road Lane 0-1m": 2, "Facility access": 1}
-    },
-    {
-        "id": 3,
-        "name": "Safety barrier (Adjacent road 1-3m)",
-        "triggers": [
-            {"Facility Type": [4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2]},
-            {"Facility Type": [3, 4, 5, 6], "Adjacent Road Lane 1-3m": [1], "Intersection or Road Crossing": [2]},
-        ],
-        "effects": {"Adjacent Road Lane 1-3m": 2, "Facility access": 1}
-    },
-    {
-        "id": 4,
-        "name": "Upgrade to cycling-priority street",
-        "triggers": [
-            {"Facility Type": [1, 2, 5, 6], "Property Access": [1]},
-        ],
-        "effects": {"Facility access": 1}
-    },
-    {
-        "id": 5,
-        "name": "Upgrade to multi-use path",
-        "triggers": [
-            {"Facility Type": [1, 2, 5, 6], "Property Access": [1]},
-        ],
-        "effects": {"Facility Type": 2, "Facility Width per Direction": 3, "Facility access": 1}
-    },
-    {
-        "id": 6,
-        "name": "Upgrade to off-road bicycle path",
-        "triggers": [
-            {"Facility Type": [1, 2, 5, 6], "Property Access": [1]},
-        ],
-        "effects": {"Facility Type": 3, "Facility access": 1}
-    },
-    {
-        "id": 7,
-        "name": "Convert to one-way facility",
-        "triggers": [
-            {"Facility Type": [4, 5, 6], "Flow Direction": [2]},
-        ],
-        "effects": {"Flow Direction": 1, "Facility access": 1}
-    },
-    {
-        "id": 8,
-        "name": "Improve surface conditions",
-        "triggers": [
-            {"Loose or slippery surface": [1]},
-        ],
-        "effects": {"Loose or slippery surface": 2, "Major Surface Deformation or Drain Opening": 2}
-    },
-    {
-        "id": 9,
-        "name": "Install light segregation",
-        "triggers": [
-            {"Light Segregation": [2]},
-        ],
-        "effects": {"Light Segregation": 1}
-    },
-    {
-        "id": 10,
-        "name": "Install street lighting",
-        "triggers": [
-            {"Street Lighting": [2]},
-        ],
-        "effects": {"Street Lighting": 1}
-    },
-    {
-        "id": 11,
-        "name": "Remove fixed obstacles",
-        "triggers": [
-            {"Fixed Obstacle on Facility": [1]},
-        ],
-        "effects": {"Fixed Obstacle on Facility": 2}
-    },
-    {
-        "id": 12,
-        "name": "Remove non-fixed obstacles",
-        "triggers": [
-            {"Non-Fixed Obstacle on Facility": [1]},
-        ],
-        "effects": {"Non-Fixed Obstacle on Facility": 2}
-    },
-    {
-        "id": 13,
-        "name": "Remove width restriction",
-        "triggers": [
-            {"Width Restriction": [1]},
-        ],
-        "effects": {"Width Restriction": 2}
-    },
-    {
-        "id": 14,
-        "name": "Improve facility access",
-        "triggers": [
-            {"Facility access": [2]},
-        ],
-        "effects": {"Facility access": 1}
-    },
-    {
-        "id": 15,
-        "name": "Redesign sharp curves",
-        "triggers": [
-            {"Curvature": [1]},
-        ],
-        "effects": {"Curvature": 2}
-    },
-    {
-        "id": 16,
-        "name": "Widen the facility",
-        "triggers": [
-            {"Facility Width per Direction": [1, 2]},
-        ],
-        "effects": {"Facility Width per Direction": 3}
-    },
-    {
-        "id": 17,
-        "name": "Install protective barrier",
-        "triggers": [
-            {"Adjacent Severe Hazard 0-1m": [1]},
-        ],
-        "effects": {"Adjacent Severe Hazard 0-1m": 2}
-    },
-    {
-        "id": 18,
-        "name": "Improve delineation",
-        "triggers": [
-            {"Delineation": [2]},
-        ],
-        "effects": {"Delineation": 1}
-    },
-    {
-        "id": 19,
-        "name": "Review intersection approach",
-        "triggers": [
-            {"Intersection Approach": [1]},
-        ],
-        "effects": {"Intersection Approach": 2}
-    },
-    {
-        "id": 20,
-        "name": "Improve crossing facility",
-        "triggers": [
-            {"Crossing Facility": [2]},
-        ],
-        "effects": {"Crossing Facility": 1}
-    },
-    {
-        "id": 21,
-        "name": "Evaluate grade separation",
-        "triggers": [
-            {"Intersection or Road Crossing": [1]},
-        ],
-        "effects": {"Intersection or Road Crossing": 2}
-    },
-    {
-        "id": 22,
-        "name": "Reconfigure/remove parking",
-        "triggers": [
-            {"Adjacent Vehicle Parking 0-1m": [1]},
-        ],
-        "effects": {"Adjacent Vehicle Parking 0-1m": 2}
-    },
-    {
-        "id": 23,
-        "name": "Review tram/train rails",
-        "triggers": [
-            {"Tram or Train Rails": [1]},
-        ],
-        "effects": {"Tram or Train Rails": 2}
-    },
-    {
-        "id": 24,
-        "name": "Install traffic calming",
-        "triggers": [
-            {"Facility Type": [4], "Intersection or Road Crossing": [2], "Adjacent Road Lane 0-1m": [1]},
-        ],
-        "effects": {}
-    },
-    {
-        "id": 25,
-        "name": "Bicycle speed control",
-        "triggers": [
-            {"Bicycle/LV speed – average": [2]},
-        ],
-        "effects": {"Bicycle/LV speed – average": 1}
-    },
-]
+@bp.get("/<project_name>/treatments/catalog")
+@with_project()
+def get_treatment_catalog(project_name: str, pm, proj):
+    """Return the CycleRAP v2.14 STM treatment catalog (the single source of
+    truth for the frontend Treatment page)."""
+    return jsonify({
+        "ok": True,
+        "version": CATALOG_VERSION,
+        "treatments": TREATMENTS,
+    })
+
 
 @bp.post("/<project_name>/treatments")
 @with_project(version=True)
 def evaluate_treatments(project_name: str, pm, proj, ver):
     """
-    Use the Excel STM macro to generate treatment suggestions:
-    - Requires GeoData + Attributes
+    Generate treatment suggestions per segment using the native v2.14 STM
+    catalog: each segment's applicable treatments, ranked by the total
+    CycleRAP score that would result from applying the treatment in isolation
+    (ascending — mirrors the workbook's "STM Results" ranking).
     """
-    gdf = proj.geo_data.df
-    attrs = ver.attributes.df
+    attrs_df = ver.attributes.df
+    rows = []
+    for segment_index in range(len(attrs_df)):
+        original_row = dict(attrs_df.iloc[segment_index])
+        suggestions = []
+        for treatment in applicable_treatments(original_row):
+            modified_row = apply_treatment_effects(original_row, [treatment["id"]])
+            scores = calculate_cyclerap_score_native(pd.DataFrame([modified_row]))
+            suggestions.append({
+                "treatment_id": treatment["id"],
+                "name": treatment["name"],
+                "resulting_scores": {
+                    "BB": float(scores["BB"].iloc[0]),
+                    "BP": float(scores["BP"].iloc[0]),
+                    "SB": float(scores["SB"].iloc[0]),
+                    "VB": float(scores["VB"].iloc[0]),
+                    "Overall Risk Level": float(scores["Overall Risk Level"].iloc[0]),
+                },
+            })
+        suggestions.sort(key=lambda s: s["resulting_scores"]["Overall Risk Level"])
+        for rank, s in enumerate(suggestions, start=1):
+            s["rank"] = rank
+        rows.append({"segment_index": segment_index, "suggestions": suggestions})
 
-    treatment_tbl = CRI.cycleRAP_interface.evaluate_treatment_suggestions(gdf, attrs)
-    ver._treatment = treatment_tbl
-    proj.save_all()
-
-    return jsonify({"ok": True, "rows": df_to_records(treatment_tbl.df)})
+    return jsonify({"ok": True, "rows": rows})
 
 
 @bp.post("/<project_name>/treatments/apply")
@@ -331,13 +160,10 @@ def apply_treatments(project_name: str, pm, proj, ver):
         original_row = dict(attrs_df.iloc[segment_index])
 
         # Apply treatment effects
-        modified_row = original_row.copy()
         for treatment_id in treatment_ids:
-            if not (1 <= treatment_id <= 25):
+            if int(treatment_id) not in TREATMENT_BY_ID:
                 return fail(f"Invalid treatment ID: {treatment_id}", 400)
-            treatment = TREATMENTS[treatment_id - 1]  # Convert 1-based to 0-based
-            for attr_name, new_value in treatment['effects'].items():
-                modified_row[attr_name] = new_value
+        modified_row = apply_treatment_effects(original_row, treatment_ids)
 
         # Calculate before scores (from original attributes)
         original_df = pd.DataFrame([original_row])
@@ -469,13 +295,10 @@ def preview_treatments(project_name: str, pm, proj, ver):
         original_row = dict(attrs_df.iloc[segment_index])
 
         # Apply treatment effects
-        modified_row = original_row.copy()
         for treatment_id in treatment_ids:
-            if not (1 <= treatment_id <= 25):
+            if int(treatment_id) not in TREATMENT_BY_ID:
                 return fail(f"Invalid treatment ID: {treatment_id}", 400)
-            treatment = TREATMENTS[treatment_id - 1]  # Convert 1-based to 0-based
-            for attr_name, new_value in treatment['effects'].items():
-                modified_row[attr_name] = new_value
+        modified_row = apply_treatment_effects(original_row, treatment_ids)
 
         # Calculate before scores (from original attributes)
         original_df = pd.DataFrame([original_row])
@@ -554,6 +377,7 @@ def treatment_effectiveness(project_name: str, pm, proj, ver):
             requested_ids = [t["id"] for t in TREATMENTS]
         if not isinstance(requested_ids, list):
             return fail("treatment_ids must be a list", 400)
+        treatment_map = TREATMENT_BY_ID
 
         attrs_df = ver.attributes.df
         n = len(attrs_df)
@@ -569,7 +393,6 @@ def treatment_effectiveness(project_name: str, pm, proj, ver):
         before_df = calculate_cyclerap_score_native(attrs_df)
         before_band = before_df["Overall Risk Level Band"].to_numpy()
 
-        treatment_map = {t["id"]: t for t in TREATMENTS}
         counts: dict[str, int] = {}
         applicable_counts: dict[str, int] = {}
 
@@ -581,15 +404,7 @@ def treatment_effectiveness(project_name: str, pm, proj, ver):
             treatment = treatment_map[tid]
 
             # Applicability mask (vectorized): OR of trigger sets, AND within a set
-            mask = pd.Series(False, index=attrs_df.index)
-            for trigger_set in treatment.get("triggers", []):
-                set_mask = pd.Series(True, index=attrs_df.index)
-                for attr_name, valid_values in trigger_set.items():
-                    if attr_name not in attrs_df.columns:
-                        set_mask = pd.Series(False, index=attrs_df.index)
-                        break
-                    set_mask &= attrs_df[attr_name].isin(valid_values)
-                mask |= set_mask
+            mask = treatment_mask(attrs_df, treatment)
 
             applicable_counts[str(tid)] = int(mask.sum())
 
@@ -648,26 +463,12 @@ def treatment_segment_effectiveness(project_name: str, segment_index: int, pm, p
         row_df = attrs_df.iloc[[segment_index]]
         before_score = float(calculate_cyclerap_score_native(row_df)["Overall Risk Level"].iloc[0])
 
+        segment_row = dict(attrs_df.iloc[segment_index])
         score_drops: dict[str, float] = {}
         for treatment in TREATMENTS:
             tid = treatment["id"]
 
-            applicable = True
-            for trigger_set in treatment.get("triggers", []):
-                set_ok = True
-                for attr_name, valid_values in trigger_set.items():
-                    if attr_name not in row_df.columns:
-                        set_ok = False
-                        break
-                    if row_df[attr_name].iloc[0] not in valid_values:
-                        set_ok = False
-                        break
-                if set_ok:
-                    break
-            else:
-                applicable = False
-
-            if not applicable:
+            if not is_treatment_applicable(segment_row, treatment):
                 score_drops[str(tid)] = 0.0
                 continue
 
@@ -930,27 +731,6 @@ def apply_all_treatments(project_name: str, pm, proj, ver):
             new_rows = [treatment_df.iloc[0].copy() if len(treatment_df) > 0 else {}] * (len(attrs_df) - len(treatment_df))
             treatment_df = pd.concat([treatment_df, pd.DataFrame(new_rows)], ignore_index=True)
 
-        # Helper function to get applicable treatments for a segment
-        def get_applicable_treatments(attr_row):
-            # Recreate the trigger logic from frontend
-            applicable = []
-            for treatment in TREATMENTS:
-                for trigger_set in treatment.get("triggers", []):
-                    # Check if all conditions in this trigger set are met
-                    all_match = True
-                    for attr_name, required_values in trigger_set.items():
-                        if attr_name not in attr_row:
-                            all_match = False
-                            break
-                        if attr_row[attr_name] not in required_values:
-                            all_match = False
-                            break
-
-                    if all_match:
-                        applicable.append(treatment)
-                        break  # Only need one trigger set to match
-            return applicable
-
         # Process each segment
         details = []
         total_treated = 0
@@ -959,20 +739,18 @@ def apply_all_treatments(project_name: str, pm, proj, ver):
             try:
                 original_row = dict(attrs_df.iloc[segment_index])
 
-                # Get applicable treatments for this segment
-                applicable_treatments = get_applicable_treatments(original_row)
+                # Get applicable treatments for this segment (manual-value
+                # treatments like "Vehicles speed control" are excluded)
+                segment_treatments = applicable_treatments(original_row)
 
-                if not applicable_treatments:
+                if not segment_treatments:
                     continue  # Skip if no applicable treatments
 
                 # Collect all treatment IDs for this segment
-                treatment_ids = [t["id"] for t in applicable_treatments]
+                treatment_ids = [t["id"] for t in segment_treatments]
 
                 # Apply treatment effects
-                modified_row = original_row.copy()
-                for treatment in applicable_treatments:
-                    for attr_name, new_value in treatment['effects'].items():
-                        modified_row[attr_name] = new_value
+                modified_row = apply_treatment_effects(original_row, treatment_ids)
 
                 # Calculate before scores
                 original_df = pd.DataFrame([original_row])
@@ -1071,7 +849,7 @@ def apply_specific_treatment(project_name: str, pm, proj, ver):
         if not target_treatment_id:
             return fail("Missing treatment_id", 400)
             
-        target_treatment = next((t for t in TREATMENTS if t["id"] == target_treatment_id), None)
+        target_treatment = TREATMENT_BY_ID.get(int(target_treatment_id))
         if not target_treatment:
             return fail(f"Invalid treatment_id: {target_treatment_id}", 400)
 
@@ -1081,20 +859,6 @@ def apply_specific_treatment(project_name: str, pm, proj, ver):
         if len(treatment_df) < len(attrs_df):
             new_rows = [{}] * (len(attrs_df) - len(treatment_df))
             treatment_df = pd.concat([treatment_df, pd.DataFrame(new_rows)], ignore_index=True)
-
-        def is_treatment_applicable(attr_row, treatment):
-            for trigger_set in treatment.get("triggers", []):
-                all_match = True
-                for attr_name, required_values in trigger_set.items():
-                    if attr_name not in attr_row:
-                        all_match = False
-                        break
-                    if attr_row[attr_name] not in required_values:
-                        all_match = False
-                        break
-                if all_match:
-                    return True
-            return False
 
         for col in attrs_df.columns:
             if col not in treatment_df.columns:
@@ -1126,12 +890,7 @@ def apply_specific_treatment(project_name: str, pm, proj, ver):
                 
                 treatment_ids = existing_treatment_ids + [target_treatment_id]
                 
-                modified_row = original_row.copy()
-                for tid in treatment_ids:
-                    t_obj = next((t for t in TREATMENTS if t["id"] == tid), None)
-                    if t_obj:
-                        for attr_name, new_value in t_obj['effects'].items():
-                            modified_row[attr_name] = new_value
+                modified_row = apply_treatment_effects(original_row, treatment_ids)
 
                 original_df = pd.DataFrame([original_row])
                 before_scores_df = calculate_cyclerap_score_native(original_df)

@@ -203,12 +203,14 @@ def share_projects():
         return jsonify({"error": "project_names must be a non-empty array"}), 400
 
     source_profile_id = str(data.get("source_profile_id") or "").strip() or None
+    include_tags = bool(data.get("include_tags", True))
 
     try:
         result = profile_store.share_projects_to_profile(
             target_profile_id,
             raw_project_names,
             source_profile_id,
+            include_tags=include_tags,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)

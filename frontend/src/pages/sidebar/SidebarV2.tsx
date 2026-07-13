@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { LuCheck, LuChevronDown } from "react-icons/lu";
 import { fetchProjectList, type ProjectListItem, type ProfileSummary } from "../../api";
 import { openCoding, openPathAnalysis, openTreatment } from "../../features/projectNav";
 import { useProjectSelection } from "../../features/projectSelection";
@@ -72,11 +73,7 @@ function Checkbox({ checked }: { checked: boolean }) {
             }
       }
     >
-      {checked && (
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-          <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
+      {checked && <LuCheck size={10} color="#fff" strokeWidth={3} />}
     </div>
   );
 }
@@ -176,19 +173,12 @@ export default function SidebarV2({
             <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text, lineHeight: 1.2 }}>
               Quick Select
             </span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={COLOR.gray600}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <LuChevronDown
+              size={14}
+              color={COLOR.gray600}
+              strokeWidth={2.5}
               style={{ transition: "transform .2s", transform: qsOpen ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0 }}
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
+            />
           </div>
           {qsOpen && (
             <div

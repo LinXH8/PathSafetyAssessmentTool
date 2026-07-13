@@ -5,6 +5,7 @@
  * Pure presentation — no data, no fetch.
  */
 import type { CSSProperties, ReactNode } from "react";
+import { LuChevronDown } from "react-icons/lu";
 import { FONT, COLOR, RADIUS } from "../../../features/ui/designTokens";
 
 /**
@@ -226,19 +227,12 @@ export function AccordionSection({
         <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: "1rem", color: COLOR.text }}>
           {title}
         </span>
-        <svg
-          width="0.875rem"
-          height="0.875rem"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={COLOR.gray600}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <LuChevronDown
+          size="0.875rem"
+          color={COLOR.gray600}
+          strokeWidth={2.5}
           style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .15s" }}
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+        />
       </div>
       {open && (
         <div

@@ -189,6 +189,19 @@ def prune_source_folder(folder_name: str) -> dict:
     referenced = _collect_referenced_filenames(pm, folder_name)
     image_files = _iter_source_image_files(source_dir)
 
+    # Ensure an authoritative folder summary (segment_count / distance) computed from
+    # the FULL frame set is cached before we decimate the folder. Pruning throws away
+    # the dense raw frames the 10 m segmentation relies on, so a summary recomputed
+    # afterwards would badly undercount — capture the correct value now and preserve it.
+    saved_summary = None
+    try:
+        _resolve_source_folder_preview(source_dir, in_root, allow_rename=False)
+        metadata = _load_source_folder_metadata(source_dir)
+        if metadata is not None and isinstance(metadata.get("summary"), dict):
+            saved_summary = dict(metadata["summary"])
+    except Exception as exc:
+        current_app.logger.warning("Failed to snapshot summary before pruning %s: %s", source_dir, exc)
+
     for image_file in image_files:
         rel = image_file.relative_to(source_dir).as_posix()
         if rel in referenced or image_file.name in referenced:
@@ -202,6 +215,12 @@ def prune_source_folder(folder_name: str) -> dict:
         except Exception as exc:
             result["errors"].append(f"Failed to delete {rel}: {exc}")
             result["kept"] += 1
+
+    # Re-stamp the cache_key to the now-pruned file set so the preserved (pre-prune)
+    # segment_count survives and no later read recomputes it from the thinned frames.
+    if result["pruned"] > 0 and saved_summary is not None:
+        remaining = _iter_source_image_files(source_dir)
+        _restamp_source_folder_metadata(source_dir, remaining, saved_summary, pruned=True)
 
     return result
 
@@ -286,6 +305,29 @@ def _write_source_folder_metadata(source_dir: Path, cache_key: str, summary: dic
     }
     temp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     temp_path.replace(metadata_path)
+
+
+def _restamp_source_folder_metadata(
+    source_dir: Path, image_files: list[Path], summary: dict, *, pruned: bool = False
+) -> None:
+    """Rewrite the folder-summary metadata so its ``cache_key`` matches the CURRENT
+    files on disk while **preserving** the (authoritative) summary values.
+
+    This is called after pruning removes raw survey frames. Without it, the stored
+    cache_key would no longer match the decimated folder, so the next summary read
+    would recompute segment_count by re-sampling the already-thinned anchor frames
+    at 10 m — which badly undercounts (the raw ~1-per-2 m frames the count depends
+    on are gone). Re-stamping keeps the correct pre-prune segment_count / distance
+    and stops any spurious recompute.
+    """
+    try:
+        preserved = dict(summary)
+        if pruned:
+            preserved["pruned"] = True
+        new_key = _build_source_folder_cache_key(source_dir, image_files)
+        _write_source_folder_metadata(source_dir, new_key, preserved)
+    except Exception as exc:
+        current_app.logger.warning("Failed to re-stamp source folder metadata for %s: %s", source_dir, exc)
 
 
 def _build_source_folder_summary(source_dir: Path, image_files: list[Path]) -> dict:
@@ -380,6 +422,7 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
 
     cached = False
     summary = None
+    restamped_pruned = False
     if metadata is not None and metadata.get("cache_key") == cache_key:
         cached_summary = metadata.get("summary")
         if isinstance(cached_summary, dict):
@@ -387,7 +430,27 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
             cached = True
 
     if summary is None:
-        summary = _build_source_folder_summary(source_dir, image_files)
+        fresh = _build_source_folder_summary(source_dir, image_files)
+        old = metadata.get("summary") if isinstance(metadata, dict) else None
+        # Backstop for folders whose raw frames were pruned after a project was
+        # created from them (cache_key no longer matches the thinned folder). The
+        # fresh recompute would re-sample the ~1-per-segment anchor frames at 10 m
+        # and undercount, so when frames have clearly been removed since the last
+        # summary we keep the authoritative pre-prune segment_count / distance and
+        # only refresh the volatile file counts.
+        if (
+            isinstance(old, dict)
+            and isinstance(old.get("segment_count"), int)
+            and (fresh.get("geotagged_image_count") or 0) < (old.get("geotagged_image_count") or 0)
+        ):
+            summary = dict(old)
+            summary["image_count"] = fresh.get("image_count")
+            summary["geotagged_image_count"] = fresh.get("geotagged_image_count")
+            summary["pruned"] = True
+            cached = True
+            restamped_pruned = True
+        else:
+            summary = fresh
 
     summary["folder_name"] = source_dir.name
     renamed_from = None
@@ -401,7 +464,9 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
 
     summary["folder_name"] = source_dir.name
 
-    if not cached or renamed_from is not None:
+    if not cached or renamed_from is not None or restamped_pruned:
+        # restamped_pruned writes the freshly-computed (pruned) cache_key so the
+        # preserved count becomes a cache hit next time instead of re-running EXIF.
         try:
             _write_source_folder_metadata(source_dir, cache_key, summary)
         except Exception as exc:

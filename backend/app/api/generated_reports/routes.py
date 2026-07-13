@@ -81,3 +81,30 @@ def delete_report(filename: str):
         return jsonify({"error": "Not found"}), 404
     target.unlink()
     return jsonify({"deleted": safe})
+
+
+@bp.route("/<path:filename>", methods=["PATCH"])
+def rename_report(filename: str):
+    """Rename a saved report. Body: {"new_name": "..."} — the .pdf extension is
+    enforced by _safe_name, collisions are rejected."""
+    _ensure_dir()
+    safe_old = _safe_name(Path(filename).name)
+    src = REPORTS_DIR / safe_old
+    if not src.exists() or not src.is_file():
+        return jsonify({"error": "Not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    raw_new = (data.get("new_name") or "").strip()
+    if not raw_new:
+        return jsonify({"error": "New name required"}), 400
+
+    safe_new = _safe_name(raw_new)
+    if safe_new == safe_old:
+        return jsonify({"renamed": safe_old, "name": safe_old})
+
+    dest = REPORTS_DIR / safe_new
+    if dest.exists():
+        return jsonify({"error": "A report with that name already exists"}), 409
+
+    src.rename(dest)
+    return jsonify({"renamed": safe_old, "name": safe_new})

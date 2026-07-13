@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Spinner } from "@chakra-ui/react";
+import { LuChevronDown } from "react-icons/lu";
 import ThemeAwareTileLayer from "../../../components/common/ThemeAwareTileLayer";
 import ShapefileModal from "../../sidebar/components/ShapefileModal";
 import EditParametersModal from "../EditParametersModal";
@@ -194,16 +195,12 @@ export default function GisLayersLayoutV2(vm: GisLayersViewModel) {
                 }}
               >
                 <span>{activeFilter?.label}</span>
-                <svg width="9" height="6" viewBox="0 0 9 6" fill="none" style={{ flexShrink: 0, marginLeft: "0.5rem" }}>
-                  <path
-                    d="M1 1l3.5 3.5L8 1"
-                    stroke={COLOR.gray500}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ transform: dropdownOpen ? "rotate(180deg)" : "none", transformOrigin: "center" }}
-                  />
-                </svg>
+                <LuChevronDown
+                  size={13}
+                  color={COLOR.gray500}
+                  strokeWidth={2}
+                  style={{ flexShrink: 0, marginLeft: "0.5rem", transform: dropdownOpen ? "rotate(180deg)" : "none", transformOrigin: "center" }}
+                />
               </button>
 
               {dropdownOpen && (

@@ -56,7 +56,7 @@ from app.services import gis_mapping as gis
 import app.services.global_var as global_var
 
 from ._helpers import _get_gis, _get_segment_midpoint, fail, get_ctx, ok
-from .roads_util import _available_road_folders, _available_road_names, _get_planning_areas_gdf, _get_road_sections_gdf, _pretty_folder_label
+from .roads_util import _available_road_folders, _available_road_names, _get_planning_areas_gdf, _get_road_sections_gdf, _pretty_folder_label, _select_latest_quarter_folders
 
 
 
@@ -199,7 +199,9 @@ def roads_in_polygon():
             points = all_road_names[name]["points"]
             folders = avail_folders.get(name.upper(), [])
             if folders:
-                for folder in folders:
+                # Collapse multi-quarter downloads to the latest survey only so the
+                # "Roads Found" table shows one row per road, not one per quarter.
+                for folder in _select_latest_quarter_folders(folders):
                     roads.append({
                         "name": folder,
                         "label": _pretty_folder_label(folder),

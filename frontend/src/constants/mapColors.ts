@@ -35,7 +35,7 @@ export const GIS_LAYER_COLORS = {
   mrt_exit:         "#06B6D4", // cyan    (unchanged — already RSB-safe)
   bus_stop:         "#BE185D", // rose    (was #8B5CF6 violet ≈ RSB Extreme)
   parking_lot:      "#047857", // emerald (was #D97706 amber  ≈ RSB Medium)
-  path_defects:     "#EF4444", // red     (unchanged — danger convention, RSB-safe)
+  path_defects:     "#F59E0B", // amber   (warning-triangle marker; hazard-sign convention — the triangle SHAPE carries the "warning", so colour need not be RSB-clear)
   // ── Lines (Polylines) — synced to Facility Type attribute colors ──
   footpath:         "#2563EB", // blue     (matches "Footpath" Facility Type attribute color)
   cycling:          "#16A34A", // green    (matches "Cycling Path" Facility Type attribute color)

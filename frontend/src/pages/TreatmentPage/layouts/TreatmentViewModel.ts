@@ -126,6 +126,11 @@ export interface TreatmentViewModel {
 
   // ── navigation ──
   onBack(): void;
+  // True when the page was opened from Path Analysis (shows the "← Back to Path
+  // Analysis" link, which returns to the prior Path Analysis view with its
+  // filters/viewport preserved via browser history).
+  cameFromPathAnalysis: boolean;
+  onBackToAnalysis(): void;
 
   // ════════ v2-only page actions (on-canvas; v1 has these in the sidebar) ════════
   effectivenessLabel: string;          // e.g. "28%"

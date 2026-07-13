@@ -14,10 +14,15 @@
  * what was inline (and is extracted here) is the overlay *rendering*.
  */
 
-import { CircleMarker, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Tooltip } from "react-leaflet";
+import { CircleMarker, Marker, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Tooltip } from "react-leaflet";
 import type L from "leaflet";
 import { GIS_LAYER_COLORS as gisLayerColors } from "../../../../constants/mapColors";
+import { makeDefectIcon } from "../../../../components/map/defectMarker";
 import type { GISLayersData, PathDefect } from "./useGISLayerToggles";
+
+// Canonical warning-triangle marker, shared with the Coding map (DefectsLayer)
+// and the Layer View legend glyph. Built once — divIcon instances are reusable.
+const defectIcon = makeDefectIcon();
 
 interface GISLayerOverlaysProps {
   /** Fetched layer geometry keyed by layer id (null until a fetch resolves). */
@@ -121,9 +126,9 @@ export function GISLayerOverlays({
         <LeafletPolygon key={`lm-${i}`} renderer={gisCanvasRenderer} positions={f.coordinates.map(([lon, lat]: [number, number]) => [lat, lon])} pathOptions={{ color: gisLayerColors.land_ministry, weight: 2, opacity: 0.8, fillOpacity: 0.2 }}><Tooltip>{f.properties?.OWNRSHP_CL ?? "Ministry Land"}</Tooltip></LeafletPolygon>
       ))}
       {showPathDefects && pathDefects?.map((d, i) => (
-        <CircleMarker key={`def-${i}`} center={[d.lat, d.lon]} radius={7} pathOptions={{ color: gisLayerColors.path_defects, weight: 2, opacity: 1, fillOpacity: 0.8 }}>
+        <Marker key={`def-${i}`} position={[d.lat, d.lon]} icon={defectIcon}>
           <Tooltip>{`${d.type_of_defect || "Defect"} — ${d.location || "Unknown"}${d.date_of_inspection ? ` (${d.date_of_inspection})` : ""}`}</Tooltip>
-        </CircleMarker>
+        </Marker>
       ))}
     </>
   );

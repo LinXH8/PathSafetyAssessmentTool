@@ -664,13 +664,33 @@ def _copy_or_link(src: str, dst: str) -> None:
         shutil.copy2(src, dst)
 
 
+def _strip_tags_from_metadata(project_dir: Path) -> None:
+    """Clear the ``tags`` list in a copied project's metadata (best-effort)."""
+    meta_path = project_dir / "project_metadata.json"
+    if not meta_path.is_file():
+        return
+    try:
+        with open(meta_path, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+        meta["tags"] = []
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(meta, f, indent=4)
+    except Exception:
+        # Metadata rewrite is non-critical — never fail the share over it.
+        pass
+
+
 def share_projects_to_profile(
     target_profile_id: str,
     project_names: list[str],
     source_profile_id: str | None = None,
+    include_tags: bool = True,
 ) -> dict:
     """Copy projects from a source profile (the active profile by default) into a target
-    profile's project area, leaving the originals untouched."""
+    profile's project area, leaving the originals untouched.
+
+    When ``include_tags`` is false the copied project's tags are cleared so the
+    destination profile starts with an untagged copy."""
     with _STATE_LOCK:
         state = _load_state()
         target = _require_profile(state, str(target_profile_id or ""))
@@ -701,6 +721,8 @@ def share_projects_to_profile(
                 skipped.append({"name": project_name, "reason": "already_exists"})
                 continue
             shutil.copytree(source_dir, destination, copy_function=_copy_or_link)
+            if not include_tags:
+                _strip_tags_from_metadata(destination)
             shared.append(project_name)
 
         return {"shared": shared, "skipped": skipped, "missing": missing}

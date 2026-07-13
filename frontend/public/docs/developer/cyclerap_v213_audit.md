@@ -1,3 +1,8 @@
+> **SUPERSEDED (2026-07-08):** the engine now implements CycleRAP **v2.14**.
+> See `scripts/extract_v214_model.py`, `scripts/numerical_parity_v214.py`,
+> `scripts/stm_parity_v214.py` and the v2.14 notes in `scoring.md` / `treatments.md`.
+> This audit is kept for historical reference only.
+
 # CycleRAP v2.13 vs Python (v2.11 port) Audit
 
 Source workbook: `CycleRAP - model - generation v2.13 - to suppliers.xlsm`

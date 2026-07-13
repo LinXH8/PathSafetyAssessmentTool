@@ -261,7 +261,7 @@ export function MapViewToolbar({
                 onClick={onGenerateReport}
                 style={{ background: COLOR.teal, color: COLOR.white, fontFamily: FONT, fontWeight: 700, borderRadius: 6 }}
               >
-                {"📄 Generate Report"}
+                {"Generate Report"}
               </Button>
               <Menu.Root positioning={{ placement: "bottom-end", strategy: "fixed" }}>
                 <Menu.Trigger asChild>

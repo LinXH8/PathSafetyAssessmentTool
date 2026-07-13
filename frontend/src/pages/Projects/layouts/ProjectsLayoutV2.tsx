@@ -1,4 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
+import { LuCheck, LuChevronsUpDown, LuChevronUp, LuChevronDown } from "react-icons/lu";
 import { getTagColor } from "../tagColor";
 import ProjectsDialogs from "./ProjectsDialogs";
 import EditProjectModalV2 from "../components/EditProjectModalV2";
@@ -39,10 +40,11 @@ const inputStyle: React.CSSProperties = {
 const captionStyle: React.CSSProperties = { fontFamily: FONT, fontSize: "0.75rem", color: COLOR.gray500 };
 
 function SortGlyph({ meta, multi }: { meta: SortMeta | null; multi: boolean }) {
-  if (!meta) return <span style={{ fontSize: "0.75rem", color: COLOR.gray400, cursor: "pointer" }}>↕</span>;
+  if (!meta) return <LuChevronsUpDown size={13} color={COLOR.gray400} style={{ cursor: "pointer", flexShrink: 0 }} />;
+  const DirIcon = meta.direction === "asc" ? LuChevronUp : LuChevronDown;
   return (
-    <span style={{ fontSize: "0.75rem", color: COLOR.gray600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.125rem" }}>
-      {meta.direction === "asc" ? "▲" : "▼"}
+    <span style={{ color: COLOR.gray600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.125rem" }}>
+      <DirIcon size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
       {multi && <span style={{ fontSize: "0.625rem", fontWeight: 700 }}>{meta.priority}</span>}
     </span>
   );
@@ -78,7 +80,6 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     loadPathAnalysis,
     loadTreatment,
     askShare,
-    shareTargets,
     sortConfig,
     getSortMeta,
     handleSort,
@@ -365,7 +366,7 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
           {actionBtn("Treatment", loadTreatment, { disabled: noSelection })}
         </div>
         <div style={{ flex: 1, display: "flex", gap: "1rem" }}>
-          {actionBtn("Share", askShare, { disabled: noSelection || shareTargets.length === 0 })}
+          {actionBtn("Share", askShare, { disabled: noSelection })}
           {actionBtn("Edit", onEditSelected, { disabled: noSelection })}
           {actionBtn("Delete", askDelete, { disabled: noSelection, danger: true })}
         </div>
@@ -500,8 +501,4 @@ function checkboxBox(checked: boolean): React.CSSProperties {
     : { width: "1rem", height: "1rem", border: `1px solid ${COLOR.borderInput}`, borderRadius: "0.125rem", flexShrink: 0, background: COLOR.white, cursor: "pointer" };
 }
 
-const checkSvg = (
-  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-    <path d="M2 6l3 3 5-6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const checkSvg = <LuCheck size={10} color="#fff" strokeWidth={3} />;
