@@ -29,7 +29,7 @@ export const INITIAL_CENTER: [number, number] = [1.3521, 103.8198];
 export const FILTER_OPTIONS: { value: FilterMode; label: string; desc: string }[] = [
   { value: "all", label: "All Layers", desc: "Shows every available GIS shapefile in this project across all categories." },
   { value: "autocoding", label: "Auto-coding", desc: "Layers that feed directly into the scoring calculations. Includes area type polygons (urban/rural/recreational), land use classifications, speed limit lines, and the road link network file." },
-  { value: "project", label: "Project Setup", desc: "Reference layers required before a project can be created or run. Includes planning area boundaries, the road name network (to match paths to roads), and the road network node file for intersection referencing." },
+  { value: "project", label: "Area Based Reporting", desc: "Layers used to report and organise results by area. Includes planning area boundaries, the road name network (to match paths to roads), and the road network node file for intersection referencing." },
   { value: "analysis", label: "Analysis", desc: "All layers displayed as overlays in the Analysis page. Includes path centrelines (footpath, cycling, shared), road and bicycle crossings, MRT exits, bus stops, bus lanes, parking lots, kerb lines, path defects, land type categories, and AMG pedestrian/cyclist count data." },
 ];
 
@@ -75,7 +75,7 @@ export const getLayerPurpose = (file: { category: string; base_name: string }): 
   const cat = file.category.toLowerCase();
   const name = file.base_name.toLowerCase();
 
-  // Project Setup: boundary and road network reference layers
+  // Area Based Reporting: boundary and road network reference layers
   if (cat === "planning_area" || cat === "road_name") return "project";
   if (cat === "linkid_shape_file" && name.includes("node")) return "project";
 

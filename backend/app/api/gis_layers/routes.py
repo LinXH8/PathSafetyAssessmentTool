@@ -203,33 +203,42 @@ def _load_originals() -> dict:
 # (e.g. a newly uploaded layer that isn't part of the autocoding pipeline).
 # This is display metadata only — it does not change what columns the
 # scoring engine actually reads.
-KNOWN_AFFECT_PARAMETERS = [
-    "Facility Width",
-    "Curvature",
-    "Grade",
-    "Road Operating Speed",
-    "Road Speed Limit",
-    "Number of Lanes – Adjacent Road",
-    "Pedestrian Crossing",
-    "Crossing Facility",
-    "Crossing Type",
-    "Peak Pedestrian Flow",
-    "Peak Bicycle Traffic Flow",
-    "Heavy Vehicle Flow",
-    "Adjacent Vehicle Parking",
-    "Area Type (Urban)",
-    "Area Type (Rural)",
-    "Area Type (Recreational)",
-    "Area Type (Industrial)",
-    "Land Use Type",
-    "Road Name Reference",
-    "Road Network Node Reference",
-    "Loose/Slippery Surface",
-    "Major Surface Deformation",
-    "Intersection or Road Crossing",
-    "Area-based Reporting",
-    "User Counts (Pedestrian/Cyclist)",
-]
+KNOWN_AFFECT_PARAMETER_GROUPS = {
+    "For Auto Coding": [
+        "Facility Width",
+        "Curvature",
+        "Grade",
+        "Road Operating Speed",
+        "Road Speed Limit",
+        "Number of Lanes – Adjacent Road",
+        "Pedestrian Crossing",
+        "Crossing Facility",
+        "Crossing Type",
+        "Peak Pedestrian Flow",
+        "Peak Bicycle Traffic Flow",
+        "Heavy Vehicle Flow",
+        "Adjacent Vehicle Parking",
+        "Area Type (Urban)",
+        "Area Type (Rural)",
+        "Area Type (Recreational)",
+        "Area Type (Industrial)",
+        "Land Use Type",
+        "Loose/Slippery Surface",
+        "Major Surface Deformation",
+        "Intersection or Road Crossing",
+    ],
+    "For Area Based Reports": [
+        "Road Name Reference",
+        "Road Network Node Reference",
+        "Area-based Reporting",
+    ],
+    "For Analysis": [
+        "User Counts (Pedestrian/Cyclist)",
+    ],
+}
+
+# Flattened view — used wherever a plain list of known parameter names is needed.
+KNOWN_AFFECT_PARAMETERS = [p for group in KNOWN_AFFECT_PARAMETER_GROUPS.values() for p in group]
 
 
 def _metadata_overrides_path() -> Path:
@@ -894,8 +903,8 @@ def delete_shapefile(shapefile_path: str):
 
 @bp.get("/parameter-options")
 def get_parameter_options():
-    """Return the curated list of parameter tags offered in the 'Affects' picker."""
-    return jsonify(KNOWN_AFFECT_PARAMETERS)
+    """Return the curated parameter tags offered in the 'Affects' picker, grouped by category."""
+    return jsonify(KNOWN_AFFECT_PARAMETER_GROUPS)
 
 
 # ---------------------------------------------------------------------------

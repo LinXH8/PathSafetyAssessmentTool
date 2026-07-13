@@ -33,7 +33,9 @@ export default function EditParametersModal({ file, onClose, onSaved, variant = 
 
   useEffect(() => {
     if (!file) return;
-    api.getParameterOptions().then(setParameterOptions).catch(() => setParameterOptions([]));
+    api.getParameterOptions()
+      .then((groups) => setParameterOptions(Object.values(groups).flat()))
+      .catch(() => setParameterOptions([]));
     setRequiredColumns(file.required_columns && file.required_columns !== "None" ? file.required_columns : "");
     setLayerName(file.name);
     const existingAffects = (file.affects || "")
