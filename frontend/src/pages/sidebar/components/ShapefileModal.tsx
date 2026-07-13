@@ -55,13 +55,13 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
   const [showUploadConfirm, setShowUploadConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Add Shapefile State — Required Columns (optional) / Affects (mandatory; pick a
-  // category first, then attributes within it — stored as "Category: Attribute")
+  // Add Shapefile State — Required Columns (optional) / Affects (mandatory; pick one or
+  // more categories, then attributes within each — stored as "Category: Attribute")
   const [addRequiredColumns, setAddRequiredColumns] = useState("");
   const [addAffectsSelected, setAddAffectsSelected] = useState<Set<string>>(new Set());
-  const [addCustomAffect, setAddCustomAffect] = useState("");
+  const [addCustomAffectByCategory, setAddCustomAffectByCategory] = useState<Record<string, string>>({});
   const [addParameterGroups, setAddParameterGroups] = useState<api.ParameterOptionGroups>({});
-  const [addActiveAffectsCategory, setAddActiveAffectsCategory] = useState("");
+  const [addActiveAffectsCategories, setAddActiveAffectsCategories] = useState<Set<string>>(new Set());
 
   const addAffectsCategoryNames = [
     ...AFFECTS_CATEGORY_ORDER.filter((name) => name in addParameterGroups),
@@ -71,7 +71,8 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
   function resetAddMetadataState() {
     setAddRequiredColumns("");
     setAddAffectsSelected(new Set());
-    setAddCustomAffect("");
+    setAddCustomAffectByCategory({});
+    setAddActiveAffectsCategories(new Set());
   }
 
   function affectsKey(category: string, param: string) {
@@ -96,18 +97,29 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
     });
   }
 
-  function addCustomAffectParam() {
-    const trimmed = addCustomAffect.trim();
-    if (!trimmed || !addActiveAffectsCategory) return;
-    setAddAffectsSelected(prev => new Set(prev).add(affectsKey(addActiveAffectsCategory, trimmed)));
-    setAddCustomAffect("");
+  function toggleActiveAffectsCategory(category: string) {
+    setAddActiveAffectsCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
   }
 
-  // Custom (not in the known list) attributes already selected under the active category.
-  const addCustomAffectsForActiveCategory = Array.from(addAffectsSelected)
-    .filter((k) => k.startsWith(`${addActiveAffectsCategory}: `))
-    .map((k) => k.slice(addActiveAffectsCategory.length + 2))
-    .filter((opt) => !(addParameterGroups[addActiveAffectsCategory] || []).includes(opt));
+  function addCustomAffectParam(category: string) {
+    const trimmed = (addCustomAffectByCategory[category] || "").trim();
+    if (!trimmed) return;
+    setAddAffectsSelected(prev => new Set(prev).add(affectsKey(category, trimmed)));
+    setAddCustomAffectByCategory(prev => ({ ...prev, [category]: "" }));
+  }
+
+  // Custom (not in the known list) attributes already selected under a given category.
+  function customAffectsForCategory(category: string) {
+    return Array.from(addAffectsSelected)
+      .filter((k) => k.startsWith(`${category}: `))
+      .map((k) => k.slice(category.length + 2))
+      .filter((opt) => !(addParameterGroups[category] || []).includes(opt));
+  }
 
   // Replace Shapefile State
   const [replaceFiles, setReplaceFiles] = useState<File[]>([]);
@@ -139,7 +151,7 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
         setAddParameterGroups(groups);
         const ordered = AFFECTS_CATEGORY_ORDER.filter((name) => name in groups);
         const first = ordered[0] || Object.keys(groups)[0] || "";
-        setAddActiveAffectsCategory(first);
+        setAddActiveAffectsCategories(first ? new Set([first]) : new Set());
       }).catch(() => setAddParameterGroups({}));
     }
   }, [open]);
@@ -761,63 +773,81 @@ export default function ShapefileModal({ open, onClose, variant = "v1" }: Shapef
                   {/* Affects (mandatory for new layers) — pick a category, then attributes within it */}
                   <Box mb={4}>
                     <Text fontWeight={v2 ? "700" : "600"} mb={2}>
-                      Affects <Text as="span" color="red.500">*</Text>
+                      Select the Purpose(s) of This Layer <Text as="span" color="red.500">*</Text>
+                    </Text>
+                    <Text fontSize="xs" color="fg.muted" mb={2}>
+                      Select one or more categories, then choose which attributes in each category this layer affects.
                     </Text>
 
-                    {/* Step 1: choose a category */}
+                    {/* Step 1: choose one or more categories */}
                     <Box display="flex" gap={2} flexWrap="wrap" mb={2}>
                       {addAffectsCategoryNames.map((cat) => (
                         <Button
                           key={cat}
                           size="xs"
-                          variant={addActiveAffectsCategory === cat ? "solid" : "outline"}
+                          variant={addActiveAffectsCategories.has(cat) ? "solid" : "outline"}
                           colorPalette="blue"
-                          onClick={() => setAddActiveAffectsCategory(cat)}
+                          onClick={() => toggleActiveAffectsCategory(cat)}
                         >
                           {cat}
                         </Button>
                       ))}
                     </Box>
 
-                    {/* Step 2: choose attributes within the selected category */}
-                    <Box maxH="180px" overflowY="auto" borderWidth="1px" borderRadius="md" p={2} mb={2}>
-                      {(addParameterGroups[addActiveAffectsCategory] || []).map((opt) => (
-                        <Box key={opt} py="4px">
-                          <Checkbox.Root
-                            checked={addAffectsSelected.has(affectsKey(addActiveAffectsCategory, opt))}
-                            onCheckedChange={() => toggleAddAffect(addActiveAffectsCategory, opt)}
-                          >
-                            <Checkbox.HiddenInput />
-                            <Checkbox.Control />
-                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
-                          </Checkbox.Root>
-                        </Box>
-                      ))}
-                      {addCustomAffectsForActiveCategory.map((opt) => (
-                        <Box key={opt} py="4px">
-                          <Checkbox.Root
-                            checked={addAffectsSelected.has(affectsKey(addActiveAffectsCategory, opt))}
-                            onCheckedChange={() => toggleAddAffect(addActiveAffectsCategory, opt)}
-                          >
-                            <Checkbox.HiddenInput />
-                            <Checkbox.Control />
-                            <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
-                          </Checkbox.Root>
-                        </Box>
-                      ))}
-                    </Box>
-                    <Box display="flex" gap={2}>
-                      <Input
-                        placeholder={`Add a custom parameter to "${addActiveAffectsCategory}"...`}
-                        size="sm"
-                        value={addCustomAffect}
-                        onChange={(e) => setAddCustomAffect(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAffectParam(); } }}
-                      />
-                      <Button size="sm" onClick={addCustomAffectParam} disabled={!addCustomAffect.trim()}>
-                        Add
-                      </Button>
-                    </Box>
+                    {/* Step 2: choose attributes within each selected category */}
+                    {addActiveAffectsCategories.size === 0 ? (
+                      <Box borderWidth="1px" borderRadius="md" p={3} mb={2}>
+                        <Text fontSize="sm" color="fg.muted">
+                          Select a category above to choose specific items.
+                        </Text>
+                      </Box>
+                    ) : (
+                      addAffectsCategoryNames
+                        .filter((cat) => addActiveAffectsCategories.has(cat))
+                        .map((cat) => (
+                          <Box key={cat} borderWidth="1px" borderRadius="md" p={2} mb={2}>
+                            <Text fontWeight={v2 ? "700" : "600"} fontSize="sm" mb={1}>{cat}</Text>
+                            <Box maxH="180px" overflowY="auto" mb={2}>
+                              {(addParameterGroups[cat] || []).map((opt) => (
+                                <Box key={opt} py="4px">
+                                  <Checkbox.Root
+                                    checked={addAffectsSelected.has(affectsKey(cat, opt))}
+                                    onCheckedChange={() => toggleAddAffect(cat, opt)}
+                                  >
+                                    <Checkbox.HiddenInput />
+                                    <Checkbox.Control />
+                                    <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
+                                  </Checkbox.Root>
+                                </Box>
+                              ))}
+                              {customAffectsForCategory(cat).map((opt) => (
+                                <Box key={opt} py="4px">
+                                  <Checkbox.Root
+                                    checked={addAffectsSelected.has(affectsKey(cat, opt))}
+                                    onCheckedChange={() => toggleAddAffect(cat, opt)}
+                                  >
+                                    <Checkbox.HiddenInput />
+                                    <Checkbox.Control />
+                                    <Checkbox.Label fontSize="sm">{opt}</Checkbox.Label>
+                                  </Checkbox.Root>
+                                </Box>
+                              ))}
+                            </Box>
+                            <Box display="flex" gap={2}>
+                              <Input
+                                placeholder={`Add a custom parameter to "${cat}"...`}
+                                size="sm"
+                                value={addCustomAffectByCategory[cat] || ""}
+                                onChange={(e) => setAddCustomAffectByCategory(prev => ({ ...prev, [cat]: e.target.value }))}
+                                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAffectParam(cat); } }}
+                              />
+                              <Button size="sm" onClick={() => addCustomAffectParam(cat)} disabled={!(addCustomAffectByCategory[cat] || "").trim()}>
+                                Add
+                              </Button>
+                            </Box>
+                          </Box>
+                        ))
+                    )}
 
                     {/* Selected affects across all categories */}
                     {addAffectsSelected.size > 0 && (
