@@ -205,6 +205,8 @@
 
 .profile-manage-btn {
   padding: 0 16px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Square "+" icon button, inline with Manage Selected. */
@@ -216,6 +218,7 @@
   justify-content: center;
   font-size: 22px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .profile-create-btn:hover:not(:disabled),
