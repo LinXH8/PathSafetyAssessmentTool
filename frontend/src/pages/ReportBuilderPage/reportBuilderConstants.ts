@@ -80,7 +80,10 @@ export const DEFAULT_ELEMENTS: ElementState[] = [
   { id: "summary", type: "summary", label: "Summary", x: 20, y: 240, width: 754, height: 150, visible: true },
   { id: "map", type: "map", label: "Map", x: 20, y: 405, width: 754, height: 350, visible: true },
   // — Page 2 —
-  { id: "benchmarkStats", type: "benchmarkStats", label: "Benchmarking Stats", x: 20, y: 1163, width: 754, height: 340, visible: false },
+  // TEMPORARILY REMOVED: benchmarkStats. Re-enable by restoring this element and
+  // removing "benchmarkStats"/"benchmarkStats_filtered" from REMOVED_IDS in
+  // useReportLayout.ts. Rendering/data logic is left intact.
+  // { id: "benchmarkStats", type: "benchmarkStats", label: "Benchmarking Stats", x: 20, y: 1163, width: 754, height: 340, visible: false },
   { id: "riskBands", type: "riskBands", label: "Risk Bands", x: 20, y: 1523, width: 754, height: 450, visible: true },
   { id: "topAttributes", type: "topAttributes", label: "Risk Factors", x: 20, y: 1993, width: 754, height: 210, visible: true },
   { id: "projectDetails", type: "projectDetails", label: "Project Details", x: 20, y: 2223, width: 754, height: 220, visible: true },
@@ -89,20 +92,33 @@ export const DEFAULT_ELEMENTS: ElementState[] = [
   { id: "treatmentSummary", type: "treatmentSummary", label: "Treatments", x: 20, y: 3213, width: 754, height: 360, visible: true },
 ];
 
-// ── Filtered duplicate sections ──────────────────────────────────────────────
+// ── Filtered sections (primary stack when a filter is active) ─────────────────
 // A clone of every default section EXCEPT the title, flagged `filtered` so it
-// renders from the Path-Analysis-filtered subset. These are injected into the
-// `elements` array only when the user enables the "Include filtered sections"
-// toggle (and a filter actually exists). See `toggleIncludeFiltered`.
+// renders from the Path-Analysis-filtered subset. When a filter is active these
+// are the DEFAULT/primary sections (clean labels — no "(Filtered)" suffix), with
+// the all-segments "(Overall)" stack (OVERALL_ELEMENTS) appended below only if
+// the user opts in. See `toggleIncludeOverall` and the mount reconciliation.
 //
-// TEMPORARY: set to false to hide the "Include filtered sections" toggle and
-// suppress all filtered sections from the report (logic kept intact). Flip back
-// to true to re-enable the feature.
+// TEMPORARY: set to false to hide the toggle and suppress all filtered sections
+// from the report (logic kept intact). Flip back to true to re-enable.
 export const FILTERED_SECTIONS_ENABLED = true;
 export const FILTERED_SUFFIX = "_filtered";
 export const FILTERED_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
   .filter((e) => e.id !== "title")
-  .map((e) => ({ ...e, id: `${e.id}${FILTERED_SUFFIX}`, label: `${e.label} (Filtered)`, filtered: true, visible: true }));
+  .map((e) => ({ ...e, id: `${e.id}${FILTERED_SUFFIX}`, label: e.label, filtered: true, visible: e.visible }));
+
+// Canonical base array for filtered mode: the (unfiltered/plain) title on top,
+// then the filtered primary stack.
+export const FILTERED_BASE_ELEMENTS: ElementState[] = [DEFAULT_ELEMENTS[0], ...FILTERED_ELEMENTS];
+
+// ── Overall sections (optional appended stack when a filter is active) ────────
+// The all-segments clones appended BELOW the filtered stack when the user checks
+// "Include overall sections". Reuse the plain DEFAULT_ELEMENTS ids (no collision
+// with the `_filtered` primary stack) and carry an "(Overall)" label suffix. In
+// no-filter mode DEFAULT_ELEMENTS is the base instead, so the two never coexist.
+export const OVERALL_ELEMENTS: ElementState[] = DEFAULT_ELEMENTS
+  .filter((e) => e.id !== "title")
+  .map((e) => ({ ...e, label: `${e.label} (Overall)`, filtered: false, visible: e.visible }));
 
 // ── Shared table styles ──────────────────────────────────────────────────────
 export const thStyle: React.CSSProperties = {

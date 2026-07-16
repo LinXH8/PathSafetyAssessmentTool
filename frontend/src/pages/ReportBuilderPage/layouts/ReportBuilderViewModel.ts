@@ -63,10 +63,10 @@ export interface ReportBuilderViewModel {
   handleDownloadWord: () => Promise<void> | void;
   exporting: "pdf" | "word" | null;
 
-  // ── Filtered-sections master toggle ───────────────────────────────────────
+  // ── Overall-sections master toggle (append all-segments stack when filtered) ─
   hasFilter: boolean;
-  includeFiltered: boolean;
-  toggleIncludeFiltered: () => void;
+  includeOverall: boolean;
+  toggleIncludeOverall: () => void;
 
   // ── Sections panel (dnd-kit reorder + show/hide) ──────────────────────────
   sensors: SensorDescriptor<SensorOptions>[];

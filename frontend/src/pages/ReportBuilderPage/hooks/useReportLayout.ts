@@ -5,15 +5,15 @@
  * `elements` array (section visibility / order / sizes, restored lazily from the
  * `LOCAL_KEYS.REPORT_LAYOUT` localStorage blob), the editable report metadata
  * (title, OIC, purpose, recommendations, date, per-project display names,
- * per-section titles), the includeFiltered flag, save / auto-save / restore /
+ * per-section titles), the includeOverall flag, save / auto-save / restore /
  * reset of the layout blob, dnd-kit reorder wiring, page navigation, and the
  * visibleElements / sectionChecklist derivations.
  *
  * Deliberately NOT owned here (stays in the container): the data-coupled height
  * web — `computeIdealHeight`, `autoFitElements`, `showElement`,
- * `toggleIncludeFiltered`, the flow-layout / canvas-height memos — because those
+ * `toggleIncludeOverall`, the flow-layout / canvas-height memos — because those
  * read the datasets from `useReportData`. They mutate this hook's state through
- * the returned `setElements` / `setIncludeFiltered`, exactly as before.
+ * the returned `setElements` / `setIncludeOverall`, exactly as before.
  *
  * Side effects: reads/writes localStorage key `LOCAL_KEYS.REPORT_LAYOUT`
  * (byte-identical blob shape); smooth-scrolls the canvas container on page nav.
@@ -56,8 +56,8 @@ export interface UseReportLayoutResult {
   purpose: string; setPurpose: React.Dispatch<React.SetStateAction<string>>;
   recommendations: string; setRecommendations: React.Dispatch<React.SetStateAction<string>>;
   reportDate: string; setReportDate: React.Dispatch<React.SetStateAction<string>>;
-  includeFiltered: boolean;
-  setIncludeFiltered: React.Dispatch<React.SetStateAction<boolean>>;
+  includeOverall: boolean;
+  setIncludeOverall: React.Dispatch<React.SetStateAction<boolean>>;
   // Persistence — the layout auto-saves on every change (see effect below), so
   // there is no manual "Save"/"Restore" surface; only an explicit reset remains.
   resetLayout: () => void;
@@ -78,7 +78,10 @@ export interface UseReportLayoutResult {
 export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayoutParams): UseReportLayoutResult {
   // ── State: auto-restored from localStorage if a saved layout exists ──────
   const [elements, setElements] = useState<ElementState[]>(() => {
-    const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis"]);
+    // NOTE: "benchmarkStats" (+ its "_filtered" clone) is TEMPORARILY removed —
+    // see reportBuilderConstants.ts DEFAULT_ELEMENTS. Listed here so it's also
+    // stripped from any older saved layout that persisted it.
+    const REMOVED_IDS = new Set(["riskStats", "recommendations", "methodology", "segmentGallery", "deepDive", "filterAnalysis", "benchmarkStats", "benchmarkStats_filtered"]);
     const l = readSavedLayout();
     if (Array.isArray(l?.elements)) {
       const saved = (l.elements as ElementState[])
@@ -114,8 +117,12 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
   const [reportDate, setReportDate] = useState(() => {
     const l = readSavedLayout(); return typeof l?.reportDate === "string" ? l.reportDate : new Date().toISOString().split("T")[0];
   });
-  const [includeFiltered, setIncludeFiltered] = useState<boolean>(() => {
-    const l = readSavedLayout(); return l?.includeFiltered === true;
+  // "Include overall sections": when a filter is active, also append the
+  // all-segments ("(Overall)") stack below the filtered primary stack. Default
+  // off; old blobs used `includeFiltered`, which is intentionally ignored (read
+  // as false) since its semantics differed.
+  const [includeOverall, setIncludeOverall] = useState<boolean>(() => {
+    const l = readSavedLayout(); return l?.includeOverall === true;
   });
 
   // ── Element helpers ───────────────────────────────────────────────────────
@@ -150,10 +157,10 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
     try {
       localStorage.setItem(LOCAL_KEYS.REPORT_LAYOUT, JSON.stringify({
         elements, reportTitle, oicName, purpose, recommendations,
-        reportDate, projectNameOverrides, sectionTitles, includeFiltered,
+        reportDate, projectNameOverrides, sectionTitles, includeOverall,
       }));
     } catch { /* quota exceeded or private browsing — silent */ }
-  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeFiltered]);
+  }, [elements, reportTitle, oicName, purpose, recommendations, reportDate, projectNameOverrides, sectionTitles, includeOverall]);
 
   const resetLayout = useCallback(() => {
     if (window.confirm("Are you sure you want to reset the layout to default? All unsaved changes will be lost.")) {
@@ -166,7 +173,7 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
       setReportDate(new Date().toISOString().split("T")[0]);
       setProjectNameOverrides({});
       setSectionTitles({});
-      setIncludeFiltered(false);
+      setIncludeOverall(false);
     }
   }, []);
 
@@ -221,7 +228,7 @@ export function useReportLayout({ canvasRef, canvasContainerRef }: UseReportLayo
     reportTitle, setReportTitle, projectNameOverrides, setProjectNameOverrides,
     sectionTitles, setSectionTitles, oicName, setOicName, purpose, setPurpose,
     recommendations, setRecommendations, reportDate, setReportDate,
-    includeFiltered, setIncludeFiltered,
+    includeOverall, setIncludeOverall,
     resetLayout,
     sensors, handleDragEnd,
     currentPage, goToPage, scrollToSection, handleCanvasScroll,

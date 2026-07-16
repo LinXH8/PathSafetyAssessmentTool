@@ -30,7 +30,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
     autoFitElements, resetLayout,
     goToPage, currentPage, totalPages,
     handleDownloadPDF, handleDownloadWord, exporting,
-    hasFilter, includeFiltered, toggleIncludeFiltered,
+    hasFilter, includeOverall, toggleIncludeOverall,
     sensors, handleDragEnd, sectionChecklist, elements, hideElement, showElement, scrollToSection,
     renderViewToggle, renderMapColorToggle,
     handleCanvasScroll, canvasH, visibleElements, layout, computeIdealHeight, renderContent,
@@ -83,13 +83,14 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
             </span>
           </div>
 
-          {/* ── Master toggle: include Path-Analysis-filtered duplicates ─────── */}
-          {/* TEMPORARILY HIDDEN — gated by FILTERED_SECTIONS_ENABLED. */}
+          {/* ── Master toggle: append the all-segments "(Overall)" stack ─────── */}
+          {/* Only meaningful when a filter is active (report defaults to the      */}
+          {/* filtered stack); gated by FILTERED_SECTIONS_ENABLED.                 */}
           {FILTERED_SECTIONS_ENABLED && (
             <>
               <label
                 title={hasFilter
-                  ? "Add a filtered copy of every section (except the title) reflecting the segments you filtered in Path Analysis"
+                  ? "The report shows the segments you filtered in Path Analysis. Check this to also append the overall all-segments sections below."
                   : "Apply a filter in Path Analysis first"}
                 style={{
                   display: "flex", alignItems: "center", gap: 8, padding: "8px 10px",
@@ -99,16 +100,16 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
               >
                 <input
                   type="checkbox"
-                  checked={includeFiltered && hasFilter}
+                  checked={includeOverall && hasFilter}
                   disabled={!hasFilter}
-                  onChange={toggleIncludeFiltered}
+                  onChange={toggleIncludeOverall}
                   style={{ accentColor: "#a020d0", cursor: hasFilter ? "pointer" : "not-allowed", flexShrink: 0 }}
                 />
-                <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include filtered sections</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#5a2a8a" }}>Include overall sections (all segments)</span>
               </label>
               {!hasFilter && (
                 <div style={{ fontSize: 10, color: "#aa8", padding: "0 10px 8px", lineHeight: 1.4 }}>
-                  Apply a filter on the Path Analysis page to enable a filtered copy of the report.
+                  Apply a filter on the Path Analysis page to show a filtered report; you can then also append the overall all-segments sections.
                 </div>
               )}
             </>
@@ -119,13 +120,24 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
               <div className="rb-reorder-list">
                 {sectionChecklist.map((sec, idx) => {
                   const elState = elements.find((e) => e.id === sec.id);
-                  // Insert a group header before the first "(Filtered)" row.
+                  // Insert a group header before the first filtered row.
                   const showFilteredHeader = sec.filtered && (idx === 0 || !sectionChecklist[idx - 1].filtered);
+                  // Insert an "Overall sections" header before the first overall
+                  // row (unfiltered, non-title) — only when a filter is active, so
+                  // the plain no-filter base shows no group headers.
+                  const isOverallRow = hasFilter && !sec.filtered && sec.id !== "title";
+                  const prev = sectionChecklist[idx - 1];
+                  const showOverallHeader = isOverallRow && (idx === 0 || !(hasFilter && !prev.filtered && prev.id !== "title"));
                   return (
                     <div key={sec.id}>
                       {showFilteredHeader && (
                         <div style={{ padding: "8px 10px 4px", fontSize: 10, fontWeight: 700, color: "#a020d0", textTransform: "uppercase", letterSpacing: 0.5, borderTop: "1px dashed #d8c4f0", marginTop: 4 }}>
                           Filtered sections
+                        </div>
+                      )}
+                      {showOverallHeader && (
+                        <div style={{ padding: "8px 10px 4px", fontSize: 10, fontWeight: 700, color: "#a020d0", textTransform: "uppercase", letterSpacing: 0.5, borderTop: "1px dashed #d8c4f0", marginTop: 4 }}>
+                          Overall sections (all segments)
                         </div>
                       )}
                       <SortableSectionRow
