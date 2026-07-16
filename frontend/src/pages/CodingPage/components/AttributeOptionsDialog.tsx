@@ -77,7 +77,7 @@ const FIELD_SUGGESTIONS: Record<string, string[]> = {
   "Crossing Type": ["Bicycle Crossing", "Signalised Crossing", "Zebra Crossing"],
   "Delineation Type": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
   "Curvature Sub-category": ["<6.5m", "<10m", "Path Junction", "10–18m", ">18m"],
-  "Defect Type": ["Footpath crack", "Footpath Uneven IMU", "Footpath uneven"],
+  "Defect Type": ["Footpath crack", "Uneven Footpath"],
 };
 
 /** Parse a comma-separated value string into an array of trimmed, non-empty tags */

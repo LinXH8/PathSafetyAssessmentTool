@@ -164,8 +164,7 @@ export const CATEGORY_COLORS: Record<string, string | Record<string, string>> = 
     "Major Surface Deformation or Drain Opening": { "Present": "#DC2626", "Not Present": "#16A34A" },
     "Defect Type": {
       "Footpath crack": "#DC2626",
-      "Footpath Uneven IMU": "#EA580C",
-      "Footpath uneven": "#CA8A04",
+      "Uneven Footpath": "#EA580C",
       "Others": "#6B7280",
     },
     "Tram or Train Rails": { "Present": "#DC2626", "Not Present": "#16A34A" },

@@ -39,7 +39,7 @@ export type ProjectDataState = {
 
 export const FO_TYPE_SUGGESTIONS = ["Lamp Post", "Traffic Light", "Covered Linkway Pole", "Bollard", "Billboard", "Sign Pole", "Railing", "Utility Box", "Vegetation", "Others"];
 export const NFO_TYPE_SUGGESTIONS = ["Barrier", "Bin", "Bicycle", "Cone", "Others"];
-export const DEFECT_TYPE_SUGGESTIONS = ["Footpath crack", "Footpath Uneven IMU", "Footpath uneven", "Others"];
+export const DEFECT_TYPE_SUGGESTIONS = ["Footpath crack", "Uneven Footpath", "Others"];
 
 export const FACILITY_WIDTH_SUBCATEGORY_MAP: Record<string, string[]> = {
   "Very Narrow": ["≤1.5m", ">1.5–1.8m", ">1.8–<2m"],

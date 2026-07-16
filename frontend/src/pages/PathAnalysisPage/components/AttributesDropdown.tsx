@@ -381,7 +381,7 @@ const cyclerapAttributes: AttributeConfig[] = [
     name: "Defect Type",
     label: "Defect Type",
     group: "Facility surface conditions",
-    options: ["Not Selected", "Footpath crack", "Footpath Uneven IMU", "Footpath uneven", "Others"],
+    options: ["Not Selected", "Footpath crack", "Uneven Footpath", "Others"],
   },
   {
     name: "Grade",
@@ -520,7 +520,7 @@ export const SUBCATEGORY_MAP: Record<
   "Major Surface Deformation or Drain Opening": {
     childAttr: "Defect Type",
     parentCategories: {
-      "Present": ["Footpath crack", "Footpath Uneven IMU", "Footpath uneven", "Others"],
+      "Present": ["Footpath crack", "Uneven Footpath", "Others"],
     },
   },
 };
