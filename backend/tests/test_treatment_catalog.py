@@ -46,6 +46,15 @@ class TestTriggerMatching:
         t9 = TREATMENT_BY_ID[9]
         assert not is_treatment_applicable({}, t9)
 
+    def test_redesign_curve_triggers_on_sharp_turn_alone(self):
+        # Intentional LTA deviation from the STM (see treatment_catalog.py):
+        # "Redesign the curve" (CM 17) applies whenever a sharp turn is present,
+        # with no co-factor required, and never on "no sharp turn".
+        t17 = TREATMENT_BY_ID[17]
+        assert is_treatment_applicable({"Curvature": 1}, t17)
+        assert not is_treatment_applicable({"Curvature": 2}, t17)
+        assert not is_treatment_applicable({}, t17)
+
     def test_speed_range_trigger(self):
         # T27 traffic calming (km/h): facility 5/6, unit km/h, 30 < speed < 50
         t27 = TREATMENT_BY_ID[27]
