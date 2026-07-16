@@ -1,6 +1,7 @@
-import { Card, Heading, Box, Image, HStack } from "@chakra-ui/react";
+import { Card, Heading, Box, Image, HStack, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { Slider } from "../../../components/ui/slider";
+import MeasureModal from "./MeasureMode/MeasureModal";
 
 type Props = {
   projectName?: string;
@@ -16,6 +17,7 @@ export default function ImagePanel({
   fit = "contain",
 }: Props) {
   const [brightness, setBrightness] = useState(100);
+  const [measureOpen, setMeasureOpen] = useState(false);
 
   return (
     <Card.Root
@@ -34,6 +36,16 @@ export default function ImagePanel({
               onValueChange={(details) => setBrightness(details.value[0])}
             />
           </Box>
+          <Button
+            size="xs"
+            colorPalette="blue"
+            variant="solid"
+            flexShrink={0}
+            disabled={!imageRef}
+            onClick={() => setMeasureOpen(true)}
+          >
+            📐 Measure
+          </Button>
         </HStack>
       </Card.Header>
 
@@ -63,6 +75,15 @@ export default function ImagePanel({
           <Box color="gray.400">No Image</Box>
         )}
       </Card.Body>
+
+      {projectName && imageRef && (
+        <MeasureModal
+          projectName={projectName}
+          imageRef={imageRef}
+          open={measureOpen}
+          onClose={() => setMeasureOpen(false)}
+        />
+      )}
     </Card.Root>
   );
 }
