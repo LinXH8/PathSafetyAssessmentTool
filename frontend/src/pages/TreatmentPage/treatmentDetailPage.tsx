@@ -36,6 +36,7 @@ import {
   copyTextToClipboard,
   copyRichContentToClipboard,
   loadTreatmentCatalog,
+  TREATMENTS,
   type ScoreType,
   type CopyButtonState,
 } from "./treatmentConstants";
@@ -336,12 +337,25 @@ export default function TreatmentDetailPage() {
   const [catalogVersion, setCatalogVersion] = useState(0);
   useEffect(() => {
     if (projectNames.length === 0) return;
-    loadTreatmentCatalog(projectNames[0])
-      .then(() => setCatalogVersion((v) => v + 1))
-      .catch((err) => {
-        console.error("Failed to load treatment catalog", err);
-        toaster.create({ title: "Failed to load treatment catalog", type: "error" });
-      });
+    let cancelled = false;
+    // Bounded retry: loadTreatmentCatalog nulls its cached promise on failure, so a
+    // transient network error would otherwise leave TREATMENTS empty forever and the
+    // treatment list stuck loading. Retry a few times before surfacing the error.
+    const attempt = (tries: number) => {
+      loadTreatmentCatalog(projectNames[0])
+        .then(() => { if (!cancelled) setCatalogVersion((v) => v + 1); })
+        .catch((err) => {
+          if (cancelled) return;
+          if (tries > 0) {
+            setTimeout(() => { if (!cancelled) attempt(tries - 1); }, 1000);
+            return;
+          }
+          console.error("Failed to load treatment catalog", err);
+          toaster.create({ title: "Failed to load treatment catalog", type: "error" });
+        });
+    };
+    attempt(3);
+    return () => { cancelled = true; };
   }, [projectNames]);
 
   const fetchData = useCallback(async () => {
@@ -894,6 +908,9 @@ export default function TreatmentDetailPage() {
     currentImageUrl,
     accordionView,
     setAccordionView,
+    // Ready once the module-level TREATMENTS array is populated. catalogVersion bumps
+    // on this mount's load; TREATMENTS.length covers a warm module cache from a prior visit.
+    catalogReady: catalogVersion > 0 || TREATMENTS.length > 0,
     effectivenessLoading,
     allApplicableTreatments,
     effectivenessCounts,

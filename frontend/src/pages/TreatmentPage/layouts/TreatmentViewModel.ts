@@ -57,6 +57,9 @@ export interface TreatmentViewModel {
   // ── treatment options list ──
   accordionView: "segment" | "treatment";
   setAccordionView(v: "segment" | "treatment"): void;
+  // False until the v2.14 treatment catalog has loaded; while false the module-level
+  // TREATMENTS array is empty so getApplicableTreatments() returns [] for every segment.
+  catalogReady: boolean;
   effectivenessLoading: boolean;
   allApplicableTreatments: Treatment[];
   effectivenessCounts: Record<number, number>;

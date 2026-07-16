@@ -42,7 +42,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
     projectNames, loading, error, isAllScope, activeProject, len,
     scope, panKey, currentCtx, scopeTotal, scopePage, pageInput, pageIndices,
     geoFeatures, currentIndex, scores, afterTreatmentScores,
-    accordionView, attrs, effectivenessLoading, allApplicableTreatments,
+    accordionView, attrs, catalogReady, effectivenessLoading, allApplicableTreatments,
     effectivenessCounts, applicableCounts, segmentScoreDrops, treatmentState,
     fullyAppliedTreatments, selectedTreatments, applyLoading,
     hasApplied, hasSelected, appliedTreatmentIds, copyButtonState, copyButtonLabel,
@@ -175,6 +175,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             scopeRange={isAllScope ? null : scope}
             filterContext={mapFilterContext}
             autoFitKey={panKey}
+            disableAutoFit
             panKey={panKey}
           />
         </GridItem>
@@ -198,6 +199,7 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             scopeRange={isAllScope ? null : scope}
             filterContext={mapFilterContext}
             autoFitKey={panKey}
+            disableAutoFit
             panKey={panKey}
           />
         </GridItem>
@@ -269,6 +271,20 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
             {(() => {
               let displayTreatments: Treatment[] = [];
               const currentAttr = attrs[currentIndex] as any;
+
+              // Catalog still loading: the module-level TREATMENTS array is empty, so
+              // getApplicableTreatments() would return [] for every segment and wrongly
+              // render "No treatments applicable". Show a loading state until it resolves.
+              if (!catalogReady) {
+                return (
+                  <Flex direction="column" align="center" justify="center" gap="3" py="8">
+                    <Spinner size="sm" color="blue.500" />
+                    <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                      Loading treatments...
+                    </Text>
+                  </Flex>
+                );
+              }
 
               if (accordionView === "segment") {
                 if (!currentAttr) {
@@ -472,11 +488,13 @@ export default function TreatmentDetailLayoutV1(vm: TreatmentViewModel) {
                   size="sm"
                   variant="outline"
                   aria-label="Copy treatment prompt"
-                  disabled={!hasApplied && !hasSelected}
+                  disabled={accordionView === "segment" ? selectedTreatments.size === 0 : (!hasApplied && !hasSelected)}
                   loading={copyButtonState === "copying"}
                   gap="1"
                   onClick={() => {
-                    const ids = hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments);
+                    const ids = accordionView === "segment"
+                      ? Array.from(selectedTreatments)
+                      : (hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments));
                     void vm.onCopyTreatmentPrompt(ids);
                   }}
                 >

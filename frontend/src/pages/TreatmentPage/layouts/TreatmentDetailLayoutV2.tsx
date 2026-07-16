@@ -220,7 +220,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     projectNames, loading, error, isAllScope, activeProject, len,
     scope, panKey, currentCtx, scopeTotal, scopePage, pageInput, pageIndices,
     geoFeatures, currentIndex, scores, afterTreatmentScores,
-    accordionView, attrs, effectivenessLoading, allApplicableTreatments,
+    accordionView, attrs, catalogReady, effectivenessLoading, allApplicableTreatments,
     effectivenessCounts, applicableCounts, segmentScoreDrops, treatmentState,
     fullyAppliedTreatments, selectedTreatments, applyLoading,
     hasApplied, hasSelected, appliedTreatmentIds, copyButtonState, copyButtonLabel,
@@ -446,6 +446,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               scopeRange={isAllScope ? null : scope}
               filterContext={mapFilterContext}
               autoFitKey={panKey}
+              disableAutoFit
               panKey={panKey}
             />
           </div>
@@ -469,6 +470,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
               scopeRange={isAllScope ? null : scope}
               filterContext={mapFilterContext}
               autoFitKey={panKey}
+              disableAutoFit
               panKey={panKey}
             />
           </div>
@@ -521,6 +523,11 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                 <Flex direction="column" align="center" justify="center" gap="3" h={treatListH}>
                   <Spinner size="sm" color="blue.500" />
                   <span style={CAPTION}>Ranking Treatment Options...</span>
+                </Flex>
+              ) : !catalogReady ? (
+                <Flex direction="column" align="center" justify="center" gap="3" h={treatListH}>
+                  <Spinner size="sm" color="blue.500" />
+                  <span style={CAPTION}>Loading treatments...</span>
                 </Flex>
               ) : displayTreatments.length === 0 ? (
                 <div style={{ height: treatListH, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", color: COLOR.gray500, fontSize: "1rem" }}>{listEmptyLabel}</div>
@@ -595,9 +602,13 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
                   <V2Btn
                     kind="dark"
                     flex={1}
-                    disabled={!hasApplied && !hasSelected}
+                    disabled={accordionView === "segment" ? selectedTreatments.size === 0 : (!hasApplied && !hasSelected)}
                     loading={copyButtonState === "copying"}
-                    onClick={() => vm.onCopyTreatmentPrompt(hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments))}
+                    onClick={() => vm.onCopyTreatmentPrompt(
+                      accordionView === "segment"
+                        ? Array.from(selectedTreatments)
+                        : (hasApplied ? appliedTreatmentIds : Array.from(selectedTreatments))
+                    )}
                   >
                     {copyButtonLabel}
                   </V2Btn>

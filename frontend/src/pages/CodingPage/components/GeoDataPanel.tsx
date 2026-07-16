@@ -69,6 +69,7 @@ type Props = {
   panKey?: number;                           // Monotonic counter to force PanToBounds effect re-fire
   scopeRange?: { start: number; count: number } | null; // In-focus global index window; out-of-scope segments are dimmed. null = no scoping
   autoFitKey?: number;                       // Bump to refit the map to the in-scope segments (e.g. on project tab switch)
+  disableAutoFit?: boolean;                  // When true, skip the initial fit-to-all-points and the autoFitKey refit (e.g. Treatment page map previews, which should stay panned to the current segment instead of zooming to fit)
   curvData?: CurvatureVisualizationResponse | null;
   showCurvatureOverlay?: boolean;
   onToggleCurvatureOverlay?: () => void;
@@ -96,7 +97,7 @@ type ScoreRow = {
 // ./GeoDataPanel/mapHelpers.tsx in S2.2. MapAutoCenter intentionally remains
 // nested inside the component body below (see its comment).
 
-export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
+export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, disableAutoFit = false, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
   const navigate = useNavigate();
 
   const decodedName = useMemo(() => {
@@ -139,7 +140,7 @@ export default function GeoDataPanel({ projectName, index, onJump, containerHeig
 // When panKey changes (project tab clicked), MapAutoCenter suppresses its setView
 // for a 800ms window. This prevents async treatment-fetch callbacks from causing
 // a re-render that overrides PanToBounds' fitBounds.
-function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number] | null; anyLayerOn?: boolean; panKey?: number }) {
+function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [number, number] | null; anyLayerOn?: boolean; panKey?: number; keepZoom?: boolean }) {
   const map = useMap();
   const prevCenterRef = useRef<[number, number] | null>(null);
   const prevPanKeyRef = useRef(panKey ?? 0);
@@ -166,10 +167,11 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
     if (centerChanged) {
       // When navigating to a new segment, pan to it
       // If GIS layers are on, zoom in close enough to see them
-      const targetZoom = anyLayerOn ? Math.max(map.getZoom(), 17) : map.getZoom();
+      // (unless keepZoom — e.g. Treatment page previews, which should only pan, never zoom)
+      const targetZoom = (!keepZoom && anyLayerOn) ? Math.max(map.getZoom(), 17) : map.getZoom();
       map.setView(center, targetZoom, { animate: true });
     }
-  }, [center, anyLayerOn, map, panKey]);
+  }, [center, anyLayerOn, map, panKey, keepZoom]);
   return null;
 }
 
@@ -511,7 +513,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
               <ThemeAwareTileLayer />
 
               {/* Auto-fit bounds to all data points (first load only) */}
-              {allLatLngs.length > 0 && <FitBounds points={allLatLngs} />}
+              {!disableAutoFit && allLatLngs.length > 0 && <FitBounds points={allLatLngs} />}
 
               {/* Auto-zoom to current point when GIS layers active */}
               <ZoomToGIS
@@ -527,13 +529,14 @@ function MapAutoCenter({ center, anyLayerOn, panKey }: { center: [number, number
                 center={current?.latlng ?? null}
                 anyLayerOn={showFootpath || showCycling || showShared || showRoadcrossing || showMrtExit || showBusStop || showBusLane || showParkingLot || showKerbLine || showBicycleCrossing || showPathDefects}
                 panKey={panKey}
+                keepZoom={disableAutoFit}
               />
 
               {/* Fly to specific project bounds when tab is clicked — MUST be last so it overrides MapAutoCenter */}
               <PanToBounds bounds={panToBounds ?? null} panKey={panKey} />
 
               {/* Refit to the in-focus scope (e.g. selected project tab) on token bump */}
-              <FitToFeatures latlngs={scopeLatLngs} fitKey={autoFitKey} />
+              {!disableAutoFit && <FitToFeatures latlngs={scopeLatLngs} fitKey={autoFitKey} />}
 
 
 
