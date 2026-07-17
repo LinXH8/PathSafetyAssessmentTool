@@ -15,7 +15,7 @@
  * Pure helpers live in ./codingHelpers; shared types/constants in ./codingConstants.
  */
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import type { Feature, LineString } from "geojson";
 import { toaster } from "../../components/ui/toaster";
@@ -118,6 +118,7 @@ export default function CodingPage() {
 
   // Handle query params for deep linking (e.g. ?segment=5)
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const initialSegment = queryParams.get("segment");
   const hasInitializedSegmentRef = useRef(false);
@@ -535,7 +536,7 @@ export default function CodingPage() {
       setIsSaveDialogOpen(true);
     } else {
       toaster.create({ title: "No changes to save.", type: "info" });
-      window.history.back();
+      navigate("/analysis/path");
     }
   };
 
@@ -550,7 +551,7 @@ export default function CodingPage() {
       }
     });
     toaster.create({ title: "Changes discarded.", type: "info" });
-    window.history.back();
+    navigate("/analysis/path");
   };
 
   const onSaveAndExit = async () => {
@@ -559,7 +560,7 @@ export default function CodingPage() {
     setIsSaving(false);
     if (success) {
       setIsSaveDialogOpen(false);
-      window.history.back();
+      navigate("/analysis/path");
     }
   };
 
