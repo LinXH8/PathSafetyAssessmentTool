@@ -121,6 +121,14 @@ export function AggregatedTopContributorsPanel({
     [visibleSegmentsByProject],
   );
 
+  // True when the map has reported visibility and this project has zero segments
+  // surviving the active filter (as opposed to genuinely having no contributor data).
+  const isFilteredOut = useCallback(
+    (name: string): boolean =>
+      !!visibleSegmentsByProject && (visibleSegmentsByProject[name]?.length ?? 0) === 0,
+    [visibleSegmentsByProject],
+  );
+
   const perProjectContributors = useMemo(
     () =>
       selectedProjects
@@ -175,7 +183,11 @@ export function AggregatedTopContributorsPanel({
                 {p.projectName}
               </div>
               {p.contributors.length === 0 ? (
-                <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>No contributors.</div>
+                <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500 }}>
+                  {isFilteredOut(p.projectName)
+                    ? "No segments match the current filters."
+                    : "No contributors."}
+                </div>
               ) : (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {p.contributors.map((attr, idx) => (
@@ -318,7 +330,9 @@ export function AggregatedTopContributorsPanel({
                   </Text>
                   {combinedContributors.length === 0 ? (
                     <Text fontSize="xs" color="gray.500">
-                      No contributor data available.
+                      {visibleSegmentsByProject && selectedProjects.every(isFilteredOut)
+                        ? "No segments match the current filters."
+                        : "No contributor data available."}
                     </Text>
                   ) : (
                     <Flex wrap="wrap" gap="2">
@@ -378,7 +392,9 @@ export function AggregatedTopContributorsPanel({
                       </Text>
                       {p.contributors.length === 0 ? (
                         <Text fontSize="xs" color="gray.500">
-                          No contributor data available.
+                          {isFilteredOut(p.projectName)
+                            ? "No segments match the current filters."
+                            : "No contributor data available."}
                         </Text>
                       ) : (
                         <Flex wrap="wrap" gap="2">
