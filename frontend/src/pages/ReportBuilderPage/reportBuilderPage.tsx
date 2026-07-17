@@ -229,7 +229,11 @@ export default function ReportBuilderPage() {
         return h;
       }
       case "topRisk": {
-        const n = el.topN ?? 10;
+        const desired = el.topN ?? 10;
+        // Fewer stretches may match (esp. a tight filter) than the user's
+        // chosen top-N — reserve space for what will actually render, not
+        // the requested count, so we don't leave blank trailing pages/rows.
+        const n = topRiskRows.length > 0 ? Math.min(desired, topRiskRows.length) : desired;
         const header = 60;   // title + subtitle
         const thead = 36;   // table header row
         if (el.viewMode === "full-page") {
