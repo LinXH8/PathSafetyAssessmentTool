@@ -45,11 +45,29 @@ import { MapFiltersPanel } from "./mapView/MapFiltersPanel";
 import { SegmentsTableTab } from "./mapView/SegmentsTableTab";
 import { MapViewToolbar } from "./mapView/MapViewToolbar";
 
+/**
+ * The canonical option set (across all parent-category branches) for a subcategory
+ * child attribute, e.g. NFO Type -> {"Barrier","Bin","Bicycle","Cone","Others"}.
+ * Returns null when the attribute has no SUBCATEGORY_MAP entry, or its schema has
+ * no "Others" option (e.g. Facility Width Sub-category) — those attributes keep
+ * every distinct raw value as its own category.
+ */
+function getKnownOptionsWithOthers(attr: string): Set<string> | null {
+  for (const { childAttr, parentCategories } of Object.values(SUBCATEGORY_MAP)) {
+    if (childAttr === attr) {
+      const options = new Set<string>();
+      Object.values(parentCategories).forEach((opts) => opts.forEach((o) => options.add(o)));
+      return options.has("Others") ? options : null;
+    }
+  }
+  return null;
+}
+
 interface AttributeAnalysisMapViewProps {
   selectedProjects: string[];
   selectedAttributes: string[];
   onChartDataUpdate?: (data: {
-    categoryDistributionData: { category: string; count: number; color: string }[];
+    categoryDistributionData: { category: string; count: number; color: string; breakdown?: { name: string; count: number }[] }[];
     primaryFocusAttribute: string | null;
     categoryStatus: {
       attribute: string;
@@ -1286,12 +1304,24 @@ export default function AttributeAnalysisMapView({
         }))
         .sort((a, b) => b.count - a.count); // Sort by count descending
     } else {
-      // For attribute focus, count segments per category value
+      // For attribute focus, count segments per category value. Values that
+      // aren't part of the attribute's canonical option set (e.g. legacy/free-text
+      // CV labels like "Hoarding" or "Chicane" for NFO Type) collapse into the
+      // same "Others" bucket the filter tree already uses for them — otherwise
+      // they'd each get their own wedge but share the same CATEGORY_UNKNOWN_COLOR
+      // grey fallback, making distinct categories visually indistinguishable.
+      const knownOptions = getKnownOptionsWithOthers(effectiveFocusAttribute);
+      // Tracks which raw values were folded into "Others" so the chart tooltip
+      // can show a breakdown instead of hiding them entirely.
+      const othersBreakdown: Record<string, number> = {};
       allPoints.forEach((point) => {
-        const category = point.attributeValue;
-        if (category) {
-          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        let category = point.attributeValue;
+        if (!category) return;
+        if (knownOptions && !knownOptions.has(category)) {
+          othersBreakdown[category] = (othersBreakdown[category] || 0) + 1;
+          category = "Others";
         }
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
       });
 
       // Convert to array format for the chart
@@ -1300,6 +1330,13 @@ export default function AttributeAnalysisMapView({
           category,
           count,
           color: attributeCategoryColors[category] || CATEGORY_UNKNOWN_COLOR,
+          ...(category === "Others" && Object.keys(othersBreakdown).length > 0
+            ? {
+                breakdown: Object.entries(othersBreakdown)
+                  .map(([name, count]) => ({ name, count }))
+                  .sort((a, b) => b.count - a.count),
+              }
+            : {}),
         }));
 
       const semanticOrder = getSemanticCategoryOrder(effectiveFocusAttribute);

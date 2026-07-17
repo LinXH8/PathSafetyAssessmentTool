@@ -35,7 +35,7 @@ interface AttributeStatus {
 }
 
 interface AttributeDistributionChartProps {
-  categoryData: { category: string; count: number; color: string }[];
+  categoryData: { category: string; count: number; color: string; breakdown?: { name: string; count: number }[] }[];
   selectedAttribute: string | null;
   categoryStatus?: AttributeStatus[];
   totalSegmentsLoaded?: number;
@@ -62,11 +62,16 @@ export default function AttributeDistributionChart({
     return categoryData.reduce((sum, item) => sum + item.count, 0);
   }, [categoryData]);
 
-  // Prepare data with percentages
+  // Prepare data with percentages (breakdown entries get a percentage of the
+  // same overall total, so they're directly comparable to the other slices).
   const chartData = useMemo(() => {
     return categoryData.map((item) => ({
       ...item,
       percentage: total > 0 ? ((item.count / total) * 100).toFixed(1) : "0",
+      breakdown: item.breakdown?.map((b) => ({
+        ...b,
+        percentage: total > 0 ? ((b.count / total) * 100).toFixed(1) : "0",
+      })),
     }));
   }, [categoryData, total]);
 
@@ -177,8 +182,15 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    const breakdown: { name: string; count: number; percentage: string }[] | undefined = data.breakdown;
                     if (isV2) {
-                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                      return (
+                        <DistTooltipBox
+                          title={data.category}
+                          detail={`Count: ${data.count} (${data.percentage}%)`}
+                          breakdown={breakdown}
+                        />
+                      );
                     }
                     return (
                       <Box
@@ -200,6 +212,16 @@ export default function AttributeDistributionChart({
                             {data.percentage}%
                           </Text>
                         </Flex>
+                        {breakdown && breakdown.length > 0 && (
+                          <Flex direction="column" gap="0.5" mt="2" pt="2" borderTopWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
+                            {breakdown.map((b) => (
+                              <Flex key={b.name} justify="space-between" gap="3">
+                                <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>{b.name}</Text>
+                                <Text fontSize="xs" fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>{b.count} ({b.percentage}%)</Text>
+                              </Flex>
+                            ))}
+                          </Flex>
+                        )}
                       </Box>
                     );
                   }
@@ -268,8 +290,15 @@ export default function AttributeDistributionChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
+                    const breakdown: { name: string; count: number; percentage: string }[] | undefined = data.breakdown;
                     if (isV2) {
-                      return <DistTooltipBox title={data.category} detail={`Count: ${data.count} (${data.percentage}%)`} />;
+                      return (
+                        <DistTooltipBox
+                          title={data.category}
+                          detail={`Count: ${data.count} (${data.percentage}%)`}
+                          breakdown={breakdown}
+                        />
+                      );
                     }
                     return (
                       <Box
@@ -291,6 +320,16 @@ export default function AttributeDistributionChart({
                             {data.percentage}%
                           </Text>
                         </Flex>
+                        {breakdown && breakdown.length > 0 && (
+                          <Flex direction="column" gap="0.5" mt="2" pt="2" borderTopWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.600" }}>
+                            {breakdown.map((b) => (
+                              <Flex key={b.name} justify="space-between" gap="3">
+                                <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>{b.name}</Text>
+                                <Text fontSize="xs" fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>{b.count} ({b.percentage}%)</Text>
+                              </Flex>
+                            ))}
+                          </Flex>
+                        )}
                       </Box>
                     );
                   }

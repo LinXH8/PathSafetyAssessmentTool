@@ -120,7 +120,16 @@ export function V2Segmented<T extends string>({
  * the same way: a bold title line + a plain detail line (count + %), thin border,
  * no heavy shadow. See `feedback_distribution_hover_parity.md`.
  */
-export function DistTooltipBox({ title, detail }: { title: string; detail: string }) {
+export function DistTooltipBox({
+  title,
+  detail,
+  breakdown,
+}: {
+  title: string;
+  detail: string;
+  /** Optional sub-category breakdown — e.g. what got folded into an "Others" bucket. */
+  breakdown?: { name: string; count: number; percentage?: string }[];
+}) {
   return (
     <div
       style={{
@@ -129,12 +138,44 @@ export function DistTooltipBox({ title, detail }: { title: string; detail: strin
         borderRadius: "0.25rem",
         padding: "0.25rem 0.5rem",
         fontFamily: FONT,
-        whiteSpace: "nowrap",
+        whiteSpace: breakdown && breakdown.length > 0 ? "normal" : "nowrap",
         pointerEvents: "none",
       }}
     >
       <div style={{ fontSize: "0.75rem", fontWeight: 700, color: COLOR.text }}>{title}</div>
       <div style={{ fontSize: "0.75rem", color: COLOR.gray600 }}>{detail}</div>
+      {breakdown && breakdown.length > 0 && (
+        <div
+          style={{
+            marginTop: "0.25rem",
+            paddingTop: "0.25rem",
+            borderTop: `1px solid ${COLOR.border}`,
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.0625rem",
+          }}
+        >
+          {breakdown.map((b) => (
+            <div
+              key={b.name}
+              style={{
+                fontSize: "0.6875rem",
+                color: COLOR.gray600,
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "0.75rem",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span>{b.name}</span>
+              <span style={{ fontWeight: 600 }}>
+                {b.count}
+                {b.percentage !== undefined ? ` (${b.percentage}%)` : ""}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

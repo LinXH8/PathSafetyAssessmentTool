@@ -10,7 +10,7 @@
  */
 
 export interface PathAnalysisChartData {
-  categoryDistributionData: { category: string; count: number; color: string }[];
+  categoryDistributionData: { category: string; count: number; color: string; breakdown?: { name: string; count: number }[] }[];
   primaryFocusAttribute: string | null;
   categoryStatus: {
     attribute: string;
