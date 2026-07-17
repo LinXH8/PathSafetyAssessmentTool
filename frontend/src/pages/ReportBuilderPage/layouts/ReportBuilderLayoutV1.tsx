@@ -148,7 +148,7 @@ export function ReportBuilderLayoutV1({ vm }: { vm: ReportBuilderViewModel }) {
                         onSelect={() => scrollToSection(sec.id)}
                       >
                         {elState && sec.visible
-                          ? sec.id === "topRisk"
+                          ? elState.type === "topRisk"
                             ? renderViewToggle(elState)
                             : (elState.type === "map" && elState.filtered)
                               ? renderMapColorToggle(elState)
