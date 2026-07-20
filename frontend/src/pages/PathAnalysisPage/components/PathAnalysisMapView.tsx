@@ -127,14 +127,23 @@ export default function AttributeAnalysisMapView({
   const [err, setErr] = useState<string | null>(null);
   const [panToBounds, setPanToBounds] = useState<L.LatLngBounds | null>(null);
 
-  // Single canvas renderer shared by all CircleMarkers — avoids creating hundreds of
-  // SVG DOM elements and dramatically reduces paint time with large project sets.
+  // Single canvas renderer shared by ALL interactive vector layers — segments AND
+  // GIS overlays. This is deliberate, not just a perf optimization: each Leaflet
+  // Canvas renderer owns its own <canvas> DOM element and its own click/mousemove
+  // listeners, and hit-tests ONLY the layers registered to that one canvas
+  // (leaflet's Canvas._onClick/_handleMouseHover walk that canvas's own layer
+  // list; there is no fallback to whatever canvas sits underneath). Two separate
+  // canvases covering the same area means whichever one mounted later becomes the
+  // sole recipient of every click/hover on the ENTIRE map, permanently, even after
+  // its own layers are toggled off (renderers are never removed once added) — that
+  // previously made segments totally uninteractable as soon as any GIS layer (e.g.
+  // Footpath) was turned on, since the GIS canvas mounted after segments and
+  // silently swallowed all subsequent map events. A single shared canvas lets
+  // Leaflet do real geometry-based hit-testing across both segment and GIS layers,
+  // correctly resolving to whichever shape is actually under the cursor. Large
+  // padding (0.5 = 50% on each side) prevents features near the viewport edge from
+  // disappearing during pan/zoom when the canvas has not yet re-rendered.
   const canvasRenderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
-
-  // Separate canvas renderer for GIS overlay layers. Large padding (0.5 = 50% on each
-  // side) prevents features near the viewport edge from disappearing during pan/zoom
-  // when the canvas has not yet re-rendered for the new position.
-  const gisCanvasRenderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
 
   // Track live map viewport so we can cull off-screen markers before React touches them.
   const [mapViewportBounds, setMapViewportBounds] = useState<L.LatLngBounds | null>(null);
@@ -1801,97 +1810,24 @@ export default function AttributeAnalysisMapView({
                       height from before CSS layout has settled. */}
                   <MapInvalidateSize />
 
-                  {/* Render visible points in a dedicated pane above any overlay layers.
-                      Uses a shared canvas renderer (vs. per-marker SVG) and viewport
-                      culling to stay fast with 15+ projects loaded. */}
-                  <Pane name="segmentsPane" style={{ zIndex: 450 }}>
-                    {viewportPoints.map(({ idx, latlng, f, projectName, color, attributeValue }) => {
-                      const radius = 5;
-                      const imageRef = f.properties?.["Image Reference"] as string | undefined;
-                      const imageUrl = imageRef
-                        ? `/api/projects/${encodeURIComponent(projectName)}/images/${encodeURIComponent(imageRef)}`
-                        : null;
-                      let label = `${projectName} - #${idx + 1}`;
-                      if (effectiveFocusAttribute && attributeValue) {
-                        label += ` | ${effectiveFocusAttribute}: ${attributeValue}`;
-                      }
+                  {/* Path Defect icons are real DOM <Marker> pins (not canvas-drawn), so
+                      they need their own pane to stay below the segments' canvas —
+                      otherwise a defect pin exactly on top of a segment would locally
+                      block that segment's click/hover (zIndex 390 < overlayPane's 400,
+                      where the shared canvasRenderer's <canvas> lives). */}
+                  <Pane name="pathDefectsPane" style={{ zIndex: 390 }} />
 
-                      return (
-                        <CircleMarker
-                          key={`${projectName}-${idx}`}
-                          center={latlng}
-                          radius={radius}
-                          pathOptions={{ color, weight: 1, opacity: 0.9, fillOpacity: 0.8 }}
-                          pane="segmentsPane"
-                          renderer={canvasRenderer}
-                          eventHandlers={{
-                            click: (e) => {
-                              // If in polygon mode, add this point to the polygon and stop propagation
-                              if (isPolygonMode || isPolygonAddMode) {
-                                L.DomEvent.stopPropagation(e as any);
-                                handlePolygonPoint(latlng);
-                                return;
-                              }
-
-                              // Check delete modes first
-                              if (isDeleteMode) {
-                                setSegmentToDelete({ projectName: projectName, index: idx });
-                                setDeleteConfirmationOpen(true);
-                                return;
-                              }
-                              if (isPointAddMode) {
-                                setSegmentToAdd({ projectName: projectName, index: idx });
-                                setIsAddSegmentsDialogOpen(true);
-                                return;
-                              }
-
-                              // Navigate to coding page for this project and segment.
-                              // When filters are active, pass filter context so the Coding
-                              // page map shows only filtered segments (+ the current segment).
-                              const segmentIdx = idx + 1; // 1-based index for UI
-                              const filterContext = buildFilterContext();
-                              if (filterContext) {
-                                sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
-                              } else {
-                                sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);
-                              }
-                              navigate(`/coding/${encodeURIComponent(projectName)}?segment=${segmentIdx}`, {
-                                state: { returnToAnalysis: true, filterContext }
-                              });
-                            }
-                          }}
-                        >
-                          <Tooltip>
-                            {imageUrl && (
-                              <img
-                                src={imageUrl}
-                                alt="segment"
-                                style={{
-                                  display: "block",
-                                  width: "200px",
-                                  height: "133px",
-                                  objectFit: "cover",
-                                  margin: "0 auto 4px",
-                                }}
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
-                                }}
-                              />
-                            )}
-                            <div>{label}</div>
-                          </Tooltip>
-                        </CircleMarker>
-                      );
-                    })}
-                  </Pane>
-
-                  {/* GIS Layers — rendered below segments pane (zIndex < 450).
-                      gisCanvasRenderer provides 50% padding so lines near the viewport
-                      edge stay visible during pan/zoom without flickering. */}
+                  {/* GIS Layers — rendered BEFORE segments so they're added to the shared
+                      canvas first. Leaflet's canvas hit-test resolves overlapping layers
+                      on the same canvas to whichever was added LAST, so rendering segments
+                      after this block keeps segments both visually on top of (e.g. filled
+                      land-parcel polygons) and hit-test-priority above GIS features. See
+                      the canvasRenderer comment above for why GIS layers must share that
+                      renderer instead of using a separate canvas. */}
                   <GISLayerOverlays
                     gisLayers={gisLayers}
                     pathDefects={pathDefects}
-                    gisCanvasRenderer={gisCanvasRenderer}
+                    canvasRenderer={canvasRenderer}
                     showFootpath={showFootpath}
                     showCycling={showCycling}
                     showShared={showShared}
@@ -1908,6 +1844,88 @@ export default function AttributeAnalysisMapView({
                     showLandPrivate={showLandPrivate}
                     showLandMinistry={showLandMinistry}
                   />
+
+                  {/* Render visible segments last so they win the shared canvas's
+                      add-order tie-break against GIS overlays (see comments above).
+                      Uses the shared canvas renderer (vs. per-marker SVG) and viewport
+                      culling to stay fast with 15+ projects loaded. */}
+                  {viewportPoints.map(({ idx, latlng, f, projectName, color, attributeValue }) => {
+                    const radius = 5;
+                    const imageRef = f.properties?.["Image Reference"] as string | undefined;
+                    const imageUrl = imageRef
+                      ? `/api/projects/${encodeURIComponent(projectName)}/images/${encodeURIComponent(imageRef)}`
+                      : null;
+                    let label = `${projectName} - #${idx + 1}`;
+                    if (effectiveFocusAttribute && attributeValue) {
+                      label += ` | ${effectiveFocusAttribute}: ${attributeValue}`;
+                    }
+
+                    return (
+                      <CircleMarker
+                        key={`${projectName}-${idx}`}
+                        center={latlng}
+                        radius={radius}
+                        pathOptions={{ color, weight: 1, opacity: 0.9, fillOpacity: 0.8 }}
+                        renderer={canvasRenderer}
+                        eventHandlers={{
+                          click: (e) => {
+                            // If in polygon mode, add this point to the polygon and stop propagation
+                            if (isPolygonMode || isPolygonAddMode) {
+                              L.DomEvent.stopPropagation(e as any);
+                              handlePolygonPoint(latlng);
+                              return;
+                            }
+
+                            // Check delete modes first
+                            if (isDeleteMode) {
+                              setSegmentToDelete({ projectName: projectName, index: idx });
+                              setDeleteConfirmationOpen(true);
+                              return;
+                            }
+                            if (isPointAddMode) {
+                              setSegmentToAdd({ projectName: projectName, index: idx });
+                              setIsAddSegmentsDialogOpen(true);
+                              return;
+                            }
+
+                            // Navigate to coding page for this project and segment.
+                            // When filters are active, pass filter context so the Coding
+                            // page map shows only filtered segments (+ the current segment).
+                            const segmentIdx = idx + 1; // 1-based index for UI
+                            const filterContext = buildFilterContext();
+                            if (filterContext) {
+                              sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
+                            } else {
+                              sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);
+                            }
+                            navigate(`/coding/${encodeURIComponent(projectName)}?segment=${segmentIdx}`, {
+                              state: { returnToAnalysis: true, filterContext }
+                            });
+                          }
+                        }}
+                      >
+                        <Tooltip>
+                          {imageUrl && (
+                            <img
+                              src={imageUrl}
+                              alt="segment"
+                              style={{
+                                display: "block",
+                                width: "200px",
+                                height: "133px",
+                                objectFit: "cover",
+                                margin: "0 auto 4px",
+                              }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = "none";
+                              }}
+                            />
+                          )}
+                          <div>{label}</div>
+                        </Tooltip>
+                      </CircleMarker>
+                    );
+                  })}
                   {/* Imported shapefile overlay — non-interactive so hover doesn't interfere with segment nodes */}
                   {importedBoundaries.map((boundary) =>
                     boundary.kind === "polygon" && boundary.coords ? (
