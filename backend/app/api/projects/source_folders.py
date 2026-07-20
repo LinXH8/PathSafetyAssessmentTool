@@ -1,6 +1,8 @@
 """Source (`in/`) folder management routes: list, preview, summarise, pick/copy/
 upload local images, and folder suggestions."""
 from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 from flask import (
     Blueprint,
     jsonify,
@@ -58,14 +60,16 @@ from .image_utils import (
     _IMAGE_EXTENSIONS,
     _build_project_geo_data_from_points,
     _get_project_source_folders,
+    _exif_date,
     get_image_folder_geo,
     make_image_namespace,
 )
 from .roads_util import _QUARTER_SUFFIX_RE, _get_known_road_names
+from collections import Counter
 
 
 _SOURCE_FOLDER_METADATA_FILENAME = "psat-folder-summary.json"
-_SOURCE_FOLDER_METADATA_VERSION = 1
+_SOURCE_FOLDER_METADATA_VERSION = 2  # bumped: summaries now also carry majority_quarter
 
 
 def _is_loopback_request() -> bool:
@@ -232,6 +236,19 @@ def _read_modified_datetime(image_path: Path) -> datetime.datetime | None:
         return None
 
 
+def _read_capture_date(image_path: Path) -> datetime.date | None:
+    """EXIF capture date if present (survives file transfers), else mtime."""
+    exif_date = _exif_date(image_path)
+    if exif_date is not None:
+        return exif_date
+    modified_at = _read_modified_datetime(image_path)
+    return modified_at.date() if modified_at is not None else None
+
+
+def _quarter_key(d: datetime.date) -> tuple[int, int]:
+    return (d.year, (d.month - 1) // 3 + 1)
+
+
 def _format_quarter_label(captured_at: datetime.datetime | None) -> str | None:
     if captured_at is None:
         return None
@@ -274,7 +291,15 @@ def _build_source_folder_cache_key(source_dir: Path, image_files: list[Path]) ->
     return digest.hexdigest()
 
 
-def _load_source_folder_metadata(source_dir: Path) -> dict | None:
+def _load_source_folder_metadata_any_version(source_dir: Path) -> dict | None:
+    """Like _load_source_folder_metadata but ignores the schema ``version`` gate.
+
+    Used only to recover the previous summary for the pruning backstop below,
+    which must survive a metadata schema bump (e.g. adding majority_quarter) —
+    a pruned folder's authoritative pre-prune segment_count is otherwise
+    unrecoverable once the raw frames are gone, so this must not be lost just
+    because the cache schema moved on.
+    """
     metadata_path = _get_source_folder_metadata_path(source_dir)
     if not metadata_path.exists() or not metadata_path.is_file():
         return None
@@ -284,11 +309,17 @@ def _load_source_folder_metadata(source_dir: Path) -> dict | None:
     except Exception:
         return None
 
-    if not isinstance(data, dict):
+    if not isinstance(data, dict) or not isinstance(data.get("summary"), dict):
+        return None
+
+    return data
+
+
+def _load_source_folder_metadata(source_dir: Path) -> dict | None:
+    data = _load_source_folder_metadata_any_version(source_dir)
+    if data is None:
         return None
     if data.get("version") != _SOURCE_FOLDER_METADATA_VERSION:
-        return None
-    if not isinstance(data.get("summary"), dict):
         return None
 
     return data
@@ -365,6 +396,21 @@ def _build_source_folder_summary(source_dir: Path, image_files: list[Path]) -> d
     }, key=_quarter_sort_key)
     survey_quarter = quarter_labels[0] if len(quarter_labels) == 1 else None
 
+    # Majority-vote quarter (EXIF capture date, falling back to mtime): tolerant of a
+    # few outlier images and of file-transfer mtime noise, unlike survey_quarter
+    # above which requires every image to agree. Used for display only (e.g. Map
+    # mode's Quarter column for folders lacking a quarter-suffixed name) — never
+    # drives the auto-rename decision, which stays keyed off survey_quarter.
+    capture_dates = [
+        capture_date
+        for capture_date in (_read_capture_date(image_file) for image_file in image_files)
+        if capture_date is not None
+    ]
+    majority_quarter = None
+    if capture_dates:
+        (year, quarter), _count = Counter(_quarter_key(d) for d in capture_dates).most_common(1)[0]
+        majority_quarter = f"{quarter}Q{year}"
+
     return {
         "folder_name": source_dir.name,
         "image_count": len(image_files),
@@ -376,6 +422,7 @@ def _build_source_folder_summary(source_dir: Path, image_files: list[Path]) -> d
         "latest_modified_at": max(modified_dates).isoformat() if modified_dates else None,
         "survey_quarter": survey_quarter,
         "survey_quarters": quarter_labels,
+        "majority_quarter": majority_quarter,
     }
 
 
@@ -431,7 +478,12 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
 
     if summary is None:
         fresh = _build_source_folder_summary(source_dir, image_files)
-        old = metadata.get("summary") if isinstance(metadata, dict) else None
+        # Version-agnostic on purpose: a metadata schema bump (e.g. adding
+        # majority_quarter) must not defeat this backstop for folders that were
+        # pruned under an older schema version — their pre-prune segment_count
+        # is otherwise unrecoverable once the raw frames are gone.
+        old_metadata = _load_source_folder_metadata_any_version(source_dir)
+        old = old_metadata.get("summary") if old_metadata is not None else None
         # Backstop for folders whose raw frames were pruned after a project was
         # created from them (cache_key no longer matches the thinned folder). The
         # fresh recompute would re-sample the ~1-per-segment anchor frames at 10 m
@@ -460,7 +512,7 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
         try:
             source_dir, renamed_from = _maybe_auto_rename_source_folder(source_dir, in_root, summary)
         except Exception as exc:
-            current_app.logger.warning("Failed to auto-rename source folder %s: %s", source_dir, exc)
+            logger.warning("Failed to auto-rename source folder %s: %s", source_dir, exc)
 
     summary["folder_name"] = source_dir.name
 
@@ -470,13 +522,28 @@ def _resolve_source_folder_preview(source_dir: Path, in_root: Path, allow_rename
         try:
             _write_source_folder_metadata(source_dir, cache_key, summary)
         except Exception as exc:
-            current_app.logger.warning("Failed to write source folder metadata for %s: %s", source_dir, exc)
+            logger.warning("Failed to write source folder metadata for %s: %s", source_dir, exc)
 
     result = dict(summary)
     result["cached"] = cached and renamed_from is None
     result["mixed_quarters"] = len(result.get("survey_quarters") or []) > 1
     result["renamed_from"] = renamed_from
     return result
+
+
+def _peek_cached_summary(source_dir: Path) -> dict | None:
+    """Cache-only, non-blocking read: validates the on-disk summary against the
+    current file listing's content-hash key (stats every file, never opens/reads
+    any of them) and returns it if still fresh, else None. Cheap enough to run
+    synchronously on a request thread."""
+    image_files = _iter_source_image_files(source_dir)
+    cache_key = _build_source_folder_cache_key(source_dir, image_files)
+    metadata = _load_source_folder_metadata(source_dir)
+    if metadata is None or metadata.get("cache_key") != cache_key:
+        return None
+    summary = metadata.get("summary")
+    return dict(summary) if isinstance(summary, dict) else None
+
 
 @bp.get("/folders")
 def list_input_folders():

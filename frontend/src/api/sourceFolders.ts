@@ -26,6 +26,9 @@ export interface SourceFolderPreview {
   latest_modified_at: string | null;
   survey_quarter: string | null;
   survey_quarters: string[];
+  /** Majority-vote quarter (EXIF-first, tolerant of a few outlier images), as
+   * opposed to survey_quarter which requires every image to agree. */
+  majority_quarter: string | null;
   cached: boolean;
   mixed_quarters: boolean;
   renamed_from: string | null;
@@ -47,6 +50,9 @@ export interface SourceFolderSummary {
   latest_modified_at: string | null;
   survey_quarter: string | null;
   survey_quarters: string[];
+  /** Majority-vote quarter (EXIF-first, tolerant of a few outlier images), as
+   * opposed to survey_quarter which requires every image to agree. */
+  majority_quarter: string | null;
   mixed_quarters: boolean;
   cached: boolean;
   renamed_from: string | null;

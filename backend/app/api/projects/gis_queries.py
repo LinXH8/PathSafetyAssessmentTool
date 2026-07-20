@@ -56,7 +56,8 @@ from app.services import gis_mapping as gis
 import app.services.global_var as global_var
 
 from ._helpers import _get_gis, _get_segment_midpoint, fail, get_ctx, ok
-from .roads_util import _available_road_folders, _available_road_names, _get_planning_areas_gdf, _get_road_sections_gdf, _pretty_folder_label, _select_latest_quarter_folders
+from .roads_util import _available_road_folders, _available_road_names, _folder_quarter_label, _get_planning_areas_gdf, _get_road_sections_gdf, _pretty_folder_label, _QUARTER_SUFFIX_RE, _select_latest_quarter_folders
+from .source_folders import _peek_cached_summary
 
 
 
@@ -115,7 +116,9 @@ def roads_in_polygon():
     # Check which folders already exist locally
     ctx = get_ctx()
     pm = ctx["pm"]
-    in_path: Path = pm.in_path
+    # Resolved (not the raw, possibly ".."-containing pm.in_path) to match the
+    # path form other folder routes (e.g. GET /folders/preview) use.
+    in_path: Path = pm.in_path.resolve()
     backend_root = Path(__file__).resolve().parents[3]
 
     # Build once: map each road-name base (uppercased, suffix-stripped) to the
@@ -202,11 +205,35 @@ def roads_in_polygon():
                 # Collapse multi-quarter downloads to the latest survey only so the
                 # "Roads Found" table shows one row per road, not one per quarter.
                 for folder in _select_latest_quarter_folders(folders):
+                    label = _pretty_folder_label(folder)
+                    if _QUARTER_SUFFIX_RE.search(folder):
+                        # Quarter is already known from the folder's own name.
+                        quarter = _folder_quarter_label(folder)
+                        quarter_status = "known"
+                    else:
+                        # No quarter suffix — check the cached majority-vote
+                        # detection (from images' own capture dates) read-only.
+                        # Never renames anything on disk. If there's no cache
+                        # yet, report "pending" and let the frontend resolve it
+                        # via the same GET /folders/preview bounded-concurrency
+                        # fetch Folder mode already uses — no server-side job
+                        # dispatch here.
+                        cached_summary = _peek_cached_summary(in_path / folder)
+                        if cached_summary is not None:
+                            quarter = cached_summary.get("majority_quarter")
+                            quarter_status = "detected" if quarter else "none"
+                        else:
+                            quarter = None
+                            quarter_status = "pending"
+                        if quarter:
+                            label = f"{folder} ({quarter})"
                     roads.append({
                         "name": folder,
-                        "label": _pretty_folder_label(folder),
+                        "label": label,
                         "points": points,
                         "exists": True,
+                        "quarter": quarter,
+                        "quarterStatus": quarter_status,
                     })
             else:
                 roads.append({
@@ -214,6 +241,8 @@ def roads_in_polygon():
                     "label": name,
                     "points": points,
                     "exists": False,
+                    "quarter": None,
+                    "quarterStatus": "none",
                 })
         logger.debug(f"[DEBUG] Returning {len(roads)} merged roads (fallback=False)")
         return ok({"roads": roads, "fallback": False})
