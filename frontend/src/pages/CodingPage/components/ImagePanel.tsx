@@ -36,20 +36,10 @@ export default function ImagePanel({
               onValueChange={(details) => setBrightness(details.value[0])}
             />
           </Box>
-          <Button
-            size="xs"
-            colorPalette="blue"
-            variant="solid"
-            flexShrink={0}
-            disabled={!imageRef}
-            onClick={() => setMeasureOpen(true)}
-          >
-            📐 Measure
-          </Button>
         </HStack>
       </Card.Header>
 
-      <Card.Body minH={0} p={0}>
+      <Card.Body minH={0} p={0} position="relative">
         {imageRef ? (
           <Box
             h="100%"
@@ -73,6 +63,29 @@ export default function ImagePanel({
           </Box>
         ) : (
           <Box color="gray.400">No Image</Box>
+        )}
+
+        {/* Floating tool button over the image — same treatment as the map's
+            floating tool cluster (white card, gray.200 border, radius 6, sm shadow). */}
+        {imageRef && (
+          <Button
+            position="absolute"
+            top="12px"
+            right="12px"
+            zIndex={10}
+            size="sm"
+            bg="white"
+            color="#2D3748"
+            borderWidth="1px"
+            borderColor="gray.200"
+            borderRadius="6px"
+            boxShadow="sm"
+            fontWeight={600}
+            _hover={{ bg: "gray.50" }}
+            onClick={() => setMeasureOpen(true)}
+          >
+            Measure
+          </Button>
         )}
       </Card.Body>
 

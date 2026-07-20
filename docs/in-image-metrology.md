@@ -129,6 +129,22 @@ frontend/src/pages/CodingPage/components/
 pointer-events freeze-after-close bug (see the root `CLAUDE.md`). `MeasureModal` renders via
 `createPortal` to `document.body` with a plain fixed overlay — no Zag, no freeze risk.
 
+**v2 styling (2026-07-16):** the modal chrome follows the v2 design system, copied from the
+canonical v2 components rather than from the guide text alone: overlay/panel/header/close match
+`ConfirmDialogV2`, the anchor-type segmented control and selects/inputs match
+`ShareProjectModalV2`, buttons mirror `V2Btn` (40px, radius 6, Inter 700; blue solid when
+active, ghost otherwise), all on `designTokens` `COLOR`/`FONT` — light-only, no dark mode.
+Canvas overlay colours (`OV`) are content drawn over the photo, not chrome, and keep the
+risk-band hues. The entry button is a **floating white "Measure" button (LuRuler icon, no
+emoji) over the image**, styled like the map's floating tool cluster (white, gray.200 border,
+radius 6, sm shadow) — not inline with the brightness slider.
+
+**Consolidation (2026-07-16, same day):** sidebar reduced to fit without scrolling — Anchor
+and Ruler each pair their primary button with an inline ghost "Clear"; the ruler guidance
+lives in the readout's empty-state sub-text (no separate hint block or divider under
+Measure); **Calibrate is a collapsed-by-default accordion** (LuChevronDown rotate pattern) —
+open it for the manual dials on anchor-less frames.
+
 **Data flow:**
 1. Modal loads the frame from the same URL ImagePanel uses:
    `/api/projects/<project>/images/<imageRef>` (proxied to the backend on `:8000`).

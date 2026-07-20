@@ -2,24 +2,31 @@
  * In-Image Path Measurement — Measure mode for the Coding page.
  *
  * A portal modal (NOT a Chakra Dialog — avoids the documented Zag pointer-events
- * freeze) that overlays a metric grid / ruler / two-point tool on the current
+ * freeze) that overlays a metric grid + perpendicular ruler on the current
  * segment's street-level frame. All geometry comes from measureMath.ts, whose
  * math is validated exact; this file is only canvas drawing + controls.
  *
- * Reliable path: click the 4 corners of a drain grating -> exact ground solve.
- * Manual dials (pitch/height/roll/yaw/k1) refine or handle drain-less frames.
+ * Reliable path: click the 4 corners of a known-size flat anchor (drain grating /
+ * tactile mat / custom rectangle) -> exact ground solve. Manual dials
+ * (pitch/height/roll/yaw/k1) refine or handle anchor-less frames.
+ *
+ * Chrome follows the v2 design system (ConfirmDialogV2 / ShareProjectModalV2
+ * patterns, designTokens COLOR/FONT, light-only). Canvas overlay colours (OV)
+ * are content drawn over the photo, not chrome.
  *
  * v1: live read-off only (persistence deferred per the design doc).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { LuChevronDown, LuX } from "react-icons/lu";
+import { COLOR, FONT } from "../../../../features/ui/designTokens";
 import {
   makeRig, solveAnchor, pxToGround, groundToPx, band,
   IMG_W, IMG_H, TRUSTED_M, GRATING_SIZES, TACTILE_SIZES,
   type AnchorSize, type Rig, type Vec2,
 } from "./measureMath";
 
-type Mode = "ruler" | "anchor";
+type Mode = "ruler" | "anchor" | "none";
 
 type AnchorType = "drain" | "tactile" | "custom";
 const ANCHOR_LABEL: Record<AnchorType, string> = {
@@ -30,10 +37,15 @@ const defaultStatus = (t: AnchorType) => `Click the 4 corners of the ${ANCHOR_LA
 
 type Props = { projectName: string; imageRef: string; open: boolean; onClose: () => void };
 
-const C = {
-  bg: "#0f1419", panel: "#161d26", line: "#2a3644", txt: "#e6edf3", dim: "#8b98a5",
+/** Canvas OVERLAY colours only — drawn over the photograph (content, not UI chrome).
+ *  Risk-band hues from colorConstants; UI chrome uses the v2 designTokens COLOR set. */
+const OV = {
   blue: "#3182CE", green: "#87C424", amber: "#FFCC1A", red: "#FF5B1A", purple: "#CD1AFF",
 };
+
+// v2 status colours (chrome)
+const GREEN_OK = "#2F855A";   // anchored confirmation text
+const AMBER_WARN = "#C05621"; // beyond-trusted-zone warning text
 
 export default function MeasureModal({ projectName, imageRef, open, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -51,6 +63,7 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
   const [customSide, setCustomSide] = useState(500);
   const [anchored, setAnchored] = useState(false);
   const [statusMsg, setStatusMsg] = useState(defaultStatus("drain"));
+  const [calOpen, setCalOpen] = useState(false); // Calibrate accordion (fallback path, collapsed by default)
 
   const activeSize: AnchorSize = useMemo(() => {
     if (anchorType === "drain") return GRATING_SIZES[sizeIdx];
@@ -92,7 +105,8 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // ---- readout (derived, pure) --------------------------------------------
+  // ---- readout (derived, pure). The empty-state sub doubles as the ruler
+  // guidance (the separate mode-hint block was cut in the consolidation pass).
   const readout = useMemo(() => {
     if (mode === "ruler" && picks.length >= 1) {
       const o = picks[0];
@@ -105,6 +119,7 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
         sub: `± ${(b * 100).toFixed(0)} cm · clear width from your mark`, far: Math.hypot(t[0], t[1]),
       };
     }
+    if (mode === "ruler") return { main: "—", sub: "click the path edge you're widening from, then the obstacle", far: 0 };
     return { main: "—", sub: "", far: 0 };
   }, [mode, picks]);
 
@@ -116,7 +131,7 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
     if (!ctx) return;
     ctx.clearRect(0, 0, cv.width, cv.height);
     if (imgElRef.current) ctx.drawImage(imgElRef.current, 0, 0, cv.width, cv.height);
-    else { ctx.fillStyle = C.panel; ctx.fillRect(0, 0, cv.width, cv.height); }
+    else { ctx.fillStyle = COLOR.gray100; ctx.fillRect(0, 0, cv.width, cv.height); }
 
     const g2 = (X: number, Y: number) => groundToPx(rig, X, Y);
     const polyGround = (pts: Vec2[], style: string, width: number, dash: number[] = []) => {
@@ -140,17 +155,17 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
       ctx.fillStyle = style; ctx.beginPath(); ctx.arc(p[0] * S, p[1] * S, 5, 0, 7); ctx.fill();
     };
 
-    if (!rig.Hinv) groundLine(-400, 400, 400, 400, C.amber, 1.5, [7, 5], 160); // horizon (unanchored)
+    if (!rig.Hinv) groundLine(-400, 400, 400, 400, OV.amber, 1.5, [7, 5], 160); // horizon (unanchored)
 
     // anchor overlay
     if (anchorPts.length) {
       if (anchorPts.length === 4) {
-        ctx.strokeStyle = C.red; ctx.lineWidth = 2.5; ctx.setLineDash([]); ctx.beginPath();
+        ctx.strokeStyle = OV.red; ctx.lineWidth = 2.5; ctx.setLineDash([]); ctx.beginPath();
         anchorPts.forEach((p, i) => (i ? ctx.lineTo(p[0] * S, p[1] * S) : ctx.moveTo(p[0] * S, p[1] * S)));
         ctx.closePath(); ctx.stroke();
       }
       anchorPts.forEach((p, i) => {
-        ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(p[0] * S, p[1] * S, 5, 0, 7); ctx.fill();
+        ctx.fillStyle = OV.red; ctx.beginPath(); ctx.arc(p[0] * S, p[1] * S, 5, 0, 7); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.font = "700 10px Inter,sans-serif"; ctx.fillText(String(i + 1), p[0] * S + 7, p[1] * S - 6);
       });
     }
@@ -163,31 +178,31 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
       const X0 = -4, X1 = 4, Y0 = -8, Y1 = 8;
       for (let x = X0; x <= X1; x++) {
         const inT = Math.abs(x) <= TRUSTED_M;
-        groundLine(x, Y0, x, Y1, x === 0 ? C.blue : inT ? "rgba(135,196,36,.85)" : "rgba(135,196,36,.30)", x === 0 ? 2 : 1, [], 128);
+        groundLine(x, Y0, x, Y1, x === 0 ? OV.blue : inT ? "rgba(135,196,36,.85)" : "rgba(135,196,36,.30)", x === 0 ? 2 : 1, [], 128);
       }
       for (let y = Math.ceil(Y0); y <= Y1; y++) {
         const inT = y <= TRUSTED_M;
         groundLine(X0, y, X1, y, inT ? "rgba(135,196,36,.85)" : "rgba(135,196,36,.30)", 1);
         if (y >= 0) {
           const p = g2(X1, y);
-          if (p) { ctx.fillStyle = inT ? C.green : "rgba(135,196,36,.45)"; ctx.font = "600 11px Inter,sans-serif"; ctx.fillText(y + " m", p[0] * S + 4, p[1] * S + 4); }
+          if (p) { ctx.fillStyle = inT ? OV.green : "rgba(135,196,36,.45)"; ctx.font = "600 11px Inter,sans-serif"; ctx.fillText(y + " m", p[0] * S + 4, p[1] * S + 4); }
         }
       }
-      groundLine(-6, TRUSTED_M, 6, TRUSTED_M, C.amber, 1.5, [4, 4]);
+      groundLine(-6, TRUSTED_M, 6, TRUSTED_M, OV.amber, 1.5, [4, 4]);
     }
 
     if (mode === "ruler" && picks.length) {
       const o = picks[0];
-      groundLine(o[0] - 6, o[1], o[0] + 6, o[1], C.blue, 2);
+      groundLine(o[0] - 6, o[1], o[0] + 6, o[1], OV.blue, 2);
       for (let d = -6; d <= 6; d += 0.5) {
         const p = g2(o[0] + d, o[1]); if (!p) continue;
         const big = Number.isInteger(d);
-        ctx.strokeStyle = C.blue; ctx.lineWidth = big ? 2 : 1;
+        ctx.strokeStyle = OV.blue; ctx.lineWidth = big ? 2 : 1;
         ctx.beginPath(); ctx.moveTo(p[0] * S, p[1] * S - (big ? 7 : 4)); ctx.lineTo(p[0] * S, p[1] * S + (big ? 7 : 4)); ctx.stroke();
         if (big && d !== 0) { ctx.fillStyle = "#9ecbf0"; ctx.font = "600 10px Inter,sans-serif"; ctx.fillText(Math.abs(d) + "m", p[0] * S - 8, p[1] * S + 20); }
       }
-      dot(o[0], o[1], C.red);
-      if (picks.length >= 2) { const t = picks[1]; groundLine(o[0], o[1], t[0], o[1], C.purple, 2.5); dot(t[0], t[1], C.purple); }
+      dot(o[0], o[1], OV.red);
+      if (picks.length >= 2) { const t = picks[1]; groundLine(o[0], o[1], t[0], o[1], OV.purple, 2.5); dot(t[0], t[1], OV.purple); }
     }
   }, [rig, mode, picks, anchorPts, imgReady, S]);
 
@@ -221,7 +236,7 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
     setRig((r) => ({ ...r, H: res.H, Hinv: res.Hinv, height: d.h, pitch: d.pitch, roll: d.roll, yaw: d.yaw, anchorYaw: d.yaw }));
     setAnchored(true);
     setMode("ruler"); setPicks([]); // straight into measuring — ruler is the tool
-    setStatusMsg(`✓ ANCHORED (exact) — ${sz.near}×${sz.side} mm → height ${d.h.toFixed(3)} m, pitch ${d.pitch.toFixed(1)}°, roll ${d.roll.toFixed(1)}°, yaw ${d.yaw.toFixed(1)}°.`);
+    setStatusMsg(`Anchored (exact) on ${sz.near} × ${sz.side} mm. Ruler ready.`);
   };
 
   const switchAnchorType = (t: AnchorType) => {
@@ -258,6 +273,7 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
       else setStatusMsg(`Corner ${next.length}/4 placed — next: ${CORNER_NAMES[next.length]}.`);
       return;
     }
+    if (mode !== "ruler") return; // "none" = nothing selected, clicks are inert
     const g = pxToGround(rig, px, py);
     if (!g) return;
     setPicks((prev) => { const next = [...prev, g]; return next.length > 2 ? next.slice(-2) : next; });
@@ -275,135 +291,191 @@ export default function MeasureModal({ projectName, imageRef, open, onClose }: P
 
   if (!open) return null;
 
-  const btn = (label: string, active: boolean, onClick: () => void, extra: React.CSSProperties = {}) => (
-    <button onClick={onClick} style={{
-      background: active ? C.blue : "#20293a", color: C.txt, border: `1px solid ${active ? C.blue : C.line}`,
-      borderRadius: 6, padding: "8px 12px", fontWeight: 600, fontSize: 13, cursor: "pointer", ...extra,
+  // v2 button (DESIGN_GUIDE §4, mirrors V2Btn in the Treatment/Report shells):
+  // 40px tall, radius 6, Inter 700 16. active = blue solid, otherwise ghost.
+  const btn = (label: React.ReactNode, active: boolean, onClick: () => void, extra: React.CSSProperties = {}) => (
+    <button type="button" onClick={onClick} style={{
+      height: "2.5rem", padding: "0 1rem",
+      background: active ? COLOR.blue : "transparent",
+      color: active ? COLOR.white : COLOR.text,
+      border: active ? "none" : `1px solid ${COLOR.borderInput}`,
+      borderRadius: 6, fontFamily: FONT, fontWeight: 700, fontSize: 15,
+      cursor: "pointer", whiteSpace: "nowrap",
+      display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.375rem",
+      ...extra,
     }}>{label}</button>
   );
 
+  // v2 segmented control (matches ShareProjectModalV2 / Create Project segStyle)
+  const seg = (label: string, selected: boolean, onClick: () => void) => (
+    <div key={label} onClick={onClick} style={{
+      flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "0 10px", fontFamily: FONT, fontSize: 15, cursor: "pointer", userSelect: "none",
+      ...(selected
+        ? { background: COLOR.white, color: COLOR.gray800, fontWeight: 700 }
+        : { background: COLOR.gray100, color: COLOR.gray500, fontWeight: 400 }),
+    }}>{label}</div>
+  );
+
+  const inputStyle: React.CSSProperties = {
+    boxSizing: "border-box", height: 40, padding: "0 12px",
+    border: `1px solid ${COLOR.borderInput}`, borderRadius: 6,
+    fontFamily: FONT, fontSize: 15, background: COLOR.white, color: COLOR.text,
+  };
+  const sectionTitle: React.CSSProperties = { fontFamily: FONT, fontWeight: 700, fontSize: 15, color: COLOR.text, marginBottom: 8 };
+  const hintText: React.CSSProperties = { fontFamily: FONT, fontSize: 13, lineHeight: 1.55, color: COLOR.gray500 };
+
   const slider = (label: string, sub: string, key: keyof Rig, min: number, max: number, step: number, fmt: (v: number) => string, breakA: boolean) => (
-    <label style={{ display: "block", margin: "10px 0", fontSize: 13 }}>
+    <label style={{ display: "block", margin: "6px 0", fontFamily: FONT, fontSize: 13.5 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-        <span>{label} <span style={{ color: C.dim }}>{sub}</span></span>
-        <span style={{ color: C.dim, fontVariantNumeric: "tabular-nums" }}>{fmt(rig[key] as number)}</span>
+        <span style={{ color: COLOR.text, fontWeight: 600 }}>{label} <span style={{ color: COLOR.gray500, fontWeight: 400 }}>{sub}</span></span>
+        <span style={{ color: COLOR.gray600, fontVariantNumeric: "tabular-nums" }}>{fmt(rig[key] as number)}</span>
       </div>
-      <input type="range" min={min} max={max} step={step} value={rig[key] as number} style={{ width: "100%", accentColor: C.blue }}
+      <input type="range" min={min} max={max} step={step} value={rig[key] as number} style={{ width: "100%", accentColor: COLOR.blue }}
         onChange={(e) => patchRig({ [key]: parseFloat(e.target.value) } as Partial<Rig>, breakA)} />
     </label>
   );
 
-  const modeHint: Record<Mode, string> = {
-    anchor: `Click the 4 corners of the ${ANCHOR_LABEL[anchorType]}: near-left → near-right → far-right → far-left.`,
-    ruler: "Click the path edge you're widening FROM, then the obstacle — reads clear width. The 1 m grid is painted for square-counting.",
-  };
-
   return createPortal(
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.72)", zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
-      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div style={{ background: C.bg, color: C.txt, border: `1px solid ${C.line}`, borderRadius: 10, maxWidth: "96vw", maxHeight: "94vh", overflow: "auto", display: "flex", flexDirection: "column", font: "14px/1.5 Inter,system-ui,sans-serif" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: `1px solid ${C.line}` }}>
-          <div><b style={{ fontSize: 15 }}>In-Image Path Measurement</b> <span style={{ color: C.dim, fontSize: 12 }}>· planning-grade, ±0.4–0.5 m near field</span></div>
-          {btn("✕ Close", false, onClose)}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="In-Image Path Measurement"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{
+        position: "fixed", inset: 0, zIndex: 3100,
+        background: "rgba(26, 32, 44, 0.55)",
+        display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
+      }}
+    >
+      <div style={{
+        background: COLOR.white, border: `1px solid ${COLOR.border}`, borderRadius: 10,
+        boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+        maxWidth: "96vw", maxHeight: "calc(100vh - 48px)", overflow: "hidden",
+        display: "flex", flexDirection: "column", fontFamily: FONT,
+      }}>
+        {/* Header (fixed) */}
+        <div style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 22px", borderBottom: `1px solid ${COLOR.border}` }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, color: COLOR.text }}>In-Image Path Measurement</span>
+            <span style={{ fontFamily: FONT, fontSize: 13, color: COLOR.gray500 }}>planning-grade, ±0.4–0.5 m near field</span>
+          </div>
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            style={{ background: "transparent", border: "none", cursor: "pointer", display: "inline-flex", lineHeight: 1, color: COLOR.gray500, padding: 0 }}
+          >
+            <LuX size={20} />
+          </button>
         </div>
 
-        <div style={{ display: "flex", gap: 14, padding: 14, flexWrap: "wrap", alignItems: "flex-start" }}>
+        {/* Body row: fixed height (= canvas). The image column stays still; only the
+            controls column scrolls when the Calibrate accordion is open. */}
+        <div style={{ display: "flex", gap: 18, padding: 22, minHeight: 0, flex: 1, overflow: "hidden", alignItems: "flex-start" }}>
           <canvas ref={canvasRef} width={Math.round(IMG_W * S)} height={Math.round(IMG_H * S)}
             onClick={onCanvasClick}
-            style={{ border: `1px solid ${C.line}`, borderRadius: 6, cursor: "crosshair", background: "#000", flex: "0 0 auto", maxWidth: "100%" }} />
+            style={{ border: `1px solid ${COLOR.border}`, borderRadius: 6, cursor: "crosshair", background: "#000", flex: "0 0 auto", maxWidth: "100%", alignSelf: "flex-start" }} />
 
-          <aside style={{ flex: "1 1 300px", minWidth: 300, maxWidth: 380 }}>
+          <aside style={{ flex: "1 1 300px", minWidth: 300, maxWidth: 380, height: Math.round(IMG_H * S), overflowY: "auto", minHeight: 0, paddingRight: 4 }}>
             {/* anchor */}
-            <div style={{ paddingBottom: 10, borderBottom: `1px solid ${C.line}` }}>
-              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".06em", color: C.dim, marginBottom: 8 }}>Anchor on a known object (reliable)</div>
-              <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                {(["drain", "tactile", "custom"] as AnchorType[]).map((t) =>
-                  <span key={t} style={{ flex: 1, display: "flex" }}>
-                    {btn(t === "drain" ? "Drain" : t === "tactile" ? "Tactile" : "Custom", anchorType === t, () => switchAnchorType(t), { flex: 1, padding: "7px 6px", fontSize: 12.5 })}
-                  </span>
-                )}
+            <div style={{ paddingBottom: 12, borderBottom: `1px solid ${COLOR.border}` }}>
+              <div style={sectionTitle}>Anchor</div>
+              <div style={{ display: "flex", height: 36, border: `1px solid ${COLOR.border}`, borderRadius: 6, overflow: "hidden", marginBottom: 10 }}>
+                {seg("Drain", anchorType === "drain", () => switchAnchorType("drain"))}
+                {seg("Tactile", anchorType === "tactile", () => switchAnchorType("tactile"))}
+                {seg("Custom", anchorType === "custom", () => switchAnchorType("custom"))}
               </div>
-              {btn(`◎ Click the 4 corners of the ${ANCHOR_LABEL[anchorType]}`, mode === "anchor", () => { setMode("anchor"); setPicks([]); }, { width: "100%" })}
-              <div style={{ fontSize: 11.5, color: C.dim, marginTop: 6, lineHeight: 1.55 }}>
-                Click order — trace the outline: <b style={{ color: C.txt }}>1 near-left, 2 near-right, 3 far-right, 4 far-left</b>.
-                {" "}"Near" is the edge closest to the camera; "far" is the edge further up the path.
+              <div style={{ display: "flex", gap: 8 }}>
+                {btn("Click the 4 corners", mode === "anchor", () => { setMode(mode === "anchor" ? "none" : "anchor"); setPicks([]); }, { flex: 1, fontSize: 14 })}
+                {btn("Clear", false, clearAnchor, { fontSize: 14 })}
+              </div>
+              <div style={{ ...hintText, marginTop: 8 }}>
+                Order: <b style={{ color: COLOR.text }}>1 near-left, 2 near-right, 3 far-right, 4 far-left</b> — "near" = edge closest to the camera.
               </div>
               {anchorType === "drain" && (
-                <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 13 }}>
-                  <span>Size</span>
+                <label style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: COLOR.text }}>Size</span>
                   <select value={sizeIdx} onChange={(e) => { const i = parseInt(e.target.value); setSizeIdx(i); if (anchorPts.length === 4) doSolveAnchor(anchorPts, GRATING_SIZES[i]); }}
-                    style={{ flex: 1, background: "#20293a", color: C.txt, border: `1px solid ${C.line}`, borderRadius: 6, padding: 6 }}>
+                    style={{ ...inputStyle, flex: 1, minWidth: 0, cursor: "pointer" }}>
                     {GRATING_SIZES.map((s, i) => <option key={i} value={i}>{s.label}</option>)}
                   </select>
                 </label>
               )}
               {anchorType === "tactile" && (
                 <>
-                  <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 13 }}>
-                    <span>Size</span>
+                  <label style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+                    <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: COLOR.text }}>Size</span>
                     <select value={tactileIdx} onChange={(e) => { const i = parseInt(e.target.value); setTactileIdx(i); if (anchorPts.length === 4) doSolveAnchor(anchorPts, TACTILE_SIZES[i]); }}
-                      style={{ flex: 1, background: "#20293a", color: C.txt, border: `1px solid ${C.line}`, borderRadius: 6, padding: 6 }}>
+                      style={{ ...inputStyle, flex: 1, minWidth: 0, cursor: "pointer" }}>
                       {TACTILE_SIZES.map((s, i) => <option key={i} value={i}>{s.label}</option>)}
                     </select>
                   </label>
-                  <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>
-                    Tiles are 300 × 300 mm. If a full mat is visible, outline the whole mat (pick its size above) — a bigger anchor is more accurate.
-                  </div>
+                  <div style={{ ...hintText, marginTop: 6 }}>Outline a whole mat when visible — a bigger anchor is more accurate.</div>
                 </>
               )}
               {anchorType === "custom" && (
                 <>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, fontSize: 13 }}>
-                    <span>Size</span>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+                    <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: COLOR.text }}>Size</span>
                     <input type="number" min={50} step={10} value={customNear || ""} onChange={(e) => onCustomDim("near", e.target.value)}
-                      style={{ flex: 1, minWidth: 0, background: "#20293a", color: C.txt, border: `1px solid ${C.line}`, borderRadius: 6, padding: 6 }} />
-                    <span style={{ color: C.dim }}>×</span>
+                      style={{ ...inputStyle, flex: 1, minWidth: 0, width: "100%" }} />
+                    <span style={{ fontFamily: FONT, fontSize: 14, color: COLOR.gray500 }}>×</span>
                     <input type="number" min={50} step={10} value={customSide || ""} onChange={(e) => onCustomDim("side", e.target.value)}
-                      style={{ flex: 1, minWidth: 0, background: "#20293a", color: C.txt, border: `1px solid ${C.line}`, borderRadius: 6, padding: 6 }} />
-                    <span style={{ color: C.dim }}>mm</span>
+                      style={{ ...inputStyle, flex: 1, minWidth: 0, width: "100%" }} />
+                    <span style={{ fontFamily: FONT, fontSize: 14, color: COLOR.gray500 }}>mm</span>
                   </div>
-                  <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>
-                    Near edge (facing you) × side edge (going away). Any flat rectangle of known size works — e.g. ground signage. It must lie flat on the ground.
-                  </div>
+                  <div style={{ ...hintText, marginTop: 6 }}>Near edge (facing you) × side edge. Must lie flat on the ground.</div>
                 </>
               )}
-              <div style={{ fontSize: 11, color: anchored ? C.green : C.dim, marginTop: 6, minHeight: 28 }}>{statusMsg}</div>
-              <div style={{ marginTop: 6 }}>{btn("Clear anchor", false, clearAnchor)}</div>
+              <div style={{ fontFamily: FONT, fontSize: 13, lineHeight: 1.5, color: anchored ? GREEN_OK : COLOR.gray500, marginTop: 8, minHeight: 20 }}>{statusMsg}</div>
             </div>
 
-            {/* measure */}
-            <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.line}` }}>
-              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".06em", color: C.dim, marginBottom: 8 }}>Measure</div>
+            {/* measure — no divider below, guidance lives in the readout sub-text */}
+            <div style={{ padding: "12px 0" }}>
+              <div style={sectionTitle}>Measure</div>
               <div style={{ display: "flex", gap: 8 }}>
-                {btn("Ruler", mode === "ruler", () => { setMode("ruler"); setPicks([]); })}
+                {btn("Ruler", mode === "ruler", () => { setMode(mode === "ruler" ? "none" : "ruler"); setPicks([]); }, { flex: 1, fontSize: 14 })}
+                {btn("Clear", false, () => setPicks([]), { fontSize: 14 })}
               </div>
-              <div style={{ fontSize: 12, color: C.dim, marginTop: 8 }}>{modeHint[mode]}</div>
-              <div style={{ fontSize: 22, fontWeight: 700, fontVariantNumeric: "tabular-nums", marginTop: 10 }}>{readout.main}</div>
-              <div style={{ fontSize: 12, color: C.dim }}>{readout.sub}</div>
+              {readout.main !== "—" && (
+                <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: COLOR.text, fontVariantNumeric: "tabular-nums", marginTop: 8 }}>{readout.main}</div>
+              )}
+              <div style={{ ...hintText, marginTop: 8 }}>{readout.sub}</div>
               {readout.far > TRUSTED_M && (
-                <div style={{ fontSize: 12, color: C.amber, marginTop: 6 }}>
-                  ⚠ {readout.far.toFixed(1)} m from camera — beyond the {TRUSTED_M} m trusted zone; precision degrades toward the horizon.
+                <div style={{ fontFamily: FONT, fontSize: 13, color: AMBER_WARN, marginTop: 6 }}>
+                  {readout.far.toFixed(1)} m from camera — beyond the {TRUSTED_M} m trusted zone; precision degrades toward the horizon.
                 </div>
               )}
-              <div style={{ marginTop: 8 }}>{btn("Clear picks", false, () => setPicks([]))}</div>
             </div>
 
-            {/* dials */}
-            <div style={{ padding: "10px 0" }}>
-              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".06em", color: C.dim, marginBottom: 4 }}>
-                Calibrate {anchored ? <span style={{ color: C.green }}>— seeded from anchor</span> : <span>(tune by eye)</span>}
+            {/* calibrate — collapsed accordion (fallback path; chevron pattern per v2) */}
+            <div style={{ borderTop: `1px solid ${COLOR.border}` }}>
+              <div
+                onClick={() => setCalOpen((o) => !o)}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0", cursor: "pointer", userSelect: "none" }}
+              >
+                <span style={{ ...sectionTitle, marginBottom: 0 }}>
+                  Calibrate {anchored && <span style={{ fontWeight: 400, fontSize: 13, color: GREEN_OK }}>seeded from anchor</span>}
+                </span>
+                <LuChevronDown size={16} color={COLOR.gray500} strokeWidth={2}
+                  style={{ flexShrink: 0, transform: calOpen ? "rotate(180deg)" : "none", transformOrigin: "center" }} />
               </div>
-              <div style={{ fontSize: 12, color: C.dim, marginBottom: 6 }}>
-                {anchored
-                  ? "On the exact 4-corner solve. Yaw & k1 stay exact; nudging pitch/height/roll goes manual (~35 mm)."
-                  : "Yaw spins the grid onto the path. k1 matches grid curvature to real straight lines. Pitch/height for no-drain frames."}
-              </div>
-              {slider("Yaw", "path direction", "yaw", -90, 90, 0.5, (v) => v.toFixed(1) + "°", false)}
-              {slider("k1", "curvature", "k1", -0.05, 0.03, 0.001, (v) => (v < 0 ? "−" : "+") + Math.abs(v).toFixed(3), false)}
-              {slider("Pitch", "vanishing point", "pitch", -15, 40, 0.1, (v) => v.toFixed(1) + "°", true)}
-              {slider("Height", "scale (m)", "height", 0.3, 2.5, 0.005, (v) => v.toFixed(3), true)}
-              {slider("Roll", "bike lean", "roll", -40, 40, 0.25, (v) => v.toFixed(1) + "°", true)}
-              <div style={{ marginTop: 6 }}>{btn("Reset all", false, resetAll)}</div>
+              {calOpen && (
+                <div style={{ paddingBottom: 4 }}>
+                  <div style={{ ...hintText, marginBottom: 4 }}>
+                    {anchored
+                      ? "Yaw & k1 keep the exact solve; pitch/height/roll break to manual (~35 mm)."
+                      : "Yaw spins the grid onto the path; pitch/height set scale for anchor-less frames."}
+                  </div>
+                  {slider("Yaw", "path direction", "yaw", -90, 90, 0.5, (v) => v.toFixed(1) + "°", false)}
+                  {slider("k1", "curvature", "k1", -0.05, 0.03, 0.001, (v) => (v < 0 ? "−" : "+") + Math.abs(v).toFixed(3), false)}
+                  {slider("Pitch", "vanishing point", "pitch", -15, 40, 0.1, (v) => v.toFixed(1) + "°", true)}
+                  {slider("Height", "scale (m)", "height", 0.3, 2.5, 0.005, (v) => v.toFixed(3), true)}
+                  {slider("Roll", "bike lean", "roll", -40, 40, 0.25, (v) => v.toFixed(1) + "°", true)}
+                  <div style={{ marginTop: 4 }}>{btn("Reset all", false, resetAll, { height: "2.25rem", fontSize: 14 })}</div>
+                </div>
+              )}
             </div>
           </aside>
         </div>
