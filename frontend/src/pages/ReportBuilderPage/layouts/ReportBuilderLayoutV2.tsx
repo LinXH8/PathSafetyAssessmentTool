@@ -278,7 +278,7 @@ export function ReportBuilderLayoutV2({ vm }: { vm: ReportBuilderViewModel }) {
             <div ref={canvasRef} className="rb-canvas" style={{ width: CANVAS_W, height: canvasH, background: "transparent", boxShadow: "none" }}>
               {Array.from({ length: totalPages }).map((_, i) => (
                 <div key={`page-bg-${i}`} style={{ position: "absolute", top: i * PAGE_H, left: 0, width: CANVAS_W, height: PAGE_H, zIndex: 0, pointerEvents: "none" }}>
-                  <div style={{
+                  <div className="rb-page-bg" style={{
                     width: CANVAS_W,
                     height: PAGE_H - PAGE_GAP,
                     background: "#fff",

@@ -22,7 +22,12 @@ function FitAllBounds({ points }: { points: L.LatLngExpression[] }) {
   const map = useMap();
   useEffect(() => {
     if (points.length === 0) return;
-    map.fitBounds(L.latLngBounds(points), { padding: [20, 20] });
+    // Invalidate size in case the container dimensions just changed/settled,
+    // then defer fitBounds so Leaflet calculates the correct viewport dimensions.
+    map.invalidateSize();
+    setTimeout(() => {
+      map.fitBounds(L.latLngBounds(points), { padding: [20, 20], maxZoom: 18 });
+    }, 100);
   }, [points, map]);
   return null;
 }
@@ -77,7 +82,7 @@ export function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: st
   const latlngs = useMemo(() => points.map((p) => p.latlng), [points]);
 
   return (
-    <MapContainer key={mapKey} style={{ width: "100%", height: "100%" }} center={[1.35, 103.82]} zoom={12} scrollWheelZoom zoomControl>
+    <MapContainer key={mapKey} style={{ width: "100%", height: "100%" }} center={[1.35, 103.82]} zoom={12} scrollWheelZoom zoomControl preferCanvas={true}>
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'

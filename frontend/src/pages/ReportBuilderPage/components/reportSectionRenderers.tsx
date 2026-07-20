@@ -116,12 +116,12 @@ export const renderTopRiskFullPage = (ctx: TopRiskRenderContext, rows: TopRiskRo
         const isFirst = i === 0;
         const isLast = i === rows.length - 1;
 
-        // Each page must exactly equal PAGE_H (except possibly the last one)
-        // so that the chunks break precisely on the PDF boundaries.
-        const height = isLast ? "auto" : PAGE_H;
+        // Each page must exactly equal PAGE_H so that the chunks break precisely
+        // on the PDF boundaries and image containers don't blow up to intrinsic heights.
+        const height = PAGE_H;
 
         return (
-          <div key={i} style={{ height, boxSizing: "border-box", paddingBottom: isLast ? 0 : PAGE_GAP, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div key={i} style={{ height, boxSizing: "border-box", paddingBottom: PAGE_GAP, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {isFirst ? (
               <div style={{ padding: "8px 12px 12px", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                 <div>
