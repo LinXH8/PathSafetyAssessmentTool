@@ -7,6 +7,13 @@
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+/** Quarter-detection state for a road's download folder. "known" = parsed from the
+ * folder's own name suffix; "detected" = majority-vote from image capture dates,
+ * already cached; "pending" = no cached detection yet — the frontend must fetch
+ * GET /folders/preview to resolve it; "none" = no quarter could be determined (or
+ * the road has no local folder at all). */
+export type QuarterStatus = "known" | "detected" | "pending" | "none";
+
 /** A road segment that can become a source-folder project. */
 export interface RoadInPolygon {
   /** The real, createable source-folder name (carries quarter suffix when downloaded). */
@@ -15,6 +22,9 @@ export interface RoadInPolygon {
   label?: string;
   points: number;
   exists: boolean;
+  /** Detected quarter label (e.g. "1Q2026"), or null if unknown/pending. */
+  quarter?: string | null;
+  quarterStatus?: QuarterStatus;
 }
 
 export interface RoadsInPolygonResult {

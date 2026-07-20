@@ -183,6 +183,17 @@ def _folder_quarter_key(folder_name: str) -> tuple[int, int] | None:
     return (year, quarter)
 
 
+def _folder_quarter_label(folder_name: str) -> str | None:
+    """Clean ``NQYYYY`` label for a folder's quarter-suffix, or None if the folder
+    name carries no parseable quarter (unlike ``_pretty_folder_label``, this never
+    includes a trailing ``__N`` dedup counter)."""
+    key = _folder_quarter_key(folder_name)
+    if key is None:
+        return None
+    year, quarter = key
+    return f"{quarter}Q{year}"
+
+
 def _select_latest_quarter_folders(folders: list[str]) -> list[str]:
     """Collapse a road's download folders to only the latest survey quarter.
 

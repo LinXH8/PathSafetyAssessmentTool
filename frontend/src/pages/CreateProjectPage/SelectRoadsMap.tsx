@@ -6,6 +6,7 @@ import {
   Flex,
   HStack,
   Badge,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   MapContainer,
@@ -22,6 +23,7 @@ import { LuCheck } from "react-icons/lu";
 import ThemeAwareTileLayer from "../../components/common/ThemeAwareTileLayer";
 import { MapCursorController } from "../../components/common/MapCursorController";
 import {
+  fetchSourceFolderPreview,
   previewUploadedShapefiles,
   queryPlanningAreasInBounds,
   queryRoadsInBounds,
@@ -29,6 +31,7 @@ import {
   queryRoadsInSelection,
   type PlanningAreaInBounds,
   type ProjectSelectionGeometry,
+  type QuarterStatus,
   type RoadInBounds,
 } from "../../api";
 import { toaster } from "../../components/ui/toaster";
@@ -368,6 +371,9 @@ export interface SelectedRoad {
   points: number;
   exists: boolean;
   selected: boolean;
+  /** Detected quarter label (e.g. "1Q2026"), or null/undefined if unknown/pending. */
+  quarter?: string | null;
+  quarterStatus?: QuarterStatus;
 }
 
 interface SelectRoadsMapProps {
@@ -694,6 +700,68 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
       clearTimeout(timeout);
     };
   }, [currentSelectionGeometry, onSelectionChange, refreshKey]);
+
+  // ─ Resolve "pending" quarter rows via bounded-concurrency fetch ─
+  // roads-in-polygon reports "pending" for folders without a quarter-suffixed
+  // name and no cached majority-vote detection yet. Resolve them the same way
+  // Folder mode already resolves its own uncached folders
+  // (createProjectPage.tsx's bulk-summary effect): a small worker pool calling
+  // the existing GET /folders/preview?skip_rename=1 endpoint, patching each
+  // row's Quarter cell (see the table below) as it completes.
+  const pendingQuarterNames = useMemo(
+    () => roads.filter((r) => r.quarterStatus === "pending").map((r) => r.name),
+    [roads]
+  );
+  // Keyed on the joined name list (not `roads` itself) so toggling a checkbox
+  // elsewhere doesn't tear down and restart in-progress fetches.
+  const pendingQuarterKey = pendingQuarterNames.join("|");
+
+  useEffect(() => {
+    if (pendingQuarterNames.length === 0) return;
+
+    let cancelled = false;
+    const ctrl = new AbortController();
+    const pending = pendingQuarterNames;
+    const CONCURRENCY = 3;
+    let cursor = 0;
+
+    const worker = async () => {
+      while (!cancelled) {
+        const index = cursor++;
+        if (index >= pending.length) break;
+        const folderName = pending[index];
+        try {
+          const preview = await fetchSourceFolderPreview(folderName, {
+            signal: ctrl.signal,
+            skipRename: true,
+          });
+          if (cancelled) return;
+          const quarter = preview.majority_quarter ?? null;
+          setRoads((prev) => {
+            const next = prev.map((r) =>
+              r.name === folderName
+                ? { ...r, quarter, quarterStatus: (quarter ? "detected" : "none") as QuarterStatus }
+                : r
+            );
+            roadsRef.current = next;
+            return next;
+          });
+        } catch (e: any) {
+          if (e?.name === "AbortError") return;
+          // Leave the row as an unresolved "pending" stub, matching Folder
+          // mode's own error handling — redrawing the selection can retry.
+        }
+      }
+    };
+
+    void Promise.all(Array.from({ length: Math.min(CONCURRENCY, pending.length) }, worker));
+
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingQuarterKey]);
 
   // ─ Selection helpers ────────────────────────────────────────────
   const toggleRoad = useCallback(
@@ -1025,7 +1093,8 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
               </div>
             ) : (
               roads.map((road) => {
-                const { name: roadDisplayName, quarter } = splitRoadLabel(road.label ?? road.name);
+                const { name: roadDisplayName } = splitRoadLabel(road.label ?? road.name);
+                const isPending = road.quarterStatus === "pending";
                 return (
                 <div
                   key={road.name}
@@ -1038,7 +1107,9 @@ export default function SelectRoadsMap({ onSelectionChange, onSelectionGeometryC
                       {roadDisplayName}{!road.exists && <span style={{ fontSize: 12, color: COLOR.gray400 }}> · not downloaded</span>}
                     </span>
                   </div>
-                  <span style={{ width: 110, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: quarter ? COLOR.text : COLOR.gray400 }} title={quarter ?? undefined}>{quarter ?? "—"}</span>
+                  <span style={{ width: 110, flexShrink: 0, display: "flex", justifyContent: "center", alignItems: "center", fontFamily: FONT, fontSize: 16, color: road.quarter ? COLOR.text : COLOR.gray400 }} title={road.quarter ?? (isPending ? "Detecting survey quarter…" : undefined)}>
+                    {isPending ? <Spinner size="xs" color={COLOR.gray400} /> : (road.quarter ?? "—")}
+                  </span>
                   <span style={{ width: 120, flexShrink: 0, textAlign: "center", fontFamily: FONT, fontSize: 16, color: COLOR.text }}>{road.points}</span>
                 </div>
                 );
