@@ -56,8 +56,9 @@ from app.services import gis_mapping as gis
 import app.services.global_var as global_var
 
 from ._helpers import _get_gis, _get_segment_midpoint, fail, get_ctx, ok
+from .image_utils import _build_project_geo_data_from_points
 from .roads_util import _available_road_folders, _available_road_names, _folder_quarter_label, _get_planning_areas_gdf, _get_road_sections_gdf, _pretty_folder_label, _QUARTER_SUFFIX_RE, _select_latest_quarter_folders
-from .source_folders import _peek_cached_summary
+from .source_folders import _get_cached_geo_points, _peek_cached_summary
 
 
 
@@ -227,10 +228,30 @@ def roads_in_polygon():
                             quarter_status = "pending"
                         if quarter:
                             label = f"{folder} ({quarter})"
+
+                    # Real segment count: clip this folder's actual survey-photo
+                    # GPS points to the drawn polygon and resample every 10 m —
+                    # the exact same pipeline project creation uses (crud.py
+                    # build_project_geo_data), so the preview matches what will
+                    # actually be created. Falls back to the shapefile/CSV
+                    # estimate (`points`) if the photos can't be read.
+                    real_points = points
+                    try:
+                        geo_points = _get_cached_geo_points(in_path / folder)
+                        if len(geo_points) > 0:
+                            segments_gdf = _build_project_geo_data_from_points(
+                                geo_points, folder, selection_polygon=poly,
+                            )
+                            real_points = len(segments_gdf)
+                        else:
+                            real_points = 0
+                    except Exception as e:
+                        logger.warning(f"[roads-in-polygon] segment count failed for {folder}: {e}")
+
                     roads.append({
                         "name": folder,
                         "label": label,
-                        "points": points,
+                        "points": real_points,
                         "exists": True,
                         "quarter": quarter,
                         "quarterStatus": quarter_status,

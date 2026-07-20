@@ -291,6 +291,37 @@ def _build_source_folder_cache_key(source_dir: Path, image_files: list[Path]) ->
     return digest.hexdigest()
 
 
+# In-memory cache of raw EXIF geo-points per source folder, keyed by the same
+# content-hash cache_key as the on-disk folder-summary cache (_build_source_folder_cache_key).
+# Unlike that cache — which stores one aggregate segment_count for the whole
+# folder — this stores the raw per-photo GPS points, so callers can re-clip
+# them against an arbitrary polygon (e.g. Map mode's live "Roads Found"
+# preview, redrawn repeatedly) without re-parsing EXIF from disk on every
+# redraw. Process-local only; cleared on backend reload, same as model state.
+_GEO_POINTS_CACHE: dict[str, tuple[str, gpd.GeoDataFrame]] = {}
+_GEO_POINTS_CACHE_LOCK = threading.Lock()
+
+
+def _get_cached_geo_points(source_dir: Path) -> gpd.GeoDataFrame:
+    """Raw EXIF geo-points for a source folder, cached in-process and
+    invalidated by the same stat-only content hash used for folder summaries."""
+    image_files = _iter_source_image_files(source_dir)
+    cache_key = _build_source_folder_cache_key(source_dir, image_files)
+    cache_id = str(source_dir)
+
+    with _GEO_POINTS_CACHE_LOCK:
+        cached = _GEO_POINTS_CACHE.get(cache_id)
+        if cached is not None and cached[0] == cache_key:
+            return cached[1]
+
+    geo_points = get_image_folder_geo(str(source_dir))
+
+    with _GEO_POINTS_CACHE_LOCK:
+        _GEO_POINTS_CACHE[cache_id] = (cache_key, geo_points)
+
+    return geo_points
+
+
 def _load_source_folder_metadata_any_version(source_dir: Path) -> dict | None:
     """Like _load_source_folder_metadata but ignores the schema ``version`` gate.
 

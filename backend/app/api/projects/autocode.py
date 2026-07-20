@@ -591,6 +591,16 @@ def autocode_all(project_name: str, pm, proj, ver):
                                 actual_filter.append("Delineation Type")
                             if "Major Surface Deformation or Drain Opening" in actual_filter:
                                 actual_filter.append("Defect Type")
+                            if "Crossing Facility" in actual_filter:
+                                actual_filter.append("Crossing Type")
+                            if "Fixed Obstacle on Facility" in actual_filter:
+                                actual_filter.append("FO Type")
+                            if "Non-Fixed Obstacle on Facility" in actual_filter:
+                                actual_filter.append("NFO Type")
+                            if "Curvature" in actual_filter:
+                                actual_filter.append("Curvature Sub-category")
+                            if "Facility Width per Direction" in actual_filter:
+                                actual_filter.append("Facility Width Sub-category")
                             merged = {k: v for k, v in (merged or {}).items() if k in actual_filter}
                             sources = {k: v for k, v in (sources or {}).items() if k in actual_filter}
 
