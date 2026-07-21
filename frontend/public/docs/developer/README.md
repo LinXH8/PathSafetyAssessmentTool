@@ -15,3 +15,5 @@ Main documents:
 - [frontend.md](frontend.md)
 - [common-issues.md](common-issues.md)
 - [contributing.md](contributing.md)
+- [ui-design-principles.md](ui-design-principles.md)
+- [in-image-path-measurement.md](in-image-path-measurement.md)

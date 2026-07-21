@@ -11,6 +11,7 @@ const DOCS_LIST = [
   { id: "treatment-application",title: "4. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
   { id: "report-generation",    title: "5. Report Generation",         path: "/docs/user/user-report-generation.md",      updatedDate: "Jun 2026" },
   { id: "gis-management",       title: "6. GIS Layer Management",      path: "/docs/user/user-gis-management.md",         updatedDate: "Jun 2026" },
+  { id: "in-image-measurement", title: "7. In-Image Path Measurement", path: "/docs/user/user-in-image-measurement.md",   updatedDate: "Jul 2026" },
 ];
 
 export default function UserGuide() {

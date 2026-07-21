@@ -15,6 +15,8 @@ const DOCS_LIST = [
   { id: "issues",       title: "8. Common Issues",      path: "/docs/developer/common-issues.md",      updatedDate: "Jun 2026" },
   { id: "contributing", title: "9. Contributing",       path: "/docs/developer/contributing.md",       updatedDate: "Jun 2026" },
   { id: "jira",         title: "10. Jira Board",        path: "/docs/developer/dev-jira.md",           updatedDate: "Jun 2026" },
+  { id: "ui-principles",title: "11. UI Design Principles", path: "/docs/developer/ui-design-principles.md", updatedDate: "Jul 2026" },
+  { id: "img-metrology", title: "12. In-Image Path Measurement", path: "/docs/developer/in-image-path-measurement.md", updatedDate: "Jul 2026" },
 ];
 
 export default function DeveloperGuide() {
