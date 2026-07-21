@@ -69,6 +69,11 @@ completed.csv
 .DS_Store
 **/.DS_Store
 
+# Microsoft Office lock/owner files (created while a .docx/.xlsx/.pptx is open)
+~$*.doc*
+~$*.xls*
+~$*.ppt*
+
 # Scratch / test artifacts
 test.jpg
 frontend/test_puppeteer.js

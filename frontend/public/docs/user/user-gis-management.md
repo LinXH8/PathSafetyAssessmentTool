@@ -50,7 +50,7 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 | `Existing Cycling Paths` | CyclingPath_Jul2024 | LineString | Cycling Path Type Reference | `path_type (1)` |
 | `Footpath` | FootPath_Mar2025 | LineString | Facility Width, Curvature | `WDT_CATG_C (1)`, `TYP_CD (2)` |
 | `Footpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
-| `Hdb Car Park Lots` | parking_lot | Point / Polygon | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |
+| `Hdb Car Park Lots` | parking_lot | Point | Adjacent Vehicle Parking | `CARPARKNO (1)`, `NOOFCARLOT (2)` |
 | `Kerbline` | kerb_line | LineString | Number of Lanes – Adjacent Road | `LANES (1)`, `LOCATION (2)`, `DIRECTION (3)` |
 | `Landuseindustrial2025` | area_type | Polygon | Area Type (Urban, Industrial, Rural, Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
 | `Landuserecre2026` | LanduseRecre2026 | Polygon | Area Type (Recreational) | `LU_DESC (1)`, `LU_TEXT (3)` |
@@ -58,7 +58,7 @@ The table below lists every shapefile currently loaded in PSAT, the PSAT attribu
 | `Landuserural2026` | LanduseRural2026 | Polygon | Area Type (Rural) | `LU_DESC (1)`, `LU_TEXT (3)` |
 | `Mrt Exits` | Mrt_exit | Point | Pedestrian Crossing, Peak Flow | `STATION_NA (1)`, `EXIT_CODE (2)` |
 | `Roadattributeline Speedlimits` | Speed_limit | LineString | Road Speed Limit | `SPEEDLIMIT (1)` |
-| `Roadcrossing` | roadcrossinglayer | LineString / Point | Pedestrian Crossing | `UNIQUE_ID (1)` |
+| `Roadcrossing` | roadcrossinglayer | LineString | Pedestrian Crossing | `UNIQUE_ID (1)` |
 | `Roadnetworkline` | Road_name | LineString | Road Name Reference | `RD_CD_DESC (1)` |
 | `Sharedpathcentreline` | path | LineString | Facility Width, Curvature | `WIDTH (1)` |
 | `Ura Parking Lot` | parking_lot | Polygon | Adjacent Vehicle Parking | `PP_CODE (1)`, `LOT_NO (2)`, `TYPE (3)` |
