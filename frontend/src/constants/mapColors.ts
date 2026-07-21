@@ -162,6 +162,11 @@ export const CATEGORY_COLORS: Record<string, string | Record<string, string>> = 
     "Facility access": { "Adequate": "#16A34A", "Inadequate": "#DC2626" },
     "Loose or slippery surface": { "Present": "#DC2626", "Not Present": "#16A34A" },
     "Major Surface Deformation or Drain Opening": { "Present": "#DC2626", "Not Present": "#16A34A" },
+    "Defect Type": {
+      "Footpath crack": "#DC2626",
+      "Uneven Footpath": "#EA580C",
+      "Others": "#6B7280",
+    },
     "Tram or Train Rails": { "Present": "#DC2626", "Not Present": "#16A34A" },
     "Delineation": { "Present": "#16A34A", "Not Present": "#DC2626" },
     "Delineation Type": {

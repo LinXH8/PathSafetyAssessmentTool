@@ -15,7 +15,7 @@
  * Pure helpers live in ./codingHelpers; shared types/constants in ./codingConstants.
  */
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import type { Feature, LineString } from "geojson";
 import { toaster } from "../../components/ui/toaster";
@@ -30,7 +30,7 @@ import { fetchCurvatureVisualization } from "../../api/curvatureVisualization";
 import type { CurvatureVisualizationResponse } from "../../api/curvatureVisualization";
 import { aggregateTopContributors } from "../../utils/aggregateTopContributors";
 import { useUiVersion } from "../../features/ui/useUiVersion";
-import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS } from "./codingConstants";
+import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS, DEFECT_TYPE_SUGGESTIONS } from "./codingConstants";
 import {
   DELINEATION_PRESENT_SUGGESTIONS,
   SLIPPERY_ISSUE_TYPE_SUGGESTIONS,
@@ -118,6 +118,7 @@ export default function CodingPage() {
 
   // Handle query params for deep linking (e.g. ?segment=5)
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const initialSegment = queryParams.get("segment");
   const hasInitializedSegmentRef = useRef(false);
@@ -349,6 +350,18 @@ export default function CodingPage() {
     return Array.from(new Set([...NFO_TYPE_SUGGESTIONS, ...projectValues])).sort();
   }, [projectData]);
 
+  const defectTypeOptions = useMemo(() => {
+    const projectValues = Array.from(new Set(
+      Object.values(projectData).flatMap((pd) => pd?.attrs ?? [])
+        .flatMap((row) => {
+          const v = row["Defect Type"];
+          if (!v) return [];
+          return String(v).split(",").map((s) => s.trim()).filter(Boolean);
+        })
+    ));
+    return Array.from(new Set([...DEFECT_TYPE_SUGGESTIONS, ...projectValues])).sort();
+  }, [projectData]);
+
   const slipperyIssueTypeOptions = useMemo(() => {
     const projectValues = Array.from(new Set(
       Object.values(projectData).flatMap((pd) => pd?.attrs ?? [])
@@ -416,6 +429,8 @@ export default function CodingPage() {
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   } = useAttributeEditing({
@@ -521,7 +536,7 @@ export default function CodingPage() {
       setIsSaveDialogOpen(true);
     } else {
       toaster.create({ title: "No changes to save.", type: "info" });
-      window.history.back();
+      navigate("/analysis/path");
     }
   };
 
@@ -536,7 +551,7 @@ export default function CodingPage() {
       }
     });
     toaster.create({ title: "Changes discarded.", type: "info" });
-    window.history.back();
+    navigate("/analysis/path");
   };
 
   const onSaveAndExit = async () => {
@@ -545,7 +560,7 @@ export default function CodingPage() {
     setIsSaving(false);
     if (success) {
       setIsSaveDialogOpen(false);
-      window.history.back();
+      navigate("/analysis/path");
     }
   };
 
@@ -621,6 +636,7 @@ export default function CodingPage() {
     foTypeOptions,
     nfoTypeOptions,
     slipperyIssueTypeOptions,
+    defectTypeOptions,
     pendingPresentDelineationChange,
     setPendingPresentDelineationChange,
     pendingNotPresentDelineationChange,
@@ -631,6 +647,8 @@ export default function CodingPage() {
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   };

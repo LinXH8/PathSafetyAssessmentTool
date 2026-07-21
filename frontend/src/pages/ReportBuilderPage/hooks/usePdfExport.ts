@@ -73,11 +73,22 @@ export function usePdfExport({
       const canvas = canvasRef.current;
       const restore: Array<() => void> = [];
 
-      // Hide decorative page labels so they don't appear in the PDF
-      canvas.querySelectorAll<HTMLElement>(".rb-page-label").forEach((el) => {
+      // Hide decorative page labels so they don't appear in the PDF,
+      // and hide Leaflet controls (which include the attribution watermark that
+      // html2canvas often renders as a black box, plus interactive zoom buttons).
+      canvas.querySelectorAll<HTMLElement>(".rb-page-label, .leaflet-control-container").forEach((el) => {
         const prev = el.style.visibility;
         el.style.visibility = "hidden";
         restore.push(() => { el.style.visibility = prev; });
+      });
+
+      // Remove box-shadow from the page backgrounds during export.
+      // html2canvas has a known bug where box-shadows on large elements stretch
+      // into massive black gradients/watermarks when the canvas height is huge.
+      canvas.querySelectorAll<HTMLElement>(".rb-page-bg").forEach((el) => {
+        const prev = el.style.boxShadow;
+        el.style.boxShadow = "none";
+        restore.push(() => { el.style.boxShadow = prev; });
       });
 
       // WYSIWYG capture — do NOT mutate section heights here.

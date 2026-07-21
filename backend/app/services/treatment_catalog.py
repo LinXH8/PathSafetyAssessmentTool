@@ -38,6 +38,19 @@ CATALOG_VERSION = _DATA["version"]
 TREATMENTS = _DATA["treatments"]
 TREATMENT_BY_ID = {t["id"]: t for t in TREATMENTS}
 
+# Intentional LTA deviation from the STM: "Redesign the curve" (CM 17) is
+# offered whenever a sharp turn is present, regardless of the STM's co-factor
+# gating (severe hazard / object-or-level-change adjacent / steep grade / high
+# bike speed). The six extracted co-factor sets all also require Curvature=1, so
+# this sharp-turn-alone set subsumes them via the ANY-of-sets rule. Injected at
+# load time (not into the faithfully-extracted JSON); idempotent on re-import.
+_CURVE_ONLY_TRIGGER = {"attrs": {"Curvature": [1]}}
+_redesign_curve = TREATMENT_BY_ID.get(17)
+if _redesign_curve is not None:
+    _sets = _redesign_curve.setdefault("trigger_sets", [])
+    if _CURVE_ONLY_TRIGGER not in _sets:
+        _sets.insert(0, _CURVE_ONLY_TRIGGER)
+
 SPEED_UNIT_FIELD = Attributes.Fields.SPEED_UNIT_STR
 ROAD_AADT_FIELD = Attributes.Fields.ROAD_AADT_STR
 ROAD_SPEED_FIELD = Attributes.Fields.ROAD_OPR_SPEED_AVG_STR

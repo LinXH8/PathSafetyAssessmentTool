@@ -71,7 +71,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Crossing Facility **❖** | Present; Not Present | When "Present": Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
 | Property Access | Present; Not Present | — |
 | Tram or Train Rails | Present; Not Present | — |
-| Major Surface Deformation or Drain Opening **❖** | Present; Not Present | When "Present": Footpath crack; Footpath uneven; Footpath Uneven IMU |
+| Major Surface Deformation or Drain Opening **❖** | Present; Not Present | When "Present": Footpath crack; Uneven Footpath |
 | Peak Pedestrian Flow | None; Low; Moderate to High | — |
 | Peak Bicycle/LV Traffic Flow | Low; Moderate to High | — |
 | Observed Proportion of Cargo Bikes | Low; Moderate to High | — |

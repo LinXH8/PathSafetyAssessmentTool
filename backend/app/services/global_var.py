@@ -301,4 +301,8 @@ risk_color_mapping = {   # Color coded according to CycleRAP user guide
 }
 
 def get_config_path():
-    return Path(get_full_path("config.json"))
+    # config.json is written at runtime (save_config/write_config), so in a
+    # packaged install it lives in the writable user-data root, seeded from the
+    # bundled default on first use. Unchanged in a source checkout.
+    import app.services.paths as paths
+    return paths.config_path()

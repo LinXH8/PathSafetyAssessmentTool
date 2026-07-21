@@ -31,7 +31,7 @@ import type {
   ProjectTreatmentSummary,
 } from "./reportBuilderTypes";
 import {
-  CRASH_TYPE_LABELS, FILTERED_ELEMENTS,
+  CRASH_TYPE_LABELS, DEFAULT_ELEMENTS, FILTERED_BASE_ELEMENTS, OVERALL_ELEMENTS,
   METHODOLOGY_TEXT, PAGE_GAP, PAGE_H,
   PROJ_CONT_HEADER_H, PROJ_HEADER_H, PROJ_PAGE_SIZE, PROJ_ROW_H,
   tdStyle, thStyle,
@@ -67,7 +67,7 @@ export default function ReportBuilderPage() {
     reportTitle, setReportTitle, projectNameOverrides, setProjectNameOverrides,
     sectionTitles, setSectionTitles, oicName, setOicName, purpose, setPurpose,
     recommendations, setRecommendations, reportDate, setReportDate,
-    includeFiltered, setIncludeFiltered,
+    includeOverall, setIncludeOverall,
     resetLayout,
     sensors, handleDragEnd,
     currentPage, goToPage, scrollToSection, handleCanvasScroll,
@@ -128,23 +128,42 @@ export default function ReportBuilderPage() {
     setActiveCategoryStatus(cst);
     setFilteredIdxByProject(fidx);
     setFilteredSegValues(fvals);
-    // Reconcile a restored layout against the current filter: if no filter is
-    // active, strip any "(Filtered)" sections (they would have no data) and
-    // force the toggle off. Done here — with full knowledge of session state —
-    // to avoid a mount-time race that could wipe legitimately saved sections.
+    // Reconcile the restored `elements` layout against the current filter state.
+    // The presence of any `filtered` element is the saved-mode signal — filtered
+    // elements exist ONLY in filtered mode. When the saved mode doesn't match the
+    // current filter state, rebuild the canonical stack wholesale (editable text —
+    // reportTitle/sectionTitles — lives in separate state, so nothing is lost).
+    // Done here, with full knowledge of session state, to avoid a mount-time race.
     const hasFlt = !!fidx && flt.length > 0;
-    if (!hasFlt) {
-      setElements((prev) => (prev.some((e) => e.filtered) ? prev.filter((e) => !e.filtered) : prev));
-      setIncludeFiltered(false);
-    } else if (includeFiltered) {
-      // Saved layout wanted filtered sections and a filter is active — ensure
-      // they exist (e.g. layout saved before this feature added them).
+    if (hasFlt) {
       setElements((prev) => {
-        if (prev.some((e) => e.filtered)) return prev;
-        const existing = new Set(prev.map((e) => e.id));
-        const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
-        return toAdd.length ? [...prev, ...toAdd] : prev;
+        if (!prev.some((e) => e.filtered)) {
+          // Saved layout was unfiltered-mode (or fresh) → default to the filtered
+          // primary stack, appending the overall stack only if opted in.
+          return [
+            ...FILTERED_BASE_ELEMENTS.map((e) => ({ ...e })),
+            ...(includeOverall ? OVERALL_ELEMENTS.map((e) => ({ ...e })) : []),
+          ];
+        }
+        // Already filtered-mode (e.g. back-navigation) → honor saved order/vis;
+        // just reconcile the overall stack against the persisted toggle.
+        if (includeOverall) {
+          const existing = new Set(prev.map((e) => e.id));
+          const toAdd = OVERALL_ELEMENTS.filter((oe) => !existing.has(oe.id)).map((oe) => ({ ...oe }));
+          return toAdd.length ? [...prev, ...toAdd] : prev;
+        }
+        return prev.filter((e) => e.filtered || e.id === "title");
       });
+    } else {
+      // No filter active → the filtered/overall stacks have no meaning. If the
+      // saved layout carried either (a `filtered` element or an "(Overall)"-
+      // labelled one), revert wholesale to the all-segments base.
+      setElements((prev) =>
+        prev.some((e) => e.filtered || e.label.endsWith("(Overall)"))
+          ? DEFAULT_ELEMENTS.map((e) => ({ ...e }))
+          : prev,
+      );
+      setIncludeOverall(false);
     }
     // Always fetch all profile projects for the network benchmark comparison.
     fetch("/api/projects")
@@ -210,7 +229,11 @@ export default function ReportBuilderPage() {
         return h;
       }
       case "topRisk": {
-        const n = el.topN ?? 10;
+        const desired = el.topN ?? 10;
+        // Fewer stretches may match (esp. a tight filter) than the user's
+        // chosen top-N — reserve space for what will actually render, not
+        // the requested count, so we don't leave blank trailing pages/rows.
+        const n = topRiskRows.length > 0 ? Math.min(desired, topRiskRows.length) : desired;
         const header = 60;   // title + subtitle
         const thead = 36;   // table header row
         if (el.viewMode === "full-page") {
@@ -302,20 +325,20 @@ export default function ReportBuilderPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setters are referentially stable (deps match the pre-extraction code)
   }, [computeIdealHeight]);
 
-  // ── Filtered sections: master toggle ──────────────────────────────────────
-  // ON  → append the "(Filtered)" duplicate of every non-title section that
-  //       isn't already present (after the existing sections).
-  // OFF → remove every filtered section.
-  const toggleIncludeFiltered = useCallback(() => {
+  // ── Overall sections: master toggle (only reachable when a filter is active) ─
+  // ON  → append the "(Overall)" all-segments duplicate of every non-title
+  //       section not already present, below the filtered stack.
+  // OFF → remove every overall row (unfiltered, non-title).
+  const toggleIncludeOverall = useCallback(() => {
     setElements((prev) => {
-      if (prev.some((e) => e.filtered)) {
-        return prev.filter((e) => !e.filtered);
+      if (prev.some((e) => !e.filtered && e.id !== "title")) {
+        return prev.filter((e) => e.filtered || e.id === "title");
       }
       const existing = new Set(prev.map((e) => e.id));
-      const toAdd = FILTERED_ELEMENTS.filter((fe) => !existing.has(fe.id)).map((fe) => ({ ...fe }));
+      const toAdd = OVERALL_ELEMENTS.filter((oe) => !existing.has(oe.id)).map((oe) => ({ ...oe }));
       return [...prev, ...toAdd];
     });
-    setIncludeFiltered((v) => !v);
+    setIncludeOverall((v) => !v);
     setTimeout(autoFitElements, 50);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- hook-returned setState setters are referentially stable (deps match the pre-extraction code)
   }, [autoFitElements]);
@@ -1456,7 +1479,7 @@ export default function ReportBuilderPage() {
     autoFitElements, resetLayout,
     goToPage, currentPage, totalPages,
     handleDownloadPDF, handleDownloadWord, exporting,
-    hasFilter, includeFiltered, toggleIncludeFiltered,
+    hasFilter, includeOverall, toggleIncludeOverall,
     sensors, handleDragEnd, sectionChecklist, elements, hideElement, showElement, scrollToSection,
     renderViewToggle, renderMapColorToggle,
     handleCanvasScroll, canvasH, visibleElements, layout, computeIdealHeight, renderContent,

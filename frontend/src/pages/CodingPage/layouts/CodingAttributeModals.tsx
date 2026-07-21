@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, Dialog, Text, Input, Button, Portal } from "@chakra-ui/react";
 import AttributeOptionsDialog from "../components/AttributeOptionsDialog";
-import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS, FACILITY_WIDTH_SUBCATEGORY_MAP } from "../codingConstants";
+import { FO_TYPE_SUGGESTIONS, NFO_TYPE_SUGGESTIONS, DEFECT_TYPE_SUGGESTIONS, FACILITY_WIDTH_SUBCATEGORY_MAP } from "../codingConstants";
 import type { CodingViewModel } from "./CodingViewModel";
 
 export function getParentCategoryForSubcat(subCat: string | null | undefined): string | null {
@@ -199,6 +199,7 @@ export default function CodingAttributeModals(vm: CodingViewModel) {
     foTypeOptions,
     nfoTypeOptions,
     slipperyIssueTypeOptions,
+    defectTypeOptions,
     pendingPresentDelineationChange,
     setPendingPresentDelineationChange,
     pendingNotPresentDelineationChange,
@@ -209,6 +210,8 @@ export default function CodingAttributeModals(vm: CodingViewModel) {
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   } = vm;
@@ -261,6 +264,7 @@ export default function CodingAttributeModals(vm: CodingViewModel) {
             // Seed with predefined suggestions so FO/NFO Type edits always show the full list
             const seeds = field === "FO Type" ? FO_TYPE_SUGGESTIONS
               : field === "NFO Type" ? NFO_TYPE_SUGGESTIONS
+              : field === "Defect Type" ? DEFECT_TYPE_SUGGESTIONS
               : [];
             const projectVals = Object.values(projectData)
               .flatMap((pd) => pd?.attrs ?? [])
@@ -284,6 +288,8 @@ export default function CodingAttributeModals(vm: CodingViewModel) {
             ? () => onEdit("Loose or slippery surface", 2)
             : editingOptions?.field === "Crossing Type"
             ? () => onEdit("Crossing Facility", 2)
+            : editingOptions?.field === "Defect Type"
+            ? () => onEdit("Major Surface Deformation or Drain Opening", 2)
             : undefined
         }
       />
@@ -338,6 +344,16 @@ export default function CodingAttributeModals(vm: CodingViewModel) {
         onConfirm={(val) => {
           editCurrentAttr("Issue Type (Slippery)", val);
           setPendingPresentSlipperyChange(false);
+        }}
+      />
+      <PresentMultiTagModal
+        open={pendingPresentDefectChange}
+        title="Select Defect Type"
+        description='"Major Surface Deformation or Drain Opening" was set to "Present". Please select the defect type(s) that apply:'
+        options={defectTypeOptions}
+        onConfirm={(val) => {
+          editCurrentAttr("Defect Type", val);
+          setPendingPresentDefectChange(false);
         }}
       />
       <PresentMultiTagModal

@@ -378,6 +378,12 @@ const cyclerapAttributes: AttributeConfig[] = [
     options: ["Not Selected", "Present", "Not Present"]
   },
   {
+    name: "Defect Type",
+    label: "Defect Type",
+    group: "Facility surface conditions",
+    options: ["Not Selected", "Footpath crack", "Uneven Footpath", "Others"],
+  },
+  {
     name: "Grade",
     group: "Facility surface conditions",
     options: ["Not Selected", "<=2% (1:25)", "2.9% (1:20)", "3.8% (1:15)", "4.7% (1:12)", ">=5%"]
@@ -511,6 +517,12 @@ export const SUBCATEGORY_MAP: Record<
       "Present": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
     },
   },
+  "Major Surface Deformation or Drain Opening": {
+    childAttr: "Defect Type",
+    parentCategories: {
+      "Present": ["Footpath crack", "Uneven Footpath", "Others"],
+    },
+  },
 };
 
 /** Set of attribute names that are subcategory children — hidden from the FilterPanel. */
@@ -519,7 +531,7 @@ export const SUBCATEGORY_CHILD_ATTRS = new Set(
 );
 
 /** Multi-value attributes whose CSV cells can contain comma-separated values. */
-export const MULTI_VALUE_ATTRS = new Set(["FO Type", "NFO Type", "Delineation Type", "Crossing Type"]);
+export const MULTI_VALUE_ATTRS = new Set(["FO Type", "NFO Type", "Delineation Type", "Crossing Type", "Defect Type"]);
 
 /**
  * Subcategory descriptions per attribute option.
@@ -536,7 +548,7 @@ export const ATTRIBUTE_SUBCATEGORIES: Record<string, Record<string, string>> = {
     "Present": "Type: leaves, sand/soil, others",
   },
   "Major Surface Deformation or Drain Opening": {
-    "Present": "Type: potholes/cracks, drain opening/grating, no kerb cut ramps, uneven surface, others",
+    "Present": "Type: footpath crack, footpath uneven, others",
   },
   "Fixed Obstacle on Facility": {
     "Present": "Type: lamp post, traffic light pole, covered linkway pole, bollards, VIG posts, vegetation, others",

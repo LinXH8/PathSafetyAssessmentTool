@@ -1,6 +1,7 @@
-import { Card, Heading, Box, Image, HStack } from "@chakra-ui/react";
+import { Card, Heading, Box, Image, HStack, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { Slider } from "../../../components/ui/slider";
+import MeasureModal from "./MeasureMode/MeasureModal";
 
 type Props = {
   projectName?: string;
@@ -16,6 +17,7 @@ export default function ImagePanel({
   fit = "contain",
 }: Props) {
   const [brightness, setBrightness] = useState(100);
+  const [measureOpen, setMeasureOpen] = useState(false);
 
   return (
     <Card.Root
@@ -37,7 +39,7 @@ export default function ImagePanel({
         </HStack>
       </Card.Header>
 
-      <Card.Body minH={0} p={0}>
+      <Card.Body minH={0} p={0} position="relative">
         {imageRef ? (
           <Box
             h="100%"
@@ -62,7 +64,39 @@ export default function ImagePanel({
         ) : (
           <Box color="gray.400">No Image</Box>
         )}
+
+        {/* Floating tool button over the image — same treatment as the map's
+            floating tool cluster (white card, gray.200 border, radius 6, sm shadow). */}
+        {imageRef && (
+          <Button
+            position="absolute"
+            top="12px"
+            right="12px"
+            zIndex={10}
+            size="sm"
+            bg="white"
+            color="#2D3748"
+            borderWidth="1px"
+            borderColor="gray.200"
+            borderRadius="6px"
+            boxShadow="sm"
+            fontWeight={600}
+            _hover={{ bg: "gray.50" }}
+            onClick={() => setMeasureOpen(true)}
+          >
+            Measure
+          </Button>
+        )}
       </Card.Body>
+
+      {projectName && imageRef && (
+        <MeasureModal
+          projectName={projectName}
+          imageRef={imageRef}
+          open={measureOpen}
+          onClose={() => setMeasureOpen(false)}
+        />
+      )}
     </Card.Root>
   );
 }

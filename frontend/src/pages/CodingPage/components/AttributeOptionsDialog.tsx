@@ -41,6 +41,7 @@ const FIELD_CURRENT_LABEL: Record<string, string> = {
   "Issue Type (Slippery)": "Slippery issue in this segment",
   "Crossing Type": "Crossing type for this segment",
   "Curvature Sub-category": "Curvature sub-category for this segment",
+  "Defect Type": "Defect type for this segment",
 };
 
 const FIELD_ADD_LABEL: Record<string, string> = {
@@ -50,6 +51,7 @@ const FIELD_ADD_LABEL: Record<string, string> = {
   "Issue Type (Slippery)": "Add Issue Type",
   "Crossing Type": "Add Crossing Type",
   "Curvature Sub-category": "Select Curvature Sub-category",
+  "Defect Type": "Add Defect Type",
 };
 
 const FIELD_PARENT_LABEL: Record<string, string> = {
@@ -58,6 +60,7 @@ const FIELD_PARENT_LABEL: Record<string, string> = {
   "Delineation Type": "Delineation",
   "Issue Type (Slippery)": "Loose or slippery surface",
   "Crossing Type": "Crossing Facility",
+  "Defect Type": "Major Surface Deformation or Drain Opening",
 };
 
 /** Override the first sentence of the empty-confirm prompt; fallback uses template */
@@ -74,6 +77,7 @@ const FIELD_SUGGESTIONS: Record<string, string[]> = {
   "Crossing Type": ["Bicycle Crossing", "Signalised Crossing", "Zebra Crossing"],
   "Delineation Type": ["Cycling Path", "Red Stripe", "Signalised Crossing", "Zebra Crossing"],
   "Curvature Sub-category": ["<6.5m", "<10m", "Path Junction", "10–18m", ">18m"],
+  "Defect Type": ["Footpath crack", "Uneven Footpath"],
 };
 
 /** Parse a comma-separated value string into an array of trimmed, non-empty tags */

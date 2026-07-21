@@ -38,7 +38,10 @@ def _repo_root() -> Path:
 
 
 def _telemetry_root() -> Path:
-    return _repo_root() / "profiles"
+    # Writable state (sqlite db + upload config) -- must follow the user-data
+    # root, not the install tree. Unchanged in a source checkout.
+    import app.services.paths as paths
+    return paths.profiles_dir()
 
 
 def _telemetry_db_path() -> Path:

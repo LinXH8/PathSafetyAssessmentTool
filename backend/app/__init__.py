@@ -5,6 +5,7 @@ from flask import Flask
 from flask_cors import CORS
 from .config import Config
 from .api import register_blueprints
+from .webui import register_webui
 
 
 def _configure_logging():
@@ -25,13 +26,29 @@ def _configure_logging():
 
 def create_app(config_object=Config):
     _configure_logging()
-    app = Flask(__name__)
+
+    # Make sure the writable tree exists before anything tries to read it. In a
+    # packaged install this is the first thing that touches %LOCALAPPDATA%.
+    from .services import paths
+    paths.ensure_user_dirs()
+    logging.getLogger(__name__).info(
+        "install_root=%s user_data_root=%s (bundled=%s)",
+        paths.install_root(), paths.user_data_root(), paths.is_bundled(),
+    )
+    # static_folder=None: Flask's default /static route is unused (there is no
+    # app/static dir) and would only clutter the URL space that register_webui
+    # now owns.
+    app = Flask(__name__, static_folder=None)
     app.config.from_object(config_object)
 
     # Enable CORS for all routes
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     register_blueprints(app)
+
+    # Serve the built frontend from the same origin/port as the API. Registered
+    # after the blueprints so the SPA catch-all can never shadow /api/*.
+    register_webui(app)
 
     # Pre-load GIS shapefiles in background so layer toggles are instant
     from .api.projects.routes import warmup_gis

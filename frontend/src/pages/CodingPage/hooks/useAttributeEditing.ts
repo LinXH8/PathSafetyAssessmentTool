@@ -68,6 +68,7 @@ export function useAttributeEditing({
   const [pendingPresentFOChange, setPendingPresentFOChange] = useState(false);
   const [pendingPresentNFOChange, setPendingPresentNFOChange] = useState(false);
   const [pendingPresentSlipperyChange, setPendingPresentSlipperyChange] = useState(false);
+  const [pendingPresentDefectChange, setPendingPresentDefectChange] = useState(false);
   const [pendingFacilityWidthParentChange, setPendingFacilityWidthParentChange] =
     useState<PendingFacilityWidthParentChange | null>(null);
 
@@ -481,6 +482,50 @@ export function useAttributeEditing({
       }
     }
 
+    // --- Major Surface Deformation or Drain Opening ---
+    if (field === "Major Surface Deformation or Drain Opening") {
+      const prevVal = attrs[currentIndex]?.["Major Surface Deformation or Drain Opening"];
+      if (value === 2 && Number(prevVal) === 1) {
+        // Present → Not Present: null out Defect Type atomically
+        if (!currentProjectName || !attrs?.[currentIndex]) return;
+        const updatedRow = { ...attrs[currentIndex], "Major Surface Deformation or Drain Opening": value, "Defect Type": null };
+        updateProjectData(currentProjectName, {
+          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
+          isDirty: true,
+        });
+        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
+          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
+        }));
+        const currentIdx = currentIndex;
+        if (scoreDebounceRef.current[currentIdx] !== undefined) clearTimeout(scoreDebounceRef.current[currentIdx]);
+        scoreDebounceRef.current[currentIdx] = window.setTimeout(async () => {
+          if (!currentProjectName) return;
+          try {
+            const newScore = await calculateScoreForRow(currentProjectName, updatedRow);
+            updateProjectData(currentProjectName, {
+              scores: scores.map((score, i) => i === currentIdx ? { ...score, ...newScore } : score),
+            });
+            window.dispatchEvent(new CustomEvent("psat:scores:updated"));
+          } catch {}
+        }, 500);
+        return;
+      }
+      if (value === 1 && Number(prevVal) === 2) {
+        // Not Present → Present: clear Defect Type, force selection
+        if (!currentProjectName || !attrs?.[currentIndex]) return;
+        const updatedRow = { ...attrs[currentIndex], "Major Surface Deformation or Drain Opening": value, "Defect Type": null };
+        updateProjectData(currentProjectName, {
+          attrs: attrs.map((row, i) => i === currentIndex ? updatedRow : row),
+          isDirty: true,
+        });
+        window.dispatchEvent(new CustomEvent("psat:attribute:changed", {
+          detail: { projectName: currentProjectName, rowIndex: currentIndex, field, value }
+        }));
+        setPendingPresentDefectChange(true);
+        return;
+      }
+    }
+
     // --- Facility Width per Direction ---
     if (field === "Facility Width per Direction") {
       const codeStr = String(value);
@@ -553,6 +598,8 @@ export function useAttributeEditing({
     setPendingPresentNFOChange,
     pendingPresentSlipperyChange,
     setPendingPresentSlipperyChange,
+    pendingPresentDefectChange,
+    setPendingPresentDefectChange,
     pendingFacilityWidthParentChange,
     setPendingFacilityWidthParentChange,
   };

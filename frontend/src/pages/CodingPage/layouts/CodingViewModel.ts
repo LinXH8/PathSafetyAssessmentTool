@@ -119,6 +119,7 @@ export interface CodingViewModel {
   foTypeOptions: string[];
   nfoTypeOptions: string[];
   slipperyIssueTypeOptions: string[];
+  defectTypeOptions: string[];
   pendingPresentDelineationChange: boolean;
   setPendingPresentDelineationChange: (value: boolean) => void;
   pendingNotPresentDelineationChange: boolean;
@@ -129,6 +130,8 @@ export interface CodingViewModel {
   setPendingPresentNFOChange: (value: boolean) => void;
   pendingPresentSlipperyChange: boolean;
   setPendingPresentSlipperyChange: (value: boolean) => void;
+  pendingPresentDefectChange: boolean;
+  setPendingPresentDefectChange: (value: boolean) => void;
   pendingFacilityWidthParentChange: PendingFacilityWidthParentChange | null;
   setPendingFacilityWidthParentChange: (value: PendingFacilityWidthParentChange | null) => void;
 }

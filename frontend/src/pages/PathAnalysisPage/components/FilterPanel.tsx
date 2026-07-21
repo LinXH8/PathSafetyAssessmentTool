@@ -90,6 +90,21 @@ export default function FilterPanel({ activeFilters, onActiveFiltersChange, vari
             overflowX: "hidden",
           }}
         >
+          {/* Header row: group label + reset — mirrors the "Current Filters" panel */}
+          <Flex align="center" justify="space-between" mb="2">
+            <Text fontSize="xs" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
+              {v2Group}
+            </Text>
+            <Button
+              size="xs"
+              variant="ghost"
+              colorPalette="gray"
+              disabled={activeFilters.length === 0}
+              onClick={() => onActiveFiltersChange([])}
+            >
+              Reset
+            </Button>
+          </Flex>
           {activeFilters.length >= MAX_ACTIVE && (
             <div style={{ fontFamily: FONT, fontSize: 12, color: COLOR.gray500, marginBottom: 10 }}>
               Maximum of {MAX_ACTIVE} filters reached. Disable one to add another.

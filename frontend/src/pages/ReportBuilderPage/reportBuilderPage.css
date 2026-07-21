@@ -335,3 +335,33 @@
 .rb-page--v2 .rb-canvas-hint {
   color: #718096;
 }
+
+@media print {
+  /* Disable fixed heights and manual spacer margins to let the browser paginate naturally */
+  .rb-canvas, .rb-canvas > div {
+    height: auto !important;
+    margin-top: 20px !important;
+    overflow: visible !important;
+  }
+  
+  /* Hide the simulated paper backgrounds and labels */
+  .rb-page-bg, .rb-page-label, .rb-canvas-hint, .rb-export-group, .rb-btn {
+    display: none !important;
+  }
+
+  /* Prevent elements from being sliced in half by page breaks */
+  .rb-element {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  .rb-element-body {
+    overflow: visible !important;
+  }
+  
+  /* Force each full-page top risk stretch to break onto a new page */
+  [data-element-id="topRisk"] .rb-element-body > div > div > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

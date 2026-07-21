@@ -10,6 +10,22 @@ import { migrateAttrRows, normalizeAttributeValues } from "../codingHelpers";
 import { defaultProjectData, projectDataCache } from "./useProjectDataCache";
 
 /**
+ * Parent -> child field(s) that must be carried along whenever the parent is
+ * selectively patched. Mirrors the backend's `actual_filter` companion-append
+ * list in `backend/app/api/projects/autocode.py::_bulk_gen`. Keep in sync.
+ */
+const COMPANION_FIELD_MAP: Record<string, string[]> = {
+  "Grade": ["Gradient %"],
+  "Delineation": ["Delineation Type"],
+  "Major Surface Deformation or Drain Opening": ["Defect Type"],
+  "Crossing Facility": ["Crossing Type"],
+  "Fixed Obstacle on Facility": ["FO Type"],
+  "Non-Fixed Obstacle on Facility": ["NFO Type"],
+  "Curvature": ["Curvature Sub-category"],
+  "Facility Width per Direction": ["Facility Width Sub-category"],
+};
+
+/**
  * useAutocode — autocode orchestration for the Coding page (`/coding/:projectNames`).
  *
  * Owns the auto-coding overlay state (running flag, message, progress, per-project
@@ -141,9 +157,9 @@ export function useAutocode({
             const patch: Record<string, unknown> = {};
             for (const field of fieldsToUpdate) {
               if (field in updatedRow) patch[field] = updatedRow[field];
-              // Mirror alias pairs that the patchedAttrs builder also applies
-              if (field === "Grade" && "Gradient %" in updatedRow) patch["Gradient %"] = updatedRow["Gradient %"];
-              if (field === "Delineation" && "Delineation Type" in updatedRow) patch["Delineation Type"] = updatedRow["Delineation Type"];
+              for (const companion of COMPANION_FIELD_MAP[field] ?? []) {
+                if (companion in updatedRow) patch[companion] = updatedRow[companion];
+              }
             }
             return { ...baselineRow, ...patch };
           });
@@ -473,9 +489,9 @@ export function useAutocode({
               const patch: Record<string, unknown> = {};
               for (const field of fields) {
                 if (field in newRow) patch[field] = newRow[field];
-                // Mirror the alias pairs the backend's _bulk_gen filter uses
-                if (field === "Grade" && "Gradient %" in newRow) patch["Gradient %"] = newRow["Gradient %"];
-                if (field === "Delineation" && "Delineation Type" in newRow) patch["Delineation Type"] = newRow["Delineation Type"];
+                for (const companion of COMPANION_FIELD_MAP[field] ?? []) {
+                  if (companion in newRow) patch[companion] = newRow[companion];
+                }
               }
               return { ...oldRow, ...patch };
             });

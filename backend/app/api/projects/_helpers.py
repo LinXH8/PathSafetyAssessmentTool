@@ -181,10 +181,18 @@ def get_ctx() -> dict:
         try:
             CRI.cycleRAP_interface.initialise(pm.src_path / "CycleRAP")
         except Exception as exc:
-            msg = f"cycleRAP_interface.initialise() failed: {exc}\n{traceback.format_exc()}"
-            logger.error(f"[Context] ERROR: {msg}")
-            _CTX["init_error"] = msg
-            raise RuntimeError(f"Project context failed to initialise: {msg}") from exc
+            # NON-FATAL since scoring went native. Every live scoring/treatment
+            # path uses calculate_cyclerap_score_native() (cyclerap_scoring.py,
+            # v2.14, pure Python); cycleRAP_interface is the legacy Excel/COM
+            # route and is effectively dead code. This used to raise, which
+            # bricked the ENTIRE project context -- and therefore the whole app
+            # -- if the .xlsm was missing or Excel was not installed. On a
+            # packaged machine neither is guaranteed, so log and continue.
+            logger.warning(
+                "cycleRAP_interface.initialise() failed (non-fatal; native scoring "
+                "is used for all live paths): %s", exc
+            )
+            logger.debug(traceback.format_exc())
 
         # If a profile is active, redirect the project manager to that profile's project root
         # instead of the legacy ../data directory from config.json.

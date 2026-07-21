@@ -12,7 +12,7 @@ from app.config import Config
 CRS_WGS84 = "EPSG:4326"
 CRS_METRIC = "EPSG:3414"
 
-DEFECT_FILE = Path(Config.DATA_DIR) / "defects" / "defect_summary.xlsx"
+DEFECT_FILE = Path(Config.DATA_DIR).parent / "generate-summary-1Q 2.xlsx"
 HEADER_ROW = 9  # zero-indexed; row 10 in the sheet
 
 
@@ -64,12 +64,16 @@ class DefectsStore:
         # Normalise column names — strip whitespace.
         df.columns = [str(c).strip() for c in df.columns]
 
-        required = {"Geocoordinates", "Type of Defect", "Location", "Date of Inspection"}
+        required = {"Geocoordinates", "Type of Defect", "Location", "Date of Inspection", "R.A.G"}
         missing = required - set(df.columns)
         if missing:
             raise ValueError(f"Defect xlsx missing columns: {missing}")
 
-        df = df[["Geocoordinates", "Type of Defect", "Location", "Date of Inspection"]].copy()
+        df = df[["Geocoordinates", "Type of Defect", "Location", "Date of Inspection", "R.A.G"]].copy()
+
+        # Only Red/Amber-flagged inspections are relevant defects.
+        rag_norm = df["R.A.G"].fillna("").astype(str).str.strip().str.lower()
+        df = df[rag_norm.isin(["red", "amber"])].copy()
 
         parsed = df["Geocoordinates"].map(_parse_coords)
         df = df[parsed.notna()].copy()

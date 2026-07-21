@@ -6,6 +6,8 @@ import os
 import re
 from pathlib import Path
 
+import app.services.paths as paths
+
 
 PROJECT_IMAGES_FOLDER = "images"
 PROJECT_METADATA_FILENAME = "project_metadata.json"
@@ -50,18 +52,26 @@ def _resolve_backend_relative(path_value: str) -> Path:
 
 
 def get_legacy_projects_root() -> Path:
+    # Writable root -- follows services/paths.py so it stays outside the install
+    # directory in a packaged build (unchanged in a source checkout).
     config = _load_config()
-    return _resolve_backend_relative(str(config.get("destination_folder") or DEFAULT_CONFIG["destination_folder"]))
+    return paths.resolve_configured_dir(config.get("destination_folder"), paths.projects_dir()).resolve()
 
 
 def get_input_root() -> Path:
     config = _load_config()
-    return _resolve_backend_relative(str(config.get("in_folder") or DEFAULT_CONFIG["in_folder"]))
+    return paths.resolve_configured_dir(config.get("in_folder"), paths.in_dir()).resolve()
 
 
 def bootstrap_profiles_storage(repo_root: Path | None = None, dry_run: bool = False) -> dict:
-    root = Path(repo_root or _repo_root()).resolve()
-    profiles_root = root / "profiles"
+    # An explicit repo_root (tests, migration scripts) is still honoured; the
+    # default follows the writable user-data root rather than the install tree.
+    if repo_root is None:
+        profiles_root = paths.profiles_dir().resolve()
+        root = profiles_root.parent
+    else:
+        root = Path(repo_root).resolve()
+        profiles_root = root / "profiles"
     registry_path = profiles_root / "profiles.json"
     backup_root = profiles_root / _REGISTRY_BACKUP_DIRNAME
 

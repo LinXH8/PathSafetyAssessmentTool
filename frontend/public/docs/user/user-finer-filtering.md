@@ -59,7 +59,7 @@ All other attributes use standard single-level filtering.
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
 | Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |
-| Major Surface Deformation or Drain Opening | Present | Footpath crack · Footpath uneven · Footpath Uneven IMU | Unique colour per type |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack · Uneven Footpath | Unique colour per type |
 
 **Grade filter values** (no finer filtering, but updated options):
 

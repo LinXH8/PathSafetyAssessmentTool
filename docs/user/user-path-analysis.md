@@ -70,7 +70,7 @@ When you select an attribute for analysis, you can filter segments by its coded 
 | Crossing Facility **❖** | Present; Not Present | When "Present": Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
 | Property Access | Present; Not Present | — |
 | Tram or Train Rails | Present; Not Present | — |
-| Major Surface Deformation or Drain Opening **❖** | Present; Not Present | When "Present": Footpath crack; Footpath uneven; Footpath Uneven IMU |
+| Major Surface Deformation or Drain Opening **❖** | Present; Not Present | When "Present": Footpath crack; Uneven Footpath |
 | Peak Pedestrian Flow | None; Low; Moderate to High | — |
 | Peak Bicycle/LV Traffic Flow | Low; Moderate to High | — |
 | Observed Proportion of Cargo Bikes | Low; Moderate to High | — |
@@ -95,7 +95,7 @@ Selecting a top-level filter value for any attribute marked **❖** reveals a se
 | Delineation | Present | Cycling Path; Red Stripe; Signalised Crossing; Traffic Crossing; Zebra Crossing |
 | Delineation | Not Present | Faded Marking |
 | Crossing Facility | Present | Zebra Crossing; Signalised PC; Bicycle Crossing; Unsignalised Junction; Development Access |
-| Major Surface Deformation or Drain Opening | Present | Footpath crack; Footpath uneven; Footpath Uneven IMU |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack; Uneven Footpath |
 
 **How to use finer filtering:**
 
@@ -182,7 +182,7 @@ All other attributes use standard single-level filtering.
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
 | Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |
-| Major Surface Deformation or Drain Opening | Present | Footpath crack · Footpath uneven · Footpath Uneven IMU | Unique colour per type |
+| Major Surface Deformation or Drain Opening | Present | Footpath crack · Uneven Footpath | Unique colour per type |
 
 #### Correcting Wrong Sub-category Colours
 

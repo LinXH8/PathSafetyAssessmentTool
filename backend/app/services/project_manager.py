@@ -14,6 +14,7 @@ from pathlib import Path
 from shapely.geometry import LineString, Point
 from shapely import wkt
 from app.services.cycleRAP_VA import gdfify, get_full_path
+import app.services.paths as paths
 
 # ─── Facade re-exports (S3.6 modularization) ──────────────────────────────────
 # These implementations were relocated into focused modules but MUST remain
@@ -307,10 +308,14 @@ class project_manager:
 # ================================================================================================================
 
     def load_config(self, config: dict) -> dict:
-        # Set paths from config
-        self.des_path   = Path(get_full_path(config.get("destination_folder")))
+        # Writable roots resolve via paths.py so they can live outside the
+        # install directory (see paths.py). In a source checkout these are
+        # byte-identical to the old "../data"/"../in" resolution.
+        # src_path stays install-relative: the CycleRAP workbook is read-only
+        # app data, not user data.
+        self.des_path   = paths.resolve_configured_dir(config.get("destination_folder"), paths.projects_dir())
         self.src_path   = Path(get_full_path(config.get("source_folder")))
-        self.in_path    = Path(get_full_path(config.get("in_folder")))
+        self.in_path    = paths.resolve_configured_dir(config.get("in_folder"), paths.in_dir())
         self.capture_freq       = config.get("capture_frequency")
         self.cycleRAP_model_src = config.get("CycleRAP_source")
         self.project_name       = config.get("current_project")
@@ -376,7 +381,8 @@ def load_images_from_folder_cv(folder: str) -> list[str]:
     return sorted(image_array, key=extract_numeric_key)
 
 def get_config_path() -> Path:
-    return Path(get_full_path("config.json"))
+    # Writable config location -- see services/paths.config_path().
+    return paths.config_path()
 
 def rename_files_with_prefix(directory: str, prefix: str) -> None:
     """

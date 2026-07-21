@@ -84,7 +84,7 @@ export function EditableText({ value, onChange, style, placeholder }: {
       onMouseDown={(e) => e.stopPropagation()}
     >
       {value || <span style={{ color: "#ccc", fontStyle: "italic" }}>{placeholder ?? "—"}</span>}
-      <span style={{ marginLeft: 3, fontSize: "0.65em", color: "#a020d0", opacity: 0.45, verticalAlign: "middle" }}>✎</span>
+      <span data-html2canvas-ignore="true" style={{ marginLeft: 3, fontSize: "0.65em", color: "#a020d0", opacity: 0.45, verticalAlign: "middle" }}>✎</span>
     </span>
   );
 }

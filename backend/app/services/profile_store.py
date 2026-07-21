@@ -13,6 +13,7 @@ import unicodedata
 from pathlib import Path
 
 from app.services.cycleRAP_VA import get_full_path
+import app.services.paths as paths
 
 _STATE_LOCK = threading.RLock()
 _ACTIVE_PROFILE_ID: str | None = None
@@ -29,7 +30,9 @@ def _repo_root() -> Path:
 
 
 def _profiles_root() -> Path:
-    return _repo_root() / "profiles"
+    # Resolves to <repo>/profiles in a source checkout (unchanged) and to the
+    # per-user writable data root in a packaged install. See services/paths.py.
+    return paths.profiles_dir()
 
 
 def _registry_path() -> Path:
@@ -85,15 +88,15 @@ def _registry_backups_root() -> Path:
 
 def _legacy_projects_root() -> Path:
     config_path = Path(get_full_path("config.json"))
-    destination_folder = "../data"
+    destination_folder = None
     if config_path.exists():
         try:
             with open(config_path, "r", encoding="utf-8") as handle:
                 config = json.load(handle)
-            destination_folder = str(config.get("destination_folder") or destination_folder)
+            destination_folder = config.get("destination_folder")
         except Exception:
-            destination_folder = "../data"
-    return Path(get_full_path(destination_folder)).resolve()
+            destination_folder = None
+    return paths.resolve_configured_dir(destination_folder, paths.projects_dir()).resolve()
 
 
 def _default_state() -> dict:

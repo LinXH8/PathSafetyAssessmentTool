@@ -31,6 +31,7 @@ const PARENT_TO_CHILD_FIELD: Record<string, string> = {
   "Crossing Facility": "Crossing Type",
   "Delineation": "Delineation Type",
   "Curvature": "Curvature Sub-category",
+  "Major Surface Deformation or Drain Opening": "Defect Type",
 };
 
 /**
@@ -41,6 +42,7 @@ const CHILD_REQUIRES_PARENT_PRESENT: Record<string, string> = {
   "NFO Type": "Non-Fixed Obstacle on Facility",
   "Issue Type (Slippery)": "Loose or slippery surface",
   "Crossing Type": "Crossing Facility",
+  "Defect Type": "Major Surface Deformation or Drain Opening",
 };
 
 /** Hover tooltips keyed by real row key (what `k` is in the render loop). */
@@ -70,7 +72,7 @@ const ATTRIBUTE_TOOLTIPS: Record<string, string> = {
 
   // Facility surface conditions
   "Delineation": "Is there visible marking separating cycling space from pedestrian space or centreline separating the directions of cyclist travel? In Singapore: red tarmac, red-and-white painted lines, shared-path arrows, or \"Cyclists\" / \"Pedestrians\" signage. CV model auto-codes this — verify when markings are faded or absent.",
-  "Major Surface Deformation or Drain Opening": "Is there a significant structural surface defect: deep pothole, cracked and raised joint, exposed drain grating with a wheel-trapping gap, or severely buckled surface?",
+  "Major Surface Deformation or Drain Opening": "Is there a significant structural surface defect: deep pothole, cracked and raised joint, exposed drain grating with a wheel-trapping gap, or severely buckled surface? Use the Defect Type sub-field to record the specific defect.",
   "Loose or slippery surface": "Is there loose material, wet algae, fallen leaves, sand, or a slippery coating that makes the surface slippery? Use the Issue Type sub-field to specify the material.",
   "Grade": "Is this segment on a slope steep enough to affect cycling control? Most Singapore paths are flat — flag ramp sections, hillside paths. Check the gradient profile in the GIS context panel if available.",
   "Curvature": "Does this segment include a tight bend that forces sudden steering or cuts forward visibility? Use the Curvature Sub-category to record the approximate bend radius or path intersection.",

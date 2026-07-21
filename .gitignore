@@ -4,6 +4,10 @@ shapefiles/
 in/
 model/
 
+# Local basemap tile cache written by backend/app/api/tiles.py (see paths.py:
+# user_data_root() is the repo root in a source checkout).
+tiles/
+
 # Claude Code settings
 .claude/path_segmentation_inference.ipynb
 
@@ -96,6 +100,8 @@ overlaps_*.txt
 !README.md
 !REFACTOR_PLAN.md
 !UI_V2_REDESIGN_GUIDE.md
+!gradient-runner.md
+!prompt.md
 *.lnk
 CycleRAP_User_Guide.pdf
 # docs/ is the canonical source for all in-app and developer docs (see REFACTOR_PLAN S0.6)
