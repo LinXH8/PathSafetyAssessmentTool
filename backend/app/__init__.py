@@ -1,5 +1,51 @@
+# ── OpenMP ordering guard — MUST STAY FIRST ──────────────────────────────────
+# torch and MKL each ship their own OpenMP runtime (libiomp5md.dll). If torch
+# loads before numpy, two copies get initialised and the process dies with
+# "OMP: Error #15 ... libiomp5md.dll already initialized". Importing numpy first
+# initialises MKL's copy, which torch then reuses.
+#
+# Verified on the packaging env (2026-07-21): `import torch` alone -> Error #15;
+# `import fiona` then torch -> Error #15; `import numpy` then torch -> fine.
+# The app only worked before because geopandas happened to pull numpy in first.
+# That is too fragile to rely on, especially in a rebuilt/frozen environment.
+#
+# Do NOT "fix" a recurrence with KMP_DUPLICATE_LIB_OK=TRUE: Intel documents that
+# it can "silently produce incorrect results", which is unacceptable for scoring.
+import numpy as _numpy  # noqa: F401  (import for side effect; keep first)
+
 import logging
 import os
+import sys
+from pathlib import Path
+
+
+def _bind_native_data_dirs() -> None:
+    """Point GDAL/PROJ at the data dirs inside THIS interpreter's environment.
+
+    conda normally sets GDAL_DATA/PROJ_LIB from its activation scripts, but the
+    packaged app launches ``python.exe`` directly and never activates anything --
+    hence the "Cannot find header.dxf (GDAL_DATA is not defined)" warning.
+
+    More importantly the packaged env gets MOVED (built here, installed into
+    %LOCALAPPDATA% on another machine), so any absolute data path baked in at
+    build time is wrong at runtime. Deriving them from ``sys.prefix`` makes the
+    environment self-locating wherever it is unpacked.
+
+    Only sets what is missing, so an explicit override still wins.
+    """
+    prefix = Path(sys.prefix)
+    for var_names, subdir in (
+        (("GDAL_DATA",), Path("Library") / "share" / "gdal"),
+        (("PROJ_LIB", "PROJ_DATA"), Path("Library") / "share" / "proj"),
+    ):
+        candidate = prefix / subdir
+        if not candidate.is_dir():
+            continue
+        for var in var_names:
+            os.environ.setdefault(var, str(candidate))
+
+
+_bind_native_data_dirs()
 
 from flask import Flask
 from flask_cors import CORS
