@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Box, Flex, Text, Button, Image as ChakraImage, Spinner, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Text, Image as ChakraImage, Spinner, IconButton } from "@chakra-ui/react";
 import { LuUpload, LuTrash2, LuImagePlus } from "react-icons/lu";
 import { toaster } from "../../../components/ui/toaster";
 
@@ -212,7 +212,11 @@ export default function PostTreatmentImageUpload({ projectName, segmentIndex, hi
           </>
         ) : (
           <Flex direction="column" align="center" color="gray.500">
-            <LuUpload size={40} mb={2} />
+            {/* mb is a Chakra style prop and is not valid on a react-icons
+                component, so the spacing lives on a wrapper. */}
+            <Box mb={2}>
+              <LuUpload size={40} />
+            </Box>
             <Text fontSize="sm">Drag & drop an image here</Text>
             <Text fontSize="xs">or click to browse</Text>
             <Text fontSize="xs" mt={1}>or paste (Ctrl+V) from clipboard</Text>

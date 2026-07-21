@@ -171,7 +171,7 @@ const getBandLabel = (score: number, type: string): string => {
   return "Extreme";
 };
 
-export default function SegmentScoresCard({ scores, beforeScores, showPreviewBackground, projectContributors, onContributorClick }: SegmentScoresCardProps) {
+export default function SegmentScoresCard({ scores, beforeScores, projectContributors, onContributorClick }: SegmentScoresCardProps) {
   const crashTypeScores = useMemo(() => {
     if (!scores) return [];
     return CRASH_TYPES.map((type) => {

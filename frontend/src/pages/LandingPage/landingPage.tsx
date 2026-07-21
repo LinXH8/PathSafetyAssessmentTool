@@ -10,7 +10,6 @@ import { useProfile } from "../../features/profile/ProfileProvider";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 import LandingModal, {
   modalCopyStyle,
-  modalLabelStyle,
   modalInputStyle,
   modalSectionTitleStyle,
   ghostBtnStyle,

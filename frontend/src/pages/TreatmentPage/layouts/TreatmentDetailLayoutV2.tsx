@@ -225,7 +225,7 @@ export default function TreatmentDetailLayoutV2(vm: TreatmentViewModel) {
     fullyAppliedTreatments, selectedTreatments, applyLoading,
     hasApplied, hasSelected, appliedTreatmentIds, copyButtonState, copyButtonLabel,
     currentImageUrl, imageCopyButtonState, imageCopyButtonLabel,
-    currentPage, imgRef, showPostTreatment, segmentHasTreatments,
+    imgRef, showPostTreatment, segmentHasTreatments,
     modifiedAttrs, changedAttributes, changedFieldSources, attrMappings,
     activeAttributeGroupTab, previewScores, previewLoading,
     beforeBandCounts, afterBandCounts, openConfirmAlert,

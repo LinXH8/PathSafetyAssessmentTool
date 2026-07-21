@@ -154,7 +154,9 @@ export function useAutocode({
           rowsToSave = baselineRowsRef.current.map((baselineRow, i) => {
             const updatedRow = updatedAttrs[i];
             if (!updatedRow) return baselineRow;
-            const patch: Record<string, unknown> = {};
+            // AttributeRow (not Record<string, unknown>): spreading an `unknown`-valued
+// record into a row widens its value type and stops it being an AttributeRow.
+const patch: AttributeRow = {};
             for (const field of fieldsToUpdate) {
               if (field in updatedRow) patch[field] = updatedRow[field];
               for (const companion of COMPANION_FIELD_MAP[field] ?? []) {
@@ -486,7 +488,9 @@ export function useAutocode({
             const patchedAttrs = currentAttrs.map((oldRow, idx) => {
               const newRow = rows[idx];
               if (!newRow) return oldRow;
-              const patch: Record<string, unknown> = {};
+              // AttributeRow (not Record<string, unknown>): spreading an `unknown`-valued
+// record into a row widens its value type and stops it being an AttributeRow.
+const patch: AttributeRow = {};
               for (const field of fields) {
                 if (field in newRow) patch[field] = newRow[field];
                 for (const companion of COMPANION_FIELD_MAP[field] ?? []) {

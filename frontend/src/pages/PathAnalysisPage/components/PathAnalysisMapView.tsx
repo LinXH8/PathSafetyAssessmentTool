@@ -18,7 +18,7 @@ import { isPointInPolygon } from "../../../components/map/polygonUtils";
 import { calculateScore, downloadFilteredImages, exportShapefile, deleteSegment, deleteSegmentsBatch, type CodingFilterContext, type FilteredProjectData } from "../../../api";
 import { getCachedGeoJSON, getCachedAttributes, getCachedResults, invalidateProject, invalidateAll } from "../../../api/projectDataCache";
 import { PROJECT_POINT_COLORS, CATEGORY_UNKNOWN_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
-import { SESSION_KEYS, LOCAL_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
+import { SESSION_KEYS, CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
 import {
   SAFETY_FOCUS_ATTRIBUTES,
   compareByOrder,
@@ -111,11 +111,6 @@ export default function AttributeAnalysisMapView({
 }: AttributeAnalysisMapViewProps) {
   const isV2 = variant === "v2";
   const navigate = useNavigate();
-  // v2: a "Generate Report" button sits beside the Download dropdown (ported from
-  // the v1 sidebar).
-  const hasSavedReport = useMemo(() => {
-    try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; }
-  }, []);
   // v2: the polygon / single-select tools move off the top bar into a floating
   // cluster over the map (mirrors Coding). This host is that overlay; the tools
   // portal into it. Null until it mounts (then they simply aren't shown).

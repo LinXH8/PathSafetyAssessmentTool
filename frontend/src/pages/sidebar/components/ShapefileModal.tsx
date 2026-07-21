@@ -40,9 +40,6 @@ const AFFECTS_CATEGORY_ORDER = ["For Auto Coding", "For Area Based Reports", "Fo
 export default function ShapefileModal({ open, onClose, variant = "v1" }: ShapefileModalProps) {
   const v2 = variant === "v2";
   const v2ModalClass = v2 ? "psat-shapefile-modal--v2" : "";
-  // v2 idiom for this modal (inline-hex, matches the footer buttons/title above).
-  const v2InputStyle = v2 ? { fontFamily: "Inter, sans-serif", borderRadius: "0.375rem", borderColor: "#CBD5E0" } : undefined;
-  const v2OutlineBtnStyle = v2 ? { fontFamily: "Inter, sans-serif", fontWeight: 700, borderRadius: "0.375rem", borderColor: "#CBD5E0", color: "#2D3748" } : undefined;
   const [step, setStep] = useState<WorkflowStep>("choice");
   const [allShapefiles, setAllShapefiles] = useState<api.ShapefileInfo[]>([]);
 

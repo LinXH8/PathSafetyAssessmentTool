@@ -101,7 +101,7 @@ export default function ReportBuilderPage() {
   const [showProjectPicker, setShowProjectPicker] = useState(false);
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [pickerSelected, setPickerSelected] = useState<Set<string>>(new Set());
-  const [pickerLoading, setPickerLoading] = useState(false);
+  const [pickerLoading] = useState(false);
 
   // ── Session storage ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -729,9 +729,6 @@ export default function ReportBuilderPage() {
           const avgBand = ([1, 2, 3, 4] as const).reduce((s, b) => s + b * (dist[b] || 0), 0) / total;
           return RISK_COLORS[Math.min(4, Math.max(1, Math.round(avgBand))) as 1 | 2 | 3 | 4];
         };
-
-        // Color safe% by threshold: ≥60% green, ≥40% amber, <40% red
-        const safeColor = (pct: number) => (pct >= 60 ? "#27ae60" : pct >= 40 ? "#e67e22" : "#e74c3c");
 
         // ▲/▼ for safe %: more safe than network = green
         const deltaSafe = (lPct: number, nPct: number, size = 7) => {

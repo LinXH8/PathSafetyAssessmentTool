@@ -142,9 +142,11 @@ export default function CreateProjectLayoutV2(vm: CreateProjectViewModel) {
     const s = folderSummaries[f];
     switch (key) {
       case "name": return f.toLowerCase();
-      case "segments": return s?.segment_count;
+      // segment_count / total_distance_km are nullable in the summary; normalise
+      // null -> undefined so they match the "no sortable value" case.
+      case "segments": return s?.segment_count ?? undefined;
       case "quarter": return s?.survey_quarter ?? (s?.survey_quarters?.length ? s.survey_quarters.join(", ") : undefined);
-      case "distance": return s?.total_distance_km;
+      case "distance": return s?.total_distance_km ?? undefined;
       case "projects": return folderProjectCounts[f] ?? 0;
     }
   };
