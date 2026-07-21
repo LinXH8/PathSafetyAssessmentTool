@@ -35,6 +35,7 @@ ultralytics>=8.0
 
 Flask>=3.0
 flask-cors>=4.0
+waitress>=3.0   # Production WSGI server (app.py). Dev server only via PSAT_DEV=1.
 exifread>=3.0    # Required: backend routes.py imports exifread for EXIF metadata extraction
 python-pptx>=0.6
 python-docx>=1.1

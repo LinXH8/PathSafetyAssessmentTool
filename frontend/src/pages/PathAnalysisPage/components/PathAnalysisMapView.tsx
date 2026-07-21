@@ -1786,9 +1786,10 @@ export default function AttributeAnalysisMapView({
                     onPointUpdate={handlePointUpdate}
                   />
 
-                  {/* Tile Layer */}
+                  {/* Tile Layer — served by our backend so maps work offline
+                      (backend/app/api/tiles.py). Do not restore a CDN URL. */}
                   <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                    url="/api/tiles/light/{z}/{x}/{y}.png"
                     attribution='&copy; OpenStreetMap contributors & CARTO'
                     maxZoom={22}
                   />

@@ -39,6 +39,7 @@ from werkzeug.utils import secure_filename
 
 from app.services.shapefile_validator import ShapefileValidator
 from app.services.gis_layer_definition import get_layer_definition
+import app.services.paths as paths
 
 bp = Blueprint("gis_layers", __name__)
 
@@ -49,8 +50,79 @@ bp = Blueprint("gis_layers", __name__)
 import xml.etree.ElementTree as ET
 
 def _shp_root() -> Path:
-    """Absolute path to backend/shapefiles/."""
-    return (Path(__file__).resolve().parents[3] / "shapefiles").resolve()
+    """Absolute path to the BUNDLED backend/shapefiles/.
+
+    Updater-owned and read-only in a packaged install -- see _shp_write_root()
+    for where user uploads go.
+    """
+    return paths.bundled_shapefiles_dir().resolve()
+
+
+def _shp_write_root() -> Path:
+    """Where every write lands: uploads and the .psat_* state files.
+
+    Identical to _shp_root() in a source checkout; a separate user-data dir in a
+    packaged install so uploads survive updates and don't need a writable
+    install tree.
+    """
+    root = paths.user_shapefiles_dir()
+    try:
+        root.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
+    return root.resolve()
+
+
+def _shp_roots() -> List[Path]:
+    """Every root to search for layers, highest precedence first.
+
+    User uploads shadow a bundled layer of the same relative path.
+    """
+    write_root = _shp_write_root()
+    bundled = _shp_root()
+    return [write_root] if write_root == bundled else [write_root, bundled]
+
+
+def _resolve_existing(rel: str) -> Path | None:
+    """Find an existing layer file by relative path across all roots."""
+    for root in _shp_roots():
+        candidate = (root / rel)
+        try:
+            resolved = candidate.resolve()
+            resolved.relative_to(root)
+        except (ValueError, OSError):
+            continue
+        if resolved.exists():
+            return resolved
+    return None
+
+
+def _is_bundled_path(p: Path) -> bool:
+    """True if p lives in the read-only, updater-owned bundled tree."""
+    if _shp_write_root() == _shp_root():
+        return False
+    try:
+        Path(p).resolve().relative_to(_shp_root())
+        return True
+    except (ValueError, OSError):
+        return False
+
+
+def _bundled_guard(abs_path: Path, action: str):
+    """Refuse to mutate a built-in layer; return a response tuple, or None if OK.
+
+    Built-in layers live in the updater-owned tree: the install dir may be
+    read-only, and even where it isn't, the next shapefile update would silently
+    undo the change. Failing loudly beats either outcome.
+    """
+    if not _is_bundled_path(abs_path):
+        return None
+    return jsonify({
+        "error": (
+            f"Cannot {action} a built-in GIS layer. Built-in layers ship with PSAT "
+            "and are replaced by app updates. Upload your own copy instead."
+        )
+    }), 409
 
 
 # Subdirectories of backend/shapefiles/ that hold data for OTHER features, not GIS
@@ -165,11 +237,19 @@ def _temp_root() -> Path:
 
 def _safe_relative(rel: str) -> Path | None:
     """
-    Resolve a relative path string against the shapefile root.
+    Resolve a relative path string against the shapefile roots.
     Returns None (and should result in a 400) if the resolved path escapes
-    the shapefiles directory.
+    every shapefiles directory.
+
+    Searches the user (writable) root first, then the bundled one, so a user
+    upload shadows a bundled layer of the same name. A path that does not exist
+    in either resolves against the WRITE root, which is where new files belong.
     """
-    root = _shp_root()
+    existing = _resolve_existing(rel)
+    if existing is not None:
+        return existing
+
+    root = _shp_write_root()
     try:
         resolved = (root / rel).resolve()
         resolved.relative_to(root)  # raises ValueError if outside root
@@ -185,7 +265,7 @@ def _companion_extensions() -> List[str]:
 
 
 def _originals_path() -> Path:
-    return _shp_root() / ".psat_originals.json"
+    return _shp_write_root() / ".psat_originals.json"
 
 def _load_originals() -> dict:
     p = _originals_path()
@@ -242,7 +322,7 @@ KNOWN_AFFECT_PARAMETERS = [p for group in KNOWN_AFFECT_PARAMETER_GROUPS.values()
 
 
 def _metadata_overrides_path() -> Path:
-    return _shp_root() / ".psat_layer_metadata.json"
+    return _shp_write_root() / ".psat_layer_metadata.json"
 
 
 def _load_metadata_overrides() -> dict:
@@ -264,7 +344,7 @@ def _save_metadata_overrides(data: dict) -> None:
 # that only newly-added layers (not the built-in/pre-existing shapefiles)
 # can have their Required Columns / Affects metadata edited afterwards.
 def _user_created_path() -> Path:
-    return _shp_root() / ".psat_user_created.json"
+    return _shp_write_root() / ".psat_user_created.json"
 
 
 def _load_user_created() -> set:
@@ -444,8 +524,8 @@ def list_shapefiles():
     if _LIST_CACHE is not None:
         return jsonify(_LIST_CACHE)
 
-    root = _shp_root()
-    if not root.exists():
+    roots = [r for r in _shp_roots() if r.exists()]
+    if not roots:
         return jsonify([])
 
     originals = _load_originals()
@@ -454,28 +534,35 @@ def list_shapefiles():
     dir_cache: dict = {}
     changed = False
     results = []
+    seen_rel: set = set()
 
     gis_exts = [".shp", ".geojson", ".kml", ".kmz", ".gml", ".gpx", ".json"]
-    for p in root.rglob("*"):
-        if not p.is_file():
-            continue
-        if p.suffix.lower() not in gis_exts:
-            continue
-        rel_parts = p.relative_to(root).parts
-        if any(part.startswith("temp") or part in _NON_LAYER_DIRS for part in rel_parts):
-            continue
-        if p.name.startswith("."):
-            continue
+    # Roots are ordered highest-precedence first, so a user upload shadows a
+    # bundled layer with the same relative path.
+    for root in roots:
+        for p in root.rglob("*"):
+            if not p.is_file():
+                continue
+            if p.suffix.lower() not in gis_exts:
+                continue
+            rel_parts = p.relative_to(root).parts
+            if any(part.startswith("temp") or part in _NON_LAYER_DIRS for part in rel_parts):
+                continue
+            if p.name.startswith("."):
+                continue
 
-        info = _file_info(p, root, overrides=overrides, dir_cache=dir_cache, user_created=user_created)
-        rel_posix = info["path"]
-        if rel_posix not in originals:
-            originals[rel_posix] = p.stem
-            changed = True
-        orig_stem = originals[rel_posix]
-        info["original_name"] = orig_stem.replace("_", " ").title()
-        info["is_renamed"] = (orig_stem != p.stem)
-        results.append(info)
+            info = _file_info(p, root, overrides=overrides, dir_cache=dir_cache, user_created=user_created)
+            rel_posix = info["path"]
+            if rel_posix in seen_rel:
+                continue
+            seen_rel.add(rel_posix)
+            if rel_posix not in originals:
+                originals[rel_posix] = p.stem
+                changed = True
+            orig_stem = originals[rel_posix]
+            info["original_name"] = orig_stem.replace("_", " ").title()
+            info["is_renamed"] = (orig_stem != p.stem)
+            results.append(info)
 
     if changed:
         _save_originals(originals)
@@ -491,16 +578,21 @@ def list_shapefiles():
 @bp.get("/categories")
 def list_categories():
     """Return one entry per immediate subdirectory of backend/shapefiles/."""
-    root = _shp_root()
-    if not root.exists():
-        return jsonify([])
-
-    cats = []
-    for d in sorted(root.iterdir()):
-        if not d.is_dir() or d.name.startswith("temp") or d.name in _NON_LAYER_DIRS:
+    # Merge categories across the user and bundled roots; a category present in
+    # both reports the combined shapefile count.
+    counts: dict = {}
+    for root in _shp_roots():
+        if not root.exists():
             continue
-        count = sum(1 for _ in d.glob("*.shp"))
-        cats.append({"name": d.name, "shapefile_count": count, "path": d.name})
+        for d in root.iterdir():
+            if not d.is_dir() or d.name.startswith("temp") or d.name in _NON_LAYER_DIRS:
+                continue
+            counts[d.name] = counts.get(d.name, 0) + sum(1 for _ in d.glob("*.shp"))
+
+    cats = [
+        {"name": name, "shapefile_count": count, "path": name}
+        for name, count in sorted(counts.items())
+    ]
     return jsonify(cats)
 
 
@@ -758,7 +850,7 @@ def upload_shapefiles():
         return jsonify({"uploaded": [], "errors": ["No files received"], "count": 0}), 400
 
     category = request.form.get("category", "uncategorised").strip().replace("..", "")
-    dest_dir = _shp_root() / category
+    dest_dir = _shp_write_root() / category
     dest_dir.mkdir(parents=True, exist_ok=True)
 
     uploaded, errors = [], []
@@ -827,6 +919,12 @@ def replace_shapefiles():
         if tgt_abs is None:
             errors.append(f"Invalid target path: {tgt_rel}")
             continue
+        if _is_bundled_path(tgt_abs):
+            errors.append(
+                f"Cannot replace built-in layer '{tgt_rel}' — built-in layers are "
+                "replaced by app updates. Upload it as a new layer instead."
+            )
+            continue
 
         try:
             # Back up the existing file before overwriting
@@ -869,6 +967,10 @@ def delete_shapefile(shapefile_path: str):
     abs_path = _safe_relative(shapefile_path)
     if abs_path is None or not abs_path.exists():
         return jsonify({"error": f"Shapefile not found: {shapefile_path}"}), 404
+
+    guard = _bundled_guard(abs_path, "delete")
+    if guard is not None:
+        return guard
 
     deleted = []
     for ext in _companion_extensions():
@@ -988,6 +1090,10 @@ def rename_shapefile():
     abs_path = _safe_relative(shapefile_path)
     if abs_path is None or not abs_path.exists():
         return jsonify({"error": f"Shapefile not found: {shapefile_path}"}), 404
+
+    guard = _bundled_guard(abs_path, "rename")
+    if guard is not None:
+        return guard
 
     # Load originals before rename so we can preserve the original stem
     originals = _load_originals()

@@ -4,16 +4,23 @@ from pathlib import Path
 
 from flask import Blueprint, jsonify, request, send_from_directory
 
+import app.services.paths as paths
+
 bp = Blueprint("generated_reports", __name__)
 
-# <project_root>/Generated Reports/
-# __file__ = backend/app/api/generated_reports/routes.py
-# parents[4] = PathSafetyAssessmentTool/ (project root)
-REPORTS_DIR = (Path(__file__).parents[4] / "Generated Reports").resolve()
+
+def _reports_dir() -> Path:
+    """Writable export dir.
+
+    Resolved lazily (not at import time) so it follows the user-data root:
+    ``<repo>/Generated Reports`` in a source checkout, the per-user data dir in
+    a packaged install. See services/paths.py.
+    """
+    return paths.generated_reports_dir().resolve()
 
 
 def _ensure_dir() -> None:
-    REPORTS_DIR.mkdir(exist_ok=True)
+    _reports_dir().mkdir(parents=True, exist_ok=True)
 
 
 def _safe_name(filename: str) -> str:
@@ -30,7 +37,7 @@ def _safe_name(filename: str) -> str:
 def list_reports():
     _ensure_dir()
     files = []
-    for f in REPORTS_DIR.iterdir():
+    for f in _reports_dir().iterdir():
         if f.is_file() and f.suffix.lower() == ".pdf":
             stat = f.stat()
             files.append({
@@ -50,7 +57,7 @@ def save_report():
         return jsonify({"error": "No file provided"}), 400
     raw_name = request.form.get("filename", "PSAT_Report.pdf")
     filename = _safe_name(raw_name)
-    dest = REPORTS_DIR / filename
+    dest = _reports_dir() / filename
     file.save(dest)
     return jsonify({"saved": filename})
 
@@ -58,11 +65,11 @@ def save_report():
 @bp.route("/<path:filename>", methods=["GET"])
 def serve_report(filename: str):
     safe = _safe_name(Path(filename).name)
-    target = REPORTS_DIR / safe
+    target = _reports_dir() / safe
     if not target.exists() or not target.is_file():
         return jsonify({"error": "Not found"}), 404
     resp = send_from_directory(
-        REPORTS_DIR,
+        _reports_dir(),
         safe,
         mimetype="application/pdf",
         conditional=True,
@@ -76,7 +83,7 @@ def serve_report(filename: str):
 @bp.route("/<path:filename>", methods=["DELETE"])
 def delete_report(filename: str):
     safe = _safe_name(Path(filename).name)
-    target = REPORTS_DIR / safe
+    target = _reports_dir() / safe
     if not target.exists() or not target.is_file():
         return jsonify({"error": "Not found"}), 404
     target.unlink()
@@ -89,7 +96,7 @@ def rename_report(filename: str):
     enforced by _safe_name, collisions are rejected."""
     _ensure_dir()
     safe_old = _safe_name(Path(filename).name)
-    src = REPORTS_DIR / safe_old
+    src = _reports_dir() / safe_old
     if not src.exists() or not src.is_file():
         return jsonify({"error": "Not found"}), 404
 
@@ -102,7 +109,7 @@ def rename_report(filename: str):
     if safe_new == safe_old:
         return jsonify({"renamed": safe_old, "name": safe_old})
 
-    dest = REPORTS_DIR / safe_new
+    dest = _reports_dir() / safe_new
     if dest.exists():
         return jsonify({"error": "A report with that name already exists"}), 409
 

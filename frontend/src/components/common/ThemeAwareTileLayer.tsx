@@ -4,9 +4,12 @@ import { useColorMode } from "../ui/color-mode";
 export default function ThemeAwareTileLayer() {
   const { colorMode } = useColorMode();
   
-  const lightMap = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
-  const darkMap = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-  
+  // Tiles are served by our own backend (see backend/app/api/tiles.py) rather
+  // than fetched straight from the CDN, so maps still render on machines with
+  // no internet. Do not put an external tile URL back here.
+  const lightMap = "/api/tiles/light/{z}/{x}/{y}.png";
+  const darkMap = "/api/tiles/dark/{z}/{x}/{y}.png";
+
   return (
     <TileLayer
       key={colorMode} // Force re-render when theme changes to avoid caching issues

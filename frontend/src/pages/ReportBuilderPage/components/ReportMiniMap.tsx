@@ -83,8 +83,10 @@ export function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: st
 
   return (
     <MapContainer key={mapKey} style={{ width: "100%", height: "100%" }} center={[1.35, 103.82]} zoom={12} scrollWheelZoom zoomControl preferCanvas={true}>
+      {/* Served by our backend so exported PDF reports still get a basemap on
+          an offline machine (backend/app/api/tiles.py). Do not restore a CDN URL. */}
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url="/api/tiles/light/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
       />
       {points.map(({ key, latlng, color }) => (

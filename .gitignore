@@ -4,6 +4,10 @@ shapefiles/
 in/
 model/
 
+# Local basemap tile cache written by backend/app/api/tiles.py (see paths.py:
+# user_data_root() is the repo root in a source checkout).
+tiles/
+
 # Claude Code settings
 .claude/path_segmentation_inference.ipynb
 
