@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import socket
 import subprocess
 import sys
@@ -27,6 +28,7 @@ import time
 import urllib.error
 import urllib.request
 import webbrowser
+import zipfile
 from pathlib import Path
 
 # launcher/ lives next to python/ and backend/ in the bundle root.
@@ -41,10 +43,32 @@ MIN_FREE_DISK_BYTES = 500 * 1024 * 1024
 
 
 def user_data_dir() -> Path:
-    """Per-user writable root. Mirrors backend/app/services/paths.py."""
+    """Per-user writable root. Mirrors backend/app/services/paths.py.
+
+    Resolution order:
+      1. PSAT_DATA_DIR env var
+      2. data_dir.txt in the install root -- written by the installer when the
+         user picks a location. A quarter of survey data is ~45 GB, which many
+         machines cannot spare on the system drive, so this must be movable.
+         It sits outside every update component, so updates never clobber it.
+      3. %LOCALAPPDATA%\\PSAT\\data
+    """
     override = os.environ.get("PSAT_DATA_DIR")
     if override:
         return Path(override)
+
+    configured = BUNDLE_ROOT / "data_dir.txt"
+    try:
+        if configured.is_file():
+            # utf-8-sig, not utf-8: Windows PowerShell 5.1 writes a BOM with
+            # -Encoding UTF8, and Notepad adds one too if anyone hand-edits this.
+            # A stray BOM would silently turn the path into garbage.
+            value = configured.read_text(encoding="utf-8-sig").strip()
+            if value:
+                return Path(value)
+    except (OSError, ValueError):
+        pass
+
     if sys.platform == "win32":
         base = os.environ.get("LOCALAPPDATA")
         root = Path(base) if base else Path.home() / "AppData" / "Local"
@@ -102,12 +126,19 @@ def find_free_port(start: int, limit: int) -> int:
     raise AssertionError("unreachable")
 
 
-def wait_for_health(port: int, process: subprocess.Popen, timeout: int) -> dict:
-    """Poll /api/health until the server answers, the process dies, or we time out."""
+def wait_for_health(port: int, process: subprocess.Popen, timeout: int,
+                    fatal: bool = True) -> dict | None:
+    """Poll /api/health until the server answers, the process dies, or we time out.
+
+    fatal=False returns None instead of exiting, so a freshly-applied update that
+    will not start can be rolled back rather than leaving the user stuck.
+    """
     url = f"http://127.0.0.1:{port}/api/health"
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if process.poll() is not None:
+            if not fatal:
+                return None
             fail(
                 f"The PSAT server stopped unexpectedly during start-up "
                 f"(exit code {process.returncode}).\n"
@@ -119,12 +150,150 @@ def wait_for_health(port: int, process: subprocess.Popen, timeout: int) -> dict:
                     return json.loads(response.read().decode("utf-8"))
         except (urllib.error.URLError, OSError, ValueError):
             time.sleep(1.0)
+    if not fatal:
+        return None
     fail(
         f"PSAT started but did not become ready within {timeout} seconds.\n"
         f"  This can happen on a slow disk the very first time. Try again; if it\n"
         f"  persists, the GIS data may be missing or damaged."
     )
     raise AssertionError("unreachable")
+
+
+def start_server(port: int, env: dict) -> subprocess.Popen:
+    return subprocess.Popen(
+        [str(sys.executable), str(BACKEND_DIR / "app.py")],
+        cwd=str(BACKEND_DIR),
+        env=env,
+    )
+
+
+# ── Staged-update application ────────────────────────────────────────────────
+# Runs BEFORE the server starts, because a process cannot replace the files it is
+# currently executing. Everything here is designed so that an interrupted update
+# (power cut, hard kill) leaves either the old version or the new one, never a mix.
+
+PENDING_DIR = BUNDLE_ROOT / "pending"
+BACKUP_DIR = BUNDLE_ROOT / "rollback"
+INSTALLED_STATE = BUNDLE_ROOT / "installed.json"
+PLAN_FILE = "plan.json"
+
+
+def _read_json(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return default
+
+
+def _top_level_targets(archive: Path) -> set[str]:
+    """First path segment of every entry, i.e. which install dirs an archive touches."""
+    with zipfile.ZipFile(archive) as zf:
+        return {name.split("/")[0] for name in zf.namelist() if "/" in name or name}
+
+
+def apply_pending_update() -> bool:
+    """Apply a staged update. Returns True if anything was applied.
+
+    Strategy: move the directories an update touches into rollback/, extract the
+    new ones, and keep rollback/ until the new version passes its health check.
+    Moves are same-volume renames, so they are effectively atomic and fast even
+    for the 5 GB shapefile tree.
+    """
+    plan_path = PENDING_DIR / PLAN_FILE
+    if not plan_path.is_file():
+        return False
+
+    plan = _read_json(plan_path, None)
+    if not plan or not plan.get("components"):
+        shutil.rmtree(PENDING_DIR, ignore_errors=True)
+        return False
+
+    print(f"Applying update {plan.get('app_version', '?')} ...")
+
+    # Reconstruct split archives and work out which top-level dirs are affected.
+    archives: list[tuple[str, Path]] = []
+    touched: set[str] = set()
+    for name, spec in plan["components"].items():
+        parts = [PENDING_DIR / p for p in spec.get("parts", [])]
+        if not parts or not all(p.is_file() for p in parts):
+            fail(f"The staged update is incomplete (missing files for '{name}').\n"
+                 f"  It has been discarded; PSAT will start on the current version.")
+        if len(parts) == 1:
+            archive = parts[0]
+        else:
+            archive = PENDING_DIR / f"{name}.joined.zip"
+            with open(archive, "wb") as out:
+                for part in parts:
+                    with open(part, "rb") as chunk:
+                        shutil.copyfileobj(chunk, out, length=8 * 1024 * 1024)
+        archives.append((name, archive))
+        touched |= _top_level_targets(archive)
+
+    if BACKUP_DIR.exists():
+        shutil.rmtree(BACKUP_DIR, ignore_errors=True)
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+
+    try:
+        # 1. move current versions aside (rename, not copy)
+        for target in sorted(touched):
+            src = BUNDLE_ROOT / target
+            if src.exists():
+                src.rename(BACKUP_DIR / target)
+
+        # 2. extract the new ones
+        for name, archive in archives:
+            print(f"  installing {name} ...")
+            with zipfile.ZipFile(archive) as zf:
+                zf.extractall(BUNDLE_ROOT)
+    except Exception as exc:
+        # Put everything back before anything else can run.
+        print(f"  update failed ({exc}); rolling back ...")
+        for target in sorted(touched):
+            live = BUNDLE_ROOT / target
+            saved = BACKUP_DIR / target
+            if saved.exists():
+                if live.exists():
+                    shutil.rmtree(live, ignore_errors=True)
+                saved.rename(live)
+        shutil.rmtree(PENDING_DIR, ignore_errors=True)
+        fail("The update could not be installed. PSAT has been restored to the "
+             "previous version and will start normally next time.")
+
+    # 3. record what is now installed, so the updater stops offering it
+    state = _read_json(INSTALLED_STATE, {})
+    for name, spec in plan["components"].items():
+        state[name] = spec.get("digest")
+    try:
+        INSTALLED_STATE.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+    except OSError:
+        pass
+
+    shutil.rmtree(PENDING_DIR, ignore_errors=True)
+    print("Update installed.")
+    return True
+
+
+def rollback_after_failed_start(touched_marker: bool) -> None:
+    """Restore the previous version after the updated app failed to become healthy."""
+    if not touched_marker or not BACKUP_DIR.is_dir():
+        return
+    print("The updated version did not start. Rolling back ...")
+    for saved in BACKUP_DIR.iterdir():
+        live = BUNDLE_ROOT / saved.name
+        if live.exists():
+            shutil.rmtree(live, ignore_errors=True)
+        try:
+            saved.rename(live)
+        except OSError as exc:
+            print(f"  could not restore {saved.name}: {exc}")
+    shutil.rmtree(BACKUP_DIR, ignore_errors=True)
+    # Drop the recorded digests so the updater offers the update again rather than
+    # believing a version that never actually ran is installed.
+    try:
+        INSTALLED_STATE.unlink(missing_ok=True)
+    except OSError:
+        pass
 
 
 def main() -> int:
@@ -138,6 +307,16 @@ def main() -> int:
     except OSError as exc:
         fail(f"Could not create the PSAT data folder at {data_dir}.\n  ({exc})")
 
+    # Apply any staged update before the server touches its own files.
+    applied = False
+    try:
+        applied = apply_pending_update()
+    except SystemExit:
+        raise
+    except Exception as exc:
+        print(f"Could not apply the staged update ({exc}); starting current version.")
+        shutil.rmtree(PENDING_DIR, ignore_errors=True)
+
     port = find_free_port(DEFAULT_PORT, PORT_SCAN_LIMIT)
 
     env = os.environ.copy()
@@ -149,13 +328,26 @@ def main() -> int:
     print(f"Starting PSAT on http://127.0.0.1:{port} ...")
     print(f"Your projects are stored in: {data_dir}")
 
-    process = subprocess.Popen(
-        [str(sys.executable), str(BACKEND_DIR / "app.py")],
-        cwd=str(BACKEND_DIR),
-        env=env,
-    )
+    process = start_server(port, env)
 
-    info = wait_for_health(port, process, HEALTH_TIMEOUT_SECONDS)
+    # After an update, a failure to come up must not strand the user on a broken
+    # install -- restore the previous version and start that instead.
+    info = wait_for_health(port, process, HEALTH_TIMEOUT_SECONDS, fatal=not applied)
+    if info is None:
+        try:
+            process.terminate()
+            process.wait(timeout=15)
+        except Exception:
+            pass
+        rollback_after_failed_start(applied)
+        process = start_server(port, env)
+        info = wait_for_health(port, process, HEALTH_TIMEOUT_SECONDS)
+        print("Rolled back to the previous version.")
+    elif applied:
+        # New version is healthy: drop the backup. It is a full copy of everything
+        # the update touched (potentially gigabytes) and must not linger on disk.
+        shutil.rmtree(BACKUP_DIR, ignore_errors=True)
+
     print(f"PSAT {info.get('version', '?')} is ready.")
 
     webbrowser.open(f"http://127.0.0.1:{port}/")
