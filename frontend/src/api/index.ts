@@ -17,6 +17,7 @@
  *  - auth.ts         — profile create/login/logout/share
  *  - media.ts        — bulk image download + shapefile export
  *  - reports.ts      — generated report save/list/delete
+ *  - updates.ts      — remote update check/download/discard
  */
 
 export * from "./_client";
@@ -29,3 +30,4 @@ export * from "./shapefiles";
 export * from "./auth";
 export * from "./media";
 export * from "./reports";
+export * from "./updates";

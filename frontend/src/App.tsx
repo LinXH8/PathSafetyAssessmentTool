@@ -14,6 +14,7 @@ import GeneratedReportsPage from "./pages/GeneratedReportsPage/GeneratedReportsP
 import AppLayout from "./layouts/AppLayout";
 import HelpPage from "./pages/HelpPage/helpPage";
 import RequireProfile from "./features/profile/RequireProfile";
+import UpdateModal from "./components/common/UpdateModal";
 import { recordProfileActivity } from "./api";
 import { useProfile } from "./features/profile/ProfileProvider";
 
@@ -45,6 +46,10 @@ export default function App() {
   return (
     <>
       <NavigationTelemetry />
+      {/* App-wide: users have no Git and never visit a release page, so this is
+          the only way an update reaches them. Suppresses itself on the landing
+          screen and stays silent when offline. */}
+      <UpdateModal />
       <Routes>
 
         <Route path="/" element={<LandingPage />} />
