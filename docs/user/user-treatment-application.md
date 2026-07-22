@@ -1,6 +1,14 @@
-﻿## 4. Treatment Application
+## 4. Treatment Application
 
 The Treatment Application page lets you test safety improvements on one or more cycling path projects. You can explore which interventions apply to each segment, preview how they would change risk scores, apply them, and compare before-and-after risk distributions — all without permanently altering the underlying survey data until you are ready.
+
+> **What's new in v2:** The Treatment Application page was fully redesigned. The core workflow below (select projects → choose By Segment/By Treatment → preview → Apply) is unchanged; what moved is the page chrome:
+>
+> - **On-canvas action row** — **Save**, **Reset All**, and **Generate/Continue Report** now sit in the page title row instead of the sidebar. There is no dedicated **Exit** button in v2 — clicking any other sidebar link (Home, Quick Select, etc.) takes you straight there.
+> - **"Treat All Segments"** (the v1 sidebar shortcut that applied one treatment to every segment regardless of relevance) has been removed. Use **By Treatment** mode (Step 3) instead — it already limits bulk-apply to segments the treatment is actually eligible for, and its **Apply** confirmation dialog is the supported way to roll a treatment out project-wide.
+> - **Unsaved-changes guard** — segment-by-segment treatment toggles (**By Segment** mode) auto-save as you go, so there is nothing to lose by navigating away. The only state that can be lost is a **staged bulk selection in By Treatment mode that you haven't clicked Apply on yet** — if you navigate away from the sidebar with such a selection pending, PSAT shows a Save / Discard / Cancel prompt before leaving.
+> - **Segment stepper + Effectiveness readout** — the segment navigator and an **Effectiveness** percentage (the share of in-scope segments whose overall risk band improved) now sit together in a context strip below the project tabs.
+> - **Overall Risk Level (bottom section)** — the "Overall Treatment Analysis" pie charts described in [Step 9](#step-9-review-the-overall-treatment-analysis) are replaced by **Before/After stacked risk-band bars** per crash type, matching the style used on the Coding and Path Analysis pages; the same before/after comparison and per-tab (All Projects / specific project) behaviour still applies.
 
 ---
 
@@ -29,6 +37,8 @@ Project selection is done from the **Projects page**. Select one or more project
 - You can load multiple projects together to compare or apply treatments across them in one session.
 - The **Verification Status** column shows ✅ for fully verified projects and ⏳ for projects still in progress.
 - Click the **pencil icon** in the Actions column to rename a project or change its tags before loading.
+
+> **v2 tip:** You can also jump straight into Treatment Application from any page using **Quick Select** in the sidebar — see [Section 1.6](../user-getting-started.md#16-quick-select--jump-to-a-workflow-from-anywhere).
 
 ---
 
@@ -61,11 +71,11 @@ The **Treatment Options** panel on the left has a dropdown that lets you switch 
 Tick the checkbox next to one or more treatments to select them. Selected treatments are highlighted in the panel.
 
 > [!IMPORTANT]
-> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live preview of the post-treatment risk scores and attribute changes. Switching it back to **Show Pre-Treatment** correctly restores the original (pre-treatment) scores and attributes — the score display refreshes automatically in both directions.
+> As soon as you select a treatment, the **Scores card** automatically previews the post-treatment risk scores — no toggle needed. The **Show Pre-Treatment** toggle (located in the Attributes panel header on the right, **on by default**) lets you switch back to the original pre-treatment scores and attribute values at any time; switch it off again to see the post-treatment attribute values alongside the preview scores.
 
-Once the **Show Post-Treatment** toggle is enabled, selecting a treatment will show a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
+Selecting one or more treatments immediately shows a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
 
-With the toggle on, the attributes panel also updates to display exactly which attribute values would change if the selected treatments were applied, so you can understand the reasoning behind the score change.
+To see exactly which attribute values would change, switch **off** the **Show Pre-Treatment** toggle — the Attributes panel then updates to display the post-treatment attribute values for your selected treatments, so you can understand the reasoning behind the score change.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click Apply.
 
@@ -75,8 +85,8 @@ With the toggle on, the attributes panel also updates to display exactly which a
 
 When you are satisfied with your selection, click **Apply (N)** at the bottom of the Treatment Options panel (where *N* is the number of treatments selected):
 
-- **In By Segment mode**, Apply saves the selected treatments for the current segment only. The treatment colours on the After Treatment map will update for that segment immediately.
-- **In By Treatment mode**, Apply triggers a confirmation dialog listing each selected treatment and asking whether to apply it to **all eligible segments** across the loaded project. Confirm to apply in bulk, or cancel to go back.
+- **In By Segment mode**, Apply saves the selected treatments for the current segment only. The treatment colours on the After Treatment map will update for that segment immediately. This is saved to disk right away — there is nothing to lose by navigating away afterwards.
+- **In By Treatment mode**, Apply triggers a confirmation dialog listing each selected treatment and asking whether to apply it to **all eligible segments** across the loaded project. Confirm to apply in bulk, or cancel to go back. Until you confirm, this bulk selection is only a preview — see the unsaved-changes note at the top of this page.
 
 If you change your mind about an applied treatment on the current segment, click the **Reset** button that appears for that treatment to remove it and restore the original scores for that segment.
 
@@ -88,8 +98,8 @@ The **middle column** shows the street-level photograph for the current segment.
 
 The **right column** shows two panels:
 
-- **Segment Scores** — displays the four CycleRAP risk scores for the current segment: Vehicle-Bicycle (VB), Bicycle-Pedestrian (BP), Single-Bicycle (SB), and Bicycle-Bicycle (BB). When treatments are selected, this panel shows the previewed scores alongside the original scores so you can compare.
-- **Attributes panel** — lists all coded attribute values for the current segment. Toggle **Show Post-Treatment** to switch between the original coded values and the values that would result from the selected treatments.
+- **Segment Scores** — displays the four CycleRAP risk scores for the current segment: Vehicle-Bicycle (VB), Bicycle-Pedestrian (BP), Single-Bicycle (SB), and Bicycle-Bicycle (BB). When treatments are selected and applied, this panel shows the "after" scores; you can toggle the button to compare with the "before" score.
+- **Attributes panel** — lists all coded attribute values for the current segment. The **Show Pre-Treatment** toggle (on by default) switches between the original coded values and the values that would result from the selected treatments; switch it off to see the post-treatment values.
 
 ---
 
@@ -118,7 +128,7 @@ The Treatment Options panel has **two separate buttons** — one for the prompt 
 
 > Prompt and image are copied separately because pasting both simultaneously into tools like Gemini is not supported — copy the prompt first, paste it, then copy and attach the image.
 
-Use **Copy Selected** when you are exploring options and want to preview the AI image before committing. Use **Copy Applied** when you have already applied treatments and want to generate the final before-and-after visualisation.
+Once the AI tool generates an "after" image, you can copy it and paste it back into PSAT's **Post-Treatment Image** area for that segment (see [Section 4: Report Generation, Top Risk Stretches](../user-report-generation.md#547-top-risk-stretches) for the equivalent Report Builder upload) — it is stored as that segment's **Post-Treatment Artistic Impression** and used as the "after" photo wherever the segment is shown.
 
 ---
 
@@ -132,18 +142,16 @@ Scroll to the bottom of the page to see the **Overall Treatment Analysis** secti
 
 Use these charts to get a quick sense of whether the treatments you have applied make a meaningful difference at the project level, not just for individual segments.
 
+> **v2 layout:** This section is shown as **Before/After "Overall Risk Level" cards** — stacked horizontal risk-band bars per crash type, with the same hover detail (count and percentage) as the equivalent Path Analysis and Coding charts — instead of pie charts. The underlying data and per-tab (All Projects / specific project) behaviour is identical.
+
 ---
 
 ### Tips and common workflows
 
 - **Pre and Post tagging** — if you are working with a before-and-after survey pair, tag one project `Pre` and the other `Post`, then load both together. You can then compare the actual post-treatment survey against PSAT's predicted improvement.
 - **Applying a single improvement across a whole project** — switch to **By Treatment** view, find the treatment you want, tick it, then click Apply. The confirmation dialog will list all eligible segments; confirm to apply in bulk.
-- **Undoing all changes** — if you want to start fresh, navigate to each segment that has been treated and click Reset to remove treatments one segment at a time.
+- **Undoing all changes** — if you want to start fresh, navigate to each segment that has been treated and click Reset to remove treatments one segment at a time, or use the on-canvas **Reset All** button (v2) / sidebar **Reset All** (v1) to reset every applied treatment across the loaded project(s) in one action.
 - **Checking what was already applied** — treatments that have already been saved for the current segment are shown with a **green background** in the Treatment Options panel, so you can see at a glance what is already in place.
-
----
-
-
 
 ---
 
@@ -170,20 +178,8 @@ When treatments are selected:
 #### Previewing Before You Apply
 
 > [!IMPORTANT]
-> The **Show Post-Treatment** toggle must be switched **on** in the Attributes panel header to see the live score preview and attribute modifications. Switching it back to **Show Pre-Treatment** correctly restores the original pre-treatment scores — the display refreshes automatically in both directions.
+> Ticking any treatment checkbox automatically shows the **live score preview** for the current segment in the Scores card — no toggle needed. The **Show Pre-Treatment** toggle (in the Attributes panel header, **on by default**) lets you switch back to the original pre-treatment scores and attributes at any time; switch it off to see the post-treatment attribute values alongside the preview scores.
 
-With the toggle enabled, tick any treatment checkbox to see the **live score preview** for the current segment. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
+Tick any treatment checkbox to see the **live score preview** for the current segment. The scores update automatically as you change your selection — you do not need to click Apply. To also see which attribute values would change, switch off **Show Pre-Treatment**.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click **Apply**.
-
-#### AI-Assisted Visualisation (Prompt & Image Copy)
-
-There are **two separate buttons** — one for the prompt and one for the image — because pasting both simultaneously into tools such as Gemini is not supported. Copy and paste each independently:
-
-- **Copy prompt** — copies a ready-to-use text prompt describing the selected or applied treatments. Prompt templates have been updated for clearer, more accurate visualisation instructions. Use the dropdown to choose:
-  - **Copy Applied** — prompt based on treatments already **applied and saved** for this segment.
-  - **Copy Selected** — prompt based on treatments currently **ticked/selected** in the panel.
-
-- **Copy image** — copies the current segment photograph to your clipboard as a standalone action. Attach it to the AI tool separately from the prompt.
-
-Use **Copy Selected** when exploring options before committing. Use **Copy Applied** when generating the final before-and-after visualisation.

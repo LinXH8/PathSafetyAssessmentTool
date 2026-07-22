@@ -2,6 +2,15 @@
 
 The Coding page is the main review workspace. It can open one or more selected projects in a combined session.
 
+> **What's new in v2:** The Coding page was fully redesigned. The core review workflow (image, attributes table, map) is unchanged, but several controls moved and a few small behaviours changed:
+>
+> - The **segment navigator, "Auto-code (By Segment)", "Auto-code (By Attribute)", Previous/Next, and Save** are all now on-canvas, in and around the segment-navigator row, instead of living in the sidebar.
+> - Coded attribute cells use a clearer colour scheme: **red** = manually overwritten, **yellow** = changed by auto-code, **green** = changed by a treatment preview. Autocoded attribute titles show **(CV)** or **(GIS)** to indicate their source.
+> - The GIS **Map Preview & Analysis** side panel (Section 2.10) is a static, collapsible **Layer View** panel instead of the old slide-in overlay — click the small tab on its edge to open or close it.
+> - The **"Start Autocoding?" confirmation pop-up** before running any auto-code action is kept in v2 — it was not removed, since auto-code overwrites existing attribute values and a confirmation step is worth the extra click.
+>
+> If a page still shows the older sidebar-driven layout, add `?ui=v1` to the URL (see the note at the top of [Section 1](../user-getting-started.md)).
+
 ---
 
 ## Table of Contents
@@ -415,6 +424,8 @@ For supported attributes, the page can show extra spatial detail within a **5m r
 
 When you turn on the **Analysis Overlay** toggle on the coding page map, PSAT automatically enables the **Footpath**, **Cycling Path**, and **Shared Path** GIS layers so the overlay is always shown over visible path geometry. There should be a black hollow circle (with 5m radius) showing the features (i.e. radius, width) snapped to the image.
 
+> **v2 layout:** The GIS layer toggles live in a fixed **Layer View** panel that slides open from the left edge of the map (click the small `›`/`‹` tab to open or close it) instead of the v1 pop-out overlay. It starts closed; the toggles, Import Shapefile button, and overlay behaviour are otherwise the same as v1.
+
 ### 2.11 Save and Progress Tracking
 
 After review:
@@ -456,6 +467,8 @@ PSAT calculates four independent risk scores per segment:
 | 4 | Extreme | > 60 | 🟣 Purple | `#CD1AFF` |
 
 > **Overall Risk Level Band** = the **highest** band across BB, BP, SB, and VB for that segment. A single Extreme sub-score makes the overall band Extreme regardless of the others.
+
+---
 
 ### 2.13 Risk Score Rationale — What Drives the Score
 

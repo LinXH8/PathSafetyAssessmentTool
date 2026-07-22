@@ -6,6 +6,8 @@ The **Report Builder** compiles a formatted, printable report of your path safet
 
 Access it from the **sidebar** on the Path Analysis or Treatment page.
 
+> **v2 status:** Unlike the Home, Coding, Path Analysis, and Treatment Application pages, the Report Builder (and the Generated Reports page) has **not** been fully redesigned for v2 — it only picks up small visual touch-ups (rounded corners, teal accent buttons) when v2 is active. The panel layout, toolbar, and workflow described below are the same in both v1 and v2. A full v2 redesign of this page is planned but not yet scheduled.
+
 ---
 
 ## Table of Contents
@@ -163,14 +165,14 @@ Each segment card shows:
 
 > Contributing factors are derived from the **CycleRAP scoring multipliers**. Each attribute that raises the risk score is listed with how much it contributed.
 
-**Pasting AI-generated after images:**
+**Adding a post-treatment image:**
 
-For each top-risk segment, the survey photo is shown as the *before* image. To add an AI-generated *after* image:
+Each top-risk segment shows the survey photo as the *before* image, with a post-treatment image area alongside it — this appears for **every** segment, whether or not a treatment has actually been recorded for it. There are two ways to add the *after* photo:
 
-1. In the **Treatment Page**, use the **AI Prompt** feature to generate an after-treatment visualisation.
-2. Copy the AI-generated image to your clipboard.
-3. In the Report Builder, click the image area of the relevant segment.
-4. Press **Ctrl+V** to paste — the AI image replaces the survey photo for that segment in the export.
+- **Upload Treatment Image** — click the button under the post-treatment panel to pick an image file directly from your computer. This is the quickest option if you already have a photo (e.g. from a completed on-site treatment).
+- **Paste an AI-generated image** — in the **Treatment Page**, use the **AI Prompt** feature to generate an after-treatment visualisation, copy the image to your clipboard, then click the image area of the relevant segment in the Report Builder and press **Ctrl+V** to paste.
+
+If a segment already has a post-treatment image, click **Change Image** to replace it — the new image appears immediately, both in the Report Builder preview and on the Treatment Application page for that segment.
 
 ### 5.4.8 Benchmarking Stats
 

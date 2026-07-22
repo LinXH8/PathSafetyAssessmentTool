@@ -1,6 +1,8 @@
-﻿# Path Safety Assessment Tool (PSAT) User Guide
+# Path Safety Assessment Tool (PSAT) User Guide
 
 Welcome to PSAT. The tool helps you create projects from geotagged survey images, review coded path segments, calculate safety risk scores, analyse safety hazards and test treatments.
+
+> **New in 2026-07-02 — the v2 interface is now the default.** The Home, Create Project, Coding, Path Analysis, Treatment Application, User Guide, and GIS Layers pages all open in the redesigned **v2** layout by default. This guide describes the app as it appears in v2 unless a section says otherwise. If a page still shows the older layout, or you want to compare, add `?ui=v1` to the page's URL (`?ui=v2` switches back) — your choice is remembered on this device until you change it again. The **Report Builder** and **Generated Reports** pages keep their existing v1 layout for now, with only minor visual touch-ups applied (see [Section 5: Report Generation](../user-report-generation.md)); the **Landing (login) page**'s branded look is unchanged aside from its profile pop-ups (see [Section 1.2](#12-user-login--account-management)).
 
 ---
 
@@ -42,6 +44,8 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 - **Admin Guide** — system deployment, model management, and infrastructure
 - **Developer Guide** — technical architecture, API reference, and scoring logic
 
+> **v2 layout:** The Help page itself was redesigned for v2 — a single unified canvas with the three guides as tab pills at the top, a slim left-hand section list showing only a "Last updated" caption instead of a date on every entry, and the standard v2 sidebar down the left of the screen. The content and structure of each guide are unchanged.
+
 ### 1.2 User Login & Account Management
 
 **Creating a new profile** — click **Create Profile** on the Landing Page and fill in the following:
@@ -73,6 +77,14 @@ If you have forgotten your PIN, you can restore access using your registered **p
 
 > If you no longer have access to your registered email, ask your administrator to delete and recreate the profile. Note that deleting a profile removes all projects associated with it.
 
+> **What's new in v2 (2026-07-07):** The Landing Page keeps its familiar branded look — background image, PSAT logo/hero, and the green profile selection panel — but the functional pop-ups behind it were rebuilt for v2:
+>
+> - The **Enter PIN**, **Create Profile**, **Manage Profile**, **Delete Profile**, and **Reset PIN** dialogs all now open in a new, lighter pop-up style consistent with the rest of the v2 interface.
+> - The right-hand profile panel **no longer scrolls as a whole** — only the list of profiles scrolls internally, so the **Start** button stays pinned and visible on screen no matter how many profiles are registered on the device.
+> - This fixes an old issue where, on devices with many saved profiles, the Start button could be scrolled out of view.
+>
+> A full redesign of the branded landing layout itself (background, hero, logo) is still planned for a future update — only the profile pop-ups have moved to v2 so far.
+
 ### 1.3 Open the Project List
 
 Use the **Home** page to browse all projects. You can:
@@ -81,6 +93,13 @@ Use the **Home** page to browse all projects. You can:
 - filter by tags (e.g. NSC, AMK)
 - sort by project name, verification progress, distance verified, autocode progress, and last modified time
 - select one or more projects for deletion, coding, path analysis, or treatment work
+
+> **What's new in v2:** The Home page is fully redesigned. A few behaviours changed along with the new look:
+>
+> - **Clear filters** is now a single **×** at the end of the "Search by Tags" bar (it appears once a search term or tag filter is active) instead of a separate "Clear Filters" button — it still clears the name search and every tag filter in one click.
+> - The **Total Distance Verified** summary shown above the project table in v1 has been removed from the v2 action bar; per-project verified distance is still shown in the table itself.
+> - The sidebar gains a **Quick Select** accordion (see [Section 1.6](#16-quick-select--jump-to-a-workflow-from-anywhere)) and, for Home specifically, a **GIS Layers** shortcut and a **Generated Reports** shortcut.
+> - A new **Share** action lets you copy selected projects into another profile's account (see [Section 1.8](#18-sharing-a-project)).
 
 ### 1.4 Create a Project
 
@@ -107,16 +126,18 @@ When you select a source folder in the Single Folder workflow, PSAT reads the ro
 
 The `in/` folder is the staging area for all survey images. Before you can create a project, images must be placed in a named sub-folder inside `in/`.
 
-**Where to get the images:**  
+**Where to get the images:**
 Survey images are captured using the LTA survey vehicle. The raw image files are provided by the survey team and must be copied into a named sub-folder under `in/` on the PSAT machine.
 
-**How images are auto-named:**  
+**How images are auto-named:**
 Images are automatically associated with a project and quarter based on two things:
 
 - **Project folder name** — the sub-folder name inside `in/` becomes the road name shown in PSAT (e.g. a folder named `AMK AVE 8` creates a project called **AMK AVE 8**)
 - **Survey quarter** — the date embedded in each image file determines its quarter label automatically (e.g. images taken in January–March 2026 are tagged as **1Q26**)
 
 > **Tip:** Do not use underscores in folder names — use spaces or dashes instead (e.g. `AMK AVE 8`, not `AMK_AVE_8`).
+
+> **What's new in v2:** The Create Project page keeps the same three creation modes, but the **Single Folder** mode now shows a sortable folder table (Folder Name / Segments / Quarter / Distance / Projects) with multi-select checkboxes, and **Polygon / Planning Area** mode has a collapsible 340px Layer View panel (Roads / Planning Area switches + Import Shapefile) with the drawing tools moved into a floating cluster over the map, instead of the old per-button toolbar.
 
 ### 1.5 Navigate Between Workflows
 
@@ -140,11 +161,15 @@ From the project list, you can send selected projects for the following:
 
 > If you currently have unsaved changes on a Coding or Treatment page, PSAT will prompt you to save or discard them before switching, the same as navigating away any other way.
 
+> **v2 only:** Quick Select is part of the new v2 sidebar (`SidebarV2`) and is not available in the v1 interface — in v1, use the project list on the Home page to select projects for each workflow instead.
+
 ### 1.7 Viewing and Updating GIS Layers
 
 Click **View GIS Layers** from the sidebar to open the GIS Layers dashboard, where you can browse, filter, rename, and update the spatial data layers that power PSAT's auto-coding.
 
 > For full instructions on adding, replacing, filtering, and renaming layers, see [Section 6: GIS Layer Management](#6-gis-layer-management).
+
+> **What's new in v2:** The GIS Layers page has also been fully redesigned to match the rest of the v2 interface (rounded 6px cards, the v2 sidebar, and consistent tab styling) — the underlying browse/filter/rename/replace workflow described in Section 6 is unchanged.
 
 ### 1.8 Sharing a Project
 

@@ -23,7 +23,7 @@ The following attributes currently have finer filtering enabled:
 |---|---|---|
 | **Facility Width per Direction** ❖ | Very Narrow; Narrow; Wide | 6 width ranges |
 | **Curvature** ❖ | Sharp Turn Present; No Sharp Turn Present | 5 radius ranges |
-| **Fixed Obstacle on Facility** ❖ | Present; Not Present | 7 obstacle types |
+| **Fixed Obstacle on Facility** ❖ | Present; Not Present | 10 obstacle types |
 | **Non-Fixed Obstacle on Facility** ❖ | Present; Not Present | 5 obstacle types |
 | **Delineation** ❖ | Present; Not Present | 5 delineation types when Present; 1 type when Not Present |
 | **Crossing Facility** ❖ | Present; Not Present | 5 crossing types |
@@ -54,8 +54,8 @@ All other attributes use standard single-level filtering.
 | Facility Width per Direction | Wide | >4 m | Blue |
 | Curvature | Sharp Turn Present | <6.5 m (footpath threshold) · 6.5–<10 m · Path Junction | Red · Orange · Purple |
 | Curvature | No Sharp Turn Present | 10–18 m · >18 m (cycling path threshold ≥18 m) | Green · Blue |
-| Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Pillar · Bollards · Fence · Vegetation · Others | Unique colour per type |
-| Non-Fixed Obstacle on Facility | Present | Barrier · Bins · Bicycle · Cone · Others | Unique colour per type |
+| Fixed Obstacle on Facility | Present | Lamp Post · Traffic Light · Covered Linkway Pole · Bollard · Billboard · Sign Pole · Utility Box · Railing · Vegetation · Others | Unique colour per type |
+| Non-Fixed Obstacle on Facility | Present | Barrier · Bin · Bicycle · Cone · Others | Unique colour per type |
 | Delineation | Present | Cycling Path · Red Stripe · Signalised Crossing · Traffic Crossing · Zebra Crossing | Unique colour per type |
 | Delineation | Not Present | Faded Marking | Unique colour per type |
 | Crossing Facility | Present | Zebra Crossing · Signalised PC · Bicycle Crossing · Unsignalised Junction · Development Access | Unique colour per type |

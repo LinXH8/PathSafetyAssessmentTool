@@ -1,6 +1,14 @@
-﻿## 4. Treatment Application
+## 4. Treatment Application
 
 The Treatment Application page lets you test safety improvements on one or more cycling path projects. You can explore which interventions apply to each segment, preview how they would change risk scores, apply them, and compare before-and-after risk distributions — all without permanently altering the underlying survey data until you are ready.
+
+> **What's new in v2:** The Treatment Application page was fully redesigned. The core workflow below (select projects → choose By Segment/By Treatment → preview → Apply) is unchanged; what moved is the page chrome:
+>
+> - **On-canvas action row** — **Save**, **Reset All**, and **Generate/Continue Report** now sit in the page title row instead of the sidebar. There is no dedicated **Exit** button in v2 — clicking any other sidebar link (Home, Quick Select, etc.) takes you straight there.
+> - **"Treat All Segments"** (the v1 sidebar shortcut that applied one treatment to every segment regardless of relevance) has been removed. Use **By Treatment** mode (Step 3) instead — it already limits bulk-apply to segments the treatment is actually eligible for, and its **Apply** confirmation dialog is the supported way to roll a treatment out project-wide.
+> - **Unsaved-changes guard** — segment-by-segment treatment toggles (**By Segment** mode) auto-save as you go, so there is nothing to lose by navigating away. The only state that can be lost is a **staged bulk selection in By Treatment mode that you haven't clicked Apply on yet** — if you navigate away from the sidebar with such a selection pending, PSAT shows a Save / Discard / Cancel prompt before leaving.
+> - **Segment stepper + Effectiveness readout** — the segment navigator and an **Effectiveness** percentage (the share of in-scope segments whose overall risk band improved) now sit together in a context strip below the project tabs.
+> - **Overall Risk Level (bottom section)** — the "Overall Treatment Analysis" pie charts described in [Step 9](#step-9-review-the-overall-treatment-analysis) are replaced by **Before/After stacked risk-band bars** per crash type, matching the style used on the Coding and Path Analysis pages; the same before/after comparison and per-tab (All Projects / specific project) behaviour still applies.
 
 ---
 
@@ -29,6 +37,8 @@ Project selection is done from the **Projects page**. Select one or more project
 - You can load multiple projects together to compare or apply treatments across them in one session.
 - The **Verification Status** column shows ✅ for fully verified projects and ⏳ for projects still in progress.
 - Click the **pencil icon** in the Actions column to rename a project or change its tags before loading.
+
+> **v2 tip:** You can also jump straight into Treatment Application from any page using **Quick Select** in the sidebar — see [Section 1.6](../user-getting-started.md#16-quick-select--jump-to-a-workflow-from-anywhere).
 
 ---
 
@@ -75,8 +85,8 @@ To see exactly which attribute values would change, switch **off** the **Show Pr
 
 When you are satisfied with your selection, click **Apply (N)** at the bottom of the Treatment Options panel (where *N* is the number of treatments selected):
 
-- **In By Segment mode**, Apply saves the selected treatments for the current segment only. The treatment colours on the After Treatment map will update for that segment immediately.
-- **In By Treatment mode**, Apply triggers a confirmation dialog listing each selected treatment and asking whether to apply it to **all eligible segments** across the loaded project. Confirm to apply in bulk, or cancel to go back.
+- **In By Segment mode**, Apply saves the selected treatments for the current segment only. The treatment colours on the After Treatment map will update for that segment immediately. This is saved to disk right away — there is nothing to lose by navigating away afterwards.
+- **In By Treatment mode**, Apply triggers a confirmation dialog listing each selected treatment and asking whether to apply it to **all eligible segments** across the loaded project. Confirm to apply in bulk, or cancel to go back. Until you confirm, this bulk selection is only a preview — see the unsaved-changes note at the top of this page.
 
 If you change your mind about an applied treatment on the current segment, click the **Reset** button that appears for that treatment to remove it and restore the original scores for that segment.
 
@@ -118,7 +128,7 @@ The Treatment Options panel has **two separate buttons** — one for the prompt 
 
 > Prompt and image are copied separately because pasting both simultaneously into tools like Gemini is not supported — copy the prompt first, paste it, then copy and attach the image.
 
-User can copy and paste back the AI generated picture back as Post-Treatment Artistic Impression.
+Once the AI tool generates an "after" image, you can copy it and paste it back into PSAT's **Post-Treatment Image** area for that segment (see [Section 4: Report Generation, Top Risk Stretches](../user-report-generation.md#547-top-risk-stretches) for the equivalent Report Builder upload) — it is stored as that segment's **Post-Treatment Artistic Impression** and used as the "after" photo wherever the segment is shown.
 
 ---
 
@@ -132,18 +142,16 @@ Scroll to the bottom of the page to see the **Overall Treatment Analysis** secti
 
 Use these charts to get a quick sense of whether the treatments you have applied make a meaningful difference at the project level, not just for individual segments.
 
+> **v2 layout:** This section is shown as **Before/After "Overall Risk Level" cards** — stacked horizontal risk-band bars per crash type, with the same hover detail (count and percentage) as the equivalent Path Analysis and Coding charts — instead of pie charts. The underlying data and per-tab (All Projects / specific project) behaviour is identical.
+
 ---
 
 ### Tips and common workflows
 
 - **Pre and Post tagging** — if you are working with a before-and-after survey pair, tag one project `Pre` and the other `Post`, then load both together. You can then compare the actual post-treatment survey against PSAT's predicted improvement.
 - **Applying a single improvement across a whole project** — switch to **By Treatment** view, find the treatment you want, tick it, then click Apply. The confirmation dialog will list all eligible segments; confirm to apply in bulk.
-- **Undoing all changes** — if you want to start fresh, navigate to each segment that has been treated and click Reset to remove treatments one segment at a time.
+- **Undoing all changes** — if you want to start fresh, navigate to each segment that has been treated and click Reset to remove treatments one segment at a time, or use the on-canvas **Reset All** button (v2) / sidebar **Reset All** (v1) to reset every applied treatment across the loaded project(s) in one action.
 - **Checking what was already applied** — treatments that have already been saved for the current segment are shown with a **green background** in the Treatment Options panel, so you can see at a glance what is already in place.
-
----
-
-
 
 ---
 
