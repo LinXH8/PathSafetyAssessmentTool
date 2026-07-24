@@ -122,6 +122,54 @@ The script fails loudly on file-count mismatch, copy errors, or an empty run. On
 
 ---
 
+## 2c. Shrink the data (pre-prune) — 129 GB → 28 GB
+
+A full quarter of raw frames is ~129 GB, more than the office machines can be relied on to
+have free. **Frames cannot simply be thinned** — PSAT samples one roughly every 10 m, so
+removing frames silently undercuts segments and road length (measured: keeping half lost
+31% of segments, and the road measured shorter).
+
+The one safe reduction is **the app's own pruning**, which deletes exactly the frames no
+project references. That needs a project to exist, so this creates one per road:
+
+```powershell
+pwsh scripts\bundle\preprune_seed_data.ps1 -DataRoot D:\PSAT-seed
+```
+
+Add `-Limit 25` to sample first. Run it **once on the build machine** — the shrunken result
+ships to every machine, so the cost is paid here instead of 11 times.
+
+### Why this is safe when thinning is not
+The project's geometry is computed from the **full** frame set *before* anything is deleted.
+Pruning then removes only what that project doesn't reference. The project keeps its correct
+segments; the folder shrinks. Pruning also re-stamps the folder's pre-prune summary, so the
+Create Project table still reports the true image count and segment count.
+
+### Measured on the Mar-2026 quarter
+| | |
+|---|---|
+| Survey data | **128.68 GB → 27.88 GB (78% smaller)** |
+| Project data | 0.41 GB |
+| **Total to ship** | **28.28 GB** |
+| Projects created | 3,730 of 3,868 |
+| Runtime | ~3 h (one-off) |
+
+Verified afterwards: project segments = folder-reported segments = frames on disk, exactly
+one anchor frame per segment (ALKAFF CRESCENT 59/59/59, BRADDELL ROAD 367/367/367).
+
+### The 138 roads that "fail" are fine
+They error with *"No geotagged images found inside the selected polygon"* — these are stub
+roads of 1–21 frames, too short to form a segment. They keep **all** their frames, stay
+fully correct, and total ~576 frames (~75 MB). Nothing to fix.
+
+### ⚠️ Ship `in/` AND `data/` together — the projects are not optional
+A pruned folder **without** its project is the broken state: creating a new project from it
+would resample the thinned frames and undercount. The projects are what make the pruned
+state valid. Never ship one without the other, and never re-run the flatten over a pruned
+`in/` without also discarding `data/`.
+
+---
+
 ## 3. Make the install drive
 
 One command assembles everything and verifies it:

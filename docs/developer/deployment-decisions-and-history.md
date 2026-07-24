@@ -192,6 +192,34 @@ pushed the per-machine disk requirement to ~160 GB and the drive to 256 GB.
 `scripts/bundle/flatten_survey_data.ps1` encapsulates all of this and refuses to report
 success on a mismatch or an empty run.
 
+### Reducing 129 GB without corrupting the data (pre-prune)
+129 GB per machine was not viable, and the obvious fix — ship fewer frames — is exactly the
+thing that breaks PSAT. Measured on one road: keeping half the frames dropped segments
+59 → 41 (−31%) and the road measured *shorter* (1.42 → 1.34 km). Keeping a quarter dropped
+it to 15. PSAT samples a frame every ~10 m; thin the frames and sample points find nothing
+to match, so coverage silently disappears. On a safety tool that is under-reporting how much
+path was assessed, with no error shown.
+
+**The resolution came from the app itself.** Its `prune_source_folder` deletes exactly the
+frames no project references — and crucially the project's geometry is computed from the
+*full* frame set **before** any deletion. So creating a project first, then pruning, shrinks
+the folder while the project keeps correct segments. Pruning also re-stamps the folder's
+pre-prune summary, so the UI still reports true counts.
+
+Doing that for every road (`preprune_seed_data.ps1`, run once on the build machine) took
+**128.68 GB → 27.88 GB, 78% smaller**, with 3,730 projects created and segment counts
+verified intact.
+
+**The critical constraint this creates:** the projects must ship *with* the pruned data. A
+pruned folder without its project is the broken state — a new project created from it would
+resample thinned frames and undercount. The projects are what make the pruned state valid.
+
+Two things worth knowing for anyone revisiting this:
+- 138 roads (3.6%) can't be pre-pruned — stub roads of 1–21 frames, too short to segment.
+  They keep every frame and stay correct; it costs ~75 MB. Not a defect.
+- The pruned state is *not* re-derivable from itself. If the flatten is ever re-run, `data/`
+  must be discarded too, and pre-prune re-run from the original delivery.
+
 ### The frontend build gate
 `npm run build` is `tsc -b && vite build`. 17 pre-existing TypeScript errors meant `tsc`
 failed and no production bundle could be produced. Fixed rather than bypassed, so the
@@ -206,9 +234,10 @@ Measured, not estimated:
 | Thing | Size |
 |---|---|
 | App bundle total | **8.92 GB** (frozen python 3.9 GB · shapefiles 5.1 GB · models 27 MB · code 2 MB · webui 10 MB) |
-| **Full quarter of survey data (Mar-2026 delivery)** | **128.9 GB** · 3,868 roads · 13 regions |
+| Full quarter, raw (Mar-2026 delivery) | 128.9 GB · 3,868 roads · 13 regions |
+| **Same quarter after pre-prune (what actually ships)** | **28.3 GB** (27.9 survey + 0.4 projects) |
 | (the repo's partially-pruned working copy, for contrast) | 45.3 GB · 1,591 roads — **not shippable**, see above |
-| **Minimum free disk per machine** | **~160 GB** (app + full quarter + update headroom) |
+| **Minimum free disk per machine** | **~50 GB** (9 GB app + 28 GB data + working headroom) |
 | Frontend-only update (compressed) | ~7 MB |
 | Whole release minus the interpreter (compressed) | ~0.7 GB |
 
