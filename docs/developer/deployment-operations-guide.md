@@ -242,9 +242,22 @@ It will:
 Then launch from the **Desktop shortcut**. First start is slow (GIS warmup — up to a
 couple of minutes). A browser opens to the app.
 
-**Smoke test after install:** app opens · Create Project lists the survey folders · you can
-create a project · **run autocode** (the most important check — it's the torch/YOLO path) ·
-GIS layers render.
+### First launch on each machine (one-time, ~5 seconds of clicking)
+The seeded projects ship in the shared project area; PSAT shows a profile's *own* projects,
+so they need pulling in once:
+
+1. On the landing page, **create a profile** (name + PIN). One user per machine.
+2. Land on the Projects page. A banner reads *"Shared projects are still outside this
+   profile — 3,730 projects are still in the shared project area."* Click **Move Shared
+   Projects**.
+3. All ~3,730 projects appear (measured: 2.8 s — it's a same-volume move, not a copy).
+
+That is the whole integration step. It is one obvious click, not a hidden command. Images
+resolve immediately because they live in the shared `in/` and are not moved.
+
+**Smoke test after install:** app opens · the 3,730 seeded projects appear after the one-click
+move · open one and confirm segments + images show · **run autocode on a fresh road** (the
+most important check — it's the torch/YOLO path) · GIS layers render.
 
 ---
 
@@ -349,6 +362,7 @@ Set by the launcher; useful for manual runs and debugging.
 |---|---|
 | "PSAT needs X GB, drive has Y GB free" | Genuinely out of space. Free space or pick another data folder. |
 | Create Project shows no folders | Survey data isn't in `<data>\in\`. Check `data_dir.txt` for where data actually lives. |
+| Seeded projects don't appear after install | The one-time move wasn't done. On the Projects page click **Move Shared Projects** (create a profile first if needed). |
 | "module not found" errors (`distutils`, `pywin32`, `urllib`, …) on a fresh install | **Truncated drive copy.** Re-copy and run `verify_drive.ps1` before reusing the drive. Not a code bug. |
 | Wrong / much lower segment counts on import | The source folder was already pruned by a prior project. Use un-pruned folders. |
 | App ignores the chosen data folder | A corrupt `data_dir.txt` (e.g. a BOM). Current code tolerates a BOM; if hand-edited, save as plain UTF-8. |
