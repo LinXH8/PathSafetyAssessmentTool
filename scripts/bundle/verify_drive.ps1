@@ -104,18 +104,24 @@ if (Test-Path $py) {
     Bad "python.exe not on the drive - cannot run the real test"
 }
 
-Head "Seed data"
-$zip = Join-Path $Drive "seed-data.zip"
-if (Test-Path $zip) {
-    try {
-        Add-Type -AssemblyName System.IO.Compression.FileSystem
-        $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
-        $n = $z.Entries.Count
-        $z.Dispose()
-        Ok "seed-data.zip opens ($n entries)"
-    } catch { Bad "seed-data.zip is corrupt: $($_.Exception.Message)" }
+Head "Seed data + projects"
+$seedIn   = Join-Path $Drive "seed\in"
+$seedData = Join-Path $Drive "seed\data"
+if (Test-Path $seedIn) {
+    $roads = (Get-ChildItem -Directory $seedIn -ErrorAction SilentlyContinue).Count
+    if ($roads -gt 0) { Ok "seed\in present ($roads road folders)" } else { Bad "seed\in is empty" }
+
+    # A pruned in/ WITHOUT its projects is the broken state - flag loudly.
+    if (Test-Path $seedData) {
+        $projects = (Get-ChildItem -Directory $seedData -ErrorAction SilentlyContinue).Count
+        if ($projects -gt 0) { Ok "seed\data present ($projects projects)" } else { Bad "seed\data is empty" }
+    } else {
+        Bad "seed\data (projects) MISSING - pruned frames without projects give wrong segment counts"
+    }
+} elseif (Test-Path (Join-Path $Drive "seed-data.zip")) {
+    Write-Host "  (legacy seed-data.zip layout - in/ only, no projects)"
 } else {
-    Write-Host "  (no seed-data.zip - PSAT will install with no survey folders)"
+    Write-Host "  (no seed data - PSAT will install with no survey folders)"
 }
 
 Write-Host ""

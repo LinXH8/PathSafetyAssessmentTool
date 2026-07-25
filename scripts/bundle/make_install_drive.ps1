@@ -36,8 +36,11 @@
   Built bundle produced by build_bundle.ps1.
 
 .PARAMETER SeedData
-  Flattened survey `in/` directory produced by flatten_survey_data.ps1.
-  Omit to build a drive with no survey data.
+  Seed DATA ROOT produced by flatten_survey_data.ps1 + preprune_seed_data.ps1 —
+  the directory that contains `in/` (pruned survey frames) and `data/` (the
+  pre-created projects). BOTH are shipped: a pruned `in/` folder without its
+  project is broken (a new project made from it would resample thinned frames and
+  undercount). Omit to build a drive with no survey data.
 
 .EXAMPLE
   pwsh scripts\bundle\make_install_drive.ps1 -Drive F:\ `
@@ -68,10 +71,24 @@ $Drive = $Drive.TrimEnd('\') + '\'
 if (-not (Test-Path $Drive))  { Die "drive not found: $Drive" }
 if (-not (Test-Path (Join-Path $Bundle "PSAT.bat"))) { Die "not a built bundle: $Bundle" }
 
+# ── Resolve the seed sub-folders (in/ + data/) ───────────────────────────────
+$seedIn = ""; $seedProjects = ""
+if ($SeedData -and -not $SkipSeed) {
+    if (-not (Test-Path $SeedData)) { Die "seed data root not found: $SeedData" }
+    $seedIn = Join-Path $SeedData "in"
+    if (-not (Test-Path $seedIn)) { Die "no in/ under seed root: $SeedData" }
+    $seedProjects = Join-Path $SeedData "data"   # the pre-created projects
+    if (-not (Test-Path $seedProjects)) {
+        Write-Host "    WARNING: no data/ (projects) under $SeedData." -ForegroundColor Yellow
+        Write-Host "    Shipping in/ WITHOUT projects gives wrong segment counts. Run preprune_seed_data.ps1 first." -ForegroundColor Yellow
+        $seedProjects = ""
+    }
+}
+
 # ── Space check ──────────────────────────────────────────────────────────────
 Head "Planning"
 $bundleBytes = Size $Bundle
-$seedBytes   = if ($SeedData -and -not $SkipSeed) { Size $SeedData } else { 0 }
+$seedBytes   = if ($seedIn) { (Size $seedIn) + (Size $seedProjects) } else { 0 }
 $needed      = ($bundleBytes + $seedBytes) * 1.02
 
 $free = (Get-PSDrive -Name $Drive.TrimEnd(':\').Substring(0,1)).Free
@@ -99,13 +116,20 @@ foreach ($f in @("Install PSAT.bat", "install_psat.ps1",
     else { Write-Host "    WARNING: missing $f" -ForegroundColor Yellow }
 }
 
-# ── Survey data ──────────────────────────────────────────────────────────────
-if ($SeedData -and -not $SkipSeed) {
-    if (-not (Test-Path $SeedData)) { Die "seed data not found: $SeedData" }
-    Head "Copying survey data (this is the long part)"
-    Info ("{0:N2} GB from {1}" -f ($seedBytes / 1GB), $SeedData)
-    $null = robocopy $SeedData (Join-Path $Drive "seed-data") /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1
-    if ($LASTEXITCODE -ge 8) { Die "seed data copy failed (robocopy $LASTEXITCODE)" }
+# ── Survey data + projects ───────────────────────────────────────────────────
+# Ships into <drive>\seed\{in,data} so the installer can lay both down under the
+# data root. Copied loose (not zipped): the pruned set is small enough, and loose
+# lets robocopy resume an interrupted copy.
+if ($seedIn) {
+    Head "Copying survey data + projects (the long part)"
+    Info ("in/   {0:N2} GB" -f ((Size $seedIn) / 1GB))
+    $null = robocopy $seedIn (Join-Path $Drive "seed\in") /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1
+    if ($LASTEXITCODE -ge 8) { Die "seed in/ copy failed (robocopy $LASTEXITCODE)" }
+    if ($seedProjects) {
+        Info ("data/ {0:N2} GB (projects)" -f ((Size $seedProjects) / 1GB))
+        $null = robocopy $seedProjects (Join-Path $Drive "seed\data") /E /NFL /NDL /NJH /NJS /NP /R:1 /W:1
+        if ($LASTEXITCODE -ge 8) { Die "seed data/ copy failed (robocopy $LASTEXITCODE)" }
+    }
     Info "done"
 } else {
     Head "Survey data"
@@ -120,17 +144,23 @@ $bundleOk = (Size (Join-Path $Drive "PSAT")) -eq $bundleBytes
 Info ("bundle bytes match : {0}" -f $bundleOk)
 if (-not $bundleOk) { Die "bundle size mismatch after copy" }
 
-if ($seedBytes -gt 0) {
-    $seedOk = (Size (Join-Path $Drive "seed-data")) -eq $seedBytes
-    Info ("seed bytes match   : {0}" -f $seedOk)
-    if (-not $seedOk) { Die "seed data size mismatch after copy" }
-    Info ("road folders       : {0:N0}" -f (Get-ChildItem -Directory (Join-Path $Drive "seed-data") -ErrorAction SilentlyContinue).Count)
+if ($seedIn) {
+    $inOk = (Size (Join-Path $Drive "seed\in")) -eq (Size $seedIn)
+    Info ("seed in/ bytes match : {0}" -f $inOk)
+    if (-not $inOk) { Die "seed in/ size mismatch after copy" }
+    Info ("road folders         : {0:N0}" -f (Get-ChildItem -Directory (Join-Path $Drive "seed\in") -ErrorAction SilentlyContinue).Count)
+    if ($seedProjects) {
+        $dataOk = (Size (Join-Path $Drive "seed\data")) -eq (Size $seedProjects)
+        Info ("seed data/ bytes match: {0}" -f $dataOk)
+        if (-not $dataOk) { Die "seed data/ size mismatch after copy" }
+        Info ("projects             : {0:N0}" -f (Get-ChildItem -Directory (Join-Path $Drive "seed\data") -ErrorAction SilentlyContinue).Count)
+    }
 }
 
 Write-Host "`n=== Done ===" -ForegroundColor Green
 Info ("elapsed: {0:N1} min" -f ((Get-Date) - $started).TotalMinutes)
 Write-Host ""
 Write-Host "Now run the full check (it RUNS the copied interpreter):" -ForegroundColor Cyan
-Write-Host "    pwsh $Drive`verify_drive.ps1 -Drive $Drive -Source $Bundle\.." -ForegroundColor Cyan
+Write-Host ("    pwsh {0} -Drive {1}" -f (Join-Path $Drive "verify_drive.ps1"), $Drive) -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Then on each machine: double-click 'Install PSAT.bat'" -ForegroundColor Cyan

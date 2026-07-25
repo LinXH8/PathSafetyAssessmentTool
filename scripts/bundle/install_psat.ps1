@@ -76,13 +76,22 @@ if (-not $DataRoot) {
 }
 
 # ── Seed data (optional) ─────────────────────────────────────────────────────
-$seedZip = Join-Path $Source "seed-data.zip"
-$seedDir = Join-Path $Source "seed-data"
+# Current model: <drive>\seed\{in,data} — survey frames AND their pre-created
+# projects. Both must be laid down: a pruned in/ folder without its project would
+# resample thinned frames and undercount. Legacy seed-data.zip / seed-data\
+# (in/ only) is still honoured for older drives.
+$seedRoot     = Join-Path $Source "seed"
+$seedIn       = Join-Path $seedRoot "in"
+$seedProjects = Join-Path $seedRoot "data"
+$seedZip      = Join-Path $Source "seed-data.zip"      # legacy, in/ only
+$seedDir      = Join-Path $Source "seed-data"          # legacy, in/ only
 $seedBytes = 0
-if (Test-Path $seedZip) {
+if (Test-Path $seedIn) {
+    $seedBytes = (Get-ChildItem -Recurse -File $seedRoot -ErrorAction SilentlyContinue | Measure-Object -Sum Length).Sum
+} elseif (Test-Path $seedZip) {
     $seedBytes = (Get-Item $seedZip).Length * 3   # rough decompressed estimate
 } elseif (Test-Path $seedDir) {
-    $seedBytes = (Get-ChildItem -Recurse -File $seedDir | Measure-Object -Sum Length).Sum
+    $seedBytes = (Get-ChildItem -Recurse -File $seedDir -ErrorAction SilentlyContinue | Measure-Object -Sum Length).Sum
 }
 
 # ── Disk preflight ───────────────────────────────────────────────────────────
@@ -120,21 +129,39 @@ New-Item -ItemType Directory -Force -Path $DataRoot | Out-Null
 # BOM with the latter, which corrupts the path when the launcher reads it.
 [System.IO.File]::WriteAllText((Join-Path $InstallRoot "data_dir.txt"), $DataRoot)
 
-# ── Seed survey data ─────────────────────────────────────────────────────────
-if ($seedBytes -gt 0) {
-    Head "Installing survey data"
+# ── Seed survey data + projects ──────────────────────────────────────────────
+if (Test-Path $seedIn) {
+    Head "Installing survey data + projects"
     $inDir = Join-Path $DataRoot "in"
     New-Item -ItemType Directory -Force -Path $inDir | Out-Null
-    if (Test-Path $seedZip) {
-        # Preferred: one archive. Hundreds of thousands of loose files copy
-        # extremely slowly from USB.
-        Say "  extracting seed-data.zip (this takes a while) ..."
-        Expand-Archive -Path $seedZip -DestinationPath $inDir -Force
-    } else {
-        Copy-Tree $seedDir $inDir "survey data"
-    }
+    Copy-Tree $seedIn $inDir "survey data (in/)"
     $n = (Get-ChildItem -Directory $inDir -ErrorAction SilentlyContinue).Count
     Say "  $n survey folders installed"
+
+    if (Test-Path $seedProjects) {
+        # The pre-created projects. They ship in the shared (legacy) data\ root;
+        # the user pulls them into their profile on first launch with the
+        # "Move Shared Projects" button (a fast same-volume move).
+        $dataDir = Join-Path $DataRoot "data"
+        New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
+        Copy-Tree $seedProjects $dataDir "projects (data/)"
+        $p = (Get-ChildItem -Directory $dataDir -ErrorAction SilentlyContinue).Count
+        Say "  $p projects installed (pull them in via 'Move Shared Projects' on first launch)"
+    } else {
+        Say "  WARNING: survey frames present but no projects - segment counts will be wrong."
+    }
+} elseif (Test-Path $seedZip) {
+    Head "Installing survey data (legacy zip, no projects)"
+    $inDir = Join-Path $DataRoot "in"
+    New-Item -ItemType Directory -Force -Path $inDir | Out-Null
+    Say "  extracting seed-data.zip ..."
+    Expand-Archive -Path $seedZip -DestinationPath $inDir -Force
+    Say "  $((Get-ChildItem -Directory $inDir -ErrorAction SilentlyContinue).Count) survey folders installed"
+} elseif (Test-Path $seedDir) {
+    Head "Installing survey data (legacy folder, no projects)"
+    $inDir = Join-Path $DataRoot "in"
+    New-Item -ItemType Directory -Force -Path $inDir | Out-Null
+    Copy-Tree $seedDir $inDir "survey data"
 } else {
     Head "Survey data"
     Say "  none found on this drive - PSAT will start with no projects."
