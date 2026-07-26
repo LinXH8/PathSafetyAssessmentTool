@@ -17,7 +17,10 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$Drive,
-    [string]$Source = "D:\PSAT-USB"
+    # Optional: a staging folder to compare file count/size against. Leave unset for
+    # the normal check — the real test is booting the copied interpreter, which runs
+    # regardless. (A stale default here once produced a misleading FAIL.)
+    [string]$Source = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -65,7 +68,7 @@ function Payload($root) {
     }
     [pscustomobject]@{ Count = $items.Count; Bytes = ($items | Measure-Object -Sum Length).Sum }
 }
-if (Test-Path $Source) {
+if ($Source -and (Test-Path $Source)) {
     $s = Payload $Source
     $d = Payload $Drive
     "  source : {0,7:N0} files  {1,6:N2} GB" -f $s.Count, ($s.Bytes / 1GB) | Write-Host
@@ -76,7 +79,7 @@ if (Test-Path $Source) {
     if ($d.Bytes -eq $s.Bytes) { Ok "total size matches exactly" }
     else { Bad ("size differs by {0:N1} MB" -f (($s.Bytes - $d.Bytes) / 1MB)) }
 } else {
-    Write-Host "  (source $Source not available; skipping comparison)"
+    Write-Host "  (no -Source given; skipping file-count comparison — the interpreter boot below is the real test)"
 }
 
 Head "Copied interpreter actually runs"
