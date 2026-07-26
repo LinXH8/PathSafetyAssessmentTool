@@ -24,7 +24,10 @@
 param(
     [string]$InstallRoot = "$env:LOCALAPPDATA\Programs\PSAT",
     [string]$DataRoot    = "",
-    [switch]$NoPrompt
+    [switch]$NoPrompt,
+    # Wipe existing user data (projects, survey images, profiles) before installing,
+    # for a genuinely fresh start. Destructive; prompts unless -NoPrompt is set.
+    [switch]$CleanData
 )
 
 $ErrorActionPreference = "Stop"
@@ -110,6 +113,40 @@ foreach ($pair in @(@($InstallRoot, $needApp, "application"), @($DataRoot, $need
         Die ("Not enough free space for the $label.`n" +
              "  Needs {0:N1} GB, but the drive holding`n  $target`n  has only {1:N1} GB free.`n`n" +
              "  Free up space, or re-run and choose a different folder." -f ($need/1GB), ($free/1GB))
+    }
+}
+
+# ── Optional: wipe existing data for a fresh start ───────────────────────────
+# Removes projects, survey images (in/) and profiles under the data root. Kept
+# separate from the app install because it destroys user work - so it is opt-in,
+# and confirmed unless -NoPrompt.
+$existingData = @("data", "in", "profiles", "Generated Reports") |
+    ForEach-Object { Join-Path $DataRoot $_ } | Where-Object { Test-Path $_ }
+
+if ($existingData) {
+    $wipe = $CleanData
+    if (-not $CleanData -and -not $NoPrompt) {
+        Head "Existing PSAT data found"
+        Say "  $DataRoot"
+        Say "  It contains projects / survey images / profiles from a previous install."
+        Say ""
+        Say "  [K] Keep it  (default - a normal reinstall)"
+        Say "  [W] Wipe it  (fresh start - deletes all projects and survey data)"
+        $ans = Read-Host "  Keep or Wipe? (K/W)"
+        $wipe = ($ans -match '^(w|wipe)$')
+    }
+    if ($wipe) {
+        if (-not $NoPrompt) {
+            $typed = Read-Host "  Type WIPE to permanently delete all PSAT data"
+            if ($typed -ne "WIPE") { Say "  Not confirmed - keeping existing data."; $wipe = $false }
+        }
+        if ($wipe) {
+            Head "Wiping existing data"
+            foreach ($p in $existingData) {
+                try { Remove-Item -Recurse -Force $p -ErrorAction Stop; Say "  removed $p" }
+                catch { Say "  could not remove $p ($($_.Exception.Message))" }
+            }
+        }
     }
 }
 

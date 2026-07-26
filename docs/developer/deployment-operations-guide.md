@@ -233,11 +233,13 @@ Double-click **`Install PSAT.bat`**. No admin required.
 
 It will:
 1. Ask where to store data (press Enter for `%LOCALAPPDATA%\PSAT\data`, or type a path).
-   Choose a non-system drive if the machine's `C:` is tight — 45 GB of survey data on a
-   small system SSD is a bad time.
-2. Preflight free disk and **refuse with a clear number** rather than half-filling a drive.
-3. Copy the app, extract `seed-data.zip` into `<data>\in\`, and create Desktop + Start
-   Menu shortcuts.
+   Choose a non-system drive if the machine's `C:` is tight.
+2. If PSAT data already exists there, ask **Keep or Wipe**. Keep = normal reinstall (data
+   preserved). Wipe = fresh start — deletes all projects, survey images and profiles after
+   you type `WIPE`. Scripted equivalent: `-CleanData`.
+3. Preflight free disk and **refuse with a clear number** rather than half-filling a drive.
+4. Copy the app + survey data + projects (`seed\in` → `<data>\in`, `seed\data` → `<data>\data`),
+   and create Desktop + Start Menu shortcuts.
 
 Then launch from the **Desktop shortcut**. First start is slow (GIS warmup — up to a
 couple of minutes). A browser opens to the app.
