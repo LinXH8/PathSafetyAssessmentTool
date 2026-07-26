@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import logging
+
 from flask import jsonify, request
 
 from . import bp
 from app.services import profile_store
 from app.services import telemetry_store
 
+logger = logging.getLogger(__name__)
 
 _CLIENT_ACTIVITY_EVENT_TYPES = {"page_view"}
 
@@ -82,6 +85,20 @@ def login_profile():
         return jsonify({"error": str(exc)}), 401
 
     _record_profile_event("profile_login", profile)
+
+    # Auto-adopt any projects sitting in the legacy (pre-profile) area into this
+    # profile. In deployment those are the pre-created, pre-pruned road projects
+    # that ship in data/ — the ONLY reason a project ever exists outside a profile
+    # now. Bringing them in on login replaces the old user-facing "Move Shared
+    # Projects" banner: the seeded roads simply appear, no click. A fast
+    # same-volume move (~3s for the whole quarter); never allowed to break login.
+    try:
+        result = profile_store.move_legacy_projects_to_profile(str(profile.get("id") or ""))
+        if result.get("moved"):
+            logger.info("Adopted %d legacy project(s) into profile %s on login",
+                        len(result["moved"]), profile.get("id"))
+    except Exception:
+        logger.exception("Auto-adopt of legacy projects failed on login (non-fatal)")
 
     _invalidate_project_context()
     return jsonify({"active_profile": profile, "overview": profile_store.get_overview()})

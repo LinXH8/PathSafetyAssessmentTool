@@ -260,12 +260,12 @@ def apply_pending_update() -> bool:
         fail("The update could not be installed. PSAT has been restored to the "
              "previous version and will start normally next time.")
 
-    # 3. record what is now installed, so the updater stops offering it
-    state = _read_json(INSTALLED_STATE, {})
-    for name, spec in plan["components"].items():
-        state[name] = spec.get("digest")
+    # 3. Drop the updater's digest cache. It computes each component's identity
+    #    from the files on disk, so it will simply re-hash the now-updated files on
+    #    its next check and see they match the new version. Deleting the stale cache
+    #    (keyed by the OLD files' fingerprints) just makes that recompute clean.
     try:
-        INSTALLED_STATE.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+        INSTALLED_STATE.unlink(missing_ok=True)
     except OSError:
         pass
 
@@ -288,8 +288,9 @@ def rollback_after_failed_start(touched_marker: bool) -> None:
         except OSError as exc:
             print(f"  could not restore {saved.name}: {exc}")
     shutil.rmtree(BACKUP_DIR, ignore_errors=True)
-    # Drop the recorded digests so the updater offers the update again rather than
-    # believing a version that never actually ran is installed.
+    # Drop the digest cache: with the previous version's files restored, the updater
+    # re-hashes them on its next check, sees they differ from the new manifest, and
+    # offers the update again — exactly what we want after a failed attempt.
     try:
         INSTALLED_STATE.unlink(missing_ok=True)
     except OSError:

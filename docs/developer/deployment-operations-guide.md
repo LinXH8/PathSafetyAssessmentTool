@@ -244,22 +244,16 @@ It will:
 Then launch from the **Desktop shortcut**. First start is slow (GIS warmup — up to a
 couple of minutes). A browser opens to the app.
 
-### First launch on each machine (one-time, ~5 seconds of clicking)
-The seeded projects ship in the shared project area; PSAT shows a profile's *own* projects,
-so they need pulling in once:
-
+### First launch on each machine
 1. On the landing page, **create a profile** (name + PIN). One user per machine.
-2. Land on the Projects page. A banner reads *"Shared projects are still outside this
-   profile — 3,730 projects are still in the shared project area."* Click **Move Shared
-   Projects**.
-3. All ~3,730 projects appear (measured: 2.8 s — it's a same-volume move, not a copy).
+2. That's it — the ~3,730 pre-seeded road projects are **adopted into the profile
+   automatically on login** (a same-volume move, ~3 s for the whole quarter). No banner,
+   no click. Images resolve immediately because they live in the shared `in/` and are not
+   moved.
 
-That is the whole integration step. It is one obvious click, not a hidden command. Images
-resolve immediately because they live in the shared `in/` and are not moved.
-
-**Smoke test after install:** app opens · the 3,730 seeded projects appear after the one-click
-move · open one and confirm segments + images show · **run autocode on a fresh road** (the
-most important check — it's the torch/YOLO path) · GIS layers render.
+**Smoke test after install:** app opens · the seeded projects are listed · open one and
+confirm segments + images show · **run autocode on a fresh road** (the most important check
+— it's the torch/YOLO path) · GIS layers render.
 
 ---
 

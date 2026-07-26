@@ -88,10 +88,6 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
     setOpenEdit,
     applyEditUpdates,
     selectedProjects,
-    activeProfile,
-    legacyProjects,
-    migratingLegacyProjects,
-    moveLegacyProjects,
   } = vm;
 
   const noSelection = selected.size === 0;
@@ -163,36 +159,10 @@ export default function ProjectsLayoutV2(vm: ProjectsViewModel) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "2rem", boxSizing: "border-box", height: "100vh", overflow: "hidden" }}>
-      {activeProfile && legacyProjects.length > 0 && (
-        <div style={{ ...card, padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-          <div>
-            <div style={{ ...labelStyle }}>Shared projects are still outside this profile</div>
-            <div style={captionStyle}>
-              {legacyProjects.length} existing project{legacyProjects.length === 1 ? " is" : "s are"} still in the shared project area.
-              Move them into {activeProfile.name} so they appear in this profile's project list.
-            </div>
-          </div>
-          <button
-            onClick={() => void moveLegacyProjects()}
-            disabled={migratingLegacyProjects}
-            style={{
-              height: "2.5rem",
-              padding: "0 1rem",
-              background: COLOR.teal,
-              color: COLOR.white,
-              border: "none",
-              borderRadius: "0.375rem",
-              fontFamily: FONT,
-              fontWeight: 700,
-              fontSize: "1rem",
-              cursor: migratingLegacyProjects ? "not-allowed" : "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {migratingLegacyProjects ? "Moving…" : "Move Shared Projects"}
-          </button>
-        </div>
-      )}
+      {/* The "shared/legacy projects" migration banner was removed: projects are
+          always created inside a profile now, and the one deliberate exception
+          (pre-seeded, pre-pruned road projects that ship in the legacy area) is
+          adopted into the profile automatically on login. Nothing to prompt for. */}
 
       {/* ── Search Area ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flexShrink: 0 }}>

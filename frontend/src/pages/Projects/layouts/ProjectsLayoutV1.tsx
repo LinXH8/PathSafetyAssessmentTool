@@ -11,10 +11,6 @@ import type { ProjectsViewModel } from "./ProjectsViewModel";
  */
 export default function ProjectsLayoutV1(vm: ProjectsViewModel) {
   const {
-    activeProfile,
-    legacyProjects,
-    migratingLegacyProjects,
-    moveLegacyProjects,
     nameQuery,
     setNameQuery,
     tagFilters,
@@ -77,25 +73,8 @@ export default function ProjectsLayoutV1(vm: ProjectsViewModel) {
 
   return (
     <div className="projects-root">
-      {activeProfile && legacyProjects.length > 0 && (
-        <div className="profile-migration-banner">
-          <div>
-            <div className="profile-migration-title">Shared projects are still outside this profile</div>
-            <div className="profile-migration-copy">
-              {legacyProjects.length} existing project{legacyProjects.length === 1 ? " is" : "s are"} still in the shared project area.
-              Move them into {activeProfile.name} so they appear in this profile's project list.
-            </div>
-          </div>
-          <Button
-            colorPalette="teal"
-            variant="solid"
-            loading={migratingLegacyProjects}
-            onClick={() => void moveLegacyProjects()}
-          >
-            Move Shared Projects
-          </Button>
-        </div>
-      )}
+      {/* Legacy "shared projects" migration banner removed — projects live in a
+          profile now, and pre-seeded road projects are auto-adopted on login. */}
 
       <div className="search-panel">
         <div className="search-row">

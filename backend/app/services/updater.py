@@ -126,21 +126,128 @@ def fetch_manifest(manifest_url: str = DEFAULT_MANIFEST_URL) -> dict:
     return data
 
 
+# ── Component identity ────────────────────────────────────────────────────────
+# A component's identity is a hash of its FILE TREE (sorted relative-path + each
+# file's sha256), NOT a hash of the download zip. This is the whole fix for the
+# "fresh install re-downloads everything" bug: a tree hash can be computed from
+# the files a machine ALREADY HAS, so a machine can tell what version each part is
+# on without any baseline file having been shipped or an update ever applied. The
+# build (make_release.py) imports these same functions from the bundle it packages
+# so the two sides can never compute a digest differently.
+
+_BACKEND_EXCLUDE_TOP = {"models", "shapefiles"}
+
+
+def component_source(name: str, base: Path) -> tuple[Path, set[str]]:
+    """Map a component name to (directory, excluded top-level names) under `base`.
+
+    `base` is the bundle root at build time and the install root at runtime, so the
+    same mapping serves both. The backend component excludes models/ and shapefiles/
+    because those ship as their own components.
+    """
+    if name == "webui":
+        return base / "webui", set()
+    if name == "backend":
+        return base / "backend", set(_BACKEND_EXCLUDE_TOP)
+    if name == "models":
+        return base / "backend" / "models", set()
+    if name == "python":
+        return base / "python", set()
+    if name.startswith("shp-"):
+        return base / "backend" / "shapefiles" / name[len("shp-"):], set()
+    return base / "__unknown_component__" / name, set()  # -> empty tree -> "changed"
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for block in iter(lambda: handle.read(CHUNK), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _iter_component_files(root: Path, exclude_top: set[str]):
+    if not root.is_dir():
+        return
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(root)
+        if rel.parts and rel.parts[0] in exclude_top:
+            continue
+        yield path, rel
+
+
+def component_tree_digest(root: Path, exclude_top: set[str] | None = None) -> str:
+    """sha256 over the sorted (relative-path, file-sha256) list of a directory."""
+    exclude_top = exclude_top or set()
+    entries = sorted(
+        (rel.as_posix(), _sha256_file(path))
+        for path, rel in _iter_component_files(root, exclude_top)
+    )
+    outer = hashlib.sha256()
+    for rel, digest in entries:
+        outer.update(rel.encode("utf-8"))
+        outer.update(b"\0")
+        outer.update(digest.encode("utf-8"))
+        outer.update(b"\n")
+    return outer.hexdigest()
+
+
+def _component_fingerprint(root: Path, exclude_top: set[str]) -> list:
+    """A cheap signature (file count, total bytes, newest mtime) used to skip the
+    expensive content hash when nothing has changed since it was last computed."""
+    count = 0
+    total = 0
+    latest = 0
+    for path, _rel in _iter_component_files(root, exclude_top):
+        try:
+            st = path.stat()
+        except OSError:
+            continue
+        count += 1
+        total += st.st_size
+        latest = max(latest, st.st_mtime_ns)
+    return [count, total, latest]
+
+
+def local_component_digest(name: str, cache: dict | None = None) -> str:
+    """Tree digest of the component as INSTALLED, using installed.json as a cache.
+
+    installed.json here is purely a cache: {component: {"digest": ..., "fp": [...]}}
+    keyed by the cheap fingerprint. A cache hit avoids re-hashing gigabytes on every
+    check; a miss (first check, or files changed by an update) recomputes and
+    updates the cache. It is never required to exist and never trusted blindly.
+    """
+    root, exclude = component_source(name, install_root())
+    fp = _component_fingerprint(root, exclude)
+    store = read_installed_state() if cache is None else cache
+    entry = store.get(name)
+    if isinstance(entry, dict) and entry.get("fp") == fp and entry.get("digest"):
+        return entry["digest"]
+    digest = component_tree_digest(root, exclude)
+    store[name] = {"digest": digest, "fp": fp}
+    if cache is None:
+        write_installed_state(store)
+    return digest
+
+
 def diff_components(manifest: dict, installed: dict | None = None) -> list[str]:
-    """Component names whose content differs from what is installed."""
-    installed = read_installed_state() if installed is None else installed
+    """Component names whose installed file tree differs from the manifest."""
+    cache = read_installed_state() if installed is None else installed
     changed = []
     for name, spec in (manifest.get("components") or {}).items():
-        want = _component_digest(spec)
-        if installed.get(name) != want:
+        want = spec.get("digest")
+        if not want:
+            # Manifest built before tree digests existed; fall back to "changed"
+            # rather than silently skipping (won't happen once make_release is updated).
             changed.append(name)
+            continue
+        if local_component_digest(name, cache) != want:
+            changed.append(name)
+    if installed is None:
+        write_installed_state(cache)  # persist any freshly computed cache entries
     return sorted(changed)
-
-
-def _component_digest(spec: dict) -> str:
-    """Stable identity for a component: hash of its parts' hashes."""
-    joined = "|".join(part.get("sha256", "") for part in spec.get("parts", []))
-    return hashlib.sha256(joined.encode("utf-8")).hexdigest()
 
 
 def check_for_update(manifest_url: str = DEFAULT_MANIFEST_URL) -> UpdateStatus:
@@ -242,7 +349,7 @@ def download_update(manifest_url: str = DEFAULT_MANIFEST_URL,
                     progress(name, index + 1, len(parts))
             plan["components"][name] = {
                 "parts": local_parts,
-                "digest": _component_digest(spec),
+                "digest": spec.get("digest"),  # the manifest's tree digest
             }
     except (urllib.error.URLError, OSError, ValueError) as exc:
         shutil.rmtree(pending, ignore_errors=True)

@@ -110,6 +110,13 @@ def main() -> int:
         print(f"ERROR: {bundle} does not look like a built bundle")
         return 1
 
+    # Import the component-identity functions from the bundle we are packaging, so
+    # the digest written into the manifest is computed by the EXACT code the client
+    # will use to hash its own installed files. If these two ever diverged, every
+    # update would look like every component changed.
+    sys.path.insert(0, str(bundle / "backend"))
+    from app.services.updater import component_source, component_tree_digest
+
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -159,6 +166,13 @@ def main() -> int:
     if shp_root.is_dir():
         for category in sorted(p for p in shp_root.iterdir() if p.is_dir()):
             add(f"shp-{category.name}", category, f"backend/shapefiles/{category.name}")
+
+    # Tree digest per component, from the bundle's own files, using the client's
+    # code. This is the identity the client compares against what it has installed.
+    print("Computing component digests ...", flush=True)
+    for name in components:
+        src, exclude = component_source(name, bundle)
+        components[name]["digest"] = component_tree_digest(src, exclude)
 
     manifest = {
         "schema": 1,

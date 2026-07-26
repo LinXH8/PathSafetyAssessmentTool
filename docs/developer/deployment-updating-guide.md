@@ -203,21 +203,16 @@ undoes itself.
 
 ---
 
-## Known limitation to fix before the FIRST real update
+## How a machine knows what it already has (no action needed)
 
-There is one gap the original author flagged: a freshly-installed machine does not yet have
-a record of which version it's on, so its **first** update check could offer to re-download
-the whole app instead of just the change. Before publishing your first real update:
+A machine works out which version each component is on by **hashing its own installed
+files** and comparing that to the manifest. It needs no baseline file and no prior update
+to have happened — a brand-new install correctly sees "nothing to download" for its own
+version, and only downloads the parts that genuinely differ in a newer release. (This
+replaced an earlier design that could have made a fresh machine re-download everything.)
 
-1. The baseline-seeding fix must be in place (ask the original author, or whoever maintains
-   the code — it is a small, known change).
-2. Publish a **`v1.0` release first** (built from the exact version already on the machines),
-   so every machine registers itself as "up to date."
-3. Then publish `v1.1` as your first real change.
-
-After that first pair, updates just work as described above. **Do not publish any release
-until this baseline step has been done once** — otherwise machines may try to download
-tens of gigabytes.
+You still do not have to do anything special for the first release. Just follow the steps
+above.
 
 ---
 
@@ -227,7 +222,7 @@ tens of gigabytes.
 |---|---|
 | Machines don't see the update | Did you publish the release (not leave it a draft)? Is `manifest.json` attached? Is the version number higher than before? |
 | Update popup appears but download fails | A file is missing from the release, or the wrong files were uploaded. Re-run `make_release.py` and re-upload the **whole** folder. |
-| Popup offers a huge (many-GB) download | The baseline step above was skipped. Stop, and sort the baseline before continuing. |
+| Popup offers a huge (many-GB) download for a small change | The manifest and the files don't match — almost always because something in the release folder was edited or hand-zipped. Re-run `make_release.py` cleanly and re-upload the whole folder. |
 | Build step errors | Do not proceed to publish. The error must be fixed first. Ask the maintainer. |
 
 **Golden rule again:** change code → two commands → upload the produced folder. Never make
