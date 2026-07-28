@@ -190,8 +190,25 @@ def prune_source_folder(folder_name: str) -> dict:
     if not _path_is_within(source_dir, in_root) or not source_dir.is_dir():
         return result
 
-    referenced = _collect_referenced_filenames(pm, folder_name)
     image_files = _iter_source_image_files(source_dir)
+
+    # Never prune a folder that has ALREADY been pruned once. After the first prune
+    # the folder holds only its segment-anchor frames (~1 per 10-15 m) — there is no
+    # dense "dead weight" left to reclaim, so a second pass can only destroy frames
+    # some project still relies on. This matters most on deployed machines: the
+    # shipped seed folders arrive pre-pruned (summary.pruned == true), and pruning
+    # here is profile-scoped (_collect_referenced_filenames sees only the ACTIVE
+    # profile's projects). A second profile creating a project would otherwise delete
+    # anchors protected only by the first profile's (moved-away) shipped project. The
+    # authoritative pre-prune segment_count is already preserved in the summary, so
+    # skipping is safe and lossless.
+    meta = _load_source_folder_metadata(source_dir)
+    if meta and isinstance(meta.get("summary"), dict) and meta["summary"].get("pruned"):
+        result["kept"] = len(image_files)
+        result["skipped_already_pruned"] = True
+        return result
+
+    referenced = _collect_referenced_filenames(pm, folder_name)
 
     # Ensure an authoritative folder summary (segment_count / distance) computed from
     # the FULL frame set is cached before we decimate the folder. Pruning throws away
