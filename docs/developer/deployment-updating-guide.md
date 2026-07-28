@@ -121,6 +121,20 @@ python scripts\bundle\make_release.py --bundle D:\PSAT-build\PSAT `
 This creates `D:\PSAT-build\release-1.1\` full of `.zip` files and one `manifest.json`.
 **That folder is your finished update. Do not touch or rename anything inside it.**
 
+> **On a Mac (or Linux)?** You can ship a **backend or frontend** change without a Windows
+> machine — those parts of the app are the same on every OS. Use the `.sh` build script
+> instead of the `.ps1`, then the **same** `make_release.py` command:
+> ```bash
+> scripts/bundle/build_bundle.sh --out-dir temp/PSAT-build --no-python --no-webui --skip-gis
+> python3 scripts/bundle/make_release.py --bundle temp/PSAT-build/PSAT \
+>     --out temp/release-1.1 --version 1.1 --notes "Fixed the thing" --skip-python
+> ```
+> (`--no-webui` for a backend-only change; drop it and let the script build the frontend for
+> a UI change.) The one thing a Mac **cannot** build for the Windows machines is a
+> **dependency change** (a new Python package) — that needs the `--skip-python` flag dropped,
+> which only works on Windows. For those, use the build machine. Everything else about
+> publishing (Step 5) is identical.
+
 ### Step 5 — publish on GitHub (your only manual, click-based step)
 1. Go to the repository on GitHub → **Releases** → **Draft a new release**.
 2. **Tag:** type `v1.1` (the letter v, then your version). Create the tag on `main`.

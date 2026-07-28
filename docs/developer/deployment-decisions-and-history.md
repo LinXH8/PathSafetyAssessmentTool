@@ -93,6 +93,38 @@ the update installs on the next launch. There is **no staged fleet rollout** —
 machines are independent and have no awareness of each other, so there is nothing to
 stage against.
 
+### Build hosts → **dual (Windows + Unix), but the frozen interpreter is per-OS** (2026-07-28)
+There are two build scripts — `build_bundle.ps1` (Windows) and `build_bundle.sh`
+(macOS/Linux) — not for portability's sake but because of one hard fact: the `python/`
+component is `conda-pack`'d from the **build machine's own** interpreter and native
+binaries (torch, GDAL, fiona), which cannot cross-compile. A macOS build's `python/` runs
+only on macOS.
+
+The insight that makes a dual system worthwhile: **every other component is
+platform-independent.** `backend` is Python *source*, `webui` is built static assets,
+`models`/`shapefiles` are data, and — crucially — the updater identifies a component by a
+**content tree digest** (`component_tree_digest`), not by the download zip's bytes. So a
+`--skip-python` release built on a Mac is byte-for-byte valid for the Windows fleet: the
+Windows machines' *existing* frozen interpreter (from the USB install) runs the new source.
+Only a **dependency change** (a new/updated `python/` component) is bound to the target OS,
+and for the Windows fleet that must still be built on Windows.
+
+Two supporting changes made this real:
+- `make_release.py` no longer needs the full backend env (flask/torch/geopandas) to run. It
+  first tries the normal import, then falls back to loading `updater.py` in **isolation**
+  (the digest functions are pure-stdlib and self-contained), so a plain-Python machine with
+  no conda env can package `--skip-python` releases and computes **identical** digests.
+- `build_bundle.sh` adds `--no-python` (skip the frozen interpreter + its smoke test),
+  `--no-webui` (backend-only — don't ship a rebuilt/mismatched frontend when only the
+  backend changed) and `--skip-gis` (omit the 5 GB models/shapefiles). A backend fix thus
+  builds to a ~22 MB `backend.zip` on any laptop.
+
+**Gotcha for the backend-only path:** don't let the frontend get rebuilt into the release
+unless you *mean* to ship UI changes — a rebuilt `webui` whose content differs from what's
+deployed (e.g. from uncommitted work in `frontend/dist`) would push an unintended,
+unreviewed frontend to every machine. `--no-webui` exists precisely to prevent that; the
+resulting manifest lists only the `backend` component, so clients touch nothing else.
+
 ### What was deliberately dropped
 
 - **Update signing (Ed25519).** Considered and built, then removed. Signing protects

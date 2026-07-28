@@ -82,6 +82,41 @@ def split_file(path: Path, max_bytes: int) -> list[Path]:
     return parts
 
 
+def _load_updater_isolated(bundle: Path):
+    """Load component_source / component_tree_digest from the bundle's updater.py
+    WITHOUT importing the `app` package (which runs app/__init__.py → flask/torch/
+    geopandas). Lets a machine with only plain Python 3 package a --skip-python
+    update. Stub `app` / `app.services` / paths / version so updater.py's top-level
+    `from app.services import paths, version` resolves — those names are used only
+    inside functions we don't call, so empty stubs are safe. The digest functions
+    themselves are pure stdlib, so the result is identical to the normal import.
+    """
+    import importlib.util
+    import types
+
+    # Drop any half-initialised `app` modules left by the failed normal import.
+    for key in [k for k in sys.modules if k == "app" or k.startswith("app.")]:
+        del sys.modules[key]
+
+    for pkg in ("app", "app.services"):
+        module = types.ModuleType(pkg)
+        module.__path__ = []  # mark as a package so submodule imports resolve
+        sys.modules[pkg] = module
+    for sub in ("paths", "version"):
+        sys.modules[f"app.services.{sub}"] = types.ModuleType(f"app.services.{sub}")
+
+    updater_path = bundle / "backend" / "app" / "services" / "updater.py"
+    # Load under the real dotted name so module.__name__ == its sys.modules key —
+    # @dataclass introspection resolves a class's module via sys.modules[__module__].
+    spec = importlib.util.spec_from_file_location("app.services.updater", updater_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"could not load {updater_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["app.services.updater"] = module  # register BEFORE exec so introspection sees it
+    spec.loader.exec_module(module)
+    return module.component_source, module.component_tree_digest
+
+
 def describe(parts: list[Path]) -> dict:
     return {
         "parts": [
@@ -114,8 +149,23 @@ def main() -> int:
     # the digest written into the manifest is computed by the EXACT code the client
     # will use to hash its own installed files. If these two ever diverged, every
     # update would look like every component changed.
+    #
+    # Two ways to get them, tried in order:
+    #  1. Normal package import — works on the build machine where the full backend
+    #     env (flask/torch/geopandas) is installed.
+    #  2. Isolated load of updater.py — for packaging a --skip-python update on a
+    #     machine WITHOUT that env (e.g. a Mac building a platform-independent
+    #     backend/webui update for the Windows fleet). component_source and
+    #     component_tree_digest are pure-stdlib and self-contained, so loading the
+    #     exact same file in isolation yields byte-identical digests without running
+    #     app/__init__.py (which pulls the heavy deps).
     sys.path.insert(0, str(bundle / "backend"))
-    from app.services.updater import component_source, component_tree_digest
+    try:
+        from app.services.updater import component_source, component_tree_digest
+    except Exception as exc:
+        print(f"  (full backend env unavailable: {exc.__class__.__name__}: {exc})")
+        print("  loading updater.py in isolation (pure hashing functions only)")
+        component_source, component_tree_digest = _load_updater_isolated(bundle)
 
     if out.exists():
         shutil.rmtree(out)

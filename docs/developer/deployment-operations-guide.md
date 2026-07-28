@@ -38,6 +38,21 @@ You build on **one** controlled machine. Target machines need none of this.
 
 Target machines need **nothing** — no Python, Node, conda, or Git.
 
+### Which OS builds what (the dual build system)
+There are two build scripts — `build_bundle.ps1` (Windows) and `build_bundle.sh`
+(macOS/Linux) — because the frozen `python/` component is the **build machine's own**
+interpreter + native binaries (torch, GDAL, fiona…) and cannot cross-compile:
+
+| You are building… | Where it must run |
+|---|---|
+| A **full bundle** or the **`python/` component** (dependency change) | On the **target OS**. The fleet is Windows → build on Windows (`build_bundle.ps1`). |
+| A **`--skip-python` update** (backend / webui / models / shapefiles change) | On **any** OS. These components are platform-independent and clients compare *content* digests, so a macOS/Linux build (`build_bundle.sh --no-python`) produces a release valid for the Windows fleet. |
+
+`make_release.py` runs on a plain-Python machine with **no** conda env — it loads the
+digest functions from `updater.py` in isolation (falls back automatically), so a Mac can
+package `--skip-python` releases. The one thing a Mac/Linux build can **never** ship to
+Windows is the `python/` interpreter itself.
+
 ---
 
 ## 2. Build a bundle
@@ -65,6 +80,23 @@ PSAT\
   launcher\   launch_psat.py
   PSAT.bat    entry point
 ```
+
+### On macOS / Linux (`build_bundle.sh`)
+Same script, ported. A **full** build needs a local conda env to freeze
+(`--conda-env`), and its `python/` runs only on that OS (see §1). The common case on a
+non-Windows machine is a **backend / webui update for the Windows fleet**, built without
+the frozen interpreter:
+
+```bash
+# Backend-only update (no frontend rebuild, no 5 GB GIS, no interpreter):
+scripts/bundle/build_bundle.sh --out-dir temp/PSAT-build --no-python --no-webui --skip-gis
+```
+
+Useful flags (beyond the ps1's `--skip-env` / `--skip-frontend`): `--no-python` (skip the
+frozen interpreter + its smoke test), `--no-webui` (backend-only — avoids shipping a
+rebuilt/mismatched frontend when only the backend changed), `--skip-gis` (omit
+models/shapefiles). Output goes under `temp/` (git-ignored). Then package with
+`make_release.py … --skip-python` exactly as in §6 — it needs no conda env.
 
 ---
 
@@ -342,8 +374,9 @@ Set by the launcher; useful for manual runs and debugging.
 
 | Path | What |
 |---|---|
-| `scripts/bundle/build_bundle.ps1` | Build + verify the bundle |
-| `scripts/bundle/make_release.py` | Turn a bundle into release archives + `manifest.json` |
+| `scripts/bundle/build_bundle.ps1` | Build + verify the bundle (Windows) |
+| `scripts/bundle/build_bundle.sh` | Build + verify the bundle (macOS/Linux); `--no-python`/`--no-webui`/`--skip-gis` for platform-independent update builds |
+| `scripts/bundle/make_release.py` | Turn a bundle into release archives + `manifest.json`; runs without a conda env (isolated `updater.py` load) |
 | `scripts/bundle/install_psat.ps1` · `Install PSAT.bat` | Per-user installer |
 | `scripts/bundle/uninstall_psat.ps1` · `Uninstall PSAT.bat` | Uninstaller (keeps data by default) |
 | `scripts/bundle/verify_drive.ps1` | Validate a copied drive by running its interpreter |
