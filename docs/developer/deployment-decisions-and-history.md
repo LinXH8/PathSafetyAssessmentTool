@@ -159,6 +159,22 @@ made from it re-imports with a badly undercounted segment total. **Ship only fol
 have not had projects created from them.** (Also: never point the packaged app at the dev
 repo's `in/` — it would prune the master survey data.)
 
+**Guarded against a second, destructive prune (2026-07-28).** The delete step above only
+ever considered the **active profile's** projects (`_collect_referenced_filenames` iterates
+`pm.projects`, which `get_ctx()` scopes to `profiles/<slug>/projects`). On a deployed
+machine that made pruning actively dangerous: the seed `in/` folders arrive **already
+pruned** to one anchor frame per segment, and those frames are protected only by the
+pre-created project that ships with them — which `move_legacy_projects_to_profile`
+(`shutil.move`, one-shot) hands to whichever profile logs in **first**. A *second* profile
+creating a project would therefore run the prune with none of those shipped projects in
+view and permanently delete the anchors the first profile relied on, leaving a folder that
+can never reproduce even its shipped segment count. `prune_source_folder` now **no-ops on
+any folder whose summary already reports `pruned: true`** — an already-pruned folder has no
+dense dead-weight left to reclaim, so a second pass can only destroy data. This closes the
+data-loss path regardless of profile. Note it does **not** change the *undercount* on
+re-creation (that happens earlier, when segments are built by resampling the thinned
+frames), so the "ship only un-pruned folders" rule for the flatten/build stage still holds.
+
 ### Partial drive copy looked exactly like a code bug
 An interrupted ~9 GB copy to the HDD left the frozen env missing `_distutils_hack`,
 `win32`, and `Lib\urllib` — surfacing on the target as three unrelated-looking "module

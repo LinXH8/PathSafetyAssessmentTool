@@ -168,6 +168,12 @@ would resample the thinned frames and undercount. The projects are what make the
 state valid. Never ship one without the other, and never re-run the flatten over a pruned
 `in/` without also discarding `data/`.
 
+> Note (2026-07-28): on the *deployed* machine, `prune_source_folder` now no-ops on any
+> folder already marked `pruned:true`, so a user creating a project from a shipped folder can
+> no longer delete its anchor frames (previously a second profile could — see the history
+> doc's "Pruned source folders" entry). This is a data-loss safety net only; the undercount
+> above is unchanged, so the ship-together rule still stands.
+
 ---
 
 ## 3. Make the install drive
@@ -360,7 +366,8 @@ Set by the launcher; useful for manual runs and debugging.
 | Create Project shows no folders | Survey data isn't in `<data>\in\`. Check `data_dir.txt` for where data actually lives. |
 | Seeded projects don't appear after install | The one-time move wasn't done. On the Projects page click **Move Shared Projects** (create a profile first if needed). |
 | "module not found" errors (`distutils`, `pywin32`, `urllib`, …) on a fresh install | **Truncated drive copy.** Re-copy and run `verify_drive.ps1` before reusing the drive. Not a code bug. |
-| Wrong / much lower segment counts on import | The source folder was already pruned by a prior project. Use un-pruned folders. |
+| Wrong / much lower segment counts on import | The source folder was already pruned by a prior project. Use un-pruned folders. (Since 2026-07-28 re-creating from a pruned folder no longer *deletes* its frames — `prune_source_folder` no-ops on `pruned:true` folders — but the newly-created project still undercounts, so this remains build-stage guidance.) |
+| Seed frames vanished / dropped further after a second profile created a project | Fixed 2026-07-28. Pruning was profile-scoped and would delete anchors protected only by the first profile's shipped project; `prune_source_folder` now skips already-pruned folders. If a pre-fix machine already lost frames, re-seed that folder's `in/` + `data/` from the drive. |
 | App ignores the chosen data folder | A corrupt `data_dir.txt` (e.g. a BOM). Current code tolerates a BOM; if hand-edited, save as plain UTF-8. |
 | Grey/blank maps | No internet. Expected — basemaps come from CARTO and cache per-user as you browse. Everything else works offline. |
 | "The update could not be installed" | Already rolled back automatically; the previous version runs. Safe to retry. |
