@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+belilios_road,1,Belilios Road_Cam4_20251208_110445_742_A.jpeg,,13.53,6.765,6.0,3.256,-6.174,1.0
+belilios_road,2,Belilios Road_Cam4_20251208_110450_833_A.jpeg,,39.861,26.696,26.0,3.95,,
+belilios_road,3,Belilios Road_Cam4_20251208_110503_037_A.jpeg,,58.054,48.958,48.0,3.988,,
+belilios_road,4,Belilios Road_Cam4_20251208_110856_111_A.jpeg,,90.798,74.426,74.0,4.664,4.25,1.0
+belilios_road,5,Belilios Road_Cam4_20251208_111054_430_A.jpeg,,115.606,103.202,,,,
+belilios_road,6,Belilios Road_Cam4_20251208_111148_501_A.jpeg,,121.449,118.527,118.0,16.863,,
+belilios_road,7,Belilios Road_Cam4_20251208_111151_012_A.jpeg,,132.453,126.951,126.0,15.535,,
+belilios_road,8,Belilios Road_Cam4_20251208_111155_578_A.jpeg,,156.677,144.565,144.0,7.321,,
+belilios_road,9,Belilios Road_Cam4_20251208_111210_773_A.jpeg,,164.907,160.792,160.0,4.048,,
+belilios_road,10,Belilios Road_Cam4_20251208_111217_418_A.jpeg,,194.922,179.915,180.0,3.359,-1.568,1.0
+belilios_road,11,Belilios Road_Cam4_20251208_111229_157_A.jpeg,,207.739,201.331,202.0,2.955,-0.57,1.0
+belilios_road,12,Belilios Road_Cam4_20251208_111242_815_A.jpeg,,235.116,221.428,,,,

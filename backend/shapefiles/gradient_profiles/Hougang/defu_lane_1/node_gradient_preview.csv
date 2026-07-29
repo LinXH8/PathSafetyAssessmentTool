@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+defu_lane_1,1,Defu Lane 1_Cam4_20260129_093302_209_C.jpeg,,10.284,5.142,6.0,2.37,0.419,1.0
+defu_lane_1,2,Defu Lane 1_Cam4_20260129_093310_024_C.jpeg,,352.051,181.167,182.0,,,

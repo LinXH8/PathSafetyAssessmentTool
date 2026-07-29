@@ -1,0 +1,42 @@
+{
+  "path_key": "lorong_penchalak",
+  "display_name": "Lorong Penchalak",
+  "source_project": "Lorong Penchalak",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Penchalak\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T20:04:38.384318+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 178.327,
+  "profile_point_count": 91,
+  "valid_elevation_count": 91,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 13,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 72.53,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 14.29,
+  "gradient_min_pct": -4.559,
+  "gradient_max_pct": 9.044,
+  "path_bounds_svy21": {
+    "min_x": 32678.154,
+    "min_y": 36458.427,
+    "max_x": 32845.878,
+    "max_y": 36517.105
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG PENCHALAK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 91,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

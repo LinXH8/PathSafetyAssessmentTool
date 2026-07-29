@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_khamis,1,Jalan Khamis_Cam4_20260102_090918_666_A.jpeg,,11.88,5.94,6.0,19.584,,
+jalan_khamis,2,Jalan Khamis_Cam4_20260102_090922_293_A.jpeg,,23.563,17.721,18.0,20.653,,
+jalan_khamis,3,Jalan Khamis_Cam4_20260102_090926_540_A.jpeg,,30.099,26.831,26.0,21.517,,
+jalan_khamis,4,Jalan Khamis_Cam4_20260102_090928_942_A.jpeg,,57.143,43.621,44.0,22.007,,
+jalan_khamis,5,Jalan Khamis_Cam4_20260102_090940_373_A.jpeg,,67.541,62.342,62.0,22.038,,
+jalan_khamis,6,Jalan Khamis_Cam4_20260102_090945_257_A.jpeg,,93.834,80.687,80.0,21.461,2.246,1.0
+jalan_khamis,7,Jalan Khamis_Cam4_20260102_090956_602_A.jpeg,,103.107,98.47,98.0,22.161,3.125,1.0
+jalan_khamis,8,Jalan Khamis_Cam4_20260102_091000_868_A.jpeg,,116.568,109.837,110.0,22.411,0.625,1.0
+jalan_khamis,9,Jalan Khamis_Cam4_20260102_091006_854_A.jpeg,,140.953,128.761,128.0,22.261,-1.562,1.0
+jalan_khamis,10,Jalan Khamis_Cam4_20260102_091015_884_A.jpeg,,169.143,155.048,156.0,21.461,-3.75,1.0
+jalan_khamis,11,Jalan Khamis_Cam4_20260102_091026_729_A.jpeg,,175.895,172.519,172.0,20.911,-3.125,1.0
+jalan_khamis,12,Jalan Khamis_Cam4_20260102_091029_145_A.jpeg,,185.595,180.745,180.0,20.711,-2.5,1.0
+jalan_khamis,13,Jalan Khamis_Cam4_20260102_091032_748_A.jpeg,,196.107,190.851,190.0,20.461,-2.5,1.0
+jalan_khamis,14,Jalan Khamis_Cam4_20260102_091036_361_A.jpeg,,205.366,200.737,200.0,20.211,-1.25,1.0
+jalan_khamis,15,Jalan Khamis_Cam4_20260102_091039_378_A.jpeg,,215.581,210.473,210.0,21.036,,
+jalan_khamis,16,Jalan Khamis_Cam4_20260102_091042_988_A.jpeg,,237.908,226.744,226.0,24.218,,

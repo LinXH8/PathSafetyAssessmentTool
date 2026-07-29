@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_seruling,1,Jalan Seruling_Cam4_20260103_092156_195_B.jpeg,,13.214,6.607,6.0,23.733,,
+jalan_seruling,2,Jalan Seruling_Cam4_20260103_092202_808_B.jpeg,,21.709,17.462,18.0,22.944,-0.813,1.0
+jalan_seruling,3,Jalan Seruling_Cam4_20260103_092207_614_B.jpeg,,31.044,26.377,26.0,22.934,-1.156,1.0
+jalan_seruling,4,Jalan Seruling_Cam4_20260103_092212_419_B.jpeg,,41.546,36.295,36.0,22.744,,
+jalan_seruling,5,Jalan Seruling_Cam4_20260103_092216_627_B.jpeg,,51.472,46.509,46.0,22.114,-3.688,1.0
+jalan_seruling,6,Jalan Seruling_Cam4_20260103_092220_231_B.jpeg,,62.567,57.019,58.0,21.289,,
+jalan_seruling,7,Jalan Seruling_Cam4_20260103_092223_835_B.jpeg,,70.034,66.3,66.0,20.424,,
+jalan_seruling,8,Jalan Seruling_Cam4_20260103_092226_237_B.jpeg,,80.075,75.054,76.0,20.07,,
+jalan_seruling,9,Jalan Seruling_Cam4_20260103_092229_247_B.jpeg,,91.065,85.57,86.0,19.506,,
+jalan_seruling,10,Jalan Seruling_Cam4_20260103_092232_248_B.jpeg,,100.873,95.969,96.0,18.575,,
+jalan_seruling,11,Jalan Seruling_Cam4_20260103_092234_650_B.jpeg,,112.159,106.516,106.0,17.312,,
+jalan_seruling,12,Jalan Seruling_Cam4_20260103_092237_052_B.jpeg,,120.609,116.384,116.0,16.86,,
+jalan_seruling,13,Jalan Seruling_Cam4_20260103_092238_854_B.jpeg,,130.66,125.634,126.0,16.699,,
+jalan_seruling,14,Jalan Seruling_Cam4_20260103_092241_258_B.jpeg,,140.105,135.383,136.0,15.099,,

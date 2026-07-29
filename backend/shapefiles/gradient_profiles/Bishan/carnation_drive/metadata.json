@@ -1,0 +1,42 @@
+{
+  "path_key": "carnation_drive",
+  "display_name": "Carnation Drive",
+  "source_project": "Carnation Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Carnation Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T02:30:32.652698+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 171.481,
+  "profile_point_count": 87,
+  "valid_elevation_count": 87,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 72,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 6,
+  "usable_gradient_completion_pct": 6.9,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 82.76,
+  "gradient_min_pct": -7.344,
+  "gradient_max_pct": 2.576,
+  "path_bounds_svy21": {
+    "min_x": 27495.888,
+    "min_y": 37440.421,
+    "max_x": 27610.336,
+    "max_y": 37561.172
+  },
+  "road_boundary": {
+    "target_road_name": "CARNATION DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 87,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

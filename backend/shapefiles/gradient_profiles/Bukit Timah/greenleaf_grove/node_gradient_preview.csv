@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_grove,1,Greenleaf Grove_Cam4_20251219_094514_071_B.jpeg,,12.224,6.112,,,,
+greenleaf_grove,2,Greenleaf Grove_Cam4_20251219_094518_875_B.jpeg,,39.317,25.771,26.0,20.88,,
+greenleaf_grove,3,Greenleaf Grove_Cam4_20251219_094532_094_B.jpeg,,49.963,44.64,44.0,20.98,1.562,1.0
+greenleaf_grove,4,Greenleaf Grove_Cam4_20251219_094536_300_B.jpeg,,61.799,55.881,56.0,21.08,1.25,1.0
+greenleaf_grove,5,Greenleaf Grove_Cam4_20251219_094541_116_B.jpeg,,83.935,72.867,72.0,21.18,0.625,1.0
+greenleaf_grove,6,Greenleaf Grove_Cam4_20251219_094548_931_B.jpeg,,95.452,89.693,90.0,22.26,,
+greenleaf_grove,7,Greenleaf Grove_Cam4_20251219_094553_136_B.jpeg,,105.767,100.609,100.0,23.429,,
+greenleaf_grove,8,Greenleaf Grove_Cam4_20251219_094558_578_B.jpeg,,114.288,110.027,110.0,23.438,,

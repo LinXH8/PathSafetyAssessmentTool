@@ -1,0 +1,42 @@
+{
+  "path_key": "countryside_walk",
+  "display_name": "Countryside Walk",
+  "source_project": "Countryside Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Countryside Walk\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T17:14:17.960214+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 57.603,
+  "profile_point_count": 30,
+  "valid_elevation_count": 30,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 5,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 23,
+  "usable_gradient_completion_pct": 76.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 16.67,
+  "gradient_min_pct": -3.144,
+  "gradient_max_pct": 4.018,
+  "path_bounds_svy21": {
+    "min_x": 28498.034,
+    "min_y": 41364.943,
+    "max_x": 28517.067,
+    "max_y": 41419.294
+  },
+  "road_boundary": {
+    "target_road_name": "COUNTRYSIDE WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 30,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

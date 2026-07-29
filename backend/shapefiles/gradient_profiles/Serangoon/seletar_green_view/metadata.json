@@ -1,0 +1,54 @@
+{
+  "path_key": "seletar_green_view",
+  "display_name": "Seletar Green View",
+  "source_project": "Seletar Green View",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Seletar Green View\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T06:41:40.905187+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 940.412,
+  "profile_point_count": 415,
+  "valid_elevation_count": 415,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 173,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 182,
+  "usable_gradient_completion_pct": 43.86,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 41.69,
+  "gradient_min_pct": -7.353,
+  "gradient_max_pct": 6.042,
+  "path_bounds_svy21": {
+    "min_x": 32070.384,
+    "min_y": 40179.426,
+    "max_x": 32481.45,
+    "max_y": 40244.085
+  },
+  "road_boundary": {
+    "target_road_name": "SELETAR GREEN VIEW",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 472,
+    "offroad_point_count": 57,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LUXUS HILL ROAD",
+        "point_count": 44
+      },
+      {
+        "road_name": "SELETAR GREEN AVENUE",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 540.0,
+    "trimmed_offroad_points": 57
+  }
+}

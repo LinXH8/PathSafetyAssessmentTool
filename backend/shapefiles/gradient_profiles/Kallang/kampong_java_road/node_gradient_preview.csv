@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kampong_java_road,1,,KAMPONG JAVA ROAD,467.473,233.736,234.0,3.85,,
+kampong_java_road,2,,KAMPONG JAVA ROAD,214.839,574.892,574.0,9.608,,
+kampong_java_road,3,,KAMPONG JAVA ROAD,749.577,1057.323,1058.0,4.508,,

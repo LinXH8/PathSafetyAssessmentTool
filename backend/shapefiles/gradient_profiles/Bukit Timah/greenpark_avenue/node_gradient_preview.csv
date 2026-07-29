@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenpark_avenue,1,Greenpark Avenue_Cam4_20251210_101632_764_A.jpeg,,11.439,5.72,6.0,17.829,,
+greenpark_avenue,2,Greenpark Avenue_Cam4_20251210_101659_595_A.jpeg,,23.329,17.384,18.0,19.449,,
+greenpark_avenue,3,Greenpark Avenue_Cam4_20251210_101705_213_A.jpeg,,34.01,28.67,28.0,20.259,0.0,1.0
+greenpark_avenue,4,Greenpark Avenue_Cam4_20251210_101710_809_A.jpeg,,56.838,45.424,46.0,20.259,0.0,1.0
+greenpark_avenue,5,Greenpark Avenue_Cam4_20251210_101723_727_A.jpeg,,69.202,63.02,64.0,,,
+greenpark_avenue,6,Greenpark Avenue_Cam4_20251210_101729_922_A.jpeg,,76.208,72.705,72.0,,,
+greenpark_avenue,7,Greenpark Avenue_Cam4_20251210_101733_517_A.jpeg,,102.964,89.586,90.0,,,
+greenpark_avenue,8,Greenpark Avenue_Cam4_20251210_101743_236_A.jpeg,,115.25,109.107,110.0,,,
+greenpark_avenue,9,Greenpark Avenue_Cam4_20251210_101747_753_A.jpeg,,138.106,126.678,126.0,,,
+greenpark_avenue,10,Greenpark Avenue_Cam4_20251210_101758_467_A.jpeg,,150.572,144.339,144.0,,,
+greenpark_avenue,11,Greenpark Avenue_Cam4_20251210_101804_652_A.jpeg,,178.375,164.474,164.0,,,
+greenpark_avenue,12,Greenpark Avenue_Cam4_20251210_101821_709_A.jpeg,,186.833,182.604,182.0,,,
+greenpark_avenue,13,Greenpark Avenue_Cam4_20251210_101826_276_A.jpeg,,219.182,203.008,204.0,,,
+greenpark_avenue,14,Greenpark Avenue_Cam4_20251210_101848_724_A.jpeg,,226.394,222.788,222.0,,,

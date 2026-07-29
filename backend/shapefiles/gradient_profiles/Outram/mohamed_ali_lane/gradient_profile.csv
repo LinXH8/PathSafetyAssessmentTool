@@ -1,0 +1,26 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+mohamed_ali_lane,Mohamed Ali Lane,2.0,29413.517,29463.215,8.522,3.093,3.093,0.0,1.0,MOHAMED ALI LANE,6.295
+mohamed_ali_lane,Mohamed Ali Lane,4.0,29414.744,29461.636,3.093,3.093,3.093,2.518,1.0,MOHAMED ALI LANE,5.524
+mohamed_ali_lane,Mohamed Ali Lane,6.0,29415.971,29460.057,3.093,3.093,3.093,5.036,1.0,MOHAMED ALI LANE,4.754
+mohamed_ali_lane,Mohamed Ali Lane,8.0,29417.198,29458.477,3.142,3.294,3.294,6.412,1.0,MOHAMED ALI LANE,3.983
+mohamed_ali_lane,Mohamed Ali Lane,10.0,29418.664,29457.387,6.023,3.495,3.495,7.788,1.0,MOHAMED ALI LANE,3.626
+mohamed_ali_lane,Mohamed Ali Lane,12.0,29420.664,29457.389,3.848,3.716,3.716,,,MOHAMED ALI LANE,3.039
+mohamed_ali_lane,Mohamed Ali Lane,14.0,29422.664,29457.39,3.936,3.936,3.716,,,MOHAMED ALI LANE,2.453
+mohamed_ali_lane,Mohamed Ali Lane,16.0,29424.664,29457.392,5.345,3.735,3.716,,,MOHAMED ALI LANE,1.867
+mohamed_ali_lane,Mohamed Ali Lane,18.0,29426.664,29457.394,3.299,3.534,3.534,-4.371,1.0,MOHAMED ALI LANE,1.281
+mohamed_ali_lane,Mohamed Ali Lane,20.0,29428.644,29457.544,3.333,3.333,3.366,,,MOHAMED ALI LANE,0.842
+mohamed_ali_lane,Mohamed Ali Lane,22.0,29430.573,29458.072,3.316,3.316,3.366,,,MOHAMED ALI LANE,0.786
+mohamed_ali_lane,Mohamed Ali Lane,24.0,29432.502,29458.601,3.366,3.366,3.366,,,MOHAMED ALI LANE,0.767
+mohamed_ali_lane,Mohamed Ali Lane,26.0,29434.431,29459.13,4.358,3.475,3.475,,,MOHAMED ALI LANE,0.749
+mohamed_ali_lane,Mohamed Ali Lane,28.0,29436.36,29459.659,5.864,3.585,3.585,5.475,1.0,MOHAMED ALI LANE,0.73
+mohamed_ali_lane,Mohamed Ali Lane,30.0,29438.289,29460.187,3.754,3.694,3.694,,,MOHAMED ALI LANE,0.711
+mohamed_ali_lane,Mohamed Ali Lane,32.0,29440.04,29459.935,3.804,3.804,3.804,,,MOHAMED ALI LANE,0.01
+mohamed_ali_lane,Mohamed Ali Lane,34.0,29441.551,29458.625,3.821,3.821,3.821,,,MOHAMED ALI LANE,1.062
+mohamed_ali_lane,Mohamed Ali Lane,36.0,29443.062,29457.314,3.821,3.821,3.821,,,MOHAMED ALI LANE,2.196
+mohamed_ali_lane,Mohamed Ali Lane,38.0,29444.573,29456.004,5.184,3.882,3.882,,,MOHAMED ALI LANE,3.33
+mohamed_ali_lane,Mohamed Ali Lane,40.0,29446.083,29454.693,8.856,3.943,3.943,,,MOHAMED ALI LANE,4.464
+mohamed_ali_lane,Mohamed Ali Lane,42.0,29445.537,29453.773,7.056,4.005,4.005,,,MOHAMED ALI LANE,3.704
+mohamed_ali_lane,Mohamed Ali Lane,44.0,29443.651,29453.107,3.904,4.066,4.066,,,MOHAMED ALI LANE,1.711
+mohamed_ali_lane,Mohamed Ali Lane,46.0,29441.766,29452.44,4.226,4.127,4.127,,,MOHAMED ALI LANE,0.281
+mohamed_ali_lane,Mohamed Ali Lane,48.0,29439.88,29451.774,4.189,4.189,4.158,,,MOHAMED ALI LANE,2.274
+mohamed_ali_lane,Mohamed Ali Lane,50.0,29438.691,29451.354,7.477,4.189,4.189,,,MOHAMED ALI LANE,3.53

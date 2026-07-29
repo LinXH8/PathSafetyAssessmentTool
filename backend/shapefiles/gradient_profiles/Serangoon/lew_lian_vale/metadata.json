@@ -1,0 +1,42 @@
+{
+  "path_key": "lew_lian_vale",
+  "display_name": "Lew Lian Vale",
+  "source_project": "Lew Lian Vale",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lew Lian Vale\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T19:01:43.283082+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 11.867,
+  "profile_point_count": 7,
+  "valid_elevation_count": 7,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 3,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 2,
+  "usable_gradient_completion_pct": 28.57,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 42.86,
+  "gradient_min_pct": 0.139,
+  "gradient_max_pct": 0.208,
+  "path_bounds_svy21": {
+    "min_x": 32977.752,
+    "min_y": 36830.726,
+    "max_x": 32988.013,
+    "max_y": 36836.688
+  },
+  "road_boundary": {
+    "target_road_name": "LEW LIAN VALE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 7,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

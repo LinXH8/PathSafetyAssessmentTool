@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_lekub,1,Jalan Lekub_Cam4_20260106_091000_054_C.jpeg,,10.692,5.346,6.0,21.625,,
+jalan_lekub,2,Jalan Lekub_Cam4_20260106_091003_661_C.jpeg,,20.346,15.519,16.0,22.806,,
+jalan_lekub,3,Jalan Lekub_Cam4_20260106_091006_666_C.jpeg,,31.631,25.989,26.0,22.9,,
+jalan_lekub,4,Jalan Lekub_Cam4_20260106_091010_269_C.jpeg,,40.948,36.289,36.0,21.837,,
+jalan_lekub,5,Jalan Lekub_Cam4_20260106_091013_271_C.jpeg,,51.526,46.237,46.0,21.381,2.5,1.0
+jalan_lekub,6,Jalan Lekub_Cam4_20260106_091016_873_C.jpeg,,61.118,56.322,56.0,21.731,3.125,1.0
+jalan_lekub,7,Jalan Lekub_Cam4_20260106_091020_481_C.jpeg,,70.722,65.92,66.0,22.131,4.063,1.0
+jalan_lekub,8,Jalan Lekub_Cam4_20260106_091024_086_C.jpeg,,83.479,77.101,78.0,22.481,2.5,1.0
+jalan_lekub,9,Jalan Lekub_Cam4_20260106_091028_892_C.jpeg,,91.209,87.344,88.0,22.531,0.625,1.0
+jalan_lekub,10,Jalan Lekub_Cam4_20260106_091031_896_C.jpeg,,100.693,95.951,96.0,22.581,0.0,1.0
+jalan_lekub,11,Jalan Lekub_Cam4_20260106_091035_504_C.jpeg,,110.141,105.417,106.0,22.581,-0.625,1.0
+jalan_lekub,12,Jalan Lekub_Cam4_20260106_091039_108_C.jpeg,,119.915,115.028,116.0,22.481,-1.25,1.0
+jalan_lekub,13,Jalan Lekub_Cam4_20260106_091042_711_C.jpeg,,130.592,125.253,126.0,22.281,-0.625,1.0
+jalan_lekub,14,Jalan Lekub_Cam4_20260106_091046_317_C.jpeg,,141.46,136.026,136.0,22.231,-1.25,1.0
+jalan_lekub,15,Jalan Lekub_Cam4_20260106_091049_920_C.jpeg,,150.778,146.119,146.0,22.131,0.0,1.0
+jalan_lekub,16,Jalan Lekub_Cam4_20260106_091052_925_C.jpeg,,162.245,156.511,156.0,22.815,,
+jalan_lekub,17,Jalan Lekub_Cam4_20260106_091056_409_C.jpeg,,171.494,166.869,166.0,23.283,,
+jalan_lekub,18,Jalan Lekub_Cam4_20260106_091059_418_C.jpeg,,180.211,175.852,176.0,22.265,,
+jalan_lekub,19,Jalan Lekub_Cam4_20260106_091103_627_C.jpeg,,254.888,217.55,218.0,22.131,1.25,1.0
+jalan_lekub,20,Jalan Lekub_Cam4_20260106_091132_457_C.jpeg,,263.897,259.393,260.0,22.931,-5.0,1.0
+jalan_lekub,21,Jalan Lekub_Cam4_20260106_091135_460_C.jpeg,,273.965,268.931,268.0,22.681,-0.625,1.0
+jalan_lekub,22,Jalan Lekub_Cam4_20260106_091139_066_C.jpeg,,310.842,292.403,292.0,22.281,-2.5,1.0
+jalan_lekub,23,Jalan Lekub_Cam4_20260106_091149_878_C.jpeg,,321.705,316.274,316.0,21.718,,
+jalan_lekub,24,Jalan Lekub_Cam4_20260106_091153_482_C.jpeg,,330.693,326.199,326.0,22.198,,
+jalan_lekub,25,Jalan Lekub_Cam4_20260106_091156_368_C.jpeg,,339.99,335.341,336.0,21.748,,

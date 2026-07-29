@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chuan_place,1,Chuan Place_Cam4_20260202_100033_488_C.jpeg,,13.667,6.833,,,,
+chuan_place,2,Chuan Place_Cam4_20260202_100038_293_C.jpeg,,33.793,23.73,24.0,20.908,,
+chuan_place,3,Chuan Place_Cam4_20260202_100048_115_C.jpeg,,44.26,39.027,40.0,17.985,,
+chuan_place,4,Chuan Place_Cam4_20260202_100052_320_C.jpeg,,69.371,56.815,56.0,17.605,,
+chuan_place,5,Chuan Place_Cam4_20260202_100106_230_C.jpeg,,81.306,75.338,76.0,19.128,,
+chuan_place,6,Chuan Place_Cam4_20260202_100215_167_C.jpeg,,104.517,92.911,92.0,17.174,,
+chuan_place,7,Chuan Place_Cam4_20260202_100248_026_C.jpeg,,115.818,110.167,110.0,15.978,-1.121,1.0
+chuan_place,8,Chuan Place_Cam4_20260202_100252_833_C.jpeg,,126.678,121.248,122.0,16.473,,
+chuan_place,9,Chuan Place_Cam4_20260202_100257_044_C.jpeg,,137.267,131.972,132.0,17.513,,
+chuan_place,10,Chuan Place_Cam4_20260202_100300_047_C.jpeg,,159.874,148.571,148.0,19.708,,
+chuan_place,11,Chuan Place_Cam4_20260202_100306_057_C.jpeg,,169.764,164.819,164.0,17.383,,
+chuan_place,12,Chuan Place_Cam4_20260202_100309_660_C.jpeg,,198.428,184.096,184.0,13.249,,
+chuan_place,13,Chuan Place_Cam4_20260202_100324_264_C.jpeg,,208.487,203.457,204.0,16.249,,
+chuan_place,14,Chuan Place_Cam4_20260202_100329_069_C.jpeg,,220.363,214.425,214.0,17.459,-2.85,1.0
+chuan_place,15,Chuan Place_Cam4_20260202_100335_135_C.jpeg,,281.614,250.989,250.0,16.703,,
+chuan_place,16,Chuan Place_Cam4_20260202_100417_421_C.jpeg,,291.083,286.349,286.0,10.912,,
+chuan_place,17,Chuan Place_Cam4_20260202_100419_843_C.jpeg,,300.561,295.822,296.0,9.402,-2.175,1.0
+chuan_place,18,Chuan Place_Cam4_20260202_100422_248_C.jpeg,,309.445,305.003,306.0,9.712,,
+chuan_place,19,Chuan Place_Cam4_20260202_100458_113_C.jpeg,,342.298,325.871,326.0,10.603,,
+chuan_place,20,Chuan Place_Cam4_20260202_100514_690_C.jpeg,,353.66,347.979,348.0,11.308,,
+chuan_place,21,Chuan Place_Cam4_20260202_100519_568_C.jpeg,,365.158,359.409,360.0,13.239,,
+chuan_place,22,Chuan Place_Cam4_20260202_100524_510_C.jpeg,,391.028,378.093,378.0,16.307,,
+chuan_place,23,Chuan Place_Cam4_20260202_100536_602_C.jpeg,,420.102,405.565,406.0,14.446,,
+chuan_place,24,Chuan Place_Cam4_20260202_100735_889_C.jpeg,,430.954,425.528,426.0,16.6,,
+chuan_place,25,Chuan Place_Cam4_20260202_100741_327_C.jpeg,,442.47,436.712,436.0,18.15,,

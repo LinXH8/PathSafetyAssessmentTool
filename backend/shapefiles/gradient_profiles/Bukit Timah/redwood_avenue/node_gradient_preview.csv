@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+redwood_avenue,1,Redwood Avenue_Cam4_20251217_082130_537_A.jpeg,,10.189,5.094,6.0,9.584,0.253,1.0
+redwood_avenue,2,Redwood Avenue_Cam4_20251217_082134_042_A.jpeg,,20.063,15.126,16.0,9.862,,
+redwood_avenue,3,Redwood Avenue_Cam4_20251217_082137_162_A.jpeg,,32.938,26.501,26.0,10.247,,
+redwood_avenue,4,Redwood Avenue_Cam4_20251217_082141_183_A.jpeg,,44.532,38.735,38.0,10.059,,
+redwood_avenue,5,Redwood Avenue_Cam4_20251217_082144_743_A.jpeg,,52.622,48.577,48.0,10.147,,
+redwood_avenue,6,Redwood Avenue_Cam4_20251217_082147_328_A.jpeg,,80.296,66.459,66.0,14.482,,
+redwood_avenue,7,Redwood Avenue_Cam4_20251217_082156_621_A.jpeg,,92.205,86.25,86.0,13.834,,
+redwood_avenue,8,Redwood Avenue_Cam4_20251217_082200_392_A.jpeg,,100.893,96.549,96.0,13.525,,
+redwood_avenue,9,Redwood Avenue_Cam4_20251217_082203_378_A.jpeg,,109.934,105.413,106.0,13.011,,
+redwood_avenue,10,Redwood Avenue_Cam4_20251217_082206_419_A.jpeg,,119.647,114.79,114.0,12.794,-0.268,1.0
+redwood_avenue,11,Redwood Avenue_Cam4_20251217_082209_429_A.jpeg,,129.904,124.776,124.0,12.859,,
+redwood_avenue,12,Redwood Avenue_Cam4_20251217_082212_635_A.jpeg,,139.745,134.825,134.0,11.998,,
+redwood_avenue,13,Redwood Avenue_Cam4_20251217_082215_639_A.jpeg,,151.688,145.716,146.0,10.846,,
+redwood_avenue,14,Redwood Avenue_Cam4_20251217_082219_758_A.jpeg,,163.466,157.577,158.0,12.101,,
+redwood_avenue,15,Redwood Avenue_Cam4_20251217_082223_763_A.jpeg,,187.141,175.303,176.0,13.753,,
+redwood_avenue,16,Redwood Avenue_Cam4_20251217_082231_462_A.jpeg,,197.895,192.518,192.0,17.028,,
+redwood_avenue,17,Redwood Avenue_Cam4_20251217_082234_980_A.jpeg,,210.241,204.068,204.0,14.534,,

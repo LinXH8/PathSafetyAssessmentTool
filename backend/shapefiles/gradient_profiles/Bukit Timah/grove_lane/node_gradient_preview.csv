@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+grove_lane,1,Grove Lane_Cam4_20251219_075140_460_B.jpeg,,14.211,7.106,10.0,13.046,,
+grove_lane,2,Grove Lane_Cam4_20251219_075145_868_B.jpeg,,115.35,64.781,64.0,16.312,,
+grove_lane,3,Grove Lane_Cam4_20251219_082138_321_A.jpeg,,122.478,118.914,118.0,18.712,,
+grove_lane,4,Grove Lane_Cam4_20251219_082140_724_A.jpeg,,131.985,127.231,128.0,19.329,,
+grove_lane,5,Grove Lane_Cam4_20251219_082143_727_A.jpeg,,141.913,136.949,136.0,19.987,4.375,1.0
+grove_lane,6,Grove Lane_Cam4_20251219_082146_730_A.jpeg,,156.104,149.009,150.0,20.293,,
+grove_lane,7,Grove Lane_Cam4_20251219_082150_934_A.jpeg,,206.858,181.481,182.0,20.405,1.229,1.0
+grove_lane,8,Grove Lane_Cam4_20251219_082207_153_A.jpeg,,220.374,213.616,214.0,20.669,0.625,1.0
+grove_lane,9,Grove Lane_Cam4_20251219_082210_763_A.jpeg,,243.915,232.144,232.0,22.309,,
+grove_lane,10,Grove Lane_Cam4_20251219_082217_972_A.jpeg,,252.569,248.242,248.0,20.996,,
+grove_lane,11,Grove Lane_Cam4_20251219_082220_976_A.jpeg,,264.737,258.653,258.0,20.996,0.0,1.0
+grove_lane,12,Grove Lane_Cam4_20251219_082224_580_A.jpeg,,442.699,353.718,,,,
+grove_lane,13,Grove Lane_Cam4_20251219_104621_902_B.jpeg,,451.852,447.276,448.0,16.527,,
+grove_lane,14,Grove Lane_Cam4_20251219_104624_304_B.jpeg,,480.248,466.05,466.0,16.476,,
+grove_lane,15,Grove Lane_Cam4_20251219_104631_521_B.jpeg,,492.299,486.274,486.0,14.712,,
+grove_lane,16,Grove Lane_Cam4_20251219_104635_146_B.jpeg,,504.61,498.455,498.0,14.756,,
+grove_lane,17,Grove Lane_Cam4_20251219_104654_436_B.jpeg,,537.8,521.205,522.0,16.295,,
+grove_lane,18,Grove Lane_Cam4_20251219_104707_118_B.jpeg,,551.089,544.445,544.0,17.721,,
+grove_lane,19,Grove Lane_Cam4_20251219_104713_164_B.jpeg,,557.84,554.465,554.0,18.369,,

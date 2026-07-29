@@ -1,0 +1,42 @@
+{
+  "path_key": "matlock_rise",
+  "display_name": "Matlock Rise",
+  "source_project": "Matlock Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Matlock Rise\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T20:41:05.756549+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 278.025,
+  "profile_point_count": 141,
+  "valid_elevation_count": 141,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 30,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 92,
+  "usable_gradient_completion_pct": 65.25,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 21.28,
+  "gradient_min_pct": -9.531,
+  "gradient_max_pct": 7.381,
+  "path_bounds_svy21": {
+    "min_x": 31357.348,
+    "min_y": 36477.657,
+    "max_x": 31387.612,
+    "max_y": 36753.102
+  },
+  "road_boundary": {
+    "target_road_name": "MATLOCK RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 141,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

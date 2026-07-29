@@ -1,0 +1,62 @@
+{
+  "path_key": "jasmine_road",
+  "display_name": "Jasmine Road",
+  "source_project": "Jasmine Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jasmine Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T04:57:17.397923+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 872.97,
+  "profile_point_count": 267,
+  "valid_elevation_count": 267,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 171,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 46,
+  "usable_gradient_completion_pct": 17.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.04,
+  "gradient_min_pct": -10.764,
+  "gradient_max_pct": 8.139,
+  "path_bounds_svy21": {
+    "min_x": 27518.436,
+    "min_y": 37316.725,
+    "max_x": 27657.958,
+    "max_y": 37628.107
+  },
+  "road_boundary": {
+    "target_road_name": "JASMINE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 438,
+    "offroad_point_count": 171,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ORCHID DRIVE",
+        "point_count": 70
+      },
+      {
+        "road_name": "CARNATION DRIVE",
+        "point_count": 52
+      },
+      {
+        "road_name": "GLADIOLA DRIVE",
+        "point_count": 35
+      },
+      {
+        "road_name": "GARDENIA ROAD",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 86.0,
+    "offroad_chainage_max_m": 614.0,
+    "trimmed_offroad_points": 171
+  }
+}

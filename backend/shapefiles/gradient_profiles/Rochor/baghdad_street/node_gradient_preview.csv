@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+baghdad_street,1,Baghdad Street_Cam4_20251208_080739_173_C.jpeg,,12.806,6.403,6.0,3.643,-1.703,1.0
+baghdad_street,2,Baghdad Street_Cam4_20251208_080743_378_C.jpeg,,24.694,18.75,18.0,3.54,,
+baghdad_street,3,Baghdad Street_Cam4_20251208_080746_982_C.jpeg,,31.215,27.954,28.0,3.348,1.184,1.0
+baghdad_street,4,Baghdad Street_Cam4_20251208_080749_385_C.jpeg,,40.801,36.008,36.0,3.815,,
+baghdad_street,5,Baghdad Street_Cam4_20251208_085332_415_C.jpeg,,71.844,56.323,56.0,5.366,,
+baghdad_street,6,Baghdad Street_Cam4_20251211_073020_372_C.jpeg,,97.49,84.667,84.0,4.357,,
+baghdad_street,7,Baghdad Street_Cam4_20251211_073951_677_C.jpeg,,105.467,101.478,102.0,3.734,,
+baghdad_street,8,Baghdad Street_Cam4_20251211_073955_279_C.jpeg,,163.896,134.681,134.0,3.912,,
+baghdad_street,9,Baghdad Street_Cam4_20251211_074312_933_C.jpeg,,177.156,170.526,170.0,5.741,,

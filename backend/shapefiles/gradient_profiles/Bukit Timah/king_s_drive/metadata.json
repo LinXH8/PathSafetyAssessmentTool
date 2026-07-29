@@ -1,0 +1,42 @@
+{
+  "path_key": "king_s_drive",
+  "display_name": "King's Drive",
+  "source_project": "King's Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\King's Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T23:32:05.160157+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 826.218,
+  "profile_point_count": 415,
+  "valid_elevation_count": 415,
+  "rejected_outlier_count": 26,
+  "rejected_step_jump_count": 212,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 119,
+  "usable_gradient_completion_pct": 28.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 51.08,
+  "gradient_min_pct": -12.545,
+  "gradient_max_pct": 13.952,
+  "path_bounds_svy21": {
+    "min_x": 24943.947,
+    "min_y": 33427.359,
+    "max_x": 25099.594,
+    "max_y": 33623.564
+  },
+  "road_boundary": {
+    "target_road_name": "KING'S DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 415,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

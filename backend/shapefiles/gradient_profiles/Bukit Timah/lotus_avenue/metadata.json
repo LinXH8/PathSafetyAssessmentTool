@@ -1,0 +1,54 @@
+{
+  "path_key": "lotus_avenue",
+  "display_name": "Lotus Avenue",
+  "source_project": "Lotus Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Lotus Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T07:07:27.845130+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 280.27,
+  "profile_point_count": 139,
+  "valid_elevation_count": 139,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 97,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 14,
+  "usable_gradient_completion_pct": 10.07,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 69.78,
+  "gradient_min_pct": -6.917,
+  "gradient_max_pct": 8.125,
+  "path_bounds_svy21": {
+    "min_x": 23525.914,
+    "min_y": 34535.486,
+    "max_x": 23616.389,
+    "max_y": 34751.342
+  },
+  "road_boundary": {
+    "target_road_name": "LOTUS AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 142,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LASIA AVENUE",
+        "point_count": 2
+      },
+      {
+        "road_name": "LEMON AVENUE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 102.0,
+    "offroad_chainage_max_m": 168.0,
+    "trimmed_offroad_points": 3
+  }
+}

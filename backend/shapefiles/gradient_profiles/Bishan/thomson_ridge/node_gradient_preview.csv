@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_ridge,1,Thomson Ridge_Cam4_20260103_095951_348_A.jpeg,,13.33,6.665,,,,
+thomson_ridge,2,Thomson Ridge_Cam4_20260103_095956_760_A.jpeg,,308.105,160.717,160.0,27.289,,
+thomson_ridge,3,Thomson Ridge_Cam4_20260103_100301_701_A.jpeg,,315.032,311.569,312.0,22.334,,
+thomson_ridge,4,Thomson Ridge_Cam4_20260103_100304_105_A.jpeg,,325.212,320.122,320.0,21.947,,
+thomson_ridge,5,Thomson Ridge_Cam4_20260103_100307_109_A.jpeg,,336.098,330.655,330.0,21.514,-3.75,1.0
+thomson_ridge,6,Thomson Ridge_Cam4_20260103_100310_110_A.jpeg,,346.874,341.486,342.0,21.355,0.516,1.0
+thomson_ridge,7,Thomson Ridge_Cam4_20260103_100313_113_A.jpeg,,355.89,351.382,352.0,20.798,-10.992,2.0
+thomson_ridge,8,Thomson Ridge_Cam4_20260103_100315_516_A.jpeg,,365.107,360.498,360.0,20.27,-4.38,1.0
+thomson_ridge,9,Thomson Ridge_Cam4_20260103_100317_919_A.jpeg,,377.084,371.095,372.0,19.57,,
+thomson_ridge,10,Thomson Ridge_Cam4_20260103_100320_922_A.jpeg,,387.003,382.043,382.0,19.34,,
+thomson_ridge,11,Thomson Ridge_Cam4_20260103_100323_325_A.jpeg,,396.652,391.828,392.0,19.914,,
+thomson_ridge,12,Thomson Ridge_Cam4_20260103_100325_728_A.jpeg,,406.239,401.446,402.0,18.97,,
+thomson_ridge,13,Thomson Ridge_Cam4_20260103_100328_731_A.jpeg,,415.024,410.631,410.0,18.972,0.648,1.0
+thomson_ridge,14,Thomson Ridge_Cam4_20260103_100332_255_A.jpeg,,441.846,428.435,428.0,19.512,,
+thomson_ridge,15,Thomson Ridge_Cam4_20260103_100341_867_A.jpeg,,453.666,447.756,448.0,20.295,,
+thomson_ridge,16,Thomson Ridge_Cam4_20260103_100347_274_A.jpeg,,478.56,466.113,466.0,19.717,,
+thomson_ridge,17,Thomson Ridge_Cam4_20260103_100358_691_A.jpeg,,491.213,484.887,484.0,18.905,-4.313,1.0
+thomson_ridge,18,Thomson Ridge_Cam4_20260103_100404_101_A.jpeg,,496.466,493.839,494.0,18.522,,
+thomson_ridge,19,Thomson Ridge_Cam4_20260103_100405_903_A.jpeg,,524.891,510.678,510.0,17.553,-1.437,1.0
+thomson_ridge,20,Thomson Ridge_Cam4_20260103_100415_514_A.jpeg,,535.254,530.073,530.0,17.165,,
+thomson_ridge,21,Thomson Ridge_Cam4_20260103_100418_486_A.jpeg,,546.986,541.12,542.0,16.578,,
+thomson_ridge,22,Thomson Ridge_Cam4_20260103_100422_689_A.jpeg,,556.443,551.715,552.0,16.251,,
+thomson_ridge,23,Thomson Ridge_Cam4_20260103_100425_693_A.jpeg,,566.264,561.354,562.0,15.333,,
+thomson_ridge,24,Thomson Ridge_Cam4_20260103_100428_099_A.jpeg,,576.636,571.45,572.0,14.879,,
+thomson_ridge,25,Thomson Ridge_Cam4_20260103_100430_505_A.jpeg,,586.233,581.434,582.0,14.332,,

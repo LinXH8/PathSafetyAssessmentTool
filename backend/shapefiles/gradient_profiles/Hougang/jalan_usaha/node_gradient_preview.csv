@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_usaha,1,Jalan Usaha_Cam4_20260112_094956_912_C.jpeg,,11.978,5.989,6.0,9.288,,
+jalan_usaha,2,Jalan Usaha_Cam4_20260112_095001_116_C.jpeg,,59.787,35.882,34.0,14.004,0.009,1.0
+jalan_usaha,3,Jalan Usaha_Cam4_20260112_095053_295_C.jpeg,,67.402,63.594,64.0,14.008,0.016,1.0
+jalan_usaha,4,Jalan Usaha_Cam4_20260112_095056_297_C.jpeg,,115.004,91.203,92.0,,,
+jalan_usaha,5,Jalan Usaha_Cam4_20260112_095116_639_C.jpeg,,139.925,127.464,128.0,,,
+jalan_usaha,6,Jalan Usaha_Cam4_20260112_095126_874_C.jpeg,,169.063,154.494,154.0,,,
+jalan_usaha,7,Jalan Usaha_Cam4_20260112_095143_103_C.jpeg,,359.305,264.184,264.0,14.039,0.016,1.0

@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chiselhurst_grove,1,Chiselhurst Grove_Cam4_20260202_105016_399_A.jpeg,,12.147,6.074,6.0,15.855,,
+chiselhurst_grove,2,Chiselhurst Grove_Cam4_20260202_105021_209_A.jpeg,,40.997,26.572,26.0,11.759,,
+chiselhurst_grove,3,Chiselhurst Grove_Cam4_20260202_105032_628_A.jpeg,,49.763,45.38,46.0,11.194,6.088,1.0
+chiselhurst_grove,4,Chiselhurst Grove_Cam4_20260202_105035_030_A.jpeg,,62.655,56.209,56.0,11.783,5.363,1.0
+chiselhurst_grove,5,Chiselhurst Grove_Cam4_20260202_105039_852_A.jpeg,,128.84,95.748,96.0,11.779,,

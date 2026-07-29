@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+limbok_terrace,1,Limbok Terrace_Cam4_20260131_102452_167_A.jpeg,,10.152,5.076,6.0,15.307,0.0,1.0
+limbok_terrace,2,Limbok Terrace_Cam4_20260131_102456_258_A.jpeg,,20.749,15.451,16.0,15.307,0.0,1.0
+limbok_terrace,3,Limbok Terrace_Cam4_20260131_102501_063_A.jpeg,,50.273,35.511,36.0,14.517,,
+limbok_terrace,4,Limbok Terrace_Cam4_20260131_102512_475_A.jpeg,,59.049,54.661,54.0,12.257,,
+limbok_terrace,5,Limbok Terrace_Cam4_20260131_102515_477_A.jpeg,,66.068,62.559,62.0,12.257,,
+limbok_terrace,6,Limbok Terrace_Cam4_20260131_102518_482_A.jpeg,,76.436,71.252,72.0,12.552,3.707,1.0
+limbok_terrace,7,Limbok Terrace_Cam4_20260131_102523_913_A.jpeg,,86.333,81.384,82.0,12.923,3.707,1.0
+limbok_terrace,8,Limbok Terrace_Cam4_20260131_102527_519_A.jpeg,,95.435,90.884,90.0,13.22,3.707,1.0
+limbok_terrace,9,Limbok Terrace_Cam4_20260131_102531_725_A.jpeg,,142.415,118.925,118.0,13.941,-7.231,1.0
+limbok_terrace,10,Limbok Terrace_Cam4_20260131_102552_757_A.jpeg,,231.636,187.026,,,,
+limbok_terrace,11,Limbok Terrace_Cam4_20260131_102621_599_A.jpeg,,240.107,235.872,236.0,13.355,,
+limbok_terrace,12,Limbok Terrace_Cam4_20260131_102624_027_A.jpeg,,396.326,318.217,318.0,14.67,0.0,1.0

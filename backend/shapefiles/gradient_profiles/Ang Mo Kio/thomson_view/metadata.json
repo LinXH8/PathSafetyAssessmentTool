@@ -1,0 +1,50 @@
+{
+  "path_key": "thomson_view",
+  "display_name": "Thomson View",
+  "source_project": "Thomson View",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Thomson View\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T19:52:05.589374+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 225.221,
+  "profile_point_count": 94,
+  "valid_elevation_count": 94,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 52,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 29.79,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.32,
+  "gradient_min_pct": -1.771,
+  "gradient_max_pct": 13.672,
+  "path_bounds_svy21": {
+    "min_x": 27653.633,
+    "min_y": 39782.791,
+    "max_x": 27806.75,
+    "max_y": 39893.737
+  },
+  "road_boundary": {
+    "target_road_name": "THOMSON VIEW",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 114,
+    "offroad_point_count": 20,
+    "offroad_top_road_names": [
+      {
+        "road_name": "THOMSON HILL",
+        "point_count": 20
+      }
+    ],
+    "offroad_chainage_min_m": 14.0,
+    "offroad_chainage_max_m": 52.0,
+    "trimmed_offroad_points": 20
+  }
+}

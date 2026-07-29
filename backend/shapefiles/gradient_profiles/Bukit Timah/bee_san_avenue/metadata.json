@@ -1,0 +1,50 @@
+{
+  "path_key": "bee_san_avenue",
+  "display_name": "Bee San Avenue",
+  "source_project": "Bee San Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bee San Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T07:32:46.537752+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 206.962,
+  "profile_point_count": 95,
+  "valid_elevation_count": 95,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 53,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 26.32,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.79,
+  "gradient_min_pct": -3.438,
+  "gradient_max_pct": 7.534,
+  "path_bounds_svy21": {
+    "min_x": 22676.373,
+    "min_y": 35385.52,
+    "max_x": 22761.83,
+    "max_y": 35449.397
+  },
+  "road_boundary": {
+    "target_road_name": "BEE SAN AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 105,
+    "offroad_point_count": 10,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HUA GUAN AVENUE",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 18.0,
+    "trimmed_offroad_points": 10
+  }
+}

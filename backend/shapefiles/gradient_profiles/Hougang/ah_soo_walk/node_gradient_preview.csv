@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ah_soo_walk,1,Ah Soo Walk_Cam4_20260112_083753_380_C.jpeg,,10.931,5.465,6.0,20.462,2.122,1.0
+ah_soo_walk,2,Ah Soo Walk_Cam4_20260112_083756_983_C.jpeg,,24.292,17.611,18.0,21.004,5.031,1.0
+ah_soo_walk,3,Ah Soo Walk_Cam4_20260112_083801_192_C.jpeg,,34.37,29.331,30.0,21.355,,

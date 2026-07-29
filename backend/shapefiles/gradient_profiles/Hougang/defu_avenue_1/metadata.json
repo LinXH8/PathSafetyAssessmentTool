@@ -1,0 +1,66 @@
+{
+  "path_key": "defu_avenue_1",
+  "display_name": "DEFU AVENUE 1",
+  "source_project": "DEFU AVENUE 1",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\one_requested_gradient_defu_avenue_1_20260529_source_projects\\DEFU AVENUE 1\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T23:19:10.751604+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4006.917,
+  "profile_point_count": 1706,
+  "valid_elevation_count": 82,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 45,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 75,
+  "usable_gradient_completion_pct": 4.4,
+  "elevation_hit_coverage_pct": 4.81,
+  "step_jump_rejection_pct": 2.64,
+  "gradient_min_pct": -1.214,
+  "gradient_max_pct": 11.725,
+  "path_bounds_svy21": {
+    "min_x": 34377.584,
+    "min_y": 36431.418,
+    "max_x": 34940.423,
+    "max_y": 38184.203
+  },
+  "road_boundary": {
+    "target_road_name": "DEFU AVENUE 1",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2005,
+    "offroad_point_count": 299,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KIM CHUAN ROAD",
+        "point_count": 149
+      },
+      {
+        "road_name": "HOUGANG AVENUE 3",
+        "point_count": 63
+      },
+      {
+        "road_name": "DEFU LANE 10",
+        "point_count": 26
+      },
+      {
+        "road_name": "DEFU LANE 9",
+        "point_count": 24
+      },
+      {
+        "road_name": "DEFU LANE 7",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 4006.917,
+    "trimmed_offroad_points": 299
+  }
+}

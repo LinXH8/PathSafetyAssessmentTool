@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+henderson_road,1,Henderson Road_Cam4_20251202_141500_005_C.jpeg,,12.125,6.062,6.0,10.468,,
+henderson_road,2,Henderson Road_Cam4_20251202_141506_613_C.jpeg,,94.066,53.095,54.0,8.89,,
+henderson_road,3,Henderson Road_Cam4_20251227_080301_667_A.jpeg,,108.194,101.13,102.0,9.9,,
+henderson_road,4,Henderson Road_Cam4_20251227_080305_272_A.jpeg,,132.429,120.311,120.0,8.178,-0.837,1.0
+henderson_road,5,Henderson Road_Cam4_20251227_080311_882_A.jpeg,,143.227,137.828,138.0,8.295,,
+henderson_road,6,Henderson Road_Cam4_20251227_080315_487_A.jpeg,,154.176,148.701,148.0,10.347,,
+henderson_road,7,Henderson Road_Cam4_20251227_080319_692_A.jpeg,,286.499,220.338,220.0,13.195,,
+henderson_road,8,Henderson Road_Cam4_20251227_080536_028_A.jpeg,,295.147,290.823,290.0,13.996,,
+henderson_road,9,Henderson Road_Cam4_20251227_080538_430_A.jpeg,,305.445,300.296,300.0,15.206,,
+henderson_road,10,Henderson Road_Cam4_20251227_080541_433_A.jpeg,,314.579,310.012,310.0,16.417,,

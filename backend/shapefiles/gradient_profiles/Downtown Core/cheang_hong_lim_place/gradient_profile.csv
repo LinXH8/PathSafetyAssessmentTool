@@ -1,0 +1,22 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+cheang_hong_lim_place,Cheang Hong Lim Place,0.0,29805.601,29491.697,,3.636,3.636,0.0,1.0,CHEANG HONG LIM PLACE,0.302
+cheang_hong_lim_place,Cheang Hong Lim Place,2.0,29803.704,29492.33,3.636,3.636,3.699,0.0,1.0,CHEANG HONG LIM PLACE,0.651
+cheang_hong_lim_place,Cheang Hong Lim Place,4.0,29801.806,29492.962,3.786,3.786,3.636,-0.625,1.0,CHEANG HONG LIM PLACE,1.605
+cheang_hong_lim_place,Cheang Hong Lim Place,6.0,29799.909,29493.594,3.761,3.761,3.636,-1.406,1.0,CHEANG HONG LIM PLACE,2.558
+cheang_hong_lim_place,Cheang Hong Lim Place,8.0,29798.012,29494.227,3.586,3.586,3.586,-2.031,1.0,CHEANG HONG LIM PLACE,3.512
+cheang_hong_lim_place,Cheang Hong Lim Place,10.0,29796.114,29494.859,10.077,3.474,3.586,-2.656,1.0,CHEANG HONG LIM PLACE,4.465
+cheang_hong_lim_place,Cheang Hong Lim Place,12.0,29794.445,29495.799,3.361,3.361,3.474,,,CHEANG HONG LIM PLACE,5.042
+cheang_hong_lim_place,Cheang Hong Lim Place,14.0,29793.29,29497.431,3.636,3.636,3.423,,,CHEANG HONG LIM PLACE,4.77
+cheang_hong_lim_place,Cheang Hong Lim Place,16.0,29792.135,29499.064,4.586,3.423,3.361,,,CHEANG HONG LIM PLACE,4.498
+cheang_hong_lim_place,Cheang Hong Lim Place,18.0,29790.979,29500.697,4.511,3.211,3.211,,,CHEANG HONG LIM PLACE,4.226
+cheang_hong_lim_place,Cheang Hong Lim Place,20.0,29789.824,29502.329,4.598,2.998,2.998,,,CHEANG HONG LIM PLACE,3.954
+cheang_hong_lim_place,Cheang Hong Lim Place,22.0,29788.669,29503.962,6.836,2.786,2.786,,,CHEANG HONG LIM PLACE,3.682
+cheang_hong_lim_place,Cheang Hong Lim Place,24.0,29787.514,29505.595,2.361,2.574,2.574,,,CHEANG HONG LIM PLACE,3.41
+cheang_hong_lim_place,Cheang Hong Lim Place,26.0,29786.359,29507.227,2.361,2.361,2.361,,,CHEANG HONG LIM PLACE,3.137
+cheang_hong_lim_place,Cheang Hong Lim Place,28.0,29785.204,29508.86,2.286,2.286,2.286,,,CHEANG HONG LIM PLACE,2.865
+cheang_hong_lim_place,Cheang Hong Lim Place,30.0,29784.048,29510.493,2.211,2.211,2.236,-1.875,1.0,CHEANG HONG LIM PLACE,2.593
+cheang_hong_lim_place,Cheang Hong Lim Place,32.0,29782.893,29512.125,2.211,2.211,2.211,-0.937,1.0,CHEANG HONG LIM PLACE,2.321
+cheang_hong_lim_place,Cheang Hong Lim Place,34.0,29781.738,29513.758,2.236,2.236,2.211,-0.391,1.0,CHEANG HONG LIM PLACE,2.049
+cheang_hong_lim_place,Cheang Hong Lim Place,36.0,29780.583,29515.391,2.211,2.211,2.211,-0.181,1.0,CHEANG HONG LIM PLACE,1.777
+cheang_hong_lim_place,Cheang Hong Lim Place,38.0,29779.428,29517.023,2.199,2.199,2.205,-0.255,1.0,CHEANG HONG LIM PLACE,1.505
+cheang_hong_lim_place,Cheang Hong Lim Place,38.897,29778.91,29517.756,2.186,2.186,2.199,-0.431,1.0,CHEANG HONG LIM PLACE,1.383

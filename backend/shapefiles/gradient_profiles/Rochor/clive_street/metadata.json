@@ -1,0 +1,66 @@
+{
+  "path_key": "clive_street",
+  "display_name": "Clive Street",
+  "source_project": "Clive Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clive Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T08:05:21.265780+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 535.729,
+  "profile_point_count": 168,
+  "valid_elevation_count": 168,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 105,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 16.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.5,
+  "gradient_min_pct": -11.337,
+  "gradient_max_pct": 4.993,
+  "path_bounds_svy21": {
+    "min_x": 30062.816,
+    "min_y": 31930.906,
+    "max_x": 30195.523,
+    "max_y": 32108.362
+  },
+  "road_boundary": {
+    "target_road_name": "CLIVE STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 269,
+    "offroad_point_count": 101,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DUNLOP STREET",
+        "point_count": 33
+      },
+      {
+        "road_name": ".",
+        "point_count": 29
+      },
+      {
+        "road_name": "UPPER DICKSON ROAD",
+        "point_count": 18
+      },
+      {
+        "road_name": "CAMPBELL LANE",
+        "point_count": 17
+      },
+      {
+        "road_name": "DALHOUSIE LANE",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 6.0,
+    "offroad_chainage_max_m": 524.0,
+    "trimmed_offroad_points": 101
+  }
+}

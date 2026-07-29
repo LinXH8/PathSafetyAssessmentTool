@@ -1,0 +1,42 @@
+{
+  "path_key": "caldecott_close",
+  "display_name": "Caldecott Close",
+  "source_project": "Caldecott Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry3\\_projects\\Caldecott Close\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T04:56:16.221621+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 581.643,
+  "profile_point_count": 292,
+  "valid_elevation_count": 292,
+  "rejected_outlier_count": 36,
+  "rejected_step_jump_count": 233,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 18,
+  "usable_gradient_completion_pct": 6.16,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 79.79,
+  "gradient_min_pct": 1.384,
+  "gradient_max_pct": 12.633,
+  "path_bounds_svy21": {
+    "min_x": 27687.734,
+    "min_y": 35551.797,
+    "max_x": 27850.547,
+    "max_y": 35761.492
+  },
+  "road_boundary": {
+    "target_road_name": "CALDECOTT CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 292,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_merlimau,1,,JALAN MERLIMAU,222.159,111.08,112.0,10.561,2.5,1.0
+jalan_merlimau,2,,JALAN MERLIMAU,88.61,266.464,266.0,14.217,,
+jalan_merlimau,3,,JALAN MERLIMAU,80.435,439.598,440.0,13.978,2.084,1.0

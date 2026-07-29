@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stokesay_drive,1,Stokesay Drive_Cam4_20260202_080314_912_B.jpeg,,14.954,7.477,8.0,18.25,,
+stokesay_drive,2,Stokesay Drive_Cam4_20260202_080319_718_B.jpeg,,43.23,29.092,30.0,16.004,,
+stokesay_drive,3,Stokesay Drive_Cam4_20260202_080330_531_B.jpeg,,49.352,46.291,46.0,15.434,-2.191,1.0
+stokesay_drive,4,Stokesay Drive_Cam4_20260202_080332_933_B.jpeg,,58.621,53.987,54.0,15.038,-7.101,1.0
+stokesay_drive,5,Stokesay Drive_Cam4_20260202_080336_538_B.jpeg,,68.93,63.776,64.0,14.711,-1.308,1.0
+stokesay_drive,6,Stokesay Drive_Cam4_20260202_080340_743_B.jpeg,,79.331,74.131,74.0,14.026,,
+stokesay_drive,7,Stokesay Drive_Cam4_20260202_080344_346_B.jpeg,,88.991,84.161,84.0,13.075,,
+stokesay_drive,8,Stokesay Drive_Cam4_20260202_080348_551_B.jpeg,,97.815,93.403,94.0,12.042,-6.558,1.0
+stokesay_drive,9,Stokesay Drive_Cam4_20260202_080353_958_B.jpeg,,157.939,127.877,128.0,15.573,,

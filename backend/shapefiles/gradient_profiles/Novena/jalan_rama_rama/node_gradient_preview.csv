@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rama_rama,1,,JALAN RAMA RAMA,98.146,49.073,50.0,6.933,,
+jalan_rama_rama,2,,JALAN RAMA RAMA,107.93,152.111,152.0,4.032,,
+jalan_rama_rama,3,,JALAN RAMA RAMA,182.074,405.037,406.0,3.651,,

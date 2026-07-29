@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_harum,1,Jalan Harum_Cam4_20251218_091008_569_A.jpeg,,12.565,6.282,6.0,14.024,,
+jalan_harum,2,Jalan Harum_Cam4_20251218_091012_774_A.jpeg,,23.539,18.052,18.0,13.68,0.742,1.0
+jalan_harum,3,Jalan Harum_Cam4_20251218_091016_978_A.jpeg,,31.064,27.302,28.0,14.276,6.979,1.0

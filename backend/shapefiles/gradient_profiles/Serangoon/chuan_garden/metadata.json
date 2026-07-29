@@ -1,0 +1,42 @@
+{
+  "path_key": "chuan_garden",
+  "display_name": "Chuan Garden",
+  "source_project": "Chuan Garden",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Chuan Garden\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T02:57:38.874775+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 796.398,
+  "profile_point_count": 400,
+  "valid_elevation_count": 400,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 192,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 160,
+  "usable_gradient_completion_pct": 40.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 48.0,
+  "gradient_min_pct": -7.562,
+  "gradient_max_pct": 8.444,
+  "path_bounds_svy21": {
+    "min_x": 31856.54,
+    "min_y": 38227.337,
+    "max_x": 32045.07,
+    "max_y": 38377.141
+  },
+  "road_boundary": {
+    "target_road_name": "CHUAN GARDEN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 400,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

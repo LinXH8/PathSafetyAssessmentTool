@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+croucher_road,1,Croucher Road_Cam4_20260112_085724_394_B.jpeg,,11.441,5.721,6.0,6.157,,
+croucher_road,2,Croucher Road_Cam4_20260112_085729_211_B.jpeg,,21.939,16.69,16.0,6.696,,
+croucher_road,3,Croucher Road_Cam4_20260112_085734_017_B.jpeg,,32.918,27.428,28.0,7.344,,
+croucher_road,4,Croucher Road_Cam4_20260112_085958_814_B.jpeg,,43.72,38.319,38.0,7.185,-7.553,1.0
+croucher_road,5,Croucher Road_Cam4_20260112_090003_619_B.jpeg,,54.584,49.152,50.0,6.452,-3.897,1.0
+croucher_road,6,Croucher Road_Cam4_20260112_090007_827_B.jpeg,,76.572,65.578,66.0,5.809,,
+croucher_road,7,Croucher Road_Cam4_20260112_090015_634_B.jpeg,,88.017,82.294,82.0,6.724,,
+croucher_road,8,Croucher Road_Cam4_20260112_090019_237_B.jpeg,,98.646,93.331,94.0,5.277,,
+croucher_road,9,Croucher Road_Cam4_20260112_090025_846_B.jpeg,,120.909,109.778,110.0,3.973,,
+croucher_road,10,Croucher Road_Cam4_20260112_090045_666_B.jpeg,,138.433,129.671,128.0,3.801,0.0,1.0

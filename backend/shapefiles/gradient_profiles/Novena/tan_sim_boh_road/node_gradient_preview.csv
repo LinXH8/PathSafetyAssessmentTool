@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tan_sim_boh_road,1,,TAN SIM BOH ROAD,182.575,91.287,92.0,14.297,,
+tan_sim_boh_road,2,,TAN SIM BOH ROAD,86.899,226.024,226.0,7.214,0.625,1.0
+tan_sim_boh_road,3,,TAN SIM BOH ROAD,37.306,375.025,376.0,7.538,,

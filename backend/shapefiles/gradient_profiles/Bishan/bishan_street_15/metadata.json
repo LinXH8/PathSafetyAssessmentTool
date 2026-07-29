@@ -1,0 +1,50 @@
+{
+  "path_key": "bishan_street_15",
+  "display_name": "Bishan Street 15",
+  "source_project": "Bishan Street 15",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Bishan Street 15\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T00:54:45.818548+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 705.341,
+  "profile_point_count": 337,
+  "valid_elevation_count": 337,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 127,
+  "repaired_gradient_point_count": 20,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 163,
+  "usable_gradient_completion_pct": 48.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 37.69,
+  "gradient_min_pct": -11.906,
+  "gradient_max_pct": 8.021,
+  "path_bounds_svy21": {
+    "min_x": 29876.832,
+    "min_y": 37072.792,
+    "max_x": 30119.04,
+    "max_y": 37237.007
+  },
+  "road_boundary": {
+    "target_road_name": "BISHAN STREET 15",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 354,
+    "offroad_point_count": 17,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BISHAN STREET 14",
+        "point_count": 17
+      }
+    ],
+    "offroad_chainage_min_m": 674.0,
+    "offroad_chainage_max_m": 706.0,
+    "trimmed_offroad_points": 17
+  }
+}

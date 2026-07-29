@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+prinsep_link,1,Cam4_20251208_073231_663_C.jpeg,,11.061,5.53,,,,
+prinsep_link,2,Cam4_20251208_073232_263_C.jpeg,,45.323,28.192,30.0,7.372,,
+prinsep_link,3,Cam4_20251211_085514_107_A.jpeg,,54.466,49.894,50.0,5.412,,
+prinsep_link,4,Cam4_20251211_085517_683_A.jpeg,,60.763,57.614,58.0,4.946,,
+prinsep_link,5,Cam4_20251211_085520_268_A.jpeg,,88.405,74.584,,,,
+prinsep_link,6,Cam4_20251211_085531_353_A.jpeg,,113.113,100.759,100.0,3.94,-4.513,1.0

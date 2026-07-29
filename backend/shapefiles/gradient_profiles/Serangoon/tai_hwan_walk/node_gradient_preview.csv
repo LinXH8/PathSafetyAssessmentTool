@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tai_hwan_walk,1,Tai Hwan Walk_Cam4_20260202_085409_538_A.jpeg,,10.804,5.402,6.0,12.872,,
+tai_hwan_walk,2,Tai Hwan Walk_Cam4_20260202_085413_141_A.jpeg,,21.843,16.324,16.0,13.57,,
+tai_hwan_walk,3,Tai Hwan Walk_Cam4_20260202_085416_745_A.jpeg,,48.942,35.393,36.0,13.52,-0.873,1.0
+tai_hwan_walk,4,Tai Hwan Walk_Cam4_20260202_085425_754_A.jpeg,,60.07,54.506,54.0,13.22,1.425,1.0
+tai_hwan_walk,5,Tai Hwan Walk_Cam4_20260202_085429_962_A.jpeg,,67.219,63.644,64.0,13.216,-0.6,1.0

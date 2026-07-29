@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+grange_garden,1,Grange Garden_Cam4_20251204_082024_581_B.jpeg,,10.348,5.174,6.0,32.184,,
+grange_garden,2,Grange Garden_Cam4_20251204_082029_388_B.jpeg,,20.905,15.626,16.0,32.666,-4.073,1.0
+grange_garden,3,Grange Garden_Cam4_20251204_082034_195_B.jpeg,,32.052,26.479,26.0,31.915,-7.5,1.0
+grange_garden,4,Grange Garden_Cam4_20251204_082039_001_B.jpeg,,56.587,44.319,44.0,30.566,-7.5,1.0
+grange_garden,5,Grange Garden_Cam4_20251204_082048_011_B.jpeg,,65.821,61.204,62.0,29.966,0.0,1.0
+grange_garden,6,Grange Garden_Cam4_20251204_082051_615_B.jpeg,,76.933,71.377,72.0,29.966,0.0,1.0
+grange_garden,7,Grange Garden_Cam4_20251204_082055_818_B.jpeg,,89.03,82.982,82.0,29.966,0.0,1.0
+grange_garden,8,Grange Garden_Cam4_20251204_082100_624_B.jpeg,,105.94,97.485,98.0,,,
+grange_garden,9,Grange Garden_Cam4_20251204_082117_924_B.jpeg,,116.027,110.984,110.0,,,
+grange_garden,10,Grange Garden_Cam4_20251204_082122_727_B.jpeg,,127.207,121.617,122.0,,,
+grange_garden,11,Grange Garden_Cam4_20251204_082126_930_B.jpeg,,138.86,133.033,134.0,,,
+grange_garden,12,Grange Garden_Cam4_20251204_082131_133_B.jpeg,,147.254,143.057,144.0,,,

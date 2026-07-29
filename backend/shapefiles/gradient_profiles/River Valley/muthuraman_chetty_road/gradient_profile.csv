@@ -1,0 +1,27 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+muthuraman_chetty_road,Muthuraman Chetty Road,68.0,28487.923,30520.281,5.67,3.919,3.919,1.919,1.0,MUTHURAMAN CHETTY ROAD,2.68
+muthuraman_chetty_road,Muthuraman Chetty Road,70.0,28489.212,30518.752,3.919,3.919,3.971,1.279,1.0,MUTHURAMAN CHETTY ROAD,0.756
+muthuraman_chetty_road,Muthuraman Chetty Road,72.0,28490.502,30517.224,4.024,4.024,3.995,,,MUTHURAMAN CHETTY ROAD,1.167
+muthuraman_chetty_road,Muthuraman Chetty Road,74.0,28491.792,30515.695,4.049,4.049,3.995,,,MUTHURAMAN CHETTY ROAD,3.09
+muthuraman_chetty_road,Muthuraman Chetty Road,76.0,28493.081,30514.166,4.969,3.995,3.995,0.0,1.0,MUTHURAMAN CHETTY ROAD,5.013
+muthuraman_chetty_road,Muthuraman Chetty Road,78.0,28494.371,30512.638,4.025,3.942,3.995,0.952,1.0,MUTHURAMAN CHETTY ROAD,6.936
+muthuraman_chetty_road,Muthuraman Chetty Road,80.0,28495.523,30511.838,3.889,3.889,3.995,,,MUTHURAMAN CHETTY ROAD,8.339
+muthuraman_chetty_road,Muthuraman Chetty Road,82.0,28496.168,30513.731,4.072,4.072,4.072,,,MUTHURAMAN CHETTY ROAD,7.817
+muthuraman_chetty_road,Muthuraman Chetty Road,84.0,28496.813,30515.624,5.5,4.36,4.36,,,MUTHURAMAN CHETTY ROAD,7.296
+muthuraman_chetty_road,Muthuraman Chetty Road,86.0,28497.457,30517.518,4.479,4.648,4.648,,,MUTHURAMAN CHETTY ROAD,6.774
+muthuraman_chetty_road,Muthuraman Chetty Road,88.0,28498.102,30519.411,4.984,4.936,4.936,,,MUTHURAMAN CHETTY ROAD,6.252
+muthuraman_chetty_road,Muthuraman Chetty Road,90.0,28498.746,30521.304,4.919,5.224,5.224,,,MUTHURAMAN CHETTY ROAD,5.731
+muthuraman_chetty_road,Muthuraman Chetty Road,92.0,28499.391,30523.197,5.512,5.512,5.472,,,MUTHURAMAN CHETTY ROAD,5.209
+muthuraman_chetty_road,Muthuraman Chetty Road,94.0,28500.035,30525.091,5.783,5.472,5.512,,,MUTHURAMAN CHETTY ROAD,4.687
+muthuraman_chetty_road,Muthuraman Chetty Road,96.0,28500.68,30526.984,5.773,5.702,5.702,,,MUTHURAMAN CHETTY ROAD,4.166
+muthuraman_chetty_road,Muthuraman Chetty Road,98.0,28501.324,30528.877,5.078,5.933,5.933,,,MUTHURAMAN CHETTY ROAD,3.644
+muthuraman_chetty_road,Muthuraman Chetty Road,100.0,28501.969,30530.771,4.863,6.329,6.329,,,MUTHURAMAN CHETTY ROAD,3.122
+muthuraman_chetty_road,Muthuraman Chetty Road,102.0,28502.613,30532.664,5.092,6.724,6.724,,,MUTHURAMAN CHETTY ROAD,2.601
+muthuraman_chetty_road,Muthuraman Chetty Road,104.0,28503.258,30534.557,7.183,7.119,7.119,,,MUTHURAMAN CHETTY ROAD,2.079
+muthuraman_chetty_road,Muthuraman Chetty Road,106.0,28503.903,30536.45,7.944,,7.515,,,MUTHURAMAN CHETTY ROAD,1.557
+muthuraman_chetty_road,Muthuraman Chetty Road,108.0,28504.547,30538.344,7.744,7.91,7.91,,,MUTHURAMAN CHETTY ROAD,1.036
+muthuraman_chetty_road,Muthuraman Chetty Road,110.0,28505.192,30540.237,8.014,8.305,8.305,,,MUTHURAMAN CHETTY ROAD,0.514
+muthuraman_chetty_road,Muthuraman Chetty Road,112.0,28505.836,30542.13,8.871,8.701,8.701,,,MUTHURAMAN CHETTY ROAD,0.008
+muthuraman_chetty_road,Muthuraman Chetty Road,114.0,28506.481,30544.024,9.096,9.096,9.096,,,MUTHURAMAN CHETTY ROAD,0.533
+muthuraman_chetty_road,Muthuraman Chetty Road,116.0,28507.125,30545.917,4.021,9.096,9.096,,,MUTHURAMAN CHETTY ROAD,1.061
+muthuraman_chetty_road,Muthuraman Chetty Road,116.303,28507.223,30546.204,4.021,9.096,9.096,0.0,1.0,MUTHURAMAN CHETTY ROAD,1.141

@@ -1,0 +1,66 @@
+{
+  "path_key": "lorong_kismis",
+  "display_name": "Lorong Kismis",
+  "source_project": "Lorong Kismis",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Lorong Kismis\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T06:12:21.903556+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2261.016,
+  "profile_point_count": 997,
+  "valid_elevation_count": 982,
+  "rejected_outlier_count": 45,
+  "rejected_step_jump_count": 503,
+  "repaired_gradient_point_count": 26,
+  "removed_bad_gradient_point_count": 9,
+  "valid_gradient_count": 332,
+  "usable_gradient_completion_pct": 33.3,
+  "elevation_hit_coverage_pct": 98.5,
+  "step_jump_rejection_pct": 50.45,
+  "gradient_min_pct": -13.281,
+  "gradient_max_pct": 11.25,
+  "path_bounds_svy21": {
+    "min_x": 20358.615,
+    "min_y": 35420.668,
+    "max_x": 21137.421,
+    "max_y": 35686.816
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG KISMIS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1132,
+    "offroad_point_count": 135,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TOH TUCK TERRACE",
+        "point_count": 65
+      },
+      {
+        "road_name": "TOH YI DRIVE",
+        "point_count": 31
+      },
+      {
+        "road_name": "TOH TUCK WALK",
+        "point_count": 16
+      },
+      {
+        "road_name": "ENG KONG ROAD",
+        "point_count": 8
+      },
+      {
+        "road_name": "UPPER TOH TUCK TERRACE",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 164.0,
+    "offroad_chainage_max_m": 2060.0,
+    "trimmed_offroad_points": 135
+  }
+}

@@ -1,0 +1,18 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+ang_mo_kio_rise,Ang Mo Kio Rise,0.0,27949.42,38858.234,15.903,12.918,12.918,0.0,1.0,ANG MO KIO RISE,17.933
+ang_mo_kio_rise,Ang Mo Kio Rise,2.0,27950.861,38859.621,12.838,12.918,12.918,0.0,1.0,ANG MO KIO RISE,16.967
+ang_mo_kio_rise,Ang Mo Kio Rise,4.0,27952.301,38861.009,32.698,12.918,12.918,0.0,1.0,ANG MO KIO RISE,16.001
+ang_mo_kio_rise,Ang Mo Kio Rise,6.0,27953.742,38862.396,20.508,12.918,12.918,0.125,1.0,ANG MO KIO RISE,15.035
+ang_mo_kio_rise,Ang Mo Kio Rise,8.0,27955.182,38863.783,12.918,12.918,12.918,0.125,1.0,ANG MO KIO RISE,14.069
+ang_mo_kio_rise,Ang Mo Kio Rise,10.0,27956.623,38865.171,12.928,12.928,12.928,0.125,1.0,ANG MO KIO RISE,13.103
+ang_mo_kio_rise,Ang Mo Kio Rise,12.0,27958.238,38866.224,13.023,13.023,12.928,-0.812,1.0,ANG MO KIO RISE,11.872
+ang_mo_kio_rise,Ang Mo Kio Rise,14.0,27960.2,38866.613,13.053,13.053,12.928,-2.25,1.0,ANG MO KIO RISE,10.112
+ang_mo_kio_rise,Ang Mo Kio Rise,16.0,27962.162,38867.001,12.853,12.853,12.853,-2.313,1.0,ANG MO KIO RISE,8.353
+ang_mo_kio_rise,Ang Mo Kio Rise,18.0,27964.123,38867.39,12.748,12.748,12.748,-4.875,1.0,ANG MO KIO RISE,6.594
+ang_mo_kio_rise,Ang Mo Kio Rise,20.0,27966.069,38867.653,12.743,12.743,12.743,-4.074,1.0,ANG MO KIO RISE,4.813
+ang_mo_kio_rise,Ang Mo Kio Rise,22.0,27967.864,38866.771,12.538,12.538,12.538,-2.762,1.0,ANG MO KIO RISE,2.837
+ang_mo_kio_rise,Ang Mo Kio Rise,24.0,27969.659,38865.889,12.366,12.366,12.527,-1.134,1.0,ANG MO KIO RISE,0.862
+ang_mo_kio_rise,Ang Mo Kio Rise,26.0,27971.454,38865.006,12.391,12.391,12.527,0.494,1.0,ANG MO KIO RISE,1.114
+ang_mo_kio_rise,Ang Mo Kio Rise,28.0,27973.249,38864.124,12.928,12.527,12.527,1.456,1.0,ANG MO KIO RISE,3.089
+ang_mo_kio_rise,Ang Mo Kio Rise,30.0,27975.044,38863.242,12.663,12.663,12.578,2.047,1.0,ANG MO KIO RISE,5.065
+ang_mo_kio_rise,Ang Mo Kio Rise,30.931,27975.879,38862.832,12.628,12.628,12.628,,,ANG MO KIO RISE,5.984

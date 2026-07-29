@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+perak_road,1,Cam4_20251208_102610_454_A.jpeg,,14.762,7.381,8.0,2.895,,
+perak_road,2,Cam4_20251208_102615_962_A.jpeg,,21.04,17.901,18.0,3.68,,
+perak_road,3,Cam4_20251208_102630_294_A.jpeg,,34.608,27.824,28.0,3.434,,
+perak_road,4,Cam4_20251208_102648_533_A.jpeg,,63.946,49.277,50.0,3.251,,
+perak_road,5,Cam4_20251208_102719_905_A.jpeg,,205.914,134.93,134.0,3.189,1.689,1.0
+perak_road,6,Cam4_20251208_121201_033_C.jpeg,,213.746,209.83,210.0,2.235,0.663,1.0
+perak_road,7,Cam4_20251208_121203_439_C.jpeg,,222.783,218.265,218.0,2.238,-1.364,1.0
+perak_road,8,Cam4_20251208_121206_447_C.jpeg,,233.688,228.236,228.0,2.018,,
+perak_road,9,Cam4_20251208_121210_049_C.jpeg,,237.217,235.453,236.0,1.912,,

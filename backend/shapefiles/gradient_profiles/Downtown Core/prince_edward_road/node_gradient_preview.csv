@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+prince_edward_road,1,Cam4_20260108_085856_517_B.jpeg,,11.675,5.837,6.0,9.638,,
+prince_edward_road,2,Cam4_20260108_085900_119_B.jpeg,,85.831,48.753,48.0,3.748,1.25,1.0
+prince_edward_road,3,Cam4_20260108_085927_776_B.jpeg,,99.406,92.619,92.0,5.898,,
+prince_edward_road,4,Cam4_20260108_085933_184_B.jpeg,,123.869,111.638,112.0,6.031,,
+prince_edward_road,5,Cam4_20260108_085939_802_B.jpeg,,135.586,129.728,130.0,4.26,,
+prince_edward_road,6,Cam4_20260108_085943_403_B.jpeg,,161.194,148.39,148.0,4.744,,
+prince_edward_road,7,Cam4_20260108_085951_212_B.jpeg,,172.575,166.884,166.0,7.299,,
+prince_edward_road,8,Cam4_20260108_085954_217_B.jpeg,,196.593,184.584,184.0,9.437,,
+prince_edward_road,9,Cam4_20260108_090001_440_B.jpeg,,303.149,249.871,250.0,3.809,1.429,1.0
+prince_edward_road,10,Cam4_20260108_090455_295_B.jpeg,,313.521,308.335,308.0,5.204,,
+prince_edward_road,11,Cam4_20260108_090458_299_B.jpeg,,377.481,345.501,346.0,8.305,,
+prince_edward_road,12,Cam4_20260108_090541_628_B.jpeg,,386.456,381.968,382.0,5.523,10.688,2.0
+prince_edward_road,13,Cam4_20260108_090605_077_B.jpeg,,424.611,405.534,406.0,7.314,,
+prince_edward_road,14,Cam4_20260108_101343_186_A.jpeg,,432.171,428.391,428.0,5.601,,

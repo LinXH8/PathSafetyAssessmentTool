@@ -1,0 +1,58 @@
+{
+  "path_key": "anamalai_avenue",
+  "display_name": "Anamalai Avenue",
+  "source_project": "Anamalai Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Anamalai Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T07:30:04.332601+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 510.194,
+  "profile_point_count": 193,
+  "valid_elevation_count": 193,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 94,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 63,
+  "usable_gradient_completion_pct": 32.64,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 48.7,
+  "gradient_min_pct": -6.793,
+  "gradient_max_pct": 4.013,
+  "path_bounds_svy21": {
+    "min_x": 23573.913,
+    "min_y": 34731.477,
+    "max_x": 23740.663,
+    "max_y": 34920.627
+  },
+  "road_boundary": {
+    "target_road_name": "ANAMALAI AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 257,
+    "offroad_point_count": 64,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 54
+      },
+      {
+        "road_name": "SIXTH AVENUE",
+        "point_count": 6
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 510.194,
+    "trimmed_offroad_points": 64
+  }
+}

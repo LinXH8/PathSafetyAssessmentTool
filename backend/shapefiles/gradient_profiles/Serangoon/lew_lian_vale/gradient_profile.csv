@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+lew_lian_vale,Lew Lian Vale,0.0,32988.013,36836.688,11.837,13.332,13.332,,,LEW LIAN VALE,2.636
+lew_lian_vale,Lew Lian Vale,2.0,32986.283,36835.683,11.895,13.332,13.332,,,LEW LIAN VALE,2.292
+lew_lian_vale,Lew Lian Vale,4.0,32984.554,36834.678,11.918,13.332,13.332,,,LEW LIAN VALE,1.948
+lew_lian_vale,Lew Lian Vale,6.0,32982.825,36833.673,13.332,13.332,13.332,,,LEW LIAN VALE,1.604
+lew_lian_vale,Lew Lian Vale,8.0,32981.096,36832.669,13.341,13.341,13.332,,,LEW LIAN VALE,1.26
+lew_lian_vale,Lew Lian Vale,10.0,32979.366,36831.664,13.229,13.229,13.336,0.139,1.0,LEW LIAN VALE,0.916
+lew_lian_vale,Lew Lian Vale,12.0,32977.752,36830.726,13.361,13.361,13.341,0.208,1.0,LEW LIAN VALE,0.595

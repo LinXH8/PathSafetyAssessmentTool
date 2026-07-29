@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+carpenter_street,1,Carpenter Street_Cam4_20251211_110517_541_A.jpeg,,12.118,6.059,,,,
+carpenter_street,2,Carpenter Street_Cam4_20251211_110522_734_A.jpeg,,20.168,16.143,,,,
+carpenter_street,3,Carpenter Street_Cam4_20251211_110526_881_A.jpeg,,29.524,24.846,24.0,2.808,0.0,1.0
+carpenter_street,4,Carpenter Street_Cam4_20251211_110532_050_A.jpeg,,39.006,34.265,34.0,2.808,0.0,1.0
+carpenter_street,5,Carpenter Street_Cam4_20251211_110535_602_A.jpeg,,70.893,54.95,56.0,2.033,,
+carpenter_street,6,Carpenter Street_Cam4_20251211_110547_981_A.jpeg,,94.015,82.454,82.0,2.033,,
+carpenter_street,7,Carpenter Street_Cam4_20251211_110556_269_A.jpeg,,119.895,106.955,106.0,,,
+carpenter_street,8,Carpenter Street_Cam4_20251211_110605_692_A.jpeg,,129.835,124.865,124.0,,,
+carpenter_street,9,Carpenter Street_Cam4_20251211_110608_345_A.jpeg,,138.637,134.236,134.0,,,
+carpenter_street,10,Carpenter Street_Cam4_20251211_110609_847_A.jpeg,,148.131,143.384,144.0,,,

@@ -1,0 +1,42 @@
+{
+  "path_key": "esplanade_drive",
+  "display_name": "Esplanade Drive",
+  "source_project": "Esplanade Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Esplanade Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T08:58:47.881409+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 461.327,
+  "profile_point_count": 232,
+  "valid_elevation_count": 232,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 103,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 90,
+  "usable_gradient_completion_pct": 38.79,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.4,
+  "gradient_min_pct": -14.968,
+  "gradient_max_pct": 6.68,
+  "path_bounds_svy21": {
+    "min_x": 30309.326,
+    "min_y": 29897.511,
+    "max_x": 30419.498,
+    "max_y": 30335.151
+  },
+  "road_boundary": {
+    "target_road_name": "ESPLANADE DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 232,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

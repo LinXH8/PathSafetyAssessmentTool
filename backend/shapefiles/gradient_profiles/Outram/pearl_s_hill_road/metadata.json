@@ -1,0 +1,42 @@
+{
+  "path_key": "pearl_s_hill_road",
+  "display_name": "Pearl's Hill Road",
+  "source_project": "Pearl's Hill Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Pearl's Hill Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-24T01:05:20.768200+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 262.19,
+  "profile_point_count": 133,
+  "valid_elevation_count": 133,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 41,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 83,
+  "usable_gradient_completion_pct": 62.41,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 30.83,
+  "gradient_min_pct": -11.25,
+  "gradient_max_pct": 11.25,
+  "path_bounds_svy21": {
+    "min_x": 28861.778,
+    "min_y": 29878.09,
+    "max_x": 28987.766,
+    "max_y": 29943.023
+  },
+  "road_boundary": {
+    "target_road_name": "PEARL'S HILL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 133,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,14 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+serangoon_north_view,Serangoon North View,0.0,32146.179,38751.457,24.451,24.451,24.451,0.0,1.0,SERANGOON NORTH VIEW,10.287
+serangoon_north_view,Serangoon North View,2.0,32146.805,38749.557,24.47,24.47,24.443,0.311,1.0,SERANGOON NORTH VIEW,8.3
+serangoon_north_view,Serangoon North View,4.0,32147.432,38747.658,24.436,24.436,24.451,0.417,1.0,SERANGOON NORTH VIEW,6.313
+serangoon_north_view,Serangoon North View,6.0,32148.058,38745.759,24.399,24.399,24.47,1.505,1.0,SERANGOON NORTH VIEW,4.327
+serangoon_north_view,Serangoon North View,8.0,32148.685,38743.859,24.484,24.484,24.484,1.842,1.0,SERANGOON NORTH VIEW,2.34
+serangoon_north_view,Serangoon North View,10.0,32149.311,38741.96,24.564,24.564,24.564,1.627,1.0,SERANGOON NORTH VIEW,0.353
+serangoon_north_view,Serangoon North View,12.0,32149.958,38740.068,24.598,24.598,24.598,1.606,1.0,SERANGOON NORTH VIEW,1.637
+serangoon_north_view,Serangoon North View,14.0,32150.618,38738.18,24.776,24.776,24.6,1.877,1.0,SERANGOON NORTH VIEW,3.627
+serangoon_north_view,Serangoon North View,16.0,32151.278,38736.292,24.6,24.6,24.613,1.444,1.0,SERANGOON NORTH VIEW,5.618
+serangoon_north_view,Serangoon North View,18.0,32151.938,38734.404,24.613,24.613,24.714,,,SERANGOON NORTH VIEW,7.609
+serangoon_north_view,Serangoon North View,20.0,32152.598,38732.516,24.714,24.714,24.714,,,SERANGOON NORTH VIEW,9.599
+serangoon_north_view,Serangoon North View,22.0,32153.258,38730.628,26.174,24.714,24.714,,,SERANGOON NORTH VIEW,11.59
+serangoon_north_view,Serangoon North View,24.0,32154.145,38728.837,25.035,24.714,24.714,,,SERANGOON NORTH VIEW,13.587

@@ -1,0 +1,54 @@
+{
+  "path_key": "grove_crescent",
+  "display_name": "Grove Crescent",
+  "source_project": "Grove Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Grove Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T17:57:22.008559+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 530.08,
+  "profile_point_count": 241,
+  "valid_elevation_count": 241,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 161,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 36,
+  "usable_gradient_completion_pct": 14.94,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.8,
+  "gradient_min_pct": -9.109,
+  "gradient_max_pct": 11.406,
+  "path_bounds_svy21": {
+    "min_x": 22474.333,
+    "min_y": 32769.896,
+    "max_x": 22568.707,
+    "max_y": 32959.244
+  },
+  "road_boundary": {
+    "target_road_name": "GROVE CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 267,
+    "offroad_point_count": 26,
+    "offroad_top_road_names": [
+      {
+        "road_name": "GROVE AVENUE",
+        "point_count": 16
+      },
+      {
+        "road_name": "GROVE DRIVE",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 320.0,
+    "offroad_chainage_max_m": 530.08,
+    "trimmed_offroad_points": 26
+  }
+}

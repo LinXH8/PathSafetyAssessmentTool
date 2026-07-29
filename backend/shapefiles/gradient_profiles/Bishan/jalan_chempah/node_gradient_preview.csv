@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chempah,1,Jalan Chempah_Cam4_20260102_091346_446_A.jpeg,,10.733,5.367,,,,
+jalan_chempah,2,Jalan Chempah_Cam4_20260102_091350_050_A.jpeg,,18.463,14.598,14.0,21.421,,
+jalan_chempah,3,Jalan Chempah_Cam4_20260102_091721_502_A.jpeg,,31.286,24.875,24.0,21.704,,
+jalan_chempah,4,Jalan Chempah_Cam4_20260102_091726_914_A.jpeg,,37.418,34.352,34.0,22.707,,
+jalan_chempah,5,Jalan Chempah_Cam4_20260102_091729_316_A.jpeg,,70.707,54.062,54.0,23.9,12.622,2.0
+jalan_chempah,6,Jalan Chempah_Cam4_20260102_091743_144_A.jpeg,,79.302,75.005,76.0,25.224,,
+jalan_chempah,7,Jalan Chempah_Cam4_20260102_091746_749_A.jpeg,,87.31,83.306,84.0,25.58,,
+jalan_chempah,8,Jalan Chempah_Cam4_20260102_091750_355_A.jpeg,,102.876,95.093,96.0,24.216,,
+jalan_chempah,9,Jalan Chempah_Cam4_20260102_091814_396_A.jpeg,,112.829,107.853,108.0,24.341,,
+jalan_chempah,10,Jalan Chempah_Cam4_20260102_091818_063_A.jpeg,,190.776,151.802,152.0,23.13,,
+jalan_chempah,11,Jalan Chempah_Cam4_20260103_103110_245_A.jpeg,,199.922,195.349,,,,
+jalan_chempah,12,Jalan Chempah_Cam4_20260103_103113_250_A.jpeg,,208.497,204.209,,,,
+jalan_chempah,13,Jalan Chempah_Cam4_20260103_103116_264_A.jpeg,,218.436,213.467,,,,
+jalan_chempah,14,Jalan Chempah_Cam4_20260103_103120_471_A.jpeg,,229.001,223.719,,,,

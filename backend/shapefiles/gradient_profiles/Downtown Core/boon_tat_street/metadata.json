@@ -1,0 +1,66 @@
+{
+  "path_key": "boon_tat_street",
+  "display_name": "Boon Tat Street",
+  "source_project": "Boon Tat Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Boon Tat Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T05:42:10.838806+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1037.857,
+  "profile_point_count": 435,
+  "valid_elevation_count": 435,
+  "rejected_outlier_count": 34,
+  "rejected_step_jump_count": 266,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 94,
+  "usable_gradient_completion_pct": 21.61,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.15,
+  "gradient_min_pct": -10.273,
+  "gradient_max_pct": 8.009,
+  "path_bounds_svy21": {
+    "min_x": 29588.441,
+    "min_y": 29160.446,
+    "max_x": 29894.937,
+    "max_y": 29347.989
+  },
+  "road_boundary": {
+    "target_road_name": "BOON TAT STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 520,
+    "offroad_point_count": 85,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 32
+      },
+      {
+        "road_name": ".",
+        "point_count": 27
+      },
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 16
+      },
+      {
+        "road_name": "ROBINSON ROAD",
+        "point_count": 5
+      },
+      {
+        "road_name": "STANLEY STREET",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 84.0,
+    "offroad_chainage_max_m": 1038.0,
+    "trimmed_offroad_points": 85
+  }
+}

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_pisang,1,Jalan Pisang_Cam4_20251208_075909_985_C.jpeg,,11.681,5.841,,,,
+jalan_pisang,2,Jalan Pisang_Cam4_20251208_075917_194_C.jpeg,,40.429,26.055,26.0,8.298,,
+jalan_pisang,3,Jalan Pisang_Cam4_20251208_080127_553_C.jpeg,,47.008,43.719,44.0,5.43,,

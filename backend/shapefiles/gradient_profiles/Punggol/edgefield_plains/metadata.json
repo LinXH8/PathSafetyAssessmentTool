@@ -1,0 +1,66 @@
+{
+  "path_key": "edgefield_plains",
+  "display_name": "Edgefield Plains",
+  "source_project": "Edgefield Plains",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Edgefield Plains\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T06:09:28.998784+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5218.183,
+  "profile_point_count": 1746,
+  "valid_elevation_count": 1636,
+  "rejected_outlier_count": 173,
+  "rejected_step_jump_count": 804,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 714,
+  "usable_gradient_completion_pct": 40.89,
+  "elevation_hit_coverage_pct": 93.7,
+  "step_jump_rejection_pct": 46.05,
+  "gradient_min_pct": -12.1,
+  "gradient_max_pct": 11.494,
+  "path_bounds_svy21": {
+    "min_x": 35885.858,
+    "min_y": 41716.933,
+    "max_x": 36892.53,
+    "max_y": 43170.78
+  },
+  "road_boundary": {
+    "target_road_name": "EDGEFIELD PLAINS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2611,
+    "offroad_point_count": 865,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL FIELD",
+        "point_count": 297
+      },
+      {
+        "road_name": "PUNGGOL CENTRAL",
+        "point_count": 240
+      },
+      {
+        "road_name": "EDGEDALE PLAINS",
+        "point_count": 117
+      },
+      {
+        "road_name": "PUNGGOL DRIVE",
+        "point_count": 110
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 98
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 5218.183,
+    "trimmed_offroad_points": 865
+  }
+}

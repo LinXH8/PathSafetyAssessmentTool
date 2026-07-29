@@ -1,0 +1,54 @@
+{
+  "path_key": "ang_mo_kio_central_3",
+  "display_name": "Ang Mo Kio Central 3",
+  "source_project": "Ang Mo Kio Central 3",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Central 3\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T15:09:54.335126+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 494.461,
+  "profile_point_count": 192,
+  "valid_elevation_count": 192,
+  "rejected_outlier_count": 16,
+  "rejected_step_jump_count": 97,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 34.38,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 50.52,
+  "gradient_min_pct": -23.459,
+  "gradient_max_pct": 8.802,
+  "path_bounds_svy21": {
+    "min_x": 29416.383,
+    "min_y": 39661.73,
+    "max_x": 29595.482,
+    "max_y": 39817.43
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO CENTRAL 3",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 249,
+    "offroad_point_count": 57,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANG MO KIO AVENUE 8",
+        "point_count": 50
+      },
+      {
+        "road_name": "ANG MO KIO CENTRAL 2",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 170.0,
+    "offroad_chainage_max_m": 494.461,
+    "trimmed_offroad_points": 57
+  }
+}

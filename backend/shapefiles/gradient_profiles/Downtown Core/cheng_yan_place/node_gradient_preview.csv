@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cheng_yan_place,1,Cheng Yan Place_Cam4_20251211_080723_990_A.jpeg,,10.42,5.21,6.0,3.165,,
+cheng_yan_place,2,Cheng Yan Place_Cam4_20251211_080728_506_A.jpeg,,20.912,15.666,16.0,3.165,0.0,1.0
+cheng_yan_place,3,Cheng Yan Place_Cam4_20251211_080731_527_A.jpeg,,29.943,25.428,26.0,3.165,0.0,1.0
+cheng_yan_place,4,Cheng Yan Place_Cam4_20251211_080734_560_A.jpeg,,40.032,34.988,34.0,3.165,0.0,1.0
+cheng_yan_place,5,Cheng Yan Place_Cam4_20251211_080737_564_A.jpeg,,50.874,45.453,46.0,4.15,,
+cheng_yan_place,6,Cheng Yan Place_Cam4_20251211_080741_071_A.jpeg,,91.696,71.285,72.0,4.687,,

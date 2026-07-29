@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+countryside_grove,1,Countryside Grove_Cam4_20251231_083242_213_B.jpeg,,10.841,5.421,6.0,8.059,-1.195,1.0
+countryside_grove,2,Countryside Grove_Cam4_20251231_083245_816_B.jpeg,,24.06,17.451,18.0,8.024,0.0,1.0
+countryside_grove,3,Countryside Grove_Cam4_20251231_083249_423_B.jpeg,,30.31,27.185,28.0,8.192,,
+countryside_grove,4,Countryside Grove_Cam4_20251231_083251_224_B.jpeg,,40.254,35.282,36.0,8.071,-1.287,1.0
+countryside_grove,5,Countryside Grove_Cam4_20251231_083254_227_B.jpeg,,53.082,46.668,46.0,8.101,,
+countryside_grove,6,Countryside Grove_Cam4_20251231_083257_831_B.jpeg,,61.241,57.162,58.0,8.488,,
+countryside_grove,7,Countryside Grove_Cam4_20251231_083300_234_B.jpeg,,70.604,65.922,66.0,8.895,,
+countryside_grove,8,Countryside Grove_Cam4_20251231_083303_237_B.jpeg,,80.038,75.321,76.0,9.842,,
+countryside_grove,9,Countryside Grove_Cam4_20251231_083306_239_B.jpeg,,107.331,93.685,94.0,9.725,,
+countryside_grove,10,Countryside Grove_Cam4_20251231_083315_848_B.jpeg,,129.69,118.51,118.0,9.715,,
+countryside_grove,11,Countryside Grove_Cam4_20251231_083322_456_B.jpeg,,140.629,135.16,136.0,9.362,,
+countryside_grove,12,Countryside Grove_Cam4_20251231_083326_065_B.jpeg,,150.058,145.344,146.0,10.485,,
+countryside_grove,13,Countryside Grove_Cam4_20251231_083329_669_B.jpeg,,162.983,156.52,156.0,10.274,,

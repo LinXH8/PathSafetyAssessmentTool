@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+nim_terrace,1,Nim Terrace_Cam4_20260101_095934_130_B.jpeg,,11.543,5.772,6.0,11.985,-0.5,1.0
+nim_terrace,2,Nim Terrace_Cam4_20260101_095938_348_B.jpeg,,22.841,17.192,18.0,11.752,-2.188,1.0
+nim_terrace,3,Nim Terrace_Cam4_20260101_095942_013_B.jpeg,,31.211,27.026,28.0,11.685,,
+nim_terrace,4,Nim Terrace_Cam4_20260101_095944_416_B.jpeg,,41.986,36.599,36.0,11.435,,
+nim_terrace,5,Nim Terrace_Cam4_20260101_095947_425_B.jpeg,,51.24,46.613,46.0,11.244,-1.927,1.0
+nim_terrace,6,Nim Terrace_Cam4_20260101_095949_832_B.jpeg,,60.797,56.018,56.0,11.777,,
+nim_terrace,7,Nim Terrace_Cam4_20260101_095952_238_B.jpeg,,70.433,65.615,66.0,12.446,,
+nim_terrace,8,Nim Terrace_Cam4_20260101_095954_640_B.jpeg,,80.39,75.412,76.0,11.147,,
+nim_terrace,9,Nim Terrace_Cam4_20260101_095957_049_B.jpeg,,90.634,85.512,86.0,10.527,-2.5,1.0
+nim_terrace,10,Nim Terrace_Cam4_20260101_095959_510_B.jpeg,,99.951,95.292,96.0,10.377,-1.875,1.0
+nim_terrace,11,Nim Terrace_Cam4_20260101_100001_915_B.jpeg,,110.555,105.253,106.0,10.277,,
+nim_terrace,12,Nim Terrace_Cam4_20260101_100005_032_B.jpeg,,124.482,117.518,118.0,10.412,,
+nim_terrace,13,Nim Terrace_Cam4_20260101_100009_317_B.jpeg,,130.089,127.286,128.0,9.831,0.469,1.0
+nim_terrace,14,Nim Terrace_Cam4_20260101_100011_820_B.jpeg,,140.378,135.233,136.0,9.893,-1.094,1.0
+nim_terrace,15,Nim Terrace_Cam4_20260101_100017_228_B.jpeg,,151.225,145.801,146.0,9.531,,
+nim_terrace,16,Nim Terrace_Cam4_20260101_100021_435_B.jpeg,,160.111,155.668,154.0,9.531,0.0,1.0

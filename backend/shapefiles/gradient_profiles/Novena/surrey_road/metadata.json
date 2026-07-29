@@ -1,0 +1,54 @@
+{
+  "path_key": "surrey_road",
+  "display_name": "Surrey Road",
+  "source_project": "Surrey Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry9\\_projects\\Surrey Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T08:53:38.040756+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 396.745,
+  "profile_point_count": 198,
+  "valid_elevation_count": 198,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 114,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 40,
+  "usable_gradient_completion_pct": 20.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 57.58,
+  "gradient_min_pct": -11.723,
+  "gradient_max_pct": 0.848,
+  "path_bounds_svy21": {
+    "min_x": 28885.305,
+    "min_y": 33094.391,
+    "max_x": 29120.379,
+    "max_y": 33176.227
+  },
+  "road_boundary": {
+    "target_road_name": "SURREY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 200,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LINCOLN ROAD",
+        "point_count": 1
+      },
+      {
+        "road_name": "NEWTON ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 202.0,
+    "offroad_chainage_max_m": 396.745,
+    "trimmed_offroad_points": 2
+  }
+}

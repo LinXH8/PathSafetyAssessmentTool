@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tai_hwan_drive,1,Tai Hwan Drive_Cam4_20260202_083336_917_A.jpeg,,11.027,5.513,6.0,9.807,4.131,1.0
+tai_hwan_drive,2,Tai Hwan Drive_Cam4_20260202_083340_521_A.jpeg,,23.722,17.374,18.0,10.377,4.662,1.0
+tai_hwan_drive,3,Tai Hwan Drive_Cam4_20260202_083344_724_A.jpeg,,34.775,29.248,30.0,10.996,4.75,1.0
+tai_hwan_drive,4,Tai Hwan Drive_Cam4_20260202_083348_328_A.jpeg,,40.514,37.645,38.0,11.362,4.337,1.0
+tai_hwan_drive,5,Tai Hwan Drive_Cam4_20260202_083350_130_A.jpeg,,51.714,46.114,46.0,11.73,4.65,1.0
+tai_hwan_drive,6,Tai Hwan Drive_Cam4_20260202_083353_734_A.jpeg,,80.283,65.998,66.0,12.547,4.506,1.0
+tai_hwan_drive,7,Tai Hwan Drive_Cam4_20260202_083403_345_A.jpeg,,91.515,85.899,86.0,13.496,5.063,1.0
+tai_hwan_drive,8,Tai Hwan Drive_Cam4_20260202_083407_550_A.jpeg,,98.158,94.837,94.0,14.133,,
+tai_hwan_drive,9,Tai Hwan Drive_Cam4_20260202_083409_919_A.jpeg,,126.874,112.516,112.0,15.576,,
+tai_hwan_drive,10,Tai Hwan Drive_Cam4_20260202_083420_730_A.jpeg,,137.266,132.07,132.0,15.687,,

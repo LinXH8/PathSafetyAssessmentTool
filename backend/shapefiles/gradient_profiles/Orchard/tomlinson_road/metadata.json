@@ -1,0 +1,58 @@
+{
+  "path_key": "tomlinson_road",
+  "display_name": "Tomlinson Road",
+  "source_project": "Tomlinson Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Tomlinson Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-25T15:38:33.146937+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 662.457,
+  "profile_point_count": 293,
+  "valid_elevation_count": 272,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 219,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 35,
+  "usable_gradient_completion_pct": 11.95,
+  "elevation_hit_coverage_pct": 92.83,
+  "step_jump_rejection_pct": 74.74,
+  "gradient_min_pct": -6.426,
+  "gradient_max_pct": 9.627,
+  "path_bounds_svy21": {
+    "min_x": 27117.749,
+    "min_y": 31608.614,
+    "max_x": 27276.64,
+    "max_y": 31943.171
+  },
+  "road_boundary": {
+    "target_road_name": "TOMLINSON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 333,
+    "offroad_point_count": 40,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ORCHARD BOULEVARD",
+        "point_count": 20
+      },
+      {
+        "road_name": ".",
+        "point_count": 11
+      },
+      {
+        "road_name": "CUSCADEN ROAD",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 108.0,
+    "offroad_chainage_max_m": 608.0,
+    "trimmed_offroad_points": 40
+  }
+}

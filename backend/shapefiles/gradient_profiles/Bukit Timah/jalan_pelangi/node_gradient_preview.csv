@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_pelangi,1,Jalan Pelangi_Cam4_20251218_090831_258_A.jpeg,,10.871,5.436,6.0,10.01,,
+jalan_pelangi,2,Jalan Pelangi_Cam4_20251218_090834_261_A.jpeg,,22.988,16.929,16.0,10.372,7.656,1.0
+jalan_pelangi,3,Jalan Pelangi_Cam4_20251218_090837_865_A.jpeg,,45.985,34.486,34.0,12.057,9.375,2.0

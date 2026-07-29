@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kuak,1,Jalan Kuak_Cam4_20260102_091538_751_A.jpeg,,12.203,6.102,6.0,23.805,,
+jalan_kuak,2,Jalan Kuak_Cam4_20260102_091542_355_A.jpeg,,20.329,16.266,16.0,24.347,,
+jalan_kuak,3,Jalan Kuak_Cam4_20260102_091545_360_A.jpeg,,31.459,25.894,26.0,25.702,,
+jalan_kuak,4,Jalan Kuak_Cam4_20260102_091551_365_A.jpeg,,42.277,36.868,36.0,25.937,,
+jalan_kuak,5,Jalan Kuak_Cam4_20260102_091555_569_A.jpeg,,49.417,45.847,46.0,21.799,,
+jalan_kuak,6,Jalan Kuak_Cam4_20260102_091557_975_A.jpeg,,60.939,55.178,56.0,19.466,0.0,1.0
+jalan_kuak,7,Jalan Kuak_Cam4_20260102_091601_579_A.jpeg,,69.181,65.06,66.0,19.555,,
+jalan_kuak,8,Jalan Kuak_Cam4_20260102_091603_983_A.jpeg,,82.127,75.654,76.0,19.854,,
+jalan_kuak,9,Jalan Kuak_Cam4_20260102_091607_588_A.jpeg,,90.888,86.508,86.0,19.704,-0.781,1.0
+jalan_kuak,10,Jalan Kuak_Cam4_20260102_091609_990_A.jpeg,,118.705,104.797,104.0,19.421,,
+jalan_kuak,11,Jalan Kuak_Cam4_20260102_091617_801_A.jpeg,,132.037,125.371,126.0,19.915,,
+jalan_kuak,12,Jalan Kuak_Cam4_20260102_091621_407_A.jpeg,,138.633,135.335,136.0,19.75,,
+jalan_kuak,13,Jalan Kuak_Cam4_20260102_091623_209_A.jpeg,,148.131,143.382,144.0,19.64,,
+jalan_kuak,14,Jalan Kuak_Cam4_20260102_091626_211_A.jpeg,,175.059,161.595,162.0,21.789,,
+jalan_kuak,15,Jalan Kuak_Cam4_20260102_091641_836_A.jpeg,,214.439,194.749,194.0,24.225,,
+jalan_kuak,16,Jalan Kuak_Cam4_20260103_103136_117_A.jpeg,,226.326,220.382,220.0,24.948,,

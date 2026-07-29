@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+parry_view,1,Parry View_Cam4_20260131_101857_267_A.jpeg,,12.978,6.489,6.0,11.859,,
+parry_view,2,Parry View_Cam4_20260131_101908_077_A.jpeg,,19.701,16.34,16.0,20.776,,
+parry_view,3,Parry View_Cam4_20260131_101909_878_A.jpeg,,198.111,108.906,106.0,35.365,-1.061,1.0
+parry_view,4,Parry View_Cam4_20260131_103743_139_A.jpeg,,223.873,210.992,210.0,,,
+parry_view,5,Parry View_Cam4_20260131_103751_571_A.jpeg,,249.665,236.769,236.0,,,
+parry_view,6,Parry View_Cam4_20260131_103800_006_A.jpeg,,257.138,253.401,254.0,,,
+parry_view,7,Parry View_Cam4_20260131_103802_411_A.jpeg,,318.654,287.896,288.0,,,
+parry_view,8,Parry View_Cam4_20260131_103821_069_A.jpeg,,327.57,323.112,324.0,28.045,-3.979,1.0
+parry_view,9,Parry View_Cam4_20260131_103823_472_A.jpeg,,361.651,344.61,,,,
+parry_view,10,Parry View_Cam4_20260131_103833_687_A.jpeg,,372.724,367.187,368.0,23.217,,
+parry_view,11,Parry View_Cam4_20260131_103837_348_A.jpeg,,384.524,378.624,378.0,18.646,,
+parry_view,12,Parry View_Cam4_20260131_103859_189_A.jpeg,,391.698,388.111,388.0,13.924,,

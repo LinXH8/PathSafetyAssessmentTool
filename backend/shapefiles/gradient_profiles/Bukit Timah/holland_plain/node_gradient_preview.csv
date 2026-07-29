@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_plain,1,Holland Plain_Cam4_20251217_074824_306_A.jpeg,,12.107,6.054,6.0,11.485,-2.031,1.0
+holland_plain,2,Holland Plain_Cam4_20251217_074827_311_A.jpeg,,23.142,17.625,18.0,11.335,-1.25,1.0
+holland_plain,3,Holland Plain_Cam4_20251217_074830_335_A.jpeg,,34.225,28.684,28.0,11.21,-1.25,1.0
+holland_plain,4,Holland Plain_Cam4_20251217_074833_352_A.jpeg,,56.947,45.586,46.0,10.983,-1.588,1.0
+holland_plain,5,Holland Plain_Cam4_20251217_074839_361_A.jpeg,,67.902,62.425,62.0,11.17,1.641,1.0
+holland_plain,6,Holland Plain_Cam4_20251217_074842_364_A.jpeg,,79.035,73.469,74.0,10.809,,
+holland_plain,7,Holland Plain_Cam4_20251217_074845_349_A.jpeg,,87.033,83.034,84.0,10.849,,
+holland_plain,8,Holland Plain_Cam4_20251217_074847_351_A.jpeg,,113.817,100.425,100.0,10.917,,
+holland_plain,9,Holland Plain_Cam4_20251217_074853_906_A.jpeg,,126.112,119.965,120.0,10.237,-0.313,1.0
+holland_plain,10,Holland Plain_Cam4_20251217_074856_910_A.jpeg,,134.307,130.209,130.0,10.137,-1.25,1.0
+holland_plain,11,Holland Plain_Cam4_20251217_074858_913_A.jpeg,,144.609,139.458,140.0,10.157,0.874,1.0
+holland_plain,12,Holland Plain_Cam4_20251217_074901_423_A.jpeg,,157.02,150.814,150.0,10.19,0.625,1.0
+holland_plain,13,Holland Plain_Cam4_20251217_074904_432_A.jpeg,,167.032,162.026,162.0,10.326,,
+holland_plain,14,Holland Plain_Cam4_20251217_074906_951_A.jpeg,,174.761,170.896,170.0,9.762,,
+holland_plain,15,Holland Plain_Cam4_20251217_074908_960_A.jpeg,,204.644,189.702,190.0,9.674,0.0,1.0
+holland_plain,16,Holland Plain_Cam4_20251217_074918_013_A.jpeg,,215.822,210.233,210.0,9.857,1.562,1.0
+holland_plain,17,Holland Plain_Cam4_20251217_074921_528_A.jpeg,,227.231,221.527,222.0,9.891,0.104,1.0
+holland_plain,18,Holland Plain_Cam4_20251217_074925_046_A.jpeg,,238.901,233.066,234.0,9.916,-0.104,1.0
+holland_plain,19,Holland Plain_Cam4_20251217_074928_575_A.jpeg,,261.014,249.957,250.0,9.855,,
+holland_plain,20,Holland Plain_Cam4_20251217_074935_648_A.jpeg,,272.487,266.751,266.0,9.813,0.313,1.0
+holland_plain,21,Holland Plain_Cam4_20251217_074939_653_A.jpeg,,282.838,277.663,278.0,9.84,0.0,1.0
+holland_plain,22,Holland Plain_Cam4_20251217_074943_179_A.jpeg,,294.498,288.668,,,,
+holland_plain,23,Holland Plain_Cam4_20251217_074947_207_A.jpeg,,314.637,304.568,,,,

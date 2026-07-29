@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_sappan,1,Jalan Sappan_Cam4_20251231_075630_370_A.jpeg,,11.805,5.902,6.0,26.81,,
+jalan_sappan,2,Jalan Sappan_Cam4_20251231_075635_774_A.jpeg,,22.805,17.305,18.0,26.936,,
+jalan_sappan,3,Jalan Sappan_Cam4_20251231_075640_581_A.jpeg,,31.095,26.95,26.0,26.73,2.771,1.0
+jalan_sappan,4,Jalan Sappan_Cam4_20251231_075644_784_A.jpeg,,40.969,36.032,36.0,26.76,-2.268,1.0
+jalan_sappan,5,Jalan Sappan_Cam4_20251231_075649_588_A.jpeg,,64.422,52.696,52.0,26.545,-1.688,1.0
+jalan_sappan,6,Jalan Sappan_Cam4_20251231_075722_624_A.jpeg,,75.115,69.768,70.0,26.673,,
+jalan_sappan,7,Jalan Sappan_Cam4_20251231_075726_778_A.jpeg,,86.342,80.728,80.0,26.951,,
+jalan_sappan,8,Jalan Sappan_Cam4_20251231_075731_587_A.jpeg,,93.289,89.816,90.0,27.69,,
+jalan_sappan,9,Jalan Sappan_Cam4_20251231_075734_590_A.jpeg,,119.713,106.501,106.0,26.83,,
+jalan_sappan,10,Jalan Sappan_Cam4_20251231_075755_021_A.jpeg,,130.452,125.082,126.0,26.785,4.523,1.0
+jalan_sappan,11,Jalan Sappan_Cam4_20251231_075759_226_A.jpeg,,141.901,136.177,136.0,27.083,,
+jalan_sappan,12,Jalan Sappan_Cam4_20251231_075803_431_A.jpeg,,148.766,145.333,146.0,26.984,,
+jalan_sappan,13,Jalan Sappan_Cam4_20251231_075806_392_A.jpeg,,175.976,162.371,162.0,27.604,0.101,1.0
+jalan_sappan,14,Jalan Sappan_Cam4_20251231_075823_808_A.jpeg,,186.647,181.311,182.0,26.984,,
+jalan_sappan,15,Jalan Sappan_Cam4_20251231_075831_014_A.jpeg,,197.828,192.237,192.0,25.426,,
+jalan_sappan,16,Jalan Sappan_Cam4_20251231_075836_370_A.jpeg,,299.038,248.433,248.0,27.15,,
+jalan_sappan,17,Jalan Sappan_Cam4_20251231_082843_727_A.jpeg,,367.024,333.031,334.0,29.798,,
+jalan_sappan,18,Jalan Sappan_Cam4_20251231_082914_935_A.jpeg,,378.238,372.631,372.0,27.255,,
+jalan_sappan,19,Jalan Sappan_Cam4_20251231_082919_742_A.jpeg,,389.529,383.883,384.0,26.95,,
+jalan_sappan,20,Jalan Sappan_Cam4_20251231_082924_546_A.jpeg,,421.499,405.514,,,,
+jalan_sappan,21,Jalan Sappan_Cam4_20251231_082941_911_A.jpeg,,556.145,488.822,486.0,29.068,,
+jalan_sappan,22,Jalan Sappan_Cam4_20260105_084340_746_A.jpeg,,595.597,575.871,,,,
+jalan_sappan,23,Jalan Sappan_Cam4_20260105_084416_811_A.jpeg,,622.575,609.086,,,,

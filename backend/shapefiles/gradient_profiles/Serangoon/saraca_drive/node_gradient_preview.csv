@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+saraca_drive,1,Saraca Drive_Cam4_20260105_082737_702_C.jpeg,,10.599,5.3,,,,
+saraca_drive,2,Saraca Drive_Cam4_20260105_082741_306_C.jpeg,,198.675,104.637,,,,
+saraca_drive,3,Saraca Drive_Cam4_20260105_083013_033_C.jpeg,,209.979,204.327,204.0,17.608,-4.844,1.0
+saraca_drive,4,Saraca Drive_Cam4_20260105_083017_242_C.jpeg,,220.831,215.405,216.0,17.408,0.601,1.0
+saraca_drive,5,Saraca Drive_Cam4_20260105_083021_320_C.jpeg,,229.21,225.021,226.0,17.606,,
+saraca_drive,6,Saraca Drive_Cam4_20260105_083029_729_C.jpeg,,236.73,232.97,232.0,17.553,,
+saraca_drive,7,Saraca Drive_Cam4_20260105_083035_616_C.jpeg,,248.27,242.5,242.0,17.285,,
+saraca_drive,8,Saraca Drive_Cam4_20260105_083114_070_C.jpeg,,259.407,253.838,254.0,16.964,,
+saraca_drive,9,Saraca Drive_Cam4_20260105_083119_477_C.jpeg,,269.91,264.658,264.0,16.757,,
+saraca_drive,10,Saraca Drive_Cam4_20260105_083123_683_C.jpeg,,281.53,275.72,276.0,16.341,,
+saraca_drive,11,Saraca Drive_Cam4_20260105_083128_496_C.jpeg,,303.594,292.562,292.0,16.47,-4.375,1.0
+saraca_drive,12,Saraca Drive_Cam4_20260105_083137_505_C.jpeg,,313.872,308.733,308.0,16.107,-0.625,1.0
+saraca_drive,13,Saraca Drive_Cam4_20260105_083143_510_C.jpeg,,325.254,319.563,320.0,16.107,,
+saraca_drive,14,Saraca Drive_Cam4_20260105_083148_799_C.jpeg,,336.393,330.824,330.0,16.107,,
+saraca_drive,15,Saraca Drive_Cam4_20260105_083153_604_C.jpeg,,347.162,341.778,342.0,16.107,0.0,1.0
+saraca_drive,16,Saraca Drive_Cam4_20260105_083158_409_C.jpeg,,370.644,358.903,358.0,16.107,,
+saraca_drive,17,Saraca Drive_Cam4_20260105_083208_621_C.jpeg,,381.224,375.934,376.0,16.341,5.208,1.0
+saraca_drive,18,Saraca Drive_Cam4_20260105_083212_838_C.jpeg,,392.62,386.922,386.0,16.614,-0.206,1.0
+saraca_drive,19,Saraca Drive_Cam4_20260105_083217_650_C.jpeg,,398.985,395.803,396.0,16.85,,
+saraca_drive,20,Saraca Drive_Cam4_20260105_083220_054_C.jpeg,,426.357,412.671,412.0,20.626,,
+saraca_drive,21,Saraca Drive_Cam4_20260105_083229_665_C.jpeg,,436.755,431.556,432.0,20.085,,
+saraca_drive,22,Saraca Drive_Cam4_20260105_083233_271_C.jpeg,,448.285,442.52,442.0,18.776,,
+saraca_drive,23,Saraca Drive_Cam4_20260105_083237_475_C.jpeg,,459.922,454.103,454.0,18.182,-5.937,1.0
+saraca_drive,24,Saraca Drive_Cam4_20260105_083242_772_C.jpeg,,574.865,517.393,518.0,17.161,-7.417,1.0
+saraca_drive,25,Saraca Drive_Cam4_20260105_083914_552_C.jpeg,,584.984,579.924,580.0,17.667,,

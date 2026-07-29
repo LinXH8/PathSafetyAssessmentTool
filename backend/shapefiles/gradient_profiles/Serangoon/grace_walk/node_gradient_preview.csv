@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+grace_walk,1,Grace Walk_Cam4_20260202_103348_451_C.jpeg,,14.352,7.176,8.0,14.319,,
+grace_walk,2,Grace Walk_Cam4_20260202_103355_238_C.jpeg,,24.488,19.42,20.0,14.686,,
+grace_walk,3,Grace Walk_Cam4_20260202_103400_094_C.jpeg,,30.862,27.675,28.0,14.946,,
+grace_walk,4,Grace Walk_Cam4_20260202_103403_174_C.jpeg,,61.356,46.109,46.0,16.101,,
+grace_walk,5,Grace Walk_Cam4_20260202_103417_785_C.jpeg,,73.852,67.604,68.0,18.991,,
+grace_walk,6,Grace Walk_Cam4_20260202_103423_882_C.jpeg,,96.762,85.307,86.0,17.04,,
+grace_walk,7,Grace Walk_Cam4_20260202_103434_973_C.jpeg,,108.977,102.869,102.0,17.816,6.208,1.0
+grace_walk,8,Grace Walk_Cam4_20260202_103441_039_C.jpeg,,115.961,112.469,112.0,18.341,2.669,1.0
+grace_walk,9,Grace Walk_Cam4_20260202_103444_642_C.jpeg,,157.329,136.645,136.0,17.343,-6.05,1.0
+grace_walk,10,Grace Walk_Cam4_20260202_103531_815_C.jpeg,,191.114,174.221,174.0,15.245,,
+grace_walk,11,Grace Walk_Cam4_20260202_103545_840_C.jpeg,,225.347,208.23,208.0,13.912,-7.283,1.0

@@ -1,0 +1,50 @@
+{
+  "path_key": "soo_chow_way",
+  "display_name": "Soo Chow Way",
+  "source_project": "Soo Chow Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Soo Chow Way\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T06:55:27.129048+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 127.598,
+  "profile_point_count": 52,
+  "valid_elevation_count": 52,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 24,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 17,
+  "usable_gradient_completion_pct": 32.69,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 46.15,
+  "gradient_min_pct": -0.978,
+  "gradient_max_pct": 13.873,
+  "path_bounds_svy21": {
+    "min_x": 27862.29,
+    "min_y": 37240.935,
+    "max_x": 27968.679,
+    "max_y": 37273.588
+  },
+  "road_boundary": {
+    "target_road_name": "SOO CHOW WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 65,
+    "offroad_point_count": 13,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOO CHOW WALK",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 24.0,
+    "trimmed_offroad_points": 13
+  }
+}

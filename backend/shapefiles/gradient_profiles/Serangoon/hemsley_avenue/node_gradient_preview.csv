@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hemsley_avenue,1,Hemsley Avenue_Cam4_20260203_082643_860_A.jpeg,,11.24,5.62,6.0,6.706,,
+hemsley_avenue,2,Hemsley Avenue_Cam4_20260203_082648_065_A.jpeg,,21.554,16.397,16.0,5.896,,
+hemsley_avenue,3,Hemsley Avenue_Cam4_20260203_082652_270_A.jpeg,,283.007,152.28,152.0,5.281,4.044,1.0
+hemsley_avenue,4,Hemsley Avenue_Cam4_20260203_082928_266_B.jpeg,,293.073,288.04,288.0,6.167,,
+hemsley_avenue,5,Hemsley Avenue_Cam4_20260203_082931_268_B.jpeg,,303.611,298.342,298.0,6.015,-2.423,1.0
+hemsley_avenue,6,Hemsley Avenue_Cam4_20260203_082934_871_B.jpeg,,313.754,308.682,308.0,6.336,9.286,2.0
+hemsley_avenue,7,Hemsley Avenue_Cam4_20260203_082938_478_B.jpeg,,325.776,319.765,320.0,6.77,,
+hemsley_avenue,8,Hemsley Avenue_Cam4_20260203_082942_086_B.jpeg,,334.445,330.111,330.0,5.96,,
+hemsley_avenue,9,Hemsley Avenue_Cam4_20260203_082944_489_B.jpeg,,367.399,350.922,350.0,6.133,,
+hemsley_avenue,10,Hemsley Avenue_Cam4_20260203_082954_701_B.jpeg,,377.211,372.305,372.0,6.485,,
+hemsley_avenue,11,Hemsley Avenue_Cam4_20260203_082957_705_B.jpeg,,386.764,381.987,382.0,5.382,,
+hemsley_avenue,12,Hemsley Avenue_Cam4_20260203_083000_709_B.jpeg,,396.525,391.644,392.0,5.38,-0.081,1.0
+hemsley_avenue,13,Hemsley Avenue_Cam4_20260203_083003_711_B.jpeg,,442.736,419.63,420.0,5.281,,
+hemsley_avenue,14,Hemsley Avenue_Cam4_20260203_083018_125_B.jpeg,,449.585,446.16,446.0,5.245,-0.125,1.0
+hemsley_avenue,15,Hemsley Avenue_Cam4_20260203_083019_929_B.jpeg,,460.111,454.848,454.0,5.225,-0.287,1.0
+hemsley_avenue,16,Hemsley Avenue_Cam4_20260203_083022_932_B.jpeg,,487.473,473.792,474.0,5.156,1.097,1.0
+hemsley_avenue,17,Hemsley Avenue_Cam4_20260203_083032_541_B.jpeg,,496.346,491.909,492.0,5.647,-3.367,1.0
+hemsley_avenue,18,Hemsley Avenue_Cam4_20260203_083036_147_B.jpeg,,669.278,582.812,582.0,5.396,0.275,1.0
+hemsley_avenue,19,Hemsley Avenue_Cam4_20260203_083229_714_B.jpeg,,740.119,704.699,704.0,5.942,,

@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+swiss_club_lane,1,Swiss Club Lane_Cam4_20251217_081615_296_C.jpeg,,11.444,5.722,6.0,28.348,,
+swiss_club_lane,2,Swiss Club Lane_Cam4_20251217_081619_471_C.jpeg,,22.617,17.031,18.0,27.292,,
+swiss_club_lane,3,Swiss Club Lane_Cam4_20251217_081623_074_C.jpeg,,34.44,28.528,28.0,26.459,-11.968,2.0
+swiss_club_lane,4,Swiss Club Lane_Cam4_20251217_081626_676_C.jpeg,,78.78,56.61,56.0,21.106,,
+swiss_club_lane,5,Swiss Club Lane_Cam4_20251217_081640_490_C.jpeg,,89.934,84.357,84.0,17.463,,
+swiss_club_lane,6,Swiss Club Lane_Cam4_20251217_081644_097_C.jpeg,,100.974,95.454,96.0,15.868,,
+swiss_club_lane,7,Swiss Club Lane_Cam4_20251217_081647_704_C.jpeg,,110.876,105.925,106.0,14.958,,
+swiss_club_lane,8,Swiss Club Lane_Cam4_20251217_081651_309_C.jpeg,,117.707,114.292,114.0,14.1,,
+swiss_club_lane,9,Swiss Club Lane_Cam4_20251217_081659_683_C.jpeg,,126.89,122.299,122.0,14.557,,
+swiss_club_lane,10,Swiss Club Lane_Cam4_20251217_081709_263_C.jpeg,,136.901,131.895,132.0,15.69,8.75,2.0
+swiss_club_lane,11,Swiss Club Lane_Cam4_20251217_081718_278_C.jpeg,,147.082,141.991,142.0,16.907,,
+swiss_club_lane,12,Swiss Club Lane_Cam4_20251217_081727_289_C.jpeg,,158.358,152.72,152.0,18.061,,
+swiss_club_lane,13,Swiss Club Lane_Cam4_20251217_081737_501_C.jpeg,,169.72,164.039,164.0,19.86,,
+swiss_club_lane,14,Swiss Club Lane_Cam4_20251217_081816_547_C.jpeg,,180.477,175.098,176.0,21.421,,
+swiss_club_lane,15,Swiss Club Lane_Cam4_20251217_081827_373_C.jpeg,,236.173,208.325,208.0,27.659,,

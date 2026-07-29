@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ewart_park,1,Ewart Park_Cam4_20251219_101233_628_B.jpeg,,12.545,6.273,6.0,26.59,-6.494,1.0
+ewart_park,2,Ewart Park_Cam4_20251219_101236_633_B.jpeg,,20.959,16.752,16.0,25.539,,
+ewart_park,3,Ewart Park_Cam4_20251219_101238_447_B.jpeg,,32.566,26.762,26.0,25.284,,
+ewart_park,4,Ewart Park_Cam4_20251219_101240_852_B.jpeg,,42.231,37.398,38.0,25.079,-3.063,1.0
+ewart_park,5,Ewart Park_Cam4_20251219_101242_653_B.jpeg,,52.263,47.247,48.0,24.909,,
+ewart_park,6,Ewart Park_Cam4_20251219_101244_455_B.jpeg,,80.872,66.568,66.0,28.917,,
+ewart_park,7,Ewart Park_Cam4_20251219_101252_327_B.jpeg,,85.185,83.029,84.0,31.475,,

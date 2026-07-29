@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_lane,1,Lentor Lane_Cam4_20251231_074348_740_B.jpeg,,11.772,5.886,6.0,11.43,-1.929,1.0
+lentor_lane,2,Lentor Lane_Cam4_20251231_074354_143_B.jpeg,,21.868,16.82,16.0,11.347,0.208,1.0
+lentor_lane,3,Lentor Lane_Cam4_20251231_074357_147_B.jpeg,,33.715,27.792,28.0,12.244,,
+lentor_lane,4,Lentor Lane_Cam4_20251231_074400_751_B.jpeg,,40.81,37.262,38.0,13.014,,
+lentor_lane,5,Lentor Lane_Cam4_20251231_074403_153_B.jpeg,,51.34,46.075,46.0,12.942,,
+lentor_lane,6,Lentor Lane_Cam4_20251231_074406_757_B.jpeg,,60.738,56.039,56.0,11.776,,
+lentor_lane,7,Lentor Lane_Cam4_20251231_074409_761_B.jpeg,,70.495,65.616,66.0,11.826,1.25,1.0
+lentor_lane,8,Lentor Lane_Cam4_20251231_074412_765_B.jpeg,,82.72,76.607,76.0,11.926,0.625,1.0
+lentor_lane,9,Lentor Lane_Cam4_20251231_074416_370_B.jpeg,,90.967,86.843,86.0,12.076,1.875,1.0
+lentor_lane,10,Lentor Lane_Cam4_20251231_074418_773_B.jpeg,,119.668,105.318,106.0,13.114,,
+lentor_lane,11,Lentor Lane_Cam4_20251231_074427_187_B.jpeg,,123.889,121.779,122.0,12.443,,
+lentor_lane,12,Lentor Lane_Cam4_20251231_074446_406_B.jpeg,,130.669,127.279,128.0,13.027,,

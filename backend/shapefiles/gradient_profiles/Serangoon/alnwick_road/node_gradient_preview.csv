@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+alnwick_road,1,Alnwick Road_Cam4_20260202_094546_910_B.jpeg,,11.338,5.669,6.0,15.626,8.906,2.0
+alnwick_road,2,Alnwick Road_Cam4_20260202_094552_916_B.jpeg,,227.142,119.24,120.0,25.02,,
+alnwick_road,3,Alnwick Road_Cam4_20260203_093602_192_A.jpeg,,235.39,231.266,232.0,14.858,0.313,1.0
+alnwick_road,4,Alnwick Road_Cam4_20260203_093606_400_A.jpeg,,281.808,258.599,258.0,14.877,1.389,1.0
+alnwick_road,5,Alnwick Road_Cam4_20260203_093626_832_A.jpeg,,292.739,287.274,288.0,14.511,-1.5,1.0
+alnwick_road,6,Alnwick Road_Cam4_20260203_093632_135_A.jpeg,,354.664,323.702,324.0,17.222,,
+alnwick_road,7,Alnwick Road_Cam4_20260203_093657_861_A.jpeg,,362.066,358.365,358.0,14.559,,
+alnwick_road,8,Alnwick Road_Cam4_20260203_093700_864_A.jpeg,,372.507,367.287,368.0,15.497,,
+alnwick_road,9,Alnwick Road_Cam4_20260203_093705_069_A.jpeg,,381.254,376.881,376.0,16.206,,
+alnwick_road,10,Alnwick Road_Cam4_20260203_093708_673_A.jpeg,,394.581,387.918,388.0,14.986,,
+alnwick_road,11,Alnwick Road_Cam4_20260203_093714_076_A.jpeg,,402.464,398.523,398.0,14.75,,
+alnwick_road,12,Alnwick Road_Cam4_20260203_093716_958_A.jpeg,,411.917,407.191,408.0,14.898,,
+alnwick_road,13,Alnwick Road_Cam4_20260203_093720_561_A.jpeg,,442.223,427.07,428.0,16.666,,
+alnwick_road,14,Alnwick Road_Cam4_20260203_093731_378_A.jpeg,,449.061,445.642,446.0,18.072,,
+alnwick_road,15,Alnwick Road_Cam4_20260203_093746_273_A.jpeg,,457.226,453.144,454.0,17.856,,
+alnwick_road,16,Alnwick Road_Cam4_20260203_093749_157_A.jpeg,,503.317,480.271,480.0,14.708,-0.962,1.0
+alnwick_road,17,Alnwick Road_Cam4_20260203_093805_984_A.jpeg,,515.89,509.603,510.0,14.427,-0.925,1.0
+alnwick_road,18,Alnwick Road_Cam4_20260203_093811_272_A.jpeg,,543.04,529.465,530.0,14.41,-0.644,1.0

@@ -1,0 +1,66 @@
+{
+  "path_key": "hill_street",
+  "display_name": "Hill Street",
+  "source_project": "Hill Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hill Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Museum_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Museum_LTA",
+  "generated_at_utc": "2026-06-07T14:23:58.157186+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2239.325,
+  "profile_point_count": 638,
+  "valid_elevation_count": 490,
+  "rejected_outlier_count": 40,
+  "rejected_step_jump_count": 363,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 120,
+  "usable_gradient_completion_pct": 18.81,
+  "elevation_hit_coverage_pct": 76.8,
+  "step_jump_rejection_pct": 56.9,
+  "gradient_min_pct": -13.629,
+  "gradient_max_pct": 10.182,
+  "path_bounds_svy21": {
+    "min_x": 29570.344,
+    "min_y": 30282.62,
+    "max_x": 29928.769,
+    "max_y": 30714.186
+  },
+  "road_boundary": {
+    "target_road_name": "HILL STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1121,
+    "offroad_point_count": 483,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 118
+      },
+      {
+        "road_name": "LOKE YEW STREET",
+        "point_count": 111
+      },
+      {
+        "road_name": "COLEMAN STREET",
+        "point_count": 111
+      },
+      {
+        "road_name": "RIVER VALLEY ROAD",
+        "point_count": 98
+      },
+      {
+        "road_name": "HIGH STREET",
+        "point_count": 21
+      }
+    ],
+    "offroad_chainage_min_m": 68.0,
+    "offroad_chainage_max_m": 2240.0,
+    "trimmed_offroad_points": 483
+  }
+}

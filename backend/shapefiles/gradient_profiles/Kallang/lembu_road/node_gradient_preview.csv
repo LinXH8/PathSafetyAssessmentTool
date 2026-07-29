@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lembu_road,1,Cam4_20251208_081121_474_A.jpeg,,12.611,6.305,6.0,4.63,,
+lembu_road,2,Cam4_20251208_081203_108_A.jpeg,,25.47,19.04,20.0,4.379,,
+lembu_road,3,Cam4_20251208_081208_126_A.jpeg,,31.341,28.406,28.0,4.826,7.457,1.0
+lembu_road,4,Cam4_20251208_081210_142_A.jpeg,,40.09,35.716,36.0,5.724,,
+lembu_road,5,Cam4_20251208_081213_165_A.jpeg,,51.794,45.942,46.0,9.784,,
+lembu_road,6,Cam4_20251208_081217_686_A.jpeg,,65.891,58.842,58.0,15.75,,
+lembu_road,7,Cam4_20251208_081222_698_A.jpeg,,132.176,99.033,100.0,14.007,,

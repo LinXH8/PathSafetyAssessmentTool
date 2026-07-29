@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+trengganu_street,1,Cam4_20251230_075007_102_C.jpeg,,10.302,5.151,,,,
+trengganu_street,2,Cam4_20251230_075016_112_C.jpeg,,21.27,15.786,,,,
+trengganu_street,3,Cam4_20251230_075022_119_C.jpeg,,33.948,27.609,28.0,,,
+trengganu_street,4,Cam4_20251230_075028_725_C.jpeg,,108.557,71.253,,,,
+trengganu_street,5,Cam4_20260109_095844_944_C.jpeg,,123.014,115.785,116.0,3.864,3.75,1.0
+trengganu_street,6,Cam4_20260109_095849_750_C.jpeg,,130.838,126.926,126.0,3.889,-2.083,1.0
+trengganu_street,7,Cam4_20260109_095852_752_C.jpeg,,169.587,150.213,,,,
+trengganu_street,8,Cam4_20260109_095941_182_C.jpeg,,205.073,187.33,188.0,11.055,,

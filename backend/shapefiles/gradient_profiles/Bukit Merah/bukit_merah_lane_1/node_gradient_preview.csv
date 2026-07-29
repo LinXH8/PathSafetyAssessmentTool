@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_merah_lane_1,1,Bukit Merah Lane 1_Cam4_20251226_073735_565_C.jpeg,,11.106,5.553,,,,
+bukit_merah_lane_1,2,Bukit Merah Lane 1_Cam4_20251226_073739_171_C.jpeg,,65.766,38.436,,,,
+bukit_merah_lane_1,3,Bukit Merah Lane 1_Cam4_20251226_073823_627_C.jpeg,,76.716,71.241,72.0,18.161,1.039,1.0
+bukit_merah_lane_1,4,Bukit Merah Lane 1_Cam4_20251226_073826_629_C.jpeg,,447.508,262.112,262.0,22.364,4.691,1.0

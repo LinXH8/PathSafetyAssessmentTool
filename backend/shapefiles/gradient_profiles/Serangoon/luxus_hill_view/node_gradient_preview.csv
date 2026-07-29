@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+luxus_hill_view,1,Luxus Hill View_Cam4_20260101_073747_434_C.jpeg,,10.613,5.307,,,,
+luxus_hill_view,2,Luxus Hill View_Cam4_20260101_073753_443_C.jpeg,,21.68,16.147,16.0,13.423,-4.575,1.0
+luxus_hill_view,3,Luxus Hill View_Cam4_20260101_073758_849_C.jpeg,,33.371,27.525,28.0,13.135,,
+luxus_hill_view,4,Luxus Hill View_Cam4_20260101_073804_255_C.jpeg,,44.434,38.902,,,,

@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+binjai_rise,1,Binjai Rise_Cam4_20251217_093620_389_C.jpeg,,10.753,5.377,6.0,20.605,,
+binjai_rise,2,Binjai Rise_Cam4_20251217_093625_229_C.jpeg,,23.577,17.165,18.0,25.425,,
+binjai_rise,3,Binjai Rise_Cam4_20251217_093630_636_C.jpeg,,51.164,37.37,38.0,25.619,,
+binjai_rise,4,Binjai Rise_Cam4_20251217_093645_015_C.jpeg,,72.885,62.024,62.0,21.858,1.533,1.0
+binjai_rise,5,Binjai Rise_Cam4_20251217_093655_325_C.jpeg,,98.065,85.475,86.0,22.732,,
+binjai_rise,6,Binjai Rise_Cam4_20251217_093716_618_C.jpeg,,111.836,104.951,104.0,23.087,,
+binjai_rise,7,Binjai Rise_Cam4_20251217_093723_361_C.jpeg,,133.745,122.791,122.0,23.58,,
+binjai_rise,8,Binjai Rise_Cam4_20251217_093735_447_C.jpeg,,144.925,139.335,140.0,23.739,,
+binjai_rise,9,Binjai Rise_Cam4_20251217_093752_358_C.jpeg,,163.963,154.444,154.0,23.489,,
+binjai_rise,10,Binjai Rise_Cam4_20251217_094001_093_C.jpeg,,193.283,178.623,178.0,22.605,,
+binjai_rise,11,Binjai Rise_Cam4_20251217_094010_522_C.jpeg,,203.337,198.31,198.0,22.923,,
+binjai_rise,12,Binjai Rise_Cam4_20251217_094014_106_C.jpeg,,212.999,208.168,208.0,24.452,,

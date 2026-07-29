@@ -1,0 +1,50 @@
+{
+  "path_key": "mimosa_place",
+  "display_name": "Mimosa Place",
+  "source_project": "Mimosa Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Mimosa Place\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T21:04:28.849570+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 359.973,
+  "profile_point_count": 169,
+  "valid_elevation_count": 169,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 39,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 108,
+  "usable_gradient_completion_pct": 63.91,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 23.08,
+  "gradient_min_pct": -5.469,
+  "gradient_max_pct": 7.187,
+  "path_bounds_svy21": {
+    "min_x": 30901.153,
+    "min_y": 40712.468,
+    "max_x": 31069.629,
+    "max_y": 40766.729
+  },
+  "road_boundary": {
+    "target_road_name": "MIMOSA PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 181,
+    "offroad_point_count": 12,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MIMOSA TERRACE",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 338.0,
+    "offroad_chainage_max_m": 360.0,
+    "trimmed_offroad_points": 12
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "path_key": "jalan_berseh",
+  "display_name": "Jalan Berseh",
+  "source_project": "Jalan Berseh",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Berseh\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T14:33:16.607706+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 287.043,
+  "profile_point_count": 98,
+  "valid_elevation_count": 98,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 44,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 37,
+  "usable_gradient_completion_pct": 37.76,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.9,
+  "gradient_min_pct": -9.425,
+  "gradient_max_pct": 11.156,
+  "path_bounds_svy21": {
+    "min_x": 30629.092,
+    "min_y": 32140.089,
+    "max_x": 30730.182,
+    "max_y": 32251.419
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN BERSEH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 145,
+    "offroad_point_count": 47,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 37
+      },
+      {
+        "road_name": "JALAN BESAR",
+        "point_count": 8
+      },
+      {
+        "road_name": "TOWNSHEND ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 146.0,
+    "offroad_chainage_max_m": 288.0,
+    "trimmed_offroad_points": 47
+  }
+}

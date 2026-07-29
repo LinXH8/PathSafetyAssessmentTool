@@ -1,0 +1,21 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+keppel_bay_view,Keppel Bay View,0.0,25875.426,27886.887,10.342,10.342,10.333,-0.694,1.0,KEPPEL BAY VIEW,10.316
+keppel_bay_view,Keppel Bay View,2.0,25877.342,27887.458,10.306,10.306,10.32,-2.963,1.0,KEPPEL BAY VIEW,9.253
+keppel_bay_view,Keppel Bay View,4.0,25879.259,27888.029,10.333,10.333,10.306,-3.329,1.0,KEPPEL BAY VIEW,8.255
+keppel_bay_view,Keppel Bay View,6.0,25881.176,27888.6,12.147,10.156,10.156,,,KEPPEL BAY VIEW,7.257
+keppel_bay_view,Keppel Bay View,8.0,25883.092,27889.171,13.481,9.978,10.067,,,KEPPEL BAY VIEW,6.259
+keppel_bay_view,Keppel Bay View,10.0,25885.009,27889.742,9.8,10.067,9.978,,,KEPPEL BAY VIEW,5.262
+keppel_bay_view,Keppel Bay View,12.0,25886.926,27890.313,10.775,9.789,9.789,,,KEPPEL BAY VIEW,4.264
+keppel_bay_view,Keppel Bay View,14.0,25888.843,27890.885,8.711,9.327,9.327,,,KEPPEL BAY VIEW,3.266
+keppel_bay_view,Keppel Bay View,16.0,25890.523,27891.901,10.25,8.866,8.866,,,KEPPEL BAY VIEW,2.746
+keppel_bay_view,Keppel Bay View,18.0,25892.068,27893.17,8.878,8.287,8.287,,,KEPPEL BAY VIEW,2.498
+keppel_bay_view,Keppel Bay View,20.0,25893.614,27894.44,10.839,7.708,7.708,,,KEPPEL BAY VIEW,2.25
+keppel_bay_view,Keppel Bay View,22.0,25895.159,27895.709,8.222,7.128,7.128,,,KEPPEL BAY VIEW,2.002
+keppel_bay_view,Keppel Bay View,24.0,25896.326,27895.318,8.787,,6.549,,,KEPPEL BAY VIEW,0.886
+keppel_bay_view,Keppel Bay View,26.0,25897.169,27893.504,7.833,,5.97,,,KEPPEL BAY VIEW,0.973
+keppel_bay_view,Keppel Bay View,28.0,25898.012,27891.691,5.056,,5.391,,,KEPPEL BAY VIEW,2.833
+keppel_bay_view,Keppel Bay View,30.0,25898.855,27889.877,4.96,4.812,4.812,,,KEPPEL BAY VIEW,4.692
+keppel_bay_view,Keppel Bay View,32.0,25899.698,27888.063,3.166,4.233,4.233,,,KEPPEL BAY VIEW,6.552
+keppel_bay_view,Keppel Bay View,34.0,25900.54,27886.249,3.058,3.654,3.654,,,KEPPEL BAY VIEW,8.412
+keppel_bay_view,Keppel Bay View,36.0,25901.383,27884.436,3.075,3.075,3.366,,,KEPPEL BAY VIEW,10.271
+keppel_bay_view,Keppel Bay View,38.0,25902.17,27882.743,3.079,3.079,3.079,,,KEPPEL BAY VIEW,12.006

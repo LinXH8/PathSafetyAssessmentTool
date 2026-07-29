@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_sukachita",
+  "display_name": "Jalan Sukachita",
+  "source_project": "Jalan Sukachita",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Sukachita\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T18:18:32.724622+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 235.974,
+  "profile_point_count": 119,
+  "valid_elevation_count": 119,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 24,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 80,
+  "usable_gradient_completion_pct": 67.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 20.17,
+  "gradient_min_pct": -1.371,
+  "gradient_max_pct": 2.612,
+  "path_bounds_svy21": {
+    "min_x": 31599.543,
+    "min_y": 36552.707,
+    "max_x": 31786.738,
+    "max_y": 36695.673
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN SUKACHITA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 119,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+eber_road,1,Eber Road_Cam4_20251204_073405_804_C.jpeg,,10.173,5.087,6.0,12.42,,
+eber_road,2,Eber Road_Cam4_20251204_073409_410_C.jpeg,,35.832,23.003,24.0,13.977,,
+eber_road,3,Eber Road_Cam4_20251204_073417_692_C.jpeg,,47.854,41.843,42.0,14.057,,
+eber_road,4,Eber Road_Cam4_20251204_073421_269_C.jpeg,,59.052,53.453,54.0,13.387,,
+eber_road,5,Eber Road_Cam4_20251204_073424_726_C.jpeg,,83.676,71.364,72.0,13.84,6.221,1.0
+eber_road,6,Eber Road_Cam4_20251204_073432_533_C.jpeg,,93.909,88.792,88.0,15.156,,
+eber_road,7,Eber Road_Cam4_20251204_073435_535_C.jpeg,,104.344,99.126,100.0,12.119,,
+eber_road,8,Eber Road_Cam4_20251204_073438_538_C.jpeg,,128.53,116.437,116.0,8.236,-7.708,1.0
+eber_road,9,Eber Road_Cam4_20251204_073445_146_C.jpeg,,139.665,134.097,134.0,7.086,-4.687,1.0
+eber_road,10,Eber Road_Cam4_20251204_073448_148_C.jpeg,,149.734,144.699,144.0,6.724,-1.562,1.0
+eber_road,11,Eber Road_Cam4_20251204_073450_549_C.jpeg,,161.782,155.758,156.0,6.311,,
+eber_road,12,Eber Road_Cam4_20251204_073453_552_C.jpeg,,240.758,201.27,202.0,8.448,5.469,1.0
+eber_road,13,Eber Road_Cam4_20260107_101044_669_A.jpeg,,318.129,279.444,280.0,8.182,,
+eber_road,14,Eber Road_Cam4_20260107_102153_590_A.jpeg,,329.297,323.713,324.0,13.765,,
+eber_road,15,Eber Road_Cam4_20260107_102200_200_A.jpeg,,352.159,340.728,340.0,27.995,,
+eber_road,16,Eber Road_Cam4_20260107_102221_231_A.jpeg,,363.86,358.009,358.0,41.672,,
+eber_road,17,Eber Road_Cam4_20260107_102229_639_A.jpeg,,375.185,369.522,370.0,37.83,,
+eber_road,18,Eber Road_Cam4_20260107_102238_048_A.jpeg,,385.974,380.579,380.0,33.825,,
+eber_road,19,Eber Road_Cam4_20260107_102245_857_A.jpeg,,408.379,397.176,398.0,28.166,,
+eber_road,20,Eber Road_Cam4_20260107_102304_529_A.jpeg,,432.207,420.293,420.0,21.5,,
+eber_road,21,Eber Road_Cam4_20260107_102312_944_A.jpeg,,444.384,438.295,438.0,12.842,,
+eber_road,22,Eber Road_Cam4_20260107_102315_946_A.jpeg,,451.762,448.073,448.0,14.824,,
+eber_road,23,Eber Road_Cam4_20260107_102318_348_A.jpeg,,462.18,456.971,456.0,17.797,,

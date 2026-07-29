@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+barker_road,1,,BARKER ROAD,458.616,229.308,230.0,3.76,,
+barker_road,2,,BARKER ROAD,525.563,721.398,722.0,19.21,,

@@ -1,0 +1,50 @@
+{
+  "path_key": "bukit_merah_lane_1",
+  "display_name": "Bukit Merah Lane 1",
+  "source_project": "Bukit Merah Lane 1",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bukit Merah Lane 1\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T11:57:05.829448+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 447.508,
+  "profile_point_count": 202,
+  "valid_elevation_count": 77,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 51,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 107,
+  "usable_gradient_completion_pct": 52.97,
+  "elevation_hit_coverage_pct": 38.12,
+  "step_jump_rejection_pct": 25.25,
+  "gradient_min_pct": -4.201,
+  "gradient_max_pct": 4.691,
+  "path_bounds_svy21": {
+    "min_x": 24553.649,
+    "min_y": 29727.995,
+    "max_x": 24887.078,
+    "max_y": 29890.205
+  },
+  "road_boundary": {
+    "target_road_name": "BUKIT MERAH LANE 1",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 225,
+    "offroad_point_count": 23,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ALEXANDRA ROAD",
+        "point_count": 23
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 44.0,
+    "trimmed_offroad_points": 23
+  }
+}

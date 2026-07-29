@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cypress_avenue,1,Cypress Avenue_Cam4_20251217_080827_493_A.jpeg,,12.498,6.249,6.0,20.109,3.421,1.0
+cypress_avenue,2,Cypress Avenue_Cam4_20251217_080832_015_A.jpeg,,23.968,18.233,18.0,19.848,,
+cypress_avenue,3,Cypress Avenue_Cam4_20251217_080836_021_A.jpeg,,46.298,35.133,36.0,17.915,,
+cypress_avenue,4,Cypress Avenue_Cam4_20251217_080844_107_A.jpeg,,60.04,53.169,54.0,18.734,,
+cypress_avenue,5,Cypress Avenue_Cam4_20251217_080849_702_A.jpeg,,82.936,71.488,72.0,16.363,,
+cypress_avenue,6,Cypress Avenue_Cam4_20251217_080856_756_A.jpeg,,94.831,88.884,88.0,15.08,,
+cypress_avenue,7,Cypress Avenue_Cam4_20251217_080900_261_A.jpeg,,118.601,106.716,106.0,14.5,,
+cypress_avenue,8,Cypress Avenue_Cam4_20251217_080906_857_A.jpeg,,130.188,124.395,124.0,15.702,,
+cypress_avenue,9,Cypress Avenue_Cam4_20251217_080909_850_A.jpeg,,153.787,141.987,142.0,15.347,,
+cypress_avenue,10,Cypress Avenue_Cam4_20251217_080915_922_A.jpeg,,167.209,160.498,160.0,14.396,,

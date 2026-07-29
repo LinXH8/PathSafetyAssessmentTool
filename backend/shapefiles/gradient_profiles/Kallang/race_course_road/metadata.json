@@ -1,0 +1,66 @@
+{
+  "path_key": "race_course_road",
+  "display_name": "Race Course Road",
+  "source_project": "Race Course Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Race Course Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-24T01:46:26.037822+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 10785.42,
+  "profile_point_count": 2782,
+  "valid_elevation_count": 2751,
+  "rejected_outlier_count": 318,
+  "rejected_step_jump_count": 1803,
+  "repaired_gradient_point_count": 24,
+  "removed_bad_gradient_point_count": 10,
+  "valid_gradient_count": 563,
+  "usable_gradient_completion_pct": 20.24,
+  "elevation_hit_coverage_pct": 98.89,
+  "step_jump_rejection_pct": 64.81,
+  "gradient_min_pct": -11.581,
+  "gradient_max_pct": 13.093,
+  "path_bounds_svy21": {
+    "min_x": 29908.84,
+    "min_y": 32228.901,
+    "max_x": 30797.181,
+    "max_y": 33183.894
+  },
+  "road_boundary": {
+    "target_road_name": "RACE COURSE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 5394,
+    "offroad_point_count": 2612,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 661
+      },
+      {
+        "road_name": "RANGOON ROAD",
+        "point_count": 336
+      },
+      {
+        "road_name": "SERANGOON ROAD",
+        "point_count": 282
+      },
+      {
+        "road_name": "FARRER PARK STATION ROAD",
+        "point_count": 265
+      },
+      {
+        "road_name": "CHANDER ROAD",
+        "point_count": 174
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 10650.0,
+    "trimmed_offroad_points": 2612
+  }
+}

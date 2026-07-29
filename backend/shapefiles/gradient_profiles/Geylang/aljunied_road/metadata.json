@@ -1,0 +1,66 @@
+{
+  "path_key": "aljunied_road",
+  "display_name": "Aljunied Road",
+  "source_project": "Aljunied Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Aljunied Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-25T18:21:56.707197+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 9418.122,
+  "profile_point_count": 3485,
+  "valid_elevation_count": 855,
+  "rejected_outlier_count": 151,
+  "rejected_step_jump_count": 720,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 27,
+  "valid_gradient_count": 336,
+  "usable_gradient_completion_pct": 9.64,
+  "elevation_hit_coverage_pct": 24.53,
+  "step_jump_rejection_pct": 20.66,
+  "gradient_min_pct": -14.921,
+  "gradient_max_pct": 10.523,
+  "path_bounds_svy21": {
+    "min_x": 33077.146,
+    "min_y": 32838.907,
+    "max_x": 33433.924,
+    "max_y": 34821.204
+  },
+  "road_boundary": {
+    "target_road_name": "ALJUNIED ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4711,
+    "offroad_point_count": 1226,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KALLANG WAY",
+        "point_count": 204
+      },
+      {
+        "road_name": "ALJUNIED WALK",
+        "point_count": 166
+      },
+      {
+        "road_name": "JALAN KOLAM AYER",
+        "point_count": 159
+      },
+      {
+        "road_name": "LORONG 23 GEYLANG",
+        "point_count": 151
+      },
+      {
+        "road_name": "SIMS DRIVE",
+        "point_count": 129
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 9026.0,
+    "trimmed_offroad_points": 1226
+  }
+}

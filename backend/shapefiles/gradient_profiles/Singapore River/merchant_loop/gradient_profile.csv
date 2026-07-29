@@ -1,0 +1,5 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+merchant_loop,Merchant Loop,6.0,29121.884,30230.088,5.958,8.733,8.733,-0.703,1.0,MERCHANT LOOP,9.186
+merchant_loop,Merchant Loop,8.0,29123.595,30229.052,8.733,8.733,8.705,-1.301,1.0,MERCHANT LOOP,7.189
+merchant_loop,Merchant Loop,10.0,29125.305,30228.016,8.646,8.646,8.705,-1.301,1.0,MERCHANT LOOP,5.191
+merchant_loop,Merchant Loop,10.322,29125.581,30227.849,8.677,8.677,8.677,-1.211,1.0,MERCHANT LOOP,4.87

@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mistri_road,1,Cam4_20251230_074804_869_B.jpeg,,9.041,4.521,4.0,6.475,,
+mistri_road,2,Cam4_20251230_074812_076_B.jpeg,,39.797,24.419,22.0,6.53,,
+mistri_road,3,Cam4_20251230_074834_901_B.jpeg,,46.845,43.321,,,,
+mistri_road,4,Cam4_20251230_074835_501_B.jpeg,,75.039,60.942,,,,
+mistri_road,5,Cam4_20251230_074837_906_B.jpeg,,109.567,92.303,92.0,6.591,,
+mistri_road,6,Cam4_20251230_074907_345_B.jpeg,,156.799,133.183,,,,

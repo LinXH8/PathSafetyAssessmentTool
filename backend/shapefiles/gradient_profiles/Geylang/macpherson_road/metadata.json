@@ -1,0 +1,66 @@
+{
+  "path_key": "macpherson_road",
+  "display_name": "Macpherson Road",
+  "source_project": "Macpherson Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Macpherson Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-25T18:25:40.637052+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 6533.563,
+  "profile_point_count": 2448,
+  "valid_elevation_count": 321,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 253,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 24,
+  "valid_gradient_count": 278,
+  "usable_gradient_completion_pct": 11.36,
+  "elevation_hit_coverage_pct": 13.11,
+  "step_jump_rejection_pct": 10.33,
+  "gradient_min_pct": -9.398,
+  "gradient_max_pct": 13.068,
+  "path_bounds_svy21": {
+    "min_x": 31954.902,
+    "min_y": 34402.979,
+    "max_x": 33056.124,
+    "max_y": 34857.048
+  },
+  "road_boundary": {
+    "target_road_name": "MACPHERSON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3268,
+    "offroad_point_count": 820,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN WANGI",
+        "point_count": 130
+      },
+      {
+        "road_name": "SIANG KUANG AVENUE",
+        "point_count": 124
+      },
+      {
+        "road_name": "GENTING ROAD",
+        "point_count": 116
+      },
+      {
+        "road_name": "GENTING LANE",
+        "point_count": 108
+      },
+      {
+        "road_name": "JALAN KOLAM AYER",
+        "point_count": 104
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 6234.0,
+    "trimmed_offroad_points": 820
+  }
+}

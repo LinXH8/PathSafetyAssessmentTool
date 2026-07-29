@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+morse_road,1,Morse Road_Cam4_20251229_074214_634_C.jpeg,,12.622,6.311,6.0,4.759,,
+morse_road,2,Morse Road_Cam4_20251229_074220_041_C.jpeg,,24.649,18.636,18.0,5.419,1.591,1.0
+morse_road,3,Morse Road_Cam4_20251229_074225_445_C.jpeg,,31.961,28.305,28.0,5.491,,

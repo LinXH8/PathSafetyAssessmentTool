@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+begonia_lane,1,Begonia Lane_Cam4_20260105_084216_097_C.jpeg,,12.207,6.103,,,,
+begonia_lane,2,Begonia Lane_Cam4_20260105_084221_502_C.jpeg,,23.429,17.818,,,,
+begonia_lane,3,Begonia Lane_Cam4_20260105_084226_306_C.jpeg,,34.179,28.804,,,,
+begonia_lane,4,Begonia Lane_Cam4_20260105_084230_510_C.jpeg,,56.018,45.099,,,,
+begonia_lane,5,Begonia Lane_Cam4_20260105_084241_324_C.jpeg,,66.895,61.457,,,,
+begonia_lane,6,Begonia Lane_Cam4_20260105_084246_129_C.jpeg,,77.769,72.332,,,,
+begonia_lane,7,Begonia Lane_Cam4_20260105_084251_534_C.jpeg,,100.15,88.959,88.0,19.568,-11.774,2.0
+begonia_lane,8,Begonia Lane_Cam4_20260105_084303_555_C.jpeg,,111.51,105.83,106.0,18.31,-6.042,1.0
+begonia_lane,9,Begonia Lane_Cam4_20260105_084307_763_C.jpeg,,122.7,117.105,118.0,17.61,-2.604,1.0

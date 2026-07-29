@@ -1,0 +1,50 @@
+{
+  "path_key": "choon_guan_street",
+  "display_name": "Choon Guan Street",
+  "source_project": "Choon Guan Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Choon Guan Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T06:02:20.550497+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 436.797,
+  "profile_point_count": 219,
+  "valid_elevation_count": 79,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 41,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 50,
+  "usable_gradient_completion_pct": 22.83,
+  "elevation_hit_coverage_pct": 36.07,
+  "step_jump_rejection_pct": 18.72,
+  "gradient_min_pct": -3.125,
+  "gradient_max_pct": 2.344,
+  "path_bounds_svy21": {
+    "min_x": 29268.452,
+    "min_y": 28732.491,
+    "max_x": 29495.648,
+    "max_y": 28758.498
+  },
+  "road_boundary": {
+    "target_road_name": "CHOON GUAN STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 220,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PECK SEAH STREET",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

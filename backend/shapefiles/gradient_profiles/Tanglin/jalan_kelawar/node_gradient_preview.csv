@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kelawar,1,Jalan Kelawar_Cam4_20251204_083154_360_B.jpeg,,13.455,6.727,6.0,18.581,,
+jalan_kelawar,2,Jalan Kelawar_Cam4_20251204_083159_768_B.jpeg,,24.39,18.922,18.0,16.863,,
+jalan_kelawar,3,Jalan Kelawar_Cam4_20251204_083205_178_B.jpeg,,47.193,35.792,36.0,15.505,0.0,1.0
+jalan_kelawar,4,Jalan Kelawar_Cam4_20251204_083214_787_B.jpeg,,58.548,52.87,52.0,15.972,,
+jalan_kelawar,5,Jalan Kelawar_Cam4_20251204_083218_991_B.jpeg,,70.211,64.379,64.0,15.505,-0.625,1.0
+jalan_kelawar,6,Jalan Kelawar_Cam4_20251204_083223_796_B.jpeg,,93.091,81.651,82.0,15.522,1.25,1.0
+jalan_kelawar,7,Jalan Kelawar_Cam4_20251204_083232_209_B.jpeg,,103.873,98.482,98.0,15.705,1.25,1.0
+jalan_kelawar,8,Jalan Kelawar_Cam4_20251204_083236_412_B.jpeg,,114.75,109.311,110.0,15.905,,
+jalan_kelawar,9,Jalan Kelawar_Cam4_20251204_083240_618_B.jpeg,,126.331,120.54,120.0,16.13,,
+jalan_kelawar,10,Jalan Kelawar_Cam4_20251204_083249_632_B.jpeg,,134.928,130.629,130.0,17.308,,
+jalan_kelawar,11,Jalan Kelawar_Cam4_20251204_083258_044_B.jpeg,,212.871,173.899,174.0,20.063,,
+jalan_kelawar,12,Jalan Kelawar_Cam4_20251204_083417_102_B.jpeg,,219.335,216.103,216.0,21.405,,
+jalan_kelawar,13,Jalan Kelawar_Cam4_20251204_083420_706_B.jpeg,,229.198,224.267,224.0,21.851,,
+jalan_kelawar,14,Jalan Kelawar_Cam4_20251204_083426_712_B.jpeg,,258.387,243.792,244.0,21.355,,
+jalan_kelawar,15,Jalan Kelawar_Cam4_20251204_083441_735_B.jpeg,,268.447,263.417,264.0,20.805,-3.75,1.0
+jalan_kelawar,16,Jalan Kelawar_Cam4_20251204_083445_338_B.jpeg,,297.586,283.016,284.0,20.222,,
+jalan_kelawar,17,Jalan Kelawar_Cam4_20251204_083454_348_B.jpeg,,309.452,303.519,304.0,23.205,,
+jalan_kelawar,18,Jalan Kelawar_Cam4_20251204_083458_555_B.jpeg,,332.242,320.847,320.0,22.308,,
+jalan_kelawar,19,Jalan Kelawar_Cam4_20251204_083505_163_B.jpeg,,359.357,345.8,346.0,21.861,,
+jalan_kelawar,20,Jalan Kelawar_Cam4_20251204_083518_380_B.jpeg,,469.09,414.224,414.0,23.786,,
+jalan_kelawar,21,Jalan Kelawar_Cam4_20251204_083628_542_B.jpeg,,639.661,554.376,,,,
+jalan_kelawar,22,Jalan Kelawar_Cam4_20251204_083713_451_B.jpeg,,670.793,655.227,656.0,18.336,,

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pan_island_expressway,1,,PAN ISLAND EXPRESSWAY,5013.684,2506.842,2506.0,3.632,-0.625,1.0
+pan_island_expressway,2,,PAN ISLAND EXPRESSWAY,3643.376,6835.376,6836.0,10.993,,
+pan_island_expressway,3,,PAN ISLAND EXPRESSWAY,9047.322,13181.289,13182.0,19.046,,

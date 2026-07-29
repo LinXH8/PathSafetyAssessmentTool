@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_lateh,1,Jalan Lateh_Cam4_20260112_083016_121_B.jpeg,,12.15,6.075,6.0,17.502,,
+jalan_lateh,2,Jalan Lateh_Cam4_20260112_083020_328_B.jpeg,,36.021,24.085,24.0,15.928,2.1,1.0
+jalan_lateh,3,Jalan Lateh_Cam4_20260112_083028_147_B.jpeg,,47.505,41.763,42.0,16.578,1.687,1.0
+jalan_lateh,4,Jalan Lateh_Cam4_20260112_083032_349_B.jpeg,,59.621,53.563,54.0,17.102,4.862,1.0
+jalan_lateh,5,Jalan Lateh_Cam4_20260112_083038_958_B.jpeg,,69.877,64.749,64.0,17.299,0.313,1.0
+jalan_lateh,6,Jalan Lateh_Cam4_20260112_083044_363_B.jpeg,,75.656,72.766,72.0,17.218,-1.638,1.0
+jalan_lateh,7,Jalan Lateh_Cam4_20260112_083046_765_B.jpeg,,86.735,81.195,82.0,17.018,-2.519,1.0
+jalan_lateh,8,Jalan Lateh_Cam4_20260112_083050_969_B.jpeg,,99.364,93.049,94.0,16.702,-1.571,1.0
+jalan_lateh,9,Jalan Lateh_Cam4_20260112_083055_781_B.jpeg,,121.696,110.53,110.0,16.115,-6.575,1.0
+jalan_lateh,10,Jalan Lateh_Cam4_20260112_083104_790_B.jpeg,,133.571,127.633,128.0,15.397,-2.45,1.0
+jalan_lateh,11,Jalan Lateh_Cam4_20260112_083108_996_B.jpeg,,144.991,139.281,140.0,15.227,-1.275,1.0
+jalan_lateh,12,Jalan Lateh_Cam4_20260112_083113_205_B.jpeg,,168.286,156.638,156.0,14.74,-3.513,1.0
+jalan_lateh,13,Jalan Lateh_Cam4_20260112_083121_620_B.jpeg,,180.998,174.642,174.0,14.171,-0.609,1.0
+jalan_lateh,14,Jalan Lateh_Cam4_20260112_083125_223_B.jpeg,,206.933,193.965,194.0,13.626,-4.229,1.0
+jalan_lateh,15,Jalan Lateh_Cam4_20260112_083132_431_B.jpeg,,216.675,211.804,212.0,13.075,-1.319,1.0
+jalan_lateh,16,Jalan Lateh_Cam4_20260112_083135_433_B.jpeg,,243.245,229.96,230.0,12.793,-2.839,1.0
+jalan_lateh,17,Jalan Lateh_Cam4_20260112_084054_268_B.jpeg,,271.958,257.601,258.0,13.537,,
+jalan_lateh,18,Jalan Lateh_Cam4_20260112_084102_075_B.jpeg,,281.203,276.58,276.0,10.681,,
+jalan_lateh,19,Jalan Lateh_Cam4_20260112_084104_477_B.jpeg,,295.024,288.114,288.0,9.269,-4.138,1.0
+jalan_lateh,20,Jalan Lateh_Cam4_20260112_084108_082_B.jpeg,,304.827,299.926,300.0,8.729,-3.775,1.0
+jalan_lateh,21,Jalan Lateh_Cam4_20260112_084117_093_B.jpeg,,372.051,338.439,338.0,11.959,,

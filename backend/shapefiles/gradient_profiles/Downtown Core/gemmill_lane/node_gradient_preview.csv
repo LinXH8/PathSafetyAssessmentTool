@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+gemmill_lane,1,Gemmill Lane_Cam4_20251230_081056_811_C.jpeg,,13.856,6.928,6.0,6.979,,
+gemmill_lane,2,Gemmill Lane_Cam4_20251230_081103_420_C.jpeg,,38.225,26.041,26.0,7.875,,
+gemmill_lane,3,Gemmill Lane_Cam4_20251230_081120_246_C.jpeg,,44.078,41.151,42.0,7.9,,
+gemmill_lane,4,Gemmill Lane_Cam4_20251230_081122_648_C.jpeg,,54.127,49.102,50.0,9.02,,
+gemmill_lane,5,Gemmill Lane_Cam4_20251230_081127_451_C.jpeg,,65.0,59.564,60.0,10.235,,
+gemmill_lane,6,Gemmill Lane_Cam4_20251230_081132_855_C.jpeg,,95.934,80.467,80.0,9.608,-7.23,1.0
+gemmill_lane,7,Gemmill Lane_Cam4_20251230_081213_709_C.jpeg,,102.712,99.323,100.0,8.528,,
+gemmill_lane,8,Gemmill Lane_Cam4_20251230_081220_318_C.jpeg,,168.395,135.554,136.0,5.57,,

@@ -1,0 +1,50 @@
+{
+  "path_key": "erskine_road",
+  "display_name": "Erskine Road",
+  "source_project": "Erskine Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Erskine Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T08:57:37.843512+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 298.275,
+  "profile_point_count": 149,
+  "valid_elevation_count": 149,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 69,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 55,
+  "usable_gradient_completion_pct": 36.91,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 46.31,
+  "gradient_min_pct": -7.651,
+  "gradient_max_pct": 7.891,
+  "path_bounds_svy21": {
+    "min_x": 29290.043,
+    "min_y": 29201.34,
+    "max_x": 29364.766,
+    "max_y": 29301.232
+  },
+  "road_boundary": {
+    "target_road_name": "ERSKINE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 151,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANN SIANG ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 220.0,
+    "offroad_chainage_max_m": 222.0,
+    "trimmed_offroad_points": 2
+  }
+}

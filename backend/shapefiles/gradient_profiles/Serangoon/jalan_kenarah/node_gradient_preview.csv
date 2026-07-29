@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kenarah,1,Jalan Kenarah_Cam4_20260106_090545_521_C.jpeg,,10.968,5.484,6.0,21.531,,
+jalan_kenarah,2,Jalan Kenarah_Cam4_20260106_090550_332_C.jpeg,,21.32,16.144,16.0,22.36,,
+jalan_kenarah,3,Jalan Kenarah_Cam4_20260106_090554_539_C.jpeg,,30.8,26.06,26.0,23.438,,
+jalan_kenarah,4,Jalan Kenarah_Cam4_20260106_090558_144_C.jpeg,,40.507,35.654,36.0,22.986,,
+jalan_kenarah,5,Jalan Kenarah_Cam4_20260106_090601_750_C.jpeg,,51.017,45.762,46.0,21.765,,
+jalan_kenarah,6,Jalan Kenarah_Cam4_20260106_090605_955_C.jpeg,,64.306,57.662,58.0,20.545,-1.25,1.0
+jalan_kenarah,7,Jalan Kenarah_Cam4_20260106_090611_364_C.jpeg,,70.535,67.421,68.0,20.631,-1.132,1.0
+jalan_kenarah,8,Jalan Kenarah_Cam4_20260106_090613_767_C.jpeg,,79.876,75.206,76.0,20.384,,
+jalan_kenarah,9,Jalan Kenarah_Cam4_20260106_090617_370_C.jpeg,,119.648,99.762,100.0,20.548,,
+jalan_kenarah,10,Jalan Kenarah_Cam4_20260106_090640_564_C.jpeg,,141.702,130.675,130.0,19.404,,
+jalan_kenarah,11,Jalan Kenarah_Cam4_20260106_090940_828_C.jpeg,,152.384,147.043,148.0,20.944,,
+jalan_kenarah,12,Jalan Kenarah_Cam4_20260106_090944_433_C.jpeg,,161.152,156.768,156.0,23.011,,
+jalan_kenarah,13,Jalan Kenarah_Cam4_20260106_090947_437_C.jpeg,,172.265,166.709,166.0,25.769,,
+jalan_kenarah,14,Jalan Kenarah_Cam4_20260106_090951_040_C.jpeg,,181.02,176.643,176.0,26.647,,
+jalan_kenarah,15,Jalan Kenarah_Cam4_20260106_090954_045_C.jpeg,,191.431,186.225,184.0,25.759,,
+jalan_kenarah,16,Jalan Kenarah_Cam4_20260106_090959_454_C.jpeg,,228.055,209.743,210.0,25.094,,
+jalan_kenarah,17,Jalan Kenarah_Cam4_20260106_091218_591_C.jpeg,,235.881,231.968,232.0,23.176,-6.539,1.0
+jalan_kenarah,18,Jalan Kenarah_Cam4_20260106_091220_995_C.jpeg,,249.781,242.831,242.0,23.187,,

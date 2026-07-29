@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lutheran_road,1,Lutheran Road_Cam4_20251217_093817_799_B.jpeg,,10.37,5.185,,,,
+lutheran_road,2,Lutheran Road_Cam4_20251217_093822_007_B.jpeg,,53.275,31.822,32.0,8.649,,
+lutheran_road,3,Lutheran Road_Cam4_20251217_093852_840_B.jpeg,,101.339,77.307,78.0,8.071,,
+lutheran_road,4,Lutheran Road_Cam4_20251217_094433_588_B.jpeg,,155.552,128.446,128.0,4.483,,
+lutheran_road,5,Lutheran Road_Cam4_20251217_094814_493_B.jpeg,,250.894,203.223,,,,
+lutheran_road,6,Lutheran Road_Cam4_20251217_095401_685_B.jpeg,,264.437,257.666,258.0,3.492,,
+lutheran_road,7,Lutheran Road_Cam4_20251217_095417_358_B.jpeg,,269.778,267.107,268.0,3.533,3.125,1.0
+lutheran_road,8,Lutheran Road_Cam4_20251217_095420_961_B.jpeg,,281.428,275.603,276.0,3.989,,
+lutheran_road,9,Lutheran Road_Cam4_20251217_095425_172_B.jpeg,,320.66,301.044,302.0,7.402,,
+lutheran_road,10,Lutheran Road_Cam4_20251217_095438_597_B.jpeg,,371.221,345.94,346.0,5.298,,
+lutheran_road,11,Lutheran Road_Cam4_20251217_095455_476_B.jpeg,,445.927,408.574,408.0,6.59,,
+lutheran_road,12,Lutheran Road_Cam4_20251217_095525_702_B.jpeg,,470.136,458.031,458.0,4.716,,
+lutheran_road,13,Lutheran Road_Cam4_20251217_100445_935_B.jpeg,,477.81,473.973,474.0,4.339,,
+lutheran_road,14,Lutheran Road_Cam4_20251217_100449_593_B.jpeg,,508.68,493.245,494.0,4.419,-3.606,1.0
+lutheran_road,15,Lutheran Road_Cam4_20251217_100505_296_B.jpeg,,535.67,522.175,,,,
+lutheran_road,16,Lutheran Road_Cam4_20251217_100528_214_B.jpeg,,541.314,538.492,,,,
+lutheran_road,17,Lutheran Road_Cam4_20251217_100531_876_B.jpeg,,614.796,578.055,578.0,6.685,,
+lutheran_road,18,Lutheran Road_Cam4_20251217_103253_359_B.jpeg,,624.901,619.848,620.0,4.271,3.991,1.0
+lutheran_road,19,Lutheran Road_Cam4_20251217_103303_672_B.jpeg,,631.646,628.273,628.0,4.465,-0.089,1.0
+lutheran_road,20,Lutheran Road_Cam4_20251217_103306_675_B.jpeg,,658.664,645.155,646.0,4.046,,
+lutheran_road,21,Lutheran Road_Cam4_20251217_103317_655_B.jpeg,,670.542,664.603,664.0,4.951,,

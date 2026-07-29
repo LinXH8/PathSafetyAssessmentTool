@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marina_view_link,1,Cam4_20251230_074816_397_A.jpeg,,11.501,5.75,6.0,7.787,,
+marina_view_link,2,Cam4_20251230_074822_406_A.jpeg,,37.13,24.315,24.0,7.88,,
+marina_view_link,3,Cam4_20251230_074832_016_A.jpeg,,44.533,40.832,40.0,6.739,,
+marina_view_link,4,Cam4_20251230_074834_418_A.jpeg,,53.861,49.197,50.0,5.037,,
+marina_view_link,5,Cam4_20251230_074837_421_A.jpeg,,81.031,67.446,68.0,3.586,2.188,1.0
+marina_view_link,6,Cam4_20251230_074847_634_A.jpeg,,89.789,85.41,86.0,3.373,,
+marina_view_link,7,Cam4_20251230_074852_444_A.jpeg,,99.318,94.554,94.0,3.192,,
+marina_view_link,8,Cam4_20251230_074859_049_A.jpeg,,138.66,118.989,118.0,5.186,,
+marina_view_link,9,Cam4_20251230_074913_465_A.jpeg,,152.648,145.654,146.0,7.962,,
+marina_view_link,10,Cam4_20251230_075025_521_A.jpeg,,162.446,157.547,158.0,12.306,,
+marina_view_link,11,Cam4_20251230_075028_527_A.jpeg,,173.496,167.971,168.0,11.113,,
+marina_view_link,12,Cam4_20251230_075032_131_A.jpeg,,198.661,186.079,186.0,6.728,,
+marina_view_link,13,Cam4_20251230_075058_522_A.jpeg,,239.163,218.912,218.0,5.916,,
+marina_view_link,14,Cam4_20260108_091413_014_B.jpeg,,250.19,244.677,244.0,5.044,,
+marina_view_link,15,Cam4_20260108_091414_814_B.jpeg,,259.391,254.791,254.0,6.624,,
+marina_view_link,16,Cam4_20260108_091416_015_B.jpeg,,285.564,272.477,272.0,5.79,,

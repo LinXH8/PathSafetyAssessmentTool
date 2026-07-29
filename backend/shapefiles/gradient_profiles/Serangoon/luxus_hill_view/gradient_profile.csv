@@ -1,0 +1,9 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+luxus_hill_view,Luxus Hill View,16.0,32473.409,40351.536,15.445,13.616,13.423,-4.575,1.0,LUXUS HILL VIEW,6.945
+luxus_hill_view,Luxus Hill View,18.0,32473.393,40353.536,13.616,13.423,13.331,-3.217,1.0,LUXUS HILL VIEW,4.947
+luxus_hill_view,Luxus Hill View,20.0,32473.377,40355.536,13.23,13.23,13.24,-3.038,1.0,LUXUS HILL VIEW,2.949
+luxus_hill_view,Luxus Hill View,22.0,32473.335,40357.535,13.24,13.24,13.23,,,LUXUS HILL VIEW,0.95
+luxus_hill_view,Luxus Hill View,24.0,32473.157,40359.527,13.18,13.18,13.18,,,LUXUS HILL VIEW,1.048
+luxus_hill_view,Luxus Hill View,26.0,32472.979,40361.519,13.135,13.135,13.135,,,LUXUS HILL VIEW,3.047
+luxus_hill_view,Luxus Hill View,28.0,32472.802,40363.511,14.37,13.135,13.135,,,LUXUS HILL VIEW,5.045
+luxus_hill_view,Luxus Hill View,30.0,32472.624,40365.503,14.44,13.135,13.135,,,LUXUS HILL VIEW,7.044

@@ -1,0 +1,66 @@
+{
+  "path_key": "toh_yi_drive",
+  "display_name": "Toh Yi Drive",
+  "source_project": "Toh Yi Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Toh Yi Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:33:30.757602+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1550.262,
+  "profile_point_count": 522,
+  "valid_elevation_count": 522,
+  "rejected_outlier_count": 46,
+  "rejected_step_jump_count": 348,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 86,
+  "usable_gradient_completion_pct": 16.48,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.67,
+  "gradient_min_pct": -11.909,
+  "gradient_max_pct": 13.585,
+  "path_bounds_svy21": {
+    "min_x": 21067.132,
+    "min_y": 35272.092,
+    "max_x": 21369.998,
+    "max_y": 35823.484
+  },
+  "road_boundary": {
+    "target_road_name": "TOH YI DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 777,
+    "offroad_point_count": 255,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KISMIS ROAD",
+        "point_count": 123
+      },
+      {
+        "road_name": "JALAN JURONG KECHIL",
+        "point_count": 106
+      },
+      {
+        "road_name": "TOH YI ROAD",
+        "point_count": 14
+      },
+      {
+        "road_name": "LORONG KISMIS",
+        "point_count": 7
+      },
+      {
+        "road_name": "KISMIS GREEN",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1550.262,
+    "trimmed_offroad_points": 255
+  }
+}

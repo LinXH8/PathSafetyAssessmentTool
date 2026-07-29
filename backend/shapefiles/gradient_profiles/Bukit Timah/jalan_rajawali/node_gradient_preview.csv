@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rajawali,1,Jalan Rajawali_Cam4_20251122_093256_815_A.jpeg,,10.201,5.1,6.0,27.935,,
+jalan_rajawali,2,Jalan Rajawali_Cam4_20251122_093313_644_A.jpeg,,20.39,15.295,16.0,28.706,13.024,2.0
+jalan_rajawali,3,Jalan Rajawali_Cam4_20251122_093325_065_A.jpeg,,49.202,34.796,34.0,28.973,,
+jalan_rajawali,4,Jalan Rajawali_Cam4_20251122_093353_183_A.jpeg,,57.679,53.441,54.0,29.463,,
+jalan_rajawali,5,Jalan Rajawali_Cam4_20251122_093401_591_A.jpeg,,68.12,62.899,62.0,29.684,,
+jalan_rajawali,6,Jalan Rajawali_Cam4_20251122_093411_209_A.jpeg,,90.6,79.36,78.0,32.531,,
+jalan_rajawali,7,Jalan Rajawali_Cam4_20251122_093434_634_A.jpeg,,114.886,102.743,,,,
+jalan_rajawali,8,Jalan Rajawali_Cam4_20251122_093449_053_A.jpeg,,172.875,143.881,,,,
+jalan_rajawali,9,Jalan Rajawali_Cam4_20251122_093729_276_A.jpeg,,183.432,178.154,178.0,34.683,,
+jalan_rajawali,10,Jalan Rajawali_Cam4_20251122_093746_097_A.jpeg,,212.004,197.718,198.0,34.766,,
+jalan_rajawali,11,Jalan Rajawali_Cam4_20251122_093818_540_A.jpeg,,238.272,225.138,226.0,34.573,0.313,1.0
+jalan_rajawali,12,Jalan Rajawali_Cam4_20251122_093833_536_A.jpeg,,248.661,243.467,244.0,35.89,,
+jalan_rajawali,13,Jalan Rajawali_Cam4_20251122_093838_947_A.jpeg,,261.067,254.864,254.0,37.536,,
+jalan_rajawali,14,Jalan Rajawali_Cam4_20251122_094740_012_A.jpeg,,337.604,299.335,300.0,35.774,,
+jalan_rajawali,15,Jalan Rajawali_Cam4_20251122_095629_727_A.jpeg,,392.79,365.197,366.0,32.849,,
+jalan_rajawali,16,Jalan Rajawali_Cam4_20251122_101445_746_A.jpeg,,405.828,399.309,400.0,30.713,-7.579,1.0
+jalan_rajawali,17,Jalan Rajawali_Cam4_20251122_101451_157_A.jpeg,,417.012,411.42,412.0,30.647,,
+jalan_rajawali,18,Jalan Rajawali_Cam4_20251122_101455_964_A.jpeg,,422.35,419.681,420.0,31.154,,
+jalan_rajawali,19,Jalan Rajawali_Cam4_20251122_101458_366_A.jpeg,,455.767,439.058,440.0,26.926,,

@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+belgravia_drive,1,Belgravia Drive_Cam4_20260101_100252_508_B.jpeg,,10.569,5.284,6.0,9.959,,
+belgravia_drive,2,Belgravia Drive_Cam4_20260101_100256_715_B.jpeg,,22.565,16.567,16.0,9.544,,
+belgravia_drive,3,Belgravia Drive_Cam4_20260101_100301_526_B.jpeg,,34.394,28.48,28.0,9.584,,
+belgravia_drive,4,Belgravia Drive_Cam4_20260101_100305_752_B.jpeg,,41.415,37.904,38.0,10.007,,
+belgravia_drive,5,Belgravia Drive_Cam4_20260101_100308_160_B.jpeg,,66.866,54.14,54.0,10.202,,
+belgravia_drive,6,Belgravia Drive_Cam4_20260101_100316_652_B.jpeg,,78.193,72.529,72.0,10.686,-4.287,1.0
+belgravia_drive,7,Belgravia Drive_Cam4_20260101_100320_259_B.jpeg,,90.103,84.148,84.0,10.79,,
+belgravia_drive,8,Belgravia Drive_Cam4_20260101_100323_868_B.jpeg,,95.897,93.0,94.0,11.939,,
+belgravia_drive,9,Belgravia Drive_Cam4_20260101_100325_668_B.jpeg,,123.535,109.716,110.0,12.263,-8.557,1.0
+belgravia_drive,10,Belgravia Drive_Cam4_20260101_100335_546_B.jpeg,,135.55,129.542,130.0,12.09,1.875,1.0
+belgravia_drive,11,Belgravia Drive_Cam4_20260101_100339_753_B.jpeg,,145.297,140.423,140.0,12.39,3.75,1.0
+belgravia_drive,12,Belgravia Drive_Cam4_20260101_100343_427_B.jpeg,,157.133,151.215,152.0,12.79,,
+belgravia_drive,13,Belgravia Drive_Cam4_20260101_100349_483_B.jpeg,,164.074,160.604,160.0,13.686,,
+belgravia_drive,14,Belgravia Drive_Cam4_20260101_100354_317_B.jpeg,,187.408,175.741,176.0,14.035,,
+belgravia_drive,15,Belgravia Drive_Cam4_20260101_100408_399_B.jpeg,,197.42,192.414,192.0,12.015,-3.125,1.0
+belgravia_drive,16,Belgravia Drive_Cam4_20260101_100412_603_B.jpeg,,209.565,203.493,204.0,11.665,,
+belgravia_drive,17,Belgravia Drive_Cam4_20260101_100417_471_B.jpeg,,220.653,215.109,216.0,11.24,-3.75,1.0
+belgravia_drive,18,Belgravia Drive_Cam4_20260101_100421_103_B.jpeg,,242.422,231.537,232.0,10.79,-1.875,1.0
+belgravia_drive,19,Belgravia Drive_Cam4_20260101_100427_147_B.jpeg,,254.574,248.498,248.0,10.34,,
+belgravia_drive,20,Belgravia Drive_Cam4_20260101_100430_150_B.jpeg,,262.503,258.538,258.0,11.322,,
+belgravia_drive,21,Belgravia Drive_Cam4_20260101_100431_952_B.jpeg,,273.285,267.894,268.0,11.05,-9.816,2.0
+belgravia_drive,22,Belgravia Drive_Cam4_20260101_100434_355_B.jpeg,,283.732,278.509,278.0,10.522,,
+belgravia_drive,23,Belgravia Drive_Cam4_20260101_100436_759_B.jpeg,,291.55,287.641,288.0,9.868,,
+belgravia_drive,24,Belgravia Drive_Cam4_20260101_100438_576_B.jpeg,,302.419,296.985,296.0,9.19,,
+belgravia_drive,25,Belgravia Drive_Cam4_20260101_100440_980_B.jpeg,,312.837,307.628,308.0,9.275,,

@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lasia_avenue,1,Lasia Avenue_Cam4_20251217_091501_042_A.jpeg,,11.661,5.83,6.0,17.244,,
+lasia_avenue,2,Lasia Avenue_Cam4_20251217_091508_140_A.jpeg,,248.36,130.01,,,,
+lasia_avenue,3,Lasia Avenue_Cam4_20251217_091730_111_A.jpeg,,261.623,254.991,254.0,24.203,,
+lasia_avenue,4,Lasia Avenue_Cam4_20251217_091735_214_A.jpeg,,285.09,273.357,274.0,23.341,,
+lasia_avenue,5,Lasia Avenue_Cam4_20251217_091743_809_A.jpeg,,288.067,286.578,286.0,23.301,,
+lasia_avenue,6,Lasia Avenue_Cam4_20251217_091825_867_A.jpeg,,358.94,323.503,324.0,25.268,,
+lasia_avenue,7,Lasia Avenue_Cam4_20251217_091845_522_A.jpeg,,368.569,363.754,364.0,17.731,,
+lasia_avenue,8,Lasia Avenue_Cam4_20251217_091848_527_A.jpeg,,382.184,375.376,376.0,17.714,0.278,1.0
+lasia_avenue,9,Lasia Avenue_Cam4_20251217_091852_587_A.jpeg,,406.82,394.502,394.0,17.477,0.937,1.0
+lasia_avenue,10,Lasia Avenue_Cam4_20251217_091859_105_A.jpeg,,419.471,413.145,414.0,19.074,,
+lasia_avenue,11,Lasia Avenue_Cam4_20251217_091902_223_A.jpeg,,425.782,422.626,422.0,19.503,,
+lasia_avenue,12,Lasia Avenue_Cam4_20251217_091903_746_A.jpeg,,454.497,440.14,440.0,18.141,,
+lasia_avenue,13,Lasia Avenue_Cam4_20251217_091910_845_A.jpeg,,466.328,460.412,460.0,16.79,,
+lasia_avenue,14,Lasia Avenue_Cam4_20251217_091913_852_A.jpeg,,478.307,472.317,472.0,17.61,,
+lasia_avenue,15,Lasia Avenue_Cam4_20251217_091916_857_A.jpeg,,502.182,490.244,490.0,16.586,-5.333,1.0
+lasia_avenue,16,Lasia Avenue_Cam4_20251217_091922_889_A.jpeg,,511.301,506.741,506.0,16.456,,
+lasia_avenue,17,Lasia Avenue_Cam4_20251217_091925_433_A.jpeg,,521.062,516.181,516.0,19.456,,
+lasia_avenue,18,Lasia Avenue_Cam4_20251217_091928_437_A.jpeg,,547.457,534.259,534.0,23.505,,
+lasia_avenue,19,Lasia Avenue_Cam4_20251217_091936_584_A.jpeg,,558.676,553.066,554.0,20.196,,
+lasia_avenue,20,Lasia Avenue_Cam4_20251217_091940_096_A.jpeg,,584.111,571.393,572.0,19.309,,
+lasia_avenue,21,Lasia Avenue_Cam4_20251217_091948_722_A.jpeg,,596.612,590.361,590.0,19.207,,

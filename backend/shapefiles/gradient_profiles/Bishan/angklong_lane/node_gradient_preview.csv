@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+angklong_lane,1,Angklong Lane_Cam4_20260103_091931_349_B.jpeg,,11.076,5.538,6.0,17.939,2.58,1.0
+angklong_lane,2,Angklong Lane_Cam4_20260103_091934_953_B.jpeg,,21.009,16.043,16.0,18.432,,
+angklong_lane,3,Angklong Lane_Cam4_20260103_091937_955_B.jpeg,,30.122,25.565,26.0,19.264,,
+angklong_lane,4,Angklong Lane_Cam4_20260103_091940_960_B.jpeg,,40.449,35.285,36.0,19.718,,
+angklong_lane,5,Angklong Lane_Cam4_20260103_091945_167_B.jpeg,,66.793,53.621,54.0,20.313,6.031,1.0
+angklong_lane,6,Angklong Lane_Cam4_20260103_092130_358_B.jpeg,,76.948,71.871,72.0,20.953,,
+angklong_lane,7,Angklong Lane_Cam4_20260103_092133_963_B.jpeg,,86.792,81.87,82.0,21.904,,
+angklong_lane,8,Angklong Lane_Cam4_20260103_092137_568_B.jpeg,,96.534,91.663,92.0,22.7,5.316,1.0
+angklong_lane,9,Angklong Lane_Cam4_20260103_092141_772_B.jpeg,,325.772,211.153,,,,
+angklong_lane,10,Angklong Lane_Cam4_20260103_093831_793_B.jpeg,,336.368,331.07,,,,
+angklong_lane,11,Angklong Lane_Cam4_20260103_093834_796_B.jpeg,,346.776,341.572,,,,
+angklong_lane,12,Angklong Lane_Cam4_20260103_093837_808_B.jpeg,,357.295,352.035,,,,
+angklong_lane,13,Angklong Lane_Cam4_20260103_093840_811_B.jpeg,,365.027,361.161,,,,

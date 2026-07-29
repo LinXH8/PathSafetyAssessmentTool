@@ -1,0 +1,66 @@
+{
+  "path_key": "lorong_1_realty_park",
+  "display_name": "Lorong 1 Realty Park",
+  "source_project": "Lorong 1 Realty Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong 1 Realty Park\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T10:26:47.312164+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1169.578,
+  "profile_point_count": 369,
+  "valid_elevation_count": 369,
+  "rejected_outlier_count": 37,
+  "rejected_step_jump_count": 183,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 122,
+  "usable_gradient_completion_pct": 33.06,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 49.59,
+  "gradient_min_pct": -7.769,
+  "gradient_max_pct": 9.689,
+  "path_bounds_svy21": {
+    "min_x": 34202.157,
+    "min_y": 38666.617,
+    "max_x": 34481.37,
+    "max_y": 38928.023
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG 1 REALTY PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 586,
+    "offroad_point_count": 217,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOUGANG AVENUE 2",
+        "point_count": 146
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 52
+      },
+      {
+        "road_name": "LORONG 5 REALTY PARK",
+        "point_count": 7
+      },
+      {
+        "road_name": "UPPER SERANGOON ROAD",
+        "point_count": 6
+      },
+      {
+        "road_name": "LORONG 4 REALTY PARK",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1074.0,
+    "trimmed_offroad_points": 217
+  }
+}

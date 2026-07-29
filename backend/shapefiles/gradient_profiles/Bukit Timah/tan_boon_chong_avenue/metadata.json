@@ -1,0 +1,42 @@
+{
+  "path_key": "tan_boon_chong_avenue",
+  "display_name": "Tan Boon Chong Avenue",
+  "source_project": "Tan Boon Chong Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Tan Boon Chong Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:20:52.451601+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 356.148,
+  "profile_point_count": 180,
+  "valid_elevation_count": 180,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 88,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 36.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 48.89,
+  "gradient_min_pct": -10.086,
+  "gradient_max_pct": 11.563,
+  "path_bounds_svy21": {
+    "min_x": 22953.457,
+    "min_y": 32993.001,
+    "max_x": 23054.162,
+    "max_y": 33146.858
+  },
+  "road_boundary": {
+    "target_road_name": "TAN BOON CHONG AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 180,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

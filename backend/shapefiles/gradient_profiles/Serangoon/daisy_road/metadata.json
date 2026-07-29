@@ -1,0 +1,50 @@
+{
+  "path_key": "daisy_road",
+  "display_name": "Daisy Road",
+  "source_project": "Daisy Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Daisy Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T09:27:10.382736+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 726.628,
+  "profile_point_count": 362,
+  "valid_elevation_count": 361,
+  "rejected_outlier_count": 37,
+  "rejected_step_jump_count": 169,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 141,
+  "usable_gradient_completion_pct": 38.95,
+  "elevation_hit_coverage_pct": 99.72,
+  "step_jump_rejection_pct": 46.69,
+  "gradient_min_pct": -11.206,
+  "gradient_max_pct": 11.719,
+  "path_bounds_svy21": {
+    "min_x": 31727.429,
+    "min_y": 36175.607,
+    "max_x": 31886.528,
+    "max_y": 36320.599
+  },
+  "road_boundary": {
+    "target_road_name": "DAISY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 365,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BRADDELL ROAD",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 682.0,
+    "offroad_chainage_max_m": 686.0,
+    "trimmed_offroad_points": 3
+  }
+}

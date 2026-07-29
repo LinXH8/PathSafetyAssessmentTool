@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pekin_street,1,Cam4_20251211_090816_850_C.jpeg,,10.032,5.016,6.0,3.241,,
+pekin_street,2,Cam4_20251211_090821_054_C.jpeg,,30.382,20.207,20.0,3.928,,
+pekin_street,3,Cam4_20260205_082648_287_C.jpeg,,39.163,34.772,34.0,4.38,0.59,1.0
+pekin_street,4,Cam4_20260205_082652_490_C.jpeg,,77.65,58.406,58.0,4.847,8.983,2.0
+pekin_street,5,Cam4_20260205_082801_539_C.jpeg,,88.012,82.831,82.0,3.984,,
+pekin_street,6,Cam4_20260205_082805_145_C.jpeg,,99.032,93.522,94.0,4.184,0.625,1.0
+pekin_street,7,Cam4_20260205_082808_749_C.jpeg,,111.407,105.219,106.0,5.276,,
+pekin_street,8,Cam4_20260205_082812_954_C.jpeg,,112.904,112.155,112.0,5.684,,

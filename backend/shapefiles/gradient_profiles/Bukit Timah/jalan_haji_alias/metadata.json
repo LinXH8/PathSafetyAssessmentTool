@@ -1,0 +1,58 @@
+{
+  "path_key": "jalan_haji_alias",
+  "display_name": "Jalan Haji Alias",
+  "source_project": "Jalan Haji Alias",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Haji Alias\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T20:11:41.502785+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1075.45,
+  "profile_point_count": 521,
+  "valid_elevation_count": 521,
+  "rejected_outlier_count": 15,
+  "rejected_step_jump_count": 197,
+  "repaired_gradient_point_count": 27,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 244,
+  "usable_gradient_completion_pct": 46.83,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 37.81,
+  "gradient_min_pct": -8.048,
+  "gradient_max_pct": 8.302,
+  "path_bounds_svy21": {
+    "min_x": 23472.828,
+    "min_y": 33787.26,
+    "max_x": 23886.927,
+    "max_y": 34135.669
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN HAJI ALIAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 539,
+    "offroad_point_count": 18,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ALLAMANDA GROVE",
+        "point_count": 9
+      },
+      {
+        "road_name": "JALAN SIANTAN",
+        "point_count": 5
+      },
+      {
+        "road_name": "SIXTH AVENUE",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 828.0,
+    "trimmed_offroad_points": 18
+  }
+}

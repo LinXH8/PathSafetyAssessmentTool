@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+parliament_place,1,Cam4_20251211_103918_943_A.jpeg,,11.125,5.562,6.0,9.441,,
+parliament_place,2,Cam4_20251211_103921_962_A.jpeg,,39.167,25.146,26.0,5.978,,
+parliament_place,3,Cam4_20251211_103932_198_A.jpeg,,46.095,42.631,42.0,5.689,,
+parliament_place,4,Cam4_20251211_103934_302_A.jpeg,,57.116,51.605,52.0,6.466,,
+parliament_place,5,Cam4_20251211_103937_816_A.jpeg,,64.782,60.949,60.0,6.895,,
+parliament_place,6,Cam4_20251211_103940_823_A.jpeg,,75.362,70.072,70.0,5.921,,
+parliament_place,7,Cam4_20251211_104053_628_A.jpeg,,87.553,81.458,82.0,5.129,5.907,1.0
+parliament_place,8,Cam4_20251211_104101_435_A.jpeg,,114.008,100.781,100.0,5.516,,
+parliament_place,9,Cam4_20251211_104112_645_A.jpeg,,121.81,117.909,118.0,10.623,,
+parliament_place,10,Cam4_20251211_104115_273_A.jpeg,,130.638,126.224,126.0,9.877,,
+parliament_place,11,Cam4_20251211_104117_846_A.jpeg,,141.267,135.952,136.0,7.02,,
+parliament_place,12,Cam4_20251211_104120_864_A.jpeg,,183.889,162.578,162.0,6.586,,
+parliament_place,13,Cam4_20251211_104134_734_A.jpeg,,192.799,188.344,188.0,6.668,,
+parliament_place,14,Cam4_20251211_104137_343_A.jpeg,,262.2,227.5,228.0,4.741,-0.703,1.0

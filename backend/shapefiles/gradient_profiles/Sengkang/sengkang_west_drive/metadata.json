@@ -1,0 +1,58 @@
+{
+  "path_key": "sengkang_west_drive",
+  "display_name": "Sengkang West Drive",
+  "source_project": "Sengkang West Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sengkang West Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-31T22:03:11.359012+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 871.051,
+  "profile_point_count": 286,
+  "valid_elevation_count": 45,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 14,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 51,
+  "usable_gradient_completion_pct": 17.83,
+  "elevation_hit_coverage_pct": 15.73,
+  "step_jump_rejection_pct": 4.9,
+  "gradient_min_pct": -2.812,
+  "gradient_max_pct": 3.064,
+  "path_bounds_svy21": {
+    "min_x": 33422.578,
+    "min_y": 42247.995,
+    "max_x": 33493.203,
+    "max_y": 42766.372
+  },
+  "road_boundary": {
+    "target_road_name": "SENGKANG WEST DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 437,
+    "offroad_point_count": 151,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SELETAR LINK",
+        "point_count": 89
+      },
+      {
+        "road_name": "TAMPINES EXPRESSWAY",
+        "point_count": 56
+      },
+      {
+        "road_name": "ANCHORVALE STREET",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 872.0,
+    "trimmed_offroad_points": 151
+  }
+}

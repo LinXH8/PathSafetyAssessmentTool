@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sommerville_walk,1,Sommerville Walk_Cam4_20260112_083329_004_B.jpeg,,11.378,5.689,6.0,22.28,,
+sommerville_walk,2,Sommerville Walk_Cam4_20260112_083341_616_B.jpeg,,23.496,17.437,18.0,23.45,,
+sommerville_walk,3,Sommerville Walk_Cam4_20260112_083400_242_B.jpeg,,34.99,29.243,30.0,24.224,,
+sommerville_walk,4,Sommerville Walk_Cam4_20260112_083414_128_B.jpeg,,57.96,46.475,46.0,25.195,7.012,1.0
+sommerville_walk,5,Sommerville Walk_Cam4_20260112_083440_577_B.jpeg,,70.108,64.034,64.0,26.302,3.638,1.0
+sommerville_walk,6,Sommerville Walk_Cam4_20260112_083458_603_B.jpeg,,93.853,81.981,82.0,26.831,1.144,1.0
+sommerville_walk,7,Sommerville Walk_Cam4_20260112_083509_416_B.jpeg,,105.623,99.738,100.0,27.034,0.788,1.0
+sommerville_walk,8,Sommerville Walk_Cam4_20260112_083514_821_B.jpeg,,113.344,109.484,110.0,27.115,1.675,1.0
+sommerville_walk,9,Sommerville Walk_Cam4_20260112_083517_824_B.jpeg,,122.917,118.131,118.0,27.205,0.1,1.0
+sommerville_walk,10,Sommerville Walk_Cam4_20260112_083521_432_B.jpeg,,133.068,127.992,128.0,27.254,0.8,1.0
+sommerville_walk,11,Sommerville Walk_Cam4_20260112_083525_636_B.jpeg,,142.33,137.699,138.0,27.307,1.644,1.0
+sommerville_walk,12,Sommerville Walk_Cam4_20260112_083529_240_B.jpeg,,153.902,148.116,148.0,27.43,0.125,1.0
+sommerville_walk,13,Sommerville Walk_Cam4_20260112_083535_245_B.jpeg,,161.874,157.888,158.0,27.508,0.525,1.0
+sommerville_walk,14,Sommerville Walk_Cam4_20260112_083541_252_B.jpeg,,338.575,250.224,250.0,31.018,,
+sommerville_walk,15,Sommerville Walk_Cam4_20260112_083816_845_B.jpeg,,361.143,349.859,350.0,22.264,,
+sommerville_walk,16,Sommerville Walk_Cam4_20260112_083827_059_B.jpeg,,373.218,367.18,368.0,21.817,-1.631,1.0
+sommerville_walk,17,Sommerville Walk_Cam4_20260112_083832_472_B.jpeg,,384.353,378.785,378.0,21.512,,
+sommerville_walk,18,Sommerville Walk_Cam4_20260112_083836_680_B.jpeg,,395.592,389.973,390.0,20.893,-1.238,1.0
+sommerville_walk,19,Sommerville Walk_Cam4_20260112_083840_890_B.jpeg,,402.23,398.911,398.0,20.794,-0.988,1.0
+sommerville_walk,20,Sommerville Walk_Cam4_20260112_083843_294_B.jpeg,,460.702,431.466,432.0,21.022,,
+sommerville_walk,21,Sommerville Walk_Cam4_20260112_083907_332_B.jpeg,,469.867,465.285,466.0,23.374,,
+sommerville_walk,22,Sommerville Walk_Cam4_20260112_083916_945_B.jpeg,,479.801,474.834,474.0,23.266,,
+sommerville_walk,23,Sommerville Walk_Cam4_20260112_083921_149_B.jpeg,,490.204,485.003,486.0,21.955,,
+sommerville_walk,24,Sommerville Walk_Cam4_20260112_083925_953_B.jpeg,,500.452,495.328,496.0,21.263,,
+sommerville_walk,25,Sommerville Walk_Cam4_20260112_083932_558_B.jpeg,,511.977,506.214,506.0,20.3,,
+sommerville_walk,26,Sommerville Walk_Cam4_20260112_083938_566_B.jpeg,,523.802,517.889,518.0,19.176,,

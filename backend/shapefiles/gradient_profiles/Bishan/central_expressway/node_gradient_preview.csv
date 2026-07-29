@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+central_expressway,1,,CENTRAL EXPRESSWAY,4994.295,2497.148,2498.0,,,
+central_expressway,2,,CENTRAL EXPRESSWAY,5396.094,7692.75,7692.0,4.831,,
+central_expressway,3,,CENTRAL EXPRESSWAY,1085.749,10935.163,10936.0,13.375,-1.882,1.0
+central_expressway,4,,CENTRAL EXPRESSWAY,132.739,11545.048,11546.0,10.662,,

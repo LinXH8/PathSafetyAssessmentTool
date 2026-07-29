@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_ampang,1,Jalan Ampang_Cam4_20251218_081009_230_A.jpeg,,13.881,6.941,6.0,8.62,,
+jalan_ampang,2,Jalan Ampang_Cam4_20251218_081024_152_A.jpeg,,58.839,36.36,36.0,11.685,,
+jalan_ampang,3,Jalan Ampang_Cam4_20251218_081037_969_A.jpeg,,131.065,94.952,94.0,15.792,,
+jalan_ampang,4,Jalan Ampang_Cam4_20251218_081116_157_A.jpeg,,141.25,136.157,136.0,19.257,,
+jalan_ampang,5,Jalan Ampang_Cam4_20251218_081119_759_A.jpeg,,150.57,145.91,146.0,20.223,,
+jalan_ampang,6,Jalan Ampang_Cam4_20251218_081129_973_A.jpeg,,165.409,157.99,158.0,21.19,5.0,1.0
+jalan_ampang,7,Jalan Ampang_Cam4_20251218_081143_184_A.jpeg,,173.579,169.494,170.0,22.223,7.292,1.0
+jalan_ampang,8,Jalan Ampang_Cam4_20251218_081153_395_A.jpeg,,181.771,177.675,178.0,22.523,0.208,1.0
+jalan_ampang,9,Jalan Ampang_Cam4_20251218_081157_600_A.jpeg,,191.831,186.801,186.0,22.581,3.75,1.0
+jalan_ampang,10,Jalan Ampang_Cam4_20251218_081201_805_A.jpeg,,204.661,198.246,198.0,22.671,-3.718,1.0
+jalan_ampang,11,Jalan Ampang_Cam4_20251218_081209_014_A.jpeg,,226.797,215.729,216.0,22.434,-0.365,1.0
+jalan_ampang,12,Jalan Ampang_Cam4_20251218_081230_637_A.jpeg,,416.199,321.498,322.0,20.6,,

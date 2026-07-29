@@ -1,0 +1,50 @@
+{
+  "path_key": "watten_rise",
+  "display_name": "Watten Rise",
+  "source_project": "Watten Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Watten Rise\\geo_data.gpkg",
+  "lidar_bundle": "Zone A_Bukit_Timah_LTA",
+  "lidar_root": "E:\\LIDAR\\Zone A_Bukit_Timah_LTA",
+  "generated_at_utc": "2026-06-06T18:15:52.046414+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 338.026,
+  "profile_point_count": 158,
+  "valid_elevation_count": 158,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 102,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 29,
+  "usable_gradient_completion_pct": 18.35,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.56,
+  "gradient_min_pct": -11.525,
+  "gradient_max_pct": 2.159,
+  "path_bounds_svy21": {
+    "min_x": 25155.407,
+    "min_y": 34546.656,
+    "max_x": 25309.549,
+    "max_y": 34657.376
+  },
+  "road_boundary": {
+    "target_road_name": "WATTEN RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 171,
+    "offroad_point_count": 13,
+    "offroad_top_road_names": [
+      {
+        "road_name": "WATTEN DRIVE",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 38.0,
+    "offroad_chainage_max_m": 62.0,
+    "trimmed_offroad_points": 13
+  }
+}

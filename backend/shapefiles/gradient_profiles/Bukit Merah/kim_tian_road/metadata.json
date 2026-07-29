@@ -1,0 +1,62 @@
+{
+  "path_key": "kim_tian_road",
+  "display_name": "Kim Tian Road",
+  "source_project": "Kim Tian Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Kim Tian Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T06:59:31.259310+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2203.945,
+  "profile_point_count": 911,
+  "valid_elevation_count": 911,
+  "rejected_outlier_count": 84,
+  "rejected_step_jump_count": 543,
+  "repaired_gradient_point_count": 13,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 222,
+  "usable_gradient_completion_pct": 24.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 59.6,
+  "gradient_min_pct": -9.309,
+  "gradient_max_pct": 10.609,
+  "path_bounds_svy21": {
+    "min_x": 27242.592,
+    "min_y": 29184.095,
+    "max_x": 27640.012,
+    "max_y": 29800.466
+  },
+  "road_boundary": {
+    "target_road_name": "KIM TIAN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1103,
+    "offroad_point_count": 192,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KIM PONG ROAD",
+        "point_count": 115
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 29
+      },
+      {
+        "road_name": "MOH GUAN TERRACE",
+        "point_count": 27
+      },
+      {
+        "road_name": "TIONG BAHRU ROAD",
+        "point_count": 21
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2190.0,
+    "trimmed_offroad_points": 192
+  }
+}

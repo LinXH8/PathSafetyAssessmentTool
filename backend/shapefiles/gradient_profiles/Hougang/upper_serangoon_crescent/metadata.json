@@ -1,0 +1,50 @@
+{
+  "path_key": "upper_serangoon_crescent",
+  "display_name": "Upper Serangoon Crescent",
+  "source_project": "Upper Serangoon Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Upper Serangoon Crescent\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T14:32:20.200184+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 456.586,
+  "profile_point_count": 34,
+  "valid_elevation_count": 34,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 7,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 21,
+  "usable_gradient_completion_pct": 61.76,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 20.59,
+  "gradient_min_pct": -0.14,
+  "gradient_max_pct": 1.594,
+  "path_bounds_svy21": {
+    "min_x": 35423.017,
+    "min_y": 39608.662,
+    "max_x": 35739.111,
+    "max_y": 39936.99
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER SERANGOON CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 230,
+    "offroad_point_count": 196,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER SERANGOON ROAD",
+        "point_count": 196
+      }
+    ],
+    "offroad_chainage_min_m": 32.0,
+    "offroad_chainage_max_m": 456.586,
+    "trimmed_offroad_points": 196
+  }
+}

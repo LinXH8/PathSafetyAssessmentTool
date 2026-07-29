@@ -1,0 +1,66 @@
+{
+  "path_key": "coronation_road",
+  "display_name": "Coronation Road",
+  "source_project": "Coronation Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Coronation Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T09:45:17.967886+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4607.67,
+  "profile_point_count": 1616,
+  "valid_elevation_count": 1613,
+  "rejected_outlier_count": 127,
+  "rejected_step_jump_count": 919,
+  "repaired_gradient_point_count": 33,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 448,
+  "usable_gradient_completion_pct": 27.72,
+  "elevation_hit_coverage_pct": 99.81,
+  "step_jump_rejection_pct": 56.87,
+  "gradient_min_pct": -11.642,
+  "gradient_max_pct": 10.138,
+  "path_bounds_svy21": {
+    "min_x": 24364.86,
+    "min_y": 33734.537,
+    "max_x": 25453.75,
+    "max_y": 34005.378
+  },
+  "road_boundary": {
+    "target_road_name": "CORONATION ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2305,
+    "offroad_point_count": 689,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CORONATION DRIVE",
+        "point_count": 202
+      },
+      {
+        "road_name": "PRINCE OF WALES ROAD",
+        "point_count": 103
+      },
+      {
+        "road_name": "DUCHESS ROAD",
+        "point_count": 78
+      },
+      {
+        "road_name": "CORONATION WALK",
+        "point_count": 77
+      },
+      {
+        "road_name": "DUCHESS AVENUE",
+        "point_count": 73
+      }
+    ],
+    "offroad_chainage_min_m": 156.0,
+    "offroad_chainage_max_m": 4608.0,
+    "trimmed_offroad_points": 689
+  }
+}

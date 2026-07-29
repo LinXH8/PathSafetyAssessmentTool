@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mei_hwan_road,1,Mei Hwan Road_Cam4_20260202_092257_542_A.jpeg,,12.893,6.446,6.0,12.969,,
+mei_hwan_road,2,Mei Hwan Road_Cam4_20260202_092301_748_A.jpeg,,34.653,23.773,24.0,14.363,,
+mei_hwan_road,3,Mei Hwan Road_Cam4_20260202_092637_468_A.jpeg,,46.441,40.547,40.0,13.302,,
+mei_hwan_road,4,Mei Hwan Road_Cam4_20260202_092642_273_A.jpeg,,57.283,51.862,52.0,12.473,-11.37,2.0
+mei_hwan_road,5,Mei Hwan Road_Cam4_20260202_092647_076_A.jpeg,,79.402,68.343,68.0,12.197,,
+mei_hwan_road,6,Mei Hwan Road_Cam4_20260202_092655_964_A.jpeg,,89.156,84.279,84.0,12.949,,
+mei_hwan_road,7,Mei Hwan Road_Cam4_20260202_092659_569_A.jpeg,,102.929,96.042,96.0,12.143,0.025,1.0
+mei_hwan_road,8,Mei Hwan Road_Cam4_20260202_092709_182_A.jpeg,,163.214,133.071,134.0,14.487,,
+mei_hwan_road,9,Mei Hwan Road_Cam4_20260202_092821_203_A.jpeg,,175.887,169.551,170.0,13.613,,
+mei_hwan_road,10,Mei Hwan Road_Cam4_20260202_092826_009_A.jpeg,,198.868,187.378,188.0,12.621,,
+mei_hwan_road,11,Mei Hwan Road_Cam4_20260202_092835_021_A.jpeg,,207.239,203.053,204.0,12.496,,
+mei_hwan_road,12,Mei Hwan Road_Cam4_20260202_092848_240_A.jpeg,,234.702,220.971,218.0,12.162,0.314,1.0
+mei_hwan_road,13,Mei Hwan Road_Cam4_20260202_092922_374_A.jpeg,,246.551,240.626,240.0,12.979,,
+mei_hwan_road,14,Mei Hwan Road_Cam4_20260202_092926_581_A.jpeg,,256.47,251.51,252.0,13.385,,
+mei_hwan_road,15,Mei Hwan Road_Cam4_20260202_092930_185_A.jpeg,,268.68,262.575,262.0,13.415,,

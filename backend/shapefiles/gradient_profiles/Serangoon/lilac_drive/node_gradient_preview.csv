@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lilac_drive,1,Lilac Drive_Cam4_20260106_105440_712_C.jpeg,,13.476,6.738,,,,
+lilac_drive,2,Lilac Drive_Cam4_20260106_105445_516_C.jpeg,,21.452,17.464,,,,
+lilac_drive,3,Lilac Drive_Cam4_20260106_105448_520_C.jpeg,,30.79,26.121,26.0,18.705,,
+lilac_drive,4,Lilac Drive_Cam4_20260106_105452_613_C.jpeg,,40.423,35.607,36.0,18.199,,
+lilac_drive,5,Lilac Drive_Cam4_20260106_105456_218_C.jpeg,,51.72,46.072,46.0,16.741,,
+lilac_drive,6,Lilac Drive_Cam4_20260106_105459_220_C.jpeg,,59.772,55.746,56.0,15.276,,
+lilac_drive,7,Lilac Drive_Cam4_20260106_105501_022_C.jpeg,,69.693,64.732,64.0,14.871,-2.671,1.0
+lilac_drive,8,Lilac Drive_Cam4_20260106_105503_439_C.jpeg,,80.368,75.03,76.0,14.911,,
+lilac_drive,9,Lilac Drive_Cam4_20260106_105506_441_C.jpeg,,91.858,86.113,86.0,14.954,,
+lilac_drive,10,Lilac Drive_Cam4_20260106_105510_050_C.jpeg,,122.384,107.121,108.0,12.801,,
+lilac_drive,11,Lilac Drive_Cam4_20260106_105520_271_C.jpeg,,129.638,126.011,126.0,11.876,,
+lilac_drive,12,Lilac Drive_Cam4_20260106_105522_672_C.jpeg,,137.893,133.766,134.0,11.708,,
+lilac_drive,13,Lilac Drive_Cam4_20260106_105525_078_C.jpeg,,148.74,143.316,144.0,12.032,,
+lilac_drive,14,Lilac Drive_Cam4_20260106_105529_288_C.jpeg,,158.264,153.502,154.0,11.079,-0.938,1.0
+lilac_drive,15,Lilac Drive_Cam4_20260106_105532_892_C.jpeg,,168.326,163.295,164.0,10.954,-2.5,1.0
+lilac_drive,16,Lilac Drive_Cam4_20260106_105535_905_C.jpeg,,179.137,173.731,174.0,10.754,-2.187,1.0
+lilac_drive,17,Lilac Drive_Cam4_20260106_105538_908_C.jpeg,,187.966,183.552,184.0,10.579,,
+lilac_drive,18,Lilac Drive_Cam4_20260106_105541_310_C.jpeg,,198.382,193.174,194.0,10.479,-3.125,1.0
+lilac_drive,19,Lilac Drive_Cam4_20260106_105544_922_C.jpeg,,208.004,203.193,204.0,10.329,0.0,1.0
+lilac_drive,20,Lilac Drive_Cam4_20260106_105558_156_C.jpeg,,255.288,231.646,232.0,10.529,1.25,1.0
+lilac_drive,21,Lilac Drive_Cam4_20260106_105611_377_C.jpeg,,261.697,258.492,258.0,11.276,,
+lilac_drive,22,Lilac Drive_Cam4_20260106_105613_178_C.jpeg,,316.459,289.078,290.0,12.026,4.531,1.0
+lilac_drive,23,Lilac Drive_Cam4_20260106_105631_080_C.jpeg,,360.718,338.589,338.0,14.387,4.792,1.0

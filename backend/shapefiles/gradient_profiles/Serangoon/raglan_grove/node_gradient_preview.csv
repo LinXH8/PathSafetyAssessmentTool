@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+raglan_grove,1,Raglan Grove_Cam4_20260202_094651_238_B.jpeg,,10.25,5.125,,,,
+raglan_grove,2,Raglan Grove_Cam4_20260202_094657_293_B.jpeg,,147.476,78.863,,,,
+raglan_grove,3,Raglan Grove_Cam4_20260203_092439_606_A.jpeg,,153.345,150.411,150.0,24.07,,
+raglan_grove,4,Raglan Grove_Cam4_20260203_092442_008_A.jpeg,,187.09,170.218,170.0,23.174,,
+raglan_grove,5,Raglan Grove_Cam4_20260203_092458_766_A.jpeg,,197.679,192.385,192.0,21.996,-1.875,1.0
+raglan_grove,6,Raglan Grove_Cam4_20260203_092505_975_A.jpeg,,234.493,216.086,216.0,22.125,,
+raglan_grove,7,Raglan Grove_Cam4_20260203_092945_811_A.jpeg,,271.236,252.865,252.0,23.938,,
+raglan_grove,8,Raglan Grove_Cam4_20260203_093009_129_A.jpeg,,283.852,277.544,278.0,30.586,,
+raglan_grove,9,Raglan Grove_Cam4_20260203_093015_736_A.jpeg,,321.639,302.746,302.0,25.835,,
+raglan_grove,10,Raglan Grove_Cam4_20260203_093151_139_A.jpeg,,344.232,332.936,332.0,21.371,-1.044,1.0
+raglan_grove,11,Raglan Grove_Cam4_20260203_093200_758_A.jpeg,,358.495,351.363,352.0,21.124,-1.55,1.0
+raglan_grove,12,Raglan Grove_Cam4_20260203_093206_166_A.jpeg,,364.492,361.494,362.0,20.99,-2.125,1.0
+raglan_grove,13,Raglan Grove_Cam4_20260203_093208_568_A.jpeg,,374.315,369.404,370.0,20.758,-0.663,1.0
+raglan_grove,14,Raglan Grove_Cam4_20260203_093212_781_A.jpeg,,433.486,403.9,404.0,21.053,,
+raglan_grove,15,Raglan Grove_Cam4_20260203_093242_222_A.jpeg,,446.453,439.969,440.0,19.922,-2.181,1.0
+raglan_grove,16,Raglan Grove_Cam4_20260203_093251_233_A.jpeg,,482.479,464.466,464.0,20.225,,
+raglan_grove,17,Raglan Grove_Cam4_20260203_093308_653_A.jpeg,,509.204,495.841,496.0,20.427,1.534,1.0

@@ -1,0 +1,62 @@
+{
+  "path_key": "sengkang_west_way",
+  "display_name": "Sengkang West Way",
+  "source_project": "Sengkang West Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sengkang West Way\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-31T22:09:21.542215+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1854.31,
+  "profile_point_count": 818,
+  "valid_elevation_count": 816,
+  "rejected_outlier_count": 79,
+  "rejected_step_jump_count": 477,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 8,
+  "valid_gradient_count": 215,
+  "usable_gradient_completion_pct": 26.28,
+  "elevation_hit_coverage_pct": 99.76,
+  "step_jump_rejection_pct": 58.31,
+  "gradient_min_pct": -7.734,
+  "gradient_max_pct": 19.549,
+  "path_bounds_svy21": {
+    "min_x": 31996.433,
+    "min_y": 41861.765,
+    "max_x": 33099.147,
+    "max_y": 41974.927
+  },
+  "road_boundary": {
+    "target_road_name": "SENGKANG WEST WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 929,
+    "offroad_point_count": 111,
+    "offroad_top_road_names": [
+      {
+        "road_name": "FERNVALE ROAD",
+        "point_count": 67
+      },
+      {
+        "road_name": "LORONG TANGGAM",
+        "point_count": 25
+      },
+      {
+        "road_name": "FERNVALE LINK",
+        "point_count": 15
+      },
+      {
+        "road_name": "JALAN KAYU",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 434.0,
+    "offroad_chainage_max_m": 1780.0,
+    "trimmed_offroad_points": 111
+  }
+}

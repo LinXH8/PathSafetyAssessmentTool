@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ang_mo_kio_rise,1,Ang Mo Kio Rise_Cam4_20251231_095726_923_A.jpeg,,11.331,5.665,6.0,12.918,0.125,1.0
+ang_mo_kio_rise,2,Ang Mo Kio Rise_Cam4_20251231_095730_588_A.jpeg,,19.802,15.566,16.0,12.853,-2.313,1.0
+ang_mo_kio_rise,3,Ang Mo Kio Rise_Cam4_20251231_095734_198_A.jpeg,,30.931,25.366,26.0,12.527,0.494,1.0

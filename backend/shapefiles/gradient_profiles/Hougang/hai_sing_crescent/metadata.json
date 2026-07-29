@@ -1,0 +1,50 @@
+{
+  "path_key": "hai_sing_crescent",
+  "display_name": "Hai Sing Crescent",
+  "source_project": "Hai Sing Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Hai Sing Crescent\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T20:33:36.310644+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 20.069,
+  "profile_point_count": 11,
+  "valid_elevation_count": 11,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 0,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 11,
+  "usable_gradient_completion_pct": 100.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 0.0,
+  "gradient_min_pct": -2.864,
+  "gradient_max_pct": 0.769,
+  "path_bounds_svy21": {
+    "min_x": 34640.025,
+    "min_y": 38567.33,
+    "max_x": 34659.105,
+    "max_y": 38572.634
+  },
+  "road_boundary": {
+    "target_road_name": "HAI SING CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 12,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HAI SING ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

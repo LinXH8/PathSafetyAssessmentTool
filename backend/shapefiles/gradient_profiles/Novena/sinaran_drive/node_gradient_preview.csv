@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sinaran_drive,1,,SINARAN DRIVE,103.389,51.695,52.0,13.105,,
+sinaran_drive,2,,SINARAN DRIVE,107.974,157.376,158.0,8.096,,
+sinaran_drive,3,,SINARAN DRIVE,183.48,411.066,412.0,12.499,,
+sinaran_drive,4,,SINARAN DRIVE,98.536,552.222,552.0,4.637,,

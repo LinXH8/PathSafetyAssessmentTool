@@ -1,0 +1,66 @@
+{
+  "path_key": "lorong_ah_soo",
+  "display_name": "Lorong Ah Soo",
+  "source_project": "Lorong Ah Soo",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Ah Soo\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T15:25:45.710082+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3980.812,
+  "profile_point_count": 1844,
+  "valid_elevation_count": 693,
+  "rejected_outlier_count": 174,
+  "rejected_step_jump_count": 484,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 287,
+  "usable_gradient_completion_pct": 15.56,
+  "elevation_hit_coverage_pct": 37.58,
+  "step_jump_rejection_pct": 26.25,
+  "gradient_min_pct": -9.909,
+  "gradient_max_pct": 5.65,
+  "path_bounds_svy21": {
+    "min_x": 33120.702,
+    "min_y": 36994.558,
+    "max_x": 34325.947,
+    "max_y": 37199.312
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG AH SOO",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1992,
+    "offroad_point_count": 148,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOUGANG AVENUE 1",
+        "point_count": 50
+      },
+      {
+        "road_name": "HOUGANG STREET 11",
+        "point_count": 44
+      },
+      {
+        "road_name": "PAYA LEBAR CRESCENT",
+        "point_count": 24
+      },
+      {
+        "road_name": "AH SOO GARDEN",
+        "point_count": 21
+      },
+      {
+        "road_name": "AH SOO WALK",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 2.0,
+    "offroad_chainage_max_m": 3280.0,
+    "trimmed_offroad_points": 148
+  }
+}

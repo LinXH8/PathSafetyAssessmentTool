@@ -1,0 +1,62 @@
+{
+  "path_key": "wolskel_road",
+  "display_name": "Wolskel Road",
+  "source_project": "Wolskel Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Wolskel Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T09:42:00.467434+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 688.484,
+  "profile_point_count": 325,
+  "valid_elevation_count": 325,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 154,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 99,
+  "usable_gradient_completion_pct": 30.46,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.38,
+  "gradient_min_pct": -9.365,
+  "gradient_max_pct": 11.014,
+  "path_bounds_svy21": {
+    "min_x": 31720.944,
+    "min_y": 36491.334,
+    "max_x": 32221.568,
+    "max_y": 36593.41
+  },
+  "road_boundary": {
+    "target_road_name": "WOLSKEL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 346,
+    "offroad_point_count": 21,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN RIANG",
+        "point_count": 7
+      },
+      {
+        "road_name": "JALAN GIRANG",
+        "point_count": 7
+      },
+      {
+        "road_name": "VAUGHAN ROAD",
+        "point_count": 5
+      },
+      {
+        "road_name": "JALAN RIA",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 496.0,
+    "trimmed_offroad_points": 21
+  }
+}

@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_walk,1,Thomson Walk_Cam4_20260101_083021_119_B.jpeg,,10.69,5.345,6.0,28.689,,
+thomson_walk,2,Thomson Walk_Cam4_20260101_083025_330_B.jpeg,,37.774,24.232,24.0,29.338,,
+thomson_walk,3,Thomson Walk_Cam4_20260101_083036_750_B.jpeg,,60.955,49.365,50.0,28.537,,
+thomson_walk,4,Thomson Walk_Cam4_20260101_083048_161_B.jpeg,,85.85,73.402,74.0,26.339,-2.422,1.0
+thomson_walk,5,Thomson Walk_Cam4_20260101_083104_382_B.jpeg,,96.673,91.262,92.0,25.432,-3.75,1.0
+thomson_walk,6,Thomson Walk_Cam4_20260101_083107_387_B.jpeg,,106.006,101.34,102.0,24.982,-4.375,1.0
+thomson_walk,7,Thomson Walk_Cam4_20260101_083110_391_B.jpeg,,113.778,109.892,110.0,24.782,1.51,1.0
+thomson_walk,8,Thomson Walk_Cam4_20260101_083115_197_B.jpeg,,179.903,146.841,146.0,29.899,,
+thomson_walk,9,Thomson Walk_Cam4_20260101_083352_028_B.jpeg,,185.81,182.857,182.0,28.135,,
+thomson_walk,10,Thomson Walk_Cam4_20260101_083354_431_B.jpeg,,196.097,190.953,190.0,28.132,3.953,1.0
+thomson_walk,11,Thomson Walk_Cam4_20260101_083358_035_B.jpeg,,266.026,231.061,232.0,27.19,,
+thomson_walk,12,Thomson Walk_Cam4_20260101_083435_265_B.jpeg,,275.045,270.535,270.0,28.709,,
+thomson_walk,13,Thomson Walk_Cam4_20260101_083439_470_B.jpeg,,300.621,287.833,288.0,29.096,,
+thomson_walk,14,Thomson Walk_Cam4_20260101_083449_683_B.jpeg,,310.037,305.329,306.0,27.375,,
+thomson_walk,15,Thomson Walk_Cam4_20260101_083453_891_B.jpeg,,330.878,320.457,320.0,26.097,,
+thomson_walk,16,Thomson Walk_Cam4_20260101_083510_120_B.jpeg,,366.674,348.776,348.0,27.119,5.783,1.0
+thomson_walk,17,Thomson Walk_Cam4_20260101_083522_736_B.jpeg,,375.064,370.869,370.0,27.81,,
+thomson_walk,18,Thomson Walk_Cam4_20260101_083525_741_B.jpeg,,388.957,382.011,382.0,30.001,,
+thomson_walk,19,Thomson Walk_Cam4_20260101_083530_553_B.jpeg,,414.113,401.535,402.0,30.263,,
+thomson_walk,20,Thomson Walk_Cam4_20260101_083540_154_B.jpeg,,426.077,420.095,420.0,30.494,4.271,1.0

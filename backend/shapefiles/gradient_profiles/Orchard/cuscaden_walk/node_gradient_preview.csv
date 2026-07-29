@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cuscaden_walk,1,Cuscaden Walk_Cam4_20251204_112627_686_B.jpeg,,11.282,5.641,6.0,36.55,0.0,1.0
+cuscaden_walk,2,Cuscaden Walk_Cam4_20251204_112635_496_B.jpeg,,23.184,17.233,18.0,36.55,0.0,1.0
+cuscaden_walk,3,Cuscaden Walk_Cam4_20251204_112638_518_B.jpeg,,30.445,26.815,26.0,36.55,0.0,1.0
+cuscaden_walk,4,Cuscaden Walk_Cam4_20251204_112640_324_B.jpeg,,40.096,35.271,36.0,36.303,,
+cuscaden_walk,5,Cuscaden Walk_Cam4_20251204_112642_726_B.jpeg,,51.205,45.651,46.0,33.823,,
+cuscaden_walk,6,Cuscaden Walk_Cam4_20251204_112645_008_B.jpeg,,60.337,55.771,56.0,30.988,,
+cuscaden_walk,7,Cuscaden Walk_Cam4_20251204_112646_814_B.jpeg,,71.667,66.002,66.0,28.152,,
+cuscaden_walk,8,Cuscaden Walk_Cam4_20251204_112649_218_B.jpeg,,81.668,76.667,76.0,25.225,,
+cuscaden_walk,9,Cuscaden Walk_Cam4_20251204_112651_625_B.jpeg,,92.146,86.907,86.0,,,
+cuscaden_walk,10,Cuscaden Walk_Cam4_20251204_112654_628_B.jpeg,,101.534,96.84,96.0,18.442,,
+cuscaden_walk,11,Cuscaden Walk_Cam4_20251204_112658_238_B.jpeg,,112.825,107.179,108.0,16.262,,
+cuscaden_walk,12,Cuscaden Walk_Cam4_20260107_092317_714_B.jpeg,,124.069,118.447,118.0,19.025,,

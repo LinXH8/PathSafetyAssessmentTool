@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+rivervale_lane,1,Rivervale Lane_Cam4_20260124_091211_086_C.jpeg,,10.781,5.39,6.0,7.853,,
+rivervale_lane,2,Rivervale Lane_Cam4_20260124_091214_090_C.jpeg,,63.71,37.245,38.0,7.666,,
+rivervale_lane,3,Rivervale Lane_Cam4_20260124_091325_493_C.jpeg,,90.226,76.968,76.0,7.162,,
+rivervale_lane,4,Rivervale Lane_Cam4_20260124_091332_671_C.jpeg,,99.519,94.872,94.0,7.624,,
+rivervale_lane,5,Rivervale Lane_Cam4_20260124_091335_076_C.jpeg,,113.36,106.439,106.0,7.233,-3.762,1.0
+rivervale_lane,6,Rivervale Lane_Cam4_20260124_091338_684_C.jpeg,,141.295,127.328,128.0,7.098,,
+rivervale_lane,7,Rivervale Lane_Cam4_20260124_091347_092_C.jpeg,,153.427,147.361,148.0,6.841,,
+rivervale_lane,8,Rivervale Lane_Cam4_20260124_091351_299_C.jpeg,,163.243,158.335,158.0,6.46,,
+rivervale_lane,9,Rivervale Lane_Cam4_20260124_091354_904_C.jpeg,,189.31,176.277,176.0,7.804,,

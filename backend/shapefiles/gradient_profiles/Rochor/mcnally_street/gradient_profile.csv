@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+mcnally_street,McNally Street,10.0,29952.702,31666.821,4.172,4.172,4.172,0.0,1.0,MCNALLY STREET,5.195
+mcnally_street,McNally Street,12.0,29954.467,31665.88,4.095,4.095,4.134,1.221,1.0,MCNALLY STREET,4.804
+mcnally_street,McNally Street,14.0,29956.232,31664.939,4.245,4.245,4.172,1.683,1.0,MCNALLY STREET,4.413
+mcnally_street,McNally Street,16.0,29957.997,31663.999,4.076,4.076,4.245,3.091,1.0,MCNALLY STREET,4.022
+mcnally_street,McNally Street,18.0,29959.762,31663.058,4.307,4.307,4.307,4.499,1.0,MCNALLY STREET,3.631
+mcnally_street,McNally Street,20.0,29961.527,31662.117,4.737,4.532,4.419,4.778,1.0,MCNALLY STREET,3.24
+mcnally_street,McNally Street,22.0,29962.52,31661.588,4.757,4.757,4.532,5.632,1.0,MCNALLY STREET,3.021

@@ -1,0 +1,21 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+telegraph_street,Telegraph Street,0.0,30023.71,29325.373,2.803,2.803,3.072,5.621,1.0,TELEGRAPH STREET,3.585
+telegraph_street,Telegraph Street,2.0,30022.055,29326.496,2.703,3.072,3.207,3.747,1.0,TELEGRAPH STREET,3.678
+telegraph_street,Telegraph Street,4.0,30020.4,29327.619,3.342,3.342,3.297,3.372,1.0,TELEGRAPH STREET,3.771
+telegraph_street,Telegraph Street,6.0,30018.746,29328.743,3.369,3.369,3.297,1.556,1.0,TELEGRAPH STREET,3.864
+telegraph_street,Telegraph Street,8.0,30017.091,29329.866,3.297,3.297,3.342,-0.26,1.0,TELEGRAPH STREET,3.958
+telegraph_street,Telegraph Street,10.0,30015.436,29330.99,3.276,3.276,3.297,-1.688,1.0,TELEGRAPH STREET,4.051
+telegraph_street,Telegraph Street,12.0,30013.709,29331.991,3.37,3.37,3.276,-3.116,1.0,TELEGRAPH STREET,4.002
+telegraph_street,Telegraph Street,14.0,30011.93,29332.904,2.943,3.093,3.093,-2.554,1.0,TELEGRAPH STREET,3.851
+telegraph_street,Telegraph Street,16.0,30010.151,29333.818,2.816,2.816,3.093,-1.991,1.0,TELEGRAPH STREET,3.701
+telegraph_street,Telegraph Street,18.0,30008.372,29334.732,5.473,2.966,3.093,1.04,1.0,TELEGRAPH STREET,3.55
+telegraph_street,Telegraph Street,20.0,30006.593,29335.646,7.518,3.117,3.117,4.07,1.0,TELEGRAPH STREET,3.4
+telegraph_street,Telegraph Street,22.0,30004.814,29336.56,5.676,3.268,3.268,6.383,1.0,TELEGRAPH STREET,3.249
+telegraph_street,Telegraph Street,24.0,30003.039,29337.482,3.419,3.419,3.419,6.081,1.0,TELEGRAPH STREET,3.108
+telegraph_street,Telegraph Street,26.0,30001.265,29338.404,3.604,3.604,3.604,4.197,1.0,TELEGRAPH STREET,2.967
+telegraph_street,Telegraph Street,28.0,29999.49,29339.327,3.846,3.846,3.604,1.561,1.0,TELEGRAPH STREET,2.827
+telegraph_street,Telegraph Street,30.0,29997.716,29340.25,3.643,3.643,3.604,-1.076,1.0,TELEGRAPH STREET,2.687
+telegraph_street,Telegraph Street,32.0,29995.941,29341.173,3.267,3.512,3.518,-1.111,1.0,TELEGRAPH STREET,2.546
+telegraph_street,Telegraph Street,34.0,29994.167,29342.096,3.381,3.381,3.518,,,TELEGRAPH STREET,2.406
+telegraph_street,Telegraph Street,36.0,29992.393,29343.019,3.518,3.518,3.515,,,TELEGRAPH STREET,2.266
+telegraph_street,Telegraph Street,36.804,29991.679,29343.39,3.887,3.518,3.518,,,TELEGRAPH STREET,2.209

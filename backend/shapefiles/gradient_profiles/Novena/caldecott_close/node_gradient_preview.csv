@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+caldecott_close,1,,CALDECOTT CLOSE,34.514,17.257,18.0,11.649,,
+caldecott_close,2,,CALDECOTT CLOSE,39.529,121.162,122.0,10.806,,
+caldecott_close,3,,CALDECOTT CLOSE,77.661,204.203,204.0,9.127,,
+caldecott_close,4,,CALDECOTT CLOSE,101.059,293.563,294.0,12.804,,
+caldecott_close,5,,CALDECOTT CLOSE,95.558,391.871,392.0,20.427,,
+caldecott_close,6,,CALDECOTT CLOSE,51.111,556.087,556.0,16.778,,

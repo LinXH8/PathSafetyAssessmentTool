@@ -1,0 +1,58 @@
+{
+  "path_key": "anchorvale_road",
+  "display_name": "Anchorvale Road",
+  "source_project": "Anchorvale Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Anchorvale Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-31T23:59:02.677178+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1662.664,
+  "profile_point_count": 579,
+  "valid_elevation_count": 560,
+  "rejected_outlier_count": 31,
+  "rejected_step_jump_count": 302,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 188,
+  "usable_gradient_completion_pct": 32.47,
+  "elevation_hit_coverage_pct": 96.72,
+  "step_jump_rejection_pct": 52.16,
+  "gradient_min_pct": -8.503,
+  "gradient_max_pct": 11.04,
+  "path_bounds_svy21": {
+    "min_x": 33803.159,
+    "min_y": 41299.482,
+    "max_x": 34191.717,
+    "max_y": 42110.673
+  },
+  "road_boundary": {
+    "target_road_name": "ANCHORVALE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 833,
+    "offroad_point_count": 254,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SENGKANG EAST WAY",
+        "point_count": 124
+      },
+      {
+        "road_name": "ANCHORVALE STREET",
+        "point_count": 112
+      },
+      {
+        "road_name": "ANCHORVALE LANE",
+        "point_count": 18
+      }
+    ],
+    "offroad_chainage_min_m": 296.0,
+    "offroad_chainage_max_m": 1422.0,
+    "trimmed_offroad_points": 254
+  }
+}

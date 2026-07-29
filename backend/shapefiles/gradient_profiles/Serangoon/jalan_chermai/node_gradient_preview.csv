@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chermai,1,Jalan Chermai_Cam4_20260106_100250_127_C.jpeg,,9.159,4.579,4.0,16.015,3.347,1.0
+jalan_chermai,2,Jalan Chermai_Cam4_20260106_100254_934_C.jpeg,,21.159,15.159,16.0,16.382,,
+jalan_chermai,3,Jalan Chermai_Cam4_20260106_100259_139_C.jpeg,,33.431,27.295,28.0,17.434,,
+jalan_chermai,4,Jalan Chermai_Cam4_20260106_100303_347_C.jpeg,,57.795,45.613,46.0,17.102,,
+jalan_chermai,5,Jalan Chermai_Cam4_20260106_100311_166_C.jpeg,,65.241,61.518,62.0,17.95,,
+jalan_chermai,6,Jalan Chermai_Cam4_20260106_100313_568_C.jpeg,,92.311,78.776,78.0,17.934,4.141,1.0
+jalan_chermai,7,Jalan Chermai_Cam4_20260106_100323_178_C.jpeg,,101.182,96.747,96.0,19.034,,
+jalan_chermai,8,Jalan Chermai_Cam4_20260106_100327_381_C.jpeg,,111.967,106.575,106.0,18.931,,
+jalan_chermai,9,Jalan Chermai_Cam4_20260106_100333_985_C.jpeg,,181.844,146.906,146.0,18.365,,
+jalan_chermai,10,Jalan Chermai_Cam4_20260106_100349_013_C.jpeg,,195.239,188.542,188.0,16.097,,
+jalan_chermai,11,Jalan Chermai_Cam4_20260106_100352_017_C.jpeg,,201.283,198.261,198.0,16.023,,

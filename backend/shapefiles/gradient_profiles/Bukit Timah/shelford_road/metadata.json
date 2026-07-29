@@ -1,0 +1,50 @@
+{
+  "path_key": "shelford_road",
+  "display_name": "Shelford Road",
+  "source_project": "Shelford Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Shelford Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T16:16:38.720808+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1054.436,
+  "profile_point_count": 513,
+  "valid_elevation_count": 48,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 28,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 63,
+  "usable_gradient_completion_pct": 12.28,
+  "elevation_hit_coverage_pct": 9.36,
+  "step_jump_rejection_pct": 5.46,
+  "gradient_min_pct": -2.292,
+  "gradient_max_pct": 8.854,
+  "path_bounds_svy21": {
+    "min_x": 25394.855,
+    "min_y": 34072.138,
+    "max_x": 25732.653,
+    "max_y": 34555.219
+  },
+  "road_boundary": {
+    "target_road_name": "SHELFORD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 529,
+    "offroad_point_count": 16,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DUNEARN ROAD",
+        "point_count": 16
+      }
+    ],
+    "offroad_chainage_min_m": 1026.0,
+    "offroad_chainage_max_m": 1054.436,
+    "trimmed_offroad_points": 16
+  }
+}

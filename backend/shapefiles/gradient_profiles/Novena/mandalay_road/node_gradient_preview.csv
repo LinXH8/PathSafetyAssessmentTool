@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mandalay_road,1,,MANDALAY ROAD,290.209,145.105,146.0,5.033,,
+mandalay_road,2,,MANDALAY ROAD,412.112,496.796,496.0,13.967,-1.701,1.0

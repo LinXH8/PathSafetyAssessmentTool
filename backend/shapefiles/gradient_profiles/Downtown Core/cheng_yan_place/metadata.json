@@ -1,0 +1,50 @@
+{
+  "path_key": "cheng_yan_place",
+  "display_name": "Cheng Yan Place",
+  "source_project": "Cheng Yan Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cheng Yan Place\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T05:51:06.706253+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 91.696,
+  "profile_point_count": 46,
+  "valid_elevation_count": 27,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 14,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 41.3,
+  "elevation_hit_coverage_pct": 58.7,
+  "step_jump_rejection_pct": 30.43,
+  "gradient_min_pct": -2.5,
+  "gradient_max_pct": 6.339,
+  "path_bounds_svy21": {
+    "min_x": 30324.233,
+    "min_y": 31348.539,
+    "max_x": 30396.607,
+    "max_y": 31403.211
+  },
+  "road_boundary": {
+    "target_road_name": "CHENG YAN PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 47,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 28.0,
+    "offroad_chainage_max_m": 28.0,
+    "trimmed_offroad_points": 1
+  }
+}

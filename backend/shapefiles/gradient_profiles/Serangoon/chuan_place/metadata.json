@@ -1,0 +1,54 @@
+{
+  "path_key": "chuan_place",
+  "display_name": "Chuan Place",
+  "source_project": "Chuan Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Chuan Place\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T03:32:17.362236+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 442.47,
+  "profile_point_count": 209,
+  "valid_elevation_count": 209,
+  "rejected_outlier_count": 39,
+  "rejected_step_jump_count": 166,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 17,
+  "usable_gradient_completion_pct": 8.13,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 79.43,
+  "gradient_min_pct": -6.871,
+  "gradient_max_pct": 9.893,
+  "path_bounds_svy21": {
+    "min_x": 31787.285,
+    "min_y": 38013.708,
+    "max_x": 31854.901,
+    "max_y": 38160.954
+  },
+  "road_boundary": {
+    "target_road_name": "CHUAN PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 223,
+    "offroad_point_count": 14,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHUAN VIEW",
+        "point_count": 11
+      },
+      {
+        "road_name": "CHUAN LINK",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 400.0,
+    "trimmed_offroad_points": 14
+  }
+}

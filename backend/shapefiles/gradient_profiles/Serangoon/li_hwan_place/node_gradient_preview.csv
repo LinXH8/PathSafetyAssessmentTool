@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+li_hwan_place,1,Li Hwan Place_Cam4_20260202_074726_754_A.jpeg,,7.876,3.938,4.0,10.756,,
+li_hwan_place,2,Li Hwan Place_Cam4_20260202_074736_363_A.jpeg,,16.968,12.422,12.0,10.848,,
+li_hwan_place,3,Li Hwan Place_Cam4_20260202_074739_967_A.jpeg,,27.962,22.465,22.0,10.76,,
+li_hwan_place,4,Li Hwan Place_Cam4_20260202_074744_171_A.jpeg,,40.656,34.309,34.0,10.715,,
+li_hwan_place,5,Li Hwan Place_Cam4_20260202_074749_576_A.jpeg,,46.917,43.786,44.0,11.334,,
+li_hwan_place,6,Li Hwan Place_Cam4_20260202_074752_582_A.jpeg,,62.882,54.899,54.0,11.075,,
+li_hwan_place,7,Li Hwan Place_Cam4_20260202_074821_892_A.jpeg,,71.687,67.285,68.0,11.209,5.619,1.0
+li_hwan_place,8,Li Hwan Place_Cam4_20260202_074825_493_A.jpeg,,140.531,106.109,106.0,12.621,,

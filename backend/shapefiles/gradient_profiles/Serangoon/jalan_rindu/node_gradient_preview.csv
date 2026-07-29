@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rindu,1,Jalan Rindu_Cam4_20260112_104428_357_A.jpeg,,12.583,6.291,6.0,9.717,-1.633,1.0
+jalan_rindu,2,Jalan Rindu_Cam4_20260112_104431_960_A.jpeg,,21.911,17.247,18.0,9.581,,
+jalan_rindu,3,Jalan Rindu_Cam4_20260112_104434_442_A.jpeg,,33.997,27.954,28.0,9.344,,
+jalan_rindu,4,Jalan Rindu_Cam4_20260112_104437_457_A.jpeg,,44.187,39.092,40.0,10.3,,
+jalan_rindu,5,Jalan Rindu_Cam4_20260112_104439_859_A.jpeg,,51.733,47.96,48.0,10.118,,
+jalan_rindu,6,Jalan Rindu_Cam4_20260112_104441_661_A.jpeg,,79.189,65.461,66.0,8.745,,
+jalan_rindu,7,Jalan Rindu_Cam4_20260112_104450_141_A.jpeg,,87.957,83.573,84.0,8.845,,
+jalan_rindu,8,Jalan Rindu_Cam4_20260112_104453_146_A.jpeg,,101.718,94.837,94.0,9.037,,
+jalan_rindu,9,Jalan Rindu_Cam4_20260112_104458_086_A.jpeg,,111.175,106.446,106.0,8.425,,
+jalan_rindu,10,Jalan Rindu_Cam4_20260112_104501_089_A.jpeg,,118.8,114.987,114.0,7.878,,
+jalan_rindu,11,Jalan Rindu_Cam4_20260112_104503_491_A.jpeg,,145.474,132.137,132.0,7.132,-3.304,1.0
+jalan_rindu,12,Jalan Rindu_Cam4_20260112_104511_553_A.jpeg,,153.347,149.41,150.0,6.809,,
+jalan_rindu,13,Jalan Rindu_Cam4_20260112_104518_778_A.jpeg,,162.711,158.029,158.0,6.774,-0.377,1.0
+jalan_rindu,14,Jalan Rindu_Cam4_20260112_104523_617_A.jpeg,,173.277,167.994,168.0,6.881,3.402,1.0
+jalan_rindu,15,Jalan Rindu_Cam4_20260112_104532_049_A.jpeg,,253.416,213.347,214.0,9.326,,
+jalan_rindu,16,Jalan Rindu_Cam4_20260112_104606_584_A.jpeg,,395.4,324.408,324.0,8.256,,
+jalan_rindu,17,Jalan Rindu_Cam4_20260112_110019_094_A.jpeg,,406.807,401.104,404.0,7.847,,
+jalan_rindu,18,Jalan Rindu_Cam4_20260112_110023_481_A.jpeg,,417.136,411.972,412.0,8.075,,
+jalan_rindu,19,Jalan Rindu_Cam4_20260112_110032_731_A.jpeg,,427.282,422.209,422.0,8.494,,
+jalan_rindu,20,Jalan Rindu_Cam4_20260112_110037_585_A.jpeg,,487.503,457.393,,,,
+jalan_rindu,21,Jalan Rindu_Cam4_20260112_110102_810_A.jpeg,,519.972,503.737,,,,
+jalan_rindu,22,Jalan Rindu_Cam4_20260112_110115_809_A.jpeg,,530.947,525.459,,,,
+jalan_rindu,23,Jalan Rindu_Cam4_20260112_110120_098_A.jpeg,,541.363,536.155,,,,

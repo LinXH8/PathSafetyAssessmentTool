@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_penchalak,1,Lorong Penchalak_Cam4_20260112_104236_616_A.jpeg,,11.057,5.529,6.0,5.568,1.131,1.0
+lorong_penchalak,2,Lorong Penchalak_Cam4_20260112_104301_713_A.jpeg,,23.893,17.475,18.0,6.022,,
+lorong_penchalak,3,Lorong Penchalak_Cam4_20260112_104306_613_A.jpeg,,30.679,27.286,28.0,7.042,,
+lorong_penchalak,4,Lorong Penchalak_Cam4_20260112_104309_631_A.jpeg,,58.513,44.596,44.0,7.655,-1.944,1.0
+lorong_penchalak,5,Lorong Penchalak_Cam4_20260112_104324_145_A.jpeg,,70.746,64.629,64.0,8.561,5.638,1.0
+lorong_penchalak,6,Lorong Penchalak_Cam4_20260112_104331_477_A.jpeg,,94.392,82.569,82.0,9.615,5.488,1.0
+lorong_penchalak,7,Lorong Penchalak_Cam4_20260112_104347_836_A.jpeg,,107.165,100.778,100.0,10.182,0.325,1.0
+lorong_penchalak,8,Lorong Penchalak_Cam4_20260112_104355_644_A.jpeg,,129.798,118.481,118.0,10.262,0.8,1.0
+lorong_penchalak,9,Lorong Penchalak_Cam4_20260112_104407_137_A.jpeg,,142.417,136.107,136.0,10.491,4.037,1.0
+lorong_penchalak,10,Lorong Penchalak_Cam4_20260112_104412_090_A.jpeg,,167.083,154.75,154.0,10.114,-1.372,1.0
+lorong_penchalak,11,Lorong Penchalak_Cam4_20260112_104420_542_A.jpeg,,178.327,172.705,172.0,9.996,-0.128,1.0

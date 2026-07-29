@@ -1,0 +1,66 @@
+{
+  "path_key": "upper_cross_street",
+  "display_name": "Upper Cross Street",
+  "source_project": "Upper Cross Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Upper Cross Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T15:58:33.595809+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1550.646,
+  "profile_point_count": 490,
+  "valid_elevation_count": 475,
+  "rejected_outlier_count": 103,
+  "rejected_step_jump_count": 384,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 57,
+  "usable_gradient_completion_pct": 11.63,
+  "elevation_hit_coverage_pct": 96.94,
+  "step_jump_rejection_pct": 78.37,
+  "gradient_min_pct": -9.058,
+  "gradient_max_pct": 6.562,
+  "path_bounds_svy21": {
+    "min_x": 28958.388,
+    "min_y": 29563.439,
+    "max_x": 29374.135,
+    "max_y": 30005.787
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER CROSS STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 777,
+    "offroad_point_count": 287,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MOSQUE STREET",
+        "point_count": 98
+      },
+      {
+        "road_name": "HAVELOCK SQUARE",
+        "point_count": 65
+      },
+      {
+        "road_name": "HAVELOCK ROAD",
+        "point_count": 41
+      },
+      {
+        "road_name": "EU TONG SEN STREET",
+        "point_count": 33
+      },
+      {
+        "road_name": "NEW BRIDGE ROAD",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1432.0,
+    "trimmed_offroad_points": 287
+  }
+}

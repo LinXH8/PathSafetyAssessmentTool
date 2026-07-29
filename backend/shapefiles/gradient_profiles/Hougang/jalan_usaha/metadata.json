@@ -1,0 +1,54 @@
+{
+  "path_key": "jalan_usaha",
+  "display_name": "Jalan Usaha",
+  "source_project": "Jalan Usaha",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Usaha\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-31T09:04:14.535857+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 359.305,
+  "profile_point_count": 167,
+  "valid_elevation_count": 31,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 27,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 44,
+  "usable_gradient_completion_pct": 26.35,
+  "elevation_hit_coverage_pct": 18.56,
+  "step_jump_rejection_pct": 16.17,
+  "gradient_min_pct": -4.105,
+  "gradient_max_pct": 0.016,
+  "path_bounds_svy21": {
+    "min_x": 33462.654,
+    "min_y": 36320.386,
+    "max_x": 33612.528,
+    "max_y": 36437.562
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN USAHA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 181,
+    "offroad_point_count": 14,
+    "offroad_top_road_names": [
+      {
+        "road_name": "THRIFT DRIVE",
+        "point_count": 8
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 36.0,
+    "offroad_chainage_max_m": 360.0,
+    "trimmed_offroad_points": 14
+  }
+}

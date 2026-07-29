@@ -1,0 +1,62 @@
+{
+  "path_key": "cuff_road",
+  "display_name": "Cuff Road",
+  "source_project": "Cuff Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cuff Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T08:22:49.582687+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 473.391,
+  "profile_point_count": 78,
+  "valid_elevation_count": 78,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 30,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 37,
+  "usable_gradient_completion_pct": 47.44,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 38.46,
+  "gradient_min_pct": -4.687,
+  "gradient_max_pct": 4.79,
+  "path_bounds_svy21": {
+    "min_x": 30129.607,
+    "min_y": 32087.055,
+    "max_x": 30296.914,
+    "max_y": 32152.361
+  },
+  "road_boundary": {
+    "target_road_name": "CUFF ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 238,
+    "offroad_point_count": 160,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 124
+      },
+      {
+        "road_name": "KAMPONG KAPOR ROAD",
+        "point_count": 21
+      },
+      {
+        "road_name": "UPPER WELD ROAD",
+        "point_count": 13
+      },
+      {
+        "road_name": "CLIVE STREET",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 474.0,
+    "trimmed_offroad_points": 160
+  }
+}

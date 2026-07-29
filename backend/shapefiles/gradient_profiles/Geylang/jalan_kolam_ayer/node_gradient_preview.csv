@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kolam_ayer,1,Cam4_20260122_091954_704_A.jpeg,,11.014,5.507,,,,
+jalan_kolam_ayer,2,Cam4_20260122_092000_712_A.jpeg,,21.739,16.376,,,,
+jalan_kolam_ayer,3,Cam4_20260122_092004_923_A.jpeg,,49.765,35.752,,,,
+jalan_kolam_ayer,4,Cam4_20260122_092013_347_A.jpeg,,58.945,54.355,,,,
+jalan_kolam_ayer,5,Cam4_20260122_092016_361_A.jpeg,,68.664,63.804,64.0,3.774,0.0,1.0
+jalan_kolam_ayer,6,Cam4_20260122_092019_364_A.jpeg,,77.824,73.244,74.0,3.774,0.0,1.0
+jalan_kolam_ayer,7,Cam4_20260122_092021_767_A.jpeg,,87.75,82.787,82.0,3.774,-0.625,1.0
+jalan_kolam_ayer,8,Cam4_20260122_092024_171_A.jpeg,,119.702,103.726,104.0,3.574,0.0,1.0
+jalan_kolam_ayer,9,Cam4_20260122_092049_387_A.jpeg,,198.191,158.946,158.0,3.424,0.0,1.0
+jalan_kolam_ayer,10,Cam4_20260122_092112_788_A.jpeg,,282.878,240.534,240.0,5.921,,

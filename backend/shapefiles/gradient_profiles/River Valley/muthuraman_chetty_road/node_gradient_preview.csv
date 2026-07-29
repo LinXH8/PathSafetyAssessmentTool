@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+muthuraman_chetty_road,1,Cam4_20251204_081130_556_C.jpeg,,12.171,6.085,,,,
+muthuraman_chetty_road,2,Cam4_20251204_081135_962_C.jpeg,,20.472,16.321,,,,
+muthuraman_chetty_road,3,Cam4_20251204_081140_768_C.jpeg,,31.753,26.112,,,,
+muthuraman_chetty_road,4,Cam4_20251204_081144_975_C.jpeg,,79.574,55.663,,,,
+muthuraman_chetty_road,5,Cam4_20251204_081205_375_C.jpeg,,116.303,97.939,98.0,5.933,,

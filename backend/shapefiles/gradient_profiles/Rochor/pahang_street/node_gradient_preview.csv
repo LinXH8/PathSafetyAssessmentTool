@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pahang_street,1,Cam4_20251208_080751_788_C.jpeg,,13.984,6.992,6.0,3.946,-0.457,1.0
+pahang_street,2,Cam4_20251208_080755_996_C.jpeg,,20.037,17.011,18.0,3.765,,
+pahang_street,3,Cam4_20251208_080757_798_C.jpeg,,31.174,25.605,26.0,3.271,-5.036,1.0
+pahang_street,4,Cam4_20251208_080801_401_C.jpeg,,41.618,36.396,36.0,3.268,1.65,1.0
+pahang_street,5,Cam4_20251208_080805_006_C.jpeg,,69.056,55.337,56.0,3.689,,
+pahang_street,6,Cam4_20251208_080817_021_C.jpeg,,75.402,72.229,,,,
+pahang_street,7,Cam4_20251208_080819_423_C.jpeg,,107.696,91.549,92.0,3.59,,
+pahang_street,8,Cam4_20251208_080830_713_C.jpeg,,119.283,113.49,114.0,3.833,3.348,1.0
+pahang_street,9,Cam4_20251208_080834_919_C.jpeg,,188.322,153.802,152.0,5.657,1.719,1.0
+pahang_street,10,Cam4_20260204_093127_519_C.jpeg,,197.022,192.672,,,,
+pahang_street,11,Cam4_20260204_093130_522_C.jpeg,,202.243,199.633,,,,

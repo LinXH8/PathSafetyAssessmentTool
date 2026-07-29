@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chuan_lane,1,Chuan Lane_Cam4_20260112_101053_200_B.jpeg,,11.552,5.776,6.0,6.44,2.972,1.0
+chuan_lane,2,Chuan Lane_Cam4_20260112_101057_408_B.jpeg,,22.032,16.792,16.0,6.703,0.603,1.0
+chuan_lane,3,Chuan Lane_Cam4_20260112_101101_023_B.jpeg,,33.873,27.953,28.0,6.88,3.012,1.0
+chuan_lane,4,Chuan Lane_Cam4_20260112_101105_226_B.jpeg,,56.435,45.154,46.0,6.969,2.925,1.0
+chuan_lane,5,Chuan Lane_Cam4_20260112_101114_857_B.jpeg,,69.188,62.812,62.0,7.218,-0.494,1.0
+chuan_lane,6,Chuan Lane_Cam4_20260112_101120_907_B.jpeg,,107.798,88.493,88.0,7.197,,
+chuan_lane,7,Chuan Lane_Cam4_20260112_101136_614_B.jpeg,,118.158,112.978,112.0,6.413,-4.494,1.0
+chuan_lane,8,Chuan Lane_Cam4_20260112_101139_028_B.jpeg,,129.402,123.78,124.0,6.016,-1.728,1.0
+chuan_lane,9,Chuan Lane_Cam4_20260112_101141_439_B.jpeg,,154.085,141.743,142.0,5.801,-0.391,1.0
+chuan_lane,10,Chuan Lane_Cam4_20260112_101146_877_B.jpeg,,166.976,160.53,160.0,5.74,-0.119,1.0
+chuan_lane,11,Chuan Lane_Cam4_20260112_101149_924_B.jpeg,,231.061,199.019,200.0,5.98,-1.444,1.0
+chuan_lane,12,Chuan Lane_Cam4_20260112_101206_291_B.jpeg,,238.437,234.749,234.0,5.827,0.325,1.0
+chuan_lane,13,Chuan Lane_Cam4_20260112_101208_147_B.jpeg,,277.051,257.744,258.0,5.758,-0.528,1.0
+chuan_lane,14,Chuan Lane_Cam4_20260112_101220_265_B.jpeg,,288.62,282.836,282.0,5.661,,
+chuan_lane,15,Chuan Lane_Cam4_20260112_101223_869_B.jpeg,,312.252,300.436,300.0,5.432,-0.822,1.0
+chuan_lane,16,Chuan Lane_Cam4_20260112_101231_133_B.jpeg,,326.043,319.147,320.0,5.179,-0.609,1.0
+chuan_lane,17,Chuan Lane_Cam4_20260112_101234_737_B.jpeg,,335.746,330.894,330.0,5.051,-0.905,1.0
+chuan_lane,18,Chuan Lane_Cam4_20260112_101237_160_B.jpeg,,359.397,347.571,348.0,4.924,-0.684,1.0
+chuan_lane,19,Chuan Lane_Cam4_20260112_101243_812_B.jpeg,,372.232,365.815,366.0,4.799,-0.584,1.0
+chuan_lane,20,Chuan Lane_Cam4_20260112_101247_443_B.jpeg,,379.465,375.849,376.0,4.709,-0.862,1.0
+chuan_lane,21,Chuan Lane_Cam4_20260112_101249_243_B.jpeg,,407.502,393.484,394.0,4.698,0.191,1.0
+chuan_lane,22,Chuan Lane_Cam4_20260112_101257_760_B.jpeg,,418.986,413.244,414.0,4.642,-0.491,1.0
+chuan_lane,23,Chuan Lane_Cam4_20260112_101301_970_B.jpeg,,442.66,430.823,430.0,4.664,,
+chuan_lane,24,Chuan Lane_Cam4_20260112_101311_057_B.jpeg,,455.185,448.922,448.0,5.945,,

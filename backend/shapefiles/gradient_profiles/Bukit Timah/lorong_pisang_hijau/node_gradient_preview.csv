@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_pisang_hijau,1,Lorong Pisang Hijau_Cam4_20251122_100511_428_C.jpeg,,11.383,5.691,6.0,35.996,,
+lorong_pisang_hijau,2,Lorong Pisang Hijau_Cam4_20251122_100516_235_C.jpeg,,22.576,16.98,16.0,35.996,0.625,1.0
+lorong_pisang_hijau,3,Lorong Pisang Hijau_Cam4_20251122_100519_840_C.jpeg,,34.321,28.449,28.0,36.15,0.469,1.0
+lorong_pisang_hijau,4,Lorong Pisang Hijau_Cam4_20251122_100522_843_C.jpeg,,58.187,46.254,46.0,36.65,-5.0,1.0
+lorong_pisang_hijau,5,Lorong Pisang Hijau_Cam4_20251122_100529_451_C.jpeg,,68.409,63.298,64.0,36.346,0.625,1.0
+lorong_pisang_hijau,6,Lorong Pisang Hijau_Cam4_20251122_100532_456_C.jpeg,,80.474,74.441,74.0,36.396,0.0,1.0
+lorong_pisang_hijau,7,Lorong Pisang Hijau_Cam4_20251122_100536_660_C.jpeg,,133.504,106.989,106.0,36.25,,
+lorong_pisang_hijau,8,Lorong Pisang Hijau_Cam4_20251122_100619_915_C.jpeg,,143.204,138.354,138.0,36.435,,
+lorong_pisang_hijau,9,Lorong Pisang Hijau_Cam4_20251122_100622_918_C.jpeg,,153.236,148.22,148.0,36.185,,
+lorong_pisang_hijau,10,Lorong Pisang Hijau_Cam4_20251122_100626_523_C.jpeg,,164.703,158.97,158.0,36.135,-1.562,1.0

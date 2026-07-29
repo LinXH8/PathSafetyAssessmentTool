@@ -1,0 +1,58 @@
+{
+  "path_key": "kim_seng_promenade",
+  "display_name": "Kim Seng Promenade",
+  "source_project": "Kim Seng Promenade",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Kim Seng Promenade\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-10T07:00:23.010959+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 598.721,
+  "profile_point_count": 43,
+  "valid_elevation_count": 27,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 17,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 20,
+  "usable_gradient_completion_pct": 46.51,
+  "elevation_hit_coverage_pct": 62.79,
+  "step_jump_rejection_pct": 39.53,
+  "gradient_min_pct": -3.125,
+  "gradient_max_pct": 0.937,
+  "path_bounds_svy21": {
+    "min_x": 27746.433,
+    "min_y": 30548.139,
+    "max_x": 27976.898,
+    "max_y": 30782.475
+  },
+  "road_boundary": {
+    "target_road_name": "KIM SENG PROMENADE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 301,
+    "offroad_point_count": 258,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KIM SENG ROAD",
+        "point_count": 119
+      },
+      {
+        "road_name": "ZION ROAD",
+        "point_count": 107
+      },
+      {
+        "road_name": "KIM SENG WALK",
+        "point_count": 32
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 568.0,
+    "trimmed_offroad_points": 258
+  }
+}

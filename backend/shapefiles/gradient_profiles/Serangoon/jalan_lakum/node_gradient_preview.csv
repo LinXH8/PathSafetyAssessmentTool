@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_lakum,1,Jalan Lakum_Cam4_20260106_095820_291_C.jpeg,,10.776,5.388,6.0,16.546,-7.051,1.0
+jalan_lakum,2,Jalan Lakum_Cam4_20260106_095825_099_C.jpeg,,19.876,15.326,16.0,16.356,,
+jalan_lakum,3,Jalan Lakum_Cam4_20260106_095828_105_C.jpeg,,32.773,26.325,26.0,17.149,3.206,1.0
+jalan_lakum,4,Jalan Lakum_Cam4_20260106_095832_307_C.jpeg,,40.257,36.515,36.0,16.676,,
+jalan_lakum,5,Jalan Lakum_Cam4_20260106_095834_715_C.jpeg,,49.902,45.08,46.0,17.179,,
+jalan_lakum,6,Jalan Lakum_Cam4_20260106_095837_719_C.jpeg,,60.117,55.009,56.0,17.551,,
+jalan_lakum,7,Jalan Lakum_Cam4_20260106_095840_723_C.jpeg,,69.943,65.03,66.0,17.754,,
+jalan_lakum,8,Jalan Lakum_Cam4_20260106_095843_724_C.jpeg,,81.397,75.67,76.0,17.946,6.237,1.0
+jalan_lakum,9,Jalan Lakum_Cam4_20260106_095847_329_C.jpeg,,92.543,86.97,86.0,18.715,,
+jalan_lakum,10,Jalan Lakum_Cam4_20260106_095850_931_C.jpeg,,100.813,96.678,96.0,18.969,,
+jalan_lakum,11,Jalan Lakum_Cam4_20260106_095853_934_C.jpeg,,194.327,147.57,148.0,17.545,,

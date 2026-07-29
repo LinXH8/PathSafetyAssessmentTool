@@ -1,0 +1,54 @@
+{
+  "path_key": "jalan_kesoma",
+  "display_name": "Jalan Kesoma",
+  "source_project": "Jalan Kesoma",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Kesoma\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T16:38:52.746081+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 276.397,
+  "profile_point_count": 98,
+  "valid_elevation_count": 98,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 36,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 51,
+  "usable_gradient_completion_pct": 52.04,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 36.73,
+  "gradient_min_pct": -4.133,
+  "gradient_max_pct": 0.679,
+  "path_bounds_svy21": {
+    "min_x": 32988.96,
+    "min_y": 36419.578,
+    "max_x": 33054.984,
+    "max_y": 36514.003
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN KESOMA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 140,
+    "offroad_point_count": 42,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERANGOON LANE",
+        "point_count": 28
+      },
+      {
+        "road_name": "HOW SUN WALK",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 196.0,
+    "offroad_chainage_max_m": 276.397,
+    "trimmed_offroad_points": 42
+  }
+}

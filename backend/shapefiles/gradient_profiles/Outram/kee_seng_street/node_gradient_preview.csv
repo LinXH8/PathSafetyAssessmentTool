@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kee_seng_street,1,Kee Seng Street_Cam4_20251230_075317_862_B.jpeg,,9.906,4.953,4.0,4.673,,
+kee_seng_street,2,Kee Seng Street_Cam4_20251230_075322_666_B.jpeg,,24.402,17.154,18.0,4.432,,
+kee_seng_street,3,Kee Seng Street_Cam4_20251230_075328_677_B.jpeg,,30.392,27.397,28.0,4.634,,
+kee_seng_street,4,Kee Seng Street_Cam4_20251230_075331_080_B.jpeg,,56.002,43.197,44.0,4.501,,

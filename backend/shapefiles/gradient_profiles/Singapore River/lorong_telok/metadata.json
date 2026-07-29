@@ -1,0 +1,42 @@
+{
+  "path_key": "lorong_telok",
+  "display_name": "Lorong Telok",
+  "source_project": "Lorong Telok",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Lorong Telok\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-10T08:40:39.832384+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 81.803,
+  "profile_point_count": 42,
+  "valid_elevation_count": 42,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 24,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 21.43,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 57.14,
+  "gradient_min_pct": -4.271,
+  "gradient_max_pct": 3.563,
+  "path_bounds_svy21": {
+    "min_x": 29688.356,
+    "min_y": 29863.532,
+    "max_x": 29726.356,
+    "max_y": 29935.323
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG TELOK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 42,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

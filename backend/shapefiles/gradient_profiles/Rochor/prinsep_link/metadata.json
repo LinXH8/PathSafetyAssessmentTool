@@ -1,0 +1,50 @@
+{
+  "path_key": "prinsep_link",
+  "display_name": "Prinsep Link",
+  "source_project": "Prinsep Link",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Prinsep Link\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-24T01:26:22.206616+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 113.113,
+  "profile_point_count": 36,
+  "valid_elevation_count": 36,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 18,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 8,
+  "usable_gradient_completion_pct": 22.22,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 50.0,
+  "gradient_min_pct": -10.857,
+  "gradient_max_pct": -0.27,
+  "path_bounds_svy21": {
+    "min_x": 29886.937,
+    "min_y": 31355.898,
+    "max_x": 29962.265,
+    "max_y": 31394.955
+  },
+  "road_boundary": {
+    "target_road_name": "PRINSEP LINK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 58,
+    "offroad_point_count": 22,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 22
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 76.0,
+    "trimmed_offroad_points": 22
+  }
+}

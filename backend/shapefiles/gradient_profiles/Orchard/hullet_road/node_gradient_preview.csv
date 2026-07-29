@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hullet_road,1,Hullet Road_Cam4_20260107_090051_676_A.jpeg,,6.468,3.234,4.0,,,
+hullet_road,2,Hullet Road_Cam4_20260107_090101_284_A.jpeg,,34.75,20.609,20.0,,,
+hullet_road,3,Hullet Road_Cam4_20260107_090119_302_A.jpeg,,47.252,41.001,42.0,,,
+hullet_road,4,Hullet Road_Cam4_20260107_090124_112_A.jpeg,,57.437,52.345,52.0,,,
+hullet_road,5,Hullet Road_Cam4_20260107_090127_721_A.jpeg,,81.276,69.357,70.0,,,
+hullet_road,6,Hullet Road_Cam4_20260107_090135_529_A.jpeg,,91.063,86.17,86.0,10.794,0.0,1.0
+hullet_road,7,Hullet Road_Cam4_20260107_090138_538_A.jpeg,,116.026,103.545,104.0,10.629,-3.537,1.0
+hullet_road,8,Hullet Road_Cam4_20260107_090148_153_A.jpeg,,162.646,139.336,140.0,10.844,0.0,1.0
+hullet_road,9,Hullet Road_Cam4_20260107_090216_393_A.jpeg,,235.071,198.858,,,,
+hullet_road,10,Hullet Road_Cam4_20260107_090636_457_A.jpeg,,247.294,241.182,242.0,,,

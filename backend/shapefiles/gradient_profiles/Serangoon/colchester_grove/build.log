@@ -1,0 +1,18 @@
+project=Colchester Grove
+path_key=colchester_grove
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/13] 20240805_Serangoon_02_Track07.laz (246 samples)
+  [2/13] 20240805_Serangoon_02_Track27.laz (194 samples)
+  [3/13] 20240805_Serangoon_02_Track28.laz (148 samples)
+  [4/13] 20240808_Serangoon_03_Track23.laz (19 samples)
+  [5/13] 20240808_Serangoon_03_Track24.laz (8 samples)
+  [6/13] 20240808_Serangoon_03_Track25.laz (285 samples)
+  [7/13] 20240808_Serangoon_03_Track26.laz (198 samples)
+  [8/13] 20240808_Serangoon_03_Track27.laz (70 samples)
+  [9/13] 20240808_Serangoon_03_Track76.laz (12 samples)
+  [10/13] 20240808_Serangoon_03_Track77.laz (3 samples)
+  [11/13] 20240808_Serangoon_03_Track84.laz (115 samples)
+  [12/13] 20240808_Serangoon_03_Track86.laz (117 samples)
+  [13/13] 20240808_Serangoon_03_Track87.laz (122 samples)

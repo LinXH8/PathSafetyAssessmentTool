@@ -1,0 +1,42 @@
+{
+  "path_key": "adis_road",
+  "display_name": "Adis Road",
+  "source_project": "Adis Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Adis Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-06T23:04:02.680427+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 601.873,
+  "profile_point_count": 302,
+  "valid_elevation_count": 302,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 46,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 239,
+  "usable_gradient_completion_pct": 79.14,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 15.23,
+  "gradient_min_pct": -11.25,
+  "gradient_max_pct": 7.5,
+  "path_bounds_svy21": {
+    "min_x": 29569.487,
+    "min_y": 31362.628,
+    "max_x": 29681.033,
+    "max_y": 31573.362
+  },
+  "road_boundary": {
+    "target_road_name": "ADIS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 302,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

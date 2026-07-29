@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_walk,1,Greenleaf Walk_Cam4_20251219_101111_845_B.jpeg,,12.63,6.315,,,,
+greenleaf_walk,2,Greenleaf Walk_Cam4_20251219_101120_859_B.jpeg,,39.823,26.226,26.0,24.156,,
+greenleaf_walk,3,Greenleaf Walk_Cam4_20251219_101131_676_B.jpeg,,50.766,45.295,46.0,24.78,,
+greenleaf_walk,4,Greenleaf Walk_Cam4_20251219_101137_083_B.jpeg,,62.294,56.53,56.0,26.091,,
+greenleaf_walk,5,Greenleaf Walk_Cam4_20251219_101141_288_B.jpeg,,73.656,67.975,68.0,27.323,,
+greenleaf_walk,6,Greenleaf Walk_Cam4_20251219_101146_093_B.jpeg,,95.359,84.508,84.0,27.586,,
+greenleaf_walk,7,Greenleaf Walk_Cam4_20251219_101155_108_B.jpeg,,107.105,101.232,102.0,29.01,,
+greenleaf_walk,8,Greenleaf Walk_Cam4_20251219_101200_561_B.jpeg,,155.112,131.109,132.0,27.409,,
+greenleaf_walk,9,Greenleaf Walk_Cam4_20251219_101825_984_B.jpeg,,165.978,160.545,160.0,26.998,-6.367,1.0
+greenleaf_walk,10,Greenleaf Walk_Cam4_20251219_101829_588_B.jpeg,,177.779,171.879,172.0,26.696,,

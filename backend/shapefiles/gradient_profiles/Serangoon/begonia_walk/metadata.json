@@ -1,0 +1,42 @@
+{
+  "path_key": "begonia_walk",
+  "display_name": "Begonia Walk",
+  "source_project": "Begonia Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Begonia Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-20T04:55:29.713768+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 298.267,
+  "profile_point_count": 151,
+  "valid_elevation_count": 151,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 39,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 88,
+  "usable_gradient_completion_pct": 58.28,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 25.83,
+  "gradient_min_pct": -5.938,
+  "gradient_max_pct": 6.25,
+  "path_bounds_svy21": {
+    "min_x": 31043.873,
+    "min_y": 40968.498,
+    "max_x": 31151.707,
+    "max_y": 41005.113
+  },
+  "road_boundary": {
+    "target_road_name": "BEGONIA WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 151,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

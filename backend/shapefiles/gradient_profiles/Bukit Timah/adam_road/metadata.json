@@ -1,0 +1,50 @@
+{
+  "path_key": "adam_road",
+  "display_name": "Adam Road",
+  "source_project": "Adam Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Adam Road\\geo_data.gpkg",
+  "lidar_bundle": "adam_road",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\adam_road",
+  "generated_at_utc": "2026-07-06T03:11:58.675605+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1480.091,
+  "profile_point_count": 741,
+  "valid_elevation_count": 741,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 409,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 191,
+  "usable_gradient_completion_pct": 25.78,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.2,
+  "gradient_min_pct": -9.166,
+  "gradient_max_pct": 11.992,
+  "path_bounds_svy21": {
+    "min_x": 25771.412,
+    "min_y": 33918.059,
+    "max_x": 26359.416,
+    "max_y": 35222.444
+  },
+  "road_boundary": {
+    "target_road_name": "ADAM ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 742,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 1480.091,
+    "offroad_chainage_max_m": 1480.091,
+    "trimmed_offroad_points": 1
+  }
+}

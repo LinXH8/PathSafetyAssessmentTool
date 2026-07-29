@@ -1,0 +1,66 @@
+{
+  "path_key": "rowell_road",
+  "display_name": "Rowell Road",
+  "source_project": "Rowell Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Rowell Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-24T03:20:20.466357+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1103.728,
+  "profile_point_count": 269,
+  "valid_elevation_count": 269,
+  "rejected_outlier_count": 40,
+  "rejected_step_jump_count": 157,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 2,
+  "valid_gradient_count": 70,
+  "usable_gradient_completion_pct": 26.02,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.36,
+  "gradient_min_pct": -7.315,
+  "gradient_max_pct": 6.771,
+  "path_bounds_svy21": {
+    "min_x": 30273.949,
+    "min_y": 32211.688,
+    "max_x": 30605.634,
+    "max_y": 32405.996
+  },
+  "road_boundary": {
+    "target_road_name": "ROWELL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 553,
+    "offroad_point_count": 284,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 246
+      },
+      {
+        "road_name": "JALAN BESAR",
+        "point_count": 16
+      },
+      {
+        "road_name": "KAMPONG KAPOR ROAD",
+        "point_count": 10
+      },
+      {
+        "road_name": "DESKER ROAD",
+        "point_count": 8
+      },
+      {
+        "road_name": ".",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 18.0,
+    "offroad_chainage_max_m": 1072.0,
+    "trimmed_offroad_points": 284
+  }
+}

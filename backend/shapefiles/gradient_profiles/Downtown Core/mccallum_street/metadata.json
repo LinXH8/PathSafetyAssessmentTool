@@ -1,0 +1,66 @@
+{
+  "path_key": "mccallum_street",
+  "display_name": "McCallum Street",
+  "source_project": "McCallum Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\McCallum Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-17T03:29:42.089607+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 652.978,
+  "profile_point_count": 256,
+  "valid_elevation_count": 256,
+  "rejected_outlier_count": 37,
+  "rejected_step_jump_count": 212,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 11,
+  "usable_gradient_completion_pct": 4.3,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 82.81,
+  "gradient_min_pct": -8.492,
+  "gradient_max_pct": 2.317,
+  "path_bounds_svy21": {
+    "min_x": 29537.443,
+    "min_y": 28989.178,
+    "max_x": 29808.053,
+    "max_y": 29140.986
+  },
+  "road_boundary": {
+    "target_road_name": "MCCALLUM STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 328,
+    "offroad_point_count": 72,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 39
+      },
+      {
+        "road_name": "ROBINSON ROAD",
+        "point_count": 11
+      },
+      {
+        "road_name": "TELOK AYER STREET",
+        "point_count": 9
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 6
+      },
+      {
+        "road_name": "BOON TAT LINK",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 88.0,
+    "offroad_chainage_max_m": 652.978,
+    "trimmed_offroad_points": 72
+  }
+}

@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kelantan_road,1,Kelantan Road_Cam4_20251208_094351_863_A.jpeg,,12.371,6.186,,,,
+kelantan_road,2,Kelantan Road_Cam4_20251208_094359_412_A.jpeg,,56.848,34.61,34.0,1.862,,
+kelantan_road,3,Kelantan Road_Cam4_20251208_094420_643_A.jpeg,,172.662,114.755,114.0,5.074,,
+kelantan_road,4,Kelantan Road_Cam4_20251208_101632_630_A.jpeg,,197.877,185.27,,,,
+kelantan_road,5,Kelantan Road_Cam4_20251208_101640_650_A.jpeg,,207.701,202.789,,,,
+kelantan_road,6,Kelantan Road_Cam4_20251208_101643_654_A.jpeg,,217.202,212.452,,,,
+kelantan_road,7,Kelantan Road_Cam4_20251208_101646_663_A.jpeg,,244.109,230.656,,,,
+kelantan_road,8,Kelantan Road_Cam4_20251208_101703_689_A.jpeg,,254.874,249.492,,,,
+kelantan_road,9,Kelantan Road_Cam4_20251208_101707_695_A.jpeg,,365.316,310.095,,,,

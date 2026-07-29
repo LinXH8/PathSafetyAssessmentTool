@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+synagogue_street,1,Cam4_20251211_091422_297_C.jpeg,,12.175,6.088,6.0,5.06,0.938,1.0
+synagogue_street,2,Cam4_20251211_091425_935_C.jpeg,,20.497,16.336,16.0,5.167,0.536,1.0
+synagogue_street,3,Cam4_20251211_091428_336_C.jpeg,,50.633,35.565,36.0,4.865,-2.159,1.0
+synagogue_street,4,Cam4_20251211_091449_369_C.jpeg,,117.753,84.193,,,,
+synagogue_street,5,Cam4_20251211_091655_547_C.jpeg,,142.626,130.19,,,,
+synagogue_street,6,Cam4_20251211_091705_156_C.jpeg,,251.925,197.275,,,,
+synagogue_street,7,Cam4_20251211_115723_134_B.jpeg,,346.401,299.163,,,,

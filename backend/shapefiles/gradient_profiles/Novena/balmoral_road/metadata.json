@@ -1,0 +1,50 @@
+{
+  "path_key": "balmoral_road",
+  "display_name": "Balmoral Road",
+  "source_project": "Balmoral Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Balmoral Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-06T21:43:09.803024+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1383.911,
+  "profile_point_count": 683,
+  "valid_elevation_count": 486,
+  "rejected_outlier_count": 62,
+  "rejected_step_jump_count": 319,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 230,
+  "usable_gradient_completion_pct": 33.67,
+  "elevation_hit_coverage_pct": 71.16,
+  "step_jump_rejection_pct": 46.71,
+  "gradient_min_pct": -12.663,
+  "gradient_max_pct": 12.648,
+  "path_bounds_svy21": {
+    "min_x": 27636.653,
+    "min_y": 32842.675,
+    "max_x": 28191.914,
+    "max_y": 33276.773
+  },
+  "road_boundary": {
+    "target_road_name": "BALMORAL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 693,
+    "offroad_point_count": 10,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BALMORAL CRESCENT",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 664.0,
+    "offroad_chainage_max_m": 802.0,
+    "trimmed_offroad_points": 10
+  }
+}

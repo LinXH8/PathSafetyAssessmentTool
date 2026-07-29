@@ -1,0 +1,66 @@
+{
+  "path_key": "neil_road",
+  "display_name": "Neil Road",
+  "source_project": "Neil Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Neil Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:25:19.938350+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4830.888,
+  "profile_point_count": 1588,
+  "valid_elevation_count": 988,
+  "rejected_outlier_count": 155,
+  "rejected_step_jump_count": 882,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 169,
+  "usable_gradient_completion_pct": 10.64,
+  "elevation_hit_coverage_pct": 62.22,
+  "step_jump_rejection_pct": 55.54,
+  "gradient_min_pct": -15.836,
+  "gradient_max_pct": 5.815,
+  "path_bounds_svy21": {
+    "min_x": 28392.153,
+    "min_y": 28811.97,
+    "max_x": 29183.364,
+    "max_y": 29196.944
+  },
+  "road_boundary": {
+    "target_road_name": "NEIL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2417,
+    "offroad_point_count": 829,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CANTONMENT ROAD",
+        "point_count": 141
+      },
+      {
+        "road_name": "BUKIT PASOH ROAD",
+        "point_count": 137
+      },
+      {
+        "road_name": "EVERTON ROAD",
+        "point_count": 107
+      },
+      {
+        "road_name": "KEONG SAIK ROAD",
+        "point_count": 106
+      },
+      {
+        "road_name": "NEW BRIDGE ROAD",
+        "point_count": 92
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 4426.0,
+    "trimmed_offroad_points": 829
+  }
+}

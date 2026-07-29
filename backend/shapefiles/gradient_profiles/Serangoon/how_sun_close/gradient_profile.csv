@@ -1,0 +1,22 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+how_sun_close,How Sun Close,2.0,33337.267,36191.54,21.498,21.498,21.583,1.988,1.0,HOW SUN CLOSE,2.368
+how_sun_close,How Sun Close,4.0,33339.115,36192.306,21.583,21.583,21.623,2.517,1.0,HOW SUN CLOSE,1.833
+how_sun_close,How Sun Close,6.0,33340.962,36193.072,21.662,21.662,21.662,2.506,1.0,HOW SUN CLOSE,1.298
+how_sun_close,How Sun Close,8.0,33342.809,36193.838,21.734,21.734,21.734,2.091,1.0,HOW SUN CLOSE,0.762
+how_sun_close,How Sun Close,10.0,33344.657,36194.604,21.784,21.784,21.784,1.669,1.0,HOW SUN CLOSE,0.227
+how_sun_close,How Sun Close,12.0,33346.485,36195.413,21.79,21.79,21.79,,,HOW SUN CLOSE,0.262
+how_sun_close,How Sun Close,14.0,33348.27,36196.315,21.796,21.796,21.796,,,HOW SUN CLOSE,0.652
+how_sun_close,How Sun Close,16.0,33350.055,36197.217,21.814,22.018,22.018,,,HOW SUN CLOSE,1.041
+how_sun_close,How Sun Close,18.0,33351.84,36198.119,21.808,22.295,22.295,,,HOW SUN CLOSE,1.43
+how_sun_close,How Sun Close,20.0,33353.625,36199.022,21.798,22.572,22.572,,,HOW SUN CLOSE,1.82
+how_sun_close,How Sun Close,22.0,33355.372,36199.971,21.794,22.833,22.833,,,HOW SUN CLOSE,2.148
+how_sun_close,How Sun Close,24.0,33356.645,36201.514,23.517,23.095,23.095,,,HOW SUN CLOSE,1.717
+how_sun_close,How Sun Close,26.0,33357.917,36203.057,23.868,23.357,23.357,,,HOW SUN CLOSE,1.286
+how_sun_close,How Sun Close,28.0,33359.19,36204.599,23.618,23.618,23.357,,,HOW SUN CLOSE,0.855
+how_sun_close,How Sun Close,30.0,33360.463,36206.142,25.089,23.381,23.357,,,HOW SUN CLOSE,0.424
+how_sun_close,How Sun Close,32.0,33361.735,36207.685,23.903,23.143,23.143,,,HOW SUN CLOSE,0.007
+how_sun_close,How Sun Close,34.0,33363.008,36209.228,22.996,22.905,22.905,,,HOW SUN CLOSE,0.438
+how_sun_close,How Sun Close,36.0,33364.281,36210.771,22.995,22.667,22.667,,,HOW SUN CLOSE,0.869
+how_sun_close,How Sun Close,38.0,33365.553,36212.314,21.86,22.43,22.43,,,HOW SUN CLOSE,1.3
+how_sun_close,How Sun Close,40.0,33366.826,36213.856,22.192,22.192,22.333,,,HOW SUN CLOSE,1.731
+how_sun_close,How Sun Close,40.216,33366.963,36214.023,22.237,22.237,22.237,,,HOW SUN CLOSE,1.778

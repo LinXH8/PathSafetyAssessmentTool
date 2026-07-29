@@ -1,0 +1,66 @@
+{
+  "path_key": "rivervale_drive",
+  "display_name": "Rivervale Drive",
+  "source_project": "Rivervale Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Rivervale Drive\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-05-31T21:01:59.997998+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8116.55,
+  "profile_point_count": 2849,
+  "valid_elevation_count": 2579,
+  "rejected_outlier_count": 731,
+  "rejected_step_jump_count": 2054,
+  "repaired_gradient_point_count": 22,
+  "removed_bad_gradient_point_count": 13,
+  "valid_gradient_count": 384,
+  "usable_gradient_completion_pct": 13.48,
+  "elevation_hit_coverage_pct": 90.52,
+  "step_jump_rejection_pct": 72.1,
+  "gradient_min_pct": -14.536,
+  "gradient_max_pct": 13.258,
+  "path_bounds_svy21": {
+    "min_x": 35569.545,
+    "min_y": 40404.334,
+    "max_x": 36193.24,
+    "max_y": 41799.548
+  },
+  "road_boundary": {
+    "target_road_name": "RIVERVALE DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4060,
+    "offroad_point_count": 1211,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 501
+      },
+      {
+        "road_name": "RIVERVALE STREET",
+        "point_count": 145
+      },
+      {
+        "road_name": "RIVERVALE LANE",
+        "point_count": 140
+      },
+      {
+        "road_name": "SENGKANG EAST DRIVE",
+        "point_count": 136
+      },
+      {
+        "road_name": "SENGKANG EAST WAY",
+        "point_count": 109
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 8116.55,
+    "trimmed_offroad_points": 1211
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "path_key": "seletar_road",
+  "display_name": "Seletar Road",
+  "source_project": "Seletar Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Seletar Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-20T03:30:23.981161+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1757.062,
+  "profile_point_count": 798,
+  "valid_elevation_count": 194,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 135,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 126,
+  "usable_gradient_completion_pct": 15.79,
+  "elevation_hit_coverage_pct": 24.31,
+  "step_jump_rejection_pct": 16.92,
+  "gradient_min_pct": -6.094,
+  "gradient_max_pct": 10.371,
+  "path_bounds_svy21": {
+    "min_x": 31831.668,
+    "min_y": 40314.075,
+    "max_x": 31953.516,
+    "max_y": 41108.263
+  },
+  "road_boundary": {
+    "target_road_name": "SELETAR ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 880,
+    "offroad_point_count": 82,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DEDAP PLACE",
+        "point_count": 39
+      },
+      {
+        "road_name": "SELETAR CLOSE",
+        "point_count": 12
+      },
+      {
+        "road_name": "JALAN JORAN",
+        "point_count": 11
+      },
+      {
+        "road_name": "SELETAR TERRACE",
+        "point_count": 7
+      },
+      {
+        "road_name": "NIM CRESCENT",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 40.0,
+    "offroad_chainage_max_m": 1716.0,
+    "trimmed_offroad_points": 82
+  }
+}

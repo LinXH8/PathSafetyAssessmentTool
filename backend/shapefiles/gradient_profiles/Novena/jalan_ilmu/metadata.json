@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_ilmu",
+  "display_name": "Jalan Ilmu",
+  "source_project": "Jalan Ilmu",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Jalan Ilmu\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T07:47:51.550204+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 128.495,
+  "profile_point_count": 65,
+  "valid_elevation_count": 65,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 38,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 14,
+  "usable_gradient_completion_pct": 21.54,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.46,
+  "gradient_min_pct": -10.469,
+  "gradient_max_pct": 6.576,
+  "path_bounds_svy21": {
+    "min_x": 26262.707,
+    "min_y": 34554.254,
+    "max_x": 26390.152,
+    "max_y": 34570.648
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN ILMU",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 66,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN BAHASA",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 128.495,
+    "offroad_chainage_max_m": 128.495,
+    "trimmed_offroad_points": 1
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "path_key": "merchant_road",
+  "display_name": "Merchant Road",
+  "source_project": "Merchant Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Merchant Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-17T03:36:28.518638+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1792.733,
+  "profile_point_count": 761,
+  "valid_elevation_count": 761,
+  "rejected_outlier_count": 91,
+  "rejected_step_jump_count": 569,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 70,
+  "usable_gradient_completion_pct": 9.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 74.77,
+  "gradient_min_pct": -9.78,
+  "gradient_max_pct": 14.258,
+  "path_bounds_svy21": {
+    "min_x": 28991.614,
+    "min_y": 29978.412,
+    "max_x": 29398.765,
+    "max_y": 30282.171
+  },
+  "road_boundary": {
+    "target_road_name": "MERCHANT ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 898,
+    "offroad_point_count": 137,
+    "offroad_top_road_names": [
+      {
+        "road_name": "READ CRESCENT",
+        "point_count": 37
+      },
+      {
+        "road_name": "NEW MARKET ROAD",
+        "point_count": 34
+      },
+      {
+        "road_name": "ANGUS STREET",
+        "point_count": 21
+      },
+      {
+        "road_name": "FISHER STREET",
+        "point_count": 15
+      },
+      {
+        "road_name": "KENG CHEOW STREET",
+        "point_count": 15
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1742.0,
+    "trimmed_offroad_points": 137
+  }
+}

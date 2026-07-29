@@ -1,0 +1,54 @@
+{
+  "path_key": "jalan_bangau",
+  "display_name": "Jalan Bangau",
+  "source_project": "Jalan Bangau",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Bangau\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T15:54:01.353000+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 534.046,
+  "profile_point_count": 251,
+  "valid_elevation_count": 251,
+  "rejected_outlier_count": 26,
+  "rejected_step_jump_count": 118,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 91,
+  "usable_gradient_completion_pct": 36.25,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.01,
+  "gradient_min_pct": -7.528,
+  "gradient_max_pct": 2.03,
+  "path_bounds_svy21": {
+    "min_x": 32243.03,
+    "min_y": 40526.137,
+    "max_x": 32282.394,
+    "max_y": 40743.988
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN BANGAU",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 269,
+    "offroad_point_count": 18,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN JARAK",
+        "point_count": 14
+      },
+      {
+        "road_name": "JALAN KENARAH",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 534.046,
+    "trimmed_offroad_points": 18
+  }
+}

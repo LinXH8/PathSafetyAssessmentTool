@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+rebecca_road,1,Rebecca Road_Cam4_20251218_092618_847_A.jpeg,,12.698,6.349,6.0,19.27,-10.573,2.0
+rebecca_road,2,Rebecca Road_Cam4_20251218_092623_051_A.jpeg,,40.014,26.356,26.0,16.782,,
+rebecca_road,3,Rebecca Road_Cam4_20251218_092630_858_A.jpeg,,49.409,44.711,44.0,14.111,,
+rebecca_road,4,Rebecca Road_Cam4_20251218_092633_268_A.jpeg,,58.373,53.891,54.0,14.254,,
+rebecca_road,5,Rebecca Road_Cam4_20251218_092635_677_A.jpeg,,69.588,63.98,64.0,13.814,,
+rebecca_road,6,Rebecca Road_Cam4_20251218_092638_683_A.jpeg,,95.588,82.588,82.0,13.276,,
+rebecca_road,7,Rebecca Road_Cam4_20251218_092645_291_A.jpeg,,106.775,101.181,102.0,14.236,,
+rebecca_road,8,Rebecca Road_Cam4_20251218_092648_895_A.jpeg,,117.239,112.007,112.0,14.388,,
+rebecca_road,9,Rebecca Road_Cam4_20251218_092651_901_A.jpeg,,143.991,130.615,130.0,13.84,,
+rebecca_road,10,Rebecca Road_Cam4_20251218_092659_116_A.jpeg,,153.378,148.685,148.0,9.55,,
+rebecca_road,11,Rebecca Road_Cam4_20251218_092701_534_A.jpeg,,200.574,176.976,176.0,9.588,,
+rebecca_road,12,Rebecca Road_Cam4_20251218_092713_554_A.jpeg,,210.314,205.444,206.0,9.03,,
+rebecca_road,13,Rebecca Road_Cam4_20251218_092715_356_A.jpeg,,222.897,216.606,216.0,8.368,,
+rebecca_road,14,Rebecca Road_Cam4_20251218_092717_760_A.jpeg,,231.127,227.012,228.0,8.457,,
+rebecca_road,15,Rebecca Road_Cam4_20251218_092719_562_A.jpeg,,256.438,243.783,244.0,9.686,,
+rebecca_road,16,Rebecca Road_Cam4_20251218_092727_973_A.jpeg,,268.021,262.23,262.0,7.803,,
+rebecca_road,17,Rebecca Road_Cam4_20251218_092742_874_A.jpeg,,274.956,271.488,272.0,7.694,-1.326,1.0
+rebecca_road,18,Rebecca Road_Cam4_20251218_092747_078_A.jpeg,,284.73,279.843,280.0,8.203,,
+rebecca_road,19,Rebecca Road_Cam4_20251218_092750_082_A.jpeg,,381.851,333.291,334.0,13.017,,
+rebecca_road,20,Rebecca Road_Cam4_20251218_092923_816_A.jpeg,,467.416,424.634,424.0,16.554,14.102,2.0

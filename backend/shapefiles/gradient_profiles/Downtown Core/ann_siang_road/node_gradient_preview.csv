@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ann_siang_road,1,Ann Siang Road_Cam4_20251230_081731_496_C.jpeg,,9.983,4.992,4.0,9.432,0.0,1.0
+ann_siang_road,2,Ann Siang Road_Cam4_20251230_081736_301_C.jpeg,,20.021,15.002,16.0,9.699,10.0,2.0
+ann_siang_road,3,Ann Siang Road_Cam4_20251230_081741_107_C.jpeg,,34.613,27.317,28.0,10.044,-5.547,1.0
+ann_siang_road,4,Ann Siang Road_Cam4_20251230_081747_712_C.jpeg,,40.439,37.526,38.0,9.867,,
+ann_siang_road,5,Ann Siang Road_Cam4_20251230_081750_115_C.jpeg,,50.77,45.605,46.0,9.822,,
+ann_siang_road,6,Ann Siang Road_Cam4_20251230_081754_319_C.jpeg,,60.782,55.776,56.0,9.032,,
+ann_siang_road,7,Ann Siang Road_Cam4_20251230_081758_524_C.jpeg,,73.42,67.101,68.0,8.832,,
+ann_siang_road,8,Ann Siang Road_Cam4_20251230_081803_929_C.jpeg,,80.634,77.027,78.0,8.532,0.625,1.0
+ann_siang_road,9,Ann Siang Road_Cam4_20251230_081806_932_C.jpeg,,90.198,85.416,86.0,8.632,0.937,1.0
+ann_siang_road,10,Ann Siang Road_Cam4_20251230_081811_136_C.jpeg,,100.517,95.357,96.0,8.732,,
+ann_siang_road,11,Ann Siang Road_Cam4_20251230_081816_543_C.jpeg,,112.637,106.577,106.0,9.492,,
+ann_siang_road,12,Ann Siang Road_Cam4_20251230_081829_160_C.jpeg,,142.722,127.679,128.0,8.744,-1.25,1.0
+ann_siang_road,13,Ann Siang Road_Cam4_20251230_081900_992_C.jpeg,,148.913,145.817,146.0,9.111,,
+ann_siang_road,14,Ann Siang Road_Cam4_20251230_081905_196_C.jpeg,,159.377,154.145,154.0,8.947,,
+ann_siang_road,15,Ann Siang Road_Cam4_20251230_081910_007_C.jpeg,,226.707,193.042,194.0,10.297,,
+ann_siang_road,16,Ann Siang Road_Cam4_20251230_082524_840_C.jpeg,,298.841,262.774,262.0,17.381,0.0,1.0

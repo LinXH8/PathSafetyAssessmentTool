@@ -1,0 +1,42 @@
+{
+  "path_key": "tai_hwan_drive",
+  "display_name": "Tai Hwan Drive",
+  "source_project": "Tai Hwan Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Tai Hwan Drive\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T08:57:47.173561+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 137.266,
+  "profile_point_count": 70,
+  "valid_elevation_count": 70,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 13,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 50,
+  "usable_gradient_completion_pct": 71.43,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 18.57,
+  "gradient_min_pct": -7.978,
+  "gradient_max_pct": 11.384,
+  "path_bounds_svy21": {
+    "min_x": 30908.672,
+    "min_y": 37506.463,
+    "max_x": 31042.187,
+    "max_y": 37534.972
+  },
+  "road_boundary": {
+    "target_road_name": "TAI HWAN DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 70,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

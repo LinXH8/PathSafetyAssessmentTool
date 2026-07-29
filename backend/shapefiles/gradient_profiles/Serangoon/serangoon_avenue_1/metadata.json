@@ -1,0 +1,66 @@
+{
+  "path_key": "serangoon_avenue_1",
+  "display_name": "Serangoon Avenue 1",
+  "source_project": "Serangoon Avenue 1",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Serangoon Avenue 1\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-11T07:54:00.850494+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2784.657,
+  "profile_point_count": 860,
+  "valid_elevation_count": 860,
+  "rejected_outlier_count": 113,
+  "rejected_step_jump_count": 458,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 288,
+  "usable_gradient_completion_pct": 33.49,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 53.26,
+  "gradient_min_pct": -12.079,
+  "gradient_max_pct": 9.002,
+  "path_bounds_svy21": {
+    "min_x": 32423.856,
+    "min_y": 36281.204,
+    "max_x": 32940.008,
+    "max_y": 36642.675
+  },
+  "road_boundary": {
+    "target_road_name": "SERANGOON AVENUE 1",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1394,
+    "offroad_point_count": 534,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG GAMBIR",
+        "point_count": 217
+      },
+      {
+        "road_name": "JALAN RINDU",
+        "point_count": 134
+      },
+      {
+        "road_name": "JALAN LABU AYER",
+        "point_count": 42
+      },
+      {
+        "road_name": "JALAN LABU MERAH",
+        "point_count": 39
+      },
+      {
+        "road_name": "SUNSHINE TERRACE",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 418.0,
+    "offroad_chainage_max_m": 2438.0,
+    "trimmed_offroad_points": 534
+  }
+}

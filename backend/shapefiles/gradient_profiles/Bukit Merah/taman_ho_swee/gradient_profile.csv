@@ -1,0 +1,11 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+taman_ho_swee,Taman Ho Swee,2.0,27716.156,29970.823,9.544,9.544,9.544,0.0,1.0,TAMAN HO SWEE,7.275
+taman_ho_swee,Taman Ho Swee,4.0,27718.074,29970.257,9.544,9.544,9.544,0.0,1.0,TAMAN HO SWEE,5.912
+taman_ho_swee,Taman Ho Swee,6.0,27719.992,29969.69,9.494,9.494,9.544,0.0,1.0,TAMAN HO SWEE,4.549
+taman_ho_swee,Taman Ho Swee,8.0,27721.91,29969.124,9.594,9.594,9.544,0.0,1.0,TAMAN HO SWEE,3.187
+taman_ho_swee,Taman Ho Swee,10.0,27723.828,29968.557,9.594,9.594,9.544,-0.625,1.0,TAMAN HO SWEE,1.824
+taman_ho_swee,Taman Ho Swee,12.0,27725.744,29967.985,9.544,9.544,9.544,,,TAMAN HO SWEE,0.467
+taman_ho_swee,Taman Ho Swee,14.0,27727.64,29967.346,9.494,9.494,9.494,,,TAMAN HO SWEE,0.839
+taman_ho_swee,Taman Ho Swee,16.0,27729.535,29966.708,10.069,9.427,9.427,-2.292,1.0,TAMAN HO SWEE,2.146
+taman_ho_swee,Taman Ho Swee,18.0,27731.43,29966.069,9.294,9.361,9.394,-2.222,1.0,TAMAN HO SWEE,3.452
+taman_ho_swee,Taman Ho Swee,20.0,27733.326,29965.431,9.294,9.294,9.361,,,TAMAN HO SWEE,4.759

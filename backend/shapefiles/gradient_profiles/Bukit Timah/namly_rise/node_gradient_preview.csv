@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+namly_rise,1,Namly Rise_Cam4_20251217_091030_982_B.jpeg,,10.287,5.144,6.0,19.856,,
+namly_rise,2,Namly Rise_Cam4_20251217_091035_791_B.jpeg,,21.185,15.736,16.0,23.492,,
+namly_rise,3,Namly Rise_Cam4_20251217_091039_996_B.jpeg,,33.044,27.114,28.0,25.893,4.739,1.0
+namly_rise,4,Namly Rise_Cam4_20251217_091044_202_B.jpeg,,44.834,38.939,38.0,24.588,,
+namly_rise,5,Namly Rise_Cam4_20251217_091049_010_B.jpeg,,50.519,47.676,48.0,20.671,,
+namly_rise,6,Namly Rise_Cam4_20251217_091052_014_B.jpeg,,61.455,55.987,56.0,18.848,,
+namly_rise,7,Namly Rise_Cam4_20251217_091059_235_B.jpeg,,73.785,67.62,68.0,20.947,,
+namly_rise,8,Namly Rise_Cam4_20251217_091128_032_B.jpeg,,79.596,76.691,76.0,22.983,,
+namly_rise,9,Namly Rise_Cam4_20251217_091132_235_B.jpeg,,112.054,95.825,96.0,24.145,,
+namly_rise,10,Namly Rise_Cam4_20251217_091143_647_B.jpeg,,124.365,118.209,118.0,19.004,1.875,1.0
+namly_rise,11,Namly Rise_Cam4_20251217_091147_850_B.jpeg,,129.761,127.063,128.0,19.22,,
+namly_rise,12,Namly Rise_Cam4_20251217_091149_652_B.jpeg,,161.447,145.604,146.0,20.953,,
+namly_rise,13,Namly Rise_Cam4_20251217_091201_669_B.jpeg,,173.579,167.513,168.0,21.495,,
+namly_rise,14,Namly Rise_Cam4_20251217_091207_076_B.jpeg,,180.686,177.133,178.0,20.307,,

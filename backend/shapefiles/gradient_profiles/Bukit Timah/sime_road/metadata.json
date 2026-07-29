@@ -1,0 +1,50 @@
+{
+  "path_key": "sime_road",
+  "display_name": "Sime Road",
+  "source_project": "Sime Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry9\\_projects\\Sime Road\\geo_data.gpkg",
+  "lidar_bundle": "bt_novena",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry9\\_lazdirs\\bt_novena",
+  "generated_at_utc": "2026-07-09T08:41:52.645250+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1284.3,
+  "profile_point_count": 618,
+  "valid_elevation_count": 618,
+  "rejected_outlier_count": 53,
+  "rejected_step_jump_count": 341,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 210,
+  "usable_gradient_completion_pct": 33.98,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.18,
+  "gradient_min_pct": -8.594,
+  "gradient_max_pct": 12.938,
+  "path_bounds_svy21": {
+    "min_x": 25591.955,
+    "min_y": 35245.368,
+    "max_x": 26478.6,
+    "max_y": 35791.672
+  },
+  "road_boundary": {
+    "target_road_name": "SIME ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 644,
+    "offroad_point_count": 26,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORNIE ROAD",
+        "point_count": 26
+      }
+    ],
+    "offroad_chainage_min_m": 286.0,
+    "offroad_chainage_max_m": 336.0,
+    "trimmed_offroad_points": 26
+  }
+}

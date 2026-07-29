@@ -1,0 +1,66 @@
+{
+  "path_key": "hua_guan_avenue",
+  "display_name": "Hua Guan Avenue",
+  "source_project": "Hua Guan Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hua Guan Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T20:04:10.698079+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2846.56,
+  "profile_point_count": 1221,
+  "valid_elevation_count": 1221,
+  "rejected_outlier_count": 91,
+  "rejected_step_jump_count": 650,
+  "repaired_gradient_point_count": 22,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 354,
+  "usable_gradient_completion_pct": 28.99,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 53.24,
+  "gradient_min_pct": -11.439,
+  "gradient_max_pct": 10.806,
+  "path_bounds_svy21": {
+    "min_x": 22263.535,
+    "min_y": 35304.774,
+    "max_x": 22757.685,
+    "max_y": 36124.315
+  },
+  "road_boundary": {
+    "target_road_name": "HUA GUAN AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1425,
+    "offroad_point_count": 204,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN GAHARU",
+        "point_count": 165
+      },
+      {
+        "road_name": "HUA GUAN CRESCENT",
+        "point_count": 22
+      },
+      {
+        "road_name": "DIN PANG AVENUE",
+        "point_count": 8
+      },
+      {
+        "road_name": "BEE SAN AVENUE",
+        "point_count": 7
+      },
+      {
+        "road_name": "SIAN TUAN AVENUE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2306.0,
+    "trimmed_offroad_points": 204
+  }
+}

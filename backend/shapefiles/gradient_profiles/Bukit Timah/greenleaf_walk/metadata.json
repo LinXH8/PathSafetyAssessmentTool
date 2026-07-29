@@ -1,0 +1,54 @@
+{
+  "path_key": "greenleaf_walk",
+  "display_name": "Greenleaf Walk",
+  "source_project": "Greenleaf Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Greenleaf Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T14:36:04.583208+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 177.779,
+  "profile_point_count": 81,
+  "valid_elevation_count": 81,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 51,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 15,
+  "usable_gradient_completion_pct": 18.52,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.96,
+  "gradient_min_pct": -6.367,
+  "gradient_max_pct": 10.177,
+  "path_bounds_svy21": {
+    "min_x": 22437.974,
+    "min_y": 33758.228,
+    "max_x": 22460.066,
+    "max_y": 33856.287
+  },
+  "road_boundary": {
+    "target_road_name": "GREENLEAF WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 90,
+    "offroad_point_count": 9,
+    "offroad_top_road_names": [
+      {
+        "road_name": "GREENLEAF VIEW",
+        "point_count": 7
+      },
+      {
+        "road_name": "GREENLEAF DRIVE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 136.0,
+    "trimmed_offroad_points": 9
+  }
+}

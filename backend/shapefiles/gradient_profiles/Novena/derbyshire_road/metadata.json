@@ -1,0 +1,42 @@
+{
+  "path_key": "derbyshire_road",
+  "display_name": "Derbyshire Road",
+  "source_project": "Derbyshire Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry4\\_projects\\Derbyshire Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T07:17:14.798157+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 472.058,
+  "profile_point_count": 238,
+  "valid_elevation_count": 238,
+  "rejected_outlier_count": 28,
+  "rejected_step_jump_count": 143,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 49,
+  "usable_gradient_completion_pct": 20.59,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 60.08,
+  "gradient_min_pct": -8.098,
+  "gradient_max_pct": 8.646,
+  "path_bounds_svy21": {
+    "min_x": 29298.252,
+    "min_y": 33075.457,
+    "max_x": 29439.033,
+    "max_y": 33274.249
+  },
+  "road_boundary": {
+    "target_road_name": "DERBYSHIRE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 238,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

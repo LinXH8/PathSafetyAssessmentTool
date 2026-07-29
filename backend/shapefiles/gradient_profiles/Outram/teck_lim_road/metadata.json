@@ -1,0 +1,54 @@
+{
+  "path_key": "teck_lim_road",
+  "display_name": "Teck Lim Road",
+  "source_project": "Teck Lim Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Teck Lim Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T13:03:23.999964+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 200.255,
+  "profile_point_count": 85,
+  "valid_elevation_count": 85,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 57,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 15,
+  "usable_gradient_completion_pct": 17.65,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 67.06,
+  "gradient_min_pct": -3.75,
+  "gradient_max_pct": 4.375,
+  "path_bounds_svy21": {
+    "min_x": 28940.151,
+    "min_y": 29118.955,
+    "max_x": 29005.124,
+    "max_y": 29217.867
+  },
+  "road_boundary": {
+    "target_road_name": "TECK LIM ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 102,
+    "offroad_point_count": 17,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JIAK CHUAN ROAD",
+        "point_count": 12
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 102.0,
+    "trimmed_offroad_points": 17
+  }
+}

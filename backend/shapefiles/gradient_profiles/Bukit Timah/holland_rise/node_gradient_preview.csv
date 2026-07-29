@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_rise,1,Holland Rise_Cam4_20251218_085933_324_C.jpeg,,14.097,7.048,8.0,25.885,9.844,2.0
+holland_rise,2,Holland Rise_Cam4_20251218_085940_492_C.jpeg,,37.081,25.589,26.0,26.723,5.938,1.0
+holland_rise,3,Holland Rise_Cam4_20251218_085953_046_C.jpeg,,45.96,41.521,42.0,27.273,1.875,1.0
+holland_rise,4,Holland Rise_Cam4_20251218_085956_649_C.jpeg,,59.973,52.967,52.0,27.473,3.125,1.0
+holland_rise,5,Holland Rise_Cam4_20251218_090002_014_C.jpeg,,83.326,71.65,72.0,28.073,,
+holland_rise,6,Holland Rise_Cam4_20251218_090011_060_C.jpeg,,91.382,87.354,88.0,28.929,,
+holland_rise,7,Holland Rise_Cam4_20251218_090014_067_C.jpeg,,118.35,104.866,104.0,29.198,,
+holland_rise,8,Holland Rise_Cam4_20251218_090024_373_C.jpeg,,128.616,123.483,124.0,30.593,,
+holland_rise,9,Holland Rise_Cam4_20251218_090028_583_C.jpeg,,152.631,140.623,140.0,30.747,,
+holland_rise,10,Holland Rise_Cam4_20251218_090038_814_C.jpeg,,165.063,158.847,158.0,31.254,,
+holland_rise,11,Holland Rise_Cam4_20251218_090044_838_C.jpeg,,171.138,168.101,168.0,31.573,,
+holland_rise,12,Holland Rise_Cam4_20251218_090049_078_C.jpeg,,311.849,241.494,242.0,35.06,,
+holland_rise,13,Holland Rise_Cam4_20251218_090151_995_C.jpeg,,319.336,315.592,316.0,25.048,-4.375,1.0

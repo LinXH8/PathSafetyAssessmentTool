@@ -1,0 +1,58 @@
+{
+  "path_key": "clifton_vale",
+  "display_name": "Clifton Vale",
+  "source_project": "Clifton Vale",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Clifton Vale\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T03:34:06.131442+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 629.595,
+  "profile_point_count": 296,
+  "valid_elevation_count": 296,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 150,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 101,
+  "usable_gradient_completion_pct": 34.12,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 50.68,
+  "gradient_min_pct": -6.447,
+  "gradient_max_pct": 8.073,
+  "path_bounds_svy21": {
+    "min_x": 31298.309,
+    "min_y": 36376.982,
+    "max_x": 31583.375,
+    "max_y": 36498.264
+  },
+  "road_boundary": {
+    "target_road_name": "CLIFTON VALE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 316,
+    "offroad_point_count": 20,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LYNWOOD GROVE",
+        "point_count": 13
+      },
+      {
+        "road_name": "MATLOCK RISE",
+        "point_count": 4
+      },
+      {
+        "road_name": "SUNDRIDGE PARK ROAD",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 154.0,
+    "offroad_chainage_max_m": 356.0,
+    "trimmed_offroad_points": 20
+  }
+}

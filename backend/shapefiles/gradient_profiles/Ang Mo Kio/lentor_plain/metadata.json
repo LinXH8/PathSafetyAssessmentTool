@@ -1,0 +1,58 @@
+{
+  "path_key": "lentor_plain",
+  "display_name": "Lentor Plain",
+  "source_project": "Lentor Plain",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Plain\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T18:28:54.333767+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 478.474,
+  "profile_point_count": 213,
+  "valid_elevation_count": 213,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 146,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 11.74,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 68.54,
+  "gradient_min_pct": -7.051,
+  "gradient_max_pct": 12.125,
+  "path_bounds_svy21": {
+    "min_x": 28600.991,
+    "min_y": 40951.952,
+    "max_x": 28716.263,
+    "max_y": 41154.369
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR PLAIN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 241,
+    "offroad_point_count": 28,
+    "offroad_top_road_names": [
+      {
+        "road_name": "COUNTRYSIDE ROAD",
+        "point_count": 23
+      },
+      {
+        "road_name": "YIO CHU KANG ROAD",
+        "point_count": 4
+      },
+      {
+        "road_name": "LENTOR LOOP",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 478.474,
+    "trimmed_offroad_points": 28
+  }
+}

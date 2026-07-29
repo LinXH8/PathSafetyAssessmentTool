@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_unggas",
+  "display_name": "Jalan Unggas",
+  "source_project": "Jalan Unggas",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry7\\_projects\\Jalan Unggas\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T04:18:35.149785+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 323.683,
+  "profile_point_count": 162,
+  "valid_elevation_count": 162,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 104,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 22,
+  "usable_gradient_completion_pct": 13.58,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.2,
+  "gradient_min_pct": -6.406,
+  "gradient_max_pct": 2.037,
+  "path_bounds_svy21": {
+    "min_x": 26294.205,
+    "min_y": 33980.715,
+    "max_x": 26336.91,
+    "max_y": 34269.59
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN UNGGAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 163,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN BAHASA",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

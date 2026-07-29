@@ -1,0 +1,66 @@
+{
+  "path_key": "lornie_road",
+  "display_name": "Lornie Road",
+  "source_project": "Lornie Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Lornie Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-06-03T01:59:29.521259+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 6428.638,
+  "profile_point_count": 1560,
+  "valid_elevation_count": 1430,
+  "rejected_outlier_count": 140,
+  "rejected_step_jump_count": 878,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 428,
+  "usable_gradient_completion_pct": 27.44,
+  "elevation_hit_coverage_pct": 91.67,
+  "step_jump_rejection_pct": 56.28,
+  "gradient_min_pct": -13.75,
+  "gradient_max_pct": 14.972,
+  "path_bounds_svy21": {
+    "min_x": 26283.944,
+    "min_y": 35206.402,
+    "max_x": 28253.428,
+    "max_y": 36000.834
+  },
+  "road_boundary": {
+    "target_road_name": "LORNIE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3216,
+    "offroad_point_count": 1656,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 783
+      },
+      {
+        "road_name": "THOMSON ROAD",
+        "point_count": 443
+      },
+      {
+        "road_name": "CALDECOTT CLOSE",
+        "point_count": 170
+      },
+      {
+        "road_name": "LORNIE WALK",
+        "point_count": 65
+      },
+      {
+        "road_name": "ANDREW ROAD",
+        "point_count": 56
+      }
+    ],
+    "offroad_chainage_min_m": 6.0,
+    "offroad_chainage_max_m": 6428.638,
+    "trimmed_offroad_points": 1656
+  }
+}

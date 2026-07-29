@@ -1,0 +1,66 @@
+{
+  "path_key": "stevens_road",
+  "display_name": "Stevens Road",
+  "source_project": "Stevens Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Stevens Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-06T21:42:12.803284+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5034.15,
+  "profile_point_count": 1787,
+  "valid_elevation_count": 810,
+  "rejected_outlier_count": 96,
+  "rejected_step_jump_count": 515,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 3,
+  "valid_gradient_count": 352,
+  "usable_gradient_completion_pct": 19.7,
+  "elevation_hit_coverage_pct": 45.33,
+  "step_jump_rejection_pct": 28.82,
+  "gradient_min_pct": -14.375,
+  "gradient_max_pct": 13.137,
+  "path_bounds_svy21": {
+    "min_x": 27098.822,
+    "min_y": 32358.372,
+    "max_x": 28037.607,
+    "max_y": 33622.619
+  },
+  "road_boundary": {
+    "target_road_name": "STEVENS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2519,
+    "offroad_point_count": 732,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BALMORAL PARK",
+        "point_count": 205
+      },
+      {
+        "road_name": "DRAYCOTT PARK",
+        "point_count": 150
+      },
+      {
+        "road_name": "DRAYCOTT DRIVE",
+        "point_count": 124
+      },
+      {
+        "road_name": "ROBIN ROAD",
+        "point_count": 84
+      },
+      {
+        "road_name": "STEVENS DRIVE",
+        "point_count": 46
+      }
+    ],
+    "offroad_chainage_min_m": 136.0,
+    "offroad_chainage_max_m": 5034.15,
+    "trimmed_offroad_points": 732
+  }
+}

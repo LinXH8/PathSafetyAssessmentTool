@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+allamanda_grove,1,Allamanda Grove_Cam4_20251218_080544_077_A.jpeg,,12.205,6.102,6.0,7.09,,
+allamanda_grove,2,Allamanda Grove_Cam4_20251218_080550_083_A.jpeg,,36.382,24.293,24.0,7.494,,
+allamanda_grove,3,Allamanda Grove_Cam4_20251218_080605_700_A.jpeg,,65.331,50.857,50.0,8.162,,
+allamanda_grove,4,Allamanda Grove_Cam4_20251218_080618_188_A.jpeg,,72.375,68.853,68.0,7.942,2.917,1.0
+allamanda_grove,5,Allamanda Grove_Cam4_20251218_080621_191_A.jpeg,,82.885,77.63,78.0,8.159,6.03,1.0
+allamanda_grove,6,Allamanda Grove_Cam4_20251218_080625_396_A.jpeg,,92.285,87.585,88.0,8.612,2.607,1.0
+allamanda_grove,7,Allamanda Grove_Cam4_20251218_080629_601_A.jpeg,,103.96,98.122,98.0,8.7,,
+allamanda_grove,8,Allamanda Grove_Cam4_20251218_080635_607_A.jpeg,,230.379,167.169,168.0,9.28,,
+allamanda_grove,9,Allamanda Grove_Cam4_20251218_081853_372_A.jpeg,,241.229,235.804,236.0,8.679,-12.353,2.0
+allamanda_grove,10,Allamanda Grove_Cam4_20251218_081856_976_A.jpeg,,254.477,247.853,248.0,8.385,2.578,1.0
+allamanda_grove,11,Allamanda Grove_Cam4_20251218_081901_181_A.jpeg,,262.203,258.34,258.0,8.162,,
+allamanda_grove,12,Allamanda Grove_Cam4_20251218_081903_588_A.jpeg,,271.949,267.076,268.0,7.962,,
+allamanda_grove,13,Allamanda Grove_Cam4_20251218_081906_593_A.jpeg,,297.195,284.572,284.0,7.899,,
+allamanda_grove,14,Allamanda Grove_Cam4_20251218_081915_602_A.jpeg,,308.131,302.663,302.0,8.249,,
+allamanda_grove,15,Allamanda Grove_Cam4_20251218_081919_806_A.jpeg,,317.329,312.73,312.0,8.062,,
+allamanda_grove,16,Allamanda Grove_Cam4_20251218_081923_409_A.jpeg,,329.952,323.64,324.0,8.174,0.313,1.0
+allamanda_grove,17,Allamanda Grove_Cam4_20251218_081928_215_A.jpeg,,356.135,343.044,344.0,8.22,,
+allamanda_grove,18,Allamanda Grove_Cam4_20251218_081937_832_A.jpeg,,385.247,370.691,370.0,8.19,-0.437,1.0
+allamanda_grove,19,Allamanda Grove_Cam4_20251218_081945_651_A.jpeg,,412.494,398.87,398.0,9.116,,

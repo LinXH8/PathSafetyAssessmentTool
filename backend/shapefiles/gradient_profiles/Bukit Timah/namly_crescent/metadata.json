@@ -1,0 +1,58 @@
+{
+  "path_key": "namly_crescent",
+  "display_name": "Namly Crescent",
+  "source_project": "Namly Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Namly Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T15:33:26.142312+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1180.337,
+  "profile_point_count": 554,
+  "valid_elevation_count": 552,
+  "rejected_outlier_count": 68,
+  "rejected_step_jump_count": 315,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 139,
+  "usable_gradient_completion_pct": 25.09,
+  "elevation_hit_coverage_pct": 99.64,
+  "step_jump_rejection_pct": 56.86,
+  "gradient_min_pct": -14.375,
+  "gradient_max_pct": 10.062,
+  "path_bounds_svy21": {
+    "min_x": 23589.012,
+    "min_y": 34198.994,
+    "max_x": 24001.037,
+    "max_y": 34402.728
+  },
+  "road_boundary": {
+    "target_road_name": "NAMLY CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 592,
+    "offroad_point_count": 38,
+    "offroad_top_road_names": [
+      {
+        "road_name": "FIFTH AVENUE",
+        "point_count": 23
+      },
+      {
+        "road_name": "SIXTH AVENUE",
+        "point_count": 13
+      },
+      {
+        "road_name": "NAMLY RISE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 42.0,
+    "offroad_chainage_max_m": 1180.337,
+    "trimmed_offroad_points": 38
+  }
+}

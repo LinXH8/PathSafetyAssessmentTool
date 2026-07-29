@@ -1,0 +1,66 @@
+{
+  "path_key": "collyer_quay",
+  "display_name": "Collyer Quay",
+  "source_project": "Collyer Quay",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Collyer Quay\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T08:12:00.081747+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3132.533,
+  "profile_point_count": 619,
+  "valid_elevation_count": 617,
+  "rejected_outlier_count": 106,
+  "rejected_step_jump_count": 426,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 119,
+  "usable_gradient_completion_pct": 19.22,
+  "elevation_hit_coverage_pct": 99.68,
+  "step_jump_rejection_pct": 68.82,
+  "gradient_min_pct": -6.453,
+  "gradient_max_pct": 9.805,
+  "path_bounds_svy21": {
+    "min_x": 29978.577,
+    "min_y": 29378.943,
+    "max_x": 30275.058,
+    "max_y": 29730.762
+  },
+  "road_boundary": {
+    "target_road_name": "COLLYER QUAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1568,
+    "offroad_point_count": 949,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 367
+      },
+      {
+        "road_name": "D'ALMEIDA STREET",
+        "point_count": 314
+      },
+      {
+        "road_name": "BATTERY ROAD",
+        "point_count": 154
+      },
+      {
+        "road_name": "MARINA BOULEVARD",
+        "point_count": 36
+      },
+      {
+        "road_name": "FINLAYSON GREEN",
+        "point_count": 31
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3068.0,
+    "trimmed_offroad_points": 949
+  }
+}

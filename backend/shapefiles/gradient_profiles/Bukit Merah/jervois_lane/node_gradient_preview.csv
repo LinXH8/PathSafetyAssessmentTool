@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jervois_lane,1,Jervois Lane_Cam4_20251205_095515_455_C.jpeg,,10.204,5.102,6.0,7.884,,
+jervois_lane,2,Jervois Lane_Cam4_20251205_095519_662_C.jpeg,,23.103,16.654,16.0,6.93,,
+jervois_lane,3,Jervois Lane_Cam4_20251205_095523_916_C.jpeg,,49.244,36.173,36.0,4.92,,
+jervois_lane,4,Jervois Lane_Cam4_20251205_095531_126_C.jpeg,,59.197,54.22,54.0,3.464,-5.437,1.0
+jervois_lane,5,Jervois Lane_Cam4_20251205_095534_136_C.jpeg,,86.464,72.83,72.0,3.439,0.703,1.0
+jervois_lane,6,Jervois Lane_Cam4_20251205_095543_148_C.jpeg,,99.884,93.174,94.0,3.867,,
+jervois_lane,7,Jervois Lane_Cam4_20251205_095547_354_C.jpeg,,105.33,102.607,102.0,3.633,,
+jervois_lane,8,Jervois Lane_Cam4_20251205_095549_155_C.jpeg,,125.913,115.621,116.0,3.68,-0.208,1.0
+jervois_lane,9,Jervois Lane_Cam4_20251205_100323_808_C.jpeg,,136.361,131.137,132.0,3.626,-0.668,1.0
+jervois_lane,10,Jervois Lane_Cam4_20251205_100326_813_C.jpeg,,162.086,149.223,150.0,3.694,2.25,1.0
+jervois_lane,11,Jervois Lane_Cam4_20251205_100334_034_C.jpeg,,202.187,182.136,182.0,3.929,,
+jervois_lane,12,Jervois Lane_Cam4_20251205_100344_887_C.jpeg,,214.117,208.152,208.0,5.803,,
+jervois_lane,13,Jervois Lane_Cam4_20251205_100350_301_C.jpeg,,580.859,397.488,398.0,16.684,-8.397,1.0

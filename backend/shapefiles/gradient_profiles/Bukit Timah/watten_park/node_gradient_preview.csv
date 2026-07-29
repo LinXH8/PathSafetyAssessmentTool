@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+watten_park,1,Watten Park_Cam4_20251210_114457_700_A.jpeg,,10.8,5.4,6.0,5.029,1.121,1.0
+watten_park,2,Watten Park_Cam4_20251210_114500_944_A.jpeg,,39.051,24.926,24.0,5.382,,
+watten_park,3,Watten Park_Cam4_20251210_114718_356_A.jpeg,,49.544,44.297,44.0,6.775,,
+watten_park,4,Watten Park_Cam4_20251210_114722_528_A.jpeg,,81.527,65.535,66.0,7.138,,
+watten_park,5,Watten Park_Cam4_20251210_114832_048_A.jpeg,,89.963,85.745,86.0,7.026,,
+watten_park,6,Watten Park_Cam4_20251210_114834_228_A.jpeg,,98.377,94.17,94.0,7.163,,
+watten_park,7,Watten Park_Cam4_20251210_114836_432_A.jpeg,,108.55,103.463,104.0,7.035,,
+watten_park,8,Watten Park_Cam4_20251210_114838_935_A.jpeg,,137.079,122.815,122.0,7.294,6.786,1.0
+watten_park,9,Watten Park_Cam4_20251210_114846_268_A.jpeg,,147.384,142.232,142.0,7.408,,
+watten_park,10,Watten Park_Cam4_20251210_114848_952_A.jpeg,,154.077,150.73,150.0,7.353,-0.906,1.0
+watten_park,11,Watten Park_Cam4_20251210_114850_529_A.jpeg,,164.056,159.066,160.0,7.244,-2.294,1.0
+watten_park,12,Watten Park_Cam4_20251210_114853_032_A.jpeg,,177.32,170.688,170.0,7.055,,
+watten_park,13,Watten Park_Cam4_20251210_114856_725_A.jpeg,,184.497,180.908,180.0,6.981,,
+watten_park,14,Watten Park_Cam4_20251210_114858_910_A.jpeg,,214.398,199.447,200.0,7.661,,
+watten_park,15,Watten Park_Cam4_20251210_114907_610_A.jpeg,,223.783,219.09,220.0,7.763,,

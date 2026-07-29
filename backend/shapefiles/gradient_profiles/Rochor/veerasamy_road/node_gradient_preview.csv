@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+veerasamy_road,1,Cam4_20251208_103424_742_A.jpeg,,12.345,6.173,,,,
+veerasamy_road,2,Cam4_20251208_103430_303_A.jpeg,,19.461,15.903,,,,
+veerasamy_road,3,Cam4_20251208_103512_334_A.jpeg,,32.335,25.898,,,,
+veerasamy_road,4,Cam4_20251208_103522_031_A.jpeg,,201.652,116.993,,,,
+veerasamy_road,5,Cam4_20251208_110258_211_A.jpeg,,215.474,208.563,208.0,2.681,,
+veerasamy_road,6,Cam4_20251208_110303_337_A.jpeg,,235.895,225.685,228.0,3.167,-0.556,1.0
+veerasamy_road,7,Cam4_20251208_110309_953_A.jpeg,,247.04,241.468,242.0,2.558,,
+veerasamy_road,8,Cam4_20251208_110313_511_A.jpeg,,255.954,251.497,252.0,3.282,-1.369,1.0
+veerasamy_road,9,Cam4_20251208_110316_523_A.jpeg,,283.594,269.774,270.0,2.846,,
+veerasamy_road,10,Cam4_20251208_110326_059_A.jpeg,,294.228,288.911,288.0,3.139,,
+veerasamy_road,11,Cam4_20251208_110329_591_A.jpeg,,301.984,298.106,298.0,3.164,,
+veerasamy_road,12,Cam4_20251208_110332_134_A.jpeg,,311.82,306.902,306.0,2.785,-7.027,1.0
+veerasamy_road,13,Cam4_20251208_110335_170_A.jpeg,,322.605,317.213,318.0,2.55,,
+veerasamy_road,14,Cam4_20251208_110338_731_A.jpeg,,332.287,327.446,328.0,2.685,,
+veerasamy_road,15,Cam4_20251208_110342_331_A.jpeg,,456.585,394.436,394.0,4.662,,
+veerasamy_road,16,Cam4_20251212_090716_186_A.jpeg,,463.016,459.801,,,,
+veerasamy_road,17,Cam4_20251212_090727_445_A.jpeg,,485.351,474.184,,,,
+veerasamy_road,18,Cam4_20260206_093356_622_A.jpeg,,495.013,490.182,492.0,5.439,,
+veerasamy_road,19,Cam4_20260206_093403_393_A.jpeg,,504.187,499.6,500.0,5.042,,
+veerasamy_road,20,Cam4_20260206_093406_382_A.jpeg,,516.65,510.419,510.0,5.03,,
+veerasamy_road,21,Cam4_20260206_093410_687_A.jpeg,,558.185,537.417,538.0,,,

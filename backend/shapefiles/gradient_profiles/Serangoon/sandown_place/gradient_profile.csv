@@ -1,0 +1,14 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+sandown_place,Sandown Place,0.0,31513.465,38587.143,13.474,10.903,10.903,-0.454,1.0,SANDOWN PLACE,4.778
+sandown_place,Sandown Place,2.0,31512.545,38585.367,10.903,10.903,10.893,,,SANDOWN PLACE,4.818
+sandown_place,Sandown Place,4.0,31511.626,38583.591,10.884,10.884,10.884,,,SANDOWN PLACE,4.859
+sandown_place,Sandown Place,6.0,31510.706,38581.814,9.988,10.815,10.815,-2.697,1.0,SANDOWN PLACE,4.9
+sandown_place,Sandown Place,8.0,31509.786,38580.038,9.874,10.747,10.747,,,SANDOWN PLACE,4.941
+sandown_place,Sandown Place,10.0,31508.867,38578.262,10.678,10.678,10.678,,,SANDOWN PLACE,4.982
+sandown_place,Sandown Place,12.0,31506.933,38578.051,11.679,10.398,10.398,,,SANDOWN PLACE,3.384
+sandown_place,Sandown Place,14.0,31504.936,38577.937,10.947,10.118,10.118,-11.052,2.0,SANDOWN PLACE,1.685
+sandown_place,Sandown Place,16.0,31502.94,38577.823,9.406,9.838,9.838,,,SANDOWN PLACE,0.015
+sandown_place,Sandown Place,18.0,31500.943,38577.708,13.018,9.558,9.794,,,SANDOWN PLACE,1.714
+sandown_place,Sandown Place,20.0,31498.946,38577.594,9.709,9.709,9.794,,,SANDOWN PLACE,3.414
+sandown_place,Sandown Place,22.0,31496.949,38577.48,9.794,9.794,9.751,0.0,1.0,SANDOWN PLACE,5.113
+sandown_place,Sandown Place,22.717,31496.234,38577.439,9.796,9.796,9.794,0.0,1.0,SANDOWN PLACE,5.722

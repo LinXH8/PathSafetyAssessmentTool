@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayflower_road,1,Mayflower Road_Cam4_20251231_083741_555_C.jpeg,,11.882,5.941,6.0,23.725,,
+mayflower_road,2,Mayflower Road_Cam4_20251231_083746_363_C.jpeg,,22.751,17.316,18.0,21.6,,
+mayflower_road,3,Mayflower Road_Cam4_20251231_083749_967_C.jpeg,,34.889,28.82,28.0,20.138,,
+mayflower_road,4,Mayflower Road_Cam4_20251231_083753_570_C.jpeg,,41.19,38.039,38.0,19.261,,
+mayflower_road,5,Mayflower Road_Cam4_20251231_083755_371_C.jpeg,,67.495,54.342,54.0,19.317,-1.979,1.0
+mayflower_road,6,Mayflower Road_Cam4_20251231_083803_790_C.jpeg,,79.781,73.638,74.0,18.725,,
+mayflower_road,7,Mayflower Road_Cam4_20251231_083807_992_C.jpeg,,90.572,85.177,86.0,18.292,-3.75,1.0
+mayflower_road,8,Mayflower Road_Cam4_20251231_083810_996_C.jpeg,,97.217,93.894,94.0,18.025,-4.271,1.0
+mayflower_road,9,Mayflower Road_Cam4_20251231_083812_798_C.jpeg,,108.363,102.79,102.0,17.658,-4.271,1.0
+mayflower_road,10,Mayflower Road_Cam4_20251231_083815_806_C.jpeg,,117.475,112.919,112.0,17.167,-3.958,1.0
+mayflower_road,11,Mayflower Road_Cam4_20251231_083818_208_C.jpeg,,148.08,132.777,132.0,16.908,0.0,1.0
+mayflower_road,12,Mayflower Road_Cam4_20251231_083827_218_C.jpeg,,158.616,153.348,154.0,16.542,-4.688,1.0
+mayflower_road,13,Mayflower Road_Cam4_20251231_083829_623_C.jpeg,,167.52,163.068,164.0,15.867,-4.062,1.0
+mayflower_road,14,Mayflower Road_Cam4_20251231_083831_426_C.jpeg,,178.074,172.797,172.0,15.3,-10.208,2.0
+mayflower_road,15,Mayflower Road_Cam4_20251231_083833_829_C.jpeg,,200.059,189.067,190.0,14.5,,
+mayflower_road,16,Mayflower Road_Cam4_20251231_083840_437_C.jpeg,,228.184,214.122,214.0,15.949,,
+mayflower_road,17,Mayflower Road_Cam4_20251231_083854_857_C.jpeg,,240.005,234.095,234.0,16.372,,
+mayflower_road,18,Mayflower Road_Cam4_20251231_083900_264_C.jpeg,,251.503,245.754,246.0,16.599,,
+mayflower_road,19,Mayflower Road_Cam4_20251231_083905_033_C.jpeg,,273.861,262.682,262.0,18.211,,
+mayflower_road,20,Mayflower Road_Cam4_20251231_083915_247_C.jpeg,,284.975,279.418,280.0,18.587,,
+mayflower_road,21,Mayflower Road_Cam4_20251231_083923_057_C.jpeg,,344.346,314.661,314.0,16.308,-5.781,1.0
+mayflower_road,22,Mayflower Road_Cam4_20251231_083946_485_C.jpeg,,546.375,445.361,446.0,19.879,,

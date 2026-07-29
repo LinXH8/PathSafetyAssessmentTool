@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dalhousie_lane,1,Dalhousie Lane_Cam4_20251208_104809_360_A.jpeg,,13.205,6.602,6.0,2.86,,
+dalhousie_lane,2,Dalhousie Lane_Cam4_20251208_104815_917_A.jpeg,,19.999,16.602,16.0,3.227,,
+dalhousie_lane,3,Dalhousie Lane_Cam4_20251208_104818_422_A.jpeg,,29.973,24.986,24.0,3.037,,

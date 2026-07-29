@@ -1,0 +1,54 @@
+{
+  "path_key": "jalan_kolam_ayer",
+  "display_name": "Jalan Kolam Ayer",
+  "source_project": "Jalan Kolam Ayer",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Jalan Kolam Ayer\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-25T18:24:35.586915+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 282.878,
+  "profile_point_count": 112,
+  "valid_elevation_count": 110,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 25,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 77,
+  "usable_gradient_completion_pct": 68.75,
+  "elevation_hit_coverage_pct": 98.21,
+  "step_jump_rejection_pct": 22.32,
+  "gradient_min_pct": -1.875,
+  "gradient_max_pct": 2.5,
+  "path_bounds_svy21": {
+    "min_x": 31954.79,
+    "min_y": 34394.237,
+    "max_x": 32086.989,
+    "max_y": 34473.25
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN KOLAM AYER",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 143,
+    "offroad_point_count": 31,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MACPHERSON ROAD",
+        "point_count": 29
+      },
+      {
+        "road_name": "BENDEMEER ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 282.878,
+    "trimmed_offroad_points": 31
+  }
+}

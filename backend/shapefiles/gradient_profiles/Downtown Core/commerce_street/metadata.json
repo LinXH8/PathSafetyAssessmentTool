@@ -1,0 +1,66 @@
+{
+  "path_key": "commerce_street",
+  "display_name": "Commerce Street",
+  "source_project": "Commerce Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Commerce Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T08:13:57.966674+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2327.974,
+  "profile_point_count": 528,
+  "valid_elevation_count": 527,
+  "rejected_outlier_count": 15,
+  "rejected_step_jump_count": 223,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 3,
+  "valid_gradient_count": 209,
+  "usable_gradient_completion_pct": 39.58,
+  "elevation_hit_coverage_pct": 99.81,
+  "step_jump_rejection_pct": 42.23,
+  "gradient_min_pct": -12.437,
+  "gradient_max_pct": 7.926,
+  "path_bounds_svy21": {
+    "min_x": 29994.985,
+    "min_y": 28746.456,
+    "max_x": 30484.527,
+    "max_y": 29111.214
+  },
+  "road_boundary": {
+    "target_road_name": "COMMERCE STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1165,
+    "offroad_point_count": 637,
+    "offroad_top_road_names": [
+      {
+        "road_name": "STRAITS VIEW",
+        "point_count": 241
+      },
+      {
+        "road_name": "MARINA WAY",
+        "point_count": 164
+      },
+      {
+        "road_name": "MARINA VIEW",
+        "point_count": 82
+      },
+      {
+        "road_name": "UNION LANE",
+        "point_count": 78
+      },
+      {
+        "road_name": "PARK STREET",
+        "point_count": 72
+      }
+    ],
+    "offroad_chainage_min_m": 194.0,
+    "offroad_chainage_max_m": 2264.0,
+    "trimmed_offroad_points": 637
+  }
+}

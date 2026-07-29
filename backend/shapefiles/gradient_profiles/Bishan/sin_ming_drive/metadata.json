@@ -1,0 +1,54 @@
+{
+  "path_key": "sin_ming_drive",
+  "display_name": "Sin Ming Drive",
+  "source_project": "Sin Ming Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Sin Ming Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T01:36:40.712786+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3072.518,
+  "profile_point_count": 1013,
+  "valid_elevation_count": 1011,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 487,
+  "repaired_gradient_point_count": 29,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 366,
+  "usable_gradient_completion_pct": 36.13,
+  "elevation_hit_coverage_pct": 99.8,
+  "step_jump_rejection_pct": 48.08,
+  "gradient_min_pct": -12.019,
+  "gradient_max_pct": 11.835,
+  "path_bounds_svy21": {
+    "min_x": 28266.135,
+    "min_y": 37523.248,
+    "max_x": 28730.599,
+    "max_y": 38214.295
+  },
+  "road_boundary": {
+    "target_road_name": "SIN MING DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1538,
+    "offroad_point_count": 525,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SIN MING ROAD",
+        "point_count": 469
+      },
+      {
+        "road_name": "SIN MING LANE",
+        "point_count": 56
+      }
+    ],
+    "offroad_chainage_min_m": 360.0,
+    "offroad_chainage_max_m": 1746.0,
+    "trimmed_offroad_points": 525
+  }
+}

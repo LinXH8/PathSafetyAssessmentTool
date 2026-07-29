@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+silat_avenue,1,Silat Avenue_Cam4_20251227_080147_873_C.jpeg,,11.772,5.886,,,,
+silat_avenue,2,Silat Avenue_Cam4_20251227_080151_476_C.jpeg,,21.72,16.746,16.0,5.49,-7.187,1.0
+silat_avenue,3,Silat Avenue_Cam4_20251227_080154_478_C.jpeg,,32.897,27.308,28.0,4.953,0.313,1.0
+silat_avenue,4,Silat Avenue_Cam4_20251227_080158_682_C.jpeg,,43.567,38.232,38.0,4.953,-2.188,1.0
+silat_avenue,5,Silat Avenue_Cam4_20251227_080202_286_C.jpeg,,50.828,47.197,48.0,4.753,,
+silat_avenue,6,Silat Avenue_Cam4_20251227_080204_689_C.jpeg,,249.879,150.353,,,,
+silat_avenue,7,Silat Avenue_Cam4_20260109_111755_645_A.jpeg,,276.287,263.083,,,,
+silat_avenue,8,Silat Avenue_Cam4_20260109_111805_863_A.jpeg,,286.284,281.285,,,,
+silat_avenue,9,Silat Avenue_Cam4_20260109_111809_468_A.jpeg,,298.432,292.358,,,,
+silat_avenue,10,Silat Avenue_Cam4_20260109_111814_274_A.jpeg,,320.244,309.338,,,,

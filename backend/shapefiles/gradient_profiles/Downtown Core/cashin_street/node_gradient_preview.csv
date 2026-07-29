@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cashin_street,1,Cashin Street_Cam4_20251211_094737_271_A.jpeg,,12.658,6.329,6.0,4.205,,
+cashin_street,2,Cashin Street_Cam4_20251211_094742_791_A.jpeg,,24.883,18.77,18.0,4.853,,
+cashin_street,3,Cashin Street_Cam4_20251211_094748_330_A.jpeg,,90.372,57.627,58.0,9.048,,
+cashin_street,4,Cashin Street_Cam4_20260204_102512_649_C.jpeg,,149.793,120.082,120.0,7.278,,

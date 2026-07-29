@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_garden_drive,1,Serangoon Garden Drive_Cam4_20260202_093017_007_B.jpeg,,11.332,5.666,6.0,15.349,,
+serangoon_garden_drive,2,Serangoon Garden Drive_Cam4_20260202_093020_009_B.jpeg,,21.485,16.408,16.0,13.956,,
+serangoon_garden_drive,3,Serangoon Garden Drive_Cam4_20260202_093023_013_B.jpeg,,43.976,32.73,32.0,12.2,-0.4,1.0
+serangoon_garden_drive,4,Serangoon Garden Drive_Cam4_20260202_093032_621_B.jpeg,,53.654,48.815,48.0,12.227,-0.275,1.0
+serangoon_garden_drive,5,Serangoon Garden Drive_Cam4_20260202_093036_236_B.jpeg,,104.976,79.315,80.0,14.603,,
+serangoon_garden_drive,6,Serangoon Garden Drive_Cam4_20260202_093054_858_B.jpeg,,115.506,110.241,,,,

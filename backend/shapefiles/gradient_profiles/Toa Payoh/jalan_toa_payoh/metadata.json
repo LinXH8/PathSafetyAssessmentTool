@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_toa_payoh",
+  "display_name": "Jalan Toa Payoh",
+  "source_project": "Jalan Toa Payoh",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Jalan Toa Payoh\\geo_data.gpkg",
+  "lidar_bundle": "jalan_toa_payoh",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\jalan_toa_payoh",
+  "generated_at_utc": "2026-07-06T03:42:24.890955+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3211.724,
+  "profile_point_count": 1606,
+  "valid_elevation_count": 931,
+  "rejected_outlier_count": 117,
+  "rejected_step_jump_count": 623,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 504,
+  "usable_gradient_completion_pct": 31.38,
+  "elevation_hit_coverage_pct": 57.97,
+  "step_jump_rejection_pct": 38.79,
+  "gradient_min_pct": -11.406,
+  "gradient_max_pct": 11.719,
+  "path_bounds_svy21": {
+    "min_x": 28793.179,
+    "min_y": 34491.043,
+    "max_x": 31921.584,
+    "max_y": 34749.989
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TOA PAYOH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1607,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN KOLAM AYER",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 3212.0,
+    "offroad_chainage_max_m": 3212.0,
+    "trimmed_offroad_points": 1
+  }
+}

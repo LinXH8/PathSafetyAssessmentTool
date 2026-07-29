@@ -1,0 +1,62 @@
+{
+  "path_key": "edgedale_plains",
+  "display_name": "Edgedale Plains",
+  "source_project": "Edgedale Plains",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Edgedale Plains\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T05:53:54.774055+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3872.609,
+  "profile_point_count": 1614,
+  "valid_elevation_count": 1562,
+  "rejected_outlier_count": 246,
+  "rejected_step_jump_count": 851,
+  "repaired_gradient_point_count": 21,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 525,
+  "usable_gradient_completion_pct": 32.53,
+  "elevation_hit_coverage_pct": 96.78,
+  "step_jump_rejection_pct": 52.73,
+  "gradient_min_pct": -13.94,
+  "gradient_max_pct": 21.016,
+  "path_bounds_svy21": {
+    "min_x": 36455.308,
+    "min_y": 41664.298,
+    "max_x": 37322.381,
+    "max_y": 42851.613
+  },
+  "road_boundary": {
+    "target_road_name": "EDGEDALE PLAINS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1938,
+    "offroad_point_count": 324,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL CENTRAL",
+        "point_count": 225
+      },
+      {
+        "road_name": "PUNGGOL DRIVE",
+        "point_count": 37
+      },
+      {
+        "road_name": "PUNGGOL FIELD",
+        "point_count": 35
+      },
+      {
+        "road_name": "PUNGGOL NORTH AVENUE",
+        "point_count": 27
+      }
+    ],
+    "offroad_chainage_min_m": 348.0,
+    "offroad_chainage_max_m": 3564.0,
+    "trimmed_offroad_points": 324
+  }
+}

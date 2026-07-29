@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marina_south_avenue,1,Cam4_20251230_083800_095_A.jpeg,,11.302,5.651,6.0,,,
+marina_south_avenue,2,Cam4_20251230_083804_301_A.jpeg,,21.428,16.365,16.0,,,
+marina_south_avenue,3,Cam4_20251230_083807_913_A.jpeg,,34.552,27.99,28.0,,,
+marina_south_avenue,4,Cam4_20251230_083812_718_A.jpeg,,57.713,46.133,46.0,,,
+marina_south_avenue,5,Cam4_20251230_083820_529_A.jpeg,,67.295,62.504,62.0,,,
+marina_south_avenue,6,Cam4_20251230_083823_510_A.jpeg,,77.963,72.629,72.0,,,
+marina_south_avenue,7,Cam4_20251230_083827_114_A.jpeg,,86.362,82.162,82.0,,,
+marina_south_avenue,8,Cam4_20251230_083830_118_A.jpeg,,100.456,93.409,94.0,,,
+marina_south_avenue,9,Cam4_20251230_083834_924_A.jpeg,,108.093,104.274,104.0,,,
+marina_south_avenue,10,Cam4_20251230_083837_314_A.jpeg,,139.681,123.887,124.0,,,
+marina_south_avenue,11,Cam4_20251230_083846_927_A.jpeg,,149.289,144.485,144.0,,,
+marina_south_avenue,12,Cam4_20251230_083849_932_A.jpeg,,157.303,153.296,154.0,,,
+marina_south_avenue,13,Cam4_20251230_083852_334_A.jpeg,,166.579,161.941,162.0,,,
+marina_south_avenue,14,Cam4_20251230_083855_337_A.jpeg,,534.665,350.622,350.0,4.634,0.0,1.0
+marina_south_avenue,15,Cam4_20251230_084126_547_A.jpeg,,598.095,566.38,566.0,5.356,2.963,1.0
+marina_south_avenue,16,Cam4_20251230_093030_642_A.jpeg,,604.92,601.508,602.0,5.817,3.473,1.0
+marina_south_avenue,17,Cam4_20251230_093032_444_A.jpeg,,636.39,620.655,620.0,7.155,7.572,1.0
+marina_south_avenue,18,Cam4_20251230_093040_823_A.jpeg,,647.369,641.88,642.0,8.82,7.259,1.0
+marina_south_avenue,19,Cam4_20251230_093043_830_A.jpeg,,654.017,650.693,650.0,9.098,,
+marina_south_avenue,20,Cam4_20251230_093045_631_A.jpeg,,665.178,659.597,660.0,7.81,,
+marina_south_avenue,21,Cam4_20251230_093048_633_A.jpeg,,675.602,670.39,670.0,5.937,,
+marina_south_avenue,22,Cam4_20251230_093051_639_A.jpeg,,686.768,681.185,682.0,5.341,,
+marina_south_avenue,23,Cam4_20251230_093055_241_A.jpeg,,1393.476,1040.122,1040.0,,,
+marina_south_avenue,24,Cam4_20251230_093550_187_A.jpeg,,1405.154,1399.315,1400.0,8.753,,
+marina_south_avenue,25,Cam4_20251230_093553_792_A.jpeg,,2063.226,1734.19,,,,
+marina_south_avenue,26,Cam4_20260108_080323_103_B.jpeg,,2085.824,2074.525,2074.0,3.879,-2.5,1.0

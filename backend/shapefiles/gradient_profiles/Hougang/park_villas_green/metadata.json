@@ -1,0 +1,42 @@
+{
+  "path_key": "park_villas_green",
+  "display_name": "Park Villas Green",
+  "source_project": "Park Villas Green",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Park Villas Green\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T12:39:34.922314+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 215.497,
+  "profile_point_count": 109,
+  "valid_elevation_count": 109,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 54,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 36,
+  "usable_gradient_completion_pct": 33.03,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 49.54,
+  "gradient_min_pct": -3.513,
+  "gradient_max_pct": 7.066,
+  "path_bounds_svy21": {
+    "min_x": 33126.075,
+    "min_y": 38815.073,
+    "max_x": 33211.671,
+    "max_y": 38957.202
+  },
+  "road_boundary": {
+    "target_road_name": "PARK VILLAS GREEN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 109,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

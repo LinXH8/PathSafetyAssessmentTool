@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_grove_avenue,1,Holland Grove Avenue_Cam4_20251219_080634_749_B.jpeg,,12.058,6.029,6.0,13.415,,
+holland_grove_avenue,2,Holland Grove Avenue_Cam4_20251219_080638_354_B.jpeg,,23.018,17.538,18.0,13.022,,
+holland_grove_avenue,3,Holland Grove Avenue_Cam4_20251219_080641_958_B.jpeg,,46.047,34.532,34.0,13.084,,
+holland_grove_avenue,4,Holland Grove Avenue_Cam4_20251219_080650_367_B.jpeg,,58.663,52.355,52.0,10.295,,
+holland_grove_avenue,5,Holland Grove Avenue_Cam4_20251219_080654_574_B.jpeg,,67.485,63.074,64.0,9.873,,
+holland_grove_avenue,6,Holland Grove Avenue_Cam4_20251219_080657_576_B.jpeg,,80.468,73.977,74.0,9.465,,
+holland_grove_avenue,7,Holland Grove Avenue_Cam4_20251219_080701_780_B.jpeg,,85.793,83.13,84.0,8.997,,
+holland_grove_avenue,8,Holland Grove Avenue_Cam4_20251219_080703_582_B.jpeg,,97.072,91.433,92.0,8.993,1.25,1.0
+holland_grove_avenue,9,Holland Grove Avenue_Cam4_20251219_080723_750_B.jpeg,,108.089,102.581,102.0,10.492,,
+holland_grove_avenue,10,Holland Grove Avenue_Cam4_20251219_080727_353_B.jpeg,,131.266,119.678,120.0,14.375,,
+holland_grove_avenue,11,Holland Grove Avenue_Cam4_20251219_080735_766_B.jpeg,,142.609,136.938,136.0,16.322,,

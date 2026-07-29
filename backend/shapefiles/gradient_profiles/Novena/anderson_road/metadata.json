@@ -1,0 +1,58 @@
+{
+  "path_key": "anderson_road",
+  "display_name": "Anderson Road",
+  "source_project": "Anderson Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Anderson Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-06T22:08:49.132645+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2169.64,
+  "profile_point_count": 764,
+  "valid_elevation_count": 486,
+  "rejected_outlier_count": 106,
+  "rejected_step_jump_count": 429,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 5,
+  "valid_gradient_count": 153,
+  "usable_gradient_completion_pct": 20.03,
+  "elevation_hit_coverage_pct": 63.61,
+  "step_jump_rejection_pct": 56.15,
+  "gradient_min_pct": -11.667,
+  "gradient_max_pct": 28.1,
+  "path_bounds_svy21": {
+    "min_x": 27279.02,
+    "min_y": 32373.07,
+    "max_x": 27748.404,
+    "max_y": 32796.525
+  },
+  "road_boundary": {
+    "target_road_name": "ANDERSON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1086,
+    "offroad_point_count": 322,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DRAYCOTT PARK",
+        "point_count": 152
+      },
+      {
+        "road_name": "ARDMORE PARK",
+        "point_count": 112
+      },
+      {
+        "road_name": "STEVENS ROAD",
+        "point_count": 58
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2170.0,
+    "trimmed_offroad_points": 322
+  }
+}

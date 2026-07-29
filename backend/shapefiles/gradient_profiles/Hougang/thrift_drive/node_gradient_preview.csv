@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thrift_drive,1,Thrift Drive_Cam4_20260112_094308_649_C.jpeg,,10.208,5.104,6.0,,,
+thrift_drive,2,Thrift Drive_Cam4_20260112_094312_853_C.jpeg,,20.277,15.242,16.0,,,
+thrift_drive,3,Thrift Drive_Cam4_20260112_094321_263_C.jpeg,,30.561,25.419,26.0,,,
+thrift_drive,4,Thrift Drive_Cam4_20260112_094335_681_C.jpeg,,56.153,43.357,,,,
+thrift_drive,5,Thrift Drive_Cam4_20260112_094527_094_C.jpeg,,85.109,70.631,70.0,,,
+thrift_drive,6,Thrift Drive_Cam4_20260112_094538_510_C.jpeg,,91.68,88.395,88.0,,,
+thrift_drive,7,Thrift Drive_Cam4_20260112_094540_913_C.jpeg,,101.485,96.582,96.0,,,
+thrift_drive,8,Thrift Drive_Cam4_20260112_094544_517_C.jpeg,,110.72,106.102,106.0,,,
+thrift_drive,9,Thrift Drive_Cam4_20260112_094548_120_C.jpeg,,121.127,115.924,116.0,,,
+thrift_drive,10,Thrift Drive_Cam4_20260112_094551_724_C.jpeg,,149.677,135.402,136.0,,,
+thrift_drive,11,Thrift Drive_Cam4_20260112_094627_184_C.jpeg,,155.956,152.817,152.0,,,
+thrift_drive,12,Thrift Drive_Cam4_20260112_094628_986_C.jpeg,,166.51,161.233,162.0,,,
+thrift_drive,13,Thrift Drive_Cam4_20260112_094631_993_C.jpeg,,180.446,173.478,174.0,,,
+thrift_drive,14,Thrift Drive_Cam4_20260112_094636_197_C.jpeg,,185.977,183.212,184.0,,,
+thrift_drive,15,Thrift Drive_Cam4_20260112_094638_000_C.jpeg,,279.32,232.648,232.0,13.181,0.0,1.0
+thrift_drive,16,Thrift Drive_Cam4_20260112_094822_331_C.jpeg,,284.452,281.886,282.0,7.257,,
+thrift_drive,17,Thrift Drive_Cam4_20260112_094824_133_C.jpeg,,300.592,292.522,292.0,9.33,,
+thrift_drive,18,Thrift Drive_Cam4_20260112_094903_082_C.jpeg,,326.122,313.357,314.0,16.27,-8.623,1.0
+thrift_drive,19,Thrift Drive_Cam4_20260112_094914_855_C.jpeg,,340.166,333.144,334.0,13.971,,
+thrift_drive,20,Thrift Drive_Cam4_20260112_094921_465_C.jpeg,,345.309,342.738,342.0,13.051,-5.749,1.0
+thrift_drive,21,Thrift Drive_Cam4_20260112_094923_871_C.jpeg,,377.776,361.543,362.0,13.051,0.0,1.0
+thrift_drive,22,Thrift Drive_Cam4_20260112_094937_685_C.jpeg,,405.297,391.536,392.0,13.051,0.0,1.0
+thrift_drive,23,Thrift Drive_Cam4_20260112_094949_103_C.jpeg,,412.07,408.684,408.0,,,
+thrift_drive,24,Thrift Drive_Cam4_20260112_094952_106_C.jpeg,,432.845,422.458,422.0,,,
+thrift_drive,25,Thrift Drive_Cam4_20260112_095252_732_C.jpeg,,442.013,437.429,438.0,,,

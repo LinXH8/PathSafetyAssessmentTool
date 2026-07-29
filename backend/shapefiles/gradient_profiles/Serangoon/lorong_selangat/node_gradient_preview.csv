@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_selangat,1,Lorong Selangat_Cam4_20260112_084209_356_B.jpeg,,11.436,5.718,6.0,9.21,,
+lorong_selangat,2,Lorong Selangat_Cam4_20260112_084214_761_B.jpeg,,22.208,16.822,16.0,8.705,,
+lorong_selangat,3,Lorong Selangat_Cam4_20260112_084218_967_B.jpeg,,33.359,27.784,28.0,8.692,,
+lorong_selangat,4,Lorong Selangat_Cam4_20260112_084223_171_B.jpeg,,44.446,38.902,38.0,7.33,,
+lorong_selangat,5,Lorong Selangat_Cam4_20260112_084227_977_B.jpeg,,66.581,55.513,56.0,7.204,-0.125,1.0
+lorong_selangat,6,Lorong Selangat_Cam4_20260112_084236_986_B.jpeg,,79.187,72.884,72.0,7.54,-0.931,1.0
+lorong_selangat,7,Lorong Selangat_Cam4_20260112_084243_595_B.jpeg,,86.389,82.788,82.0,7.437,0.062,1.0
+lorong_selangat,8,Lorong Selangat_Cam4_20260112_084246_603_B.jpeg,,96.764,91.577,92.0,7.507,1.125,1.0
+lorong_selangat,9,Lorong Selangat_Cam4_20260112_084250_808_B.jpeg,,106.926,101.845,102.0,7.565,,
+lorong_selangat,10,Lorong Selangat_Cam4_20260112_084254_412_B.jpeg,,133.154,120.04,120.0,7.685,0.825,1.0
+lorong_selangat,11,Lorong Selangat_Cam4_20260112_084302_221_B.jpeg,,146.657,139.905,140.0,7.826,0.787,1.0
+lorong_selangat,12,Lorong Selangat_Cam4_20260112_084306_424_B.jpeg,,171.427,159.042,160.0,7.862,,
+lorong_selangat,13,Lorong Selangat_Cam4_20260112_084314_834_B.jpeg,,179.439,175.433,176.0,7.923,1.472,1.0
+lorong_selangat,14,Lorong Selangat_Cam4_20260112_084318_440_B.jpeg,,195.61,187.524,188.0,7.975,,
+lorong_selangat,15,Lorong Selangat_Cam4_20260112_084337_062_B.jpeg,,317.71,256.66,256.0,12.483,,
+lorong_selangat,16,Lorong Selangat_Cam4_20260112_084431_736_B.jpeg,,345.274,331.492,332.0,7.19,2.688,1.0
+lorong_selangat,17,Lorong Selangat_Cam4_20260112_084445_550_B.jpeg,,356.004,350.639,350.0,6.952,-2.381,1.0

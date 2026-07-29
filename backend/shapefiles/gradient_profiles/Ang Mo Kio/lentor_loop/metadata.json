@@ -1,0 +1,66 @@
+{
+  "path_key": "lentor_loop",
+  "display_name": "Lentor Loop",
+  "source_project": "Lentor Loop",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Loop\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:16:03.682985+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3000.13,
+  "profile_point_count": 1058,
+  "valid_elevation_count": 1058,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 703,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 146,
+  "usable_gradient_completion_pct": 13.8,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.45,
+  "gradient_min_pct": -11.463,
+  "gradient_max_pct": 12.662,
+  "path_bounds_svy21": {
+    "min_x": 28099.262,
+    "min_y": 40842.341,
+    "max_x": 28633.792,
+    "max_y": 41353.744
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR LOOP",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1502,
+    "offroad_point_count": 444,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LENTOR TERRACE",
+        "point_count": 135
+      },
+      {
+        "road_name": "LENTOR ROAD",
+        "point_count": 118
+      },
+      {
+        "road_name": "FUDU WALK",
+        "point_count": 82
+      },
+      {
+        "road_name": "LENTOR VALE",
+        "point_count": 18
+      },
+      {
+        "road_name": "LENTOR WALK",
+        "point_count": 17
+      }
+    ],
+    "offroad_chainage_min_m": 46.0,
+    "offroad_chainage_max_m": 2730.0,
+    "trimmed_offroad_points": 444
+  }
+}

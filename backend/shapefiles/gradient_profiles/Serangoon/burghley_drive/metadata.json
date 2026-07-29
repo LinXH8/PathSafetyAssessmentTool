@@ -1,0 +1,66 @@
+{
+  "path_key": "burghley_drive",
+  "display_name": "Burghley Drive",
+  "source_project": "Burghley Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Burghley Drive\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T01:57:30.233549+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3122.275,
+  "profile_point_count": 1363,
+  "valid_elevation_count": 1358,
+  "rejected_outlier_count": 161,
+  "rejected_step_jump_count": 624,
+  "repaired_gradient_point_count": 16,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 578,
+  "usable_gradient_completion_pct": 42.41,
+  "elevation_hit_coverage_pct": 99.63,
+  "step_jump_rejection_pct": 45.78,
+  "gradient_min_pct": -11.401,
+  "gradient_max_pct": 10.338,
+  "path_bounds_svy21": {
+    "min_x": 30918.314,
+    "min_y": 37539.278,
+    "max_x": 31624.331,
+    "max_y": 38116.965
+  },
+  "road_boundary": {
+    "target_road_name": "BURGHLEY DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1563,
+    "offroad_point_count": 200,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CRICHTON CLOSE",
+        "point_count": 46
+      },
+      {
+        "road_name": "LI HWAN WALK",
+        "point_count": 36
+      },
+      {
+        "road_name": "CORFE PLACE",
+        "point_count": 26
+      },
+      {
+        "road_name": "LI HWAN TERRACE",
+        "point_count": 25
+      },
+      {
+        "road_name": "BLANDFORD DRIVE",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3092.0,
+    "trimmed_offroad_points": 200
+  }
+}

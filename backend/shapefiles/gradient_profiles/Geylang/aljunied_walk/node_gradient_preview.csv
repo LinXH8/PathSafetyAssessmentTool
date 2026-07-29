@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+aljunied_walk,1,Cam4_20260113_082517_840_B.jpeg,,11.432,5.716,,,,
+aljunied_walk,2,Cam4_20260113_082519_041_B.jpeg,,20.259,15.846,,,,
+aljunied_walk,3,Cam4_20260113_082520_242_B.jpeg,,30.768,25.514,,,,
+aljunied_walk,4,Cam4_20260113_082522_643_B.jpeg,,66.803,48.786,48.0,2.064,0.156,1.0
+aljunied_walk,5,Cam4_20260113_082542_476_B.jpeg,,76.657,71.73,,,,
+aljunied_walk,6,Cam4_20260113_082546_081_B.jpeg,,88.416,82.537,,,,
+aljunied_walk,7,Cam4_20260113_082549_686_B.jpeg,,98.089,93.253,,,,

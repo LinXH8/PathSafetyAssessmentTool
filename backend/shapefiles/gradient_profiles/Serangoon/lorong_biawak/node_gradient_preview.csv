@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_biawak,1,Lorong Biawak_Cam4_20260112_082201_063_B.jpeg,,12.136,6.068,6.0,16.41,4.897,1.0
+lorong_biawak,2,Lorong Biawak_Cam4_20260112_082218_490_B.jpeg,,19.94,16.038,16.0,17.049,7.638,1.0
+lorong_biawak,3,Lorong Biawak_Cam4_20260112_082223_296_B.jpeg,,46.275,33.107,34.0,18.175,4.062,1.0
+lorong_biawak,4,Lorong Biawak_Cam4_20260112_082235_311_B.jpeg,,56.847,51.561,52.0,18.772,2.787,1.0
+lorong_biawak,5,Lorong Biawak_Cam4_20260112_082239_516_B.jpeg,,64.849,60.848,60.0,18.951,1.512,1.0
+lorong_biawak,6,Lorong Biawak_Cam4_20260112_082242_521_B.jpeg,,79.56,72.205,72.0,19.021,0.088,1.0
+lorong_biawak,7,Lorong Biawak_Cam4_20260112_082247_926_B.jpeg,,85.531,82.545,82.0,19.068,0.494,1.0
+lorong_biawak,8,Lorong Biawak_Cam4_20260112_082250_329_B.jpeg,,115.312,100.421,100.0,19.015,-0.75,1.0
+lorong_biawak,9,Lorong Biawak_Cam4_20260112_082300_554_B.jpeg,,126.061,120.686,120.0,19.048,0.325,1.0
+lorong_biawak,10,Lorong Biawak_Cam4_20260112_082304_159_B.jpeg,,134.419,130.24,130.0,19.05,0.0,1.0
+lorong_biawak,11,Lorong Biawak_Cam4_20260112_082307_161_B.jpeg,,147.291,140.855,140.0,19.074,0.038,1.0
+lorong_biawak,12,Lorong Biawak_Cam4_20260112_082312_566_B.jpeg,,154.495,150.893,150.0,19.077,0.0,1.0
+lorong_biawak,13,Lorong Biawak_Cam4_20260112_082315_569_B.jpeg,,158.911,156.703,156.0,19.073,-0.159,1.0

@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+li_po_avenue,1,Li Po Avenue_Cam4_20260105_104740_472_B.jpeg,,11.498,5.749,6.0,18.816,,
+li_po_avenue,2,Li Po Avenue_Cam4_20260105_104744_078_B.jpeg,,24.205,17.851,18.0,18.874,-4.583,1.0
+li_po_avenue,3,Li Po Avenue_Cam4_20260105_104747_689_B.jpeg,,31.186,27.696,28.0,18.249,-1.042,1.0
+li_po_avenue,4,Li Po Avenue_Cam4_20260105_104749_588_B.jpeg,,40.128,35.657,36.0,18.216,0.521,1.0
+li_po_avenue,5,Li Po Avenue_Cam4_20260105_104752_037_B.jpeg,,50.846,45.487,46.0,18.608,,
+li_po_avenue,6,Li Po Avenue_Cam4_20260105_104755_103_B.jpeg,,62.062,56.454,56.0,18.942,2.109,1.0
+li_po_avenue,7,Li Po Avenue_Cam4_20260105_104758_164_B.jpeg,,70.983,66.522,66.0,19.067,,
+li_po_avenue,8,Li Po Avenue_Cam4_20260105_104800_567_B.jpeg,,99.394,85.189,86.0,19.014,-1.14,1.0
+li_po_avenue,9,Li Po Avenue_Cam4_20260105_104809_016_B.jpeg,,110.139,104.767,104.0,19.188,,
+li_po_avenue,10,Li Po Avenue_Cam4_20260105_104813_219_B.jpeg,,116.935,113.537,114.0,20.382,,
+li_po_avenue,11,Li Po Avenue_Cam4_20260105_104815_707_B.jpeg,,126.502,121.718,122.0,20.746,,
+li_po_avenue,12,Li Po Avenue_Cam4_20260105_104818_810_B.jpeg,,137.577,132.039,132.0,20.613,,
+li_po_avenue,13,Li Po Avenue_Cam4_20260105_104822_517_B.jpeg,,148.143,142.86,142.0,21.024,,
+li_po_avenue,14,Li Po Avenue_Cam4_20260105_104826_223_B.jpeg,,156.17,152.157,152.0,21.003,,
+li_po_avenue,15,Li Po Avenue_Cam4_20260105_104829_341_B.jpeg,,165.097,160.634,160.0,21.157,,
+li_po_avenue,16,Li Po Avenue_Cam4_20260105_104834_376_B.jpeg,,173.614,169.356,170.0,20.771,,

@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chepstow_close,1,Chepstow Close_Cam4_20260203_090955_019_A.jpeg,,11.503,5.752,6.0,23.231,,
+chepstow_close,2,Chepstow Close_Cam4_20260203_090959_224_A.jpeg,,40.522,26.012,26.0,23.883,,
+chepstow_close,3,Chepstow Close_Cam4_20260203_091008_834_A.jpeg,,53.457,46.989,46.0,24.609,3.788,1.0
+chepstow_close,4,Chepstow Close_Cam4_20260203_091013_039_A.jpeg,,58.83,56.143,56.0,24.979,3.412,1.0
+chepstow_close,5,Chepstow Close_Cam4_20260203_091014_841_A.jpeg,,69.602,64.216,64.0,25.266,3.613,1.0
+chepstow_close,6,Chepstow Close_Cam4_20260203_091018_442_A.jpeg,,79.684,74.643,74.0,25.601,2.763,1.0
+chepstow_close,7,Chepstow Close_Cam4_20260203_091022_050_A.jpeg,,90.17,84.927,84.0,25.805,,
+chepstow_close,8,Chepstow Close_Cam4_20260203_091026_254_A.jpeg,,95.295,92.733,92.0,25.968,0.762,1.0

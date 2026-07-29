@@ -1,0 +1,66 @@
+{
+  "path_key": "bishan_street_22",
+  "display_name": "Bishan Street 22",
+  "source_project": "Bishan Street 22",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Bishan Street 22\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-02T08:17:59.147041+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4373.563,
+  "profile_point_count": 1290,
+  "valid_elevation_count": 1168,
+  "rejected_outlier_count": 97,
+  "rejected_step_jump_count": 750,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 289,
+  "usable_gradient_completion_pct": 22.4,
+  "elevation_hit_coverage_pct": 90.54,
+  "step_jump_rejection_pct": 58.14,
+  "gradient_min_pct": -10.436,
+  "gradient_max_pct": 13.359,
+  "path_bounds_svy21": {
+    "min_x": 28969.649,
+    "min_y": 37295.008,
+    "max_x": 29656.742,
+    "max_y": 38203.073
+  },
+  "road_boundary": {
+    "target_road_name": "BISHAN STREET 22",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2188,
+    "offroad_point_count": 898,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BISHAN STREET 24",
+        "point_count": 339
+      },
+      {
+        "road_name": "BISHAN STREET 23",
+        "point_count": 250
+      },
+      {
+        "road_name": "BISHAN STREET 25",
+        "point_count": 199
+      },
+      {
+        "road_name": "JALAN PEMIMPIN",
+        "point_count": 57
+      },
+      {
+        "road_name": "MARYMOUNT ROAD",
+        "point_count": 52
+      }
+    ],
+    "offroad_chainage_min_m": 166.0,
+    "offroad_chainage_max_m": 4374.0,
+    "trimmed_offroad_points": 898
+  }
+}

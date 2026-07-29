@@ -1,0 +1,66 @@
+{
+  "path_key": "market_street",
+  "display_name": "Market Street",
+  "source_project": "Market Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Market Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-17T02:12:35.889223+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 997.887,
+  "profile_point_count": 195,
+  "valid_elevation_count": 195,
+  "rejected_outlier_count": 39,
+  "rejected_step_jump_count": 148,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 15,
+  "usable_gradient_completion_pct": 7.69,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 75.9,
+  "gradient_min_pct": -3.927,
+  "gradient_max_pct": 9.21,
+  "path_bounds_svy21": {
+    "min_x": 29823.741,
+    "min_y": 29399.964,
+    "max_x": 29937.883,
+    "max_y": 29702.023
+  },
+  "road_boundary": {
+    "target_road_name": "MARKET STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 500,
+    "offroad_point_count": 305,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 213
+      },
+      {
+        "road_name": "CHURCH STREET",
+        "point_count": 43
+      },
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 26
+      },
+      {
+        "road_name": "MALACCA STREET",
+        "point_count": 12
+      },
+      {
+        "road_name": "PHILLIP STREET",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 998.0,
+    "trimmed_offroad_points": 305
+  }
+}

@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+saraca_walk,1,Saraca Walk_Cam4_20260105_082852_179_C.jpeg,,12.295,6.147,6.0,16.064,,
+saraca_walk,2,Saraca Walk_Cam4_20260105_082858_186_C.jpeg,,22.514,17.404,18.0,15.74,5.625,1.0
+saraca_walk,3,Saraca Walk_Cam4_20260105_082901_789_C.jpeg,,33.638,28.076,28.0,16.356,,
+saraca_walk,4,Saraca Walk_Cam4_20260105_082905_868_C.jpeg,,41.002,37.32,38.0,16.381,-5.83,1.0
+saraca_walk,5,Saraca Walk_Cam4_20260105_082908_872_C.jpeg,,67.848,54.425,54.0,15.877,-0.469,1.0
+saraca_walk,6,Saraca Walk_Cam4_20260105_082919_686_C.jpeg,,79.379,73.614,74.0,15.99,-1.406,1.0
+saraca_walk,7,Saraca Walk_Cam4_20260105_082924_500_C.jpeg,,88.178,83.778,84.0,15.756,-0.625,1.0
+saraca_walk,8,Saraca Walk_Cam4_20260105_082927_977_C.jpeg,,101.731,94.954,94.0,15.656,-1.25,1.0
+saraca_walk,9,Saraca Walk_Cam4_20260105_082932_782_C.jpeg,,107.886,104.809,104.0,15.706,1.875,1.0
+saraca_walk,10,Saraca Walk_Cam4_20260105_082935_185_C.jpeg,,135.721,121.803,122.0,16.206,,
+saraca_walk,11,Saraca Walk_Cam4_20260105_082946_599_C.jpeg,,146.358,141.04,142.0,16.666,1.224,1.0
+saraca_walk,12,Saraca Walk_Cam4_20260105_082950_804_C.jpeg,,158.097,152.228,152.0,16.407,,
+saraca_walk,13,Saraca Walk_Cam4_20260105_082955_609_C.jpeg,,169.502,163.8,164.0,16.224,,
+saraca_walk,14,Saraca Walk_Cam4_20260105_083001_019_C.jpeg,,199.518,184.51,184.0,16.485,,
+saraca_walk,15,Saraca Walk_Cam4_20260105_083926_564_C.jpeg,,210.523,205.02,,,,
+saraca_walk,16,Saraca Walk_Cam4_20260105_083931_369_C.jpeg,,236.042,223.282,224.0,16.538,,
+saraca_walk,17,Saraca Walk_Cam4_20260105_083944_587_C.jpeg,,247.603,241.823,242.0,16.926,4.427,1.0
+saraca_walk,18,Saraca Walk_Cam4_20260105_083950_592_C.jpeg,,258.612,253.107,254.0,17.257,,
+saraca_walk,19,Saraca Walk_Cam4_20260105_083955_997_C.jpeg,,325.388,292.0,292.0,15.706,-1.25,1.0
+saraca_walk,20,Saraca Walk_Cam4_20260105_084022_912_C.jpeg,,337.286,331.337,332.0,15.915,-4.062,1.0
+saraca_walk,21,Saraca Walk_Cam4_20260105_084027_722_C.jpeg,,348.204,342.745,342.0,15.886,,
+saraca_walk,22,Saraca Walk_Cam4_20260105_084031_327_C.jpeg,,353.808,351.006,352.0,16.533,,
+saraca_walk,23,Saraca Walk_Cam4_20260105_084033_129_C.jpeg,,382.396,368.102,368.0,15.573,-0.417,1.0

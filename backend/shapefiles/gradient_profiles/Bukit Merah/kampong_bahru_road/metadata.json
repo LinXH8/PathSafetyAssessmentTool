@@ -1,0 +1,66 @@
+{
+  "path_key": "kampong_bahru_road",
+  "display_name": "Kampong Bahru Road",
+  "source_project": "Kampong Bahru Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Kampong Bahru Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T04:23:12.400475+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8757.323,
+  "profile_point_count": 3086,
+  "valid_elevation_count": 2786,
+  "rejected_outlier_count": 367,
+  "rejected_step_jump_count": 1721,
+  "repaired_gradient_point_count": 35,
+  "removed_bad_gradient_point_count": 5,
+  "valid_gradient_count": 867,
+  "usable_gradient_completion_pct": 28.09,
+  "elevation_hit_coverage_pct": 90.28,
+  "step_jump_rejection_pct": 55.77,
+  "gradient_min_pct": -12.463,
+  "gradient_max_pct": 34.166,
+  "path_bounds_svy21": {
+    "min_x": 27078.926,
+    "min_y": 27715.606,
+    "max_x": 28393.034,
+    "max_y": 28853.088
+  },
+  "road_boundary": {
+    "target_road_name": "KAMPONG BAHRU ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4380,
+    "offroad_point_count": 1294,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KEPPEL ROAD",
+        "point_count": 424
+      },
+      {
+        "road_name": "AYER RAJAH EXPRESSWAY",
+        "point_count": 379
+      },
+      {
+        "road_name": "BLAIR ROAD",
+        "point_count": 143
+      },
+      {
+        "road_name": ".",
+        "point_count": 110
+      },
+      {
+        "road_name": "JALAN BUKIT MERAH",
+        "point_count": 75
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 8732.0,
+    "trimmed_offroad_points": 1294
+  }
+}

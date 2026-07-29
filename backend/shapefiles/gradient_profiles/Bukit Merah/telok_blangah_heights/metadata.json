@@ -1,0 +1,54 @@
+{
+  "path_key": "telok_blangah_heights",
+  "display_name": "Telok Blangah Heights",
+  "source_project": "Telok Blangah Heights",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Telok Blangah Heights\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T07:08:28.778825+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2392.385,
+  "profile_point_count": 884,
+  "valid_elevation_count": 95,
+  "rejected_outlier_count": 20,
+  "rejected_step_jump_count": 63,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 7.47,
+  "elevation_hit_coverage_pct": 10.75,
+  "step_jump_rejection_pct": 7.13,
+  "gradient_min_pct": -3.75,
+  "gradient_max_pct": 5.286,
+  "path_bounds_svy21": {
+    "min_x": 25020.645,
+    "min_y": 28625.384,
+    "max_x": 25911.205,
+    "max_y": 28974.683
+  },
+  "road_boundary": {
+    "target_road_name": "TELOK BLANGAH HEIGHTS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1198,
+    "offroad_point_count": 314,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TELOK BLANGAH STREET 32",
+        "point_count": 227
+      },
+      {
+        "road_name": "TELOK BLANGAH STREET 31",
+        "point_count": 87
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2392.385,
+    "trimmed_offroad_points": 314
+  }
+}

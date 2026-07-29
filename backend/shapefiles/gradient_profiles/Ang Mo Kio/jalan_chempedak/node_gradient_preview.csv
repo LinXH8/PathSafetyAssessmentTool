@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chempedak,1,Jalan Chempedak_Cam4_20260105_082813_840_A.jpeg,,9.411,4.706,4.0,21.344,,
+jalan_chempedak,2,Jalan Chempedak_Cam4_20260105_082825_252_A.jpeg,,21.051,15.231,16.0,23.667,,
+jalan_chempedak,3,Jalan Chempedak_Cam4_20260105_082829_458_A.jpeg,,30.45,25.751,26.0,26.095,,
+jalan_chempedak,4,Jalan Chempedak_Cam4_20260105_082832_461_A.jpeg,,41.633,36.042,36.0,26.08,,
+jalan_chempedak,5,Jalan Chempedak_Cam4_20260105_082836_065_A.jpeg,,53.197,47.415,48.0,24.98,,
+jalan_chempedak,6,Jalan Chempedak_Cam4_20260105_082841_470_A.jpeg,,62.771,57.984,58.0,25.511,,
+jalan_chempedak,7,Jalan Chempedak_Cam4_20260105_082846_278_A.jpeg,,87.341,75.056,76.0,26.77,8.021,1.0
+jalan_chempedak,8,Jalan Chempedak_Cam4_20260105_082855_288_A.jpeg,,96.294,91.818,92.0,26.294,,
+jalan_chempedak,9,Jalan Chempedak_Cam4_20260105_082858_891_A.jpeg,,108.944,102.619,102.0,25.931,2.06,1.0
+jalan_chempedak,10,Jalan Chempedak_Cam4_20260105_082904_299_A.jpeg,,132.056,120.5,120.0,25.663,,
+jalan_chempedak,11,Jalan Chempedak_Cam4_20260105_082915_108_A.jpeg,,143.074,137.565,138.0,25.571,,
+jalan_chempedak,12,Jalan Chempedak_Cam4_20260105_082919_312_A.jpeg,,153.113,148.093,148.0,26.942,,
+jalan_chempedak,13,Jalan Chempedak_Cam4_20260105_082922_916_A.jpeg,,164.029,158.571,158.0,26.89,-0.078,1.0
+jalan_chempedak,14,Jalan Chempedak_Cam4_20260105_082927_122_A.jpeg,,170.606,167.317,168.0,27.003,3.073,1.0
+jalan_chempedak,15,Jalan Chempedak_Cam4_20260105_082929_524_A.jpeg,,198.01,184.308,184.0,26.221,,
+jalan_chempedak,16,Jalan Chempedak_Cam4_20260105_082938_533_A.jpeg,,208.803,203.407,204.0,26.649,,
+jalan_chempedak,17,Jalan Chempedak_Cam4_20260105_082942_136_A.jpeg,,219.756,214.28,214.0,26.346,3.021,1.0
+jalan_chempedak,18,Jalan Chempedak_Cam4_20260105_082945_741_A.jpeg,,231.875,225.816,226.0,27.162,,
+jalan_chempedak,19,Jalan Chempedak_Cam4_20260105_082949_944_A.jpeg,,238.293,235.084,236.0,27.97,4.588,1.0

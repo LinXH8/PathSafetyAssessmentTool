@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_green,1,Holland Green_Cam4_20251219_095247_216_B.jpeg,,12.602,6.301,6.0,12.738,-7.24,1.0
+holland_green,2,Holland Green_Cam4_20251219_095250_822_B.jpeg,,23.663,18.132,18.0,11.888,-7.292,1.0
+holland_green,3,Holland Green_Cam4_20251219_095254_426_B.jpeg,,68.778,46.22,46.0,13.754,,
+holland_green,4,Holland Green_Cam4_20251219_095310_660_B.jpeg,,93.366,81.072,82.0,12.899,,
+holland_green,5,Holland Green_Cam4_20251219_095319_103_B.jpeg,,105.719,99.542,100.0,12.478,,
+holland_green,6,Holland Green_Cam4_20251219_095323_310_B.jpeg,,113.623,109.671,110.0,12.736,4.531,1.0
+holland_green,7,Holland Green_Cam4_20251219_095326_312_B.jpeg,,141.228,127.425,128.0,13.236,,
+holland_green,8,Holland Green_Cam4_20251219_095337_152_B.jpeg,,152.649,146.939,146.0,13.536,4.141,1.0
+holland_green,9,Holland Green_Cam4_20251219_095341_365_B.jpeg,,177.646,165.148,166.0,14.486,,
+holland_green,10,Holland Green_Cam4_20251219_095410_902_B.jpeg,,189.95,183.798,184.0,14.829,-0.028,1.0
+holland_green,11,Holland Green_Cam4_20251219_095416_309_B.jpeg,,196.183,193.066,194.0,14.827,0.22,1.0
+holland_green,12,Holland Green_Cam4_20251219_095418_712_B.jpeg,,224.814,210.499,210.0,14.826,-0.469,1.0
+holland_green,13,Holland Green_Cam4_20251219_095431_211_B.jpeg,,250.389,237.601,238.0,14.415,-7.093,1.0
+holland_green,14,Holland Green_Cam4_20251219_095439_619_B.jpeg,,264.182,257.285,258.0,13.915,,
+holland_green,15,Holland Green_Cam4_20251219_095454_642_B.jpeg,,325.391,294.786,294.0,15.988,,
+holland_green,16,Holland Green_Cam4_20251219_095519_873_B.jpeg,,337.126,331.258,332.0,15.117,,
+holland_green,17,Holland Green_Cam4_20251219_095524_719_B.jpeg,,375.304,356.215,356.0,13.886,0.156,1.0
+holland_green,18,Holland Green_Cam4_20251219_095534_934_B.jpeg,,434.749,405.026,406.0,12.918,,
+holland_green,19,Holland Green_Cam4_20251219_095548_781_B.jpeg,,447.67,441.209,442.0,13.28,,
+holland_green,20,Holland Green_Cam4_20251219_095552_390_B.jpeg,,484.522,466.096,466.0,12.175,,
+holland_green,21,Holland Green_Cam4_20251219_095606_262_B.jpeg,,511.909,498.216,498.0,11.867,0.25,1.0
+holland_green,22,Holland Green_Cam4_20251219_095617_679_B.jpeg,,552.475,532.192,532.0,14.611,,
+holland_green,23,Holland Green_Cam4_20251219_095639_976_B.jpeg,,588.609,570.542,,,,
+holland_green,24,Holland Green_Cam4_20260110_124519_508_C.jpeg,,655.451,622.03,622.0,11.466,,
+holland_green,25,Holland Green_Cam4_20260110_124538_735_C.jpeg,,681.542,668.496,,,,

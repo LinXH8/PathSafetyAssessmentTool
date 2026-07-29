@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+morley_road,1,Morley Road_Cam4_20251218_081101_833_B.jpeg,,11.41,5.705,6.0,20.75,-10.208,2.0
+morley_road,2,Morley Road_Cam4_20251218_081106_038_B.jpeg,,24.325,17.868,18.0,20.535,,
+morley_road,3,Morley Road_Cam4_20251218_081110_844_B.jpeg,,33.125,28.725,28.0,20.578,,

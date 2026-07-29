@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+haji_lane,1,Haji Lane_Cam4_20251208_075315_187_C.jpeg,,12.202,6.101,6.0,5.277,,
+haji_lane,2,Haji Lane_Cam4_20251208_075323_597_C.jpeg,,19.867,16.034,16.0,4.743,3.779,1.0
+haji_lane,3,Haji Lane_Cam4_20251208_075327_201_C.jpeg,,30.014,24.941,24.0,5.481,9.233,2.0
+haji_lane,4,Haji Lane_Cam4_20251208_075332_007_C.jpeg,,30.789,30.402,30.0,6.035,4.617,1.0
+haji_lane,5,Haji Lane_Cam4_20251208_075400_846_C.jpeg,,71.858,51.323,52.0,4.889,3.281,1.0
+haji_lane,6,Haji Lane_Cam4_20251208_075415_862_C.jpeg,,86.106,78.982,78.0,4.624,-3.125,1.0
+haji_lane,7,Haji Lane_Cam4_20251208_075420_666_C.jpeg,,117.264,101.685,102.0,4.573,-0.496,1.0
+haji_lane,8,Haji Lane_Cam4_20251208_075432_088_C.jpeg,,123.655,120.459,120.0,4.256,-1.489,1.0
+haji_lane,9,Haji Lane_Cam4_20251208_075434_490_C.jpeg,,133.339,128.497,128.0,4.46,,
+haji_lane,10,Haji Lane_Cam4_20251208_075438_094_C.jpeg,,143.289,138.314,138.0,6.019,,
+haji_lane,11,Haji Lane_Cam4_20251208_075441_699_C.jpeg,,156.968,150.129,150.0,7.982,,

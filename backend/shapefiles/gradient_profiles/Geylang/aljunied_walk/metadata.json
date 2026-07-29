@@ -1,0 +1,50 @@
+{
+  "path_key": "aljunied_walk",
+  "display_name": "Aljunied Walk",
+  "source_project": "Aljunied Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Aljunied Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-26T00:52:51.682897+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 98.089,
+  "profile_point_count": 14,
+  "valid_elevation_count": 14,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 2,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 14,
+  "usable_gradient_completion_pct": 100.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 14.29,
+  "gradient_min_pct": -6.875,
+  "gradient_max_pct": 4.375,
+  "path_bounds_svy21": {
+    "min_x": 33353.972,
+    "min_y": 33703.791,
+    "max_x": 33361.698,
+    "max_y": 33801.327
+  },
+  "road_boundary": {
+    "target_road_name": "ALJUNIED WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 51,
+    "offroad_point_count": 37,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ALJUNIED ROAD",
+        "point_count": 37
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 98.089,
+    "trimmed_offroad_points": 37
+  }
+}

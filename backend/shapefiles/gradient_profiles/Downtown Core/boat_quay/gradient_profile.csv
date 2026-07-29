@@ -1,0 +1,7 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+boat_quay,Boat Quay,1412.0,29594.12,30212.856,4.003,4.003,3.99,0.0,1.0,BOAT QUAY,2.269
+boat_quay,Boat Quay,1414.0,29592.978,30214.498,3.99,3.99,3.984,0.0,1.0,BOAT QUAY,0.969
+boat_quay,Boat Quay,1416.0,29591.837,30216.141,3.953,3.953,3.99,0.781,1.0,BOAT QUAY,0.331
+boat_quay,Boat Quay,1418.0,29592.517,30216.856,3.978,3.978,3.99,1.797,1.0,BOAT QUAY,1.196
+boat_quay,Boat Quay,1420.0,29594.517,30216.9,4.128,4.128,4.053,2.292,1.0,BOAT QUAY,1.744
+boat_quay,Boat Quay,1422.0,29596.516,30216.945,4.203,4.203,4.128,3.437,1.0,BOAT QUAY,2.292

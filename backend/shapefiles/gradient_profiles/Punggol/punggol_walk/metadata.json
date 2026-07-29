@@ -1,0 +1,62 @@
+{
+  "path_key": "punggol_walk",
+  "display_name": "Punggol Walk",
+  "source_project": "Punggol Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Punggol Walk\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T06:23:57.815160+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3475.147,
+  "profile_point_count": 1030,
+  "valid_elevation_count": 980,
+  "rejected_outlier_count": 123,
+  "rejected_step_jump_count": 530,
+  "repaired_gradient_point_count": 13,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 337,
+  "usable_gradient_completion_pct": 32.72,
+  "elevation_hit_coverage_pct": 95.15,
+  "step_jump_rejection_pct": 51.46,
+  "gradient_min_pct": -9.341,
+  "gradient_max_pct": 7.13,
+  "path_bounds_svy21": {
+    "min_x": 35238.286,
+    "min_y": 42668.533,
+    "max_x": 35672.175,
+    "max_y": 43564.977
+  },
+  "road_boundary": {
+    "target_road_name": "PUNGGOL WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1739,
+    "offroad_point_count": 709,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SUMANG LINK",
+        "point_count": 224
+      },
+      {
+        "road_name": "PUNGGOL CENTRAL",
+        "point_count": 189
+      },
+      {
+        "road_name": "PUNGGOL WAY",
+        "point_count": 166
+      },
+      {
+        "road_name": "PUNGGOL FIELD",
+        "point_count": 130
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3476.0,
+    "trimmed_offroad_points": 709
+  }
+}

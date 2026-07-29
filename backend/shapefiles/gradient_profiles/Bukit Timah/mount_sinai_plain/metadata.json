@@ -1,0 +1,54 @@
+{
+  "path_key": "mount_sinai_plain",
+  "display_name": "Mount Sinai Plain",
+  "source_project": "Mount Sinai Plain",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Mount Sinai Plain\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T15:23:35.683860+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 303.233,
+  "profile_point_count": 132,
+  "valid_elevation_count": 132,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 97,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 6.82,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 73.48,
+  "gradient_min_pct": -7.357,
+  "gradient_max_pct": 9.958,
+  "path_bounds_svy21": {
+    "min_x": 22197.866,
+    "min_y": 33081.404,
+    "max_x": 22287.964,
+    "max_y": 33178.397
+  },
+  "road_boundary": {
+    "target_road_name": "MOUNT SINAI PLAIN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 153,
+    "offroad_point_count": 21,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MOUNT SINAI CRESCENT",
+        "point_count": 12
+      },
+      {
+        "road_name": "MOUNT SINAI AVENUE",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 304.0,
+    "trimmed_offroad_points": 21
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "path_key": "gopeng_street",
+  "display_name": "Gopeng Street",
+  "source_project": "Gopeng Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Gopeng Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T14:04:47.674114+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 839.885,
+  "profile_point_count": 277,
+  "valid_elevation_count": 266,
+  "rejected_outlier_count": 50,
+  "rejected_step_jump_count": 232,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 13,
+  "usable_gradient_completion_pct": 4.69,
+  "elevation_hit_coverage_pct": 96.03,
+  "step_jump_rejection_pct": 83.75,
+  "gradient_min_pct": -3.769,
+  "gradient_max_pct": 13.383,
+  "path_bounds_svy21": {
+    "min_x": 29139.257,
+    "min_y": 28596.084,
+    "max_x": 29385.145,
+    "max_y": 28725.122
+  },
+  "road_boundary": {
+    "target_road_name": "GOPENG STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 421,
+    "offroad_point_count": 144,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TRAS STREET",
+        "point_count": 88
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 41
+      },
+      {
+        "road_name": "PECK SEAH STREET",
+        "point_count": 9
+      },
+      {
+        "road_name": "ANSON ROAD",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 32.0,
+    "offroad_chainage_max_m": 840.0,
+    "trimmed_offroad_points": 144
+  }
+}

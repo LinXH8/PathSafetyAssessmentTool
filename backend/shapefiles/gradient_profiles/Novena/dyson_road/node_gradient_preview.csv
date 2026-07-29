@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dyson_road,1,,DYSON ROAD,103.561,51.781,52.0,16.753,,
+dyson_road,2,,DYSON ROAD,68.527,270.015,270.0,9.713,,
+dyson_road,3,,DYSON ROAD,109.193,434.362,434.0,4.147,0.124,1.0
+dyson_road,4,,DYSON ROAD,141.676,666.72,666.0,5.476,0.252,1.0
+dyson_road,5,,DYSON ROAD,220.447,847.782,848.0,12.966,,

@@ -1,0 +1,66 @@
+{
+  "path_key": "amoy_street",
+  "display_name": "Amoy Street",
+  "source_project": "Amoy Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Amoy Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-06T22:31:21.398046+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1652.165,
+  "profile_point_count": 629,
+  "valid_elevation_count": 159,
+  "rejected_outlier_count": 51,
+  "rejected_step_jump_count": 179,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 260,
+  "usable_gradient_completion_pct": 41.34,
+  "elevation_hit_coverage_pct": 25.28,
+  "step_jump_rejection_pct": 28.46,
+  "gradient_min_pct": -23.163,
+  "gradient_max_pct": 7.0,
+  "path_bounds_svy21": {
+    "min_x": 29454.706,
+    "min_y": 29138.455,
+    "max_x": 29701.086,
+    "max_y": 29538.356
+  },
+  "road_boundary": {
+    "target_road_name": "AMOY STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 828,
+    "offroad_point_count": 199,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CROSS STREET",
+        "point_count": 79
+      },
+      {
+        "road_name": "PEKIN STREET",
+        "point_count": 63
+      },
+      {
+        "road_name": "BOON TAT STREET",
+        "point_count": 18
+      },
+      {
+        "road_name": "TELOK AYER STREET",
+        "point_count": 17
+      },
+      {
+        "road_name": "GEMMILL LANE",
+        "point_count": 16
+      }
+    ],
+    "offroad_chainage_min_m": 44.0,
+    "offroad_chainage_max_m": 1652.165,
+    "trimmed_offroad_points": 199
+  }
+}

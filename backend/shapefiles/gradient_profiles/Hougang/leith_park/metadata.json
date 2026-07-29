@@ -1,0 +1,42 @@
+{
+  "path_key": "leith_park",
+  "display_name": "Leith Park",
+  "source_project": "Leith Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Leith Park\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-31T10:51:27.982865+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 248.279,
+  "profile_point_count": 126,
+  "valid_elevation_count": 17,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 5,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 63,
+  "usable_gradient_completion_pct": 50.0,
+  "elevation_hit_coverage_pct": 13.49,
+  "step_jump_rejection_pct": 3.97,
+  "gradient_min_pct": -5.216,
+  "gradient_max_pct": 3.222,
+  "path_bounds_svy21": {
+    "min_x": 32521.393,
+    "min_y": 38184.152,
+    "max_x": 32599.489,
+    "max_y": 38306.28
+  },
+  "road_boundary": {
+    "target_road_name": "LEITH PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 126,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

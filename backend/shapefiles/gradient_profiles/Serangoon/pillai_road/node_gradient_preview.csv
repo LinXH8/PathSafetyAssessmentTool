@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pillai_road,1,Pillai Road_Cam4_20260112_081218_789_A.jpeg,,13.707,6.853,6.0,10.184,1.635,1.0
+pillai_road,2,Pillai Road_Cam4_20260112_081225_268_A.jpeg,,41.999,27.853,28.0,10.653,,
+pillai_road,3,Pillai Road_Cam4_20260112_081239_082_A.jpeg,,48.016,45.007,46.0,10.341,,
+pillai_road,4,Pillai Road_Cam4_20260112_081242_084_A.jpeg,,83.002,65.509,66.0,10.865,,
+pillai_road,5,Pillai Road_Cam4_20260112_081300_703_A.jpeg,,88.109,85.556,86.0,12.765,,
+pillai_road,6,Pillai Road_Cam4_20260112_081303_715_A.jpeg,,99.827,93.968,94.0,13.459,,
+pillai_road,7,Pillai Road_Cam4_20260112_081313_928_A.jpeg,,139.938,119.882,120.0,14.635,1.588,1.0

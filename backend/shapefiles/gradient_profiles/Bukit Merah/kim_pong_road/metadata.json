@@ -1,0 +1,54 @@
+{
+  "path_key": "kim_pong_road",
+  "display_name": "Kim Pong Road",
+  "source_project": "Kim Pong Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Kim Pong Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T15:15:50.512665+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 464.436,
+  "profile_point_count": 223,
+  "valid_elevation_count": 223,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 163,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 8.52,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 73.09,
+  "gradient_min_pct": -10.344,
+  "gradient_max_pct": 10.487,
+  "path_bounds_svy21": {
+    "min_x": 27633.736,
+    "min_y": 29567.525,
+    "max_x": 27669.656,
+    "max_y": 29803.307
+  },
+  "road_boundary": {
+    "target_road_name": "KIM PONG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 234,
+    "offroad_point_count": 11,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MOH GUAN TERRACE",
+        "point_count": 7
+      },
+      {
+        "road_name": "LIM LIAK STREET",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 464.436,
+    "trimmed_offroad_points": 11
+  }
+}

@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+turf_club_road,1,Turf Club Road_Cam4_20251217_073907_565_B.jpeg,,10.742,5.371,6.0,8.209,,
+turf_club_road,2,Turf Club Road_Cam4_20251217_073914_772_B.jpeg,,23.238,16.99,16.0,9.317,,
+turf_club_road,3,Turf Club Road_Cam4_20251217_073921_980_B.jpeg,,45.733,34.486,34.0,9.616,,
+turf_club_road,4,Turf Club Road_Cam4_20251217_073941_205_B.jpeg,,57.099,51.416,52.0,11.781,,
+turf_club_road,5,Turf Club Road_Cam4_20251217_073950_813_B.jpeg,,69.129,63.114,64.0,13.25,,
+turf_club_road,6,Turf Club Road_Cam4_20251217_074002_227_B.jpeg,,91.558,80.343,80.0,12.495,,
+turf_club_road,7,Turf Club Road_Cam4_20251217_074018_527_B.jpeg,,103.369,97.463,98.0,15.063,,
+turf_club_road,8,Turf Club Road_Cam4_20251217_074025_136_B.jpeg,,110.803,107.086,108.0,14.509,,
+turf_club_road,9,Turf Club Road_Cam4_20251217_074028_744_B.jpeg,,135.036,122.92,122.0,11.971,,
+turf_club_road,10,Turf Club Road_Cam4_20251217_074051_570_B.jpeg,,169.479,152.257,152.0,14.012,,
+turf_club_road,11,Turf Club Road_Cam4_20251217_075543_572_B.jpeg,,181.646,175.562,176.0,13.263,,
+turf_club_road,12,Turf Club Road_Cam4_20251217_075550_782_B.jpeg,,204.612,193.129,194.0,11.803,,
+turf_club_road,13,Turf Club Road_Cam4_20251217_075559_188_B.jpeg,,216.536,210.574,210.0,11.071,-5.938,1.0
+turf_club_road,14,Turf Club Road_Cam4_20251217_075603_392_B.jpeg,,227.751,222.143,222.0,11.222,2.084,1.0
+turf_club_road,15,Turf Club Road_Cam4_20251217_075607_597_B.jpeg,,250.981,239.366,240.0,10.203,,
+turf_club_road,16,Turf Club Road_Cam4_20251217_075617_087_B.jpeg,,262.339,256.66,256.0,9.135,1.577,1.0

@@ -1,0 +1,42 @@
+{
+  "path_key": "cypress_avenue",
+  "display_name": "Cypress Avenue",
+  "source_project": "Cypress Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cypress Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T11:34:00.083205+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 167.209,
+  "profile_point_count": 85,
+  "valid_elevation_count": 85,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 61,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 5.88,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 71.76,
+  "gradient_min_pct": -0.469,
+  "gradient_max_pct": 3.421,
+  "path_bounds_svy21": {
+    "min_x": 23251.58,
+    "min_y": 34784.635,
+    "max_x": 23407.617,
+    "max_y": 34843.079
+  },
+  "road_boundary": {
+    "target_road_name": "CYPRESS AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 85,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

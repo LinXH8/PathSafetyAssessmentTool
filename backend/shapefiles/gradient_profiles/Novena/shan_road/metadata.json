@@ -1,0 +1,42 @@
+{
+  "path_key": "shan_road",
+  "display_name": "Shan Road",
+  "source_project": "Shan Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry9\\_projects\\Shan Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T08:34:10.021601+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 710.546,
+  "profile_point_count": 357,
+  "valid_elevation_count": 357,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 221,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 87,
+  "usable_gradient_completion_pct": 24.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.9,
+  "gradient_min_pct": -10.469,
+  "gradient_max_pct": 11.574,
+  "path_bounds_svy21": {
+    "min_x": 29392.637,
+    "min_y": 34047.617,
+    "max_x": 29543.74,
+    "max_y": 34309.652
+  },
+  "road_boundary": {
+    "target_road_name": "SHAN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 357,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

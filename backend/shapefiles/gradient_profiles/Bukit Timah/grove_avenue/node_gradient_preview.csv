@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+grove_avenue,1,Grove Avenue_Cam4_20251219_074441_194_B.jpeg,,14.615,7.307,,,,
+grove_avenue,2,Grove Avenue_Cam4_20251219_074447_805_B.jpeg,,21.438,18.026,,,,
+grove_avenue,3,Grove Avenue_Cam4_20251219_074450_208_B.jpeg,,81.354,51.396,52.0,15.12,,
+grove_avenue,4,Grove Avenue_Cam4_20251219_075046_997_B.jpeg,,91.056,86.205,86.0,9.918,0.781,1.0
+grove_avenue,5,Grove Avenue_Cam4_20251219_075049_999_B.jpeg,,99.651,95.354,96.0,10.043,1.562,1.0
+grove_avenue,6,Grove Avenue_Cam4_20251219_075052_401_B.jpeg,,110.413,105.032,106.0,10.274,,
+grove_avenue,7,Grove Avenue_Cam4_20251219_075055_413_B.jpeg,,123.869,117.141,118.0,10.602,,
+grove_avenue,8,Grove Avenue_Cam4_20251219_075059_618_B.jpeg,,129.882,126.875,126.0,10.608,,
+grove_avenue,9,Grove Avenue_Cam4_20251219_075102_021_B.jpeg,,254.396,192.139,192.0,13.237,,
+grove_avenue,10,Grove Avenue_Cam4_20251219_075152_476_B.jpeg,,266.757,260.576,260.0,13.072,,
+grove_avenue,11,Grove Avenue_Cam4_20251219_075156_679_B.jpeg,,274.29,270.523,270.0,13.452,,
+grove_avenue,12,Grove Avenue_Cam4_20251219_075159_081_B.jpeg,,284.484,279.387,280.0,13.11,,
+grove_avenue,13,Grove Avenue_Cam4_20251219_075202_083_B.jpeg,,293.037,288.76,288.0,12.42,,
+grove_avenue,14,Grove Avenue_Cam4_20251219_075205_687_B.jpeg,,315.722,304.379,304.0,12.543,,
+grove_avenue,15,Grove Avenue_Cam4_20251219_075226_711_B.jpeg,,359.926,337.824,338.0,13.048,,
+grove_avenue,16,Grove Avenue_Cam4_20251219_075242_197_B.jpeg,,388.226,374.076,374.0,13.365,-1.521,1.0
+grove_avenue,17,Grove Avenue_Cam4_20251219_075251_205_B.jpeg,,418.484,403.355,404.0,13.043,,
+grove_avenue,18,Grove Avenue_Cam4_20251219_075259_014_B.jpeg,,445.289,431.886,432.0,11.308,-3.125,1.0
+grove_avenue,19,Grove Avenue_Cam4_20251219_075305_621_B.jpeg,,488.697,466.993,466.0,11.198,,
+grove_avenue,20,Grove Avenue_Cam4_20251219_075317_033_B.jpeg,,500.7,494.698,494.0,10.455,,
+grove_avenue,21,Grove Avenue_Cam4_20251219_075321_236_B.jpeg,,509.031,504.865,504.0,12.574,,
+grove_avenue,22,Grove Avenue_Cam4_20251219_075326_041_B.jpeg,,516.268,512.65,,,,
+grove_avenue,23,Grove Avenue_Cam4_20251219_075328_447_B.jpeg,,524.577,520.422,,,,
+grove_avenue,24,Grove Avenue_Cam4_20251219_075330_849_B.jpeg,,535.447,530.012,,,,
+grove_avenue,25,Grove Avenue_Cam4_20251219_075334_453_B.jpeg,,734.163,634.805,634.0,23.265,,

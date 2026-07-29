@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+china_street,1,China Street_Cam4_20251211_120009_725_B.jpeg,,12.194,6.097,6.0,4.426,,
+china_street,2,China Street_Cam4_20251211_120012_730_B.jpeg,,22.114,17.154,18.0,4.503,,
+china_street,3,China Street_Cam4_20251211_120015_133_B.jpeg,,34.901,28.508,28.0,4.861,,
+china_street,4,China Street_Cam4_20251211_120018_163_B.jpeg,,42.554,38.727,38.0,,,
+china_street,5,China Street_Cam4_20251211_120019_964_B.jpeg,,50.211,46.382,46.0,3.705,,
+china_street,6,China Street_Cam4_20251211_120021_769_B.jpeg,,78.43,64.32,64.0,3.309,,
+china_street,7,China Street_Cam4_20251211_120028_980_B.jpeg,,122.621,100.525,,,,
+china_street,8,China Street_Cam4_20251211_120039_291_B.jpeg,,132.924,127.772,128.0,3.377,0.032,1.0
+china_street,9,China Street_Cam4_20251211_120041_695_B.jpeg,,142.605,137.764,138.0,,,
+china_street,10,China Street_Cam4_20251211_120044_098_B.jpeg,,152.161,147.383,148.0,,,
+china_street,11,China Street_Cam4_20251211_120046_502_B.jpeg,,162.165,157.163,158.0,,,
+china_street,12,China Street_Cam4_20260205_095108_408_A.jpeg,,189.376,175.771,176.0,,,
+china_street,13,China Street_Cam4_20260205_095125_705_A.jpeg,,199.894,194.635,194.0,,,
+china_street,14,China Street_Cam4_20260205_095130_515_A.jpeg,,233.875,216.884,216.0,,,
+china_street,15,China Street_Cam4_20260205_095211_977_A.jpeg,,305.935,269.905,270.0,,,
+china_street,16,China Street_Cam4_20260205_095229_410_A.jpeg,,317.988,311.962,312.0,3.453,0.043,1.0
+china_street,17,China Street_Cam4_20260205_095232_413_A.jpeg,,327.78,322.884,322.0,3.457,0.021,1.0
+china_street,18,China Street_Cam4_20260205_095234_816_A.jpeg,,337.576,332.678,332.0,3.457,0.0,1.0

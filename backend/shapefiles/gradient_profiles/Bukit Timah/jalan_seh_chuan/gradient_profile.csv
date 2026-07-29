@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+jalan_seh_chuan,Jalan Seh Chuan,0.0,21461.488,35837.391,14.867,14.867,14.975,,,JALAN SEH CHUAN,1.19
+jalan_seh_chuan,Jalan Seh Chuan,2.0,21463.465,35837.694,14.696,14.975,15.029,,,JALAN SEH CHUAN,0.779
+jalan_seh_chuan,Jalan Seh Chuan,4.0,21465.442,35837.997,14.667,15.083,15.083,2.54,1.0,JALAN SEH CHUAN,2.748
+jalan_seh_chuan,Jalan Seh Chuan,6.0,21467.418,35838.3,15.471,15.131,15.131,,,JALAN SEH CHUAN,4.716
+jalan_seh_chuan,Jalan Seh Chuan,8.0,21469.395,35838.604,15.178,15.178,15.178,,,JALAN SEH CHUAN,6.685
+jalan_seh_chuan,Jalan Seh Chuan,10.0,21471.372,35838.907,15.228,15.228,15.203,,,JALAN SEH CHUAN,8.653
+jalan_seh_chuan,Jalan Seh Chuan,10.534,21471.9,35838.988,15.293,15.293,15.228,1.974,1.0,JALAN SEH CHUAN,9.178

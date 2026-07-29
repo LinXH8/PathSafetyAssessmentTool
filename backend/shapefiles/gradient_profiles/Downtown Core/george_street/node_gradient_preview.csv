@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+george_street,1,George Street_Cam4_20251211_091753_864_C.jpeg,,10.332,5.166,,,,
+george_street,2,George Street_Cam4_20251211_091756_274_C.jpeg,,24.142,17.237,,,,
+george_street,3,George Street_Cam4_20251211_091759_278_C.jpeg,,31.803,27.973,,,,
+george_street,4,George Street_Cam4_20251211_091801_081_C.jpeg,,40.53,36.166,,,,
+george_street,5,George Street_Cam4_20251211_091804_085_C.jpeg,,51.421,45.976,,,,
+george_street,6,George Street_Cam4_20251211_091808_292_C.jpeg,,63.927,57.674,,,,
+george_street,7,George Street_Cam4_20251211_091814_298_C.jpeg,,69.013,66.47,,,,
+george_street,8,George Street_Cam4_20251211_091818_504_C.jpeg,,82.281,75.647,,,,
+george_street,9,George Street_Cam4_20251211_091824_567_C.jpeg,,106.063,94.172,,,,
+george_street,10,George Street_Cam4_20251211_091835_982_C.jpeg,,114.9,110.481,,,,
+george_street,11,George Street_Cam4_20251211_091839_585_C.jpeg,,124.728,119.814,120.0,10.637,,
+george_street,12,George Street_Cam4_20251211_091842_589_C.jpeg,,213.436,169.082,170.0,9.847,,
+george_street,13,George Street_Cam4_20251211_115622_405_B.jpeg,,220.35,216.893,216.0,1.69,0.0,1.0
+george_street,14,George Street_Cam4_20251211_115624_807_B.jpeg,,229.018,224.684,224.0,1.64,-0.625,1.0
+george_street,15,George Street_Cam4_20251211_115627_809_B.jpeg,,240.476,234.747,234.0,1.59,-0.313,1.0
+george_street,16,George Street_Cam4_20251211_115631_363_B.jpeg,,249.537,245.007,246.0,1.78,,
+george_street,17,George Street_Cam4_20251211_115633_766_B.jpeg,,261.908,255.722,256.0,3.475,,
+george_street,18,George Street_Cam4_20251211_115638_574_B.jpeg,,270.483,266.195,266.0,5.232,,
+george_street,19,George Street_Cam4_20251211_115641_600_B.jpeg,,280.004,275.244,276.0,7.053,,
+george_street,20,George Street_Cam4_20251211_115645_230_B.jpeg,,289.825,284.914,284.0,8.544,,
+george_street,21,George Street_Cam4_20260205_083942_756_C.jpeg,,328.682,309.253,310.0,10.429,,
+george_street,22,George Street_Cam4_20260205_084839_951_C.jpeg,,338.876,333.779,,,,

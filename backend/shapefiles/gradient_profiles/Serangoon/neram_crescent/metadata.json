@@ -1,0 +1,54 @@
+{
+  "path_key": "neram_crescent",
+  "display_name": "Neram Crescent",
+  "source_project": "Neram Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Neram Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T05:12:42.090772+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1283.878,
+  "profile_point_count": 576,
+  "valid_elevation_count": 576,
+  "rejected_outlier_count": 28,
+  "rejected_step_jump_count": 311,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 159,
+  "usable_gradient_completion_pct": 27.6,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 53.99,
+  "gradient_min_pct": -11.875,
+  "gradient_max_pct": 10.275,
+  "path_bounds_svy21": {
+    "min_x": 31637.67,
+    "min_y": 40732.384,
+    "max_x": 31861.294,
+    "max_y": 40921.308
+  },
+  "road_boundary": {
+    "target_road_name": "NERAM CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 643,
+    "offroad_point_count": 67,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SARACA ROAD",
+        "point_count": 37
+      },
+      {
+        "road_name": "NERAM ROAD",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 24.0,
+    "offroad_chainage_max_m": 1284.0,
+    "trimmed_offroad_points": 67
+  }
+}

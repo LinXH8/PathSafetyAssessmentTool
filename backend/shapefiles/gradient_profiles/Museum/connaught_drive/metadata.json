@@ -1,0 +1,66 @@
+{
+  "path_key": "connaught_drive",
+  "display_name": "Connaught Drive",
+  "source_project": "Connaught Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Connaught Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T09:19:13.815851+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1240.09,
+  "profile_point_count": 104,
+  "valid_elevation_count": 83,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 46,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 42,
+  "usable_gradient_completion_pct": 40.38,
+  "elevation_hit_coverage_pct": 79.81,
+  "step_jump_rejection_pct": 44.23,
+  "gradient_min_pct": -5.568,
+  "gradient_max_pct": 6.25,
+  "path_bounds_svy21": {
+    "min_x": 29993.343,
+    "min_y": 30078.231,
+    "max_x": 30329.592,
+    "max_y": 30516.554
+  },
+  "road_boundary": {
+    "target_road_name": "CONNAUGHT DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 622,
+    "offroad_point_count": 518,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ST. ANDREW'S ROAD",
+        "point_count": 187
+      },
+      {
+        "road_name": "PARLIAMENT PLACE",
+        "point_count": 121
+      },
+      {
+        "road_name": "ESPLANADE DRIVE",
+        "point_count": 95
+      },
+      {
+        "road_name": "STAMFORD ROAD",
+        "point_count": 92
+      },
+      {
+        "road_name": "FULLERTON ROAD",
+        "point_count": 16
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1206.0,
+    "trimmed_offroad_points": 518
+  }
+}

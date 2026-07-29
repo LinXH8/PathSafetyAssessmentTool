@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_lane,1,Greenleaf Lane_Cam4_20251218_083822_313_A.jpeg,,10.768,5.384,6.0,14.284,,
+greenleaf_lane,2,Greenleaf Lane_Cam4_20251218_083826_516_A.jpeg,,22.057,16.412,16.0,15.682,,
+greenleaf_lane,3,Greenleaf Lane_Cam4_20251218_083830_121_A.jpeg,,34.366,28.212,28.0,16.389,,
+greenleaf_lane,4,Greenleaf Lane_Cam4_20251218_083833_728_A.jpeg,,40.204,37.285,38.0,15.522,,
+greenleaf_lane,5,Greenleaf Lane_Cam4_20251218_083835_532_A.jpeg,,66.687,53.446,54.0,15.004,,
+greenleaf_lane,6,Greenleaf Lane_Cam4_20251218_083844_543_A.jpeg,,78.406,72.547,72.0,17.007,4.653,1.0
+greenleaf_lane,7,Greenleaf Lane_Cam4_20251218_083848_748_A.jpeg,,118.218,98.312,98.0,18.519,,

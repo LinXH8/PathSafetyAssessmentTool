@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+manila_street,1,Cam4_20251208_073830_066_C.jpeg,,17.916,8.958,8.0,4.554,,
+manila_street,2,Cam4_20251208_073842_683_C.jpeg,,20.404,19.16,20.0,3.848,,
+manila_street,3,Cam4_20251208_073844_487_C.jpeg,,84.676,52.54,52.0,4.64,,
+manila_street,4,Cam4_20251208_073914_413_C.jpeg,,92.612,88.644,88.0,5.661,,
+manila_street,5,Cam4_20251208_073915_016_C.jpeg,,103.198,97.905,98.0,3.923,,
+manila_street,6,Cam4_20251208_073918_024_C.jpeg,,108.349,105.774,106.0,3.265,,
+manila_street,7,Cam4_20251208_073922_229_C.jpeg,,158.826,133.587,134.0,4.754,,
+manila_street,8,Cam4_20251208_073940_254_C.jpeg,,163.159,160.992,160.0,3.758,-0.469,1.0

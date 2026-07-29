@@ -1,0 +1,62 @@
+{
+  "path_key": "mount_sinai_rise",
+  "display_name": "Mount Sinai Rise",
+  "source_project": "Mount Sinai Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Mount Sinai Rise\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T15:25:51.879479+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2079.875,
+  "profile_point_count": 874,
+  "valid_elevation_count": 869,
+  "rejected_outlier_count": 89,
+  "rejected_step_jump_count": 564,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 181,
+  "usable_gradient_completion_pct": 20.71,
+  "elevation_hit_coverage_pct": 99.43,
+  "step_jump_rejection_pct": 64.53,
+  "gradient_min_pct": -13.281,
+  "gradient_max_pct": 12.031,
+  "path_bounds_svy21": {
+    "min_x": 21700.171,
+    "min_y": 33070.77,
+    "max_x": 22143.904,
+    "max_y": 33290.755
+  },
+  "road_boundary": {
+    "target_road_name": "MOUNT SINAI RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1041,
+    "offroad_point_count": 167,
+    "offroad_top_road_names": [
+      {
+        "road_name": "RIDGEWOOD CLOSE",
+        "point_count": 98
+      },
+      {
+        "road_name": "MOUNT SINAI WALK",
+        "point_count": 36
+      },
+      {
+        "road_name": "MOUNT SINAI AVENUE",
+        "point_count": 22
+      },
+      {
+        "road_name": "PINE GROVE",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 178.0,
+    "offroad_chainage_max_m": 1882.0,
+    "trimmed_offroad_points": 167
+  }
+}

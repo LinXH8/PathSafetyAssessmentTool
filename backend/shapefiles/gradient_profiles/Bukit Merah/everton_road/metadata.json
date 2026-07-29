@@ -1,0 +1,54 @@
+{
+  "path_key": "everton_road",
+  "display_name": "Everton Road",
+  "source_project": "Everton Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Everton Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T13:03:11.640384+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1494.79,
+  "profile_point_count": 690,
+  "valid_elevation_count": 628,
+  "rejected_outlier_count": 53,
+  "rejected_step_jump_count": 371,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 45,
+  "valid_gradient_count": 161,
+  "usable_gradient_completion_pct": 23.33,
+  "elevation_hit_coverage_pct": 91.01,
+  "step_jump_rejection_pct": 53.77,
+  "gradient_min_pct": -12.864,
+  "gradient_max_pct": 11.375,
+  "path_bounds_svy21": {
+    "min_x": 28426.045,
+    "min_y": 28448.188,
+    "max_x": 28619.496,
+    "max_y": 28858.313
+  },
+  "road_boundary": {
+    "target_road_name": "EVERTON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 749,
+    "offroad_point_count": 59,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 32
+      },
+      {
+        "road_name": "SPOTTISWOODE PARK ROAD",
+        "point_count": 27
+      }
+    ],
+    "offroad_chainage_min_m": 40.0,
+    "offroad_chainage_max_m": 1258.0,
+    "trimmed_offroad_points": 59
+  }
+}

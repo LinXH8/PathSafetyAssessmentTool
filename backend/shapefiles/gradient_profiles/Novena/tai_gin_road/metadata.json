@@ -1,0 +1,54 @@
+{
+  "path_key": "tai_gin_road",
+  "display_name": "Tai Gin Road",
+  "source_project": "Tai Gin Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry9\\_projects\\Tai Gin Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T08:55:33.424169+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 241.63,
+  "profile_point_count": 120,
+  "valid_elevation_count": 114,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 78,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 24,
+  "usable_gradient_completion_pct": 20.0,
+  "elevation_hit_coverage_pct": 95.0,
+  "step_jump_rejection_pct": 65.0,
+  "gradient_min_pct": -10.357,
+  "gradient_max_pct": 10.159,
+  "path_bounds_svy21": {
+    "min_x": 29427.734,
+    "min_y": 34434.715,
+    "max_x": 29495.342,
+    "max_y": 34666.694
+  },
+  "road_boundary": {
+    "target_road_name": "TAI GIN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 122,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "AH HOOD ROAD",
+        "point_count": 1
+      },
+      {
+        "road_name": "JALAN TOA PAYOH",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 242.0,
+    "trimmed_offroad_points": 2
+  }
+}

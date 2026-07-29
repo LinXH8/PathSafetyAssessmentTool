@@ -1,0 +1,9 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+defu_lane_4,Defu Lane 4,0.0,35536.302,37934.01,2.876,2.876,2.875,-0.1,1.0,DEFU LANE 4,1.064
+defu_lane_4,Defu Lane 4,2.0,35535.948,37935.978,2.875,2.875,2.873,-0.463,1.0,DEFU LANE 4,0.933
+defu_lane_4,Defu Lane 4,4.0,35535.593,37937.947,2.871,2.871,2.871,-0.347,1.0,DEFU LANE 4,2.93
+defu_lane_4,Defu Lane 4,6.0,35535.238,37939.915,2.848,2.848,2.848,-0.322,1.0,DEFU LANE 4,4.927
+defu_lane_4,Defu Lane 4,8.0,35534.883,37941.883,2.81,2.81,2.848,-0.044,1.0,DEFU LANE 4,6.924
+defu_lane_4,Defu Lane 4,10.0,35534.528,37943.851,2.763,2.763,2.848,0.969,1.0,DEFU LANE 4,8.921
+defu_lane_4,Defu Lane 4,12.0,35534.173,37945.82,2.961,2.961,2.868,1.292,1.0,DEFU LANE 4,10.918
+defu_lane_4,Defu Lane 4,14.0,35533.869,37947.506,2.925,2.925,2.925,1.938,1.0,DEFU LANE 4,12.63

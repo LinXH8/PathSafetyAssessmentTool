@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_eunos",
+  "display_name": "Jalan Eunos",
+  "source_project": "Jalan Eunos",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Jalan Eunos\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-25T18:24:25.068290+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3361.686,
+  "profile_point_count": 1316,
+  "valid_elevation_count": 461,
+  "rejected_outlier_count": 56,
+  "rejected_step_jump_count": 265,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 244,
+  "usable_gradient_completion_pct": 18.54,
+  "elevation_hit_coverage_pct": 35.03,
+  "step_jump_rejection_pct": 20.14,
+  "gradient_min_pct": -12.305,
+  "gradient_max_pct": 9.766,
+  "path_bounds_svy21": {
+    "min_x": 35944.952,
+    "min_y": 33336.937,
+    "max_x": 36097.011,
+    "max_y": 34600.5
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN EUNOS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1682,
+    "offroad_point_count": 366,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 114
+      },
+      {
+        "road_name": "SIMS AVENUE EAST",
+        "point_count": 54
+      },
+      {
+        "road_name": "JALAN YASIN",
+        "point_count": 34
+      },
+      {
+        "road_name": "EUNOS CRESCENT",
+        "point_count": 29
+      },
+      {
+        "road_name": "PAYA LEBAR WAY",
+        "point_count": 26
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3080.0,
+    "trimmed_offroad_points": 366
+  }
+}

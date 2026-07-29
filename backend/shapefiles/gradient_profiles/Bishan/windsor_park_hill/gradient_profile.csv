@@ -1,0 +1,19 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+windsor_park_hill,Windsor Park Hill,0.0,27034.647,37671.079,39.134,,37.912,,,WINDSOR PARK HILL,2.561
+windsor_park_hill,Windsor Park Hill,2.0,27034.202,37673.029,39.228,37.912,37.912,,,WINDSOR PARK HILL,2.139
+windsor_park_hill,Windsor Park Hill,4.0,27033.757,37674.978,39.278,37.912,37.912,,,WINDSOR PARK HILL,1.717
+windsor_park_hill,Windsor Park Hill,6.0,27033.312,37676.928,39.49,37.912,37.912,,,WINDSOR PARK HILL,1.294
+windsor_park_hill,Windsor Park Hill,8.0,27032.866,37678.878,37.912,37.912,37.912,,,WINDSOR PARK HILL,0.872
+windsor_park_hill,Windsor Park Hill,10.0,27032.421,37680.828,37.979,37.979,37.962,,,WINDSOR PARK HILL,0.45
+windsor_park_hill,Windsor Park Hill,12.0,27031.802,37682.719,37.962,37.962,37.979,2.917,1.0,WINDSOR PARK HILL,0.21
+windsor_park_hill,Windsor Park Hill,14.0,27030.972,37684.539,38.079,38.079,38.079,5.208,1.0,WINDSOR PARK HILL,0.191
+windsor_park_hill,Windsor Park Hill,16.0,27030.143,37686.358,38.146,38.146,38.146,5.313,1.0,WINDSOR PARK HILL,0.172
+windsor_park_hill,Windsor Park Hill,18.0,27029.313,37688.178,38.404,38.404,38.379,4.583,1.0,WINDSOR PARK HILL,0.153
+windsor_park_hill,Windsor Park Hill,20.0,27028.483,37689.998,38.379,38.379,38.404,5.208,1.0,WINDSOR PARK HILL,0.135
+windsor_park_hill,Windsor Park Hill,22.0,27027.653,37691.818,38.446,38.446,38.446,3.75,1.0,WINDSOR PARK HILL,0.116
+windsor_park_hill,Windsor Park Hill,24.0,27026.897,37693.668,38.562,38.562,38.562,5.104,1.0,WINDSOR PARK HILL,0.018
+windsor_park_hill,Windsor Park Hill,26.0,27026.184,37695.537,38.679,38.679,38.679,6.042,1.0,WINDSOR PARK HILL,0.127
+windsor_park_hill,Windsor Park Hill,28.0,27025.471,37697.405,38.812,38.812,38.812,5.312,1.0,WINDSOR PARK HILL,0.273
+windsor_park_hill,Windsor Park Hill,30.0,27024.758,37699.274,38.929,38.929,38.929,5.954,1.0,WINDSOR PARK HILL,0.418
+windsor_park_hill,Windsor Park Hill,32.0,27024.045,37701.142,39.046,39.046,38.987,5.611,1.0,WINDSOR PARK HILL,0.563
+windsor_park_hill,Windsor Park Hill,32.158,27023.988,37701.29,39.062,39.062,39.046,5.405,1.0,WINDSOR PARK HILL,0.575

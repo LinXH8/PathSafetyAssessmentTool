@@ -1,0 +1,54 @@
+{
+  "path_key": "geylang_serai",
+  "display_name": "Geylang Serai",
+  "source_project": "Geylang Serai",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Geylang Serai\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-26T17:57:03.511338+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 608.709,
+  "profile_point_count": 178,
+  "valid_elevation_count": 157,
+  "rejected_outlier_count": 31,
+  "rejected_step_jump_count": 126,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 35,
+  "usable_gradient_completion_pct": 19.66,
+  "elevation_hit_coverage_pct": 88.2,
+  "step_jump_rejection_pct": 70.79,
+  "gradient_min_pct": -5.567,
+  "gradient_max_pct": 5.759,
+  "path_bounds_svy21": {
+    "min_x": 35115.035,
+    "min_y": 33165.154,
+    "max_x": 35293.409,
+    "max_y": 33309.757
+  },
+  "road_boundary": {
+    "target_road_name": "GEYLANG SERAI",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 306,
+    "offroad_point_count": 128,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHANGI ROAD",
+        "point_count": 124
+      },
+      {
+        "road_name": "ENGKU AMAN TURN",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 6.0,
+    "offroad_chainage_max_m": 546.0,
+    "trimmed_offroad_points": 128
+  }
+}

@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chander_road,1,Chander Road_Cam4_20251208_111450_166_A.jpeg,,12.027,6.014,6.0,3.635,,
+chander_road,2,Chander Road_Cam4_20251208_111454_200_A.jpeg,,24.394,18.211,18.0,8.4,,
+chander_road,3,Chander Road_Cam4_20251208_111458_350_A.jpeg,,30.855,27.625,28.0,11.873,,
+chander_road,4,Chander Road_Cam4_20251208_111500_399_A.jpeg,,40.447,35.651,36.0,11.562,,
+chander_road,5,Chander Road_Cam4_20251208_111503_411_A.jpeg,,53.464,46.956,46.0,11.044,,
+chander_road,6,Chander Road_Cam4_20251208_111508_457_A.jpeg,,60.413,56.939,56.0,10.525,,
+chander_road,7,Chander Road_Cam4_20251208_111511_031_A.jpeg,,70.042,65.227,66.0,9.615,,
+chander_road,8,Chander Road_Cam4_20251208_111514_582_A.jpeg,,80.395,75.218,76.0,8.546,,
+chander_road,9,Chander Road_Cam4_20251208_111518_653_A.jpeg,,118.451,99.423,100.0,6.408,,
+chander_road,10,Chander Road_Cam4_20251208_111553_167_A.jpeg,,233.932,176.192,176.0,5.005,,
+chander_road,11,Chander Road_Cam4_20251208_114304_025_C.jpeg,,246.954,240.443,,,,
+chander_road,12,Chander Road_Cam4_20251208_114601_009_C.jpeg,,276.024,261.489,262.0,2.931,-0.8,1.0
+chander_road,13,Chander Road_Cam4_20251208_114726_955_C.jpeg,,289.218,282.621,282.0,3.546,1.925,1.0
+chander_road,14,Chander Road_Cam4_20251208_114732_369_C.jpeg,,321.128,305.173,306.0,4.85,,
+chander_road,15,Chander Road_Cam4_20251208_114827_075_C.jpeg,,331.21,326.169,326.0,4.126,,
+chander_road,16,Chander Road_Cam4_20251208_114831_293_C.jpeg,,377.25,354.23,354.0,4.915,,
+chander_road,17,Chander Road_Cam4_20251208_114857_738_C.jpeg,,384.012,380.631,380.0,3.651,,
+chander_road,18,Chander Road_Cam4_20251208_114901_344_C.jpeg,,393.847,388.929,388.0,3.763,,

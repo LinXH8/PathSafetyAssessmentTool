@@ -1,0 +1,66 @@
+{
+  "path_key": "tekka_lane",
+  "display_name": "Tekka Lane",
+  "source_project": "Tekka Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Tekka Lane\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-25T13:04:47.346600+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1511.253,
+  "profile_point_count": 122,
+  "valid_elevation_count": 91,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 49,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 59,
+  "usable_gradient_completion_pct": 48.36,
+  "elevation_hit_coverage_pct": 74.59,
+  "step_jump_rejection_pct": 40.16,
+  "gradient_min_pct": -3.697,
+  "gradient_max_pct": 10.675,
+  "path_bounds_svy21": {
+    "min_x": 29567.356,
+    "min_y": 32180.186,
+    "max_x": 29895.308,
+    "max_y": 32497.787
+  },
+  "road_boundary": {
+    "target_road_name": "TEKKA LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 757,
+    "offroad_point_count": 635,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KAMPONG JAVA ROAD",
+        "point_count": 206
+      },
+      {
+        "road_name": ".",
+        "point_count": 193
+      },
+      {
+        "road_name": "NORTHUMBERLAND ROAD",
+        "point_count": 153
+      },
+      {
+        "road_name": "HAMPSHIRE ROAD",
+        "point_count": 61
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 22
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1512.0,
+    "trimmed_offroad_points": 635
+  }
+}

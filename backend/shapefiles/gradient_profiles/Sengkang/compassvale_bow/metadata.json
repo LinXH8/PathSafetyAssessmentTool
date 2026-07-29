@@ -1,0 +1,66 @@
+{
+  "path_key": "compassvale_bow",
+  "display_name": "Compassvale Bow",
+  "source_project": "Compassvale Bow",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Compassvale Bow\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T00:08:52.063707+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3060.737,
+  "profile_point_count": 1146,
+  "valid_elevation_count": 1093,
+  "rejected_outlier_count": 127,
+  "rejected_step_jump_count": 690,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 261,
+  "usable_gradient_completion_pct": 22.77,
+  "elevation_hit_coverage_pct": 95.38,
+  "step_jump_rejection_pct": 60.21,
+  "gradient_min_pct": -9.259,
+  "gradient_max_pct": 50.106,
+  "path_bounds_svy21": {
+    "min_x": 34289.221,
+    "min_y": 40301.813,
+    "max_x": 35142.465,
+    "max_y": 40784.828
+  },
+  "road_boundary": {
+    "target_road_name": "COMPASSVALE BOW",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1532,
+    "offroad_point_count": 386,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BUANGKOK DRIVE",
+        "point_count": 127
+      },
+      {
+        "road_name": "SENGKANG EAST ROAD",
+        "point_count": 120
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 66
+      },
+      {
+        "road_name": "SENGKANG CENTRAL",
+        "point_count": 37
+      },
+      {
+        "road_name": "COMPASSVALE LINK",
+        "point_count": 36
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3060.737,
+    "trimmed_offroad_points": 386
+  }
+}

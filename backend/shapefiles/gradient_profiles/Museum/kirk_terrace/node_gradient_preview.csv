@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kirk_terrace,1,Cam4_20251204_091111_196_C.jpeg,,9.906,4.953,4.0,4.717,,
+kirk_terrace,2,Cam4_20260107_080856_461_A.jpeg,,16.195,13.051,14.0,5.617,,
+kirk_terrace,3,Cam4_20260107_080900_667_A.jpeg,,26.9,21.548,22.0,6.776,,
+kirk_terrace,4,Cam4_20260107_080906_074_A.jpeg,,36.579,31.739,32.0,7.798,,
+kirk_terrace,5,Cam4_20260107_080910_281_A.jpeg,,54.354,45.467,46.0,8.554,,
+kirk_terrace,6,Cam4_20260107_080919_295_A.jpeg,,56.689,55.522,56.0,8.148,,
+kirk_terrace,7,Cam4_20260107_080920_496_A.jpeg,,70.096,63.393,62.0,8.314,2.5,1.0
+kirk_terrace,8,Cam4_20260107_080931_308_A.jpeg,,79.875,74.986,,,,

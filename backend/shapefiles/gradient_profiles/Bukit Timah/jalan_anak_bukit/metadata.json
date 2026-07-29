@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_anak_bukit",
+  "display_name": "Jalan Anak Bukit",
+  "source_project": "Jalan Anak Bukit",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Anak Bukit\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-04T20:13:05.967762+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 705.031,
+  "profile_point_count": 220,
+  "valid_elevation_count": 220,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 173,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 2,
+  "valid_gradient_count": 12,
+  "usable_gradient_completion_pct": 5.45,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 78.64,
+  "gradient_min_pct": -7.385,
+  "gradient_max_pct": 11.75,
+  "path_bounds_svy21": {
+    "min_x": 21784.026,
+    "min_y": 35506.785,
+    "max_x": 22021.295,
+    "max_y": 36097.588
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN ANAK BUKIT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 354,
+    "offroad_point_count": 134,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PAN ISLAND EXPRESSWAY",
+        "point_count": 37
+      },
+      {
+        "road_name": "BUKIT TIMAH LINK",
+        "point_count": 27
+      },
+      {
+        "road_name": "DUNEARN ROAD",
+        "point_count": 26
+      },
+      {
+        "road_name": "RIFLE RANGE ROAD",
+        "point_count": 17
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 64.0,
+    "offroad_chainage_max_m": 706.0,
+    "trimmed_offroad_points": 134
+  }
+}

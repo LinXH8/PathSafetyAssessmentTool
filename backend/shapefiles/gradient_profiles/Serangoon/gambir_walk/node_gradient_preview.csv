@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+gambir_walk,1,Gambir Walk_Cam4_20260112_104802_176_A.jpeg,,11.547,5.773,6.0,7.915,,
+gambir_walk,2,Gambir Walk_Cam4_20260112_104806_498_A.jpeg,,19.519,15.533,16.0,6.672,,
+gambir_walk,3,Gambir Walk_Cam4_20260112_104808_901_A.jpeg,,29.869,24.694,24.0,5.442,,
+gambir_walk,4,Gambir Walk_Cam4_20260112_104811_936_A.jpeg,,44.087,36.978,36.0,4.844,1.2,1.0
+gambir_walk,5,Gambir Walk_Cam4_20260112_104816_212_A.jpeg,,66.387,55.237,56.0,5.488,1.219,1.0
+gambir_walk,6,Gambir Walk_Cam4_20260112_104825_316_A.jpeg,,75.271,70.829,70.0,5.906,1.769,1.0
+gambir_walk,7,Gambir Walk_Cam4_20260112_104828_925_A.jpeg,,102.06,88.665,88.0,6.755,3.931,1.0
+gambir_walk,8,Gambir Walk_Cam4_20260112_104841_686_A.jpeg,,112.517,107.289,108.0,7.271,2.287,1.0
+gambir_walk,9,Gambir Walk_Cam4_20260112_104846_492_A.jpeg,,137.149,124.833,124.0,7.611,2.937,1.0
+gambir_walk,10,Gambir Walk_Cam4_20260112_104857_414_A.jpeg,,146.656,141.902,142.0,9.554,,
+gambir_walk,11,Gambir Walk_Cam4_20260112_104901_743_A.jpeg,,160.906,153.781,154.0,13.387,,
+gambir_walk,12,Gambir Walk_Cam4_20260112_104908_351_A.jpeg,,184.938,172.922,172.0,11.648,,
+gambir_walk,13,Gambir Walk_Cam4_20260112_104920_500_A.jpeg,,196.052,190.495,190.0,11.122,,

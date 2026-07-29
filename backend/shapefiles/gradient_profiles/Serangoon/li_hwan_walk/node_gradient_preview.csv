@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+li_hwan_walk,1,Li Hwan Walk_Cam4_20260202_080429_677_A.jpeg,,13.502,6.751,6.0,19.859,,
+li_hwan_walk,2,Li Hwan Walk_Cam4_20260202_080436_895_A.jpeg,,20.799,17.151,18.0,20.2,,
+li_hwan_walk,3,Li Hwan Walk_Cam4_20260202_080440_377_A.jpeg,,31.337,26.068,26.0,20.9,,
+li_hwan_walk,4,Li Hwan Walk_Cam4_20260202_080445_785_A.jpeg,,44.132,37.735,38.0,21.632,0.308,1.0

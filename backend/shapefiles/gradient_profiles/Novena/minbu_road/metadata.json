@@ -1,0 +1,50 @@
+{
+  "path_key": "minbu_road",
+  "display_name": "Minbu Road",
+  "source_project": "Minbu Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry8\\_projects\\Minbu Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T06:12:52.016175+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 369.686,
+  "profile_point_count": 185,
+  "valid_elevation_count": 185,
+  "rejected_outlier_count": 22,
+  "rejected_step_jump_count": 144,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 4.86,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.84,
+  "gradient_min_pct": -7.813,
+  "gradient_max_pct": 11.804,
+  "path_bounds_svy21": {
+    "min_x": 29637.385,
+    "min_y": 33923.281,
+    "max_x": 29899.049,
+    "max_y": 34184.348
+  },
+  "road_boundary": {
+    "target_road_name": "MINBU ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 186,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARTABAN ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 370.0,
+    "offroad_chainage_max_m": 370.0,
+    "trimmed_offroad_points": 1
+  }
+}

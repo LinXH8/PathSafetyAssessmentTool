@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+namly_view,1,Namly View_Cam4_20251217_083106_859_B.jpeg,,13.527,6.764,6.0,17.706,,
+namly_view,2,Namly View_Cam4_20251217_083114_669_B.jpeg,,20.433,16.98,16.0,17.433,,
+namly_view,3,Namly View_Cam4_20251217_083117_672_B.jpeg,,31.441,25.937,26.0,17.418,,
+namly_view,4,Namly View_Cam4_20251217_083123_077_B.jpeg,,88.885,60.163,60.0,18.872,,
+namly_view,5,Namly View_Cam4_20251217_083236_176_B.jpeg,,99.722,94.303,94.0,30.027,,
+namly_view,6,Namly View_Cam4_20251217_083248_790_B.jpeg,,110.871,105.296,106.0,30.465,,
+namly_view,7,Namly View_Cam4_20251217_083300_802_B.jpeg,,121.736,116.304,116.0,28.386,,
+namly_view,8,Namly View_Cam4_20251217_083318_822_B.jpeg,,144.478,133.107,134.0,26.464,,
+namly_view,9,Namly View_Cam4_20251217_083333_311_B.jpeg,,155.545,150.012,150.0,27.178,,
+namly_view,10,Namly View_Cam4_20251217_083338_719_B.jpeg,,167.287,161.416,162.0,26.58,-1.25,1.0
+namly_view,11,Namly View_Cam4_20251217_083344_725_B.jpeg,,173.909,170.598,170.0,26.513,-0.417,1.0
+namly_view,12,Namly View_Cam4_20251217_083347_128_B.jpeg,,187.374,180.641,180.0,27.076,,
+namly_view,13,Namly View_Cam4_20251217_083351_931_B.jpeg,,214.512,200.943,200.0,27.319,,
+namly_view,14,Namly View_Cam4_20251217_083402_147_B.jpeg,,385.26,299.886,300.0,29.597,,

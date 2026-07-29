@@ -1,0 +1,15 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+aljunied_walk,Aljunied Walk,38.0,33356.566,33741.389,2.639,2.639,2.364,-6.875,1.0,ALJUNIED WALK,14.308
+aljunied_walk,Aljunied Walk,40.0,33356.406,33743.383,2.564,2.364,2.226,-5.313,1.0,ALJUNIED WALK,12.309
+aljunied_walk,Aljunied Walk,42.0,33356.245,33745.376,2.089,2.089,2.089,-3.75,1.0,ALJUNIED WALK,10.309
+aljunied_walk,Aljunied Walk,44.0,33356.085,33747.37,2.339,2.064,2.064,-1.875,1.0,ALJUNIED WALK,8.309
+aljunied_walk,Aljunied Walk,46.0,33355.924,33749.363,2.039,2.039,2.064,0.0,1.0,ALJUNIED WALK,6.31
+aljunied_walk,Aljunied Walk,48.0,33355.763,33751.357,2.039,2.039,2.064,0.156,1.0,ALJUNIED WALK,4.31
+aljunied_walk,Aljunied Walk,50.0,33355.603,33753.351,2.089,2.089,2.089,0.313,1.0,ALJUNIED WALK,2.31
+aljunied_walk,Aljunied Walk,52.0,33355.442,33755.344,2.089,2.089,2.089,0.313,1.0,ALJUNIED WALK,0.311
+aljunied_walk,Aljunied Walk,54.0,33355.281,33757.338,2.089,2.089,2.089,0.0,1.0,ALJUNIED WALK,1.689
+aljunied_walk,Aljunied Walk,56.0,33355.121,33759.331,2.139,2.139,2.089,0.625,1.0,ALJUNIED WALK,3.689
+aljunied_walk,Aljunied Walk,58.0,33354.96,33761.325,2.064,2.064,2.089,1.406,1.0,ALJUNIED WALK,5.688
+aljunied_walk,Aljunied Walk,60.0,33354.799,33763.318,2.089,2.089,2.139,2.812,1.0,ALJUNIED WALK,7.688
+aljunied_walk,Aljunied Walk,62.0,33354.639,33765.312,8.439,2.314,2.201,3.75,1.0,ALJUNIED WALK,9.687
+aljunied_walk,Aljunied Walk,64.0,33354.478,33767.305,2.539,2.539,2.314,4.375,1.0,ALJUNIED WALK,11.687

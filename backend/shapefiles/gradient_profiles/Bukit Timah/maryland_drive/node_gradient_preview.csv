@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+maryland_drive,1,Maryland Drive_Cam4_20251218_083409_203_A.jpeg,,10.13,5.065,6.0,22.667,,
+maryland_drive,2,Maryland Drive_Cam4_20251218_083412_807_A.jpeg,,21.464,15.797,16.0,24.111,,
+maryland_drive,3,Maryland Drive_Cam4_20251218_083417_012_A.jpeg,,34.487,27.976,28.0,23.311,,
+maryland_drive,4,Maryland Drive_Cam4_20251218_083421_815_A.jpeg,,57.523,46.005,46.0,24.025,,
+maryland_drive,5,Maryland Drive_Cam4_20251218_083429_624_A.jpeg,,67.892,62.708,62.0,23.458,,
+maryland_drive,6,Maryland Drive_Cam4_20251218_083433_828_A.jpeg,,170.484,119.188,120.0,22.641,,
+maryland_drive,7,Maryland Drive_Cam4_20251218_084118_540_A.jpeg,,184.837,177.661,178.0,23.151,3.281,1.0
+maryland_drive,8,Maryland Drive_Cam4_20251218_084122_744_A.jpeg,,190.725,187.781,188.0,23.514,5.078,1.0
+maryland_drive,9,Maryland Drive_Cam4_20251218_084124_547_A.jpeg,,201.018,195.871,196.0,23.917,,
+maryland_drive,10,Maryland Drive_Cam4_20251218_084128_151_A.jpeg,,232.971,216.994,216.0,25.915,,
+maryland_drive,11,Maryland Drive_Cam4_20251218_084156_860_A.jpeg,,245.287,239.129,240.0,28.847,,
+maryland_drive,12,Maryland Drive_Cam4_20251218_084215_963_A.jpeg,,304.221,274.754,274.0,25.624,,
+maryland_drive,13,Maryland Drive_Cam4_20251218_085046_818_A.jpeg,,339.687,321.954,322.0,23.652,0.341,1.0
+maryland_drive,14,Maryland Drive_Cam4_20251218_085055_829_A.jpeg,,438.845,389.266,390.0,24.767,,

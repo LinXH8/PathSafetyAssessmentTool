@@ -1,0 +1,54 @@
+{
+  "path_key": "claymore_road",
+  "display_name": "Claymore Road",
+  "source_project": "Claymore Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Claymore Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-07T07:57:47.324313+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 778.007,
+  "profile_point_count": 305,
+  "valid_elevation_count": 304,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 216,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 38,
+  "usable_gradient_completion_pct": 12.46,
+  "elevation_hit_coverage_pct": 99.67,
+  "step_jump_rejection_pct": 70.82,
+  "gradient_min_pct": -9.637,
+  "gradient_max_pct": 4.802,
+  "path_bounds_svy21": {
+    "min_x": 27503.236,
+    "min_y": 32141.13,
+    "max_x": 27758.602,
+    "max_y": 32262.35
+  },
+  "road_boundary": {
+    "target_road_name": "CLAYMORE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 391,
+    "offroad_point_count": 86,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLAYMORE DRIVE",
+        "point_count": 81
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 250.0,
+    "offroad_chainage_max_m": 474.0,
+    "trimmed_offroad_points": 86
+  }
+}

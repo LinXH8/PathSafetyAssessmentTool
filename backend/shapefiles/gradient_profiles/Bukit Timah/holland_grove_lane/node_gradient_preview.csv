@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_grove_lane,1,Holland Grove Lane_Cam4_20251219_082804_659_B.jpeg,,10.501,5.251,6.0,21.123,,
+holland_grove_lane,2,Holland Grove Lane_Cam4_20251219_082808_864_B.jpeg,,22.549,16.525,16.0,19.17,,
+holland_grove_lane,3,Holland Grove Lane_Cam4_20251219_082813_071_B.jpeg,,33.685,28.117,28.0,17.389,-10.469,2.0
+holland_grove_lane,4,Holland Grove Lane_Cam4_20251219_082817_275_B.jpeg,,44.471,39.078,40.0,16.899,,
+holland_grove_lane,5,Holland Grove Lane_Cam4_20251219_082821_480_B.jpeg,,67.715,56.093,56.0,16.069,,
+holland_grove_lane,6,Holland Grove Lane_Cam4_20251219_082830_491_B.jpeg,,78.074,72.894,72.0,15.404,,

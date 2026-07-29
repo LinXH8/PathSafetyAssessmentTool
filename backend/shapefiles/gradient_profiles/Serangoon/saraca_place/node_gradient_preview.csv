@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+saraca_place,1,Saraca Place_Cam4_20260105_083546_690_C.jpeg,,11.252,5.626,,,,
+saraca_place,2,Saraca Place_Cam4_20260105_083551_496_C.jpeg,,23.201,17.226,18.0,15.568,,
+saraca_place,3,Saraca Place_Cam4_20260105_083555_702_C.jpeg,,31.104,27.152,28.0,14.84,,
+saraca_place,4,Saraca Place_Cam4_20260105_083558_705_C.jpeg,,44.619,37.862,38.0,14.862,3.788,1.0
+saraca_place,5,Saraca Place_Cam4_20260105_083603_510_C.jpeg,,51.427,48.023,48.0,15.085,-0.73,1.0
+saraca_place,6,Saraca Place_Cam4_20260105_083605_912_C.jpeg,,61.33,56.379,56.0,15.097,1.094,1.0
+saraca_place,7,Saraca Place_Cam4_20260105_083609_517_C.jpeg,,70.84,66.085,66.0,15.397,3.75,1.0
+saraca_place,8,Saraca Place_Cam4_20260105_083613_122_C.jpeg,,101.066,85.953,86.0,16.094,,
+saraca_place,9,Saraca Place_Cam4_20260105_083625_138_C.jpeg,,113.084,107.075,108.0,16.847,,
+saraca_place,10,Saraca Place_Cam4_20260105_083631_745_C.jpeg,,122.672,117.878,118.0,17.079,,
+saraca_place,11,Saraca Place_Cam4_20260105_083635_951_C.jpeg,,130.5,126.586,126.0,16.231,,
+saraca_place,12,Saraca Place_Cam4_20260105_083639_555_C.jpeg,,140.417,135.459,136.0,15.991,,
+saraca_place,13,Saraca Place_Cam4_20260105_083643_757_C.jpeg,,172.237,156.327,156.0,15.982,,
+saraca_place,14,Saraca Place_Cam4_20260105_083700_579_C.jpeg,,181.699,176.968,176.0,18.59,,
+saraca_place,15,Saraca Place_Cam4_20260105_083705_386_C.jpeg,,192.75,187.224,188.0,19.421,,
+saraca_place,16,Saraca Place_Cam4_20260105_083711_393_C.jpeg,,251.269,222.009,222.0,20.593,,
+saraca_place,17,Saraca Place_Cam4_20260105_083852_931_C.jpeg,,262.44,256.854,,,,
+saraca_place,18,Saraca Place_Cam4_20260105_083857_135_C.jpeg,,273.651,268.045,270.0,19.883,,

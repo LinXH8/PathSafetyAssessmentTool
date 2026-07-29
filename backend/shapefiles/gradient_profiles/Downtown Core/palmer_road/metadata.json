@@ -1,0 +1,58 @@
+{
+  "path_key": "palmer_road",
+  "display_name": "Palmer Road",
+  "source_project": "Palmer Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Palmer Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-23T09:10:03.770785+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 168.633,
+  "profile_point_count": 51,
+  "valid_elevation_count": 51,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 29,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 11,
+  "usable_gradient_completion_pct": 21.57,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.86,
+  "gradient_min_pct": -9.474,
+  "gradient_max_pct": 8.407,
+  "path_bounds_svy21": {
+    "min_x": 29338.338,
+    "min_y": 28404.477,
+    "max_x": 29443.253,
+    "max_y": 28512.791
+  },
+  "road_boundary": {
+    "target_road_name": "PALMER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 86,
+    "offroad_point_count": 35,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SHENTON WAY",
+        "point_count": 17
+      },
+      {
+        "road_name": ".",
+        "point_count": 11
+      },
+      {
+        "road_name": "MISTRI ROAD",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 98.0,
+    "trimmed_offroad_points": 35
+  }
+}

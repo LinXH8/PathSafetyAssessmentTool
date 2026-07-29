@@ -1,0 +1,58 @@
+{
+  "path_key": "eng_kong_terrace",
+  "display_name": "Eng Kong Terrace",
+  "source_project": "Eng Kong Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Eng Kong Terrace\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T12:38:02.730048+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 592.704,
+  "profile_point_count": 245,
+  "valid_elevation_count": 245,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 132,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 67,
+  "usable_gradient_completion_pct": 27.35,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 53.88,
+  "gradient_min_pct": -7.656,
+  "gradient_max_pct": 11.75,
+  "path_bounds_svy21": {
+    "min_x": 20730.359,
+    "min_y": 35350.931,
+    "max_x": 20988.85,
+    "max_y": 35445.802
+  },
+  "road_boundary": {
+    "target_road_name": "ENG KONG TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 298,
+    "offroad_point_count": 53,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ENG KONG ROAD",
+        "point_count": 24
+      },
+      {
+        "road_name": "UPPER TOH TUCK TERRACE",
+        "point_count": 18
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 592.704,
+    "trimmed_offroad_points": 53
+  }
+}

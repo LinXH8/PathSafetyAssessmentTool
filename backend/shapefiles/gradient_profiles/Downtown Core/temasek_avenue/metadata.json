@@ -1,0 +1,54 @@
+{
+  "path_key": "temasek_avenue",
+  "display_name": "Temasek Avenue",
+  "source_project": "Temasek Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Temasek Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-25T13:15:20.809920+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1513.48,
+  "profile_point_count": 710,
+  "valid_elevation_count": 710,
+  "rejected_outlier_count": 64,
+  "rejected_step_jump_count": 453,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 147,
+  "usable_gradient_completion_pct": 20.7,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 63.8,
+  "gradient_min_pct": -7.812,
+  "gradient_max_pct": 9.093,
+  "path_bounds_svy21": {
+    "min_x": 30787.629,
+    "min_y": 30238.472,
+    "max_x": 31086.293,
+    "max_y": 30765.756
+  },
+  "road_boundary": {
+    "target_road_name": "TEMASEK AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 758,
+    "offroad_point_count": 48,
+    "offroad_top_road_names": [
+      {
+        "road_name": "RAFFLES BOULEVARD",
+        "point_count": 33
+      },
+      {
+        "road_name": "TEMASEK BOULEVARD",
+        "point_count": 15
+      }
+    ],
+    "offroad_chainage_min_m": 432.0,
+    "offroad_chainage_max_m": 1362.0,
+    "trimmed_offroad_points": 48
+  }
+}

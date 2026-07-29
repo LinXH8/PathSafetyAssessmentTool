@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+toh_tuck_drive,1,Toh Tuck Drive_Cam4_20251121_122938_658_B.jpeg,,9.867,4.934,4.0,20.98,,
+toh_tuck_drive,2,Toh Tuck Drive_Cam4_20251121_122943_463_B.jpeg,,22.153,16.01,16.0,20.805,-2.292,1.0
+toh_tuck_drive,3,Toh Tuck Drive_Cam4_20251121_122950_073_B.jpeg,,32.243,27.198,28.0,20.795,,
+toh_tuck_drive,4,Toh Tuck Drive_Cam4_20251121_122954_880_B.jpeg,,42.391,37.317,38.0,22.022,,
+toh_tuck_drive,5,Toh Tuck Drive_Cam4_20251121_122957_283_B.jpeg,,68.095,55.243,56.0,21.795,,
+toh_tuck_drive,6,Toh Tuck Drive_Cam4_20251121_123003_891_B.jpeg,,77.473,72.784,72.0,22.541,,
+toh_tuck_drive,7,Toh Tuck Drive_Cam4_20251121_123006_293_B.jpeg,,103.315,90.394,90.0,22.143,-2.083,1.0
+toh_tuck_drive,8,Toh Tuck Drive_Cam4_20251121_123014_104_B.jpeg,,115.986,109.65,110.0,21.96,0.0,1.0
+toh_tuck_drive,9,Toh Tuck Drive_Cam4_20251121_123018_910_B.jpeg,,124.07,120.028,120.0,21.909,-1.875,1.0
+toh_tuck_drive,10,Toh Tuck Drive_Cam4_20251121_123032_126_B.jpeg,,129.491,126.78,126.0,21.81,-1.25,1.0
+toh_tuck_drive,11,Toh Tuck Drive_Cam4_20251121_123033_929_B.jpeg,,139.55,134.52,134.0,21.71,-5.625,1.0
+toh_tuck_drive,12,Toh Tuck Drive_Cam4_20251121_123037_532_B.jpeg,,149.744,144.647,144.0,20.859,-7.962,1.0
+toh_tuck_drive,13,Toh Tuck Drive_Cam4_20251121_123041_137_B.jpeg,,160.101,154.923,154.0,20.906,,
+toh_tuck_drive,14,Toh Tuck Drive_Cam4_20251121_123045_942_B.jpeg,,171.197,165.649,166.0,23.158,,

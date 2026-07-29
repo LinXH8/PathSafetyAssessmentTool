@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+elm_avenue,1,Elm Avenue_Cam4_20251217_083137_663_A.jpeg,,11.638,5.819,6.0,9.921,,
+elm_avenue,2,Elm Avenue_Cam4_20251217_083140_670_A.jpeg,,23.823,17.731,18.0,8.985,-2.604,1.0
+elm_avenue,3,Elm Avenue_Cam4_20251217_083143_673_A.jpeg,,33.931,28.877,28.0,8.969,,
+elm_avenue,4,Elm Avenue_Cam4_20251217_083146_176_A.jpeg,,58.889,46.41,46.0,9.676,,

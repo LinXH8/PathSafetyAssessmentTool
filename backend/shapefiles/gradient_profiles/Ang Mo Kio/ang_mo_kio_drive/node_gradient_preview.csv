@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ang_mo_kio_drive,1,Ang Mo Kio Drive_Cam4_20260101_091852_153_B.jpeg,,14.276,7.138,8.0,19.032,,
+ang_mo_kio_drive,2,Ang Mo Kio Drive_Cam4_20260101_091859_365_B.jpeg,,24.209,19.243,20.0,17.624,,
+ang_mo_kio_drive,3,Ang Mo Kio Drive_Cam4_20260101_091902_971_B.jpeg,,47.131,35.67,36.0,17.533,,
+ang_mo_kio_drive,4,Ang Mo Kio Drive_Cam4_20260101_091916_794_B.jpeg,,81.475,64.303,64.0,19.865,,
+ang_mo_kio_drive,5,Ang Mo Kio Drive_Cam4_20260101_091934_215_B.jpeg,,93.225,87.35,88.0,18.555,,
+ang_mo_kio_drive,6,Ang Mo Kio Drive_Cam4_20260101_091939_035_B.jpeg,,99.815,96.52,96.0,17.767,,
+ang_mo_kio_drive,7,Ang Mo Kio Drive_Cam4_20260101_091942_640_B.jpeg,,112.469,106.142,106.0,17.786,,
+ang_mo_kio_drive,8,Ang Mo Kio Drive_Cam4_20260101_091948_048_B.jpeg,,120.119,116.294,116.0,18.078,,
+ang_mo_kio_drive,9,Ang Mo Kio Drive_Cam4_20260101_091951_052_B.jpeg,,146.301,133.21,134.0,16.676,,
+ang_mo_kio_drive,10,Ang Mo Kio Drive_Cam4_20260101_092002_521_B.jpeg,,157.978,152.14,152.0,15.732,-1.354,1.0

@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayo_street,1,Cam4_20251208_102247_513_A.jpeg,,10.521,5.261,6.0,6.132,,
+mayo_street,2,Cam4_20251208_102253_612_A.jpeg,,23.265,16.893,,,,
+mayo_street,3,Cam4_20251208_102259_645_A.jpeg,,30.647,26.956,26.0,6.426,,
+mayo_street,4,Cam4_20251208_102302_768_A.jpeg,,40.488,35.567,36.0,5.476,,
+mayo_street,5,Cam4_20251208_102306_780_A.jpeg,,51.294,45.891,46.0,3.671,,
+mayo_street,6,Cam4_20251208_102310_848_A.jpeg,,64.041,57.667,58.0,3.124,0.547,1.0
+mayo_street,7,Cam4_20251208_102315_480_A.jpeg,,105.306,84.674,84.0,4.276,,
+mayo_street,8,Cam4_20251208_102331_216_A.jpeg,,112.052,108.679,108.0,3.105,,
+mayo_street,9,Cam4_20251208_102334_221_A.jpeg,,121.005,116.528,116.0,2.751,,

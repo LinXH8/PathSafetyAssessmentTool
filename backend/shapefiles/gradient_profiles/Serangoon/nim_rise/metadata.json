@@ -1,0 +1,50 @@
+{
+  "path_key": "nim_rise",
+  "display_name": "Nim Rise",
+  "source_project": "Nim Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Nim Rise\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T05:17:39.708418+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 454.286,
+  "profile_point_count": 148,
+  "valid_elevation_count": 148,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 50,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 69,
+  "usable_gradient_completion_pct": 46.62,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 33.78,
+  "gradient_min_pct": -6.667,
+  "gradient_max_pct": 6.198,
+  "path_bounds_svy21": {
+    "min_x": 31222.609,
+    "min_y": 40175.615,
+    "max_x": 31428.887,
+    "max_y": 40269.997
+  },
+  "road_boundary": {
+    "target_road_name": "NIM RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 229,
+    "offroad_point_count": 81,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NIM ROAD",
+        "point_count": 81
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 160.0,
+    "trimmed_offroad_points": 81
+  }
+}

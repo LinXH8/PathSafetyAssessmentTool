@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lantana_avenue,1,Lantana Avenue_Cam4_20251217_091517_204_A.jpeg,,10.896,5.448,6.0,15.644,,
+lantana_avenue,2,Lantana Avenue_Cam4_20251217_091520_941_A.jpeg,,21.33,16.113,16.0,16.997,,
+lantana_avenue,3,Lantana Avenue_Cam4_20251217_091523_947_A.jpeg,,33.927,27.628,28.0,17.38,,
+lantana_avenue,4,Lantana Avenue_Cam4_20251217_091527_580_A.jpeg,,40.929,37.428,38.0,17.392,-2.578,1.0
+lantana_avenue,5,Lantana Avenue_Cam4_20251217_091529_585_A.jpeg,,50.645,45.787,46.0,17.98,,
+lantana_avenue,6,Lantana Avenue_Cam4_20251217_091532_668_A.jpeg,,59.95,55.297,56.0,18.443,,
+lantana_avenue,7,Lantana Avenue_Cam4_20251217_091535_687_A.jpeg,,70.817,65.383,66.0,18.423,,
+lantana_avenue,8,Lantana Avenue_Cam4_20251217_091539_211_A.jpeg,,80.205,75.511,76.0,18.266,,
+lantana_avenue,9,Lantana Avenue_Cam4_20251217_091542_228_A.jpeg,,92.258,86.231,86.0,18.936,,
+lantana_avenue,10,Lantana Avenue_Cam4_20251217_091546_280_A.jpeg,,103.957,98.108,98.0,20.652,,
+lantana_avenue,11,Lantana Avenue_Cam4_20251217_091550_791_A.jpeg,,131.858,117.908,118.0,19.499,,
+lantana_avenue,12,Lantana Avenue_Cam4_20251217_091632_943_A.jpeg,,144.253,138.056,138.0,19.777,,
+lantana_avenue,13,Lantana Avenue_Cam4_20251217_091637_075_A.jpeg,,154.682,149.468,150.0,21.829,,
+lantana_avenue,14,Lantana Avenue_Cam4_20251217_091641_082_A.jpeg,,176.602,165.642,166.0,24.439,,
+lantana_avenue,15,Lantana Avenue_Cam4_20251217_091650_724_A.jpeg,,188.905,182.753,182.0,25.67,,
+lantana_avenue,16,Lantana Avenue_Cam4_20251217_091655_412_A.jpeg,,199.601,194.253,194.0,26.438,,
+lantana_avenue,17,Lantana Avenue_Cam4_20251217_091659_418_A.jpeg,,211.09,205.346,206.0,24.804,,
+lantana_avenue,18,Lantana Avenue_Cam4_20251217_091703_431_A.jpeg,,233.326,222.208,222.0,22.085,,
+lantana_avenue,19,Lantana Avenue_Cam4_20251217_091710_084_A.jpeg,,243.906,238.616,238.0,20.096,-1.354,1.0
+lantana_avenue,20,Lantana Avenue_Cam4_20251217_091713_092_A.jpeg,,255.34,249.623,250.0,20.013,-3.385,1.0
+lantana_avenue,21,Lantana Avenue_Cam4_20251217_091716_613_A.jpeg,,266.73,261.035,262.0,19.015,,
+lantana_avenue,22,Lantana Avenue_Cam4_20251217_091720_785_A.jpeg,,404.172,335.451,336.0,25.054,,
+lantana_avenue,23,Lantana Avenue_Cam4_20251217_092100_872_A.jpeg,,413.897,409.034,410.0,19.059,5.218,1.0
+lantana_avenue,24,Lantana Avenue_Cam4_20251217_092103_471_A.jpeg,,445.486,429.691,430.0,18.443,,
+lantana_avenue,25,Lantana Avenue_Cam4_20251217_092112_582_A.jpeg,,455.457,450.472,450.0,17.819,,
+lantana_avenue,26,Lantana Avenue_Cam4_20251217_092115_715_A.jpeg,,468.022,461.74,462.0,16.297,,

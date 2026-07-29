@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+circular_road,1,Circular Road_Cam4_20251211_081537_496_C.jpeg,,10.004,5.002,6.0,1.906,-0.313,1.0
+circular_road,2,Circular Road_Cam4_20251211_081540_497_C.jpeg,,283.651,146.828,,,,
+circular_road,3,Circular Road_Cam4_20251211_081913_119_C.jpeg,,546.819,415.235,,,,
+circular_road,4,Circular Road_Cam4_20251211_111334_314_A.jpeg,,556.556,551.687,552.0,9.39,1.673,1.0
+circular_road,5,Circular Road_Cam4_20251211_111337_935_A.jpeg,,567.465,562.01,562.0,9.366,-0.404,1.0
+circular_road,6,Circular Road_Cam4_20251211_111341_450_A.jpeg,,575.917,571.691,572.0,9.326,-0.404,1.0
+circular_road,7,Circular Road_Cam4_20251211_111343_953_A.jpeg,,602.504,589.21,590.0,9.253,-0.404,1.0
+circular_road,8,Circular Road_Cam4_20251211_111351_226_A.jpeg,,613.345,607.924,608.0,,,
+circular_road,9,Circular Road_Cam4_20251211_111354_402_A.jpeg,,623.965,618.655,618.0,,,
+circular_road,10,Circular Road_Cam4_20251211_111357_407_A.jpeg,,631.949,627.957,628.0,,,
+circular_road,11,Circular Road_Cam4_20251211_111359_568_A.jpeg,,645.907,638.928,638.0,,,
+circular_road,12,Circular Road_Cam4_20251211_111404_230_A.jpeg,,679.903,662.905,662.0,,,
+circular_road,13,Circular Road_Cam4_20251211_111437_527_A.jpeg,,692.241,686.072,686.0,,,
+circular_road,14,Circular Road_Cam4_20251211_111441_198_A.jpeg,,700.312,696.276,696.0,,,
+circular_road,15,Circular Road_Cam4_20251211_111443_714_A.jpeg,,726.348,713.33,714.0,,,
+circular_road,16,Circular Road_Cam4_20251211_111451_367_A.jpeg,,838.154,782.251,,,,
+circular_road,17,Circular Road_Cam4_20251211_111916_379_A.jpeg,,985.961,912.058,,,,
+circular_road,18,Circular Road_Cam4_20260205_093219_292_A.jpeg,,1075.473,1030.717,,,,
+circular_road,19,Circular Road_Cam4_20260205_093249_200_A.jpeg,,1086.33,1080.901,,,,
+circular_road,20,Circular Road_Cam4_20260205_093252_202_A.jpeg,,1094.145,1090.237,,,,
+circular_road,21,Circular Road_Cam4_20260205_093254_605_A.jpeg,,1153.838,1123.991,,,,
+circular_road,22,Circular Road_Cam4_20260205_093314_308_A.jpeg,,1164.672,1159.255,,,,
+circular_road,23,Circular Road_Cam4_20260205_093317_312_A.jpeg,,1173.746,1169.209,,,,
+circular_road,24,Circular Road_Cam4_20260205_093319_714_A.jpeg,,1361.528,1267.637,,,,
+circular_road,25,Circular Road_Cam4_20260205_093522_485_A.jpeg,,1390.992,1376.26,1376.0,2.094,,
+circular_road,26,Circular Road_Cam4_20260205_093530_298_A.jpeg,,1398.76,1394.876,1394.0,3.01,3.781,1.0

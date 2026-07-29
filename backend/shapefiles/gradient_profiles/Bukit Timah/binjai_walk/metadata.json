@@ -1,0 +1,42 @@
+{
+  "path_key": "binjai_walk",
+  "display_name": "Binjai Walk",
+  "source_project": "Binjai Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Binjai Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T08:33:36.018033+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 337.555,
+  "profile_point_count": 170,
+  "valid_elevation_count": 170,
+  "rejected_outlier_count": 27,
+  "rejected_step_jump_count": 140,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 11,
+  "usable_gradient_completion_pct": 6.47,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 82.35,
+  "gradient_min_pct": -10.834,
+  "gradient_max_pct": 9.743,
+  "path_bounds_svy21": {
+    "min_x": 22838.043,
+    "min_y": 35556.094,
+    "max_x": 22929.787,
+    "max_y": 35689.289
+  },
+  "road_boundary": {
+    "target_road_name": "BINJAI WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 170,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

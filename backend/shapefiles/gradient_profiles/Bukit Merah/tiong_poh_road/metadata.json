@@ -1,0 +1,66 @@
+{
+  "path_key": "tiong_poh_road",
+  "display_name": "Tiong Poh Road",
+  "source_project": "Tiong Poh Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Tiong Poh Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T17:59:56.421810+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 700.913,
+  "profile_point_count": 288,
+  "valid_elevation_count": 286,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 180,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 22.92,
+  "elevation_hit_coverage_pct": 99.31,
+  "step_jump_rejection_pct": 62.5,
+  "gradient_min_pct": -14.214,
+  "gradient_max_pct": 11.882,
+  "path_bounds_svy21": {
+    "min_x": 27874.009,
+    "min_y": 29410.047,
+    "max_x": 28136.327,
+    "max_y": 29614.371
+  },
+  "road_boundary": {
+    "target_road_name": "TIONG POH ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 352,
+    "offroad_point_count": 64,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SIT WAH ROAD",
+        "point_count": 24
+      },
+      {
+        "road_name": "EU CHIN STREET",
+        "point_count": 19
+      },
+      {
+        "road_name": "ENG WATT STREET",
+        "point_count": 11
+      },
+      {
+        "road_name": "KENG KIAT STREET",
+        "point_count": 8
+      },
+      {
+        "road_name": "ENG HOON STREET",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 60.0,
+    "offroad_chainage_max_m": 700.913,
+    "trimmed_offroad_points": 64
+  }
+}

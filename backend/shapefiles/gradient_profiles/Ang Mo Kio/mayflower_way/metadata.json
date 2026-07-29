@@ -1,0 +1,62 @@
+{
+  "path_key": "mayflower_way",
+  "display_name": "Mayflower Way",
+  "source_project": "Mayflower Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Mayflower Way\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T19:00:34.303544+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 399.807,
+  "profile_point_count": 168,
+  "valid_elevation_count": 168,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 63,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 81,
+  "usable_gradient_completion_pct": 48.21,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 37.5,
+  "gradient_min_pct": -9.187,
+  "gradient_max_pct": 5.125,
+  "path_bounds_svy21": {
+    "min_x": 28692.146,
+    "min_y": 39317.142,
+    "max_x": 28873.013,
+    "max_y": 39373.61
+  },
+  "road_boundary": {
+    "target_road_name": "MAYFLOWER WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 201,
+    "offroad_point_count": 33,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MAYFLOWER ROAD",
+        "point_count": 19
+      },
+      {
+        "road_name": "MAYFLOWER AVENUE",
+        "point_count": 11
+      },
+      {
+        "road_name": "MAYFLOWER CRESCENT",
+        "point_count": 2
+      },
+      {
+        "road_name": "MAYFLOWER PLACE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 56.0,
+    "offroad_chainage_max_m": 400.0,
+    "trimmed_offroad_points": 33
+  }
+}

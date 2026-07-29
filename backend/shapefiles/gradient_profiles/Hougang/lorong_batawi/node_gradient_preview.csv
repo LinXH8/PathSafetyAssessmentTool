@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_batawi,1,Lorong Batawi_Cam4_20260110_140935_898_C.jpeg,,13.187,6.593,6.0,12.322,,
+lorong_batawi,2,Lorong Batawi_Cam4_20260110_140940_105_C.jpeg,,36.068,24.628,24.0,12.052,,
+lorong_batawi,3,Lorong Batawi_Cam4_20260131_104355_779_C.jpeg,,41.989,39.029,40.0,11.943,0.758,1.0
+lorong_batawi,4,Lorong Batawi_Cam4_20260131_104358_781_C.jpeg,,52.537,47.263,48.0,11.714,-5.228,1.0
+lorong_batawi,5,Lorong Batawi_Cam4_20260131_104402_395_C.jpeg,,62.909,57.723,58.0,11.188,-1.331,1.0
+lorong_batawi,6,Lorong Batawi_Cam4_20260131_104405_398_C.jpeg,,105.843,84.376,84.0,10.725,-2.144,1.0
+lorong_batawi,7,Lorong Batawi_Cam4_20260131_104416_813_C.jpeg,,113.136,109.489,110.0,10.265,-1.341,1.0
+lorong_batawi,8,Lorong Batawi_Cam4_20260131_104418_615_C.jpeg,,122.908,118.022,118.0,10.164,-0.881,1.0
+lorong_batawi,9,Lorong Batawi_Cam4_20260131_104421_019_C.jpeg,,132.649,127.779,128.0,10.022,-1.719,1.0
+lorong_batawi,10,Lorong Batawi_Cam4_20260131_104423_423_C.jpeg,,146.312,139.481,140.0,9.876,-2.041,1.0

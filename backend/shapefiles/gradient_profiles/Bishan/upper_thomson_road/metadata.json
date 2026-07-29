@@ -1,0 +1,66 @@
+{
+  "path_key": "upper_thomson_road",
+  "display_name": "Upper Thomson Road",
+  "source_project": "Upper Thomson Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Upper Thomson Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-02T08:59:03.320849+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 88221.118,
+  "profile_point_count": 16535,
+  "valid_elevation_count": 6065,
+  "rejected_outlier_count": 581,
+  "rejected_step_jump_count": 4176,
+  "repaired_gradient_point_count": 52,
+  "removed_bad_gradient_point_count": 12,
+  "valid_gradient_count": 1990,
+  "usable_gradient_completion_pct": 12.04,
+  "elevation_hit_coverage_pct": 36.68,
+  "step_jump_rejection_pct": 25.26,
+  "gradient_min_pct": -13.46,
+  "gradient_max_pct": 14.296,
+  "path_bounds_svy21": {
+    "min_x": 26185.005,
+    "min_y": 36145.405,
+    "max_x": 28605.796,
+    "max_y": 42646.586
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER THOMSON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 44112,
+    "offroad_point_count": 27577,
+    "offroad_top_road_names": [
+      {
+        "road_name": "OLD UPPER THOMSON ROAD",
+        "point_count": 9640
+      },
+      {
+        "road_name": "JALAN TAMBUR",
+        "point_count": 1672
+      },
+      {
+        "road_name": "BRIGHT HILL DRIVE",
+        "point_count": 1175
+      },
+      {
+        "road_name": "SIN MING AVENUE",
+        "point_count": 1145
+      },
+      {
+        "road_name": "CASUARINA ROAD",
+        "point_count": 818
+      }
+    ],
+    "offroad_chainage_min_m": 14.0,
+    "offroad_chainage_max_m": 88010.0,
+    "trimmed_offroad_points": 27577
+  }
+}

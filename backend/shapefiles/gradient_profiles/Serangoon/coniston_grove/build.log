@@ -1,0 +1,13 @@
+project=Coniston Grove
+path_key=coniston_grove
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/8] 20240805_Serangoon_02_Track07.laz (33 samples)
+  [2/8] 20240808_Serangoon_03_Track23.laz (11 samples)
+  [3/8] 20240808_Serangoon_03_Track24.laz (81 samples)
+  [4/8] 20240808_Serangoon_03_Track25.laz (72 samples)
+  [5/8] 20240808_Serangoon_03_Track27.laz (27 samples)
+  [6/8] 20240808_Serangoon_03_Track70.laz (6 samples)
+  [7/8] 20240808_Serangoon_03_Track76.laz (21 samples)
+  [8/8] 20240808_Serangoon_03_Track84.laz (81 samples)

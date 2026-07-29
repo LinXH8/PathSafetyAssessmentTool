@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hougang_street_61,1,Hougang Street 61_Cam4_20260124_081756_521_B.jpeg,,11.381,5.691,6.0,11.225,,
+hougang_street_61,2,Hougang Street 61_Cam4_20260124_081800_126_B.jpeg,,20.451,15.916,16.0,9.668,,
+hougang_street_61,3,Hougang Street 61_Cam4_20260124_081803_130_B.jpeg,,33.648,27.049,28.0,7.829,,
+hougang_street_61,4,Hougang Street 61_Cam4_20260124_081807_335_B.jpeg,,57.336,45.492,46.0,6.207,,
+hougang_street_61,5,Hougang Street 61_Cam4_20260124_081814_547_B.jpeg,,67.877,62.607,62.0,6.359,1.166,1.0
+hougang_street_61,6,Hougang Street 61_Cam4_20260124_081818_155_B.jpeg,,79.809,73.843,74.0,6.473,,
+hougang_street_61,7,Hougang Street 61_Cam4_20260124_081822_362_B.jpeg,,134.982,107.396,108.0,6.813,0.472,1.0
+hougang_street_61,8,Hougang Street 61_Cam4_20260124_081840_388_B.jpeg,,146.577,140.78,140.0,6.977,0.347,1.0
+hougang_street_61,9,Hougang Street 61_Cam4_20260124_081843_992_B.jpeg,,168.573,157.575,158.0,7.184,,
+hougang_street_61,10,Hougang Street 61_Cam4_20260124_081852_399_B.jpeg,,178.343,173.458,174.0,7.223,,
+hougang_street_61,11,Hougang Street 61_Cam4_20260124_081855_878_B.jpeg,,187.407,182.875,182.0,7.285,,
+hougang_street_61,12,Hougang Street 61_Cam4_20260124_081858_280_B.jpeg,,213.996,200.702,200.0,7.268,0.791,1.0
+hougang_street_61,13,Hougang Street 61_Cam4_20260124_081910_252_B.jpeg,,446.545,330.271,330.0,6.751,-1.55,1.0
+hougang_street_61,14,Hougang Street 61_Cam4_20260124_082057_085_B.jpeg,,454.508,450.527,450.0,5.724,-0.337,1.0

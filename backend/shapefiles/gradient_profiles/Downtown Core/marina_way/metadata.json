@@ -1,0 +1,66 @@
+{
+  "path_key": "marina_way",
+  "display_name": "Marina Way",
+  "source_project": "Marina Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Marina Way\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-17T02:11:48.173384+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2881.1,
+  "profile_point_count": 478,
+  "valid_elevation_count": 469,
+  "rejected_outlier_count": 58,
+  "rejected_step_jump_count": 244,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 9,
+  "valid_gradient_count": 165,
+  "usable_gradient_completion_pct": 34.52,
+  "elevation_hit_coverage_pct": 98.12,
+  "step_jump_rejection_pct": 51.05,
+  "gradient_min_pct": -11.094,
+  "gradient_max_pct": 12.724,
+  "path_bounds_svy21": {
+    "min_x": 30105.428,
+    "min_y": 28751.448,
+    "max_x": 30477.495,
+    "max_y": 29399.01
+  },
+  "road_boundary": {
+    "target_road_name": "MARINA WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1442,
+    "offroad_point_count": 964,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARINA BOULEVARD",
+        "point_count": 413
+      },
+      {
+        "road_name": "STRAITS VIEW",
+        "point_count": 209
+      },
+      {
+        "road_name": "CENTRAL BOULEVARD",
+        "point_count": 162
+      },
+      {
+        "road_name": "MARINA VIEW",
+        "point_count": 99
+      },
+      {
+        "road_name": "MARINA VIEW LINK",
+        "point_count": 54
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2882.0,
+    "trimmed_offroad_points": 964
+  }
+}

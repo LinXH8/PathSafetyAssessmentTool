@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_sampurna,1,Jalan Sampurna_Cam4_20251218_090741_402_A.jpeg,,12.028,6.014,6.0,11.282,,
+jalan_sampurna,2,Jalan Sampurna_Cam4_20251218_090807_825_A.jpeg,,24.375,18.201,18.0,11.751,,
+jalan_sampurna,3,Jalan Sampurna_Cam4_20251218_090812_028_A.jpeg,,30.376,27.375,28.0,10.719,,
+jalan_sampurna,4,Jalan Sampurna_Cam4_20251218_090813_830_A.jpeg,,58.635,44.506,44.0,10.394,,
+jalan_sampurna,5,Jalan Sampurna_Cam4_20251218_090822_841_A.jpeg,,67.636,63.136,64.0,11.001,,
+jalan_sampurna,6,Jalan Sampurna_Cam4_20251218_090825_848_A.jpeg,,97.092,82.364,80.0,10.75,,
+jalan_sampurna,7,Jalan Sampurna_Cam4_20251218_090912_703_A.jpeg,,107.329,102.211,102.0,9.77,0.781,1.0
+jalan_sampurna,8,Jalan Sampurna_Cam4_20251218_090916_907_A.jpeg,,117.866,112.598,112.0,9.795,-0.547,1.0
+jalan_sampurna,9,Jalan Sampurna_Cam4_20251218_090922_314_A.jpeg,,142.733,130.3,130.0,11.435,,
+jalan_sampurna,10,Jalan Sampurna_Cam4_20251218_090957_755_A.jpeg,,152.586,147.66,148.0,12.918,,
+jalan_sampurna,11,Jalan Sampurna_Cam4_20251218_091001_358_A.jpeg,,179.549,166.068,166.0,11.129,,
+jalan_sampurna,12,Jalan Sampurna_Cam4_20251218_091059_629_A.jpeg,,190.328,184.939,184.0,10.214,,
+jalan_sampurna,13,Jalan Sampurna_Cam4_20251218_091103_234_A.jpeg,,215.935,203.131,204.0,11.875,,
+jalan_sampurna,14,Jalan Sampurna_Cam4_20251218_091110_916_A.jpeg,,228.641,222.288,222.0,12.195,,
+jalan_sampurna,15,Jalan Sampurna_Cam4_20251218_091115_118_A.jpeg,,238.693,233.667,234.0,12.891,,
+jalan_sampurna,16,Jalan Sampurna_Cam4_20251218_091120_525_A.jpeg,,464.901,351.797,,,,
+jalan_sampurna,17,Jalan Sampurna_Cam4_20251218_091241_017_A.jpeg,,475.965,470.433,470.0,13.252,,
+jalan_sampurna,18,Jalan Sampurna_Cam4_20251218_091244_621_A.jpeg,,484.176,480.07,480.0,14.895,,
+jalan_sampurna,19,Jalan Sampurna_Cam4_20251218_091247_023_A.jpeg,,512.143,498.159,498.0,16.339,,
+jalan_sampurna,20,Jalan Sampurna_Cam4_20251218_091254_829_A.jpeg,,525.087,518.615,518.0,16.543,,
+jalan_sampurna,21,Jalan Sampurna_Cam4_20251218_091259_033_A.jpeg,,555.733,540.41,540.0,22.077,,
+jalan_sampurna,22,Jalan Sampurna_Cam4_20251218_091329_543_A.jpeg,,568.179,561.956,562.0,20.753,8.594,1.0
+jalan_sampurna,23,Jalan Sampurna_Cam4_20251218_091345_766_A.jpeg,,574.39,571.285,572.0,21.578,9.375,2.0
+jalan_sampurna,24,Jalan Sampurna_Cam4_20251218_091348_769_A.jpeg,,583.74,579.065,580.0,22.378,7.656,1.0

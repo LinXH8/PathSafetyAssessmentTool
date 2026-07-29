@@ -1,0 +1,66 @@
+{
+  "path_key": "geylang_road",
+  "display_name": "Geylang Road",
+  "source_project": "Geylang Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Geylang Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-26T07:16:00.540709+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5995.718,
+  "profile_point_count": 1388,
+  "valid_elevation_count": 889,
+  "rejected_outlier_count": 47,
+  "rejected_step_jump_count": 575,
+  "repaired_gradient_point_count": 16,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 411,
+  "usable_gradient_completion_pct": 29.61,
+  "elevation_hit_coverage_pct": 64.05,
+  "step_jump_rejection_pct": 41.43,
+  "gradient_min_pct": -10.3,
+  "gradient_max_pct": 12.5,
+  "path_bounds_svy21": {
+    "min_x": 31856.649,
+    "min_y": 32468.343,
+    "max_x": 33412.291,
+    "max_y": 32829.802
+  },
+  "road_boundary": {
+    "target_road_name": "GEYLANG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2999,
+    "offroad_point_count": 1611,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 554
+      },
+      {
+        "road_name": ".",
+        "point_count": 229
+      },
+      {
+        "road_name": "SIMS AVENUE",
+        "point_count": 228
+      },
+      {
+        "road_name": "KALLANG ROAD",
+        "point_count": 88
+      },
+      {
+        "road_name": "LORONG 4 GEYLANG",
+        "point_count": 54
+      }
+    ],
+    "offroad_chainage_min_m": 300.0,
+    "offroad_chainage_max_m": 5866.0,
+    "trimmed_offroad_points": 1611
+  }
+}

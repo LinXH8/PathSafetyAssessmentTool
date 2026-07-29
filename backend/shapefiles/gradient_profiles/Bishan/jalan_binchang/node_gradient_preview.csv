@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_binchang,1,Jalan Binchang_Cam4_20260102_094433_153_A.jpeg,,11.738,5.869,,,,
+jalan_binchang,2,Jalan Binchang_Cam4_20260102_094437_408_A.jpeg,,24.188,17.963,,,,
+jalan_binchang,3,Jalan Binchang_Cam4_20260102_094442_265_A.jpeg,,33.805,28.997,28.0,10.925,,
+jalan_binchang,4,Jalan Binchang_Cam4_20260102_094446_353_A.jpeg,,58.811,46.308,46.0,11.156,,
+jalan_binchang,5,Jalan Binchang_Cam4_20260102_094456_656_A.jpeg,,69.147,63.979,64.0,10.684,,
+jalan_binchang,6,Jalan Binchang_Cam4_20260102_094500_259_A.jpeg,,259.847,164.497,164.0,10.559,,
+jalan_binchang,7,Jalan Binchang_Cam4_20260103_082011_973_A.jpeg,,269.629,264.738,264.0,10.218,-0.625,1.0
+jalan_binchang,8,Jalan Binchang_Cam4_20260103_082016_779_A.jpeg,,290.767,280.198,280.0,10.393,,
+jalan_binchang,9,Jalan Binchang_Cam4_20260103_085049_932_A.jpeg,,553.29,422.029,422.0,15.779,,
+jalan_binchang,10,Jalan Binchang_Cam4_20260103_085334_533_A.jpeg,,563.468,558.379,558.0,14.795,-2.187,1.0
+jalan_binchang,11,Jalan Binchang_Cam4_20260103_085337_537_A.jpeg,,573.612,568.54,568.0,14.621,-1.431,1.0

@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+plantation_avenue,1,Plantation Avenue_Cam4_20260202_081729_443_C.jpeg,,11.101,5.55,6.0,22.751,,
+plantation_avenue,2,Plantation Avenue_Cam4_20260202_081733_048_C.jpeg,,22.911,17.006,,,,
+plantation_avenue,3,Plantation Avenue_Cam4_20260202_081737_253_C.jpeg,,90.109,56.51,56.0,25.195,,
+plantation_avenue,4,Plantation Avenue_Cam4_20260203_083214_990_C.jpeg,,100.561,95.335,96.0,22.208,,
+plantation_avenue,5,Plantation Avenue_Cam4_20260203_083219_195_C.jpeg,,123.421,111.991,112.0,22.199,,
+plantation_avenue,6,Plantation Avenue_Cam4_20260203_083228_204_C.jpeg,,134.819,129.12,130.0,21.695,0.694,1.0
+plantation_avenue,7,Plantation Avenue_Cam4_20260203_083232_409_C.jpeg,,144.358,139.588,140.0,21.523,-5.156,1.0
+plantation_avenue,8,Plantation Avenue_Cam4_20260203_083249_840_C.jpeg,,200.222,172.29,172.0,22.162,,
+plantation_avenue,9,Plantation Avenue_Cam4_20260203_083311_468_C.jpeg,,212.572,206.397,206.0,21.015,0.926,1.0
+plantation_avenue,10,Plantation Avenue_Cam4_20260203_083316_273_C.jpeg,,223.759,218.165,218.0,20.563,,
+plantation_avenue,11,Plantation Avenue_Cam4_20260203_083321_678_C.jpeg,,262.028,242.893,242.0,19.938,,
+plantation_avenue,12,Plantation Avenue_Cam4_20260203_083458_995_C.jpeg,,273.812,267.92,268.0,22.038,,
+plantation_avenue,13,Plantation Avenue_Cam4_20260203_083503_198_C.jpeg,,285.385,279.599,280.0,21.686,,
+plantation_avenue,14,Plantation Avenue_Cam4_20260203_083511_612_C.jpeg,,293.888,289.637,290.0,21.408,,
+plantation_avenue,15,Plantation Avenue_Cam4_20260203_083523_023_C.jpeg,,318.979,306.434,306.0,21.373,,

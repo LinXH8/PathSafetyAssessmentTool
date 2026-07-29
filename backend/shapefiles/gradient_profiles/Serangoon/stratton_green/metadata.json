@@ -1,0 +1,42 @@
+{
+  "path_key": "stratton_green",
+  "display_name": "Stratton Green",
+  "source_project": "Stratton Green",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Stratton Green\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T07:59:49.269064+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 51.236,
+  "profile_point_count": 27,
+  "valid_elevation_count": 27,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 5,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 16,
+  "usable_gradient_completion_pct": 59.26,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 18.52,
+  "gradient_min_pct": -7.52,
+  "gradient_max_pct": 6.274,
+  "path_bounds_svy21": {
+    "min_x": 31536.532,
+    "min_y": 40468.861,
+    "max_x": 31548.464,
+    "max_y": 40518.128
+  },
+  "road_boundary": {
+    "target_road_name": "STRATTON GREEN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 27,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

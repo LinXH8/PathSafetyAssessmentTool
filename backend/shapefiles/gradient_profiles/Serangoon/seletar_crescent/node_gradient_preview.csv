@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+seletar_crescent,1,Seletar Crescent_Cam4_20260106_082408_017_C.jpeg,,11.258,5.629,6.0,19.778,,
+seletar_crescent,2,Seletar Crescent_Cam4_20260106_082413_426_C.jpeg,,20.1,15.679,16.0,20.573,,
+seletar_crescent,3,Seletar Crescent_Cam4_20260106_082416_430_C.jpeg,,31.178,25.639,26.0,19.857,,
+seletar_crescent,4,Seletar Crescent_Cam4_20260106_082420_637_C.jpeg,,41.482,36.33,36.0,18.632,,
+seletar_crescent,5,Seletar Crescent_Cam4_20260106_082425_442_C.jpeg,,51.215,46.348,46.0,17.503,,
+seletar_crescent,6,Seletar Crescent_Cam4_20260106_082429_046_C.jpeg,,60.636,55.925,56.0,16.245,,
+seletar_crescent,7,Seletar Crescent_Cam4_20260106_082432_650_C.jpeg,,70.403,65.519,66.0,15.432,-8.437,1.0
+seletar_crescent,8,Seletar Crescent_Cam4_20260106_082435_654_C.jpeg,,82.667,76.535,76.0,15.145,-3.125,1.0
+seletar_crescent,9,Seletar Crescent_Cam4_20260106_082439_258_C.jpeg,,90.083,86.375,86.0,15.136,0.938,1.0
+seletar_crescent,10,Seletar Crescent_Cam4_20260106_082441_660_C.jpeg,,116.137,103.11,104.0,15.22,0.937,1.0
+seletar_crescent,11,Seletar Crescent_Cam4_20260106_082450_069_C.jpeg,,125.245,120.691,120.0,17.828,,
+seletar_crescent,12,Seletar Crescent_Cam4_20260106_082453_673_C.jpeg,,134.92,130.082,130.0,19.813,,
+seletar_crescent,13,Seletar Crescent_Cam4_20260106_082457_275_C.jpeg,,145.1,140.01,140.0,18.854,,
+seletar_crescent,14,Seletar Crescent_Cam4_20260106_082500_879_C.jpeg,,155.994,150.547,150.0,17.967,,
+seletar_crescent,15,Seletar Crescent_Cam4_20260106_082504_485_C.jpeg,,164.466,160.23,160.0,19.264,,
+seletar_crescent,16,Seletar Crescent_Cam4_20260106_082507_488_C.jpeg,,175.092,169.779,170.0,19.249,,
+seletar_crescent,17,Seletar Crescent_Cam4_20260106_082511_695_C.jpeg,,185.473,180.282,180.0,19.609,,
+seletar_crescent,18,Seletar Crescent_Cam4_20260106_082515_952_C.jpeg,,239.845,212.659,212.0,19.598,,
+seletar_crescent,19,Seletar Crescent_Cam4_20260106_082549_587_C.jpeg,,247.527,243.686,244.0,18.698,,
+seletar_crescent,20,Seletar Crescent_Cam4_20260106_082553_190_C.jpeg,,258.315,252.921,252.0,16.895,,
+seletar_crescent,21,Seletar Crescent_Cam4_20260106_082556_793_C.jpeg,,267.921,263.118,264.0,15.407,-1.875,1.0
+seletar_crescent,22,Seletar Crescent_Cam4_20260106_082559_799_C.jpeg,,277.459,272.69,272.0,15.32,,
+seletar_crescent,23,Seletar Crescent_Cam4_20260106_082602_802_C.jpeg,,306.224,291.842,292.0,20.326,,
+seletar_crescent,24,Seletar Crescent_Cam4_20260106_082616_620_C.jpeg,,316.204,311.214,312.0,20.29,,
+seletar_crescent,25,Seletar Crescent_Cam4_20260106_082620_224_C.jpeg,,329.62,322.912,322.0,19.782,,

@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jiak_chuan_road,1,Jiak Chuan Road_Cam4_20251229_074432_878_B.jpeg,,10.582,5.291,4.0,9.653,,
+jiak_chuan_road,2,Jiak Chuan Road_Cam4_20251229_074437_082_B.jpeg,,44.041,27.312,28.0,10.15,,
+jiak_chuan_road,3,Jiak Chuan Road_Cam4_20251229_074608_394_B.jpeg,,55.303,49.672,,,,
+jiak_chuan_road,4,Jiak Chuan Road_Cam4_20251229_074613_800_B.jpeg,,112.937,84.12,84.0,15.537,,

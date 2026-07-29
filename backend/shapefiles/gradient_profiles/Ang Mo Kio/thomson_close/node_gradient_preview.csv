@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_close,1,Thomson Close_Cam4_20260101_081512_038_B.jpeg,,11.821,5.911,6.0,37.872,,
+thomson_close,2,Thomson Close_Cam4_20260101_081515_646_B.jpeg,,22.008,16.914,16.0,36.209,,
+thomson_close,3,Thomson Close_Cam4_20260101_081518_048_B.jpeg,,32.362,27.185,28.0,34.972,,
+thomson_close,4,Thomson Close_Cam4_20260101_081520_450_B.jpeg,,44.012,38.187,38.0,33.471,,
+thomson_close,5,Thomson Close_Cam4_20260101_081523_454_B.jpeg,,51.204,47.608,48.0,32.535,-5.781,1.0
+thomson_close,6,Thomson Close_Cam4_20260101_081525_855_B.jpeg,,79.997,65.601,66.0,32.035,-0.965,1.0
+thomson_close,7,Thomson Close_Cam4_20260101_082639_329_B.jpeg,,90.768,85.383,86.0,30.813,-4.922,1.0
+thomson_close,8,Thomson Close_Cam4_20260101_082642_938_B.jpeg,,100.557,95.663,96.0,30.208,,
+thomson_close,9,Thomson Close_Cam4_20260101_082646_548_B.jpeg,,112.186,106.372,106.0,29.684,,
+thomson_close,10,Thomson Close_Cam4_20260101_082650_153_B.jpeg,,121.042,116.614,116.0,29.083,,
+thomson_close,11,Thomson Close_Cam4_20260101_082652_556_B.jpeg,,133.507,127.274,128.0,29.341,,
+thomson_close,12,Thomson Close_Cam4_20260101_082656_162_B.jpeg,,139.254,136.38,136.0,31.659,,
+thomson_close,13,Thomson Close_Cam4_20260101_082657_963_B.jpeg,,151.009,145.131,146.0,35.963,,
+thomson_close,14,Thomson Close_Cam4_20260101_082701_568_B.jpeg,,159.898,155.453,156.0,38.612,,
+thomson_close,15,Thomson Close_Cam4_20260101_082705_175_B.jpeg,,168.579,164.238,164.0,39.325,,

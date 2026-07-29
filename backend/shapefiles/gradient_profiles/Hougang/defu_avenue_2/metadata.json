@@ -1,0 +1,58 @@
+{
+  "path_key": "defu_avenue_2",
+  "display_name": "Defu Avenue 2",
+  "source_project": "Defu Avenue 2",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Defu Avenue 2\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T19:26:51.281663+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 794.663,
+  "profile_point_count": 365,
+  "valid_elevation_count": 365,
+  "rejected_outlier_count": 56,
+  "rejected_step_jump_count": 123,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 2,
+  "valid_gradient_count": 190,
+  "usable_gradient_completion_pct": 52.05,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 33.7,
+  "gradient_min_pct": -5.462,
+  "gradient_max_pct": 8.042,
+  "path_bounds_svy21": {
+    "min_x": 35504.215,
+    "min_y": 37829.173,
+    "max_x": 35573.618,
+    "max_y": 38231.201
+  },
+  "road_boundary": {
+    "target_road_name": "DEFU AVENUE 2",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 399,
+    "offroad_point_count": 34,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DEFU LANE 4",
+        "point_count": 13
+      },
+      {
+        "road_name": "DEFU LANE 6",
+        "point_count": 11
+      },
+      {
+        "road_name": "DEFU LANE 1",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 182.0,
+    "offroad_chainage_max_m": 754.0,
+    "trimmed_offroad_points": 34
+  }
+}

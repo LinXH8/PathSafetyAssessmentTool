@@ -1,0 +1,66 @@
+{
+  "path_key": "keppel_road",
+  "display_name": "Keppel Road",
+  "source_project": "Keppel Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Keppel Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T04:45:15.357913+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4594.015,
+  "profile_point_count": 1991,
+  "valid_elevation_count": 1962,
+  "rejected_outlier_count": 202,
+  "rejected_step_jump_count": 1418,
+  "repaired_gradient_point_count": 20,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 273,
+  "usable_gradient_completion_pct": 13.71,
+  "elevation_hit_coverage_pct": 98.54,
+  "step_jump_rejection_pct": 71.22,
+  "gradient_min_pct": -14.471,
+  "gradient_max_pct": 13.967,
+  "path_bounds_svy21": {
+    "min_x": 27479.041,
+    "min_y": 27989.705,
+    "max_x": 29339.511,
+    "max_y": 28433.17
+  },
+  "road_boundary": {
+    "target_road_name": "KEPPEL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2299,
+    "offroad_point_count": 308,
+    "offroad_top_road_names": [
+      {
+        "road_name": "AYER RAJAH EXPRESSWAY",
+        "point_count": 69
+      },
+      {
+        "road_name": "ANSON ROAD",
+        "point_count": 62
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 62
+      },
+      {
+        "road_name": "TANJONG PAGAR ROAD",
+        "point_count": 59
+      },
+      {
+        "road_name": "CANTONMENT ROAD",
+        "point_count": 37
+      }
+    ],
+    "offroad_chainage_min_m": 810.0,
+    "offroad_chainage_max_m": 4594.015,
+    "trimmed_offroad_points": 308
+  }
+}

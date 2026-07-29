@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+fernvale_close,1,Fernvale Close_Cam4_20260106_093316_865_A.jpeg,,10.462,5.231,6.0,8.331,,
+fernvale_close,2,Fernvale Close_Cam4_20260106_093320_477_A.jpeg,,20.823,15.642,16.0,8.528,0.729,1.0
+fernvale_close,3,Fernvale Close_Cam4_20260106_093323_481_A.jpeg,,31.526,26.174,26.0,8.498,,
+fernvale_close,4,Fernvale Close_Cam4_20260106_093326_489_A.jpeg,,44.764,38.145,38.0,8.481,,
+fernvale_close,5,Fernvale Close_Cam4_20260106_093332_500_A.jpeg,,67.474,56.119,56.0,8.314,0.313,1.0
+fernvale_close,6,Fernvale Close_Cam4_20260106_093348_720_A.jpeg,,79.12,73.297,74.0,8.273,0.208,1.0
+fernvale_close,7,Fernvale Close_Cam4_20260106_093352_925_A.jpeg,,90.669,84.895,84.0,8.306,0.104,1.0
+fernvale_close,8,Fernvale Close_Cam4_20260106_093356_531_A.jpeg,,114.165,102.417,102.0,7.524,,
+fernvale_close,9,Fernvale Close_Cam4_20260106_093403_743_A.jpeg,,124.104,119.135,120.0,7.181,-0.625,1.0
+fernvale_close,10,Fernvale Close_Cam4_20260106_093406_148_A.jpeg,,135.238,129.671,130.0,7.098,-0.312,1.0
+fernvale_close,11,Fernvale Close_Cam4_20260106_093409_752_A.jpeg,,143.009,139.124,140.0,7.214,0.833,1.0
+fernvale_close,12,Fernvale Close_Cam4_20260106_093412_754_A.jpeg,,151.551,147.28,148.0,7.714,11.25,2.0

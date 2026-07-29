@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+balestier_road,1,,BALESTIER ROAD,965.797,482.898,482.0,5.495,,
+balestier_road,2,,BALESTIER ROAD,321.514,1126.553,1126.0,7.016,,
+balestier_road,3,,BALESTIER ROAD,734.256,1654.438,1654.0,5.051,,
+balestier_road,4,,BALESTIER ROAD,301.674,2172.403,2172.0,4.657,,
+balestier_road,5,,BALESTIER ROAD,70.878,2358.679,2358.0,3.592,,
+balestier_road,6,,BALESTIER ROAD,64.259,2426.248,2426.0,4.12,,

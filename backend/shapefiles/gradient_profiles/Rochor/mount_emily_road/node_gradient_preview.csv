@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mount_emily_road,1,Cam4_20251204_095203_871_C.jpeg,,11.778,5.889,6.0,3.473,5.0,1.0
+mount_emily_road,2,Cam4_20251204_095208_732_C.jpeg,,23.865,17.821,18.0,4.19,4.271,1.0
+mount_emily_road,3,Cam4_20251204_095214_837_C.jpeg,,32.398,28.131,28.0,4.74,,
+mount_emily_road,4,Cam4_20251204_095218_450_C.jpeg,,40.716,36.557,36.0,5.674,,
+mount_emily_road,5,Cam4_20251204_095222_682_C.jpeg,,49.96,45.338,46.0,5.981,7.101,1.0
+mount_emily_road,6,Cam4_20251204_095228_777_C.jpeg,,60.413,55.187,56.0,6.648,8.542,1.0
+mount_emily_road,7,Cam4_20251204_095234_194_C.jpeg,,85.959,73.186,74.0,8.173,8.542,1.0
+mount_emily_road,8,Cam4_20251204_095245_186_C.jpeg,,113.42,99.689,100.0,10.64,7.083,1.0
+mount_emily_road,9,Cam4_20251204_095258_302_C.jpeg,,130.063,121.741,122.0,11.235,3.75,1.0

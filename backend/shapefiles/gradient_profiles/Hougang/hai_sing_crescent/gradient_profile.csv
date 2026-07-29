@@ -1,0 +1,12 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+hai_sing_crescent,Hai Sing Crescent,2.0,34642.008,38572.371,3.88,3.88,3.852,-0.65,1.0,HAI SING CRESCENT,3.111
+hai_sing_crescent,Hai Sing Crescent,4.0,34643.991,38572.109,3.852,3.852,3.839,-0.433,1.0,HAI SING CRESCENT,2.255
+hai_sing_crescent,Hai Sing Crescent,6.0,34645.973,38571.847,3.826,3.826,3.826,-0.325,1.0,HAI SING CRESCENT,1.399
+hai_sing_crescent,Hai Sing Crescent,8.0,34647.956,38571.585,3.818,3.818,3.826,-0.006,1.0,HAI SING CRESCENT,0.543
+hai_sing_crescent,Hai Sing Crescent,10.0,34649.939,38571.323,3.81,3.81,3.826,0.769,1.0,HAI SING CRESCENT,0.313
+hai_sing_crescent,Hai Sing Crescent,12.0,34651.879,38570.919,3.838,3.838,3.838,0.769,1.0,HAI SING CRESCENT,1.028
+hai_sing_crescent,Hai Sing Crescent,14.0,34653.67,38570.03,3.888,3.888,3.888,0.769,1.0,HAI SING CRESCENT,1.253
+hai_sing_crescent,Hai Sing Crescent,16.0,34655.461,38569.14,3.907,3.907,3.888,0.327,1.0,HAI SING CRESCENT,1.478
+hai_sing_crescent,Hai Sing Crescent,18.0,34657.252,38568.25,3.901,3.901,3.888,-0.976,1.0,HAI SING CRESCENT,1.703
+hai_sing_crescent,Hai Sing Crescent,20.0,34659.043,38567.36,3.828,3.828,3.865,-1.456,1.0,HAI SING CRESCENT,1.928
+hai_sing_crescent,Hai Sing Crescent,20.069,34659.105,38567.33,3.827,3.827,3.828,-2.864,1.0,HAI SING CRESCENT,1.936

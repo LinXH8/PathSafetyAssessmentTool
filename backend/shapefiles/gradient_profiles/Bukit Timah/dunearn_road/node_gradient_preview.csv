@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dunearn_road,1,,DUNEARN ROAD,978.871,489.435,490.0,2.56,,
+dunearn_road,2,,DUNEARN ROAD,854.131,1406.112,1406.0,6.427,,
+dunearn_road,3,,DUNEARN ROAD,364.882,2015.619,2016.0,5.764,,
+dunearn_road,4,,DUNEARN ROAD,287.521,2342.379,2342.0,5.706,,
+dunearn_road,5,,DUNEARN ROAD,2313.039,3643.218,3644.0,17.932,,
+dunearn_road,6,,DUNEARN ROAD,1827.201,5715.022,5716.0,8.024,,
+dunearn_road,7,,DUNEARN ROAD,130.885,6694.079,6694.0,12.69,,
+dunearn_road,8,,DUNEARN ROAD,626.862,7073.734,7074.0,21.142,,

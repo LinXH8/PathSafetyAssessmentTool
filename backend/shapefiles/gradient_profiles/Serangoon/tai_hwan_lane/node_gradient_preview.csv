@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tai_hwan_lane,1,Tai Hwan Lane_Cam4_20260202_085232_467_A.jpeg,,11.397,5.698,6.0,17.098,,
+tai_hwan_lane,2,Tai Hwan Lane_Cam4_20260202_085236_071_A.jpeg,,21.482,16.439,16.0,17.045,,
+tai_hwan_lane,3,Tai Hwan Lane_Cam4_20260202_085239_557_A.jpeg,,30.385,25.934,26.0,17.0,0.75,1.0
+tai_hwan_lane,4,Tai Hwan Lane_Cam4_20260202_085242_562_A.jpeg,,40.735,35.56,36.0,17.142,0.725,1.0
+tai_hwan_lane,5,Tai Hwan Lane_Cam4_20260202_085246_164_A.jpeg,,53.097,46.916,46.0,17.145,0.725,1.0
+tai_hwan_lane,6,Tai Hwan Lane_Cam4_20260202_085250_369_A.jpeg,,61.932,57.514,58.0,17.209,0.2,1.0
+tai_hwan_lane,7,Tai Hwan Lane_Cam4_20260202_085253_372_A.jpeg,,76.221,69.076,70.0,17.286,-0.163,1.0

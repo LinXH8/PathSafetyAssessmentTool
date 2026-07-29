@@ -1,0 +1,42 @@
+{
+  "path_key": "morse_road",
+  "display_name": "Morse Road",
+  "source_project": "Morse Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Morse Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:19:47.381485+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 31.961,
+  "profile_point_count": 17,
+  "valid_elevation_count": 17,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 11,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 2,
+  "usable_gradient_completion_pct": 11.76,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.71,
+  "gradient_min_pct": -0.195,
+  "gradient_max_pct": 1.591,
+  "path_bounds_svy21": {
+    "min_x": 25852.185,
+    "min_y": 28006.219,
+    "max_x": 25866.925,
+    "max_y": 28034.557
+  },
+  "road_boundary": {
+    "target_road_name": "MORSE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 17,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

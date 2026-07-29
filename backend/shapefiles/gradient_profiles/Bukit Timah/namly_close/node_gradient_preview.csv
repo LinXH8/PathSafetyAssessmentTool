@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+namly_close,1,Namly Close_Cam4_20251217_082759_083_B.jpeg,,11.074,5.537,6.0,17.368,,
+namly_close,2,Namly Close_Cam4_20251217_082802_088_B.jpeg,,22.638,16.856,16.0,17.168,2.109,1.0
+namly_close,3,Namly Close_Cam4_20251217_082805_093_B.jpeg,,34.876,28.757,28.0,19.286,,
+namly_close,4,Namly Close_Cam4_20251217_082808_696_B.jpeg,,40.427,37.652,38.0,22.903,,

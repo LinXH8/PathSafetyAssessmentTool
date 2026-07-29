@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+derbyshire_road,1,,DERBYSHIRE ROAD,156.689,78.344,78.0,11.802,,
+derbyshire_road,2,,DERBYSHIRE ROAD,140.088,226.732,226.0,7.553,,
+derbyshire_road,3,,DERBYSHIRE ROAD,37.37,453.373,454.0,2.768,0.208,1.0

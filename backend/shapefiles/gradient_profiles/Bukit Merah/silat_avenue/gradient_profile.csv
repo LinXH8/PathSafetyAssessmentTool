@@ -1,0 +1,22 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+silat_avenue,Silat Avenue,12.0,27671.994,28743.565,5.878,5.878,5.703,-5.313,1.0,SILAT AVENUE,21.927
+silat_avenue,Silat Avenue,14.0,27673.965,28743.901,5.703,5.703,5.596,-6.25,1.0,SILAT AVENUE,19.927
+silat_avenue,Silat Avenue,16.0,27675.937,28744.237,5.49,5.49,5.49,-7.187,1.0,SILAT AVENUE,17.928
+silat_avenue,Silat Avenue,18.0,27677.909,28744.573,5.328,5.328,5.328,-8.047,1.0,SILAT AVENUE,15.929
+silat_avenue,Silat Avenue,20.0,27679.88,28744.909,5.128,5.128,5.128,-6.719,1.0,SILAT AVENUE,13.93
+silat_avenue,Silat Avenue,22.0,27681.854,28745.226,4.953,4.953,4.953,-4.688,1.0,SILAT AVENUE,11.931
+silat_avenue,Silat Avenue,24.0,27683.845,28745.423,4.903,4.903,4.953,-2.188,1.0,SILAT AVENUE,9.933
+silat_avenue,Silat Avenue,26.0,27685.835,28745.62,4.953,4.953,4.953,0.0,1.0,SILAT AVENUE,7.934
+silat_avenue,Silat Avenue,28.0,27687.825,28745.817,4.953,4.953,4.953,0.313,1.0,SILAT AVENUE,5.936
+silat_avenue,Silat Avenue,30.0,27689.815,28746.015,4.953,4.953,4.953,0.313,1.0,SILAT AVENUE,3.938
+silat_avenue,Silat Avenue,32.0,27691.806,28746.212,4.978,4.978,4.978,0.313,1.0,SILAT AVENUE,1.939
+silat_avenue,Silat Avenue,34.0,27693.801,28746.317,5.003,5.003,4.978,0.0,1.0,SILAT AVENUE,0.051
+silat_avenue,Silat Avenue,36.0,27695.801,28746.346,5.003,5.003,4.978,-1.094,1.0,SILAT AVENUE,2.036
+silat_avenue,Silat Avenue,38.0,27697.801,28746.375,4.953,4.953,4.953,-2.188,1.0,SILAT AVENUE,4.02
+silat_avenue,Silat Avenue,40.0,27699.801,28746.405,5.115,4.878,4.878,-2.188,1.0,SILAT AVENUE,6.004
+silat_avenue,Silat Avenue,42.0,27701.8,28746.434,4.803,4.803,4.803,-1.875,1.0,SILAT AVENUE,7.989
+silat_avenue,Silat Avenue,44.0,27703.786,28746.347,4.803,4.803,4.803,-1.406,1.0,SILAT AVENUE,9.943
+silat_avenue,Silat Avenue,46.0,27705.721,28745.841,4.803,4.803,4.803,-0.938,1.0,SILAT AVENUE,11.788
+silat_avenue,Silat Avenue,48.0,27707.655,28745.334,4.753,4.753,4.753,,,SILAT AVENUE,13.633
+silat_avenue,Silat Avenue,50.0,27709.59,28744.827,4.703,4.703,4.728,,,SILAT AVENUE,15.478
+silat_avenue,Silat Avenue,52.0,27711.389,28745.232,5.503,4.703,4.703,,,SILAT AVENUE,17.316

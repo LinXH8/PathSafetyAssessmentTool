@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+golden_drive,1,Golden Drive_Cam4_20260202_082302_453_A.jpeg,,11.182,5.591,6.0,23.373,,
+golden_drive,2,Golden Drive_Cam4_20260202_082310_261_A.jpeg,,22.591,16.887,16.0,21.895,,
+golden_drive,3,Golden Drive_Cam4_20260202_082315_669_A.jpeg,,34.159,28.375,28.0,21.177,,
+golden_drive,4,Golden Drive_Cam4_20260202_082319_875_A.jpeg,,39.427,36.793,36.0,20.254,,
+golden_drive,5,Golden Drive_Cam4_20260202_082321_677_A.jpeg,,65.947,52.687,52.0,19.185,,
+golden_drive,6,Golden Drive_Cam4_20260202_082333_090_A.jpeg,,77.267,71.607,72.0,18.65,-4.766,1.0
+golden_drive,7,Golden Drive_Cam4_20260202_082337_294_A.jpeg,,107.941,92.604,92.0,19.232,,
+golden_drive,8,Golden Drive_Cam4_20260202_082345_700_A.jpeg,,160.352,134.146,134.0,21.887,,
+golden_drive,9,Golden Drive_Cam4_20260202_082526_012_A.jpeg,,183.011,171.681,172.0,19.366,11.145,2.0
+golden_drive,10,Golden Drive_Cam4_20260202_082535_022_A.jpeg,,193.735,188.373,188.0,20.438,,
+golden_drive,11,Golden Drive_Cam4_20260202_082540_427_A.jpeg,,206.163,199.949,200.0,19.856,,
+golden_drive,12,Golden Drive_Cam4_20260202_082545_837_A.jpeg,,221.549,213.856,214.0,19.017,-1.071,1.0
+golden_drive,13,Golden Drive_Cam4_20260202_082620_093_A.jpeg,,272.49,247.019,248.0,27.023,,
+golden_drive,14,Golden Drive_Cam4_20260202_082646_528_A.jpeg,,283.158,277.824,278.0,21.501,,
+golden_drive,15,Golden Drive_Cam4_20260202_082650_131_A.jpeg,,295.618,289.388,290.0,20.564,,
+golden_drive,16,Golden Drive_Cam4_20260202_082654_335_A.jpeg,,317.013,306.316,306.0,20.455,5.525,1.0
+golden_drive,17,Golden Drive_Cam4_20260202_082702_744_A.jpeg,,324.045,320.529,320.0,20.654,-0.37,1.0

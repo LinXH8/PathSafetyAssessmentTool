@@ -1,0 +1,23 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+d_almeida_street,D'Almeida Street,0.0,29987.09,29527.684,5.13,5.13,5.255,,,D'ALMEIDA STREET,11.282
+d_almeida_street,D'Almeida Street,2.0,29987.754,29529.571,5.255,5.255,5.36,,,D'ALMEIDA STREET,10.761
+d_almeida_street,D'Almeida Street,4.0,29988.419,29531.457,5.201,5.465,5.465,5.252,1.0,D'ALMEIDA STREET,10.24
+d_almeida_street,D'Almeida Street,6.0,29989.083,29533.344,10.608,5.675,5.675,,,D'ALMEIDA STREET,9.72
+d_almeida_street,D'Almeida Street,8.0,29989.748,29535.23,5.885,5.885,5.675,,,D'ALMEIDA STREET,9.199
+d_almeida_street,D'Almeida Street,10.0,29990.412,29537.117,11.191,5.69,5.675,,,D'ALMEIDA STREET,8.678
+d_almeida_street,D'Almeida Street,12.0,29991.082,29539.001,8.375,5.495,5.495,-5.453,1.0,D'ALMEIDA STREET,8.151
+d_almeida_street,D'Almeida Street,14.0,29991.766,29540.88,6.319,5.3,5.3,,,D'ALMEIDA STREET,7.611
+d_almeida_street,D'Almeida Street,16.0,29992.449,29542.76,5.105,5.105,5.239,,,D'ALMEIDA STREET,7.07
+d_almeida_street,D'Almeida Street,18.0,29993.133,29544.64,5.189,5.189,5.189,,,D'ALMEIDA STREET,6.53
+d_almeida_street,D'Almeida Street,20.0,29993.816,29546.519,5.239,5.239,5.105,-5.417,1.0,D'ALMEIDA STREET,5.99
+d_almeida_street,D'Almeida Street,22.0,29994.5,29548.399,4.789,5.005,5.005,,,D'ALMEIDA STREET,5.449
+d_almeida_street,D'Almeida Street,24.0,29995.182,29550.279,4.772,4.772,4.805,,,D'ALMEIDA STREET,4.911
+d_almeida_street,D'Almeida Street,26.0,29995.862,29552.16,6.105,4.789,4.805,,,D'ALMEIDA STREET,4.374
+d_almeida_street,D'Almeida Street,28.0,29996.543,29554.04,6.055,4.805,4.789,-1.497,1.0,D'ALMEIDA STREET,3.837
+d_almeida_street,D'Almeida Street,30.0,29997.223,29555.921,4.822,4.822,4.789,,,D'ALMEIDA STREET,3.299
+d_almeida_street,D'Almeida Street,32.0,29997.903,29557.802,4.672,4.672,4.685,,,D'ALMEIDA STREET,2.762
+d_almeida_street,D'Almeida Street,34.0,29998.584,29559.682,4.685,4.685,4.673,-1.601,1.0,D'ALMEIDA STREET,2.225
+d_almeida_street,D'Almeida Street,36.0,29998.257,29561.582,4.673,4.673,4.672,-0.469,1.0,D'ALMEIDA STREET,2.694
+d_almeida_street,D'Almeida Street,38.0,29997.649,29563.488,4.66,4.66,4.66,-0.608,1.0,D'ALMEIDA STREET,3.443
+d_almeida_street,D'Almeida Street,40.0,29997.041,29565.393,4.635,4.635,4.648,-0.873,1.0,D'ALMEIDA STREET,4.193
+d_almeida_street,D'Almeida Street,40.171,29996.989,29565.556,4.635,4.635,4.635,-1.151,1.0,D'ALMEIDA STREET,4.257

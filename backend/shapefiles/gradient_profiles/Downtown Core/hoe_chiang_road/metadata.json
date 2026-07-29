@@ -1,0 +1,66 @@
+{
+  "path_key": "hoe_chiang_road",
+  "display_name": "Hoe Chiang Road",
+  "source_project": "Hoe Chiang Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hoe Chiang Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T14:29:41.392633+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 590.792,
+  "profile_point_count": 156,
+  "valid_elevation_count": 156,
+  "rejected_outlier_count": 17,
+  "rejected_step_jump_count": 121,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 16,
+  "usable_gradient_completion_pct": 10.26,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.56,
+  "gradient_min_pct": -13.551,
+  "gradient_max_pct": 5.904,
+  "path_bounds_svy21": {
+    "min_x": 28923.342,
+    "min_y": 28446.825,
+    "max_x": 29067.595,
+    "max_y": 28571.035
+  },
+  "road_boundary": {
+    "target_road_name": "HOE CHIANG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 297,
+    "offroad_point_count": 141,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 50
+      },
+      {
+        "road_name": "KEE SENG STREET",
+        "point_count": 48
+      },
+      {
+        "road_name": "LIM TECK KIM ROAD",
+        "point_count": 39
+      },
+      {
+        "road_name": "CANTONMENT ROAD",
+        "point_count": 3
+      },
+      {
+        "road_name": "TANJONG PAGAR ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 590.792,
+    "trimmed_offroad_points": 141
+  }
+}

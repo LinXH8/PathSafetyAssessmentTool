@@ -1,0 +1,50 @@
+{
+  "path_key": "duke_s_road",
+  "display_name": "Duke's Road",
+  "source_project": "Duke's Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Duke's Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T11:42:09.128227+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 685.254,
+  "profile_point_count": 333,
+  "valid_elevation_count": 333,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 247,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 40,
+  "usable_gradient_completion_pct": 12.01,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 74.17,
+  "gradient_min_pct": -11.692,
+  "gradient_max_pct": 3.125,
+  "path_bounds_svy21": {
+    "min_x": 25507.316,
+    "min_y": 33733.468,
+    "max_x": 25666.539,
+    "max_y": 33921.647
+  },
+  "road_boundary": {
+    "target_road_name": "DUKE'S ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 344,
+    "offroad_point_count": 11,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 666.0,
+    "offroad_chainage_max_m": 686.0,
+    "trimmed_offroad_points": 11
+  }
+}

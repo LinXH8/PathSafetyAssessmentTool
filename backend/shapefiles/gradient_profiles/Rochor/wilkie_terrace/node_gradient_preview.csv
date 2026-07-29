@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+wilkie_terrace,1,Cam4_20251204_094745_265_C.jpeg,,14.804,7.402,8.0,10.36,8.125,1.0
+wilkie_terrace,2,Cam4_20251204_094754_923_C.jpeg,,22.418,18.611,18.0,10.91,6.875,1.0
+wilkie_terrace,3,Cam4_20251204_094758_555_C.jpeg,,30.071,26.245,26.0,11.561,5.312,1.0
+wilkie_terrace,4,Cam4_20251204_094801_559_C.jpeg,,40.778,35.425,36.0,12.11,3.75,1.0
+wilkie_terrace,5,Cam4_20251204_094806_448_C.jpeg,,54.562,47.67,48.0,12.535,4.688,1.0

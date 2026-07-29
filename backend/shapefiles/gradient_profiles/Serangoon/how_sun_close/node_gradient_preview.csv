@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+how_sun_close,1,How Sun Close_Cam4_20260112_085944_199_A.jpeg,,11.372,5.686,6.0,21.662,2.506,1.0
+how_sun_close,2,How Sun Close_Cam4_20260112_085954_410_A.jpeg,,21.853,16.612,16.0,22.018,,
+how_sun_close,3,How Sun Close_Cam4_20260112_090002_225_A.jpeg,,40.216,31.034,32.0,23.143,,

@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marina_boulevard,1,Cam4_20251211_083115_877_C.jpeg,,12.797,6.399,6.0,9.695,,
+marina_boulevard,2,Cam4_20251211_083118_280_C.jpeg,,36.441,24.619,24.0,8.475,,
+marina_boulevard,3,Cam4_20260205_075250_627_C.jpeg,,86.471,61.456,62.0,9.684,,
+marina_boulevard,4,Cam4_20260205_080338_881_C.jpeg,,87.7,87.086,88.0,16.908,,

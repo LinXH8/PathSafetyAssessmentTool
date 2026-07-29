@@ -1,0 +1,66 @@
+{
+  "path_key": "new_market_road",
+  "display_name": "New Market Road",
+  "source_project": "New Market Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\New Market Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-17T08:24:02.836301+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1020.968,
+  "profile_point_count": 161,
+  "valid_elevation_count": 161,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 74,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 55,
+  "usable_gradient_completion_pct": 34.16,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 45.96,
+  "gradient_min_pct": -8.901,
+  "gradient_max_pct": 7.474,
+  "path_bounds_svy21": {
+    "min_x": 28986.564,
+    "min_y": 29621.103,
+    "max_x": 29321.912,
+    "max_y": 30009.649
+  },
+  "road_boundary": {
+    "target_road_name": "NEW MARKET ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 512,
+    "offroad_point_count": 351,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER CROSS STREET",
+        "point_count": 156
+      },
+      {
+        "road_name": "HAVELOCK SQUARE",
+        "point_count": 81
+      },
+      {
+        "road_name": "PARK CRESCENT",
+        "point_count": 67
+      },
+      {
+        "road_name": "EU TONG SEN STREET",
+        "point_count": 38
+      },
+      {
+        "road_name": "HAVELOCK ROAD",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1020.968,
+    "trimmed_offroad_points": 351
+  }
+}

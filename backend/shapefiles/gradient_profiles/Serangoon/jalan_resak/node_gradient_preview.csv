@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_resak,1,Jalan Resak_Cam4_20260106_083558_896_C.jpeg,,10.426,5.213,6.0,11.392,,
+jalan_resak,2,Jalan Resak_Cam4_20260106_083605_503_C.jpeg,,20.872,15.649,16.0,11.314,,
+jalan_resak,3,Jalan Resak_Cam4_20260106_083610_909_C.jpeg,,30.772,25.822,26.0,11.216,,
+jalan_resak,4,Jalan Resak_Cam4_20260106_083615_114_C.jpeg,,40.337,35.554,36.0,10.473,,
+jalan_resak,5,Jalan Resak_Cam4_20260106_083619_321_C.jpeg,,50.825,45.581,46.0,10.386,0.729,1.0
+jalan_resak,6,Jalan Resak_Cam4_20260106_083624_127_C.jpeg,,62.399,56.612,56.0,10.802,2.333,1.0
+jalan_resak,7,Jalan Resak_Cam4_20260106_083628_330_C.jpeg,,70.258,66.329,66.0,10.745,,
+jalan_resak,8,Jalan Resak_Cam4_20260106_083631_333_C.jpeg,,80.632,75.445,76.0,11.098,1.094,1.0
+jalan_resak,9,Jalan Resak_Cam4_20260106_083636_140_C.jpeg,,90.914,85.773,86.0,11.186,1.562,1.0
+jalan_resak,10,Jalan Resak_Cam4_20260106_083640_344_C.jpeg,,99.69,95.302,96.0,11.261,2.328,1.0
+jalan_resak,11,Jalan Resak_Cam4_20260106_083644_549_C.jpeg,,109.665,104.677,104.0,11.447,,
+jalan_resak,12,Jalan Resak_Cam4_20260106_083656_561_C.jpeg,,139.648,124.656,124.0,11.161,0.0,1.0
+jalan_resak,13,Jalan Resak_Cam4_20260106_094404_256_C.jpeg,,150.957,145.302,146.0,12.354,,
+jalan_resak,14,Jalan Resak_Cam4_20260106_094407_860_C.jpeg,,160.239,155.598,156.0,11.317,,
+jalan_resak,15,Jalan Resak_Cam4_20260106_094411_343_C.jpeg,,170.729,165.484,166.0,11.089,10.324,2.0
+jalan_resak,16,Jalan Resak_Cam4_20260106_094414_947_C.jpeg,,179.536,175.133,176.0,11.552,-1.719,1.0

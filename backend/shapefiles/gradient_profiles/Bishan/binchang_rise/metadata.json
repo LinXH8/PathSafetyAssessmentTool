@@ -1,0 +1,62 @@
+{
+  "path_key": "binchang_rise",
+  "display_name": "Binchang Rise",
+  "source_project": "Binchang Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Binchang Rise\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T02:21:15.613407+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1637.848,
+  "profile_point_count": 654,
+  "valid_elevation_count": 653,
+  "rejected_outlier_count": 29,
+  "rejected_step_jump_count": 413,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 140,
+  "usable_gradient_completion_pct": 21.41,
+  "elevation_hit_coverage_pct": 99.85,
+  "step_jump_rejection_pct": 63.15,
+  "gradient_min_pct": -9.779,
+  "gradient_max_pct": 9.789,
+  "path_bounds_svy21": {
+    "min_x": 29201.679,
+    "min_y": 36740.362,
+    "max_x": 29617.539,
+    "max_y": 37127.185
+  },
+  "road_boundary": {
+    "target_road_name": "BINCHANG RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 820,
+    "offroad_point_count": 166,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BISHAN ROAD",
+        "point_count": 69
+      },
+      {
+        "road_name": "BISHAN STREET 21",
+        "point_count": 61
+      },
+      {
+        "road_name": "CLOVER CLOSE",
+        "point_count": 33
+      },
+      {
+        "road_name": "CLOVER WAY",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1638.0,
+    "trimmed_offroad_points": 166
+  }
+}

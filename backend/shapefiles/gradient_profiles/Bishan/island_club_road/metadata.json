@@ -1,0 +1,54 @@
+{
+  "path_key": "island_club_road",
+  "display_name": "Island Club Road",
+  "source_project": "Island Club Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Island Club Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T03:00:02.389029+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1324.612,
+  "profile_point_count": 352,
+  "valid_elevation_count": 352,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 112,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 2,
+  "valid_gradient_count": 213,
+  "usable_gradient_completion_pct": 60.51,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 31.82,
+  "gradient_min_pct": -10.866,
+  "gradient_max_pct": 5.891,
+  "path_bounds_svy21": {
+    "min_x": 27034.092,
+    "min_y": 38129.172,
+    "max_x": 27421.831,
+    "max_y": 38809.477
+  },
+  "road_boundary": {
+    "target_road_name": "ISLAND CLUB ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 664,
+    "offroad_point_count": 312,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER THOMSON ROAD",
+        "point_count": 310
+      },
+      {
+        "road_name": "VENUS DRIVE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1324.612,
+    "trimmed_offroad_points": 312
+  }
+}

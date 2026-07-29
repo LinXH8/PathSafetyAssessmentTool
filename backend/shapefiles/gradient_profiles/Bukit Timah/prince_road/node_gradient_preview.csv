@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+prince_road,1,Prince Road_Cam4_20251218_084030_295_B.jpeg,,10.143,5.072,,,,
+prince_road,2,Prince Road_Cam4_20251218_084032_697_B.jpeg,,302.712,156.428,156.0,7.164,,
+prince_road,3,Prince Road_Cam4_20251218_084623_584_B.jpeg,,315.971,309.341,310.0,5.042,,
+prince_road,4,Prince Road_Cam4_20251218_084627_792_B.jpeg,,321.415,318.693,318.0,4.958,-1.474,1.0
+prince_road,5,Prince Road_Cam4_20251218_084630_794_B.jpeg,,387.573,354.494,354.0,4.23,,
+prince_road,6,Prince Road_Cam4_20251218_084756_704_B.jpeg,,435.459,411.516,410.0,4.545,,
+prince_road,7,Prince Road_Cam4_20251218_084822_535_B.jpeg,,442.989,439.224,440.0,5.829,,
+prince_road,8,Prince Road_Cam4_20251218_084824_939_B.jpeg,,454.611,448.8,448.0,6.458,,
+prince_road,9,Prince Road_Cam4_20251218_084828_546_B.jpeg,,465.578,460.095,460.0,6.221,,
+prince_road,10,Prince Road_Cam4_20251218_084832_150_B.jpeg,,472.163,468.87,468.0,5.058,,
+prince_road,11,Prince Road_Cam4_20251218_084834_554_B.jpeg,,485.635,478.899,478.0,4.625,,

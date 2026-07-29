@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+clive_street,1,Clive Street_Cam4_20251208_103756_241_A.jpeg,,10.192,5.096,4.0,2.538,,
+clive_street,2,Clive Street_Cam4_20251208_103800_380_A.jpeg,,24.681,17.436,18.0,2.968,4.727,1.0
+clive_street,3,Clive Street_Cam4_20251208_103806_515_A.jpeg,,32.348,28.514,28.0,3.252,,
+clive_street,4,Clive Street_Cam4_20251208_103810_667_A.jpeg,,39.9,36.124,,,,
+clive_street,5,Clive Street_Cam4_20251208_104415_208_A.jpeg,,107.337,73.619,74.0,4.207,,
+clive_street,6,Clive Street_Cam4_20251208_104754_010_A.jpeg,,115.796,111.567,112.0,2.195,0.0,1.0
+clive_street,7,Clive Street_Cam4_20251208_104757_515_A.jpeg,,124.977,120.387,120.0,2.404,,
+clive_street,8,Clive Street_Cam4_20251208_104801_145_A.jpeg,,135.413,130.195,130.0,3.053,,
+clive_street,9,Clive Street_Cam4_20251208_104805_171_A.jpeg,,164.009,149.711,150.0,3.551,,
+clive_street,10,Clive Street_Cam4_20251208_105045_526_A.jpeg,,380.726,272.367,,,,
+clive_street,11,Clive Street_Cam4_20251208_120722_884_C.jpeg,,391.725,386.225,384.0,4.271,,
+clive_street,12,Clive Street_Cam4_20251208_120728_897_C.jpeg,,399.67,395.698,,,,
+clive_street,13,Clive Street_Cam4_20251208_120734_301_C.jpeg,,427.067,413.369,414.0,4.152,,
+clive_street,14,Clive Street_Cam4_20251208_121051_789_C.jpeg,,437.335,432.201,432.0,2.769,-0.785,1.0
+clive_street,15,Clive Street_Cam4_20251208_121055_397_C.jpeg,,448.55,442.943,442.0,2.755,,
+clive_street,16,Clive Street_Cam4_20251208_121100_202_C.jpeg,,535.729,492.14,492.0,3.637,,

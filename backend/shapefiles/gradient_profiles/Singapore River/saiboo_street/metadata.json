@@ -1,0 +1,50 @@
+{
+  "path_key": "saiboo_street",
+  "display_name": "Saiboo Street",
+  "source_project": "Saiboo Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Saiboo Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-24T03:25:50.956077+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 508.435,
+  "profile_point_count": 234,
+  "valid_elevation_count": 234,
+  "rejected_outlier_count": 19,
+  "rejected_step_jump_count": 153,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 49,
+  "usable_gradient_completion_pct": 20.94,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 65.38,
+  "gradient_min_pct": -11.282,
+  "gradient_max_pct": 9.019,
+  "path_bounds_svy21": {
+    "min_x": 28500.352,
+    "min_y": 30167.077,
+    "max_x": 28607.417,
+    "max_y": 30372.964
+  },
+  "road_boundary": {
+    "target_road_name": "SAIBOO STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 256,
+    "offroad_point_count": 22,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NANSON ROAD",
+        "point_count": 22
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 42.0,
+    "trimmed_offroad_points": 22
+  }
+}

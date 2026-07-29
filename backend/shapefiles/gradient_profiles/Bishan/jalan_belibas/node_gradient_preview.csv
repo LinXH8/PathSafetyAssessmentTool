@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_belibas,1,Jalan Belibas_Cam4_20260103_080502_204_B.jpeg,,11.138,5.569,6.0,11.07,-3.35,1.0
+jalan_belibas,2,Jalan Belibas_Cam4_20260103_080505_207_B.jpeg,,20.304,15.721,16.0,10.722,,
+jalan_belibas,3,Jalan Belibas_Cam4_20260103_080507_609_B.jpeg,,31.525,25.914,26.0,9.714,,
+jalan_belibas,4,Jalan Belibas_Cam4_20260103_080510_614_B.jpeg,,40.607,36.066,36.0,9.776,,
+jalan_belibas,5,Jalan Belibas_Cam4_20260103_080513_018_B.jpeg,,51.249,45.928,46.0,9.988,,
+jalan_belibas,6,Jalan Belibas_Cam4_20260103_080516_020_B.jpeg,,60.596,55.922,56.0,10.214,,
+jalan_belibas,7,Jalan Belibas_Cam4_20260103_080519_028_B.jpeg,,70.441,65.519,66.0,10.102,-1.615,1.0

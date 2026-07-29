@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_jambu_mawar",
+  "display_name": "Jalan Jambu Mawar",
+  "source_project": "Jalan Jambu Mawar",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Jambu Mawar\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T21:06:16.507797+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 151.596,
+  "profile_point_count": 77,
+  "valid_elevation_count": 77,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 32,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 36,
+  "usable_gradient_completion_pct": 46.75,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 41.56,
+  "gradient_min_pct": -7.111,
+  "gradient_max_pct": 2.329,
+  "path_bounds_svy21": {
+    "min_x": 22828.543,
+    "min_y": 35266.378,
+    "max_x": 22962.794,
+    "max_y": 35312.395
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN JAMBU MAWAR",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 77,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

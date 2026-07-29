@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_bukit_ho_swee",
+  "display_name": "Jalan Bukit Ho Swee",
+  "source_project": "Jalan Bukit Ho Swee",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Jalan Bukit Ho Swee\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T06:12:52.175286+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2752.862,
+  "profile_point_count": 955,
+  "valid_elevation_count": 945,
+  "rejected_outlier_count": 99,
+  "rejected_step_jump_count": 484,
+  "repaired_gradient_point_count": 22,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 359,
+  "usable_gradient_completion_pct": 37.59,
+  "elevation_hit_coverage_pct": 98.95,
+  "step_jump_rejection_pct": 50.68,
+  "gradient_min_pct": -14.896,
+  "gradient_max_pct": 9.031,
+  "path_bounds_svy21": {
+    "min_x": 27127.564,
+    "min_y": 29851.77,
+    "max_x": 28002.412,
+    "max_y": 30065.438
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN BUKIT HO SWEE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1378,
+    "offroad_point_count": 423,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BUKIT HO SWEE CRESCENT",
+        "point_count": 181
+      },
+      {
+        "road_name": "LOWER DELTA ROAD",
+        "point_count": 81
+      },
+      {
+        "road_name": "BUKIT HO SWEE LINK",
+        "point_count": 75
+      },
+      {
+        "road_name": "TIONG BAHRU ROAD",
+        "point_count": 69
+      },
+      {
+        "road_name": "TAMAN HO SWEE",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2752.862,
+    "trimmed_offroad_points": 423
+  }
+}

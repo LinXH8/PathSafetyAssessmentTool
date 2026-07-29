@@ -1,0 +1,54 @@
+{
+  "path_key": "joon_hiang_road",
+  "display_name": "Joon Hiang Road",
+  "source_project": "Joon Hiang Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Joon Hiang Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T18:28:33.769150+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 703.249,
+  "profile_point_count": 299,
+  "valid_elevation_count": 295,
+  "rejected_outlier_count": 39,
+  "rejected_step_jump_count": 124,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 144,
+  "usable_gradient_completion_pct": 48.16,
+  "elevation_hit_coverage_pct": 98.66,
+  "step_jump_rejection_pct": 41.47,
+  "gradient_min_pct": -8.094,
+  "gradient_max_pct": 2.062,
+  "path_bounds_svy21": {
+    "min_x": 32549.73,
+    "min_y": 37141.545,
+    "max_x": 32766.393,
+    "max_y": 37352.303
+  },
+  "road_boundary": {
+    "target_road_name": "JOON HIANG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 353,
+    "offroad_point_count": 54,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BOUNDARY ROAD",
+        "point_count": 49
+      },
+      {
+        "road_name": "RECREATION ROAD",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 704.0,
+    "trimmed_offroad_points": 54
+  }
+}

@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+teck_lim_road,1,Cam4_20251229_074440_686_B.jpeg,,13.667,6.833,,,,
+teck_lim_road,2,Cam4_20251229_074446_692_B.jpeg,,20.044,16.856,,,,
+teck_lim_road,3,Cam4_20251229_074450_296_B.jpeg,,51.015,35.53,36.0,10.191,,
+teck_lim_road,4,Cam4_20251229_074507_114_B.jpeg,,81.912,66.464,66.0,8.408,,
+teck_lim_road,5,Cam4_20251229_074530_554_B.jpeg,,200.255,141.084,142.0,12.576,,

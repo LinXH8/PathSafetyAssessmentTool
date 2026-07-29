@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mount_sinai_view,1,Mount Sinai View_Cam4_20251219_083420_071_A.jpeg,,10.719,5.359,6.0,24.222,,
+mount_sinai_view,2,Mount Sinai View_Cam4_20251219_092617_838_B.jpeg,,23.596,17.157,18.0,25.082,,
+mount_sinai_view,3,Mount Sinai View_Cam4_20251219_092623_845_B.jpeg,,30.664,27.13,28.0,25.655,,
+mount_sinai_view,4,Mount Sinai View_Cam4_20251219_092627_450_B.jpeg,,56.008,43.336,44.0,24.891,,
+mount_sinai_view,5,Mount Sinai View_Cam4_20251219_092638_264_B.jpeg,,66.413,61.21,62.0,27.652,,
+mount_sinai_view,6,Mount Sinai View_Cam4_20251219_092643_078_B.jpeg,,80.731,73.572,74.0,26.369,,
+mount_sinai_view,7,Mount Sinai View_Cam4_20251219_092651_493_B.jpeg,,109.437,95.084,96.0,26.085,,
+mount_sinai_view,8,Mount Sinai View_Cam4_20251219_092704_126_B.jpeg,,135.219,122.328,122.0,26.303,,

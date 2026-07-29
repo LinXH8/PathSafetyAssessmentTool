@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tari_dulang,1,Jalan Tari Dulang_Cam4_20260106_095727_010_A.jpeg,,10.232,5.116,,,,
+jalan_tari_dulang,2,Jalan Tari Dulang_Cam4_20260106_095730_017_A.jpeg,,24.271,17.251,,,,
+jalan_tari_dulang,3,Jalan Tari Dulang_Cam4_20260106_095734_221_A.jpeg,,63.137,43.704,44.0,9.032,-2.374,1.0
+jalan_tari_dulang,4,Jalan Tari Dulang_Cam4_20260106_095745_683_A.jpeg,,72.222,67.68,68.0,9.157,0.313,1.0
+jalan_tari_dulang,5,Jalan Tari Dulang_Cam4_20260106_095748_089_A.jpeg,,83.638,77.93,78.0,9.232,0.0,1.0
+jalan_tari_dulang,6,Jalan Tari Dulang_Cam4_20260106_095751_092_A.jpeg,,92.583,88.111,88.0,9.282,1.25,1.0
+jalan_tari_dulang,7,Jalan Tari Dulang_Cam4_20260106_095753_496_A.jpeg,,104.025,98.304,98.0,9.332,0.312,1.0
+jalan_tari_dulang,8,Jalan Tari Dulang_Cam4_20260106_095756_498_A.jpeg,,113.047,108.536,108.0,9.407,1.563,1.0
+jalan_tari_dulang,9,Jalan Tari Dulang_Cam4_20260106_095758_905_A.jpeg,,126.029,119.538,120.0,9.557,-0.313,1.0
+jalan_tari_dulang,10,Jalan Tari Dulang_Cam4_20260106_095802_531_A.jpeg,,134.556,130.293,130.0,9.557,0.313,1.0
+jalan_tari_dulang,11,Jalan Tari Dulang_Cam4_20260106_095804_935_A.jpeg,,143.007,138.781,138.0,9.557,0.0,1.0
+jalan_tari_dulang,12,Jalan Tari Dulang_Cam4_20260106_095807_341_A.jpeg,,153.389,148.198,148.0,9.607,0.938,1.0
+jalan_tari_dulang,13,Jalan Tari Dulang_Cam4_20260106_095810_345_A.jpeg,,162.365,157.877,158.0,9.682,0.0,1.0

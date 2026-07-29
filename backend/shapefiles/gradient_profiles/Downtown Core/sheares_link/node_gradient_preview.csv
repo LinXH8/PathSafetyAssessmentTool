@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sheares_link,1,Cam4_20260108_075420_040_B.jpeg,,13.293,6.646,6.0,8.415,,
+sheares_link,2,Cam4_20260108_075424_245_B.jpeg,,39.002,26.147,26.0,10.168,,
+sheares_link,3,Cam4_20260108_075431_453_B.jpeg,,68.221,53.612,54.0,8.132,-2.163,1.0
+sheares_link,4,Cam4_20260108_075441_066_B.jpeg,,76.905,72.563,72.0,8.615,,
+sheares_link,5,Cam4_20260108_075444_068_B.jpeg,,87.859,82.382,82.0,8.032,,
+sheares_link,6,Cam4_20260108_075448_873_B.jpeg,,96.686,92.273,92.0,7.171,,

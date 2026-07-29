@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+marina_gardens_lane,Marina Gardens Lane,10.0,31262.41,28772.614,3.86,3.86,3.885,-0.625,1.0,MARINA GARDENS LANE,12.007
+marina_gardens_lane,Marina Gardens Lane,12.0,31263.437,28774.33,3.885,3.885,3.872,0.0,1.0,MARINA GARDENS LANE,10.009
+marina_gardens_lane,Marina Gardens Lane,14.0,31264.465,28776.046,3.96,3.96,3.86,,,MARINA GARDENS LANE,8.011
+marina_gardens_lane,Marina Gardens Lane,16.0,31265.381,28777.824,3.685,3.685,3.885,,,MARINA GARDENS LANE,6.023
+marina_gardens_lane,Marina Gardens Lane,18.0,31266.289,28779.606,4.985,3.793,3.901,0.521,1.0,MARINA GARDENS LANE,4.036
+marina_gardens_lane,Marina Gardens Lane,20.0,31267.197,28781.388,5.297,3.901,3.847,0.278,1.0,MARINA GARDENS LANE,2.049
+marina_gardens_lane,Marina Gardens Lane,22.0,31267.795,28782.56,4.01,4.01,3.901,,,MARINA GARDENS LANE,0.741

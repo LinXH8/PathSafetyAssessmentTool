@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_place,1,Greenleaf Place_Cam4_20251219_095018_178_B.jpeg,,11.388,5.694,6.0,30.794,,
+greenleaf_place,2,Greenleaf Place_Cam4_20251219_095024_785_B.jpeg,,23.008,17.198,18.0,29.494,,
+greenleaf_place,3,Greenleaf Place_Cam4_20251219_095032_593_B.jpeg,,46.501,34.755,34.0,27.939,,
+greenleaf_place,4,Greenleaf Place_Cam4_20251219_095039_201_B.jpeg,,55.846,51.174,52.0,26.144,-6.562,1.0
+greenleaf_place,5,Greenleaf Place_Cam4_20251219_095041_604_B.jpeg,,66.874,61.36,62.0,25.367,-7.813,1.0
+greenleaf_place,6,Greenleaf Place_Cam4_20251219_095044_607_B.jpeg,,78.284,72.579,72.0,25.175,-3.223,1.0
+greenleaf_place,7,Greenleaf Place_Cam4_20251219_095051_216_B.jpeg,,101.841,90.063,90.0,24.417,-2.5,1.0
+greenleaf_place,8,Greenleaf Place_Cam4_20251219_095059_629_B.jpeg,,112.743,107.292,108.0,23.967,-2.5,1.0
+greenleaf_place,9,Greenleaf Place_Cam4_20251219_095103_232_B.jpeg,,124.068,118.405,118.0,23.817,-2.5,1.0
+greenleaf_place,10,Greenleaf Place_Cam4_20251219_095107_450_B.jpeg,,130.409,127.238,128.0,23.467,-4.375,1.0
+greenleaf_place,11,Greenleaf Place_Cam4_20251219_095109_252_B.jpeg,,158.131,144.27,144.0,22.967,,
+greenleaf_place,12,Greenleaf Place_Cam4_20251219_095117_060_B.jpeg,,169.276,163.703,164.0,22.417,-1.875,1.0
+greenleaf_place,13,Greenleaf Place_Cam4_20251219_095120_698_B.jpeg,,180.84,175.058,176.0,22.167,-1.694,1.0
+greenleaf_place,14,Greenleaf Place_Cam4_20251219_095124_302_B.jpeg,,205.031,192.936,192.0,22.74,,
+greenleaf_place,15,Greenleaf Place_Cam4_20251219_095130_912_B.jpeg,,217.675,211.353,212.0,23.068,,
+greenleaf_place,16,Greenleaf Place_Cam4_20251219_100509_540_B.jpeg,,223.282,220.479,220.0,23.172,,
+greenleaf_place,17,Greenleaf Place_Cam4_20251219_100512_001_B.jpeg,,301.233,262.258,262.0,22.067,3.125,1.0
+greenleaf_place,18,Greenleaf Place_Cam4_20251219_100543_929_B.jpeg,,364.964,333.099,334.0,24.117,3.125,1.0
+greenleaf_place,19,Greenleaf Place_Cam4_20251219_100611_664_B.jpeg,,373.252,369.108,370.0,25.25,0.938,1.0

@@ -1,0 +1,42 @@
+{
+  "path_key": "casuarina_walk",
+  "display_name": "Casuarina Walk",
+  "source_project": "Casuarina Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Casuarina Walk\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T17:00:51.120399+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 292.593,
+  "profile_point_count": 148,
+  "valid_elevation_count": 148,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 64,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 58,
+  "usable_gradient_completion_pct": 39.19,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 43.24,
+  "gradient_min_pct": -11.125,
+  "gradient_max_pct": 8.886,
+  "path_bounds_svy21": {
+    "min_x": 27282.894,
+    "min_y": 39693.379,
+    "max_x": 27300.113,
+    "max_y": 39848.329
+  },
+  "road_boundary": {
+    "target_road_name": "CASUARINA WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 148,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

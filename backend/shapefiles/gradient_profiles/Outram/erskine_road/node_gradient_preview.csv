@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+erskine_road,1,Erskine Road_Cam4_20251230_081952_049_C.jpeg,,10.24,5.12,6.0,8.696,,
+erskine_road,2,Erskine Road_Cam4_20251230_081956_252_C.jpeg,,21.175,15.707,16.0,8.503,-3.958,1.0
+erskine_road,3,Erskine Road_Cam4_20251230_082001_055_C.jpeg,,30.586,25.88,26.0,7.502,,
+erskine_road,4,Erskine Road_Cam4_20251230_082005_260_C.jpeg,,40.484,35.535,36.0,6.459,,
+erskine_road,5,Erskine Road_Cam4_20251230_082009_464_C.jpeg,,49.926,45.205,46.0,5.711,,
+erskine_road,6,Erskine Road_Cam4_20251230_082013_070_C.jpeg,,60.965,55.445,56.0,4.834,,
+erskine_road,7,Erskine Road_Cam4_20251230_082017_283_C.jpeg,,71.613,66.289,66.0,4.249,-5.0,1.0
+erskine_road,8,Erskine Road_Cam4_20251230_082023_289_C.jpeg,,112.666,92.139,92.0,5.042,2.932,1.0
+erskine_road,9,Erskine Road_Cam4_20251230_082041_309_C.jpeg,,197.335,155.001,156.0,4.872,,
+erskine_road,10,Erskine Road_Cam4_20251230_082240_256_C.jpeg,,220.53,208.933,208.0,8.199,,
+erskine_road,11,Erskine Road_Cam4_20251230_082331_909_C.jpeg,,226.798,223.664,224.0,7.274,,
+erskine_road,12,Erskine Road_Cam4_20251230_082333_711_C.jpeg,,238.4,232.599,232.0,6.277,,
+erskine_road,13,Erskine Road_Cam4_20251230_082337_314_C.jpeg,,248.182,243.291,244.0,5.754,,
+erskine_road,14,Erskine Road_Cam4_20251230_082340_923_C.jpeg,,257.95,253.066,254.0,5.561,,
+erskine_road,15,Erskine Road_Cam4_20251230_082344_526_C.jpeg,,269.761,263.855,264.0,4.849,-3.747,1.0
+erskine_road,16,Erskine Road_Cam4_20251230_082349_334_C.jpeg,,280.426,275.094,276.0,4.724,-2.813,1.0
+erskine_road,17,Erskine Road_Cam4_20251230_082353_537_C.jpeg,,287.21,283.818,284.0,4.763,,
+erskine_road,18,Erskine Road_Cam4_20251230_082356_541_C.jpeg,,298.275,292.743,292.0,6.034,,

@@ -1,0 +1,54 @@
+{
+  "path_key": "lilac_road",
+  "display_name": "Lilac Road",
+  "source_project": "Lilac Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lilac Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T19:24:52.252632+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 248.28,
+  "profile_point_count": 122,
+  "valid_elevation_count": 122,
+  "rejected_outlier_count": 17,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 36,
+  "usable_gradient_completion_pct": 29.51,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 53.28,
+  "gradient_min_pct": -4.792,
+  "gradient_max_pct": 5.979,
+  "path_bounds_svy21": {
+    "min_x": 31151.787,
+    "min_y": 40413.821,
+    "max_x": 31231.578,
+    "max_y": 40509.4
+  },
+  "road_boundary": {
+    "target_road_name": "LILAC ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 126,
+    "offroad_point_count": 4,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LILAC DRIVE",
+        "point_count": 3
+      },
+      {
+        "road_name": "MIMOSA WALK",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 216.0,
+    "trimmed_offroad_points": 4
+  }
+}

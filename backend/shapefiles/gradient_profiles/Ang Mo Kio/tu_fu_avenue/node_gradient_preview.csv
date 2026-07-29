@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tu_fu_avenue,1,Tu Fu Avenue_Cam4_20260105_104939_411_B.jpeg,,10.808,5.404,6.0,22.122,-0.404,1.0
+tu_fu_avenue,2,Tu Fu Avenue_Cam4_20260105_104942_421_B.jpeg,,24.229,17.518,18.0,22.16,7.897,1.0
+tu_fu_avenue,3,Tu Fu Avenue_Cam4_20260105_104946_067_B.jpeg,,31.386,27.807,28.0,22.677,-1.333,1.0
+tu_fu_avenue,4,Tu Fu Avenue_Cam4_20260105_104947_869_B.jpeg,,41.415,36.4,36.0,22.724,,
+tu_fu_avenue,5,Tu Fu Avenue_Cam4_20260105_104950_338_B.jpeg,,50.513,45.964,46.0,23.261,,
+tu_fu_avenue,6,Tu Fu Avenue_Cam4_20260105_104952_799_B.jpeg,,61.561,56.037,56.0,22.466,,
+tu_fu_avenue,7,Tu Fu Avenue_Cam4_20260105_104955_802_B.jpeg,,73.477,67.519,68.0,22.013,,
+tu_fu_avenue,8,Tu Fu Avenue_Cam4_20260105_104959_409_B.jpeg,,81.135,77.306,78.0,23.667,,
+tu_fu_avenue,9,Tu Fu Avenue_Cam4_20260105_105001_811_B.jpeg,,91.504,86.32,86.0,24.323,,
+tu_fu_avenue,10,Tu Fu Avenue_Cam4_20260105_105004_814_B.jpeg,,100.823,96.164,96.0,22.731,,
+tu_fu_avenue,11,Tu Fu Avenue_Cam4_20260105_105007_221_B.jpeg,,112.103,106.463,106.0,21.47,,
+tu_fu_avenue,12,Tu Fu Avenue_Cam4_20260105_105010_247_B.jpeg,,123.701,117.902,118.0,21.73,,
+tu_fu_avenue,13,Tu Fu Avenue_Cam4_20260105_105013_251_B.jpeg,,145.884,134.792,134.0,21.398,,
+tu_fu_avenue,14,Tu Fu Avenue_Cam4_20260105_105019_437_B.jpeg,,155.483,150.683,150.0,21.293,,

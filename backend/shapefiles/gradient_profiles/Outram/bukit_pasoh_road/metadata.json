@@ -1,0 +1,42 @@
+{
+  "path_key": "bukit_pasoh_road",
+  "display_name": "Bukit Pasoh Road",
+  "source_project": "Bukit Pasoh Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bukit Pasoh Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T05:56:55.139941+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 287.913,
+  "profile_point_count": 145,
+  "valid_elevation_count": 145,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 95,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 18.62,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 65.52,
+  "gradient_min_pct": -7.656,
+  "gradient_max_pct": 11.74,
+  "path_bounds_svy21": {
+    "min_x": 28781.174,
+    "min_y": 28993.587,
+    "max_x": 28860.204,
+    "max_y": 29134.081
+  },
+  "road_boundary": {
+    "target_road_name": "BUKIT PASOH ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 145,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

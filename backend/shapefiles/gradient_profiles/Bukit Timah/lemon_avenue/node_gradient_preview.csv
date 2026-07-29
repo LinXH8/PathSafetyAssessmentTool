@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lemon_avenue,1,Lemon Avenue_Cam4_20251217_090957_593_A.jpeg,,11.745,5.873,6.0,10.034,,
+lemon_avenue,2,Lemon Avenue_Cam4_20251217_091003_184_A.jpeg,,23.682,17.714,18.0,9.715,,
+lemon_avenue,3,Lemon Avenue_Cam4_20251217_091008_758_A.jpeg,,30.303,26.993,26.0,10.623,,
+lemon_avenue,4,Lemon Avenue_Cam4_20251217_091010_760_A.jpeg,,57.681,43.992,44.0,11.639,,
+lemon_avenue,5,Lemon Avenue_Cam4_20251217_091018_273_A.jpeg,,72.076,64.878,64.0,12.608,,
+lemon_avenue,6,Lemon Avenue_Cam4_20251217_091023_306_A.jpeg,,78.597,75.337,76.0,13.902,,
+lemon_avenue,7,Lemon Avenue_Cam4_20251217_091025_481_A.jpeg,,107.341,92.969,92.0,13.626,4.437,1.0

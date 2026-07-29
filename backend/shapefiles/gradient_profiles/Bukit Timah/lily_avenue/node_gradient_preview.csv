@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lily_avenue,1,Lily Avenue_Cam4_20251217_090936_855_A.jpeg,,10.219,5.109,6.0,8.109,,
+lily_avenue,2,Lily Avenue_Cam4_20251217_090940_872_A.jpeg,,146.818,78.518,78.0,10.444,,
+lily_avenue,3,Lily Avenue_Cam4_20251217_091105_109_A.jpeg,,157.657,152.238,152.0,16.506,,
+lily_avenue,4,Lily Avenue_Cam4_20251217_091108_151_A.jpeg,,167.88,162.768,162.0,14.735,,
+lily_avenue,5,Lily Avenue_Cam4_20251217_091110_724_A.jpeg,,180.676,174.278,174.0,11.596,,
+lily_avenue,6,Lily Avenue_Cam4_20251217_091113_803_A.jpeg,,203.491,192.083,192.0,10.086,,
+lily_avenue,7,Lily Avenue_Cam4_20251217_091119_380_A.jpeg,,214.854,209.172,210.0,9.317,-3.906,1.0
+lily_avenue,8,Lily Avenue_Cam4_20251217_091123_408_A.jpeg,,311.133,262.993,262.0,12.774,,
+lily_avenue,9,Lily Avenue_Cam4_20251217_091210_166_A.jpeg,,323.783,317.458,318.0,12.429,,
+lily_avenue,10,Lily Avenue_Cam4_20251217_091214_231_A.jpeg,,330.315,327.049,328.0,12.378,,
+lily_avenue,11,Lily Avenue_Cam4_20251217_091216_250_A.jpeg,,361.308,345.812,346.0,10.429,,
+lily_avenue,12,Lily Avenue_Cam4_20251217_091225_845_A.jpeg,,367.952,364.63,364.0,10.605,,
+lily_avenue,13,Lily Avenue_Cam4_20251217_091227_899_A.jpeg,,379.488,373.72,374.0,11.786,,
+lily_avenue,14,Lily Avenue_Cam4_20251217_091231_379_A.jpeg,,385.371,382.429,382.0,11.491,,

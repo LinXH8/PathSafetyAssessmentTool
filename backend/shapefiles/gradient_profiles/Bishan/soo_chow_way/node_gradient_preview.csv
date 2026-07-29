@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+soo_chow_way,1,Soo Chow Way_Cam4_20260103_100715_135_A.jpeg,,14.615,7.307,,,,
+soo_chow_way,2,Soo Chow Way_Cam4_20260103_100720_559_A.jpeg,,21.532,18.073,,,,
+soo_chow_way,3,Soo Chow Way_Cam4_20260103_100722_963_A.jpeg,,29.716,25.624,26.0,10.797,,
+soo_chow_way,4,Soo Chow Way_Cam4_20260103_100726_566_A.jpeg,,41.469,35.593,36.0,11.822,,
+soo_chow_way,5,Soo Chow Way_Cam4_20260103_100731_374_A.jpeg,,50.912,46.19,46.0,12.086,-0.978,1.0
+soo_chow_way,6,Soo Chow Way_Cam4_20260103_100734_430_A.jpeg,,60.882,55.897,56.0,12.532,,
+soo_chow_way,7,Soo Chow Way_Cam4_20260103_100737_437_A.jpeg,,71.716,66.299,66.0,13.062,,
+soo_chow_way,8,Soo Chow Way_Cam4_20260103_100740_440_A.jpeg,,80.205,75.961,76.0,14.022,,
+soo_chow_way,9,Soo Chow Way_Cam4_20260103_100742_842_A.jpeg,,107.272,93.739,94.0,15.455,,
+soo_chow_way,10,Soo Chow Way_Cam4_20260103_100752_455_A.jpeg,,121.532,114.402,114.0,17.099,1.451,1.0
+soo_chow_way,11,Soo Chow Way_Cam4_20260103_100757_262_A.jpeg,,127.598,124.565,124.0,17.607,5.75,1.0

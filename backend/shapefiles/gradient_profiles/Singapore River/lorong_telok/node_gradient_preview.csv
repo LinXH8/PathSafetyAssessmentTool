@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_telok,1,Cam4_20251211_111756_752_A.jpeg,,10.08,5.04,6.0,2.844,,
+lorong_telok,2,Cam4_20251211_111800_801_A.jpeg,,20.793,15.436,16.0,2.419,-3.75,1.0
+lorong_telok,3,Cam4_20251211_111804_489_A.jpeg,,32.221,26.507,26.0,2.236,-0.937,1.0
+lorong_telok,4,Cam4_20251211_111808_701_A.jpeg,,44.04,38.131,38.0,2.512,,
+lorong_telok,5,Cam4_20251211_111812_225_A.jpeg,,58.588,51.314,52.0,2.168,,
+lorong_telok,6,Cam4_20251211_111816_432_A.jpeg,,60.361,59.475,60.0,2.23,,
+lorong_telok,7,Cam4_20251211_111816_932_A.jpeg,,71.345,65.853,66.0,2.287,,
+lorong_telok,8,Cam4_20251211_111820_035_A.jpeg,,81.803,76.574,76.0,2.457,,

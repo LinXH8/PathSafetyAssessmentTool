@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+countryside_walk,1,Countryside Walk_Cam4_20251231_081018_256_B.jpeg,,11.325,5.662,6.0,8.066,4.018,1.0
+countryside_walk,2,Countryside Walk_Cam4_20251231_081021_261_B.jpeg,,20.839,16.082,16.0,8.078,-2.027,1.0
+countryside_walk,3,Countryside Walk_Cam4_20251231_081023_663_B.jpeg,,34.307,27.573,28.0,7.981,0.759,1.0
+countryside_walk,4,Countryside Walk_Cam4_20251231_081027_267_B.jpeg,,57.603,45.955,46.0,7.938,1.386,1.0

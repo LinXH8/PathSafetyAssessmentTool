@@ -1,0 +1,66 @@
+{
+  "path_key": "punggol_drive",
+  "display_name": "Punggol Drive",
+  "source_project": "Punggol Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Punggol Drive\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T05:14:59.056987+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8963.957,
+  "profile_point_count": 3233,
+  "valid_elevation_count": 2709,
+  "rejected_outlier_count": 492,
+  "rejected_step_jump_count": 2073,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 26,
+  "valid_gradient_count": 618,
+  "usable_gradient_completion_pct": 19.12,
+  "elevation_hit_coverage_pct": 83.79,
+  "step_jump_rejection_pct": 64.12,
+  "gradient_min_pct": -49.312,
+  "gradient_max_pct": 62.474,
+  "path_bounds_svy21": {
+    "min_x": 35862.166,
+    "min_y": 42139.573,
+    "max_x": 37508.153,
+    "max_y": 43494.885
+  },
+  "road_boundary": {
+    "target_road_name": "PUNGGOL DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4483,
+    "offroad_point_count": 1250,
+    "offroad_top_road_names": [
+      {
+        "road_name": "EDGEDALE PLAINS",
+        "point_count": 351
+      },
+      {
+        "road_name": "SENTUL CRESCENT",
+        "point_count": 300
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 242
+      },
+      {
+        "road_name": "EDGEFIELD PLAINS",
+        "point_count": 159
+      },
+      {
+        "road_name": "PUNGGOL EAST",
+        "point_count": 130
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 8964.0,
+    "trimmed_offroad_points": 1250
+  }
+}

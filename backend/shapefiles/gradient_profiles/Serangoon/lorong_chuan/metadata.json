@@ -1,0 +1,30 @@
+{
+  "path_key": "lorong_chuan",
+  "display_name": "Lorong Chuan",
+  "source_project": "Lorong Chuan",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Chuan\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-04-28T07:15:10.038921+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4813.291,
+  "profile_point_count": 2408,
+  "valid_elevation_count": 2353,
+  "rejected_outlier_count": 299,
+  "rejected_step_jump_count": 1394,
+  "repaired_gradient_point_count": 44,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 664,
+  "gradient_min_pct": -12.137,
+  "gradient_max_pct": 11.241,
+  "path_bounds_svy21": {
+    "min_x": 30805.024,
+    "min_y": 36609.285,
+    "max_x": 31935.073,
+    "max_y": 38365.893
+  }
+}

@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+muswell_hill,1,Muswell Hill_Cam4_20260112_092130_012_B.jpeg,,8.955,4.477,4.0,6.287,3.128,1.0
+muswell_hill,2,Muswell Hill_Cam4_20260112_092346_561_B.jpeg,,37.973,23.464,24.0,9.278,,
+muswell_hill,3,Muswell Hill_Cam4_20260112_092411_263_B.jpeg,,48.705,43.339,44.0,10.337,,
+muswell_hill,4,Muswell Hill_Cam4_20260112_092420_303_B.jpeg,,60.422,54.564,54.0,10.008,4.721,1.0
+muswell_hill,5,Muswell Hill_Cam4_20260112_092430_518_B.jpeg,,83.489,71.956,72.0,11.231,4.9,1.0
+muswell_hill,6,Muswell Hill_Cam4_20260112_092452_793_B.jpeg,,94.916,89.203,90.0,11.636,0.012,1.0
+muswell_hill,7,Muswell Hill_Cam4_20260112_092507_809_B.jpeg,,106.701,100.809,100.0,11.631,0.181,1.0
+muswell_hill,8,Muswell Hill_Cam4_20260112_092512_015_B.jpeg,,112.863,109.782,110.0,11.766,-0.256,1.0
+muswell_hill,9,Muswell Hill_Cam4_20260112_092514_419_B.jpeg,,122.648,117.756,118.0,11.583,-1.437,1.0
+muswell_hill,10,Muswell Hill_Cam4_20260112_092518_042_B.jpeg,,151.719,137.184,138.0,11.939,,
+muswell_hill,11,Muswell Hill_Cam4_20260112_092527_654_B.jpeg,,163.402,157.56,158.0,10.166,,
+muswell_hill,12,Muswell Hill_Cam4_20260112_092531_281_B.jpeg,,173.915,168.659,168.0,9.779,-4.411,1.0

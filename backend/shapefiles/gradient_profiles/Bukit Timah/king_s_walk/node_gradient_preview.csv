@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+king_s_walk,1,King's Walk_Cam4_20251217_102230_666_B.jpeg,,10.636,5.318,6.0,14.115,4.688,1.0
+king_s_walk,2,King's Walk_Cam4_20251217_102253_097_B.jpeg,,22.231,16.434,16.0,14.735,,
+king_s_walk,3,King's Walk_Cam4_20251217_102313_101_B.jpeg,,33.565,27.898,28.0,15.358,5.156,1.0
+king_s_walk,4,King's Walk_Cam4_20251217_102336_810_B.jpeg,,55.939,44.752,44.0,16.615,,
+king_s_walk,5,King's Walk_Cam4_20251217_102356_969_B.jpeg,,66.992,61.465,62.0,17.468,,
+king_s_walk,6,King's Walk_Cam4_20251217_102406_596_B.jpeg,,77.985,72.489,72.0,18.498,,
+king_s_walk,7,King's Walk_Cam4_20251217_102415_842_B.jpeg,,89.806,83.895,84.0,18.905,6.25,1.0

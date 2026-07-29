@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kismis_green,1,Kismis Green_Cam4_20251216_095346_484_A.jpeg,,13.553,6.776,6.0,29.711,-0.365,1.0
+kismis_green,2,Kismis Green_Cam4_20251216_095350_981_A.jpeg,,20.618,17.085,18.0,29.989,,
+kismis_green,3,Kismis Green_Cam4_20251216_095353_220_A.jpeg,,30.545,25.581,26.0,29.819,,
+kismis_green,4,Kismis Green_Cam4_20251216_095356_326_A.jpeg,,41.584,36.064,36.0,29.825,,
+kismis_green,5,Kismis Green_Cam4_20251216_095359_964_A.jpeg,,50.338,45.961,46.0,31.023,,
+kismis_green,6,Kismis Green_Cam4_20251216_095402_970_A.jpeg,,77.696,64.017,64.0,31.062,,
+kismis_green,7,Kismis Green_Cam4_20251216_095412_778_A.jpeg,,90.642,84.169,84.0,31.158,,
+kismis_green,8,Kismis Green_Cam4_20251216_095417_856_A.jpeg,,97.505,94.073,94.0,31.828,,
+kismis_green,9,Kismis Green_Cam4_20251216_095421_118_A.jpeg,,106.388,101.946,102.0,32.248,,
+kismis_green,10,Kismis Green_Cam4_20251216_095425_135_A.jpeg,,135.404,120.896,120.0,33.431,,
+kismis_green,11,Kismis Green_Cam4_20251216_095439_747_A.jpeg,,189.878,162.641,162.0,32.138,,
+kismis_green,12,Kismis Green_Cam4_20251216_095511_041_A.jpeg,,198.768,194.323,194.0,31.881,3.903,1.0

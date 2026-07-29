@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jupiter_road,1,Jupiter Road_Cam4_20260105_103445_789_A.jpeg,,10.304,5.152,6.0,19.231,,
+jupiter_road,2,Jupiter Road_Cam4_20260105_103449_998_A.jpeg,,54.964,32.634,32.0,17.79,,
+jupiter_road,3,Jupiter Road_Cam4_20260105_103537_486_A.jpeg,,64.622,59.793,60.0,14.744,,
+jupiter_road,4,Jupiter Road_Cam4_20260105_103540_490_A.jpeg,,72.019,68.321,68.0,14.34,-9.072,2.0
+jupiter_road,5,Jupiter Road_Cam4_20260105_103542_896_A.jpeg,,81.558,76.789,76.0,13.887,1.499,1.0
+jupiter_road,6,Jupiter Road_Cam4_20260105_105404_162_A.jpeg,,142.011,111.785,112.0,15.75,,
+jupiter_road,7,Jupiter Road_Cam4_20260105_105616_375_A.jpeg,,150.855,146.433,146.0,17.129,,
+jupiter_road,8,Jupiter Road_Cam4_20260105_105620_579_A.jpeg,,160.757,155.806,156.0,17.8,,
+jupiter_road,9,Jupiter Road_Cam4_20260105_105626_585_A.jpeg,,170.662,165.709,166.0,18.287,,
+jupiter_road,10,Jupiter Road_Cam4_20260105_105633_797_A.jpeg,,182.289,176.475,176.0,18.913,-5.542,1.0
+jupiter_road,11,Jupiter Road_Cam4_20260105_105641_603_A.jpeg,,193.429,187.859,188.0,18.465,,
+jupiter_road,12,Jupiter Road_Cam4_20260105_105645_206_A.jpeg,,201.173,197.301,198.0,19.385,,
+jupiter_road,13,Jupiter Road_Cam4_20260105_105647_609_A.jpeg,,211.08,206.126,206.0,19.395,,
+jupiter_road,14,Jupiter Road_Cam4_20260105_105651_212_A.jpeg,,220.315,215.697,216.0,20.282,,
+jupiter_road,15,Jupiter Road_Cam4_20260105_105654_815_A.jpeg,,230.654,225.484,226.0,20.959,,
+jupiter_road,16,Jupiter Road_Cam4_20260105_105659_025_A.jpeg,,239.882,235.268,236.0,21.425,,
+jupiter_road,17,Jupiter Road_Cam4_20260105_105703_229_A.jpeg,,275.124,257.503,258.0,22.0,,
+jupiter_road,18,Jupiter Road_Cam4_20260105_105815_318_A.jpeg,,288.101,281.613,282.0,23.454,,
+jupiter_road,19,Jupiter Road_Cam4_20260105_105819_520_A.jpeg,,295.036,291.568,292.0,23.385,1.163,1.0
+jupiter_road,20,Jupiter Road_Cam4_20260105_105821_927_A.jpeg,,304.232,299.634,300.0,23.699,4.479,1.0
+jupiter_road,21,Jupiter Road_Cam4_20260105_105825_532_A.jpeg,,314.601,309.417,310.0,24.514,,
+jupiter_road,22,Jupiter Road_Cam4_20260105_105830_341_A.jpeg,,426.597,370.599,370.0,35.286,,
+jupiter_road,23,Jupiter Road_Cam4_20260105_110213_303_A.jpeg,,434.803,430.7,430.0,34.098,3.972,1.0
+jupiter_road,24,Jupiter Road_Cam4_20260105_110217_511_A.jpeg,,471.848,453.326,454.0,33.449,-4.97,1.0
+jupiter_road,25,Jupiter Road_Cam4_20260105_110244_548_A.jpeg,,483.708,477.778,478.0,33.524,3.08,1.0

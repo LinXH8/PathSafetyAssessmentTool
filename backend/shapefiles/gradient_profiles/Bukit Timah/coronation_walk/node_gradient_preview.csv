@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+coronation_walk,1,Coronation Walk_Cam4_20251218_101657_279_B.jpeg,,11.036,5.518,6.0,4.104,,
+coronation_walk,2,Coronation Walk_Cam4_20251218_101702_662_B.jpeg,,21.048,16.042,16.0,4.175,,
+coronation_walk,3,Coronation Walk_Cam4_20251218_101706_268_B.jpeg,,30.81,25.929,26.0,4.336,,
+coronation_walk,4,Coronation Walk_Cam4_20251218_101711_161_B.jpeg,,59.012,44.911,44.0,4.278,,
+coronation_walk,5,Coronation Walk_Cam4_20251218_101724_453_B.jpeg,,69.953,64.483,64.0,4.478,,
+coronation_walk,6,Coronation Walk_Cam4_20251218_101728_088_B.jpeg,,76.439,73.196,74.0,4.076,,
+coronation_walk,7,Coronation Walk_Cam4_20251218_101729_890_B.jpeg,,87.533,81.986,82.0,4.088,,
+coronation_walk,8,Coronation Walk_Cam4_20251218_101732_895_B.jpeg,,99.478,93.505,94.0,4.957,-1.709,1.0
+coronation_walk,9,Coronation Walk_Cam4_20251218_101737_702_B.jpeg,,108.529,104.003,104.0,4.91,,
+coronation_walk,10,Coronation Walk_Cam4_20251218_101741_416_B.jpeg,,117.006,112.768,112.0,5.268,,
+coronation_walk,11,Coronation Walk_Cam4_20251218_101744_417_B.jpeg,,127.631,122.318,122.0,5.363,5.327,1.0
+coronation_walk,12,Coronation Walk_Cam4_20251218_101748_727_B.jpeg,,140.194,133.912,134.0,6.079,-3.126,1.0
+coronation_walk,13,Coronation Walk_Cam4_20251218_101752_937_B.jpeg,,148.678,144.436,144.0,5.27,-3.793,1.0
+coronation_walk,14,Coronation Walk_Cam4_20251218_101755_944_B.jpeg,,179.49,164.084,164.0,5.495,6.804,1.0
+coronation_walk,15,Coronation Walk_Cam4_20251218_101809_170_B.jpeg,,186.153,182.821,182.0,5.202,,
+coronation_walk,16,Coronation Walk_Cam4_20251218_101818_884_B.jpeg,,196.911,191.532,192.0,6.17,,
+coronation_walk,17,Coronation Walk_Cam4_20251218_101836_561_B.jpeg,,236.462,216.687,216.0,5.301,5.536,1.0
+coronation_walk,18,Coronation Walk_Cam4_20251218_101852_434_B.jpeg,,275.85,256.156,256.0,4.949,-1.771,1.0
+coronation_walk,19,Coronation Walk_Cam4_20251218_101907_379_B.jpeg,,316.746,296.298,296.0,4.64,,
+coronation_walk,20,Coronation Walk_Cam4_20251218_101918_843_B.jpeg,,356.277,336.512,336.0,4.296,0.0,1.0

@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sunrise_walk,1,Sunrise Walk_Cam4_20260105_095746_226_C.jpeg,,10.82,5.41,6.0,12.686,0.937,1.0
+sunrise_walk,2,Sunrise Walk_Cam4_20260105_095820_494_C.jpeg,,33.53,22.175,22.0,13.251,,
+sunrise_walk,3,Sunrise Walk_Cam4_20260105_095828_269_C.jpeg,,45.639,39.584,40.0,12.994,0.937,1.0
+sunrise_walk,4,Sunrise Walk_Cam4_20260105_095831_871_C.jpeg,,53.499,49.569,50.0,13.145,1.25,1.0
+sunrise_walk,5,Sunrise Walk_Cam4_20260105_095834_286_C.jpeg,,63.254,58.376,58.0,13.295,1.875,1.0
+sunrise_walk,6,Sunrise Walk_Cam4_20260105_095837_890_C.jpeg,,74.38,68.817,68.0,13.445,1.875,1.0

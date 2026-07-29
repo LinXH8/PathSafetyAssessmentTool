@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+coleman_lane,1,Coleman Lane_Cam4_20251211_094530_414_C.jpeg,,8.977,4.488,4.0,5.718,3.116,1.0
+coleman_lane,2,Coleman Lane_Cam4_20251211_102154_799_A.jpeg,,18.966,13.972,14.0,5.536,,
+coleman_lane,3,Coleman Lane_Cam4_20251211_102158_926_A.jpeg,,33.474,26.22,26.0,5.203,,
+coleman_lane,4,Coleman Lane_Cam4_20251211_102205_487_A.jpeg,,40.38,36.927,36.0,7.76,,
+coleman_lane,5,Coleman Lane_Cam4_20251211_102207_992_A.jpeg,,50.507,45.443,46.0,10.71,,
+coleman_lane,6,Coleman Lane_Cam4_20251211_102210_551_A.jpeg,,59.44,54.974,54.0,14.765,,
+coleman_lane,7,Coleman Lane_Cam4_20251211_102213_563_A.jpeg,,88.191,73.815,74.0,16.668,,
+coleman_lane,8,Coleman Lane_Cam4_20251211_102230_030_A.jpeg,,95.352,91.771,,,,
+coleman_lane,9,Coleman Lane_Cam4_20251211_102232_533_A.jpeg,,112.684,104.018,,,,
+coleman_lane,10,Coleman Lane_Cam4_20260204_120308_236_C.jpeg,,121.675,117.18,,,,
+coleman_lane,11,Coleman Lane_Cam4_20260204_120310_640_C.jpeg,,153.912,137.793,140.0,16.378,,

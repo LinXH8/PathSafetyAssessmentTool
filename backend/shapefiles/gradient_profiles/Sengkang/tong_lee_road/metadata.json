@@ -1,0 +1,54 @@
+{
+  "path_key": "tong_lee_road",
+  "display_name": "Tong Lee Road",
+  "source_project": "Tong Lee Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Tong Lee Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T02:53:32.645153+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 198.239,
+  "profile_point_count": 91,
+  "valid_elevation_count": 91,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 9.89,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 71.43,
+  "gradient_min_pct": -5.781,
+  "gradient_max_pct": 8.588,
+  "path_bounds_svy21": {
+    "min_x": 32171.001,
+    "min_y": 42367.405,
+    "max_x": 32317.032,
+    "max_y": 42446.721
+  },
+  "road_boundary": {
+    "target_road_name": "TONG LEE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 101,
+    "offroad_point_count": 10,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN TARI PIRING",
+        "point_count": 5
+      },
+      {
+        "road_name": "JALAN TARI PAYONG",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 64.0,
+    "offroad_chainage_max_m": 130.0,
+    "trimmed_offroad_points": 10
+  }
+}

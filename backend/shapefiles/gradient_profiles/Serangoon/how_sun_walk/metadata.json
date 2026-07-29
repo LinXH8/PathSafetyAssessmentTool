@@ -1,0 +1,54 @@
+{
+  "path_key": "how_sun_walk",
+  "display_name": "How Sun Walk",
+  "source_project": "How Sun Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\How Sun Walk\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T15:36:28.110223+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 603.375,
+  "profile_point_count": 240,
+  "valid_elevation_count": 233,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 160,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 52,
+  "usable_gradient_completion_pct": 21.67,
+  "elevation_hit_coverage_pct": 97.08,
+  "step_jump_rejection_pct": 66.67,
+  "gradient_min_pct": -9.083,
+  "gradient_max_pct": 7.866,
+  "path_bounds_svy21": {
+    "min_x": 32921.728,
+    "min_y": 36254.37,
+    "max_x": 33030.9,
+    "max_y": 36409.522
+  },
+  "road_boundary": {
+    "target_road_name": "HOW SUN WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 303,
+    "offroad_point_count": 63,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERANGOON AVENUE 1",
+        "point_count": 45
+      },
+      {
+        "road_name": "HOW SUN DRIVE",
+        "point_count": 18
+      }
+    ],
+    "offroad_chainage_min_m": 84.0,
+    "offroad_chainage_max_m": 604.0,
+    "trimmed_offroad_points": 63
+  }
+}

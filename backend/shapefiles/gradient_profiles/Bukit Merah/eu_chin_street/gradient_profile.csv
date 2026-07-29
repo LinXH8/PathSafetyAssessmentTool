@@ -1,0 +1,18 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+eu_chin_street,Eu Chin Street,0.0,27861.903,29573.087,,,,,,EU CHIN STREET,32.598
+eu_chin_street,Eu Chin Street,2.0,27860.32,29571.864,,,,,,EU CHIN STREET,30.608
+eu_chin_street,Eu Chin Street,4.0,27858.737,29570.642,,,,,,EU CHIN STREET,28.62
+eu_chin_street,Eu Chin Street,6.0,27857.154,29569.419,,,7.307,,,EU CHIN STREET,26.633
+eu_chin_street,Eu Chin Street,8.0,27855.571,29568.197,,,7.307,,,EU CHIN STREET,24.649
+eu_chin_street,Eu Chin Street,10.0,27853.989,29566.974,,,7.307,0.0,1.0,EU CHIN STREET,22.667
+eu_chin_street,Eu Chin Street,12.0,27852.406,29565.752,,7.307,7.307,0.0,1.0,EU CHIN STREET,20.689
+eu_chin_street,Eu Chin Street,14.0,27850.823,29564.529,,7.307,7.307,0.0,1.0,EU CHIN STREET,18.715
+eu_chin_street,Eu Chin Street,16.0,27849.225,29563.326,,7.307,7.307,0.0,1.0,EU CHIN STREET,16.743
+eu_chin_street,Eu Chin Street,18.0,27847.618,29562.136,,7.307,7.307,0.0,1.0,EU CHIN STREET,14.776
+eu_chin_street,Eu Chin Street,20.0,27846.011,29560.945,10.057,7.307,7.307,-0.625,1.0,EU CHIN STREET,12.819
+eu_chin_street,Eu Chin Street,22.0,27844.417,29559.738,7.307,7.307,7.307,-0.625,1.0,EU CHIN STREET,10.883
+eu_chin_street,Eu Chin Street,24.0,27842.843,29558.504,7.257,7.257,7.257,-0.625,1.0,EU CHIN STREET,8.987
+eu_chin_street,Eu Chin Street,26.0,27841.269,29557.27,7.257,7.257,7.257,-0.625,1.0,EU CHIN STREET,7.147
+eu_chin_street,Eu Chin Street,28.0,27839.695,29556.036,7.257,7.257,7.257,0.0,1.0,EU CHIN STREET,5.422
+eu_chin_street,Eu Chin Street,30.0,27838.121,29554.802,7.257,7.257,7.257,0.0,1.0,EU CHIN STREET,3.965
+eu_chin_street,Eu Chin Street,32.0,27836.853,29553.807,7.007,7.007,7.257,0.0,1.0,EU CHIN STREET,3.242

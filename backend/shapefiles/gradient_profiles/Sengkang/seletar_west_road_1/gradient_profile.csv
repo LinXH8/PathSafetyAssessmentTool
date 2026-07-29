@@ -1,0 +1,18 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+seletar_west_road_1,Seletar West Road 1,0.0,31970.031,41462.957,15.361,14.617,14.617,,,SELETAR WEST ROAD 1,4.428
+seletar_west_road_1,Seletar West Road 1,2.0,31970.124,41464.955,15.133,14.617,14.617,,,SELETAR WEST ROAD 1,2.432
+seletar_west_road_1,Seletar West Road 1,4.0,31970.217,41466.953,14.617,14.617,14.617,,,SELETAR WEST ROAD 1,0.436
+seletar_west_road_1,Seletar West Road 1,6.0,31970.31,41468.951,14.115,14.587,14.587,,,SELETAR WEST ROAD 1,1.56
+seletar_west_road_1,Seletar West Road 1,8.0,31970.403,41470.949,14.574,14.557,14.557,-3.48,1.0,SELETAR WEST ROAD 1,3.556
+seletar_west_road_1,Seletar West Road 1,10.0,31970.496,41472.947,14.526,14.526,14.526,,,SELETAR WEST ROAD 1,5.551
+seletar_west_road_1,Seletar West Road 1,12.0,31970.284,41474.91,14.339,14.339,14.339,,,SELETAR WEST ROAD 1,7.479
+seletar_west_road_1,Seletar West Road 1,14.0,31969.744,41476.835,14.296,14.296,14.339,-2.351,1.0,SELETAR WEST ROAD 1,9.333
+seletar_west_road_1,Seletar West Road 1,16.0,31969.204,41478.761,14.268,14.268,14.339,,,SELETAR WEST ROAD 1,11.187
+seletar_west_road_1,Seletar West Road 1,18.0,31968.664,41480.687,14.551,14.551,14.338,,,SELETAR WEST ROAD 1,13.041
+seletar_west_road_1,Seletar West Road 1,20.0,31968.124,41482.613,15.184,14.445,14.338,,,SELETAR WEST ROAD 1,14.895
+seletar_west_road_1,Seletar West Road 1,22.0,31967.584,41484.538,15.123,14.338,14.338,-1.998,1.0,SELETAR WEST ROAD 1,16.749
+seletar_west_road_1,Seletar West Road 1,24.0,31966.913,41486.404,14.609,14.231,14.231,,,SELETAR WEST ROAD 1,18.529
+seletar_west_road_1,Seletar West Road 1,26.0,31965.803,41488.068,14.125,14.125,14.178,,,SELETAR WEST ROAD 1,20.06
+seletar_west_road_1,Seletar West Road 1,28.0,31964.694,41489.732,14.178,14.178,14.125,,,SELETAR WEST ROAD 1,21.591
+seletar_west_road_1,Seletar West Road 1,30.0,31963.584,41491.396,13.937,13.937,14.09,-2.822,1.0,SELETAR WEST ROAD 1,23.122
+seletar_west_road_1,Seletar West Road 1,30.366,31963.381,41491.701,14.055,14.055,14.055,-2.943,1.0,SELETAR WEST ROAD 1,23.402

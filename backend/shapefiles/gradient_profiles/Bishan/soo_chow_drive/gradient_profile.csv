@@ -1,0 +1,22 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+soo_chow_drive,Soo Chow Drive,0.0,27813.02,37283.755,21.152,21.152,21.106,-0.173,1.0,SOO CHOW DRIVE,2.312
+soo_chow_drive,Soo Chow Drive,2.0,27811.543,37285.103,21.106,21.106,21.102,-0.347,1.0,SOO CHOW DRIVE,2.371
+soo_chow_drive,Soo Chow Drive,4.0,27810.066,37286.452,21.085,21.085,21.099,-0.578,1.0,SOO CHOW DRIVE,2.429
+soo_chow_drive,Soo Chow Drive,6.0,27808.589,37287.8,21.099,21.099,21.085,-2.256,1.0,SOO CHOW DRIVE,2.488
+soo_chow_drive,Soo Chow Drive,8.0,27807.112,37289.148,21.06,21.06,21.06,-4.896,1.0,SOO CHOW DRIVE,2.546
+soo_chow_drive,Soo Chow Drive,10.0,27805.635,37290.497,20.922,20.922,20.922,-5.496,1.0,SOO CHOW DRIVE,2.605
+soo_chow_drive,Soo Chow Drive,12.0,27804.158,37291.845,20.707,20.707,20.707,-5.892,1.0,SOO CHOW DRIVE,2.663
+soo_chow_drive,Soo Chow Drive,14.0,27802.682,37293.196,20.588,20.588,20.645,-4.572,1.0,SOO CHOW DRIVE,2.72
+soo_chow_drive,Soo Chow Drive,16.0,27801.247,37294.588,20.556,20.556,20.588,-2.62,1.0,SOO CHOW DRIVE,2.718
+soo_chow_drive,Soo Chow Drive,18.0,27799.811,37295.98,20.645,20.645,20.556,-0.668,1.0,SOO CHOW DRIVE,2.716
+soo_chow_drive,Soo Chow Drive,20.0,27798.375,37297.373,20.825,20.517,20.556,1.16,1.0,SOO CHOW DRIVE,2.714
+soo_chow_drive,Soo Chow Drive,22.0,27796.928,37298.753,20.388,20.388,20.592,2.988,1.0,SOO CHOW DRIVE,2.729
+soo_chow_drive,Soo Chow Drive,24.0,27795.472,37300.124,20.181,20.592,20.592,4.297,1.0,SOO CHOW DRIVE,2.756
+soo_chow_drive,Soo Chow Drive,26.0,27794.016,37301.496,20.795,20.795,20.795,5.606,1.0,SOO CHOW DRIVE,2.784
+soo_chow_drive,Soo Chow Drive,28.0,27792.56,37302.867,20.503,21.04,21.04,,,SOO CHOW DRIVE,2.812
+soo_chow_drive,Soo Chow Drive,30.0,27791.104,37304.238,21.285,21.285,21.04,,,SOO CHOW DRIVE,2.839
+soo_chow_drive,Soo Chow Drive,32.0,27789.644,37305.605,21.95,21.095,21.04,,,SOO CHOW DRIVE,2.872
+soo_chow_drive,Soo Chow Drive,34.0,27788.184,37306.971,21.923,20.904,20.904,-0.958,1.0,SOO CHOW DRIVE,2.907
+soo_chow_drive,Soo Chow Drive,36.0,27786.723,37308.337,21.131,20.714,20.714,,,SOO CHOW DRIVE,2.941
+soo_chow_drive,Soo Chow Drive,74.0,27764.813,37338.753,19.486,20.523,20.619,,,SOO CHOW DRIVE,5.739
+soo_chow_drive,Soo Chow Drive,74.726,27764.474,37339.395,19.916,20.523,20.523,,,SOO CHOW DRIVE,6.046

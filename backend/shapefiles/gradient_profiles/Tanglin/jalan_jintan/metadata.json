@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_jintan",
+  "display_name": "Jalan Jintan",
+  "source_project": "Jalan Jintan",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Jintan\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-07T15:49:18.051257+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 165.685,
+  "profile_point_count": 84,
+  "valid_elevation_count": 84,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 40,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 33.33,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.62,
+  "gradient_min_pct": -5.833,
+  "gradient_max_pct": 3.194,
+  "path_bounds_svy21": {
+    "min_x": 28059.563,
+    "min_y": 32002.914,
+    "max_x": 28160.284,
+    "max_y": 32011.351
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN JINTAN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 84,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

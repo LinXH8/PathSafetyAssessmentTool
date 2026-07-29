@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+carver_street,1,Carver Street_Cam4_20251211_094837_424_A.jpeg,,10.9,5.45,,,,
+carver_street,2,Carver Street_Cam4_20251211_094842_440_A.jpeg,,122.336,66.618,,,,
+carver_street,3,Carver Street_Cam4_20260204_110731_670_A.jpeg,,157.082,139.709,140.0,9.168,,
+carver_street,4,Carver Street_Cam4_20260204_110748_530_A.jpeg,,170.556,163.819,,,,
+carver_street,5,Carver Street_Cam4_20260204_110750_332_A.jpeg,,200.316,185.436,,,,
+carver_street,6,Carver Street_Cam4_20260204_110800_549_A.jpeg,,210.842,205.579,,,,
+carver_street,7,Carver Street_Cam4_20260204_110804_164_A.jpeg,,221.255,216.048,,,,
+carver_street,8,Carver Street_Cam4_20260204_110807_768_A.jpeg,,227.241,224.248,,,,

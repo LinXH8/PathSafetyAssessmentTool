@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tai_hwan_place,1,Tai Hwan Place_Cam4_20260202_090118_208_A.jpeg,,13.579,6.79,6.0,19.272,-2.725,1.0
+tai_hwan_place,2,Tai Hwan Place_Cam4_20260202_090122_295_A.jpeg,,21.592,17.585,18.0,19.056,,
+tai_hwan_place,3,Tai Hwan Place_Cam4_20260202_090124_697_A.jpeg,,31.414,26.503,26.0,18.292,,
+tai_hwan_place,4,Tai Hwan Place_Cam4_20260202_090127_701_A.jpeg,,40.718,36.066,36.0,17.58,,
+tai_hwan_place,5,Tai Hwan Place_Cam4_20260202_090130_705_A.jpeg,,66.415,53.567,54.0,16.476,-5.456,1.0
+tai_hwan_place,6,Tai Hwan Place_Cam4_20260202_090140_796_A.jpeg,,80.017,73.216,74.0,15.385,-8.362,1.0
+tai_hwan_place,7,Tai Hwan Place_Cam4_20260202_090145_602_A.jpeg,,86.01,83.013,84.0,14.781,-6.606,1.0
+tai_hwan_place,8,Tai Hwan Place_Cam4_20260202_090147_403_A.jpeg,,96.424,91.217,92.0,14.25,-4.438,1.0
+tai_hwan_place,9,Tai Hwan Place_Cam4_20260202_090150_407_A.jpeg,,106.87,101.647,102.0,13.936,-2.65,1.0
+tai_hwan_place,10,Tai Hwan Place_Cam4_20260202_090154_012_A.jpeg,,115.517,111.193,112.0,13.907,1.475,1.0

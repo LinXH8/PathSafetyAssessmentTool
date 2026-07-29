@@ -1,0 +1,13 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+jalan_rumah_tinggi,Jalan Rumah Tinggi,0.0,25440.779,29958.387,17.128,17.128,17.203,-0.307,1.0,JALAN RUMAH TINGGI,8.827
+jalan_rumah_tinggi,Jalan Rumah Tinggi,2.0,25439.258,29959.686,17.203,17.203,17.197,,,JALAN RUMAH TINGGI,7.782
+jalan_rumah_tinggi,Jalan Rumah Tinggi,4.0,25437.737,29960.984,17.263,17.263,17.191,,,JALAN RUMAH TINGGI,6.738
+jalan_rumah_tinggi,Jalan Rumah Tinggi,6.0,25436.215,29962.282,17.768,17.191,17.191,-1.634,1.0,JALAN RUMAH TINGGI,5.693
+jalan_rumah_tinggi,Jalan Rumah Tinggi,8.0,25434.694,29963.581,17.708,17.119,17.119,-1.807,1.0,JALAN RUMAH TINGGI,4.649
+jalan_rumah_tinggi,Jalan Rumah Tinggi,10.0,25433.173,29964.879,17.046,17.046,17.066,,,JALAN RUMAH TINGGI,3.605
+jalan_rumah_tinggi,Jalan Rumah Tinggi,12.0,25432.772,29966.666,17.066,17.066,17.046,,,JALAN RUMAH TINGGI,1.903
+jalan_rumah_tinggi,Jalan Rumah Tinggi,14.0,25432.856,29968.664,16.946,16.946,17.046,,,JALAN RUMAH TINGGI,0.084
+jalan_rumah_tinggi,Jalan Rumah Tinggi,16.0,25432.94,29970.662,16.996,16.996,17.066,1.187,1.0,JALAN RUMAH TINGGI,2.071
+jalan_rumah_tinggi,Jalan Rumah Tinggi,18.0,25433.023,29972.661,17.421,17.126,17.126,1.655,1.0,JALAN RUMAH TINGGI,4.058
+jalan_rumah_tinggi,Jalan Rumah Tinggi,20.0,25433.107,29974.659,17.256,17.256,17.141,1.937,1.0,JALAN RUMAH TINGGI,6.044
+jalan_rumah_tinggi,Jalan Rumah Tinggi,20.647,25433.134,29975.305,17.156,17.156,17.156,,,JALAN RUMAH TINGGI,6.687

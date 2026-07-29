@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jacaranda_road,1,Jacaranda Road_Cam4_20260105_083520_135_B.jpeg,,12.366,6.183,6.0,24.308,-6.795,1.0
+jacaranda_road,2,Jacaranda Road_Cam4_20260105_083525_540_B.jpeg,,20.584,16.475,16.0,24.063,,
+jacaranda_road,3,Jacaranda Road_Cam4_20260105_083529_743_B.jpeg,,32.443,26.514,26.0,25.518,,
+jacaranda_road,4,Jacaranda Road_Cam4_20260105_083535_748_B.jpeg,,86.277,59.36,60.0,25.075,,
+jacaranda_road,5,Jacaranda Road_Cam4_20260105_084531_665_B.jpeg,,136.501,111.389,112.0,24.579,,
+jacaranda_road,6,Jacaranda Road_Cam4_20260105_084611_911_B.jpeg,,170.121,153.311,154.0,25.275,,
+jacaranda_road,7,Jacaranda Road_Cam4_20260105_084643_749_B.jpeg,,206.857,188.489,188.0,25.907,,
+jacaranda_road,8,Jacaranda Road_Cam4_20260105_084730_009_B.jpeg,,218.499,212.678,212.0,26.364,,
+jacaranda_road,9,Jacaranda Road_Cam4_20260105_084736_017_B.jpeg,,229.927,224.213,224.0,26.876,4.883,1.0

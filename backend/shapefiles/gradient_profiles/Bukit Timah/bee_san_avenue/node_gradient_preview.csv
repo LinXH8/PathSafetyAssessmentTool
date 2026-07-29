@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bee_san_avenue,1,Bee San Avenue_Cam4_20251216_075834_847_C.jpeg,,12.883,6.442,,,,
+bee_san_avenue,2,Bee San Avenue_Cam4_20251216_075839_652_C.jpeg,,24.659,18.771,20.0,16.56,,
+bee_san_avenue,3,Bee San Avenue_Cam4_20251216_075845_056_C.jpeg,,32.375,28.517,28.0,16.533,-0.344,1.0
+bee_san_avenue,4,Bee San Avenue_Cam4_20251216_075847_459_C.jpeg,,40.098,36.236,36.0,16.645,1.281,1.0
+bee_san_avenue,5,Bee San Avenue_Cam4_20251216_075849_861_C.jpeg,,68.829,54.463,54.0,16.504,1.5,1.0
+bee_san_avenue,6,Bee San Avenue_Cam4_20251216_075859_475_C.jpeg,,79.774,74.302,74.0,16.585,,
+bee_san_avenue,7,Bee San Avenue_Cam4_20251216_075902_490_C.jpeg,,103.507,91.64,92.0,16.627,,
+bee_san_avenue,8,Bee San Avenue_Cam4_20251216_075909_698_C.jpeg,,114.16,108.833,108.0,17.324,,
+bee_san_avenue,9,Bee San Avenue_Cam4_20251216_075914_505_C.jpeg,,124.082,119.121,120.0,16.914,,
+bee_san_avenue,10,Bee San Avenue_Cam4_20251216_075922_315_C.jpeg,,194.525,159.303,160.0,17.196,,
+bee_san_avenue,11,Bee San Avenue_Cam4_20251216_075945_141_C.jpeg,,206.962,200.744,200.0,17.325,,

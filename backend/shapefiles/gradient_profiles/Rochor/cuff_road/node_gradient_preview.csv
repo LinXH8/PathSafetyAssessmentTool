@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cuff_road,1,Cuff Road_Cam4_20251208_110123_714_A.jpeg,,11.801,5.9,6.0,3.0,0.99,1.0
+cuff_road,2,Cuff Road_Cam4_20251208_110128_403_A.jpeg,,22.611,17.206,18.0,3.228,-4.531,1.0
+cuff_road,3,Cuff Road_Cam4_20251208_110132_415_A.jpeg,,34.01,28.311,28.0,2.831,-1.733,1.0
+cuff_road,4,Cuff Road_Cam4_20251208_110136_449_A.jpeg,,41.5,37.755,38.0,2.851,1.198,1.0
+cuff_road,5,Cuff Road_Cam4_20251208_110138_974_A.jpeg,,68.05,54.775,54.0,2.853,-1.332,1.0
+cuff_road,6,Cuff Road_Cam4_20251208_110148_180_A.jpeg,,78.798,73.424,74.0,3.413,,
+cuff_road,7,Cuff Road_Cam4_20251208_110152_200_A.jpeg,,91.236,85.017,86.0,4.444,,
+cuff_road,8,Cuff Road_Cam4_20251208_110156_792_A.jpeg,,102.388,96.812,96.0,3.519,,
+cuff_road,9,Cuff Road_Cam4_20251208_110200_851_A.jpeg,,123.915,113.151,114.0,2.867,,
+cuff_road,10,Cuff Road_Cam4_20251208_110208_420_A.jpeg,,134.071,128.993,128.0,2.459,,
+cuff_road,11,Cuff Road_Cam4_20251208_110212_092_A.jpeg,,146.403,140.237,140.0,2.599,4.79,1.0
+cuff_road,12,Cuff Road_Cam4_20251208_110216_603_A.jpeg,,169.483,157.943,,,,
+cuff_road,13,Cuff Road_Cam4_20251208_110225_626_A.jpeg,,253.883,211.683,,,,
+cuff_road,14,Cuff Road_Cam4_20251208_120649_902_C.jpeg,,339.82,296.851,,,,
+cuff_road,15,Cuff Road_Cam4_20251208_120837_862_C.jpeg,,473.391,406.605,,,,

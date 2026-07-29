@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ascot_rise,1,Ascot Rise_Cam4_20251217_084119_086_C.jpeg,,14.081,7.041,8.0,11.442,,
+ascot_rise,2,Ascot Rise_Cam4_20251217_084151_997_C.jpeg,,20.096,17.089,18.0,11.741,,
+ascot_rise,3,Ascot Rise_Cam4_20251217_084309_111_C.jpeg,,53.821,36.959,,,,

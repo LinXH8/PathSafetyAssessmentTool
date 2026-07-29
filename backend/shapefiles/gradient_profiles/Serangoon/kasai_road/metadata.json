@@ -1,0 +1,58 @@
+{
+  "path_key": "kasai_road",
+  "display_name": "Kasai Road",
+  "source_project": "Kasai Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Kasai Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T18:27:34.763025+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1886.291,
+  "profile_point_count": 772,
+  "valid_elevation_count": 766,
+  "rejected_outlier_count": 74,
+  "rejected_step_jump_count": 421,
+  "repaired_gradient_point_count": 18,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 220,
+  "usable_gradient_completion_pct": 28.5,
+  "elevation_hit_coverage_pct": 99.22,
+  "step_jump_rejection_pct": 54.53,
+  "gradient_min_pct": -10.447,
+  "gradient_max_pct": 13.983,
+  "path_bounds_svy21": {
+    "min_x": 31377.702,
+    "min_y": 40832.34,
+    "max_x": 31910.012,
+    "max_y": 40956.884
+  },
+  "road_boundary": {
+    "target_road_name": "KASAI ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 945,
+    "offroad_point_count": 173,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NERAM CRESCENT",
+        "point_count": 88
+      },
+      {
+        "road_name": "SARACA HILL",
+        "point_count": 63
+      },
+      {
+        "road_name": "NERAM ROAD",
+        "point_count": 22
+      }
+    ],
+    "offroad_chainage_min_m": 68.0,
+    "offroad_chainage_max_m": 1016.0,
+    "trimmed_offroad_points": 173
+  }
+}

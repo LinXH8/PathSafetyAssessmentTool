@@ -1,0 +1,54 @@
+{
+  "path_key": "trengganu_street",
+  "display_name": "Trengganu Street",
+  "source_project": "Trengganu Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Trengganu Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T15:48:22.399487+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 205.073,
+  "profile_point_count": 52,
+  "valid_elevation_count": 30,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 29,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 15,
+  "usable_gradient_completion_pct": 28.85,
+  "elevation_hit_coverage_pct": 57.69,
+  "step_jump_rejection_pct": 55.77,
+  "gradient_min_pct": -2.604,
+  "gradient_max_pct": 3.75,
+  "path_bounds_svy21": {
+    "min_x": 29196.035,
+    "min_y": 29442.998,
+    "max_x": 29245.587,
+    "max_y": 29530.801
+  },
+  "road_boundary": {
+    "target_road_name": "TRENGGANU STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 104,
+    "offroad_point_count": 52,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TEMPLE STREET",
+        "point_count": 44
+      },
+      {
+        "road_name": "PAGODA STREET",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 206.0,
+    "trimmed_offroad_points": 52
+  }
+}

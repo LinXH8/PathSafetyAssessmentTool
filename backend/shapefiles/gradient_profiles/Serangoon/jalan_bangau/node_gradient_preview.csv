@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_bangau,1,Jalan Bangau_Cam4_20260106_090643_567_C.jpeg,,10.318,5.159,8.0,18.489,,
+jalan_bangau,2,Jalan Bangau_Cam4_20260106_090647_772_C.jpeg,,20.257,15.288,16.0,18.723,,
+jalan_bangau,3,Jalan Bangau_Cam4_20260106_090651_978_C.jpeg,,29.514,24.886,24.0,18.45,,
+jalan_bangau,4,Jalan Bangau_Cam4_20260106_090655_581_C.jpeg,,39.229,34.371,34.0,18.32,0.38,1.0
+jalan_bangau,5,Jalan Bangau_Cam4_20260106_090659_186_C.jpeg,,49.224,44.226,44.0,18.423,,
+jalan_bangau,6,Jalan Bangau_Cam4_20260106_090703_392_C.jpeg,,60.869,55.047,56.0,18.515,,
+jalan_bangau,7,Jalan Bangau_Cam4_20260106_090711_202_C.jpeg,,69.702,65.285,66.0,18.623,1.458,1.0
+jalan_bangau,8,Jalan Bangau_Cam4_20260106_090714_206_C.jpeg,,83.595,76.649,76.0,19.508,,
+jalan_bangau,9,Jalan Bangau_Cam4_20260106_090719_614_C.jpeg,,106.1,94.848,94.0,18.984,,
+jalan_bangau,10,Jalan Bangau_Cam4_20260106_090727_780_C.jpeg,,116.565,111.333,112.0,19.095,-0.625,1.0
+jalan_bangau,11,Jalan Bangau_Cam4_20260106_090731_984_C.jpeg,,126.141,121.353,122.0,19.095,1.25,1.0
+jalan_bangau,12,Jalan Bangau_Cam4_20260106_090735_587_C.jpeg,,151.756,138.948,138.0,19.145,0.0,1.0
+jalan_bangau,13,Jalan Bangau_Cam4_20260106_090748_207_C.jpeg,,161.582,156.669,156.0,20.017,,
+jalan_bangau,14,Jalan Bangau_Cam4_20260106_090753_011_C.jpeg,,171.178,166.38,166.0,19.331,,
+jalan_bangau,15,Jalan Bangau_Cam4_20260106_090756_534_C.jpeg,,181.832,176.505,176.0,18.595,,
+jalan_bangau,16,Jalan Bangau_Cam4_20260106_090800_138_C.jpeg,,207.32,194.576,194.0,18.558,,
+jalan_bangau,17,Jalan Bangau_Cam4_20260106_090808_549_C.jpeg,,217.291,212.305,212.0,17.831,,
+jalan_bangau,18,Jalan Bangau_Cam4_20260106_090831_258_C.jpeg,,294.137,255.714,256.0,21.861,,
+jalan_bangau,19,Jalan Bangau_Cam4_20260106_090900_098_C.jpeg,,304.572,299.354,300.0,19.245,-0.625,1.0
+jalan_bangau,20,Jalan Bangau_Cam4_20260106_090903_107_C.jpeg,,339.797,322.184,322.0,19.178,-1.875,1.0
+jalan_bangau,21,Jalan Bangau_Cam4_20260106_090913_922_C.jpeg,,349.985,344.891,344.0,18.945,-1.25,1.0
+jalan_bangau,22,Jalan Bangau_Cam4_20260106_090917_525_C.jpeg,,361.718,355.851,356.0,18.745,,
+jalan_bangau,23,Jalan Bangau_Cam4_20260106_090921_127_C.jpeg,,513.05,437.384,438.0,19.361,,
+jalan_bangau,24,Jalan Bangau_Cam4_20260106_091629_974_C.jpeg,,522.726,517.888,,,,
+jalan_bangau,25,Jalan Bangau_Cam4_20260106_091632_376_C.jpeg,,534.046,528.386,,,,

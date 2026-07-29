@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+coniston_grove,1,Coniston Grove_Cam4_20260202_110407_397_A.jpeg,,14.848,7.424,8.0,8.193,,
+coniston_grove,2,Coniston Grove_Cam4_20260202_110411_610_A.jpeg,,35.453,25.151,26.0,8.516,,
+coniston_grove,3,Coniston Grove_Cam4_20260202_110417_638_A.jpeg,,47.389,41.421,42.0,7.889,0.825,1.0
+coniston_grove,4,Coniston Grove_Cam4_20260202_110421_246_A.jpeg,,58.941,53.165,54.0,7.983,-0.263,1.0
+coniston_grove,5,Coniston Grove_Cam4_20260202_110424_854_A.jpeg,,66.676,62.808,62.0,7.971,0.138,1.0
+coniston_grove,6,Coniston Grove_Cam4_20260202_110427_258_A.jpeg,,93.734,80.205,80.0,8.014,0.175,1.0
+coniston_grove,7,Coniston Grove_Cam4_20260202_110435_687_A.jpeg,,103.373,98.554,98.0,8.087,0.425,1.0
+coniston_grove,8,Coniston Grove_Cam4_20260202_110438_696_A.jpeg,,113.325,108.349,108.0,8.061,-0.275,1.0
+coniston_grove,9,Coniston Grove_Cam4_20260202_110441_698_A.jpeg,,126.489,119.907,120.0,8.081,0.375,1.0
+coniston_grove,10,Coniston Grove_Cam4_20260202_110445_932_A.jpeg,,148.097,137.293,138.0,8.1,-0.937,1.0
+coniston_grove,11,Coniston Grove_Cam4_20260202_110453_138_A.jpeg,,158.683,153.39,154.0,8.024,0.544,1.0

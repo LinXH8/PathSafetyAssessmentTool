@@ -1,0 +1,66 @@
+{
+  "path_key": "hillcrest_road",
+  "display_name": "Hillcrest Road",
+  "source_project": "Hillcrest Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hillcrest Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T18:59:01.779290+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1809.225,
+  "profile_point_count": 440,
+  "valid_elevation_count": 32,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 30,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 24,
+  "usable_gradient_completion_pct": 5.45,
+  "elevation_hit_coverage_pct": 7.27,
+  "step_jump_rejection_pct": 6.82,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 24631.644,
+    "min_y": 34428.034,
+    "max_x": 25249.025,
+    "max_y": 35448.579
+  },
+  "road_boundary": {
+    "target_road_name": "HILLCREST ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 906,
+    "offroad_point_count": 466,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DUNEARN ROAD",
+        "point_count": 314
+      },
+      {
+        "road_name": ".",
+        "point_count": 94
+      },
+      {
+        "road_name": "WATTEN RISE",
+        "point_count": 28
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 11
+      },
+      {
+        "road_name": "GREENMEAD AVENUE",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1782.0,
+    "trimmed_offroad_points": 466
+  }
+}

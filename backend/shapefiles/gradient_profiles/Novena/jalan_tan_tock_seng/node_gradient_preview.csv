@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tan_tock_seng,1,,JALAN TAN TOCK SENG,63.028,31.514,32.0,13.426,-0.313,1.0
+jalan_tan_tock_seng,2,,JALAN TAN TOCK SENG,142.845,134.45,134.0,11.143,,
+jalan_tan_tock_seng,3,,JALAN TAN TOCK SENG,451.882,574.656,574.0,18.644,10.208,2.0

@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+palmer_road,1,Cam4_20251229_084655_107_A.jpeg,,8.808,4.404,,,,
+palmer_road,2,Cam4_20251229_084747_974_A.jpeg,,19.741,14.275,,,,
+palmer_road,3,Cam4_20251229_085028_128_A.jpeg,,32.403,26.072,,,,
+palmer_road,4,Cam4_20251229_085034_134_A.jpeg,,129.208,80.805,80.0,5.888,,
+palmer_road,5,Cam4_20260108_092452_340_A.jpeg,,142.566,135.887,136.0,4.088,1.438,1.0
+palmer_road,6,Cam4_20260108_092457_101_A.jpeg,,149.152,145.859,146.0,4.088,0.958,1.0
+palmer_road,7,Cam4_20260108_092459_503_A.jpeg,,158.768,153.96,154.0,4.28,,
+palmer_road,8,Cam4_20260108_092503_707_A.jpeg,,168.633,163.701,164.0,5.501,,

@@ -1,0 +1,58 @@
+{
+  "path_key": "anthony_road",
+  "display_name": "Anthony Road",
+  "source_project": "Anthony Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Anthony Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-06T22:11:22.268433+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 736.704,
+  "profile_point_count": 329,
+  "valid_elevation_count": 329,
+  "rejected_outlier_count": 36,
+  "rejected_step_jump_count": 208,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 52,
+  "usable_gradient_completion_pct": 15.81,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 63.22,
+  "gradient_min_pct": -6.259,
+  "gradient_max_pct": 13.205,
+  "path_bounds_svy21": {
+    "min_x": 28348.09,
+    "min_y": 32446.623,
+    "max_x": 28671.407,
+    "max_y": 32582.677
+  },
+  "road_boundary": {
+    "target_road_name": "ANTHONY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 370,
+    "offroad_point_count": 41,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLEMENCEAU AVENUE NORTH",
+        "point_count": 22
+      },
+      {
+        "road_name": "PECK HAY ROAD",
+        "point_count": 13
+      },
+      {
+        "road_name": ".",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 188.0,
+    "offroad_chainage_max_m": 736.704,
+    "trimmed_offroad_points": 41
+  }
+}

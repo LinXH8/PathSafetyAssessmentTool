@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+liang_seah_street,1,Cam4_20251208_074631_644_C.jpeg,,12.24,6.12,,,,
+liang_seah_street,2,Cam4_20251208_074640_054_C.jpeg,,18.714,15.477,18.0,5.659,,
+liang_seah_street,3,Cam4_20251208_074642_459_C.jpeg,,33.794,26.254,26.0,5.704,,
+liang_seah_street,4,Cam4_20251208_074647_865_C.jpeg,,39.955,36.874,36.0,5.66,,
+liang_seah_street,5,Cam4_20251208_074650_266_C.jpeg,,51.101,45.528,46.0,5.458,,
+liang_seah_street,6,Cam4_20251208_074654_470_C.jpeg,,59.264,55.183,56.0,5.431,,
+liang_seah_street,7,Cam4_20251208_074657_473_C.jpeg,,69.338,64.301,64.0,5.798,3.333,1.0
+liang_seah_street,8,Cam4_20251208_074701_076_C.jpeg,,84.492,76.915,76.0,5.331,,
+liang_seah_street,9,Cam4_20251208_074707_084_C.jpeg,,96.554,90.523,90.0,3.473,,
+liang_seah_street,10,Cam4_20251208_074713_088_C.jpeg,,98.554,97.554,98.0,3.523,1.25,1.0
+liang_seah_street,11,Cam4_20251208_074714_290_C.jpeg,,108.585,103.57,104.0,3.623,,
+liang_seah_street,12,Cam4_20251208_074719_096_C.jpeg,,123.141,115.863,116.0,5.107,,
+liang_seah_street,13,Cam4_20251208_074725_702_C.jpeg,,129.756,126.448,126.0,5.544,3.318,1.0
+liang_seah_street,14,Cam4_20251208_074728_705_C.jpeg,,272.192,200.974,200.0,3.931,,
+liang_seah_street,15,Cam4_20251211_075358_486_A.jpeg,,373.189,322.69,322.0,9.215,,
+liang_seah_street,16,Cam4_20260204_082449_855_A.jpeg,,390.317,381.753,,,,
+liang_seah_street,17,Cam4_20260204_082502_958_A.jpeg,,391.965,391.141,,,,
+liang_seah_street,18,Cam4_20260204_082503_558_A.jpeg,,399.603,395.784,,,,
+liang_seah_street,19,Cam4_20260204_082505_961_A.jpeg,,485.834,442.718,442.0,4.637,,

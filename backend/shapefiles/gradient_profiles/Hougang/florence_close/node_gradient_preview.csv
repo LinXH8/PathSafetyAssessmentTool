@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+florence_close,1,Florence Close_Cam4_20260130_081510_186_B.jpeg,,13.56,6.78,6.0,9.792,3.628,1.0
+florence_close,2,Florence Close_Cam4_20260130_081518_606_B.jpeg,,19.999,16.78,16.0,10.442,6.516,1.0
+florence_close,3,Florence Close_Cam4_20260130_081522_812_B.jpeg,,32.63,26.315,26.0,10.892,1.103,1.0
+florence_close,4,Florence Close_Cam4_20260130_081529_419_B.jpeg,,80.046,56.338,56.0,17.06,,
+florence_close,5,Florence Close_Cam4_20260130_081721_515_B.jpeg,,103.699,91.873,,,,
+florence_close,6,Florence Close_Cam4_20260130_081731_126_B.jpeg,,113.896,108.798,,,,
+florence_close,7,Florence Close_Cam4_20260130_081734_731_B.jpeg,,123.636,118.766,,,,
+florence_close,8,Florence Close_Cam4_20260130_081737_735_B.jpeg,,138.016,130.826,,,,

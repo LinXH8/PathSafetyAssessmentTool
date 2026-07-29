@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+canton_street,Canton Street,0.0,29784.441,29850.93,2.649,5.218,5.218,,,CANTON STREET,0.143
+canton_street,Canton Street,2.0,29786.063,29852.101,2.471,5.218,5.218,,,CANTON STREET,0.122
+canton_street,Canton Street,4.0,29787.684,29853.272,1.62,5.218,5.218,,,CANTON STREET,0.102
+canton_street,Canton Street,6.0,29789.305,29854.443,5.218,5.218,5.218,,,CANTON STREET,0.082
+canton_street,Canton Street,8.0,29790.927,29855.614,5.218,5.218,5.218,,,CANTON STREET,0.062
+canton_street,Canton Street,10.0,29792.548,29856.785,5.218,5.218,5.218,0.0,1.0,CANTON STREET,0.042
+canton_street,Canton Street,10.136,29792.658,29856.864,5.218,5.218,5.218,0.0,1.0,CANTON STREET,0.04

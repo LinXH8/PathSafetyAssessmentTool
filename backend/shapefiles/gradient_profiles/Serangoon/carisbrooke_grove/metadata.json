@@ -1,0 +1,66 @@
+{
+  "path_key": "carisbrooke_grove",
+  "display_name": "Carisbrooke Grove",
+  "source_project": "Carisbrooke Grove",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Carisbrooke Grove\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T02:28:27.793834+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1052.009,
+  "profile_point_count": 463,
+  "valid_elevation_count": 463,
+  "rejected_outlier_count": 32,
+  "rejected_step_jump_count": 259,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 130,
+  "usable_gradient_completion_pct": 28.08,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.94,
+  "gradient_min_pct": -9.739,
+  "gradient_max_pct": 9.975,
+  "path_bounds_svy21": {
+    "min_x": 31401.016,
+    "min_y": 37769.707,
+    "max_x": 31784.924,
+    "max_y": 38013.426
+  },
+  "road_boundary": {
+    "target_road_name": "CARISBROOKE GROVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 528,
+    "offroad_point_count": 65,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CONWAY GROVE",
+        "point_count": 28
+      },
+      {
+        "road_name": "CARDIFF GROVE",
+        "point_count": 20
+      },
+      {
+        "road_name": "CHISELHURST GROVE",
+        "point_count": 13
+      },
+      {
+        "road_name": "COOLING CLOSE",
+        "point_count": 3
+      },
+      {
+        "road_name": "CONISTON GROVE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1004.0,
+    "trimmed_offroad_points": 65
+  }
+}

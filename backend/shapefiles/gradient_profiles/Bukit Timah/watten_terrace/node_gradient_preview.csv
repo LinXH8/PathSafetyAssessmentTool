@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+watten_terrace,1,Watten Terrace_Cam4_20251210_114723_033_A.jpeg,,10.584,5.292,6.0,7.244,,
+watten_terrace,2,Watten Terrace_Cam4_20251210_114726_655_A.jpeg,,23.68,17.132,18.0,7.408,,
+watten_terrace,3,Watten Terrace_Cam4_20251210_114730_890_A.jpeg,,32.383,28.031,28.0,8.668,,
+watten_terrace,4,Watten Terrace_Cam4_20251210_114733_544_A.jpeg,,41.479,36.931,36.0,8.102,,
+watten_terrace,5,Watten Terrace_Cam4_20251210_114736_071_A.jpeg,,50.693,46.086,46.0,6.414,,
+watten_terrace,6,Watten Terrace_Cam4_20251210_114738_765_A.jpeg,,64.531,57.612,58.0,5.913,0.625,1.0
+watten_terrace,7,Watten Terrace_Cam4_20251210_114742_956_A.jpeg,,71.552,68.041,68.0,6.013,,
+watten_terrace,8,Watten Terrace_Cam4_20251210_114744_971_A.jpeg,,278.529,175.041,176.0,10.861,,

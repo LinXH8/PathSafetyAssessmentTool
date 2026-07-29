@@ -1,0 +1,54 @@
+{
+  "path_key": "tai_hwan_crescent",
+  "display_name": "Tai Hwan Crescent",
+  "source_project": "Tai Hwan Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Tai Hwan Crescent\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T08:56:10.016363+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 796.427,
+  "profile_point_count": 322,
+  "valid_elevation_count": 322,
+  "rejected_outlier_count": 46,
+  "rejected_step_jump_count": 144,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 127,
+  "usable_gradient_completion_pct": 39.44,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.72,
+  "gradient_min_pct": -9.048,
+  "gradient_max_pct": 6.686,
+  "path_bounds_svy21": {
+    "min_x": 30894.637,
+    "min_y": 37424.657,
+    "max_x": 31089.749,
+    "max_y": 37560.518
+  },
+  "road_boundary": {
+    "target_road_name": "TAI HWAN CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 400,
+    "offroad_point_count": 78,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TAI HWAN DRIVE",
+        "point_count": 71
+      },
+      {
+        "road_name": "TAI HWAN GROVE",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 330.0,
+    "offroad_chainage_max_m": 796.0,
+    "trimmed_offroad_points": 78
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "path_key": "bo_seng_avenue",
+  "display_name": "Bo Seng Avenue",
+  "source_project": "Bo Seng Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry3\\_projects\\Bo Seng Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T04:39:31.954202+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 166.605,
+  "profile_point_count": 85,
+  "valid_elevation_count": 85,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 24,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 49,
+  "usable_gradient_completion_pct": 57.65,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 28.24,
+  "gradient_min_pct": -11.771,
+  "gradient_max_pct": 4.132,
+  "path_bounds_svy21": {
+    "min_x": 28556.164,
+    "min_y": 34219.59,
+    "max_x": 28611.803,
+    "max_y": 34376.629
+  },
+  "road_boundary": {
+    "target_road_name": "BO SENG AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 85,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

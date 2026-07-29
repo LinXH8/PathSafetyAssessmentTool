@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+solomon_street,Solomon Street,0.0,29017.162,30054.172,3.315,3.315,3.315,-0.665,1.0,SOLOMON STREET,0.232
+solomon_street,Solomon Street,2.0,29019.162,30054.21,3.36,3.36,3.3,-0.443,1.0,SOLOMON STREET,1.664
+solomon_street,Solomon Street,4.0,29021.161,30054.249,3.285,3.285,3.289,-0.332,1.0,SOLOMON STREET,3.096
+solomon_street,Solomon Street,6.0,29023.161,30054.287,3.285,3.285,3.289,1.198,1.0,SOLOMON STREET,4.528
+solomon_street,Solomon Street,8.0,29025.16,30054.325,3.289,3.289,3.289,2.728,1.0,SOLOMON STREET,5.96
+solomon_street,Solomon Street,10.0,29027.16,30054.364,3.59,3.46,3.374,4.009,1.0,SOLOMON STREET,7.392
+solomon_street,Solomon Street,10.259,29027.419,30054.369,3.63,3.63,3.46,7.558,1.0,SOLOMON STREET,7.577

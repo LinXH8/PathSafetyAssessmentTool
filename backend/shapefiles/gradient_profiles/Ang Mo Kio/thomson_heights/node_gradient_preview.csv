@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_heights,1,Thomson Heights_Cam4_20260101_083612_000_B.jpeg,,13.031,6.516,8.0,34.467,,
+thomson_heights,2,Thomson Heights_Cam4_20260101_083620_422_B.jpeg,,191.901,102.466,102.0,39.109,,
+thomson_heights,3,Thomson Heights_Cam4_20260101_084025_022_B.jpeg,,198.792,195.347,196.0,37.269,,
+thomson_heights,4,Thomson Heights_Cam4_20260101_084028_028_B.jpeg,,208.33,203.561,204.0,36.739,,
+thomson_heights,5,Thomson Heights_Cam4_20260101_084032_232_B.jpeg,,222.566,215.448,216.0,38.029,,
+thomson_heights,6,Thomson Heights_Cam4_20260101_084038_843_B.jpeg,,228.71,225.638,226.0,38.027,,
+thomson_heights,7,Thomson Heights_Cam4_20260101_084041_845_B.jpeg,,239.463,234.086,234.0,37.28,,
+thomson_heights,8,Thomson Heights_Cam4_20260101_084046_653_B.jpeg,,248.115,243.789,244.0,37.505,3.75,1.0
+thomson_heights,9,Thomson Heights_Cam4_20260101_084050_257_B.jpeg,,270.324,259.22,260.0,38.442,,
+thomson_heights,10,Thomson Heights_Cam4_20260101_084104_689_B.jpeg,,280.444,275.384,276.0,37.751,,
+thomson_heights,11,Thomson Heights_Cam4_20260101_084108_894_B.jpeg,,291.142,285.793,286.0,37.405,-1.563,1.0
+thomson_heights,12,Thomson Heights_Cam4_20260101_084113_104_B.jpeg,,300.521,295.832,296.0,37.23,-1.562,1.0
+thomson_heights,13,Thomson Heights_Cam4_20260101_084116_709_B.jpeg,,309.555,305.038,306.0,37.13,-0.625,1.0
+thomson_heights,14,Thomson Heights_Cam4_20260101_084119_710_B.jpeg,,324.021,316.788,316.0,37.28,0.156,1.0
+thomson_heights,15,Thomson Heights_Cam4_20260101_084124_529_B.jpeg,,331.051,327.536,328.0,37.118,,
+thomson_heights,16,Thomson Heights_Cam4_20260101_084126_933_B.jpeg,,341.071,336.061,336.0,36.928,,
+thomson_heights,17,Thomson Heights_Cam4_20260101_084129_937_B.jpeg,,351.551,346.311,346.0,36.155,-1.875,1.0
+thomson_heights,18,Thomson Heights_Cam4_20260101_084132_939_B.jpeg,,360.184,355.868,356.0,36.18,0.781,1.0
+thomson_heights,19,Thomson Heights_Cam4_20260101_084135_345_B.jpeg,,372.947,366.566,366.0,36.116,,
+thomson_heights,20,Thomson Heights_Cam4_20260101_084138_953_B.jpeg,,380.039,376.493,376.0,35.228,,
+thomson_heights,21,Thomson Heights_Cam4_20260101_084140_757_B.jpeg,,390.09,385.064,386.0,34.958,,
+thomson_heights,22,Thomson Heights_Cam4_20260101_084143_162_B.jpeg,,399.846,394.968,394.0,34.793,3.01,1.0

@@ -1,0 +1,54 @@
+{
+  "path_key": "george_street",
+  "display_name": "George Street",
+  "source_project": "George Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\George Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T14:03:37.862720+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 338.876,
+  "profile_point_count": 102,
+  "valid_elevation_count": 102,
+  "rejected_outlier_count": 23,
+  "rejected_step_jump_count": 71,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 18,
+  "usable_gradient_completion_pct": 17.65,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 69.61,
+  "gradient_min_pct": -0.625,
+  "gradient_max_pct": 5.532,
+  "path_bounds_svy21": {
+    "min_x": 29561.119,
+    "min_y": 29746.476,
+    "max_x": 29661.344,
+    "max_y": 29827.355
+  },
+  "road_boundary": {
+    "target_road_name": "GEORGE STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 171,
+    "offroad_point_count": 69,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOUTH BRIDGE ROAD",
+        "point_count": 44
+      },
+      {
+        "road_name": "UPPER PICKERING STREET",
+        "point_count": 25
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 338.876,
+    "trimmed_offroad_points": 69
+  }
+}

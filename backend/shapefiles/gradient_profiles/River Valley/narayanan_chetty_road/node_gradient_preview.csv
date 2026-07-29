@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+narayanan_chetty_road,1,Cam4_20251204_081224_604_C.jpeg,,11.27,5.635,6.0,4.644,,
+narayanan_chetty_road,2,Cam4_20251204_081230_011_C.jpeg,,20.106,15.688,16.0,4.575,,
+narayanan_chetty_road,3,Cam4_20251204_081234_215_C.jpeg,,43.117,31.611,32.0,3.609,,

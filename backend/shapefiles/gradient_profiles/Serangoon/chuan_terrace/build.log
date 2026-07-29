@@ -1,0 +1,19 @@
+project=Chuan Terrace
+path_key=chuan_terrace
+lidar_bundle=Serangoon
+
+Road boundary check:
+  target: CHUAN TERRACE
+  off-road points: 34/368
+    - CHUAN DRIVE: 24
+    - LORONG CHUAN: 10
+  trimmed off-road points: 34
+  [1/9] 20240805_Serangoon_02_Track27.laz (190 samples)
+  [2/9] 20240805_Serangoon_02_Track28.laz (141 samples)
+  [3/9] 20240805_Serangoon_02_Track41.laz (334 samples)
+  [4/9] 20240805_Serangoon_02_Track66.laz (22 samples)
+  [5/9] 20240805_Serangoon_02_Track69.laz (34 samples)
+  [6/9] 20240808_Serangoon_03_Track69.laz (171 samples)
+  [7/9] 20240808_Serangoon_03_Track74.laz (77 samples)
+  [8/9] 20240808_Serangoon_03_Track80.laz (7 samples)
+  [9/9] 20240808_Serangoon_03_Track88.laz (334 samples)

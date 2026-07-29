@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chuan_link,1,Chuan Link_Cam4_20260202_100526_319_C.jpeg,,10.0,5.0,,,,
+chuan_link,2,Chuan Link_Cam4_20260202_100530_524_C.jpeg,,34.81,22.405,22.0,13.861,,
+chuan_link,3,Chuan Link_Cam4_20260202_100547_589_C.jpeg,,45.621,40.216,40.0,13.745,,
+chuan_link,4,Chuan Link_Cam4_20260202_100551_277_C.jpeg,,53.261,49.441,50.0,13.554,,
+chuan_link,5,Chuan Link_Cam4_20260202_100553_681_C.jpeg,,78.829,66.045,66.0,12.139,,
+chuan_link,6,Chuan Link_Cam4_20260202_100605_720_C.jpeg,,89.79,84.309,84.0,12.435,,
+chuan_link,7,Chuan Link_Cam4_20260202_100613_093_C.jpeg,,101.669,95.73,96.0,12.965,,
+chuan_link,8,Chuan Link_Cam4_20260202_100619_744_C.jpeg,,124.445,113.057,114.0,11.987,,
+chuan_link,9,Chuan Link_Cam4_20260202_100629_953_C.jpeg,,139.539,131.992,132.0,11.047,,
+chuan_link,10,Chuan Link_Cam4_20260202_100642_677_C.jpeg,,151.708,145.624,146.0,10.745,1.147,1.0
+chuan_link,11,Chuan Link_Cam4_20260202_100647_484_C.jpeg,,162.364,157.036,158.0,11.037,3.162,1.0
+chuan_link,12,Chuan Link_Cam4_20260202_100651_696_C.jpeg,,185.601,173.982,174.0,11.535,2.331,1.0
+chuan_link,13,Chuan Link_Cam4_20260202_100702_600_C.jpeg,,195.46,190.531,190.0,12.025,,
+chuan_link,14,Chuan Link_Cam4_20260202_100706_805_C.jpeg,,207.409,201.434,202.0,12.576,4.334,1.0
+chuan_link,15,Chuan Link_Cam4_20260202_100712_212_C.jpeg,,218.258,212.833,212.0,13.25,,
+chuan_link,16,Chuan Link_Cam4_20260202_100717_126_C.jpeg,,229.186,223.722,224.0,14.485,,
+chuan_link,17,Chuan Link_Cam4_20260202_100722_601_C.jpeg,,340.529,284.858,284.0,15.329,1.996,1.0
+chuan_link,18,Chuan Link_Cam4_20260202_100859_303_C.jpeg,,384.031,362.28,362.0,9.833,,

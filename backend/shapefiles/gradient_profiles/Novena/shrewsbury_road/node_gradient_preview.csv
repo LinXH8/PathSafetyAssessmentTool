@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+shrewsbury_road,1,,SHREWSBURY ROAD,433.558,216.779,216.0,4.328,,
+shrewsbury_road,2,,SHREWSBURY ROAD,74.024,470.57,470.0,3.932,,
+shrewsbury_road,3,,SHREWSBURY ROAD,20.027,591.62,592.0,2.95,-0.625,1.0
+shrewsbury_road,4,,SHREWSBURY ROAD,0.215,621.767,622.0,2.99,-0.125,1.0

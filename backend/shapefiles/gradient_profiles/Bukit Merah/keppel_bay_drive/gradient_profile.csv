@@ -1,0 +1,22 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+keppel_bay_drive,Keppel Bay Drive,0.0,26211.478,27735.864,7.706,4.496,4.496,,,KEPPEL BAY DRIVE,5.551
+keppel_bay_drive,Keppel Bay Drive,2.0,26209.662,27736.702,4.496,4.496,4.615,,,KEPPEL BAY DRIVE,3.555
+keppel_bay_drive,Keppel Bay Drive,4.0,26207.847,27737.541,4.496,4.735,4.735,,,KEPPEL BAY DRIVE,1.56
+keppel_bay_drive,Keppel Bay Drive,6.0,26206.031,27738.379,3.529,4.974,4.974,,,KEPPEL BAY DRIVE,0.436
+keppel_bay_drive,Keppel Bay Drive,8.0,26204.215,27739.218,1.604,5.452,5.452,,,KEPPEL BAY DRIVE,2.432
+keppel_bay_drive,Keppel Bay Drive,10.0,26202.399,27740.056,4.179,5.931,5.931,,,KEPPEL BAY DRIVE,4.428
+keppel_bay_drive,Keppel Bay Drive,12.0,26200.584,27740.895,1.729,6.409,6.409,,,KEPPEL BAY DRIVE,6.423
+keppel_bay_drive,Keppel Bay Drive,14.0,26198.775,27741.749,7.336,6.888,6.888,,,KEPPEL BAY DRIVE,8.42
+keppel_bay_drive,Keppel Bay Drive,16.0,26196.973,27742.615,8.826,7.366,7.366,,,KEPPEL BAY DRIVE,10.418
+keppel_bay_drive,Keppel Bay Drive,18.0,26195.17,27743.481,8.291,7.845,7.845,,,KEPPEL BAY DRIVE,12.415
+keppel_bay_drive,Keppel Bay Drive,20.0,26193.367,27744.347,8.386,8.323,8.323,,,KEPPEL BAY DRIVE,14.413
+keppel_bay_drive,Keppel Bay Drive,22.0,26191.564,27745.213,8.316,8.802,8.802,,,KEPPEL BAY DRIVE,16.41
+keppel_bay_drive,Keppel Bay Drive,24.0,26189.762,27746.08,8.171,9.28,9.28,,,KEPPEL BAY DRIVE,18.408
+keppel_bay_drive,Keppel Bay Drive,26.0,26187.959,27746.946,9.758,9.758,9.758,,,KEPPEL BAY DRIVE,20.405
+keppel_bay_drive,Keppel Bay Drive,28.0,26186.156,27747.812,9.908,9.908,9.908,,,KEPPEL BAY DRIVE,22.403
+keppel_bay_drive,Keppel Bay Drive,30.0,26184.353,27748.678,10.117,10.117,10.117,5.104,1.0,KEPPEL BAY DRIVE,24.4
+keppel_bay_drive,Keppel Bay Drive,32.0,26182.551,27749.544,10.167,10.167,10.167,,,KEPPEL BAY DRIVE,26.398
+keppel_bay_drive,Keppel Bay Drive,34.0,26180.748,27750.41,11.658,10.346,10.167,,,KEPPEL BAY DRIVE,28.395
+keppel_bay_drive,Keppel Bay Drive,36.0,26178.945,27751.276,10.525,10.189,10.167,,,KEPPEL BAY DRIVE,30.393
+keppel_bay_drive,Keppel Bay Drive,38.0,26177.142,27752.142,9.579,10.031,10.11,,,KEPPEL BAY DRIVE,32.391
+keppel_bay_drive,Keppel Bay Drive,40.0,26176.047,27752.669,9.538,10.031,10.031,,,KEPPEL BAY DRIVE,33.604

@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+kramat_road,Kramat Road,0.0,28891.54,31576.05,7.864,7.864,7.862,,,KRAMAT ROAD,2.584
+kramat_road,Kramat Road,2.0,28889.591,31576.501,7.847,7.847,7.863,,,KRAMAT ROAD,2.376
+kramat_road,Kramat Road,4.0,28887.643,31576.952,8.443,7.862,7.864,0.0,1.0,KRAMAT ROAD,2.168
+kramat_road,Kramat Road,6.0,28885.694,31577.403,8.137,7.877,7.862,,,KRAMAT ROAD,1.96
+kramat_road,Kramat Road,8.0,28883.746,31577.854,7.892,7.892,7.862,,,KRAMAT ROAD,1.752
+kramat_road,Kramat Road,10.0,28881.797,31578.305,6.854,7.609,7.743,,,KRAMAT ROAD,1.228
+kramat_road,Kramat Road,12.0,28880.698,31578.56,7.326,7.326,7.609,-6.338,1.0,KRAMAT ROAD,0.83

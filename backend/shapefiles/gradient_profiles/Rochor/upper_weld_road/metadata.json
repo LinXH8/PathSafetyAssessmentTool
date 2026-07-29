@@ -1,0 +1,58 @@
+{
+  "path_key": "upper_weld_road",
+  "display_name": "Upper Weld Road",
+  "source_project": "Upper Weld Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Upper Weld Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-25T16:06:59.613381+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 687.419,
+  "profile_point_count": 192,
+  "valid_elevation_count": 192,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 137,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 13.02,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 71.35,
+  "gradient_min_pct": -7.563,
+  "gradient_max_pct": 10.935,
+  "path_bounds_svy21": {
+    "min_x": 30207.193,
+    "min_y": 31965.0,
+    "max_x": 30402.744,
+    "max_y": 32110.288
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER WELD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 345,
+    "offroad_point_count": 153,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 133
+      },
+      {
+        "road_name": "PERAK ROAD",
+        "point_count": 11
+      },
+      {
+        "road_name": "KAMPONG KAPOR ROAD",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 84.0,
+    "offroad_chainage_max_m": 688.0,
+    "trimmed_offroad_points": 153
+  }
+}

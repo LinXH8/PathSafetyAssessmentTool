@@ -1,0 +1,66 @@
+{
+  "path_key": "owen_road",
+  "display_name": "Owen Road",
+  "source_project": "Owen Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Owen Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-23T08:38:36.291588+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2717.381,
+  "profile_point_count": 891,
+  "valid_elevation_count": 877,
+  "rejected_outlier_count": 73,
+  "rejected_step_jump_count": 672,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 76,
+  "usable_gradient_completion_pct": 8.53,
+  "elevation_hit_coverage_pct": 98.43,
+  "step_jump_rejection_pct": 75.42,
+  "gradient_min_pct": -10.312,
+  "gradient_max_pct": 11.173,
+  "path_bounds_svy21": {
+    "min_x": 29759.676,
+    "min_y": 32632.138,
+    "max_x": 30412.492,
+    "max_y": 33271.858
+  },
+  "road_boundary": {
+    "target_road_name": "OWEN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1360,
+    "offroad_point_count": 469,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 163
+      },
+      {
+        "road_name": "CAMBRIDGE ROAD",
+        "point_count": 71
+      },
+      {
+        "road_name": "RACE COURSE ROAD",
+        "point_count": 63
+      },
+      {
+        "road_name": "WORCESTER ROAD",
+        "point_count": 61
+      },
+      {
+        "road_name": "FARRER PARK STATION ROAD",
+        "point_count": 59
+      }
+    ],
+    "offroad_chainage_min_m": 226.0,
+    "offroad_chainage_max_m": 2690.0,
+    "trimmed_offroad_points": 469
+  }
+}

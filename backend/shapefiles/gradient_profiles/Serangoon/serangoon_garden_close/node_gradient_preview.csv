@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_garden_close,1,Serangoon Garden Close_Cam4_20260202_093220_208_B.jpeg,,10.492,5.246,6.0,10.206,0.344,1.0
+serangoon_garden_close,2,Serangoon Garden Close_Cam4_20260202_093224_420_B.jpeg,,22.315,16.404,16.0,10.209,,

@@ -1,0 +1,50 @@
+{
+  "path_key": "namly_view",
+  "display_name": "Namly View",
+  "source_project": "Namly View",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Namly View\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T15:42:40.360980+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 385.26,
+  "profile_point_count": 193,
+  "valid_elevation_count": 193,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 149,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 9.84,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.2,
+  "gradient_min_pct": -6.638,
+  "gradient_max_pct": 10.938,
+  "path_bounds_svy21": {
+    "min_x": 24007.705,
+    "min_y": 34076.34,
+    "max_x": 24107.201,
+    "max_y": 34252.066
+  },
+  "road_boundary": {
+    "target_road_name": "NAMLY VIEW",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 194,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NAMLY AVENUE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

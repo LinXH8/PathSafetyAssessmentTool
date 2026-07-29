@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_teresa_close,1,Bukit Teresa Close_Cam4_20251227_075636_401_C.jpeg,,10.359,5.18,6.0,26.211,,
+bukit_teresa_close,2,Bukit Teresa Close_Cam4_20251227_075640_005_C.jpeg,,40.091,25.225,26.0,25.807,0.125,1.0
+bukit_teresa_close,3,Bukit Teresa Close_Cam4_20251227_075650_817_C.jpeg,,77.462,58.776,58.0,25.997,-0.719,1.0
+bukit_teresa_close,4,Bukit Teresa Close_Cam4_20251227_075702_833_C.jpeg,,88.804,83.133,84.0,25.416,,
+bukit_teresa_close,5,Bukit Teresa Close_Cam4_20251227_075707_636_C.jpeg,,95.341,92.072,92.0,24.649,,
+bukit_teresa_close,6,Bukit Teresa Close_Cam4_20251227_075710_639_C.jpeg,,104.584,99.962,100.0,24.387,1.6,1.0
+bukit_teresa_close,7,Bukit Teresa Close_Cam4_20251227_075714_242_C.jpeg,,136.565,120.575,120.0,25.748,,
+bukit_teresa_close,8,Bukit Teresa Close_Cam4_20251227_075723_854_C.jpeg,,144.563,140.564,140.0,26.787,,
+bukit_teresa_close,9,Bukit Teresa Close_Cam4_20251227_075726_257_C.jpeg,,174.554,159.559,160.0,27.152,3.812,1.0

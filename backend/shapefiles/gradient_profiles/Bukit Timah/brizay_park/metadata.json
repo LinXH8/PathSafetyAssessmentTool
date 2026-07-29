@@ -1,0 +1,42 @@
+{
+  "path_key": "brizay_park",
+  "display_name": "Brizay Park",
+  "source_project": "Brizay Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Brizay Park\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T08:34:27.386073+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 348.349,
+  "profile_point_count": 176,
+  "valid_elevation_count": 176,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 91,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 61,
+  "usable_gradient_completion_pct": 34.66,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 51.7,
+  "gradient_min_pct": -6.615,
+  "gradient_max_pct": 10.781,
+  "path_bounds_svy21": {
+    "min_x": 22722.69,
+    "min_y": 34673.283,
+    "max_x": 22950.414,
+    "max_y": 34833.827
+  },
+  "road_boundary": {
+    "target_road_name": "BRIZAY PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 176,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

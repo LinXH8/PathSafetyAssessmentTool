@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+oak_avenue,1,Oak Avenue_Cam4_20251217_081016_607_A.jpeg,,12.088,6.044,6.0,16.03,-1.024,1.0
+oak_avenue,2,Oak Avenue_Cam4_20251217_081021_133_A.jpeg,,23.617,17.853,18.0,16.364,,
+oak_avenue,3,Oak Avenue_Cam4_20251217_081025_175_A.jpeg,,33.63,28.624,28.0,17.567,,
+oak_avenue,4,Oak Avenue_Cam4_20251217_081028_752_A.jpeg,,40.532,37.081,38.0,18.492,,
+oak_avenue,5,Oak Avenue_Cam4_20251217_081031_260_A.jpeg,,50.489,45.511,46.0,18.764,,

@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_antoi,1,Jalan Antoi_Cam4_20260106_092952_274_C.jpeg,,10.328,5.164,6.0,19.901,7.578,1.0
+jalan_antoi,2,Jalan Antoi_Cam4_20260106_092955_879_C.jpeg,,20.073,15.2,16.0,20.057,,
+jalan_antoi,3,Jalan Antoi_Cam4_20260106_092958_882_C.jpeg,,30.952,25.513,26.0,20.783,,
+jalan_antoi,4,Jalan Antoi_Cam4_20260106_093002_487_C.jpeg,,41.635,36.294,36.0,22.134,,
+jalan_antoi,5,Jalan Antoi_Cam4_20260106_093006_090_C.jpeg,,50.426,46.031,46.0,22.945,,
+jalan_antoi,6,Jalan Antoi_Cam4_20260106_093009_094_C.jpeg,,60.308,55.367,56.0,21.588,,
+jalan_antoi,7,Jalan Antoi_Cam4_20260106_093013_297_C.jpeg,,94.457,77.382,78.0,20.349,,
+jalan_antoi,8,Jalan Antoi_Cam4_20260106_093236_178_C.jpeg,,107.231,100.844,100.0,21.149,,
+jalan_antoi,9,Jalan Antoi_Cam4_20260106_093245_192_C.jpeg,,113.834,110.532,110.0,22.323,,
+jalan_antoi,10,Jalan Antoi_Cam4_20260106_093248_195_C.jpeg,,124.214,119.024,120.0,22.071,,
+jalan_antoi,11,Jalan Antoi_Cam4_20260106_093252_398_C.jpeg,,134.102,129.158,130.0,21.048,,
+jalan_antoi,12,Jalan Antoi_Cam4_20260106_093256_605_C.jpeg,,142.863,138.482,138.0,21.534,,
+jalan_antoi,13,Jalan Antoi_Cam4_20260106_093302_010_C.jpeg,,154.237,148.55,148.0,22.165,,
+jalan_antoi,14,Jalan Antoi_Cam4_20260106_093308_014_C.jpeg,,201.316,177.776,178.0,21.301,,

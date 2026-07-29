@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+eu_chin_street,1,Eu Chin Street_Cam4_20251227_080532_514_B.jpeg,,14.773,7.387,8.0,7.307,,
+eu_chin_street,2,Eu Chin Street_Cam4_20251227_080537_319_B.jpeg,,21.248,18.011,18.0,7.307,0.0,1.0
+eu_chin_street,3,Eu Chin Street_Cam4_20251227_080539_726_B.jpeg,,31.612,26.43,26.0,7.257,-0.625,1.0

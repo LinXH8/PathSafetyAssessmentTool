@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+havelock_link,1,Havelock Link_Cam4_20251227_081918_084_C.jpeg,,10.465,5.232,6.0,3.262,,
+havelock_link,2,Havelock Link_Cam4_20251227_081921_092_C.jpeg,,20.715,15.59,16.0,2.795,-3.677,1.0
+havelock_link,3,Havelock Link_Cam4_20251227_081924_094_C.jpeg,,33.216,26.966,26.0,2.96,2.944,1.0
+havelock_link,4,Havelock Link_Cam4_20251227_081928_299_C.jpeg,,43.993,38.605,38.0,3.984,,
+havelock_link,5,Havelock Link_Cam4_20251227_081932_509_C.jpeg,,54.16,49.076,50.0,5.047,,
+havelock_link,6,Havelock Link_Cam4_20251227_081936_713_C.jpeg,,59.974,57.067,58.0,5.827,,
+havelock_link,7,Havelock Link_Cam4_20251227_081940_916_C.jpeg,,86.064,73.019,74.0,5.844,,
+havelock_link,8,Havelock Link_Cam4_20251227_081951_729_C.jpeg,,95.635,90.85,90.0,4.887,,
+havelock_link,9,Havelock Link_Cam4_20251227_081955_339_C.jpeg,,106.74,101.188,102.0,4.944,,
+havelock_link,10,Havelock Link_Cam4_20251227_081959_543_C.jpeg,,117.816,112.278,112.0,5.278,,

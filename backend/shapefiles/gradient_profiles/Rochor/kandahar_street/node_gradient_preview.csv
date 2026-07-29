@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kandahar_street,1,Kandahar Street_Cam4_20251208_080546_964_C.jpeg,,11.43,5.715,6.0,5.101,,
+kandahar_street,2,Kandahar Street_Cam4_20251208_080551_168_C.jpeg,,161.557,86.494,86.0,4.323,,
+kandahar_street,3,Kandahar Street_Cam4_20251208_080722_352_C.jpeg,,174.252,167.905,168.0,3.352,-2.237,1.0
+kandahar_street,4,Kandahar Street_Cam4_20251208_080726_560_C.jpeg,,268.183,221.218,222.0,8.624,,

@@ -1,0 +1,54 @@
+{
+  "path_key": "orchard_turn",
+  "display_name": "Orchard Turn",
+  "source_project": "Orchard Turn",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Orchard Turn\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-23T08:27:19.784242+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2369.194,
+  "profile_point_count": 856,
+  "valid_elevation_count": 856,
+  "rejected_outlier_count": 160,
+  "rejected_step_jump_count": 620,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 151,
+  "usable_gradient_completion_pct": 17.64,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 72.43,
+  "gradient_min_pct": -13.462,
+  "gradient_max_pct": 14.869,
+  "path_bounds_svy21": {
+    "min_x": 27702.504,
+    "min_y": 31533.834,
+    "max_x": 28210.047,
+    "max_y": 31831.369
+  },
+  "road_boundary": {
+    "target_road_name": "ORCHARD TURN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1186,
+    "offroad_point_count": 330,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ORCHARD BOULEVARD",
+        "point_count": 246
+      },
+      {
+        "road_name": "PATERSON ROAD",
+        "point_count": 84
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2370.0,
+    "trimmed_offroad_points": 330
+  }
+}

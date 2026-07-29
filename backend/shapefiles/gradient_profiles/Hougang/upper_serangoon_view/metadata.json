@@ -1,0 +1,50 @@
+{
+  "path_key": "upper_serangoon_view",
+  "display_name": "Upper Serangoon View",
+  "source_project": "Upper Serangoon View",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Upper Serangoon View\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T17:20:33.520135+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1282.475,
+  "profile_point_count": 361,
+  "valid_elevation_count": 97,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 63,
+  "usable_gradient_completion_pct": 17.45,
+  "elevation_hit_coverage_pct": 26.87,
+  "step_jump_rejection_pct": 18.01,
+  "gradient_min_pct": -2.549,
+  "gradient_max_pct": 9.653,
+  "path_bounds_svy21": {
+    "min_x": 35512.086,
+    "min_y": 39530.516,
+    "max_x": 35840.33,
+    "max_y": 40158.158
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER SERANGOON VIEW",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 643,
+    "offroad_point_count": 282,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER SERANGOON ROAD",
+        "point_count": 282
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 606.0,
+    "trimmed_offroad_points": 282
+  }
+}

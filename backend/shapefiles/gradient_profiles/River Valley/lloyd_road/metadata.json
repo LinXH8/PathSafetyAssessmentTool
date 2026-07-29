@@ -1,0 +1,42 @@
+{
+  "path_key": "lloyd_road",
+  "display_name": "Lloyd Road",
+  "source_project": "Lloyd Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Lloyd Road\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-10T08:32:25.796115+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 438.879,
+  "profile_point_count": 221,
+  "valid_elevation_count": 221,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 67,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 133,
+  "usable_gradient_completion_pct": 60.18,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 30.32,
+  "gradient_min_pct": -11.875,
+  "gradient_max_pct": 11.557,
+  "path_bounds_svy21": {
+    "min_x": 28593.881,
+    "min_y": 31043.742,
+    "max_x": 28816.803,
+    "max_y": 31126.636
+  },
+  "road_boundary": {
+    "target_road_name": "LLOYD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 221,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

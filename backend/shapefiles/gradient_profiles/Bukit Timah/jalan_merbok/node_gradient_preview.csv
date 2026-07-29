@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_merbok,1,Jalan Merbok_Cam4_20251122_094323_330_A.jpeg,,13.799,6.9,6.0,48.405,1.031,1.0
+jalan_merbok,2,Jalan Merbok_Cam4_20251122_094331_620_A.jpeg,,23.066,18.433,18.0,48.394,-0.522,1.0
+jalan_merbok,3,Jalan Merbok_Cam4_20251122_094336_426_A.jpeg,,62.536,42.801,42.0,48.41,,
+jalan_merbok,4,Jalan Merbok_Cam4_20251122_094429_902_A.jpeg,,102.245,82.391,82.0,47.263,,
+jalan_merbok,5,Jalan Merbok_Cam4_20251122_095251_650_A.jpeg,,109.29,105.768,106.0,45.815,,
+jalan_merbok,6,Jalan Merbok_Cam4_20251122_095258_271_A.jpeg,,117.733,113.512,114.0,46.865,,
+jalan_merbok,7,Jalan Merbok_Cam4_20251122_095306_697_A.jpeg,,211.038,164.386,164.0,44.064,-0.874,1.0
+jalan_merbok,8,Jalan Merbok_Cam4_20251122_100615_875_A.jpeg,,217.528,214.283,214.0,43.931,,
+jalan_merbok,9,Jalan Merbok_Cam4_20251122_100621_885_A.jpeg,,226.746,222.137,222.0,44.375,,
+jalan_merbok,10,Jalan Merbok_Cam4_20251122_100631_515_A.jpeg,,240.93,233.838,234.0,44.456,,
+jalan_merbok,11,Jalan Merbok_Cam4_20251122_100647_135_A.jpeg,,250.049,245.489,246.0,43.61,,
+jalan_merbok,12,Jalan Merbok_Cam4_20251122_100657_953_A.jpeg,,255.826,252.938,252.0,43.957,,

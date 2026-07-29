@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_klapa,1,Jalan Klapa_Cam4_20251208_090126_119_C.jpeg,,10.51,5.255,6.0,7.572,,
+jalan_klapa,2,Jalan Klapa_Cam4_20251208_090130_325_C.jpeg,,38.049,24.28,24.0,5.861,,
+jalan_klapa,3,Jalan Klapa_Cam4_20251208_090256_796_C.jpeg,,45.419,41.734,,,,
+jalan_klapa,4,Jalan Klapa_Cam4_20251208_090300_400_C.jpeg,,56.174,50.797,52.0,5.572,,
+jalan_klapa,5,Jalan Klapa_Cam4_20251208_090305_206_C.jpeg,,68.285,62.23,62.0,4.145,,
+jalan_klapa,6,Jalan Klapa_Cam4_20251208_090313_015_C.jpeg,,77.301,72.793,72.0,4.09,,
+jalan_klapa,7,Jalan Klapa_Cam4_20251208_090316_620_C.jpeg,,87.751,82.526,82.0,3.285,,
+jalan_klapa,8,Jalan Klapa_Cam4_20251208_090320_824_C.jpeg,,118.997,103.374,104.0,3.53,1.485,1.0
+jalan_klapa,9,Jalan Klapa_Cam4_20251208_090333_344_C.jpeg,,127.667,123.332,124.0,3.686,0.945,1.0
+jalan_klapa,10,Jalan Klapa_Cam4_20251208_090336_346_C.jpeg,,191.946,159.807,160.0,5.437,,

@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+supreme_court_lane,1,Cam4_20251211_103738_672_A.jpeg,,13.022,6.511,6.0,5.304,,
+supreme_court_lane,2,Cam4_20251211_103748_422_A.jpeg,,23.657,18.339,18.0,5.613,5.536,1.0
+supreme_court_lane,3,Cam4_20251211_103753_090_A.jpeg,,29.931,26.794,26.0,5.747,,
+supreme_court_lane,4,Cam4_20251211_103755_619_A.jpeg,,40.787,35.359,36.0,6.173,,
+supreme_court_lane,5,Cam4_20251211_103802_253_A.jpeg,,79.627,60.207,60.0,6.329,,
+supreme_court_lane,6,Cam4_20251211_103826_797_A.jpeg,,103.425,91.526,92.0,5.07,,
+supreme_court_lane,7,Cam4_20251211_103836_909_A.jpeg,,115.755,109.59,110.0,5.529,,
+supreme_court_lane,8,Cam4_20251211_103841_541_A.jpeg,,140.519,128.137,128.0,,,
+supreme_court_lane,9,Cam4_20251211_103854_373_A.jpeg,,152.111,146.315,146.0,4.944,,
+supreme_court_lane,10,Cam4_20251211_103857_987_A.jpeg,,162.486,157.299,158.0,4.939,1.937,1.0
+supreme_court_lane,11,Cam4_20251211_103901_992_A.jpeg,,190.419,176.453,176.0,5.101,,
+supreme_court_lane,12,Cam4_20251211_103915_841_A.jpeg,,201.35,195.885,196.0,4.751,,
+supreme_court_lane,13,Cam4_20260205_084845_327_A.jpeg,,206.52,203.935,204.0,5.36,,
+supreme_court_lane,14,Cam4_20260205_084847_731_A.jpeg,,387.637,297.079,298.0,7.604,,

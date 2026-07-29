@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rumia,1,Jalan Rumia_Cam4_20251218_080418_821_C.jpeg,,10.926,5.463,6.0,19.709,,
+jalan_rumia,2,Jalan Rumia_Cam4_20251218_080422_425_C.jpeg,,21.428,16.177,16.0,21.391,,
+jalan_rumia,3,Jalan Rumia_Cam4_20251218_080426_033_C.jpeg,,32.628,27.028,28.0,23.221,,
+jalan_rumia,4,Jalan Rumia_Cam4_20251218_080429_637_C.jpeg,,43.191,37.909,38.0,23.273,,
+jalan_rumia,5,Jalan Rumia_Cam4_20251218_080433_240_C.jpeg,,50.658,46.925,46.0,22.117,,
+jalan_rumia,6,Jalan Rumia_Cam4_20251218_080435_642_C.jpeg,,76.845,63.752,64.0,21.978,5.312,1.0
+jalan_rumia,7,Jalan Rumia_Cam4_20251218_080444_059_C.jpeg,,86.459,81.652,82.0,22.778,2.917,1.0
+jalan_rumia,8,Jalan Rumia_Cam4_20251218_080447_061_C.jpeg,,112.963,99.711,100.0,22.978,-0.625,1.0
+jalan_rumia,9,Jalan Rumia_Cam4_20251218_080455_950_C.jpeg,,124.978,118.971,118.0,22.778,-2.5,1.0
+jalan_rumia,10,Jalan Rumia_Cam4_20251218_080459_556_C.jpeg,,148.715,136.847,136.0,22.928,1.25,1.0
+jalan_rumia,11,Jalan Rumia_Cam4_20251218_080506_762_C.jpeg,,158.96,153.837,154.0,21.978,-3.75,1.0
+jalan_rumia,12,Jalan Rumia_Cam4_20251218_080509_767_C.jpeg,,167.483,163.221,164.0,21.578,-4.375,1.0
+jalan_rumia,13,Jalan Rumia_Cam4_20251218_080512_170_C.jpeg,,177.57,172.527,172.0,21.428,,
+jalan_rumia,14,Jalan Rumia_Cam4_20251218_080515_173_C.jpeg,,212.051,194.811,194.0,21.911,-0.469,1.0
+jalan_rumia,15,Jalan Rumia_Cam4_20251218_080525_383_C.jpeg,,219.38,215.716,216.0,20.422,,
+jalan_rumia,16,Jalan Rumia_Cam4_20251218_080533_794_C.jpeg,,232.154,225.767,226.0,19.552,,
+jalan_rumia,17,Jalan Rumia_Cam4_20251218_080537_396_C.jpeg,,258.606,245.38,246.0,21.391,,
+jalan_rumia,18,Jalan Rumia_Cam4_20251218_080544_603_C.jpeg,,265.433,262.02,262.0,21.028,4.375,1.0
+jalan_rumia,19,Jalan Rumia_Cam4_20251218_080546_408_C.jpeg,,333.422,299.427,300.0,22.628,-1.25,1.0
+jalan_rumia,20,Jalan Rumia_Cam4_20251218_080604_436_C.jpeg,,363.142,348.282,348.0,22.728,-1.25,1.0
+jalan_rumia,21,Jalan Rumia_Cam4_20251218_080612_854_C.jpeg,,373.802,368.472,368.0,22.44,,
+jalan_rumia,22,Jalan Rumia_Cam4_20251218_080615_256_C.jpeg,,418.454,396.128,396.0,21.351,,
+jalan_rumia,23,Jalan Rumia_Cam4_20251218_080626_669_C.jpeg,,447.801,433.127,434.0,22.047,,
+jalan_rumia,24,Jalan Rumia_Cam4_20251218_080720_737_C.jpeg,,458.324,453.063,,,,
+jalan_rumia,25,Jalan Rumia_Cam4_20251218_080724_341_C.jpeg,,467.592,462.958,,,,

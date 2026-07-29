@@ -1,0 +1,42 @@
+{
+  "path_key": "ah_soo_garden",
+  "display_name": "Ah Soo Garden",
+  "source_project": "Ah Soo Garden",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ah Soo Garden\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_05_TPY_01",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_05_TPY_01",
+  "generated_at_utc": "2026-05-30T19:13:31.360999+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 440.323,
+  "profile_point_count": 222,
+  "valid_elevation_count": 22,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 13,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 51,
+  "usable_gradient_completion_pct": 22.97,
+  "elevation_hit_coverage_pct": 9.91,
+  "step_jump_rejection_pct": 5.86,
+  "gradient_min_pct": -7.975,
+  "gradient_max_pct": 0.069,
+  "path_bounds_svy21": {
+    "min_x": 33544.169,
+    "min_y": 36873.13,
+    "max_x": 33668.556,
+    "max_y": 36996.716
+  },
+  "road_boundary": {
+    "target_road_name": "AH SOO GARDEN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 222,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

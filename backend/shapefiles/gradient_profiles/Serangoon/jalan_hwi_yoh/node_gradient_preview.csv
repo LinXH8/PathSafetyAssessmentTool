@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_hwi_yoh,1,Jalan Hwi Yoh_Cam4_20260202_082520_153_C.jpeg,,12.229,6.114,6.0,28.206,,
+jalan_hwi_yoh,2,Jalan Hwi Yoh_Cam4_20260202_082523_157_C.jpeg,,85.574,48.902,,,,
+jalan_hwi_yoh,3,Jalan Hwi Yoh_Cam4_20260203_090757_403_A.jpeg,,127.524,106.549,104.0,25.967,0.61,1.0
+jalan_hwi_yoh,4,Jalan Hwi Yoh_Cam4_20260203_090810_017_A.jpeg,,146.872,137.198,,,,

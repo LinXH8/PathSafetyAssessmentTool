@@ -1,0 +1,15 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+bukit_ayer_molek,Bukit Ayer Molek,0.0,22967.089,36486.292,40.301,38.826,38.826,,,BUKIT AYER MOLEK,4.214
+bukit_ayer_molek,Bukit Ayer Molek,2.0,22967.118,36484.292,38.826,38.826,38.696,,,BUKIT AYER MOLEK,3.997
+bukit_ayer_molek,Bukit Ayer Molek,4.0,22967.146,36482.293,38.831,38.566,38.566,,,BUKIT AYER MOLEK,3.779
+bukit_ayer_molek,Bukit Ayer Molek,6.0,22967.174,36480.293,39.456,38.306,38.306,,,BUKIT AYER MOLEK,3.562
+bukit_ayer_molek,Bukit Ayer Molek,8.0,22967.203,36478.293,38.496,38.006,38.006,,,BUKIT AYER MOLEK,3.344
+bukit_ayer_molek,Bukit Ayer Molek,10.0,22967.231,36476.293,37.466,37.706,37.706,,,BUKIT AYER MOLEK,3.127
+bukit_ayer_molek,Bukit Ayer Molek,12.0,22966.939,36474.369,37.211,37.406,37.406,,,BUKIT AYER MOLEK,2.6
+bukit_ayer_molek,Bukit Ayer Molek,14.0,22966.024,36472.59,40.981,37.146,37.146,,,BUKIT AYER MOLEK,1.474
+bukit_ayer_molek,Bukit Ayer Molek,16.0,22965.108,36470.812,36.656,36.886,36.886,,,BUKIT AYER MOLEK,0.347
+bukit_ayer_molek,Bukit Ayer Molek,18.0,22964.193,36469.034,36.626,36.626,36.626,,,BUKIT AYER MOLEK,0.779
+bukit_ayer_molek,Bukit Ayer Molek,20.0,22963.278,36467.255,36.586,36.586,36.586,,,BUKIT AYER MOLEK,1.906
+bukit_ayer_molek,Bukit Ayer Molek,22.0,22962.363,36465.477,36.526,36.526,36.536,-1.635,1.0,BUKIT AYER MOLEK,3.032
+bukit_ayer_molek,Bukit Ayer Molek,24.0,22961.448,36463.698,36.536,36.536,36.531,-1.457,1.0,BUKIT AYER MOLEK,4.159
+bukit_ayer_molek,Bukit Ayer Molek,24.118,22961.395,36463.594,36.516,36.516,36.526,-0.472,1.0,BUKIT AYER MOLEK,4.225

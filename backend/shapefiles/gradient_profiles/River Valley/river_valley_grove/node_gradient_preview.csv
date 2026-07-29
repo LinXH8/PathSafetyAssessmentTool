@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+river_valley_grove,1,Cam4_20251205_085030_331_B.jpeg,,11.239,5.62,6.0,10.454,,
+river_valley_grove,2,Cam4_20251205_085036_938_B.jpeg,,24.684,17.961,18.0,11.487,,
+river_valley_grove,3,Cam4_20251205_085042_943_B.jpeg,,47.908,36.296,36.0,14.01,,
+river_valley_grove,4,Cam4_20251205_085051_966_B.jpeg,,59.382,53.645,54.0,14.083,,
+river_valley_grove,5,Cam4_20251205_085055_569_B.jpeg,,71.294,65.338,66.0,15.399,,
+river_valley_grove,6,Cam4_20251205_085059_775_B.jpeg,,77.534,74.414,74.0,15.252,,
+river_valley_grove,7,Cam4_20251205_085102_175_B.jpeg,,87.355,82.445,82.0,14.958,,
+river_valley_grove,8,Cam4_20251205_085105_780_B.jpeg,,98.418,92.887,92.0,12.545,,
+river_valley_grove,9,Cam4_20251205_085109_384_B.jpeg,,107.656,103.037,104.0,8.048,,
+river_valley_grove,10,Cam4_20251205_085112_389_B.jpeg,,119.838,113.747,114.0,7.973,0.521,1.0
+river_valley_grove,11,Cam4_20251205_085116_594_B.jpeg,,131.024,125.431,126.0,9.395,,
+river_valley_grove,12,Cam4_20251205_085120_802_B.jpeg,,145.899,138.461,138.0,11.605,,
+river_valley_grove,13,Cam4_20251205_085137_020_B.jpeg,,251.67,198.785,198.0,7.524,-1.094,1.0
+river_valley_grove,14,Cam4_20251205_085219_719_B.jpeg,,263.539,257.604,258.0,8.116,,

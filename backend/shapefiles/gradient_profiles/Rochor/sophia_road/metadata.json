@@ -1,0 +1,66 @@
+{
+  "path_key": "sophia_road",
+  "display_name": "Sophia Road",
+  "source_project": "Sophia Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Sophia Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-24T05:43:24.863743+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2563.886,
+  "profile_point_count": 722,
+  "valid_elevation_count": 520,
+  "rejected_outlier_count": 74,
+  "rejected_step_jump_count": 400,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 168,
+  "usable_gradient_completion_pct": 23.27,
+  "elevation_hit_coverage_pct": 72.02,
+  "step_jump_rejection_pct": 55.4,
+  "gradient_min_pct": -8.75,
+  "gradient_max_pct": 14.588,
+  "path_bounds_svy21": {
+    "min_x": 29349.263,
+    "min_y": 31391.296,
+    "max_x": 29845.733,
+    "max_y": 32134.317
+  },
+  "road_boundary": {
+    "target_road_name": "SOPHIA ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1283,
+    "offroad_point_count": 561,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER WILKIE ROAD",
+        "point_count": 135
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 127
+      },
+      {
+        "road_name": "WILKIE ROAD",
+        "point_count": 102
+      },
+      {
+        "road_name": "MACKENZIE ROAD",
+        "point_count": 101
+      },
+      {
+        "road_name": "SELEGIE ROAD",
+        "point_count": 54
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2564.0,
+    "trimmed_offroad_points": 561
+  }
+}

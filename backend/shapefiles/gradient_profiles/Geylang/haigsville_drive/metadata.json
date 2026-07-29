@@ -1,0 +1,50 @@
+{
+  "path_key": "haigsville_drive",
+  "display_name": "Haigsville Drive",
+  "source_project": "Haigsville Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Haigsville Drive\\geo_data.gpkg",
+  "lidar_bundle": "Marine Parade",
+  "lidar_root": "E:\\LIDAR\\Marine Parade",
+  "generated_at_utc": "2026-06-26T18:02:24.072264+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 353.02,
+  "profile_point_count": 177,
+  "valid_elevation_count": 54,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 59,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 47,
+  "usable_gradient_completion_pct": 26.55,
+  "elevation_hit_coverage_pct": 30.51,
+  "step_jump_rejection_pct": 33.33,
+  "gradient_min_pct": -0.895,
+  "gradient_max_pct": -0.448,
+  "path_bounds_svy21": {
+    "min_x": 35161.855,
+    "min_y": 32450.324,
+    "max_x": 35266.081,
+    "max_y": 32561.92
+  },
+  "road_boundary": {
+    "target_road_name": "HAIGSVILLE DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 178,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HAIG ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 354.0,
+    "offroad_chainage_max_m": 354.0,
+    "trimmed_offroad_points": 1
+  }
+}

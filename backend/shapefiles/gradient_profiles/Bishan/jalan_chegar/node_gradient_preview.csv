@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chegar,1,Jalan Chegar_Cam4_20260102_091822_869_A.jpeg,,10.47,5.235,6.0,24.251,,
+jalan_chegar,2,Jalan Chegar_Cam4_20260102_091827_675_A.jpeg,,34.587,22.529,22.0,24.401,0.0,1.0
+jalan_chegar,3,Jalan Chegar_Cam4_20260102_091843_912_A.jpeg,,67.527,51.057,52.0,24.45,,
+jalan_chegar,4,Jalan Chegar_Cam4_20260102_091854_126_A.jpeg,,107.688,87.608,88.0,26.51,,
+jalan_chegar,5,Jalan Chegar_Cam4_20260102_091906_170_A.jpeg,,118.464,113.076,114.0,23.739,-7.818,1.0
+jalan_chegar,6,Jalan Chegar_Cam4_20260102_091909_173_A.jpeg,,130.334,124.399,124.0,23.829,,

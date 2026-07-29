@@ -1,0 +1,50 @@
+{
+  "path_key": "york_hill",
+  "display_name": "York Hill",
+  "source_project": "York Hill",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\York Hill\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T16:34:42.106100+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 323.496,
+  "profile_point_count": 150,
+  "valid_elevation_count": 150,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 93,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 18.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.0,
+  "gradient_min_pct": -8.262,
+  "gradient_max_pct": 9.543,
+  "path_bounds_svy21": {
+    "min_x": 28459.588,
+    "min_y": 29807.048,
+    "max_x": 28515.445,
+    "max_y": 29963.008
+  },
+  "road_boundary": {
+    "target_road_name": "YORK HILL",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 163,
+    "offroad_point_count": 13,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHIN SWEE ROAD",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 24.0,
+    "trimmed_offroad_points": 13
+  }
+}

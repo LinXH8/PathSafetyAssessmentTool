@@ -1,0 +1,42 @@
+{
+  "path_key": "seletar_west_road_2",
+  "display_name": "Seletar West Road 2",
+  "source_project": "Seletar West Road 2",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Seletar West Road 2\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-31T21:58:56.924108+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 12.519,
+  "profile_point_count": 8,
+  "valid_elevation_count": 8,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 2,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 4,
+  "usable_gradient_completion_pct": 50.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 25.0,
+  "gradient_min_pct": -9.427,
+  "gradient_max_pct": -2.891,
+  "path_bounds_svy21": {
+    "min_x": 31408.776,
+    "min_y": 41291.915,
+    "max_x": 31420.879,
+    "max_y": 41295.118
+  },
+  "road_boundary": {
+    "target_road_name": "SELETAR WEST ROAD 2",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 8,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

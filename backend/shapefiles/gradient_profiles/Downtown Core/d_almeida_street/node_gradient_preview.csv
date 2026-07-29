@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+d_almeida_street,1,D'Almeida Street_Cam4_20251211_084935_274_C.jpeg,,11.381,5.691,6.0,5.675,,
+d_almeida_street,2,D'Almeida Street_Cam4_20251211_084935_875_C.jpeg,,22.742,17.062,18.0,5.189,,
+d_almeida_street,3,D'Almeida Street_Cam4_20251211_084936_476_C.jpeg,,34.436,28.589,28.0,4.789,-1.497,1.0
+d_almeida_street,4,D'Almeida Street_Cam4_20251211_084941_881_C.jpeg,,40.171,37.304,38.0,4.66,-0.608,1.0

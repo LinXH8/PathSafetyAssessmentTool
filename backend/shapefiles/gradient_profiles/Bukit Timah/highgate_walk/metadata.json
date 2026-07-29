@@ -1,0 +1,50 @@
+{
+  "path_key": "highgate_walk",
+  "display_name": "Highgate Walk",
+  "source_project": "Highgate Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Highgate Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T18:58:57.038542+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 238.474,
+  "profile_point_count": 115,
+  "valid_elevation_count": 115,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 34,
+  "usable_gradient_completion_pct": 29.57,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.52,
+  "gradient_min_pct": -8.125,
+  "gradient_max_pct": 6.016,
+  "path_bounds_svy21": {
+    "min_x": 20537.007,
+    "min_y": 35773.453,
+    "max_x": 20596.835,
+    "max_y": 35878.763
+  },
+  "road_boundary": {
+    "target_road_name": "HIGHGATE WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 121,
+    "offroad_point_count": 6,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HIGHGATE CRESCENT",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 10.0,
+    "trimmed_offroad_points": 6
+  }
+}

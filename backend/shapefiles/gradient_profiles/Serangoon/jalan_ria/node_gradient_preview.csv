@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_ria,1,Jalan Ria_Cam4_20260112_080700_487_B.jpeg,,11.9,5.95,6.0,9.507,,
+jalan_ria,2,Jalan Ria_Cam4_20260112_080705_891_B.jpeg,,23.512,17.706,18.0,9.837,,
+jalan_ria,3,Jalan Ria_Cam4_20260112_080710_095_B.jpeg,,46.961,35.236,36.0,8.948,,
+jalan_ria,4,Jalan Ria_Cam4_20260112_080718_506_B.jpeg,,58.108,52.534,,,,
+jalan_ria,5,Jalan Ria_Cam4_20260112_080722_712_B.jpeg,,69.388,63.748,64.0,10.328,,
+jalan_ria,6,Jalan Ria_Cam4_20260112_080726_914_B.jpeg,,91.149,80.269,80.0,11.222,,
+jalan_ria,7,Jalan Ria_Cam4_20260112_080735_325_B.jpeg,,103.168,97.159,98.0,6.87,,
+jalan_ria,8,Jalan Ria_Cam4_20260112_080741_333_B.jpeg,,114.295,108.732,108.0,5.223,-7.094,1.0
+jalan_ria,9,Jalan Ria_Cam4_20260112_080747_952_B.jpeg,,136.827,125.561,126.0,4.497,,
+jalan_ria,10,Jalan Ria_Cam4_20260112_080758_766_B.jpeg,,146.55,141.689,142.0,4.029,,

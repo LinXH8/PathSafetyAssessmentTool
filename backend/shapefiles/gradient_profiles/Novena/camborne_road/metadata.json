@@ -1,0 +1,42 @@
+{
+  "path_key": "camborne_road",
+  "display_name": "Camborne Road",
+  "source_project": "Camborne Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry3\\_projects\\Camborne Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T04:59:27.729655+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 445.452,
+  "profile_point_count": 224,
+  "valid_elevation_count": 224,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 127,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 72,
+  "usable_gradient_completion_pct": 32.14,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.7,
+  "gradient_min_pct": -4.896,
+  "gradient_max_pct": 8.437,
+  "path_bounds_svy21": {
+    "min_x": 26593.428,
+    "min_y": 33952.41,
+    "max_x": 26709.441,
+    "max_y": 34374.836
+  },
+  "road_boundary": {
+    "target_road_name": "CAMBORNE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 224,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

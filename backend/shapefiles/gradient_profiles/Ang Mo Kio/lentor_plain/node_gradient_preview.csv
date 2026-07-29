@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_plain,1,Lentor Plain_Cam4_20251231_081601_903_B.jpeg,,12.573,6.286,6.0,8.847,,
+lentor_plain,2,Lentor Plain_Cam4_20251231_081609_110_B.jpeg,,37.04,24.806,24.0,8.809,2.0,1.0
+lentor_plain,3,Lentor Plain_Cam4_20251231_081618_735_B.jpeg,,47.813,42.426,42.0,10.329,5.375,1.0
+lentor_plain,4,Lentor Plain_Cam4_20251231_081622_339_B.jpeg,,56.957,52.385,52.0,10.291,0.229,1.0
+lentor_plain,5,Lentor Plain_Cam4_20251231_081625_345_B.jpeg,,66.869,61.913,62.0,10.429,,
+lentor_plain,6,Lentor Plain_Cam4_20251231_081628_347_B.jpeg,,95.331,81.1,82.0,11.106,,
+lentor_plain,7,Lentor Plain_Cam4_20251231_081636_755_B.jpeg,,108.738,102.035,102.0,10.352,,
+lentor_plain,8,Lentor Plain_Cam4_20251231_081640_960_B.jpeg,,118.104,113.421,114.0,12.159,,
+lentor_plain,9,Lentor Plain_Cam4_20251231_081643_961_B.jpeg,,125.554,121.829,122.0,12.008,,
+lentor_plain,10,Lentor Plain_Cam4_20251231_081646_364_B.jpeg,,155.881,140.717,140.0,11.013,,
+lentor_plain,11,Lentor Plain_Cam4_20251231_081656_573_B.jpeg,,180.725,168.303,168.0,11.753,,
+lentor_plain,12,Lentor Plain_Cam4_20251231_081705_585_B.jpeg,,191.729,186.227,186.0,11.859,,
+lentor_plain,13,Lentor Plain_Cam4_20251231_081709_789_B.jpeg,,199.276,195.502,196.0,13.514,,
+lentor_plain,14,Lentor Plain_Cam4_20251231_081713_400_B.jpeg,,209.909,204.592,204.0,14.028,,
+lentor_plain,15,Lentor Plain_Cam4_20251231_081718_805_B.jpeg,,216.963,213.436,214.0,13.426,,
+lentor_plain,16,Lentor Plain_Cam4_20251231_081724_209_B.jpeg,,227.566,222.264,222.0,13.699,,
+lentor_plain,17,Lentor Plain_Cam4_20251231_081729_014_B.jpeg,,235.919,231.742,232.0,14.046,,
+lentor_plain,18,Lentor Plain_Cam4_20251231_081733_218_B.jpeg,,326.453,281.186,282.0,12.026,,
+lentor_plain,19,Lentor Plain_Cam4_20251231_081811_094_B.jpeg,,337.939,332.196,332.0,12.958,,
+lentor_plain,20,Lentor Plain_Cam4_20251231_081816_498_B.jpeg,,347.386,342.662,342.0,14.143,,
+lentor_plain,21,Lentor Plain_Cam4_20251231_081821_905_B.jpeg,,458.745,403.065,404.0,14.139,,
+lentor_plain,22,Lentor Plain_Cam4_20251231_084152_559_B.jpeg,,470.008,464.377,,,,
+lentor_plain,23,Lentor Plain_Cam4_20251231_084156_763_B.jpeg,,478.474,474.241,,,,

@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+haigsville_drive,1,Cam4_20260116_084932_727_B.jpeg,,9.844,4.922,4.0,2.071,,
+haigsville_drive,2,Cam4_20260116_084936_937_B.jpeg,,23.611,16.727,16.0,5.788,,
+haigsville_drive,3,Cam4_20260116_084941_141_B.jpeg,,33.788,28.699,28.0,10.863,,
+haigsville_drive,4,Cam4_20260116_084944_744_B.jpeg,,39.775,36.781,36.0,11.587,,
+haigsville_drive,5,Cam4_20260116_084946_550_B.jpeg,,52.029,45.902,46.0,9.491,,
+haigsville_drive,6,Cam4_20260116_084950_754_B.jpeg,,60.966,56.497,56.0,7.143,,
+haigsville_drive,7,Cam4_20260116_084953_758_B.jpeg,,71.353,66.159,66.0,6.168,-0.895,1.0
+haigsville_drive,8,Cam4_20260116_084956_761_B.jpeg,,80.027,75.69,76.0,6.079,-0.895,1.0
+haigsville_drive,9,Cam4_20260116_084959_764_B.jpeg,,91.468,85.748,86.0,5.989,-0.895,1.0
+haigsville_drive,10,Cam4_20260116_085005_169_B.jpeg,,102.976,97.222,98.0,5.882,-0.895,1.0
+haigsville_drive,11,Cam4_20260116_085008_772_B.jpeg,,109.25,106.113,106.0,5.81,-0.783,1.0
+haigsville_drive,12,Cam4_20260116_085010_575_B.jpeg,,119.182,114.216,114.0,5.765,,
+haigsville_drive,13,Cam4_20260116_085013_579_B.jpeg,,150.068,134.625,134.0,,,
+haigsville_drive,14,Cam4_20260116_085024_392_B.jpeg,,205.551,177.809,178.0,,,
+haigsville_drive,15,Cam4_20260116_085044_213_B.jpeg,,218.577,212.064,212.0,,,
+haigsville_drive,16,Cam4_20260116_085048_418_B.jpeg,,229.879,224.228,224.0,,,
+haigsville_drive,17,Cam4_20260116_085052_026_B.jpeg,,236.046,232.963,232.0,,,
+haigsville_drive,18,Cam4_20260116_085053_832_B.jpeg,,260.802,248.424,248.0,4.539,-0.895,1.0
+haigsville_drive,19,Cam4_20260116_085114_855_B.jpeg,,312.351,286.577,286.0,4.217,,
+haigsville_drive,20,Cam4_20260116_085129_269_B.jpeg,,322.652,317.502,318.0,8.931,,
+haigsville_drive,21,Cam4_20260116_085132_271_B.jpeg,,332.075,327.364,328.0,9.863,,
+haigsville_drive,22,Cam4_20260116_085135_272_B.jpeg,,344.636,338.356,338.0,9.643,,
+haigsville_drive,23,Cam4_20260116_085140_083_B.jpeg,,353.02,348.828,348.0,7.676,,

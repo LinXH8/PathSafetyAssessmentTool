@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+surin_road,1,Surin Road_Cam4_20260130_085413_946_A.jpeg,,11.014,5.507,6.0,49.6,0.0,1.0
+surin_road,2,Surin Road_Cam4_20260130_085417_551_A.jpeg,,20.359,15.686,16.0,49.263,,
+surin_road,3,Surin Road_Cam4_20260130_085420_554_A.jpeg,,31.251,25.805,26.0,41.931,,
+surin_road,4,Surin Road_Cam4_20260130_085424_160_A.jpeg,,56.905,44.078,44.0,30.061,,
+surin_road,5,Surin Road_Cam4_20260130_085432_571_A.jpeg,,82.736,69.821,70.0,23.828,,
+surin_road,6,Surin Road_Cam4_20260130_085445_785_A.jpeg,,111.803,97.269,98.0,25.243,,
+surin_road,7,Surin Road_Cam4_20260130_085456_003_A.jpeg,,117.173,114.488,114.0,29.395,,
+surin_road,8,Surin Road_Cam4_20260130_085457_805_A.jpeg,,128.113,122.643,122.0,31.091,,
+surin_road,9,Surin Road_Cam4_20260130_085501_410_A.jpeg,,155.92,142.017,142.0,35.329,,
+surin_road,10,Surin Road_Cam4_20260130_085510_424_A.jpeg,,183.95,169.935,170.0,35.753,0.0,1.0

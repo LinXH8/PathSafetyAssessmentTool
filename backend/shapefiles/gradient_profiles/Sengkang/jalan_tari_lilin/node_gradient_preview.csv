@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tari_lilin,1,Jalan Tari Lilin_Cam4_20260106_100000_402_A.jpeg,,13.581,6.791,6.0,8.715,-6.308,1.0
+jalan_tari_lilin,2,Jalan Tari Lilin_Cam4_20260106_100007_039_A.jpeg,,61.43,37.505,36.0,9.818,,
+jalan_tari_lilin,3,Jalan Tari Lilin_Cam4_20260106_100242_171_A.jpeg,,85.299,73.364,74.0,12.508,,
+jalan_tari_lilin,4,Jalan Tari Lilin_Cam4_20260106_100250_580_A.jpeg,,97.8,91.55,,,,
+jalan_tari_lilin,5,Jalan Tari Lilin_Cam4_20260106_101849_296_A.jpeg,,125.349,111.575,112.0,14.509,6.486,1.0
+jalan_tari_lilin,6,Jalan Tari Lilin_Cam4_20260106_101915_304_A.jpeg,,137.245,131.297,132.0,16.01,2.43,1.0
+jalan_tari_lilin,7,Jalan Tari Lilin_Cam4_20260106_101927_946_A.jpeg,,143.244,140.244,140.0,16.422,,
+jalan_tari_lilin,8,Jalan Tari Lilin_Cam4_20260106_101930_348_A.jpeg,,266.018,204.631,,,,
+jalan_tari_lilin,9,Jalan Tari Lilin_Cam4_20260106_105103_570_A.jpeg,,276.331,271.175,,,,
+jalan_tari_lilin,10,Jalan Tari Lilin_Cam4_20260106_105107_181_A.jpeg,,286.62,281.476,,,,
+jalan_tari_lilin,11,Jalan Tari Lilin_Cam4_20260106_105110_186_A.jpeg,,315.512,301.066,,,,
+jalan_tari_lilin,12,Jalan Tari Lilin_Cam4_20260106_105119_197_A.jpeg,,384.136,349.824,,,,

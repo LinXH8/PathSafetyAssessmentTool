@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ang_mo_kio_street_23,1,Ang Mo Kio Street 23_Cam4_20251231_073151_081_C.jpeg,,14.679,7.339,8.0,13.22,0.0,1.0
+ang_mo_kio_street_23,2,Ang Mo Kio Street 23_Cam4_20251231_073157_054_C.jpeg,,24.928,19.803,20.0,13.22,0.0,1.0
+ang_mo_kio_street_23,3,Ang Mo Kio Street 23_Cam4_20251231_073201_260_C.jpeg,,30.715,27.821,28.0,13.233,3.125,1.0
+ang_mo_kio_street_23,4,Ang Mo Kio Street 23_Cam4_20251231_073203_663_C.jpeg,,60.156,45.435,46.0,13.358,,
+ang_mo_kio_street_23,5,Ang Mo Kio Street 23_Cam4_20251231_073215_075_C.jpeg,,69.23,64.693,64.0,14.595,,
+ang_mo_kio_street_23,6,Ang Mo Kio Street 23_Cam4_20251231_073218_079_C.jpeg,,95.166,82.198,82.0,13.213,-0.625,1.0
+ang_mo_kio_street_23,7,Ang Mo Kio Street 23_Cam4_20251231_073227_687_C.jpeg,,106.11,100.638,100.0,13.163,-1.25,1.0
+ang_mo_kio_street_23,8,Ang Mo Kio Street 23_Cam4_20251231_073231_892_C.jpeg,,117.477,111.793,112.0,13.705,,
+ang_mo_kio_street_23,9,Ang Mo Kio Street 23_Cam4_20251231_073236_097_C.jpeg,,127.04,122.258,122.0,14.82,,
+ang_mo_kio_street_23,10,Ang Mo Kio Street 23_Cam4_20251231_073239_704_C.jpeg,,138.26,132.65,132.0,15.51,,
+ang_mo_kio_street_23,11,Ang Mo Kio Street 23_Cam4_20251231_073243_909_C.jpeg,,161.056,149.658,150.0,15.601,,
+ang_mo_kio_street_23,12,Ang Mo Kio Street 23_Cam4_20251231_073252_320_C.jpeg,,173.174,167.115,168.0,14.508,,
+ang_mo_kio_street_23,13,Ang Mo Kio Street 23_Cam4_20251231_073257_126_C.jpeg,,209.604,191.389,192.0,13.168,2.265,1.0
+ang_mo_kio_street_23,14,Ang Mo Kio Street 23_Cam4_20251231_073317_544_C.jpeg,,242.685,226.145,226.0,13.797,,
+ang_mo_kio_street_23,15,Ang Mo Kio Street 23_Cam4_20251231_073336_164_C.jpeg,,255.962,249.323,250.0,13.885,,
+ang_mo_kio_street_23,16,Ang Mo Kio Street 23_Cam4_20251231_073342_770_C.jpeg,,264.876,260.419,260.0,14.795,,
+ang_mo_kio_street_23,17,Ang Mo Kio Street 23_Cam4_20251231_073347_576_C.jpeg,,275.968,270.422,270.0,14.693,,
+ang_mo_kio_street_23,18,Ang Mo Kio Street 23_Cam4_20251231_073353_583_C.jpeg,,299.175,287.572,288.0,13.063,0.625,1.0
+ang_mo_kio_street_23,19,Ang Mo Kio Street 23_Cam4_20251231_073403_768_C.jpeg,,310.531,304.853,304.0,13.613,2.188,1.0
+ang_mo_kio_street_23,20,Ang Mo Kio Street 23_Cam4_20251231_073407_974_C.jpeg,,321.04,315.786,316.0,13.438,-1.562,1.0
+ang_mo_kio_street_23,21,Ang Mo Kio Street 23_Cam4_20251231_073412_177_C.jpeg,,332.126,326.583,326.0,13.579,3.436,1.0
+ang_mo_kio_street_23,22,Ang Mo Kio Street 23_Cam4_20251231_073418_184_C.jpeg,,456.042,394.084,394.0,14.311,,

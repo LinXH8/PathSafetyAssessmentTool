@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+venus_road,1,Venus Road_Cam4_20260105_103210_858_A.jpeg,,10.227,5.113,6.0,15.452,,
+venus_road,2,Venus Road_Cam4_20260105_103215_668_A.jpeg,,20.634,15.43,16.0,14.011,,
+venus_road,3,Venus Road_Cam4_20260105_103222_283_A.jpeg,,29.927,25.281,26.0,13.283,,
+venus_road,4,Venus Road_Cam4_20260105_103237_302_A.jpeg,,40.29,35.108,36.0,13.587,,
+venus_road,5,Venus Road_Cam4_20260105_103243_307_A.jpeg,,49.74,45.015,46.0,14.35,,
+venus_road,6,Venus Road_Cam4_20260105_103248_139_A.jpeg,,61.453,55.596,56.0,15.225,,
+venus_road,7,Venus Road_Cam4_20260105_103252_344_A.jpeg,,72.768,67.11,68.0,13.463,,
+venus_road,8,Venus Road_Cam4_20260105_103255_952_A.jpeg,,80.354,76.561,76.0,13.463,0.125,1.0
+venus_road,9,Venus Road_Cam4_20260105_103258_355_A.jpeg,,89.804,85.079,86.0,13.463,,
+venus_road,10,Venus Road_Cam4_20260105_103301_360_A.jpeg,,100.85,95.327,96.0,14.343,,
+venus_road,11,Venus Road_Cam4_20260105_103304_964_A.jpeg,,110.27,105.56,106.0,14.164,,
+venus_road,12,Venus Road_Cam4_20260105_103307_967_A.jpeg,,119.969,115.119,116.0,14.001,,
+venus_road,13,Venus Road_Cam4_20260105_103310_969_A.jpeg,,129.409,124.689,124.0,14.563,,
+venus_road,14,Venus Road_Cam4_20260105_103313_972_A.jpeg,,140.558,134.984,134.0,15.101,,
+venus_road,15,Venus Road_Cam4_20260105_103318_179_A.jpeg,,261.714,201.136,202.0,13.453,-0.125,1.0
+venus_road,16,Venus Road_Cam4_20260105_103424_764_A.jpeg,,270.535,266.125,266.0,15.804,,
+venus_road,17,Venus Road_Cam4_20260105_103428_967_A.jpeg,,280.482,275.509,276.0,15.775,,
+venus_road,18,Venus Road_Cam4_20260105_103433_771_A.jpeg,,290.296,285.389,,,,

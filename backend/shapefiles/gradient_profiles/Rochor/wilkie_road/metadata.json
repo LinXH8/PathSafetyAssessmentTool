@@ -1,0 +1,58 @@
+{
+  "path_key": "wilkie_road",
+  "display_name": "Wilkie Road",
+  "source_project": "Wilkie Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Wilkie Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-25T16:28:15.837035+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2064.229,
+  "profile_point_count": 859,
+  "valid_elevation_count": 456,
+  "rejected_outlier_count": 47,
+  "rejected_step_jump_count": 329,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 182,
+  "usable_gradient_completion_pct": 21.19,
+  "elevation_hit_coverage_pct": 53.08,
+  "step_jump_rejection_pct": 38.3,
+  "gradient_min_pct": -8.063,
+  "gradient_max_pct": 6.569,
+  "path_bounds_svy21": {
+    "min_x": 29356.494,
+    "min_y": 31554.275,
+    "max_x": 29850.55,
+    "max_y": 31865.955
+  },
+  "road_boundary": {
+    "target_road_name": "WILKIE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1034,
+    "offroad_point_count": 175,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOPHIA ROAD",
+        "point_count": 130
+      },
+      {
+        "road_name": "WILKIE TERRACE",
+        "point_count": 27
+      },
+      {
+        "road_name": "NIVEN ROAD",
+        "point_count": 18
+      }
+    ],
+    "offroad_chainage_min_m": 126.0,
+    "offroad_chainage_max_m": 2064.229,
+    "trimmed_offroad_points": 175
+  }
+}

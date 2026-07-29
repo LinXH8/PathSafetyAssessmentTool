@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+holland_grove_walk,1,Holland Grove Walk_Cam4_20251219_081028_241_B.jpeg,,10.753,5.376,6.0,13.643,,
+holland_grove_walk,2,Holland Grove Walk_Cam4_20251219_082918_574_B.jpeg,,22.209,16.481,16.0,12.876,,
+holland_grove_walk,3,Holland Grove Walk_Cam4_20251219_082923_979_B.jpeg,,33.101,27.655,28.0,11.502,,
+holland_grove_walk,4,Holland Grove Walk_Cam4_20251219_082928_184_B.jpeg,,55.264,44.183,44.0,12.128,5.313,1.0
+holland_grove_walk,5,Holland Grove Walk_Cam4_20251219_082937_197_B.jpeg,,67.168,61.216,62.0,13.119,9.062,2.0
+holland_grove_walk,6,Holland Grove Walk_Cam4_20251219_082942_003_B.jpeg,,74.417,70.793,70.0,13.794,7.083,1.0
+holland_grove_walk,7,Holland Grove Walk_Cam4_20251219_082945_006_B.jpeg,,101.388,87.903,88.0,16.193,,

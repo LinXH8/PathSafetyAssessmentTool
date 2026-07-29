@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kingsmead_road,1,Kingsmead Road_Cam4_20251218_085235_393_B.jpeg,,10.541,5.27,6.0,7.35,,
+kingsmead_road,2,Kingsmead Road_Cam4_20251218_085239_601_B.jpeg,,33.586,22.063,22.0,7.818,-2.035,1.0
+kingsmead_road,3,Kingsmead Road_Cam4_20251218_090115_157_B.jpeg,,45.466,39.526,40.0,7.654,0.312,1.0
+kingsmead_road,4,Kingsmead Road_Cam4_20251218_090119_364_B.jpeg,,57.263,51.365,52.0,8.332,,
+kingsmead_road,5,Kingsmead Road_Cam4_20251218_090122_967_B.jpeg,,83.187,70.225,70.0,7.479,0.26,1.0
+kingsmead_road,6,Kingsmead Road_Cam4_20251218_090131_978_B.jpeg,,92.748,87.968,88.0,7.678,,
+kingsmead_road,7,Kingsmead Road_Cam4_20251218_090137_383_B.jpeg,,165.649,129.198,130.0,8.118,,
+kingsmead_road,8,Kingsmead Road_Cam4_20251218_090209_830_B.jpeg,,176.832,171.24,172.0,10.191,,
+kingsmead_road,9,Kingsmead Road_Cam4_20251218_090214_636_B.jpeg,,185.468,181.15,182.0,10.018,,
+kingsmead_road,10,Kingsmead Road_Cam4_20251218_090218_239_B.jpeg,,195.071,190.269,190.0,10.156,,
+kingsmead_road,11,Kingsmead Road_Cam4_20251218_090222_442_B.jpeg,,221.293,208.182,208.0,10.783,,
+kingsmead_road,12,Kingsmead Road_Cam4_20251218_090241_068_B.jpeg,,232.174,226.733,226.0,10.687,,
+kingsmead_road,13,Kingsmead Road_Cam4_20251218_090245_875_B.jpeg,,242.072,237.123,238.0,10.595,,
+kingsmead_road,14,Kingsmead Road_Cam4_20251218_090249_480_B.jpeg,,252.08,247.076,248.0,10.977,2.929,1.0
+kingsmead_road,15,Kingsmead Road_Cam4_20251218_090253_083_B.jpeg,,278.758,265.419,266.0,11.676,4.387,1.0
+kingsmead_road,16,Kingsmead Road_Cam4_20251218_090319_517_B.jpeg,,306.349,292.554,292.0,13.034,,
+kingsmead_road,17,Kingsmead Road_Cam4_20251218_090411_788_B.jpeg,,314.524,310.437,310.0,13.713,4.583,1.0

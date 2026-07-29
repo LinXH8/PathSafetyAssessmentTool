@@ -1,0 +1,42 @@
+{
+  "path_key": "flint_street",
+  "display_name": "Flint Street",
+  "source_project": "Flint Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Flint Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T09:02:07.884385+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 14.08,
+  "profile_point_count": 9,
+  "valid_elevation_count": 9,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 2,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 55.56,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 22.22,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 1.786,
+  "path_bounds_svy21": {
+    "min_x": 30132.775,
+    "min_y": 29775.533,
+    "max_x": 30141.301,
+    "max_y": 29786.738
+  },
+  "road_boundary": {
+    "target_road_name": "FLINT STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 9,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

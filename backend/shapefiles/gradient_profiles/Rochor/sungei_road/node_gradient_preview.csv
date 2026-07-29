@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sungei_road,1,Cam4_20251208_102123_212_A.jpeg,,10.651,5.325,6.0,4.833,,
+sungei_road,2,Cam4_20251208_102127_306_A.jpeg,,21.926,16.288,16.0,5.062,,
+sungei_road,3,Cam4_20251208_102132_387_A.jpeg,,28.968,25.447,26.0,5.497,,
+sungei_road,4,Cam4_20251208_130026_254_C.jpeg,,53.856,41.412,42.0,6.296,,
+sungei_road,5,Cam4_20251208_130035_869_C.jpeg,,62.708,58.282,58.0,4.711,,
+sungei_road,6,Cam4_20251208_130038_874_C.jpeg,,171.796,117.252,118.0,3.681,,
+sungei_road,7,Cam4_20251208_130242_836_C.jpeg,,241.908,206.852,206.0,3.702,,
+sungei_road,8,Cam4_20251208_130320_771_C.jpeg,,275.453,258.681,258.0,4.052,,
+sungei_road,9,Cam4_20251208_130331_001_C.jpeg,,282.631,279.042,280.0,5.039,,

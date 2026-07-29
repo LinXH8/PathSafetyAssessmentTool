@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tudor_close,1,,TUDOR CLOSE,18.518,9.259,10.0,13.163,,
+tudor_close,2,,TUDOR CLOSE,40.297,38.667,38.0,12.956,,
+tudor_close,3,,TUDOR CLOSE,185.884,192.052,192.0,6.216,-0.625,1.0

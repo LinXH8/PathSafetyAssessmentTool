@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bali_lane,1,Bali Lane_Cam4_20251208_075156_495_C.jpeg,,14.321,7.16,8.0,6.412,,
+bali_lane,2,Bali Lane_Cam4_20251208_075202_501_C.jpeg,,41.535,27.928,28.0,6.283,,
+bali_lane,3,Bali Lane_Cam4_20251208_075211_508_C.jpeg,,65.855,53.695,54.0,7.023,,
+bali_lane,4,Bali Lane_Cam4_20251208_075219_317_C.jpeg,,99.323,82.589,82.0,5.03,-0.167,1.0
+bali_lane,5,Bali Lane_Cam4_20251208_075234_934_C.jpeg,,141.354,120.338,,,,
+bali_lane,6,Bali Lane_Cam4_20251211_092813_968_B.jpeg,,147.401,144.377,,,,
+bali_lane,7,Bali Lane_Cam4_20251211_092815_770_B.jpeg,,158.732,153.067,,,,

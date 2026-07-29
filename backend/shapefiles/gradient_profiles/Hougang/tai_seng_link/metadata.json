@@ -1,0 +1,54 @@
+{
+  "path_key": "tai_seng_link",
+  "display_name": "Tai Seng Link",
+  "source_project": "Tai Seng Link",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Tai Seng Link\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_05_TPY_01",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_05_TPY_01",
+  "generated_at_utc": "2026-05-31T14:17:07.018201+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 524.764,
+  "profile_point_count": 183,
+  "valid_elevation_count": 183,
+  "rejected_outlier_count": 38,
+  "rejected_step_jump_count": 81,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 72,
+  "usable_gradient_completion_pct": 39.34,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.26,
+  "gradient_min_pct": -2.175,
+  "gradient_max_pct": 8.092,
+  "path_bounds_svy21": {
+    "min_x": 34279.451,
+    "min_y": 35313.306,
+    "max_x": 34380.128,
+    "max_y": 35557.345
+  },
+  "road_boundary": {
+    "target_road_name": "TAI SENG LINK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 264,
+    "offroad_point_count": 81,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TAI SENG AVENUE",
+        "point_count": 51
+      },
+      {
+        "road_name": "TAI SENG STREET",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 140.0,
+    "offroad_chainage_max_m": 524.764,
+    "trimmed_offroad_points": 81
+  }
+}

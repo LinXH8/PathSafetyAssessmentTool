@@ -1,0 +1,66 @@
+{
+  "path_key": "keong_saik_road",
+  "display_name": "Keong Saik Road",
+  "source_project": "Keong Saik Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Keong Saik Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T15:15:09.977394+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1673.868,
+  "profile_point_count": 715,
+  "valid_elevation_count": 655,
+  "rejected_outlier_count": 82,
+  "rejected_step_jump_count": 470,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 147,
+  "usable_gradient_completion_pct": 20.56,
+  "elevation_hit_coverage_pct": 91.61,
+  "step_jump_rejection_pct": 65.73,
+  "gradient_min_pct": -9.548,
+  "gradient_max_pct": 13.827,
+  "path_bounds_svy21": {
+    "min_x": 28875.642,
+    "min_y": 29009.233,
+    "max_x": 29027.564,
+    "max_y": 29444.954
+  },
+  "road_boundary": {
+    "target_road_name": "KEONG SAIK ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 838,
+    "offroad_point_count": 123,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KRETA AYER ROAD",
+        "point_count": 47
+      },
+      {
+        "road_name": "NEIL ROAD",
+        "point_count": 22
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 20
+      },
+      {
+        "road_name": "TECK LIM ROAD",
+        "point_count": 19
+      },
+      {
+        "road_name": "SAGO STREET",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1616.0,
+    "trimmed_offroad_points": 123
+  }
+}

@@ -1,0 +1,21 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+maju_avenue,Maju Avenue,74.0,31590.147,38531.965,7.897,7.897,7.869,0.0,1.0,MAJU AVENUE,3.009
+maju_avenue,Maju Avenue,76.0,31588.181,38532.334,7.869,7.869,7.852,0.0,1.0,MAJU AVENUE,1.012
+maju_avenue,Maju Avenue,78.0,31586.216,38532.702,7.834,7.834,7.869,1.484,1.0,MAJU AVENUE,0.985
+maju_avenue,Maju Avenue,80.0,31584.25,38533.07,7.783,7.783,7.869,4.109,1.0,MAJU AVENUE,2.982
+maju_avenue,Maju Avenue,82.0,31582.284,38533.439,7.988,7.988,7.988,6.734,1.0,MAJU AVENUE,4.979
+maju_avenue,Maju Avenue,84.0,31581.914,38535.157,7.962,8.198,8.198,6.869,1.0,MAJU AVENUE,5.57
+maju_avenue,Maju Avenue,86.0,31581.876,38537.157,8.408,8.408,8.408,,,MAJU AVENUE,5.867
+maju_avenue,Maju Avenue,88.0,31581.838,38539.156,8.419,8.419,8.419,,,MAJU AVENUE,6.164
+maju_avenue,Maju Avenue,90.0,31581.8,38541.156,8.836,8.448,8.448,,,MAJU AVENUE,6.461
+maju_avenue,Maju Avenue,92.0,31581.763,38543.156,8.505,8.478,8.478,,,MAJU AVENUE,6.758
+maju_avenue,Maju Avenue,94.0,31581.902,38545.145,7.851,8.508,8.508,,,MAJU AVENUE,6.879
+maju_avenue,Maju Avenue,96.0,31582.166,38547.128,8.475,8.537,8.537,,,MAJU AVENUE,6.874
+maju_avenue,Maju Avenue,98.0,31582.43,38549.11,10.194,8.567,8.567,,,MAJU AVENUE,6.87
+maju_avenue,Maju Avenue,100.0,31582.694,38551.093,8.658,8.658,8.567,,,MAJU AVENUE,6.865
+maju_avenue,Maju Avenue,102.0,31582.959,38553.075,7.913,8.601,8.567,-1.011,1.0,MAJU AVENUE,6.861
+maju_avenue,Maju Avenue,104.0,31583.223,38555.058,8.781,8.543,8.543,-4.7,1.0,MAJU AVENUE,6.856
+maju_avenue,Maju Avenue,106.0,31583.487,38557.04,13.637,8.486,8.486,,,MAJU AVENUE,6.851
+maju_avenue,Maju Avenue,108.0,31583.751,38559.022,8.191,8.191,8.191,,,MAJU AVENUE,6.847
+maju_avenue,Maju Avenue,110.0,31584.016,38561.005,8.159,8.159,8.18,-5.273,1.0,MAJU AVENUE,6.842
+maju_avenue,Maju Avenue,112.0,31584.28,38562.987,8.17,8.17,8.17,-0.531,1.0,MAJU AVENUE,6.838

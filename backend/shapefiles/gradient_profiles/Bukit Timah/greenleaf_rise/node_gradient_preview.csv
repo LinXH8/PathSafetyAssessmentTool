@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_rise,1,Greenleaf Rise_Cam4_20251219_094659_886_B.jpeg,,10.104,5.052,6.0,21.757,,
+greenleaf_rise,2,Greenleaf Rise_Cam4_20251219_094703_490_B.jpeg,,20.007,15.055,16.0,21.305,0.729,1.0
+greenleaf_rise,3,Greenleaf Rise_Cam4_20251219_094706_975_B.jpeg,,86.898,53.452,54.0,24.274,,
+greenleaf_rise,4,Greenleaf Rise_Cam4_20251219_095000_756_B.jpeg,,111.776,99.337,100.0,27.703,,
+greenleaf_rise,5,Greenleaf Rise_Cam4_20251219_100659_736_B.jpeg,,136.888,124.332,124.0,27.556,,
+greenleaf_rise,6,Greenleaf Rise_Cam4_20251219_100709_354_B.jpeg,,143.949,140.418,140.0,27.023,,
+greenleaf_rise,7,Greenleaf Rise_Cam4_20251219_100711_156_B.jpeg,,154.142,149.046,150.0,26.485,,
+greenleaf_rise,8,Greenleaf Rise_Cam4_20251219_100713_607_B.jpeg,,224.293,189.218,190.0,22.603,,
+greenleaf_rise,9,Greenleaf Rise_Cam4_20251219_100729_723_B.jpeg,,237.436,230.865,230.0,21.014,-3.047,1.0
+greenleaf_rise,10,Greenleaf Rise_Cam4_20251219_100732_740_B.jpeg,,247.292,242.364,242.0,20.882,0.469,1.0
+greenleaf_rise,11,Greenleaf Rise_Cam4_20251219_100735_142_B.jpeg,,257.275,252.283,252.0,20.589,-4.609,1.0
+greenleaf_rise,12,Greenleaf Rise_Cam4_20251219_100737_546_B.jpeg,,264.612,260.943,260.0,20.429,-1.289,1.0
+greenleaf_rise,13,Greenleaf Rise_Cam4_20251219_100739_349_B.jpeg,,325.136,294.874,294.0,20.104,7.392,1.0
+greenleaf_rise,14,Greenleaf Rise_Cam4_20251219_100759_777_B.jpeg,,336.284,330.71,330.0,19.168,,
+greenleaf_rise,15,Greenleaf Rise_Cam4_20251219_100803_380_B.jpeg,,346.07,341.177,342.0,17.68,,
+greenleaf_rise,16,Greenleaf Rise_Cam4_20251219_100806_383_B.jpeg,,357.089,351.58,352.0,17.515,,

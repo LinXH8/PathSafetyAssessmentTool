@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+guillemard_crescent,1,Cam4_20260116_081224_649_B.jpeg,,14.959,7.479,8.0,1.716,,
+guillemard_crescent,2,Cam4_20260116_081230_060_B.jpeg,,36.728,25.843,26.0,1.878,2.344,1.0
+guillemard_crescent,3,Cam4_20260116_081242_070_B.jpeg,,49.092,42.91,42.0,1.966,5.625,1.0
+guillemard_crescent,4,Cam4_20260116_081248_076_B.jpeg,,60.247,54.67,54.0,3.075,,
+guillemard_crescent,5,Cam4_20260116_081251_692_B.jpeg,,82.387,71.317,72.0,6.169,,
+guillemard_crescent,6,Cam4_20260116_081300_062_B.jpeg,,91.036,86.711,86.0,12.099,,
+guillemard_crescent,7,Cam4_20260116_081305_468_B.jpeg,,101.89,96.463,96.0,16.317,,
+guillemard_crescent,8,Cam4_20260116_081309_679_B.jpeg,,111.372,106.631,106.0,16.159,-2.636,1.0
+guillemard_crescent,9,Cam4_20260116_081313_282_B.jpeg,,123.203,117.288,118.0,15.843,-2.636,1.0
+guillemard_crescent,10,Cam4_20260116_081318_086_B.jpeg,,134.225,128.714,128.0,15.579,-2.636,1.0
+guillemard_crescent,11,Cam4_20260116_081322_891_B.jpeg,,158.378,146.302,146.0,7.991,,
+guillemard_crescent,12,Cam4_20260116_081334_979_B.jpeg,,168.599,163.489,164.0,3.488,,
+guillemard_crescent,13,Cam4_20260116_081338_583_B.jpeg,,179.538,174.069,174.0,6.399,,
+guillemard_crescent,14,Cam4_20260116_081342_789_B.jpeg,,202.971,191.255,192.0,5.017,,
+guillemard_crescent,15,Cam4_20260116_081351_203_B.jpeg,,213.978,208.475,208.0,3.367,,
+guillemard_crescent,16,Cam4_20260116_081355_408_B.jpeg,,242.707,228.343,228.0,3.555,,
+guillemard_crescent,17,Cam4_20260116_081405_624_B.jpeg,,253.548,248.128,248.0,2.3,-2.812,1.0
+guillemard_crescent,18,Cam4_20260116_081409_115_B.jpeg,,263.709,258.629,258.0,2.108,0.418,1.0
+guillemard_crescent,19,Cam4_20260116_081412_119_B.jpeg,,275.688,269.698,270.0,2.208,,
+guillemard_crescent,20,Cam4_20260116_081415_725_B.jpeg,,285.552,280.62,280.0,3.037,,
+guillemard_crescent,21,Cam4_20260116_081434_946_B.jpeg,,383.08,334.316,,,,
+guillemard_crescent,22,Cam4_20260116_081648_028_B.jpeg,,415.587,399.333,402.0,25.636,,
+guillemard_crescent,23,Cam4_20260116_081809_090_B.jpeg,,441.383,428.485,428.0,16.671,,
+guillemard_crescent,24,Cam4_20260116_081848_111_B.jpeg,,452.531,446.957,446.0,7.442,,
+guillemard_crescent,25,Cam4_20260116_081853_517_B.jpeg,,463.316,457.923,458.0,5.634,,
+guillemard_crescent,26,Cam4_20260116_081857_721_B.jpeg,,473.622,468.469,468.0,2.869,,

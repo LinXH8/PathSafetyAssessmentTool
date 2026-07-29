@@ -1,0 +1,42 @@
+{
+  "path_key": "goldhill_avenue",
+  "display_name": "Goldhill Avenue",
+  "source_project": "Goldhill Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Goldhill Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T06:42:28.380360+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 602.952,
+  "profile_point_count": 303,
+  "valid_elevation_count": 303,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 213,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 46,
+  "usable_gradient_completion_pct": 15.18,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 70.3,
+  "gradient_min_pct": -32.789,
+  "gradient_max_pct": 5.671,
+  "path_bounds_svy21": {
+    "min_x": 27795.117,
+    "min_y": 33437.844,
+    "max_x": 28045.287,
+    "max_y": 33798.676
+  },
+  "road_boundary": {
+    "target_road_name": "GOLDHILL AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 303,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

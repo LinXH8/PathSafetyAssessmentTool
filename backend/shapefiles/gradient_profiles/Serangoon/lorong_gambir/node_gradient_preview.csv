@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_gambir,1,Lorong Gambir_Cam4_20260112_104152_336_A.jpeg,,10.362,5.181,6.0,7.67,-1.663,1.0
+lorong_gambir,2,Lorong Gambir_Cam4_20260112_104156_634_A.jpeg,,22.055,16.208,16.0,7.42,-3.569,1.0
+lorong_gambir,3,Lorong Gambir_Cam4_20260112_104201_443_A.jpeg,,154.642,88.348,88.0,9.139,,
+lorong_gambir,4,Lorong Gambir_Cam4_20260112_104727_031_A.jpeg,,165.743,160.193,160.0,4.613,-0.169,1.0
+lorong_gambir,5,Lorong Gambir_Cam4_20260112_104730_634_A.jpeg,,173.563,169.653,170.0,4.943,2.078,1.0
+lorong_gambir,6,Lorong Gambir_Cam4_20260112_104733_036_A.jpeg,,203.267,188.415,188.0,4.8,0.383,1.0
+lorong_gambir,7,Lorong Gambir_Cam4_20260112_104741_535_A.jpeg,,247.485,225.376,226.0,4.858,-0.969,1.0
+lorong_gambir,8,Lorong Gambir_Cam4_20260112_104754_917_A.jpeg,,431.021,339.253,,,,

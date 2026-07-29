@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_gaharu",
+  "display_name": "Jalan Gaharu",
+  "source_project": "Jalan Gaharu",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Gaharu\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T20:09:16.043969+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 742.47,
+  "profile_point_count": 370,
+  "valid_elevation_count": 370,
+  "rejected_outlier_count": 48,
+  "rejected_step_jump_count": 293,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 30,
+  "usable_gradient_completion_pct": 8.11,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 79.19,
+  "gradient_min_pct": -9.182,
+  "gradient_max_pct": 7.604,
+  "path_bounds_svy21": {
+    "min_x": 22050.464,
+    "min_y": 35854.215,
+    "max_x": 22261.12,
+    "max_y": 36004.197
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN GAHARU",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 373,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN BINGKA",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 62.0,
+    "offroad_chainage_max_m": 694.0,
+    "trimmed_offroad_points": 3
+  }
+}

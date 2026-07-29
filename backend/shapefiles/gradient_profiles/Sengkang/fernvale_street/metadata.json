@@ -1,0 +1,62 @@
+{
+  "path_key": "fernvale_street",
+  "display_name": "Fernvale Street",
+  "source_project": "Fernvale Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Fernvale Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T00:58:23.714925+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1034.291,
+  "profile_point_count": 129,
+  "valid_elevation_count": 110,
+  "rejected_outlier_count": 30,
+  "rejected_step_jump_count": 105,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 2,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 3.88,
+  "elevation_hit_coverage_pct": 85.27,
+  "step_jump_rejection_pct": 81.4,
+  "gradient_min_pct": -9.781,
+  "gradient_max_pct": -3.066,
+  "path_bounds_svy21": {
+    "min_x": 32587.389,
+    "min_y": 42181.874,
+    "max_x": 33439.679,
+    "max_y": 42244.58
+  },
+  "road_boundary": {
+    "target_road_name": "FERNVALE STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 519,
+    "offroad_point_count": 390,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANCHORVALE STREET",
+        "point_count": 249
+      },
+      {
+        "road_name": "FERNVALE ROAD",
+        "point_count": 86
+      },
+      {
+        "road_name": "FERNVALE LINK",
+        "point_count": 35
+      },
+      {
+        "road_name": "LORONG SAMAK",
+        "point_count": 20
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1034.291,
+    "trimmed_offroad_points": 390
+  }
+}

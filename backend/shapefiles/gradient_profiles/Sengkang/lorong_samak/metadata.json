@@ -1,0 +1,50 @@
+{
+  "path_key": "lorong_samak",
+  "display_name": "Lorong Samak",
+  "source_project": "Lorong Samak",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Samak\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T02:21:57.380826+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 219.017,
+  "profile_point_count": 106,
+  "valid_elevation_count": 102,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 51,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 39,
+  "usable_gradient_completion_pct": 36.79,
+  "elevation_hit_coverage_pct": 96.23,
+  "step_jump_rejection_pct": 48.11,
+  "gradient_min_pct": -2.163,
+  "gradient_max_pct": 8.437,
+  "path_bounds_svy21": {
+    "min_x": 32440.853,
+    "min_y": 42129.44,
+    "max_x": 32592.404,
+    "max_y": 42164.307
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG SAMAK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 111,
+    "offroad_point_count": 5,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG TANGGAM",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 74.0,
+    "offroad_chainage_max_m": 82.0,
+    "trimmed_offroad_points": 5
+  }
+}

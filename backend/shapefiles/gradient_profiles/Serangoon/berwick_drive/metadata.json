@@ -1,0 +1,66 @@
+{
+  "path_key": "berwick_drive",
+  "display_name": "Berwick Drive",
+  "source_project": "Berwick Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Berwick Drive\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-20T07:12:58.284995+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1979.471,
+  "profile_point_count": 823,
+  "valid_elevation_count": 823,
+  "rejected_outlier_count": 58,
+  "rejected_step_jump_count": 363,
+  "repaired_gradient_point_count": 17,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 345,
+  "usable_gradient_completion_pct": 41.92,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.11,
+  "gradient_min_pct": -7.623,
+  "gradient_max_pct": 13.215,
+  "path_bounds_svy21": {
+    "min_x": 30913.145,
+    "min_y": 38123.556,
+    "max_x": 31207.038,
+    "max_y": 38709.579
+  },
+  "road_boundary": {
+    "target_road_name": "BERWICK DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 991,
+    "offroad_point_count": 168,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BRAEMAR DRIVE",
+        "point_count": 47
+      },
+      {
+        "road_name": "BROCKHAMPTON DRIVE",
+        "point_count": 42
+      },
+      {
+        "road_name": "BLANDFORD DRIVE",
+        "point_count": 35
+      },
+      {
+        "road_name": "BORTHWICK DRIVE",
+        "point_count": 24
+      },
+      {
+        "road_name": "BODMIN DRIVE",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 772.0,
+    "offroad_chainage_max_m": 1658.0,
+    "trimmed_offroad_points": 168
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "hua_guan_crescent",
+  "display_name": "Hua Guan Crescent",
+  "source_project": "Hua Guan Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hua Guan Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T20:05:05.459613+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 445.476,
+  "profile_point_count": 182,
+  "valid_elevation_count": 182,
+  "rejected_outlier_count": 15,
+  "rejected_step_jump_count": 148,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 4.95,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 81.32,
+  "gradient_min_pct": -10.674,
+  "gradient_max_pct": 6.01,
+  "path_bounds_svy21": {
+    "min_x": 22603.336,
+    "min_y": 35421.149,
+    "max_x": 22666.374,
+    "max_y": 35546.66
+  },
+  "road_boundary": {
+    "target_road_name": "HUA GUAN CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 224,
+    "offroad_point_count": 42,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HUA GUAN AVENUE",
+        "point_count": 42
+      }
+    ],
+    "offroad_chainage_min_m": 338.0,
+    "offroad_chainage_max_m": 446.0,
+    "trimmed_offroad_points": 42
+  }
+}

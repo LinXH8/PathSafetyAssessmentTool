@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_tempua",
+  "display_name": "Jalan Tempua",
+  "source_project": "Jalan Tempua",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry7\\_projects\\Jalan Tempua\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T04:16:55.269595+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 470.081,
+  "profile_point_count": 237,
+  "valid_elevation_count": 237,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 154,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 43,
+  "usable_gradient_completion_pct": 18.14,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.98,
+  "gradient_min_pct": -9.079,
+  "gradient_max_pct": 10.16,
+  "path_bounds_svy21": {
+    "min_x": 26314.881,
+    "min_y": 33944.855,
+    "max_x": 26524.572,
+    "max_y": 34032.961
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TEMPUA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 237,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

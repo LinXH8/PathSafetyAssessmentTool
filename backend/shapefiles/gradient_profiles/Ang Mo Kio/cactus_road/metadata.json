@@ -1,0 +1,50 @@
+{
+  "path_key": "cactus_road",
+  "display_name": "Cactus Road",
+  "source_project": "Cactus Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Cactus Road\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:56:15.423198+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1105.562,
+  "profile_point_count": 535,
+  "valid_elevation_count": 535,
+  "rejected_outlier_count": 58,
+  "rejected_step_jump_count": 301,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 127,
+  "usable_gradient_completion_pct": 23.74,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.26,
+  "gradient_min_pct": -14.552,
+  "gradient_max_pct": 13.658,
+  "path_bounds_svy21": {
+    "min_x": 29930.797,
+    "min_y": 41273.121,
+    "max_x": 30051.82,
+    "max_y": 41578.593
+  },
+  "road_boundary": {
+    "target_road_name": "CACTUS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 554,
+    "offroad_point_count": 19,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CACTUS CRESCENT",
+        "point_count": 19
+      }
+    ],
+    "offroad_chainage_min_m": 68.0,
+    "offroad_chainage_max_m": 164.0,
+    "trimmed_offroad_points": 19
+  }
+}

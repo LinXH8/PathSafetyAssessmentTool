@@ -1,0 +1,58 @@
+{
+  "path_key": "bishan_street_24",
+  "display_name": "Bishan Street 24",
+  "source_project": "Bishan Street 24",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Bishan Street 24\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T00:59:35.477797+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1674.774,
+  "profile_point_count": 342,
+  "valid_elevation_count": 326,
+  "rejected_outlier_count": 26,
+  "rejected_step_jump_count": 158,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 128,
+  "usable_gradient_completion_pct": 37.43,
+  "elevation_hit_coverage_pct": 95.32,
+  "step_jump_rejection_pct": 46.2,
+  "gradient_min_pct": -10.919,
+  "gradient_max_pct": 14.936,
+  "path_bounds_svy21": {
+    "min_x": 28913.241,
+    "min_y": 37426.733,
+    "max_x": 29294.285,
+    "max_y": 38045.133
+  },
+  "road_boundary": {
+    "target_road_name": "BISHAN STREET 24",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 839,
+    "offroad_point_count": 497,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARYMOUNT ROAD",
+        "point_count": 245
+      },
+      {
+        "road_name": "BISHAN STREET 22",
+        "point_count": 227
+      },
+      {
+        "road_name": "JALAN PEMIMPIN",
+        "point_count": 25
+      }
+    ],
+    "offroad_chainage_min_m": 332.0,
+    "offroad_chainage_max_m": 1674.774,
+    "trimmed_offroad_points": 497
+  }
+}

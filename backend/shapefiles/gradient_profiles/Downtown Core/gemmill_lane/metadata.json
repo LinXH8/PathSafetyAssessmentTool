@@ -1,0 +1,54 @@
+{
+  "path_key": "gemmill_lane",
+  "display_name": "Gemmill Lane",
+  "source_project": "Gemmill Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Gemmill Lane\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T15:29:21.418120+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 168.395,
+  "profile_point_count": 79,
+  "valid_elevation_count": 79,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 64,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 3,
+  "usable_gradient_completion_pct": 3.8,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 81.01,
+  "gradient_min_pct": -7.23,
+  "gradient_max_pct": 4.751,
+  "path_bounds_svy21": {
+    "min_x": 29511.822,
+    "min_y": 29408.402,
+    "max_x": 29595.146,
+    "max_y": 29453.357
+  },
+  "road_boundary": {
+    "target_road_name": "GEMMILL LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 86,
+    "offroad_point_count": 7,
+    "offroad_top_road_names": [
+      {
+        "road_name": "AMOY STREET",
+        "point_count": 4
+      },
+      {
+        "road_name": "CLUB STREET",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 62.0,
+    "offroad_chainage_max_m": 168.395,
+    "trimmed_offroad_points": 7
+  }
+}

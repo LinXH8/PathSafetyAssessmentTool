@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mount_sinai_walk,1,Mount Sinai Walk_Cam4_20251219_082506_859_A.jpeg,,13.463,6.731,6.0,23.95,,
+mount_sinai_walk,2,Mount Sinai Walk_Cam4_20251219_082520_075_A.jpeg,,20.362,16.913,16.0,23.322,,
+mount_sinai_walk,3,Mount Sinai Walk_Cam4_20251219_082523_680_A.jpeg,,31.818,26.09,26.0,22.08,,
+mount_sinai_walk,4,Mount Sinai Walk_Cam4_20251219_082527_285_A.jpeg,,43.834,37.826,38.0,21.274,,

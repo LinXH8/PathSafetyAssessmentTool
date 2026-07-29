@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+rochdale_road,1,Rochdale Road_Cam4_20260112_094354_910_C.jpeg,,12.186,6.093,6.0,,,
+rochdale_road,2,Rochdale Road_Cam4_20260112_094400_916_C.jpeg,,24.21,18.198,18.0,,,
+rochdale_road,3,Rochdale Road_Cam4_20260112_094405_601_C.jpeg,,31.438,27.824,28.0,,,
+rochdale_road,4,Rochdale Road_Cam4_20260112_094408_003_C.jpeg,,41.015,36.227,36.0,,,
+rochdale_road,5,Rochdale Road_Cam4_20260112_094410_913_C.jpeg,,50.728,45.872,46.0,,,
+rochdale_road,6,Rochdale Road_Cam4_20260112_094413_916_C.jpeg,,60.697,55.712,56.0,,,
+rochdale_road,7,Rochdale Road_Cam4_20260112_094417_522_C.jpeg,,73.612,67.154,68.0,,,
+rochdale_road,8,Rochdale Road_Cam4_20260112_094422_934_C.jpeg,,92.356,82.984,82.0,,,
+rochdale_road,9,Rochdale Road_Cam4_20260112_094435_424_C.jpeg,,101.759,97.058,98.0,,,
+rochdale_road,10,Rochdale Road_Cam4_20260112_094444_437_C.jpeg,,202.36,152.06,152.0,,,
+rochdale_road,11,Rochdale Road_Cam4_20260112_094642_203_C.jpeg,,213.258,207.809,208.0,6.41,0.0,1.0
+rochdale_road,12,Rochdale Road_Cam4_20260112_094647_009_C.jpeg,,226.72,219.989,220.0,6.324,,
+rochdale_road,13,Rochdale Road_Cam4_20260112_094651_834_C.jpeg,,232.124,229.422,230.0,6.819,,
+rochdale_road,14,Rochdale Road_Cam4_20260112_094653_637_C.jpeg,,243.011,237.568,238.0,6.931,,
+rochdale_road,15,Rochdale Road_Cam4_20260112_094657_239_C.jpeg,,252.947,247.979,248.0,6.499,,

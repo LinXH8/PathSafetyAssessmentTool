@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+florida_road,1,Florida Road_Cam4_20260105_104015_028_A.jpeg,,12.407,6.204,6.0,29.614,,
+florida_road,2,Florida Road_Cam4_20260105_104018_632_A.jpeg,,20.986,16.697,16.0,28.459,,
+florida_road,3,Florida Road_Cam4_20260105_104021_034_A.jpeg,,31.44,26.213,26.0,27.33,,
+florida_road,4,Florida Road_Cam4_20260105_104024_045_A.jpeg,,41.094,36.267,36.0,26.983,-1.932,1.0
+florida_road,5,Florida Road_Cam4_20260105_104027_050_A.jpeg,,51.63,46.362,46.0,26.784,-3.125,1.0
+florida_road,6,Florida Road_Cam4_20260105_104030_052_A.jpeg,,61.366,56.498,56.0,25.93,,
+florida_road,7,Florida Road_Cam4_20260105_104032_455_A.jpeg,,71.931,66.649,66.0,24.638,,
+florida_road,8,Florida Road_Cam4_20260105_104035_463_A.jpeg,,80.95,76.441,76.0,25.211,,

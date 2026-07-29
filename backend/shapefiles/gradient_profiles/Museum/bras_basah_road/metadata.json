@@ -1,0 +1,66 @@
+{
+  "path_key": "bras_basah_road",
+  "display_name": "Bras Basah Road",
+  "source_project": "Bras Basah Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bras Basah Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Museum_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Museum_LTA",
+  "generated_at_utc": "2026-06-07T05:25:42.048503+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7075.429,
+  "profile_point_count": 2443,
+  "valid_elevation_count": 1133,
+  "rejected_outlier_count": 317,
+  "rejected_step_jump_count": 916,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 259,
+  "usable_gradient_completion_pct": 10.6,
+  "elevation_hit_coverage_pct": 46.38,
+  "step_jump_rejection_pct": 37.49,
+  "gradient_min_pct": -7.5,
+  "gradient_max_pct": 10.505,
+  "path_bounds_svy21": {
+    "min_x": 29784.535,
+    "min_y": 30581.547,
+    "max_x": 30556.192,
+    "max_y": 31181.813
+  },
+  "road_boundary": {
+    "target_road_name": "BRAS BASAH ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3539,
+    "offroad_point_count": 1096,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 219
+      },
+      {
+        "road_name": "VICTORIA STREET",
+        "point_count": 194
+      },
+      {
+        "road_name": "QUEEN STREET",
+        "point_count": 146
+      },
+      {
+        "road_name": "BEACH ROAD",
+        "point_count": 145
+      },
+      {
+        "road_name": "WATERLOO STREET",
+        "point_count": 123
+      }
+    ],
+    "offroad_chainage_min_m": 178.0,
+    "offroad_chainage_max_m": 7076.0,
+    "trimmed_offroad_points": 1096
+  }
+}

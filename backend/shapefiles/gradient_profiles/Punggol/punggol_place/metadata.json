@@ -1,0 +1,62 @@
+{
+  "path_key": "punggol_place",
+  "display_name": "Punggol Place",
+  "source_project": "Punggol Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Punggol Place\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T08:02:51.983045+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4268.873,
+  "profile_point_count": 1373,
+  "valid_elevation_count": 1253,
+  "rejected_outlier_count": 206,
+  "rejected_step_jump_count": 817,
+  "repaired_gradient_point_count": 20,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 352,
+  "usable_gradient_completion_pct": 25.64,
+  "elevation_hit_coverage_pct": 91.26,
+  "step_jump_rejection_pct": 59.5,
+  "gradient_min_pct": -27.607,
+  "gradient_max_pct": 14.77,
+  "path_bounds_svy21": {
+    "min_x": 35536.747,
+    "min_y": 42312.28,
+    "max_x": 36216.723,
+    "max_y": 43222.553
+  },
+  "road_boundary": {
+    "target_road_name": "PUNGGOL PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2136,
+    "offroad_point_count": 763,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL DRIVE",
+        "point_count": 254
+      },
+      {
+        "road_name": "PUNGGOL FIELD",
+        "point_count": 247
+      },
+      {
+        "road_name": "PUNGGOL CENTRAL",
+        "point_count": 145
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 117
+      }
+    ],
+    "offroad_chainage_min_m": 34.0,
+    "offroad_chainage_max_m": 3828.0,
+    "trimmed_offroad_points": 763
+  }
+}

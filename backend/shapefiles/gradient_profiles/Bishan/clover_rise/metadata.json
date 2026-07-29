@@ -1,0 +1,42 @@
+{
+  "path_key": "clover_rise",
+  "display_name": "Clover Rise",
+  "source_project": "Clover Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clover Rise\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T02:38:41.961741+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 143.845,
+  "profile_point_count": 73,
+  "valid_elevation_count": 73,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 38,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 26.03,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 52.05,
+  "gradient_min_pct": -2.812,
+  "gradient_max_pct": 9.895,
+  "path_bounds_svy21": {
+    "min_x": 29048.799,
+    "min_y": 36783.046,
+    "max_x": 29109.535,
+    "max_y": 36829.607
+  },
+  "road_boundary": {
+    "target_road_name": "CLOVER RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 73,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

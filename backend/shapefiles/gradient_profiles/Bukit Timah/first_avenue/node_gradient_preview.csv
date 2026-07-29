@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+first_avenue,1,First Avenue_Cam4_20251217_081156_279_B.jpeg,,9.829,4.914,4.0,7.258,-2.266,1.0
+first_avenue,2,First Avenue_Cam4_20251217_081202_168_B.jpeg,,41.001,25.415,26.0,7.53,,
+first_avenue,3,First Avenue_Cam4_20251217_081214_788_B.jpeg,,52.642,46.821,46.0,8.055,2.813,1.0
+first_avenue,4,First Avenue_Cam4_20251217_081218_992_B.jpeg,,75.654,64.148,64.0,8.755,4.375,1.0
+first_avenue,5,First Avenue_Cam4_20251217_081228_003_B.jpeg,,87.525,81.59,82.0,9.93,7.812,1.0
+first_avenue,6,First Avenue_Cam4_20251217_081241_226_B.jpeg,,98.693,93.109,94.0,10.855,7.187,1.0
+first_avenue,7,First Avenue_Cam4_20251217_081254_451_B.jpeg,,122.778,110.736,110.0,12.399,,
+first_avenue,8,First Avenue_Cam4_20251217_081318_327_B.jpeg,,134.323,128.551,128.0,13.428,,
+first_avenue,9,First Avenue_Cam4_20251217_081329_765_B.jpeg,,157.491,145.907,146.0,15.555,,
+first_avenue,10,First Avenue_Cam4_20251217_081358_975_B.jpeg,,169.071,163.281,164.0,21.434,,
+first_avenue,11,First Avenue_Cam4_20251217_081410_392_B.jpeg,,179.704,174.387,174.0,23.605,,
+first_avenue,12,First Avenue_Cam4_20251217_081421_201_B.jpeg,,204.07,191.887,192.0,24.198,,
+first_avenue,13,First Avenue_Cam4_20251217_081445_724_B.jpeg,,214.589,209.329,210.0,19.874,,
+first_avenue,14,First Avenue_Cam4_20251217_081501_828_B.jpeg,,240.142,227.365,228.0,20.474,2.5,1.0
+first_avenue,15,First Avenue_Cam4_20251217_081513_242_B.jpeg,,251.021,245.582,246.0,21.31,,
+first_avenue,16,First Avenue_Cam4_20251217_081518_046_B.jpeg,,274.986,263.004,264.0,21.948,,
+first_avenue,17,First Avenue_Cam4_20251217_081526_464_B.jpeg,,286.34,280.663,280.0,22.99,,
+first_avenue,18,First Avenue_Cam4_20251217_081530_070_B.jpeg,,295.127,290.734,290.0,24.202,,
+first_avenue,19,First Avenue_Cam4_20251217_081533_076_B.jpeg,,321.959,308.543,308.0,21.456,,
+first_avenue,20,First Avenue_Cam4_20251217_081542_688_B.jpeg,,509.495,415.727,416.0,20.424,-2.5,1.0

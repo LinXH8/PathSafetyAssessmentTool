@@ -1,0 +1,66 @@
+{
+  "path_key": "martin_road",
+  "display_name": "Martin Road",
+  "source_project": "Martin Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Martin Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-17T03:19:29.168795+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 576.167,
+  "profile_point_count": 212,
+  "valid_elevation_count": 212,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 163,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 12.74,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 76.89,
+  "gradient_min_pct": -0.099,
+  "gradient_max_pct": 10.815,
+  "path_bounds_svy21": {
+    "min_x": 28469.248,
+    "min_y": 30391.879,
+    "max_x": 28629.057,
+    "max_y": 30537.358
+  },
+  "road_boundary": {
+    "target_road_name": "MARTIN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 290,
+    "offroad_point_count": 78,
+    "offroad_top_road_names": [
+      {
+        "road_name": "RODYK STREET",
+        "point_count": 40
+      },
+      {
+        "road_name": "MUTHURAMAN CHETTY ROAD",
+        "point_count": 13
+      },
+      {
+        "road_name": ".",
+        "point_count": 12
+      },
+      {
+        "road_name": "MOHAMED SULTAN ROAD",
+        "point_count": 9
+      },
+      {
+        "road_name": "NARAYANAN CHETTY ROAD",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 576.167,
+    "trimmed_offroad_points": 78
+  }
+}

@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+shan_road,1,,SHAN ROAD,0.434,0.217,0.0,9.776,-0.625,1.0
+shan_road,2,,SHAN ROAD,111.001,56.369,56.0,7.057,,
+shan_road,3,,SHAN ROAD,127.77,285.137,286.0,6.154,,
+shan_road,4,,SHAN ROAD,0.739,476.852,476.0,9.776,,
+shan_road,5,,SHAN ROAD,232.894,594.099,594.0,13.226,11.574,2.0

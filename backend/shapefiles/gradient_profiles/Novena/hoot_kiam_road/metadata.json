@@ -1,0 +1,50 @@
+{
+  "path_key": "hoot_kiam_road",
+  "display_name": "Hoot Kiam Road",
+  "source_project": "Hoot Kiam Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hoot Kiam Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Tanglin_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Tanglin_LTA",
+  "generated_at_utc": "2026-06-06T21:53:01.507801+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 823.076,
+  "profile_point_count": 373,
+  "valid_elevation_count": 373,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 292,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 37,
+  "usable_gradient_completion_pct": 9.92,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 78.28,
+  "gradient_min_pct": -7.685,
+  "gradient_max_pct": 8.287,
+  "path_bounds_svy21": {
+    "min_x": 27636.307,
+    "min_y": 30925.924,
+    "max_x": 27690.877,
+    "max_y": 31270.377
+  },
+  "road_boundary": {
+    "target_road_name": "HOOT KIAM ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 413,
+    "offroad_point_count": 40,
+    "offroad_top_road_names": [
+      {
+        "road_name": "IRWELL BANK ROAD",
+        "point_count": 40
+      }
+    ],
+    "offroad_chainage_min_m": 354.0,
+    "offroad_chainage_max_m": 824.0,
+    "trimmed_offroad_points": 40
+  }
+}

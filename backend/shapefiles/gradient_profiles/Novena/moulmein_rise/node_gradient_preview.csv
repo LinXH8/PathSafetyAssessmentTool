@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+moulmein_rise,1,,MOULMEIN RISE,0.0,0.0,0.0,10.706,,
+moulmein_rise,2,,MOULMEIN RISE,82.034,41.017,42.0,8.353,,
+moulmein_rise,3,,MOULMEIN RISE,106.099,212.897,212.0,15.278,,
+moulmein_rise,4,,MOULMEIN RISE,153.632,342.763,342.0,12.078,,

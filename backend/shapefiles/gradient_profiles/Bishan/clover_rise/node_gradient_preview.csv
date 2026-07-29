@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+clover_rise,1,Clover Rise_Cam4_20260103_082955_060_A.jpeg,,10.715,5.357,6.0,13.9,1.094,1.0
+clover_rise,2,Clover Rise_Cam4_20260103_082959_265_A.jpeg,,20.176,15.445,16.0,14.34,7.25,1.0
+clover_rise,3,Clover Rise_Cam4_20260103_083003_467_A.jpeg,,33.376,26.776,26.0,14.925,,
+clover_rise,4,Clover Rise_Cam4_20260103_083008_871_A.jpeg,,41.01,37.193,38.0,15.716,,
+clover_rise,5,Clover Rise_Cam4_20260103_083011_874_A.jpeg,,50.987,45.998,46.0,14.742,,
+clover_rise,6,Clover Rise_Cam4_20260103_083015_478_A.jpeg,,63.915,57.451,58.0,14.378,,
+clover_rise,7,Clover Rise_Cam4_20260103_083020_282_A.jpeg,,69.992,66.953,66.0,14.378,-1.667,1.0
+clover_rise,8,Clover Rise_Cam4_20260103_083023_287_A.jpeg,,99.225,84.608,84.0,15.11,,
+clover_rise,9,Clover Rise_Cam4_20260103_083038_308_A.jpeg,,143.845,121.535,122.0,14.048,,

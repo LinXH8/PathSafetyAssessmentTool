@@ -1,0 +1,50 @@
+{
+  "path_key": "martin_place",
+  "display_name": "Martin Place",
+  "source_project": "Martin Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Martin Place\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-17T03:17:55.313917+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 317.631,
+  "profile_point_count": 159,
+  "valid_elevation_count": 159,
+  "rejected_outlier_count": 28,
+  "rejected_step_jump_count": 101,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 16.98,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 63.52,
+  "gradient_min_pct": -6.979,
+  "gradient_max_pct": 11.719,
+  "path_bounds_svy21": {
+    "min_x": 28489.154,
+    "min_y": 30581.385,
+    "max_x": 28616.004,
+    "max_y": 30681.505
+  },
+  "road_boundary": {
+    "target_road_name": "MARTIN PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 160,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MUTHURAMAN CHETTY ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 170.0,
+    "offroad_chainage_max_m": 170.0,
+    "trimmed_offroad_points": 1
+  }
+}

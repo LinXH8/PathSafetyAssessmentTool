@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_siantan,1,Jalan Siantan_Cam4_20251218_075947_616_A.jpeg,,11.89,5.945,6.0,7.625,-2.042,1.0
+jalan_siantan,2,Jalan Siantan_Cam4_20251218_075953_029_A.jpeg,,20.085,15.988,16.0,7.528,-0.268,1.0
+jalan_siantan,3,Jalan Siantan_Cam4_20251218_075956_634_A.jpeg,,31.611,25.848,26.0,7.821,,
+jalan_siantan,4,Jalan Siantan_Cam4_20251218_080001_436_A.jpeg,,42.719,37.165,38.0,7.628,,
+jalan_siantan,5,Jalan Siantan_Cam4_20251218_080005_640_A.jpeg,,50.608,46.663,46.0,7.888,,
+jalan_siantan,6,Jalan Siantan_Cam4_20251218_080008_644_A.jpeg,,78.146,64.377,64.0,8.154,,
+jalan_siantan,7,Jalan Siantan_Cam4_20251218_080018_253_A.jpeg,,90.207,84.177,84.0,7.471,,
+jalan_siantan,8,Jalan Siantan_Cam4_20251218_080021_861_A.jpeg,,113.288,101.748,102.0,7.11,1.484,1.0
+jalan_siantan,9,Jalan Siantan_Cam4_20251218_080029_069_A.jpeg,,124.859,119.074,120.0,8.497,,

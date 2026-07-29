@@ -1,0 +1,10 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+serangoon_garden_close,Serangoon Garden Close,0.0,30951.762,38396.462,10.145,10.145,10.168,0.925,1.0,SERANGOON GARDEN CLOSE,5.734
+serangoon_garden_close,Serangoon Garden Close,2.0,30949.926,38397.254,10.168,10.168,10.186,0.633,1.0,SERANGOON GARDEN CLOSE,5.699
+serangoon_garden_close,Serangoon Garden Close,4.0,30948.09,38398.047,10.206,10.206,10.205,0.575,1.0,SERANGOON GARDEN CLOSE,5.663
+serangoon_garden_close,Serangoon Garden Close,6.0,30946.253,38398.84,10.205,10.205,10.206,0.344,1.0,SERANGOON GARDEN CLOSE,5.627
+serangoon_garden_close,Serangoon Garden Close,8.0,30944.417,38399.633,10.214,10.214,10.214,,,SERANGOON GARDEN CLOSE,5.591
+serangoon_garden_close,Serangoon Garden Close,10.0,30942.581,38400.425,10.23,10.23,10.214,,,SERANGOON GARDEN CLOSE,5.556
+serangoon_garden_close,Serangoon Garden Close,12.0,30941.991,38402.122,10.673,10.219,10.214,-0.067,1.0,SERANGOON GARDEN CLOSE,4.257
+serangoon_garden_close,Serangoon Garden Close,14.0,30941.807,38404.113,10.33,10.209,10.214,-0.089,1.0,SERANGOON GARDEN CLOSE,2.891
+serangoon_garden_close,Serangoon Garden Close,16.0,30941.624,38406.105,10.198,10.198,10.209,,,SERANGOON GARDEN CLOSE,2.567

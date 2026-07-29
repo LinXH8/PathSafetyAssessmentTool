@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kesoma,1,Jalan Kesoma_Cam4_20260112_081555_520_A.jpeg,,11.261,5.63,6.0,8.813,,
+jalan_kesoma,2,Jalan Kesoma_Cam4_20260112_081559_125_A.jpeg,,21.495,16.378,16.0,8.542,,
+jalan_kesoma,3,Jalan Kesoma_Cam4_20260112_081602_729_A.jpeg,,31.58,26.538,26.0,7.428,,
+jalan_kesoma,4,Jalan Kesoma_Cam4_20260112_081606_333_A.jpeg,,42.879,37.23,38.0,7.319,-3.683,1.0
+jalan_kesoma,5,Jalan Kesoma_Cam4_20260112_081610_535_A.jpeg,,54.062,48.471,48.0,6.931,-1.131,1.0
+jalan_kesoma,6,Jalan Kesoma_Cam4_20260112_081614_140_A.jpeg,,77.059,65.561,66.0,6.794,-1.175,1.0
+jalan_kesoma,7,Jalan Kesoma_Cam4_20260112_081621_823_A.jpeg,,87.474,82.267,82.0,6.587,-0.438,1.0
+jalan_kesoma,8,Jalan Kesoma_Cam4_20260112_081625_429_A.jpeg,,99.209,93.341,94.0,6.554,0.25,1.0
+jalan_kesoma,9,Jalan Kesoma_Cam4_20260112_081630_236_A.jpeg,,181.633,140.421,140.0,10.79,,
+jalan_kesoma,10,Jalan Kesoma_Cam4_20260112_081717_608_A.jpeg,,253.623,217.628,,,,
+jalan_kesoma,11,Jalan Kesoma_Cam4_20260112_081751_723_A.jpeg,,264.332,258.978,,,,
+jalan_kesoma,12,Jalan Kesoma_Cam4_20260112_081756_528_A.jpeg,,276.397,270.364,,,,

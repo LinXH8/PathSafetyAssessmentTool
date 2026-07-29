@@ -1,0 +1,54 @@
+{
+  "path_key": "bukit_teresa_road",
+  "display_name": "Bukit Teresa Road",
+  "source_project": "Bukit Teresa Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bukit Teresa Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T12:03:11.123360+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1135.065,
+  "profile_point_count": 514,
+  "valid_elevation_count": 514,
+  "rejected_outlier_count": 51,
+  "rejected_step_jump_count": 343,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 99,
+  "usable_gradient_completion_pct": 19.26,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.73,
+  "gradient_min_pct": -11.875,
+  "gradient_max_pct": 11.406,
+  "path_bounds_svy21": {
+    "min_x": 27072.727,
+    "min_y": 28471.185,
+    "max_x": 27461.996,
+    "max_y": 28738.482
+  },
+  "road_boundary": {
+    "target_road_name": "BUKIT TERESA ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 569,
+    "offroad_point_count": 55,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BUKIT PURMEI",
+        "point_count": 51
+      },
+      {
+        "road_name": "BUKIT TERESA CLOSE",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 734.0,
+    "trimmed_offroad_points": 55
+  }
+}

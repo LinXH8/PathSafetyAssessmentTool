@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dunearn_close,1,,DUNEARN CLOSE,98.325,49.162,50.0,4.33,,
+dunearn_close,2,,DUNEARN CLOSE,187.021,262.894,262.0,8.327,,
+dunearn_close,3,,DUNEARN CLOSE,175.746,444.278,444.0,8.694,,
+dunearn_close,4,,DUNEARN CLOSE,105.5,653.923,654.0,7.593,,

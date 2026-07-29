@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marigold_drive,1,Marigold Drive_Cam4_20260105_100641_544_A.jpeg,,12.96,6.48,6.0,34.173,,
+marigold_drive,2,Marigold Drive_Cam4_20260105_100657_166_A.jpeg,,24.155,18.558,18.0,35.378,,
+marigold_drive,3,Marigold Drive_Cam4_20260105_100702_574_A.jpeg,,30.888,27.522,28.0,34.995,,
+marigold_drive,4,Marigold Drive_Cam4_20260105_100705_575_A.jpeg,,40.384,35.636,36.0,37.041,,
+marigold_drive,5,Marigold Drive_Cam4_20260105_100709_786_A.jpeg,,53.999,47.192,48.0,37.116,,
+marigold_drive,6,Marigold Drive_Cam4_20260105_100714_594_A.jpeg,,61.768,57.884,58.0,36.661,,
+marigold_drive,7,Marigold Drive_Cam4_20260105_100716_997_A.jpeg,,71.877,66.823,66.0,36.426,,
+marigold_drive,8,Marigold Drive_Cam4_20260105_100720_000_A.jpeg,,80.034,75.956,76.0,36.142,,
+marigold_drive,9,Marigold Drive_Cam4_20260105_100722_407_A.jpeg,,91.941,85.988,86.0,35.521,,
+marigold_drive,10,Marigold Drive_Cam4_20260105_100725_409_A.jpeg,,101.996,96.969,96.0,35.281,0.542,1.0
+marigold_drive,11,Marigold Drive_Cam4_20260105_100727_813_A.jpeg,,112.271,107.133,108.0,35.609,,
+marigold_drive,12,Marigold Drive_Cam4_20260105_100730_216_A.jpeg,,120.101,116.186,116.0,35.473,,
+marigold_drive,13,Marigold Drive_Cam4_20260105_100732_018_A.jpeg,,130.169,125.135,126.0,34.824,-1.25,1.0
+marigold_drive,14,Marigold Drive_Cam4_20260105_100734_420_A.jpeg,,140.454,135.311,136.0,34.525,,
+marigold_drive,15,Marigold Drive_Cam4_20260105_100736_823_A.jpeg,,150.425,145.439,146.0,33.532,,
+marigold_drive,16,Marigold Drive_Cam4_20260105_100739_226_A.jpeg,,183.503,166.964,166.0,32.66,,
+marigold_drive,17,Marigold Drive_Cam4_20260105_100932_207_A.jpeg,,208.244,195.874,196.0,34.011,,
+marigold_drive,18,Marigold Drive_Cam4_20260105_102130_044_A.jpeg,,218.909,213.576,214.0,34.121,,
+marigold_drive,19,Marigold Drive_Cam4_20260105_102134_849_A.jpeg,,230.504,224.706,224.0,33.923,,
+marigold_drive,20,Marigold Drive_Cam4_20260105_102140_253_A.jpeg,,240.578,235.541,236.0,32.879,,
+marigold_drive,21,Marigold Drive_Cam4_20260105_102145_066_A.jpeg,,263.441,252.01,252.0,31.858,,
+marigold_drive,22,Marigold Drive_Cam4_20260105_102154_080_A.jpeg,,287.428,275.435,276.0,29.937,,
+marigold_drive,23,Marigold Drive_Cam4_20260105_102400_885_A.jpeg,,315.379,301.404,302.0,27.251,-10.313,2.0
+marigold_drive,24,Marigold Drive_Cam4_20260105_102408_096_A.jpeg,,324.879,320.129,320.0,27.083,,

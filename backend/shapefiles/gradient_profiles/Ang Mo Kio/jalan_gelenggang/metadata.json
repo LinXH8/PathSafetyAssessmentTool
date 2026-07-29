@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_gelenggang",
+  "display_name": "Jalan Gelenggang",
+  "source_project": "Jalan Gelenggang",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Gelenggang\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T17:53:23.031505+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 719.292,
+  "profile_point_count": 349,
+  "valid_elevation_count": 349,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 209,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 95,
+  "usable_gradient_completion_pct": 27.22,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 59.89,
+  "gradient_min_pct": -7.93,
+  "gradient_max_pct": 11.406,
+  "path_bounds_svy21": {
+    "min_x": 27592.165,
+    "min_y": 39439.026,
+    "max_x": 27702.266,
+    "max_y": 39760.025
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN GELENGGANG",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 361,
+    "offroad_point_count": 12,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SEMBAWANG HILLS DRIVE",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 22.0,
+    "trimmed_offroad_points": 12
+  }
+}

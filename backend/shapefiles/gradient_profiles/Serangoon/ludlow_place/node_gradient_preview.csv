@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ludlow_place,1,Ludlow Place_Cam4_20260202_093915_396_B.jpeg,,12.137,6.068,,,,
+ludlow_place,2,Ludlow Place_Cam4_20260202_093920_801_B.jpeg,,24.798,18.467,18.0,12.584,,
+ludlow_place,3,Ludlow Place_Cam4_20260202_093939_426_B.jpeg,,48.244,36.521,36.0,13.295,,
+ludlow_place,4,Ludlow Place_Cam4_20260202_093948_449_B.jpeg,,76.623,62.434,62.0,12.541,,
+ludlow_place,5,Ludlow Place_Cam4_20260202_093958_060_B.jpeg,,85.222,80.923,80.0,11.579,-0.669,1.0

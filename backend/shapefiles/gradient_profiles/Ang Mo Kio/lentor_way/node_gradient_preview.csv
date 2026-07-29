@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_way,1,Lentor Way_Cam4_20251231_073900_972_B.jpeg,,10.097,5.048,6.0,8.265,,
+lentor_way,2,Lentor Way_Cam4_20251231_073904_576_B.jpeg,,22.838,16.468,16.0,9.209,,
+lentor_way,3,Lentor Way_Cam4_20251231_073909_380_B.jpeg,,34.457,28.648,28.0,9.531,-4.761,1.0
+lentor_way,4,Lentor Way_Cam4_20251231_073914_187_B.jpeg,,40.561,37.509,38.0,9.782,9.911,2.0
+lentor_way,5,Lentor Way_Cam4_20251231_073916_589_B.jpeg,,70.117,55.339,56.0,11.488,,
+lentor_way,6,Lentor Way_Cam4_20251231_073928_002_B.jpeg,,82.475,76.296,76.0,11.676,,
+lentor_way,7,Lentor Way_Cam4_20251231_073932_807_B.jpeg,,105.227,93.851,94.0,12.129,,
+lentor_way,8,Lentor Way_Cam4_20251231_073942_421_B.jpeg,,117.172,111.199,112.0,12.415,-1.825,1.0
+lentor_way,9,Lentor Way_Cam4_20251231_073947_828_B.jpeg,,124.632,120.902,120.0,12.329,3.322,1.0
+lentor_way,10,Lentor Way_Cam4_20251231_073950_832_B.jpeg,,151.305,137.968,138.0,13.76,,
+lentor_way,11,Lentor Way_Cam4_20251231_074001_642_B.jpeg,,162.814,157.059,158.0,14.179,,
+lentor_way,12,Lentor Way_Cam4_20251231_074005_845_B.jpeg,,186.674,174.744,174.0,14.923,,
+lentor_way,13,Lentor Way_Cam4_20251231_074040_080_B.jpeg,,198.069,192.371,192.0,16.364,,
+lentor_way,14,Lentor Way_Cam4_20251231_074045_529_B.jpeg,,222.21,210.139,210.0,16.793,,
+lentor_way,15,Lentor Way_Cam4_20251231_074054_540_B.jpeg,,233.991,228.101,228.0,17.905,8.281,1.0
+lentor_way,16,Lentor Way_Cam4_20251231_074058_744_B.jpeg,,240.66,237.325,238.0,18.18,,
+lentor_way,17,Lentor Way_Cam4_20251231_074301_281_B.jpeg,,279.684,260.172,260.0,17.296,,
+lentor_way,18,Lentor Way_Cam4_20251231_074318_105_B.jpeg,,347.987,313.835,314.0,14.539,-2.25,1.0
+lentor_way,19,Lentor Way_Cam4_20251231_074341_530_B.jpeg,,416.551,382.269,382.0,11.517,-2.405,1.0
+lentor_way,20,Lentor Way_Cam4_20251231_074535_057_B.jpeg,,477.383,446.967,,,,
+lentor_way,21,Lentor Way_Cam4_20251231_074959_964_B.jpeg,,488.739,483.061,484.0,9.164,-9.892,2.0

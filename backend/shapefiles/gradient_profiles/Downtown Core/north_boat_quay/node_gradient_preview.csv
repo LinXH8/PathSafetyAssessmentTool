@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+north_boat_quay,1,Cam4_20251211_094143_037_C.jpeg,,14.374,7.187,8.0,4.988,0.0,1.0
+north_boat_quay,2,Cam4_20251211_094149_062_C.jpeg,,20.028,17.201,18.0,5.256,3.437,1.0
+north_boat_quay,3,Cam4_20251211_094151_465_C.jpeg,,143.855,81.941,82.0,3.517,-0.732,1.0
+north_boat_quay,4,Cam4_20251211_110235_248_A.jpeg,,153.239,148.547,148.0,4.567,,
+north_boat_quay,5,Cam4_20251211_110241_374_A.jpeg,,162.871,158.055,158.0,4.477,,
+north_boat_quay,6,Cam4_20251211_110245_010_A.jpeg,,174.19,168.53,170.0,4.967,,
+north_boat_quay,7,Cam4_20251211_110248_307_A.jpeg,,201.977,188.084,188.0,4.534,,
+north_boat_quay,8,Cam4_20251211_110255_712_A.jpeg,,214.881,208.429,208.0,5.302,,
+north_boat_quay,9,Cam4_20251211_110259_367_A.jpeg,,220.156,217.518,218.0,4.534,,
+north_boat_quay,10,Cam4_20251211_110300_870_A.jpeg,,231.425,225.79,226.0,5.103,,
+north_boat_quay,11,Cam4_20251211_110303_996_A.jpeg,,241.672,236.549,236.0,6.754,,
+north_boat_quay,12,Cam4_20251211_110307_043_A.jpeg,,253.812,247.742,248.0,7.823,,
+north_boat_quay,13,Cam4_20251211_110310_563_A.jpeg,,262.457,258.134,258.0,6.7,,
+north_boat_quay,14,Cam4_20251211_110313_206_A.jpeg,,270.155,266.306,266.0,5.471,,
+north_boat_quay,15,Cam4_20251211_110316_335_A.jpeg,,320.457,295.306,,,,

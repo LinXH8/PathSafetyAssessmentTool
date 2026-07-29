@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stone_avenue,1,Stone Avenue_Cam4_20251216_080041_638_C.jpeg,,10.287,5.143,,,,
+stone_avenue,2,Stone Avenue_Cam4_20251216_080045_239_C.jpeg,,20.676,15.481,,,,
+stone_avenue,3,Stone Avenue_Cam4_20251216_080049_447_C.jpeg,,33.676,27.176,,,,
+stone_avenue,4,Stone Avenue_Cam4_20251216_080054_853_C.jpeg,,40.989,37.333,38.0,13.154,0.056,1.0
+stone_avenue,5,Stone Avenue_Cam4_20251216_080057_258_C.jpeg,,50.02,45.504,46.0,13.136,,
+stone_avenue,6,Stone Avenue_Cam4_20251216_080100_262_C.jpeg,,60.751,55.385,56.0,12.391,,
+stone_avenue,7,Stone Avenue_Cam4_20251216_080104_466_C.jpeg,,73.127,66.939,66.0,12.812,,
+stone_avenue,8,Stone Avenue_Cam4_20251216_080108_672_C.jpeg,,81.341,77.234,78.0,12.812,,
+stone_avenue,9,Stone Avenue_Cam4_20251216_080111_079_C.jpeg,,105.288,93.315,94.0,12.612,,
+stone_avenue,10,Stone Avenue_Cam4_20251216_080119_488_C.jpeg,,117.604,111.446,112.0,12.652,,
+stone_avenue,11,Stone Avenue_Cam4_20251216_080124_896_C.jpeg,,195.868,156.736,156.0,15.145,,

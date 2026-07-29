@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+minbu_road,1,,MINBU ROAD,249.825,124.913,124.0,14.415,,
+minbu_road,2,,MINBU ROAD,119.749,309.811,310.0,12.238,,

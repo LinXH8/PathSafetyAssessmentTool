@@ -1,0 +1,9 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+serangoon_avenue_2,Serangoon Avenue 2,0.0,31832.052,37472.794,10.13,10.13,9.835,0.625,1.0,SERANGOON AVENUE 2,5.836
+serangoon_avenue_2,Serangoon Avenue 2,2.0,31833.921,37473.508,9.834,9.834,9.848,0.417,1.0,SERANGOON AVENUE 2,3.876
+serangoon_avenue_2,Serangoon Avenue 2,4.0,31835.789,37474.221,9.835,9.835,9.86,0.514,1.0,SERANGOON AVENUE 2,1.916
+serangoon_avenue_2,Serangoon Avenue 2,6.0,31837.658,37474.935,9.86,9.86,9.86,0.537,1.0,SERANGOON AVENUE 2,0.043
+serangoon_avenue_2,Serangoon Avenue 2,8.0,31839.526,37475.648,9.876,9.876,9.876,0.663,1.0,SERANGOON AVENUE 2,2.003
+serangoon_avenue_2,Serangoon Avenue 2,10.0,31841.394,37476.362,9.891,9.891,9.891,1.158,1.0,SERANGOON AVENUE 2,3.963
+serangoon_avenue_2,Serangoon Avenue 2,12.0,31843.263,37477.075,9.936,9.936,9.913,1.314,1.0,SERANGOON AVENUE 2,5.923
+serangoon_avenue_2,Serangoon Avenue 2,12.528,31843.756,37477.264,9.94,9.94,9.936,1.785,1.0,SERANGOON AVENUE 2,6.44

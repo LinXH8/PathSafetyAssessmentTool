@@ -1,0 +1,42 @@
+{
+  "path_key": "stanley_street",
+  "display_name": "Stanley Street",
+  "source_project": "Stanley Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Stanley Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T12:13:56.629429+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 473.105,
+  "profile_point_count": 238,
+  "valid_elevation_count": 96,
+  "rejected_outlier_count": 16,
+  "rejected_step_jump_count": 152,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 29,
+  "usable_gradient_completion_pct": 12.18,
+  "elevation_hit_coverage_pct": 40.34,
+  "step_jump_rejection_pct": 63.87,
+  "gradient_min_pct": -28.954,
+  "gradient_max_pct": 17.593,
+  "path_bounds_svy21": {
+    "min_x": 29587.895,
+    "min_y": 29138.781,
+    "max_x": 29695.86,
+    "max_y": 29284.854
+  },
+  "road_boundary": {
+    "target_road_name": "STANLEY STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 238,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

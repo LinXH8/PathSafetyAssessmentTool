@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_teck_kee",
+  "display_name": "Jalan Teck Kee",
+  "source_project": "Jalan Teck Kee",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Teck Kee\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T18:20:04.469450+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 20.807,
+  "profile_point_count": 12,
+  "valid_elevation_count": 12,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 4,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 41.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 33.33,
+  "gradient_min_pct": 0.475,
+  "gradient_max_pct": 8.81,
+  "path_bounds_svy21": {
+    "min_x": 32510.71,
+    "min_y": 37757.222,
+    "max_x": 32517.56,
+    "max_y": 37776.739
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TECK KEE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 12,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

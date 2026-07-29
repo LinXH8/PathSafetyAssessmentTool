@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+golden_walk,1,Golden Walk_Cam4_20260202_082351_714_A.jpeg,,10.546,5.273,6.0,16.562,4.725,1.0
+golden_walk,2,Golden Walk_Cam4_20260202_082355_319_A.jpeg,,21.557,16.052,16.0,17.099,4.387,1.0
+golden_walk,3,Golden Walk_Cam4_20260202_082359_523_A.jpeg,,33.877,27.717,28.0,17.46,0.675,1.0
+golden_walk,4,Golden Walk_Cam4_20260202_082404_929_A.jpeg,,83.887,58.882,58.0,16.824,-5.597,1.0
+golden_walk,5,Golden Walk_Cam4_20260202_082425_355_A.jpeg,,92.899,88.393,88.0,16.141,-0.319,1.0
+golden_walk,6,Golden Walk_Cam4_20260202_082427_758_A.jpeg,,103.343,98.121,98.0,16.118,0.044,1.0
+golden_walk,7,Golden Walk_Cam4_20260202_082430_760_A.jpeg,,114.815,109.079,110.0,17.011,,

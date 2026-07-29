@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mount_sinai_plain,1,Mount Sinai Plain_Cam4_20251219_084016_680_B.jpeg,,12.632,6.316,,,,
+mount_sinai_plain,2,Mount Sinai Plain_Cam4_20251219_084021_489_B.jpeg,,112.47,62.551,62.0,24.611,,
+mount_sinai_plain,3,Mount Sinai Plain_Cam4_20251219_084434_389_B.jpeg,,141.304,126.887,126.0,25.165,,
+mount_sinai_plain,4,Mount Sinai Plain_Cam4_20251219_084447_616_B.jpeg,,147.93,144.617,144.0,24.702,,
+mount_sinai_plain,5,Mount Sinai Plain_Cam4_20251219_084450_018_B.jpeg,,156.854,152.392,152.0,27.299,,
+mount_sinai_plain,6,Mount Sinai Plain_Cam4_20251219_084453_622_B.jpeg,,167.753,162.304,162.0,29.852,,
+mount_sinai_plain,7,Mount Sinai Plain_Cam4_20251219_084457_827_B.jpeg,,196.461,182.107,182.0,23.1,,
+mount_sinai_plain,8,Mount Sinai Plain_Cam4_20251219_084511_043_B.jpeg,,204.771,200.616,200.0,23.04,,
+mount_sinai_plain,9,Mount Sinai Plain_Cam4_20251219_084526_669_B.jpeg,,303.233,254.002,254.0,24.408,,

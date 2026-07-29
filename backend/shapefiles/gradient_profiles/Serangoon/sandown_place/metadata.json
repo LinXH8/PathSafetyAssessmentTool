@@ -1,0 +1,42 @@
+{
+  "path_key": "sandown_place",
+  "display_name": "Sandown Place",
+  "source_project": "Sandown Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sandown Place\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T06:30:52.213888+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 22.717,
+  "profile_point_count": 13,
+  "valid_elevation_count": 13,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 5,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 38.46,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 38.46,
+  "gradient_min_pct": -11.052,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 31496.234,
+    "min_y": 38577.439,
+    "max_x": 31513.465,
+    "max_y": 38587.143
+  },
+  "road_boundary": {
+    "target_road_name": "SANDOWN PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 13,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

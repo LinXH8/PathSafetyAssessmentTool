@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+teo_hong_road,1,Cam4_20251229_075418_749_B.jpeg,,11.753,5.876,6.0,5.341,,
+teo_hong_road,2,Cam4_20251229_075424_754_B.jpeg,,23.408,17.58,18.0,5.27,,
+teo_hong_road,3,Cam4_20251229_075430_039_B.jpeg,,33.877,28.643,28.0,5.774,,
+teo_hong_road,4,Cam4_20251229_075437_847_B.jpeg,,78.149,56.013,56.0,4.939,,
+teo_hong_road,5,Cam4_20251229_075522_056_B.jpeg,,89.233,83.691,84.0,3.096,3.198,1.0
+teo_hong_road,6,Cam4_20251229_075527_464_B.jpeg,,101.838,95.535,96.0,3.758,,
+teo_hong_road,7,Cam4_20251229_075533_950_B.jpeg,,117.684,109.761,110.0,3.645,,

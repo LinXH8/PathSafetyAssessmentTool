@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marymount_terrace,1,Marymount Terrace_Cam4_20260103_091635_271_A.jpeg,,11.781,5.891,6.0,15.13,,
+marymount_terrace,2,Marymount Terrace_Cam4_20260103_091640_076_A.jpeg,,20.972,16.377,16.0,16.164,,
+marymount_terrace,3,Marymount Terrace_Cam4_20260103_091647_881_A.jpeg,,28.516,24.744,24.0,16.712,,
+marymount_terrace,4,Marymount Terrace_Cam4_20260103_091654_493_A.jpeg,,53.147,40.831,40.0,15.408,,

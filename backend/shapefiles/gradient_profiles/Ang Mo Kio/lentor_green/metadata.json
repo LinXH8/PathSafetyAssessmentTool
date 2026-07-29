@@ -1,0 +1,66 @@
+{
+  "path_key": "lentor_green",
+  "display_name": "Lentor Green",
+  "source_project": "Lentor Green",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Green\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T18:20:10.091015+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2775.463,
+  "profile_point_count": 674,
+  "valid_elevation_count": 670,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 484,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 90,
+  "usable_gradient_completion_pct": 13.35,
+  "elevation_hit_coverage_pct": 99.41,
+  "step_jump_rejection_pct": 71.81,
+  "gradient_min_pct": -12.464,
+  "gradient_max_pct": 14.099,
+  "path_bounds_svy21": {
+    "min_x": 28238.288,
+    "min_y": 40621.631,
+    "max_x": 28582.78,
+    "max_y": 40975.578
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR GREEN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1389,
+    "offroad_point_count": 715,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LENTOR DRIVE",
+        "point_count": 408
+      },
+      {
+        "road_name": "YIO CHU KANG ROAD",
+        "point_count": 136
+      },
+      {
+        "road_name": "LENTOR HILLS ROAD",
+        "point_count": 84
+      },
+      {
+        "road_name": "LENTOR LOOP",
+        "point_count": 33
+      },
+      {
+        "road_name": "LENTOR GROVE",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2776.0,
+    "trimmed_offroad_points": 715
+  }
+}

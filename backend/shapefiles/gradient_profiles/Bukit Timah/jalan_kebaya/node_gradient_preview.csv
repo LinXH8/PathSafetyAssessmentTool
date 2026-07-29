@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kebaya,1,Jalan Kebaya_Cam4_20251219_080326_221_B.jpeg,,10.281,5.141,6.0,9.086,8.575,1.0
+jalan_kebaya,2,Jalan Kebaya_Cam4_20251219_080329_824_B.jpeg,,36.121,23.201,24.0,9.782,,
+jalan_kebaya,3,Jalan Kebaya_Cam4_20251219_080338_834_B.jpeg,,46.527,41.324,42.0,10.957,,
+jalan_kebaya,4,Jalan Kebaya_Cam4_20251219_080342_437_B.jpeg,,59.94,53.233,54.0,11.307,,
+jalan_kebaya,5,Jalan Kebaya_Cam4_20251219_080347_244_B.jpeg,,84.578,72.259,72.0,10.409,2.031,1.0
+jalan_kebaya,6,Jalan Kebaya_Cam4_20251219_080401_062_B.jpeg,,94.965,89.772,90.0,10.684,,
+jalan_kebaya,7,Jalan Kebaya_Cam4_20251219_080405_868_B.jpeg,,106.075,100.52,100.0,10.609,-1.719,1.0
+jalan_kebaya,8,Jalan Kebaya_Cam4_20251219_080410_072_B.jpeg,,129.385,117.73,118.0,11.096,-0.781,1.0
+jalan_kebaya,9,Jalan Kebaya_Cam4_20251219_080419_686_B.jpeg,,139.99,134.687,134.0,11.709,,
+jalan_kebaya,10,Jalan Kebaya_Cam4_20251219_080423_890_B.jpeg,,151.652,145.821,146.0,11.869,,
+jalan_kebaya,11,Jalan Kebaya_Cam4_20251219_080428_096_B.jpeg,,161.803,156.727,156.0,11.778,,
+jalan_kebaya,12,Jalan Kebaya_Cam4_20251219_080431_701_B.jpeg,,184.151,172.977,172.0,12.378,,
+jalan_kebaya,13,Jalan Kebaya_Cam4_20251219_080442_513_B.jpeg,,195.764,189.958,190.0,10.417,,
+jalan_kebaya,14,Jalan Kebaya_Cam4_20251219_080448_519_B.jpeg,,222.272,209.018,210.0,13.743,,
+jalan_kebaya,15,Jalan Kebaya_Cam4_20251219_080751_381_B.jpeg,,233.12,227.696,228.0,12.829,,
+jalan_kebaya,16,Jalan Kebaya_Cam4_20251219_080754_986_B.jpeg,,240.401,236.76,236.0,12.107,,
+jalan_kebaya,17,Jalan Kebaya_Cam4_20251219_080757_389_B.jpeg,,255.178,247.789,248.0,11.87,0.168,1.0
+jalan_kebaya,18,Jalan Kebaya_Cam4_20251219_080803_394_B.jpeg,,371.551,313.364,314.0,14.224,,
+jalan_kebaya,19,Jalan Kebaya_Cam4_20251219_080852_055_B.jpeg,,394.609,383.08,384.0,12.239,,

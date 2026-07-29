@@ -1,0 +1,62 @@
+{
+  "path_key": "seletar_hills_drive",
+  "display_name": "Seletar Hills Drive",
+  "source_project": "Seletar Hills Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Seletar Hills Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T06:44:41.802165+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1430.499,
+  "profile_point_count": 681,
+  "valid_elevation_count": 681,
+  "rejected_outlier_count": 30,
+  "rejected_step_jump_count": 406,
+  "repaired_gradient_point_count": 13,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 154,
+  "usable_gradient_completion_pct": 22.61,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 59.62,
+  "gradient_min_pct": -10.625,
+  "gradient_max_pct": 13.333,
+  "path_bounds_svy21": {
+    "min_x": 32295.432,
+    "min_y": 40568.662,
+    "max_x": 32781.545,
+    "max_y": 41022.733
+  },
+  "road_boundary": {
+    "target_road_name": "SELETAR HILLS DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 717,
+    "offroad_point_count": 36,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SELETAR COURT",
+        "point_count": 11
+      },
+      {
+        "road_name": "JALAN SELASEH",
+        "point_count": 10
+      },
+      {
+        "road_name": "JALAN KETUMBIT",
+        "point_count": 9
+      },
+      {
+        "road_name": "JALAN ANTOI",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1168.0,
+    "trimmed_offroad_points": 36
+  }
+}

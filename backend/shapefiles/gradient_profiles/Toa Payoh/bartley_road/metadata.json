@@ -1,0 +1,66 @@
+{
+  "path_key": "bartley_road",
+  "display_name": "Bartley Road",
+  "source_project": "Bartley Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Bartley Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-11T03:08:28.711653+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4069.886,
+  "profile_point_count": 1846,
+  "valid_elevation_count": 1842,
+  "rejected_outlier_count": 216,
+  "rejected_step_jump_count": 1071,
+  "repaired_gradient_point_count": 32,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 464,
+  "usable_gradient_completion_pct": 25.14,
+  "elevation_hit_coverage_pct": 99.78,
+  "step_jump_rejection_pct": 58.02,
+  "gradient_min_pct": -12.519,
+  "gradient_max_pct": 12.158,
+  "path_bounds_svy21": {
+    "min_x": 32178.335,
+    "min_y": 35863.799,
+    "max_x": 33688.751,
+    "max_y": 36288.63
+  },
+  "road_boundary": {
+    "target_road_name": "BARTLEY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2036,
+    "offroad_point_count": 190,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BIDADARI PARK DRIVE",
+        "point_count": 63
+      },
+      {
+        "road_name": "UPPER SERANGOON ROAD",
+        "point_count": 48
+      },
+      {
+        "road_name": "MOUNT VERNON ROAD",
+        "point_count": 20
+      },
+      {
+        "road_name": "HOW SUN DRIVE",
+        "point_count": 18
+      },
+      {
+        "road_name": "EDEN GROVE",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3734.0,
+    "trimmed_offroad_points": 190
+  }
+}

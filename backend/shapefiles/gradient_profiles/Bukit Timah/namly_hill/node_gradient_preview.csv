@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+namly_hill,1,Namly Hill_Cam4_20251217_082207_601_B.jpeg,,12.923,6.462,6.0,18.162,,
+namly_hill,2,Namly Hill_Cam4_20251217_082214_808_B.jpeg,,36.577,24.75,24.0,17.744,,
+namly_hill,3,Namly Hill_Cam4_20251217_082238_238_B.jpeg,,47.451,42.014,42.0,18.794,3.453,1.0
+namly_hill,4,Namly Hill_Cam4_20251217_082250_146_B.jpeg,,58.387,52.919,52.0,19.773,,
+namly_hill,5,Namly Hill_Cam4_20251217_082302_159_B.jpeg,,69.67,64.029,64.0,22.236,,
+namly_hill,6,Namly Hill_Cam4_20251217_082313_571_B.jpeg,,80.346,75.008,76.0,23.054,,
+namly_hill,7,Namly Hill_Cam4_20251217_082332_675_B.jpeg,,102.802,91.574,92.0,21.76,4.375,1.0
+namly_hill,8,Namly Hill_Cam4_20251217_082406_323_B.jpeg,,113.655,108.228,108.0,22.91,9.375,2.0
+namly_hill,9,Namly Hill_Cam4_20251217_082418_336_B.jpeg,,124.961,119.308,120.0,24.11,7.812,1.0

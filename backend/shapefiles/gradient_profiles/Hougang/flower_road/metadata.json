@@ -1,0 +1,62 @@
+{
+  "path_key": "flower_road",
+  "display_name": "Flower Road",
+  "source_project": "Flower Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Flower Road\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T20:03:07.125015+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1699.908,
+  "profile_point_count": 783,
+  "valid_elevation_count": 103,
+  "rejected_outlier_count": 36,
+  "rejected_step_jump_count": 90,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 73,
+  "usable_gradient_completion_pct": 9.32,
+  "elevation_hit_coverage_pct": 13.15,
+  "step_jump_rejection_pct": 11.49,
+  "gradient_min_pct": -3.717,
+  "gradient_max_pct": 6.564,
+  "path_bounds_svy21": {
+    "min_x": 33097.609,
+    "min_y": 37847.034,
+    "max_x": 33544.352,
+    "max_y": 38214.15
+  },
+  "road_boundary": {
+    "target_road_name": "FLOWER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 851,
+    "offroad_point_count": 68,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KOVAN ROAD",
+        "point_count": 48
+      },
+      {
+        "road_name": "JALAN CHORAK",
+        "point_count": 9
+      },
+      {
+        "road_name": "HIGHLAND ROAD",
+        "point_count": 6
+      },
+      {
+        "road_name": "PALM GROVE AVENUE",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 128.0,
+    "offroad_chainage_max_m": 1376.0,
+    "trimmed_offroad_points": 68
+  }
+}

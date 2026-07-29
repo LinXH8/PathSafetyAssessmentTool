@@ -1,0 +1,58 @@
+{
+  "path_key": "lentor_gardens",
+  "display_name": "Lentor Gardens",
+  "source_project": "Lentor Gardens",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Gardens\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:07:10.524686+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1250.099,
+  "profile_point_count": 583,
+  "valid_elevation_count": 583,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 265,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 195,
+  "usable_gradient_completion_pct": 33.45,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 45.45,
+  "gradient_min_pct": -12.366,
+  "gradient_max_pct": 12.646,
+  "path_bounds_svy21": {
+    "min_x": 27796.496,
+    "min_y": 40345.565,
+    "max_x": 28113.755,
+    "max_y": 40662.423
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR GARDENS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 627,
+    "offroad_point_count": 44,
+    "offroad_top_road_names": [
+      {
+        "road_name": "YIO CHU KANG DRIVE",
+        "point_count": 15
+      },
+      {
+        "road_name": "MUNSHI ABDULLAH AVENUE",
+        "point_count": 15
+      },
+      {
+        "road_name": "LENTOR HILLS ROAD",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 122.0,
+    "offroad_chainage_max_m": 1250.099,
+    "trimmed_offroad_points": 44
+  }
+}

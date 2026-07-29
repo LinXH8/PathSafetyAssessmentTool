@@ -1,0 +1,62 @@
+{
+  "path_key": "grove_avenue",
+  "display_name": "Grove Avenue",
+  "source_project": "Grove Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Grove Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T17:56:44.586271+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 734.163,
+  "profile_point_count": 306,
+  "valid_elevation_count": 288,
+  "rejected_outlier_count": 22,
+  "rejected_step_jump_count": 179,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 73,
+  "usable_gradient_completion_pct": 23.86,
+  "elevation_hit_coverage_pct": 94.12,
+  "step_jump_rejection_pct": 58.5,
+  "gradient_min_pct": -11.5,
+  "gradient_max_pct": 4.422,
+  "path_bounds_svy21": {
+    "min_x": 22517.855,
+    "min_y": 32697.285,
+    "max_x": 22666.804,
+    "max_y": 32880.702
+  },
+  "road_boundary": {
+    "target_road_name": "GROVE AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 369,
+    "offroad_point_count": 63,
+    "offroad_top_road_names": [
+      {
+        "road_name": "GROVE DRIVE",
+        "point_count": 30
+      },
+      {
+        "road_name": "GROVE CRESCENT",
+        "point_count": 21
+      },
+      {
+        "road_name": "GHIM MOH ROAD",
+        "point_count": 9
+      },
+      {
+        "road_name": "GROVE LANE",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 4.0,
+    "offroad_chainage_max_m": 734.163,
+    "trimmed_offroad_points": 63
+  }
+}

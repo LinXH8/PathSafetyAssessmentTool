@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_lye_kwee",
+  "display_name": "Jalan Lye Kwee",
+  "source_project": "Jalan Lye Kwee",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Lye Kwee\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T07:33:27.252144+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 150.424,
+  "profile_point_count": 77,
+  "valid_elevation_count": 77,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 14,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 55,
+  "usable_gradient_completion_pct": 71.43,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 18.18,
+  "gradient_min_pct": -3.42,
+  "gradient_max_pct": 7.037,
+  "path_bounds_svy21": {
+    "min_x": 35125.593,
+    "min_y": 39195.102,
+    "max_x": 35207.405,
+    "max_y": 39298.132
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN LYE KWEE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 77,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+greenleaf_avenue,1,Greenleaf Avenue_Cam4_20251219_094710_580_B.jpeg,,11.848,5.924,,,,
+greenleaf_avenue,2,Greenleaf Avenue_Cam4_20251219_094714_785_B.jpeg,,22.251,17.05,,,,
+greenleaf_avenue,3,Greenleaf Avenue_Cam4_20251219_094720_235_B.jpeg,,47.439,34.845,34.0,24.429,,
+greenleaf_avenue,4,Greenleaf Avenue_Cam4_20251219_094734_077_B.jpeg,,59.04,53.239,54.0,23.609,-2.813,1.0
+greenleaf_avenue,5,Greenleaf Avenue_Cam4_20251219_094738_280_B.jpeg,,66.677,62.859,62.0,23.434,-2.187,1.0
+greenleaf_avenue,6,Greenleaf Avenue_Cam4_20251219_094740_687_B.jpeg,,92.911,79.794,80.0,23.673,,
+greenleaf_avenue,7,Greenleaf Avenue_Cam4_20251219_094747_897_B.jpeg,,103.966,98.439,98.0,23.235,,
+greenleaf_avenue,8,Greenleaf Avenue_Cam4_20251219_094750_900_B.jpeg,,115.283,109.625,110.0,23.005,,
+greenleaf_avenue,9,Greenleaf Avenue_Cam4_20251219_094753_906_B.jpeg,,139.131,127.207,128.0,22.145,,
+greenleaf_avenue,10,Greenleaf Avenue_Cam4_20251219_094759_913_B.jpeg,,148.989,144.06,144.0,21.547,-5.0,1.0
+greenleaf_avenue,11,Greenleaf Avenue_Cam4_20251219_094802_319_B.jpeg,,161.596,155.293,156.0,21.314,,
+greenleaf_avenue,12,Greenleaf Avenue_Cam4_20251219_094805_322_B.jpeg,,169.084,165.34,166.0,21.982,,
+greenleaf_avenue,13,Greenleaf Avenue_Cam4_20251219_094807_123_B.jpeg,,177.573,173.328,174.0,22.422,0.208,1.0
+greenleaf_avenue,14,Greenleaf Avenue_Cam4_20251219_094809_526_B.jpeg,,277.467,227.52,228.0,22.129,-0.703,1.0

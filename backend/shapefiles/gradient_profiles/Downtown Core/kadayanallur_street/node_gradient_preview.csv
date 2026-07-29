@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kadayanallur_street,1,Kadayanallur Street_Cam4_20251230_081913_610_C.jpeg,,10.961,5.481,,,,
+kadayanallur_street,2,Kadayanallur Street_Cam4_20251230_081919_618_C.jpeg,,19.758,15.36,16.0,9.053,,
+kadayanallur_street,3,Kadayanallur Street_Cam4_20251230_081924_426_C.jpeg,,33.672,26.715,26.0,7.869,-8.611,1.0
+kadayanallur_street,4,Kadayanallur Street_Cam4_20251230_081937_638_C.jpeg,,44.148,38.91,38.0,7.848,,
+kadayanallur_street,5,Kadayanallur Street_Cam4_20251230_081942_442_C.jpeg,,111.221,77.684,78.0,6.146,,
+kadayanallur_street,6,Kadayanallur Street_Cam4_20260109_082544_790_C.jpeg,,119.185,115.203,116.0,6.237,,
+kadayanallur_street,7,Kadayanallur Street_Cam4_20260109_082549_593_C.jpeg,,129.434,124.31,124.0,5.485,,
+kadayanallur_street,8,Kadayanallur Street_Cam4_20260109_082557_404_C.jpeg,,139.398,134.416,134.0,5.548,2.187,1.0
+kadayanallur_street,9,Kadayanallur Street_Cam4_20260109_082601_609_C.jpeg,,158.113,148.756,148.0,5.523,-1.664,1.0
+kadayanallur_street,10,Kadayanallur Street_Cam4_20260109_082713_702_C.jpeg,,184.244,171.178,172.0,7.394,,
+kadayanallur_street,11,Kadayanallur Street_Cam4_20260109_084120_379_A.jpeg,,230.414,207.329,208.0,5.986,-0.808,1.0
+kadayanallur_street,12,Kadayanallur Street_Cam4_20260109_084140_803_A.jpeg,,239.538,234.976,,,,
+kadayanallur_street,13,Kadayanallur Street_Cam4_20260109_084144_406_A.jpeg,,249.218,244.378,,,,
+kadayanallur_street,14,Kadayanallur Street_Cam4_20260109_084148_010_A.jpeg,,261.762,255.49,,,,
+kadayanallur_street,15,Kadayanallur Street_Cam4_20260109_084152_701_A.jpeg,,269.312,265.537,,,,

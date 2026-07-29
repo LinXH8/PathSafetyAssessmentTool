@@ -1,0 +1,62 @@
+{
+  "path_key": "sengkang_central",
+  "display_name": "Sengkang Central",
+  "source_project": "Sengkang Central",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sengkang Central\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T01:24:19.485472+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3400.451,
+  "profile_point_count": 1465,
+  "valid_elevation_count": 1417,
+  "rejected_outlier_count": 256,
+  "rejected_step_jump_count": 983,
+  "repaired_gradient_point_count": 22,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 256,
+  "usable_gradient_completion_pct": 17.47,
+  "elevation_hit_coverage_pct": 96.72,
+  "step_jump_rejection_pct": 67.1,
+  "gradient_min_pct": -11.292,
+  "gradient_max_pct": 7.028,
+  "path_bounds_svy21": {
+    "min_x": 34606.82,
+    "min_y": 40237.275,
+    "max_x": 34858.399,
+    "max_y": 41177.231
+  },
+  "road_boundary": {
+    "target_road_name": "SENGKANG CENTRAL",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1702,
+    "offroad_point_count": 237,
+    "offroad_top_road_names": [
+      {
+        "road_name": "COMPASSVALE LINK",
+        "point_count": 110
+      },
+      {
+        "road_name": "COMPASSVALE BOW",
+        "point_count": 75
+      },
+      {
+        "road_name": "SENGKANG EAST AVENUE",
+        "point_count": 48
+      },
+      {
+        "road_name": "COMPASSVALE DRIVE",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 416.0,
+    "offroad_chainage_max_m": 3400.451,
+    "trimmed_offroad_points": 237
+  }
+}

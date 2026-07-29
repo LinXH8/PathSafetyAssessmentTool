@@ -1,0 +1,42 @@
+{
+  "path_key": "coronation_walk",
+  "display_name": "Coronation Walk",
+  "source_project": "Coronation Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Coronation Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T11:32:52.564476+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 356.277,
+  "profile_point_count": 180,
+  "valid_elevation_count": 180,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 79,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 78,
+  "usable_gradient_completion_pct": 43.33,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 43.89,
+  "gradient_min_pct": -10.446,
+  "gradient_max_pct": 10.969,
+  "path_bounds_svy21": {
+    "min_x": 25276.338,
+    "min_y": 33910.187,
+    "max_x": 25383.162,
+    "max_y": 34058.491
+  },
+  "road_boundary": {
+    "target_road_name": "CORONATION WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 180,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

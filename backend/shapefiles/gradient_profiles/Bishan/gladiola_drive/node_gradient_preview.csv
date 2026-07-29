@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+gladiola_drive,1,Gladiola Drive_Cam4_20260105_101002_250_A.jpeg,,10.119,5.059,6.0,34.234,,
+gladiola_drive,2,Gladiola Drive_Cam4_20260105_101004_053_A.jpeg,,22.616,16.367,16.0,33.524,,
+gladiola_drive,3,Gladiola Drive_Cam4_20260105_101006_456_A.jpeg,,30.116,26.366,26.0,30.709,,
+gladiola_drive,4,Gladiola Drive_Cam4_20260105_101008_261_A.jpeg,,40.45,35.283,36.0,29.153,3.125,1.0
+gladiola_drive,5,Gladiola Drive_Cam4_20260105_101011_265_A.jpeg,,67.293,53.872,54.0,30.952,,
+gladiola_drive,6,Gladiola Drive_Cam4_20260105_101023_897_A.jpeg,,97.049,82.171,82.0,32.089,,
+gladiola_drive,7,Gladiola Drive_Cam4_20260105_101035_310_A.jpeg,,103.822,100.436,100.0,31.651,,
+gladiola_drive,8,Gladiola Drive_Cam4_20260105_101037_717_A.jpeg,,112.544,108.183,108.0,33.105,,
+gladiola_drive,9,Gladiola Drive_Cam4_20260105_101040_723_A.jpeg,,122.657,117.601,118.0,34.356,,
+gladiola_drive,10,Gladiola Drive_Cam4_20260105_101043_724_A.jpeg,,133.707,128.182,128.0,35.606,,
+gladiola_drive,11,Gladiola Drive_Cam4_20260105_101046_729_A.jpeg,,145.423,139.565,140.0,37.106,,
+gladiola_drive,12,Gladiola Drive_Cam4_20260105_101050_333_A.jpeg,,170.006,157.714,158.0,34.163,,
+gladiola_drive,13,Gladiola Drive_Cam4_20260105_101056_817_A.jpeg,,180.857,175.431,176.0,26.498,,
+gladiola_drive,14,Gladiola Drive_Cam4_20260105_101059_221_A.jpeg,,189.134,184.995,184.0,26.114,-3.229,1.0

@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+birch_road,1,Birch Road_Cam4_20251208_073619_272_A.jpeg,,14.359,7.179,8.0,3.278,,
+birch_road,2,Birch Road_Cam4_20251208_073624_301_A.jpeg,,66.266,40.313,40.0,4.385,,
+birch_road,3,Birch Road_Cam4_20251208_073641_876_A.jpeg,,78.335,72.301,72.0,4.772,,
+birch_road,4,Birch Road_Cam4_20251208_073658_957_A.jpeg,,108.482,93.409,94.0,2.851,,
+birch_road,5,Birch Road_Cam4_20251208_073711_983_A.jpeg,,168.564,138.523,138.0,3.155,,
+birch_road,6,Birch Road_Cam4_20251208_073733_551_A.jpeg,,201.012,184.788,184.0,4.576,,

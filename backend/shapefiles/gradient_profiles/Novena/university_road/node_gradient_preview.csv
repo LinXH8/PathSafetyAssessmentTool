@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+university_road,1,,UNIVERSITY ROAD,837.991,418.996,418.0,15.258,,
+university_road,2,,UNIVERSITY ROAD,98.746,887.364,888.0,22.454,,
+university_road,3,,UNIVERSITY ROAD,94.045,1082.505,1082.0,16.191,,

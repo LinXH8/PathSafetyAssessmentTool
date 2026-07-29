@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_joran,1,Jalan Joran_Cam4_20260106_085526_471_C.jpeg,,9.882,4.941,,,,
+jalan_joran,2,Jalan Joran_Cam4_20260106_085547_499_C.jpeg,,129.839,69.86,,,,
+jalan_joran,3,Jalan Joran_Cam4_20260106_100906_611_C.jpeg,,137.926,133.883,134.0,20.501,,
+jalan_joran,4,Jalan Joran_Cam4_20260106_100909_615_C.jpeg,,163.703,150.815,150.0,21.327,,
+jalan_joran,5,Jalan Joran_Cam4_20260106_101028_203_C.jpeg,,172.69,168.197,168.0,22.181,,
+jalan_joran,6,Jalan Joran_Cam4_20260106_101033_013_C.jpeg,,202.482,187.586,,,,
+jalan_joran,7,Jalan Joran_Cam4_20260106_101043_828_C.jpeg,,212.06,207.271,208.0,22.814,,
+jalan_joran,8,Jalan Joran_Cam4_20260106_101047_432_C.jpeg,,221.73,216.895,216.0,22.659,,
+jalan_joran,9,Jalan Joran_Cam4_20260106_101052_238_C.jpeg,,231.752,226.741,226.0,22.295,,
+jalan_joran,10,Jalan Joran_Cam4_20260106_101056_443_C.jpeg,,265.529,248.641,,,,
+jalan_joran,11,Jalan Joran_Cam4_20260106_101120_482_C.jpeg,,277.596,271.563,272.0,21.463,-0.833,1.0
+jalan_joran,12,Jalan Joran_Cam4_20260106_101124_686_C.jpeg,,285.932,281.764,282.0,21.504,0.521,1.0
+jalan_joran,13,Jalan Joran_Cam4_20260106_101127_689_C.jpeg,,321.618,303.775,,,,
+jalan_joran,14,Jalan Joran_Cam4_20260106_101142_104_C.jpeg,,333.629,327.624,328.0,20.454,,
+jalan_joran,15,Jalan Joran_Cam4_20260106_101146_307_C.jpeg,,340.583,337.106,338.0,21.842,,

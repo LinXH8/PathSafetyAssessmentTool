@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_jambu_mawar,1,Jalan Jambu Mawar_Cam4_20251217_095451_680_C.jpeg,,11.319,5.66,6.0,12.211,-0.265,1.0
+jalan_jambu_mawar,2,Jalan Jambu Mawar_Cam4_20251217_095455_925_C.jpeg,,24.438,17.879,18.0,13.154,,
+jalan_jambu_mawar,3,Jalan Jambu Mawar_Cam4_20251217_095500_128_C.jpeg,,32.252,28.345,28.0,14.009,,
+jalan_jambu_mawar,4,Jalan Jambu Mawar_Cam4_20251217_095503_156_C.jpeg,,40.753,36.502,36.0,13.47,,
+jalan_jambu_mawar,5,Jalan Jambu Mawar_Cam4_20251217_095506_280_C.jpeg,,70.408,55.58,56.0,10.215,0.497,1.0
+jalan_jambu_mawar,6,Jalan Jambu Mawar_Cam4_20251217_095517_192_C.jpeg,,95.95,83.179,84.0,9.89,-7.111,1.0
+jalan_jambu_mawar,7,Jalan Jambu Mawar_Cam4_20251217_095527_007_C.jpeg,,120.89,108.42,108.0,10.341,,
+jalan_jambu_mawar,8,Jalan Jambu Mawar_Cam4_20251217_095536_746_C.jpeg,,131.005,125.948,126.0,9.486,-0.937,1.0
+jalan_jambu_mawar,9,Jalan Jambu Mawar_Cam4_20251217_095539_785_C.jpeg,,142.543,136.774,136.0,9.461,-0.625,1.0
+jalan_jambu_mawar,10,Jalan Jambu Mawar_Cam4_20251217_095543_417_C.jpeg,,151.596,147.069,148.0,9.461,0.937,1.0

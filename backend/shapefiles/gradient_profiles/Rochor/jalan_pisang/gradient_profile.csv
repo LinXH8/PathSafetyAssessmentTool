@@ -1,0 +1,19 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+jalan_pisang,Jalan Pisang,14.0,30798.996,31713.355,7.252,9.707,9.707,0.0,1.0,JALAN PISANG,23.107
+jalan_pisang,Jalan Pisang,16.0,30800.442,31714.736,9.707,9.707,9.707,,,JALAN PISANG,21.115
+jalan_pisang,Jalan Pisang,18.0,30801.888,31716.117,9.848,9.848,9.707,,,JALAN PISANG,19.123
+jalan_pisang,Jalan Pisang,20.0,30803.335,31717.499,9.64,9.58,9.58,,,JALAN PISANG,17.131
+jalan_pisang,Jalan Pisang,22.0,30804.781,31718.88,9.742,9.313,9.313,,,JALAN PISANG,15.139
+jalan_pisang,Jalan Pisang,24.0,30806.227,31720.261,10.933,8.806,8.806,,,JALAN PISANG,13.147
+jalan_pisang,Jalan Pisang,26.0,30807.674,31721.643,11.354,8.298,8.298,,,JALAN PISANG,11.155
+jalan_pisang,Jalan Pisang,28.0,30809.12,31723.024,8.96,7.79,7.79,,,JALAN PISANG,9.163
+jalan_pisang,Jalan Pisang,30.0,30810.566,31724.405,7.985,,7.282,,,JALAN PISANG,7.171
+jalan_pisang,Jalan Pisang,32.0,30812.013,31725.787,7.869,6.775,6.775,,,JALAN PISANG,5.179
+jalan_pisang,Jalan Pisang,34.0,30813.459,31727.168,5.213,6.267,6.267,,,JALAN PISANG,3.187
+jalan_pisang,Jalan Pisang,36.0,30814.906,31728.549,6.089,5.759,5.759,,,JALAN PISANG,1.195
+jalan_pisang,Jalan Pisang,38.0,30816.352,31729.93,4.467,5.251,5.289,,,JALAN PISANG,0.797
+jalan_pisang,Jalan Pisang,40.0,30817.798,31731.312,5.055,5.27,5.289,,,JALAN PISANG,2.789
+jalan_pisang,Jalan Pisang,42.0,30819.049,31730.349,5.289,5.289,5.289,,,JALAN PISANG,3.167
+jalan_pisang,Jalan Pisang,44.0,30820.246,31728.747,5.727,5.43,5.43,,,JALAN PISANG,3.105
+jalan_pisang,Jalan Pisang,46.0,30821.443,31727.145,5.57,5.57,5.5,,,JALAN PISANG,3.042
+jalan_pisang,Jalan Pisang,48.0,30822.047,31726.337,4.056,5.57,5.57,,,JALAN PISANG,3.011

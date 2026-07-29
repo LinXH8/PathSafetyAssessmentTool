@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+burmah_road,1,Burmah Road_Cam4_20251208_072653_380_A.jpeg,,8.289,4.144,,,,
+burmah_road,2,Burmah Road_Cam4_20251208_072710_901_A.jpeg,,18.853,13.571,,,,
+burmah_road,3,Burmah Road_Cam4_20251208_072716_908_A.jpeg,,27.375,23.114,,,,
+burmah_road,4,Burmah Road_Cam4_20251208_072720_914_A.jpeg,,90.832,59.103,,,,
+burmah_road,5,Burmah Road_Cam4_20251208_072824_496_A.jpeg,,97.385,94.109,94.0,2.787,0.885,1.0
+burmah_road,6,Burmah Road_Cam4_20251208_072827_001_A.jpeg,,107.32,102.353,102.0,2.991,3.049,1.0
+burmah_road,7,Burmah Road_Cam4_20251208_072831_019_A.jpeg,,119.845,113.583,114.0,2.955,4.418,1.0
+burmah_road,8,Burmah Road_Cam4_20251208_072837_047_A.jpeg,,144.05,131.948,132.0,2.857,,
+burmah_road,9,Burmah Road_Cam4_20251208_072852_576_A.jpeg,,201.595,172.823,,,,
+burmah_road,10,Burmah Road_Cam4_20251208_072916_669_A.jpeg,,231.148,216.372,,,,

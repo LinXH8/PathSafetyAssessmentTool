@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chay_yan_street,1,Chay Yan Street_Cam4_20251227_081414_000_B.jpeg,,11.46,5.73,8.0,10.454,,
+chay_yan_street,2,Chay Yan Street_Cam4_20251227_081417_612_B.jpeg,,20.917,16.189,16.0,10.176,,
+chay_yan_street,3,Chay Yan Street_Cam4_20251227_081420_615_B.jpeg,,32.609,26.763,26.0,10.826,,
+chay_yan_street,4,Chay Yan Street_Cam4_20251227_081424_217_B.jpeg,,40.154,36.381,36.0,10.852,,
+chay_yan_street,5,Chay Yan Street_Cam4_20251227_081426_619_B.jpeg,,50.132,45.143,46.0,11.37,,
+chay_yan_street,6,Chay Yan Street_Cam4_20251227_081430_222_B.jpeg,,79.609,64.87,64.0,9.996,,
+chay_yan_street,7,Chay Yan Street_Cam4_20251227_081441_055_B.jpeg,,122.284,100.947,100.0,10.512,-0.268,1.0
+chay_yan_street,8,Chay Yan Street_Cam4_20251227_081538_721_B.jpeg,,143.754,133.019,134.0,10.823,,

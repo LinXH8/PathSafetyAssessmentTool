@@ -1,0 +1,42 @@
+{
+  "path_key": "lentor_walk",
+  "display_name": "Lentor Walk",
+  "source_project": "Lentor Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Walk\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T18:36:28.760398+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 55.549,
+  "profile_point_count": 29,
+  "valid_elevation_count": 29,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 17,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 5,
+  "usable_gradient_completion_pct": 17.24,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.62,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 3.438,
+  "path_bounds_svy21": {
+    "min_x": 28547.616,
+    "min_y": 41165.414,
+    "max_x": 28580.662,
+    "max_y": 41186.93
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 29,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

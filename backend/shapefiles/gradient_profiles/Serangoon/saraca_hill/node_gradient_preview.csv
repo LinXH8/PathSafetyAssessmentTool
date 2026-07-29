@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+saraca_hill,1,Saraca Hill_Cam4_20260106_111552_095_C.jpeg,,13.373,6.687,6.0,18.132,,
+saraca_hill,2,Saraca Hill_Cam4_20260106_111557_510_C.jpeg,,19.932,16.653,16.0,18.826,1.328,1.0
+saraca_hill,3,Saraca Hill_Cam4_20260106_111559_913_C.jpeg,,30.101,25.016,26.0,19.004,1.042,1.0
+saraca_hill,4,Saraca Hill_Cam4_20260106_111603_531_C.jpeg,,40.602,35.351,36.0,19.088,-2.215,1.0
+saraca_hill,5,Saraca Hill_Cam4_20260106_111607_137_C.jpeg,,49.872,45.237,46.0,18.815,,
+saraca_hill,6,Saraca Hill_Cam4_20260106_111610_740_C.jpeg,,81.15,65.511,66.0,19.302,0.625,1.0
+saraca_hill,7,Saraca Hill_Cam4_20260106_111621_559_C.jpeg,,91.866,86.508,86.0,20.079,,
+saraca_hill,8,Saraca Hill_Cam4_20260106_111625_161_C.jpeg,,100.676,96.271,96.0,19.414,,
+saraca_hill,9,Saraca Hill_Cam4_20260106_111628_764_C.jpeg,,116.451,108.564,108.0,19.264,-0.313,1.0
+saraca_hill,10,Saraca Hill_Cam4_20260106_111650_420_C.jpeg,,126.382,121.417,122.0,19.322,1.25,1.0
+saraca_hill,11,Saraca Hill_Cam4_20260106_111654_024_C.jpeg,,136.204,131.293,132.0,19.414,,
+saraca_hill,12,Saraca Hill_Cam4_20260106_111658_232_C.jpeg,,188.135,162.17,162.0,19.973,,

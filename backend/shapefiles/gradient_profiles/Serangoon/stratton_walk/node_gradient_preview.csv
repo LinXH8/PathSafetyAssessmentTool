@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stratton_walk,1,Stratton Walk_Cam4_20260101_094123_458_B.jpeg,,10.313,5.156,6.0,17.679,-3.063,1.0
+stratton_walk,2,Stratton Walk_Cam4_20260101_094127_063_B.jpeg,,21.241,15.777,16.0,17.516,-2.189,1.0
+stratton_walk,3,Stratton Walk_Cam4_20260101_094130_744_B.jpeg,,58.611,39.926,40.0,17.713,,
+stratton_walk,4,Stratton Walk_Cam4_20260101_094156_015_B.jpeg,,69.203,63.907,64.0,17.784,-5.523,1.0
+stratton_walk,5,Stratton Walk_Cam4_20260101_094200_219_B.jpeg,,76.145,72.674,72.0,17.404,-1.938,1.0
+stratton_walk,6,Stratton Walk_Cam4_20260101_094202_697_B.jpeg,,102.453,89.299,90.0,16.15,0.417,1.0
+stratton_walk,7,Stratton Walk_Cam4_20260101_094215_359_B.jpeg,,107.781,105.117,106.0,15.483,,
+stratton_walk,8,Stratton Walk_Cam4_20260101_094219_565_B.jpeg,,119.363,113.572,114.0,15.27,,
+stratton_walk,9,Stratton Walk_Cam4_20260101_094241_204_B.jpeg,,127.364,123.363,124.0,14.955,,
+stratton_walk,10,Stratton Walk_Cam4_20260101_094246_608_B.jpeg,,136.243,131.804,132.0,15.752,,
+stratton_walk,11,Stratton Walk_Cam4_20260101_094252_110_B.jpeg,,145.672,140.958,140.0,16.108,,
+stratton_walk,12,Stratton Walk_Cam4_20260101_094256_917_B.jpeg,,156.052,150.862,150.0,15.491,1.875,1.0
+stratton_walk,13,Stratton Walk_Cam4_20260101_094301_184_B.jpeg,,165.398,160.725,160.0,15.758,3.542,1.0
+stratton_walk,14,Stratton Walk_Cam4_20260101_094304_795_B.jpeg,,176.552,170.975,170.0,16.125,,

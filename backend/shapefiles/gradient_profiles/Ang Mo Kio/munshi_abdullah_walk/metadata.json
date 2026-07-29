@@ -1,0 +1,50 @@
+{
+  "path_key": "munshi_abdullah_walk",
+  "display_name": "Munshi Abdullah Walk",
+  "source_project": "Munshi Abdullah Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Munshi Abdullah Walk\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T19:02:23.922152+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 316.059,
+  "profile_point_count": 153,
+  "valid_elevation_count": 153,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 99,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 17.65,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.71,
+  "gradient_min_pct": -12.242,
+  "gradient_max_pct": 10.352,
+  "path_bounds_svy21": {
+    "min_x": 27668.46,
+    "min_y": 40516.308,
+    "max_x": 27757.067,
+    "max_y": 40657.107
+  },
+  "road_boundary": {
+    "target_road_name": "MUNSHI ABDULLAH WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 160,
+    "offroad_point_count": 7,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MUNSHI ABDULLAH AVENUE",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 316.059,
+    "trimmed_offroad_points": 7
+  }
+}

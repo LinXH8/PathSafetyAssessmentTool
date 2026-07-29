@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stratton_place,1,Stratton Place_Cam4_20260101_094046_136_B.jpeg,,10.336,5.168,6.0,19.439,,
+stratton_place,2,Stratton Place_Cam4_20260101_094050_947_B.jpeg,,45.032,27.684,26.0,18.404,,
+stratton_place,3,Stratton Place_Cam4_20260101_094349_438_B.jpeg,,54.666,49.849,50.0,17.335,,
+stratton_place,4,Stratton Place_Cam4_20260101_094352_501_B.jpeg,,64.934,59.8,60.0,18.124,,
+stratton_place,5,Stratton Place_Cam4_20260101_094355_563_B.jpeg,,75.699,70.317,70.0,17.835,,
+stratton_place,6,Stratton Place_Cam4_20260101_094358_570_B.jpeg,,84.832,80.266,80.0,16.374,,
+stratton_place,7,Stratton Place_Cam4_20260101_094401_675_B.jpeg,,92.474,88.653,88.0,16.174,-0.99,1.0

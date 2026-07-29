@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_pinang,1,Jalan Pinang_Cam4_20251208_075802_863_C.jpeg,,9.826,4.913,4.0,5.795,,
+jalan_pinang,2,Jalan Pinang_Cam4_20251208_075808_873_C.jpeg,,55.779,32.803,32.0,5.016,,
+jalan_pinang,3,Jalan Pinang_Cam4_20251208_075844_150_C.jpeg,,64.302,60.04,60.0,4.479,4.823,1.0
+jalan_pinang,4,Jalan Pinang_Cam4_20251208_075848_355_C.jpeg,,87.446,75.874,76.0,6.015,,
+jalan_pinang,5,Jalan Pinang_Cam4_20251208_075928_006_C.jpeg,,123.689,105.567,106.0,9.111,,
+jalan_pinang,6,Jalan Pinang_Cam4_20251212_111157_731_C.jpeg,,152.187,137.938,138.0,7.683,,

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+windsor_park_hill,1,Windsor Park Hill_Cam4_20260105_105220_208_A.jpeg,,11.096,5.548,6.0,37.912,,
+windsor_park_hill,2,Windsor Park Hill_Cam4_20260105_105226_216_A.jpeg,,22.75,16.923,16.0,38.146,5.313,1.0
+windsor_park_hill,3,Windsor Park Hill_Cam4_20260105_105233_429_A.jpeg,,32.158,27.454,28.0,38.812,5.312,1.0

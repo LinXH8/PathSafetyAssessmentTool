@@ -1,0 +1,58 @@
+{
+  "path_key": "keng_cheow_street",
+  "display_name": "Keng Cheow Street",
+  "source_project": "Keng Cheow Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Keng Cheow Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T15:46:22.431332+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 444.143,
+  "profile_point_count": 163,
+  "valid_elevation_count": 117,
+  "rejected_outlier_count": 20,
+  "rejected_step_jump_count": 124,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 21,
+  "usable_gradient_completion_pct": 12.88,
+  "elevation_hit_coverage_pct": 71.78,
+  "step_jump_rejection_pct": 76.07,
+  "gradient_min_pct": -13.065,
+  "gradient_max_pct": 7.247,
+  "path_bounds_svy21": {
+    "min_x": 29133.19,
+    "min_y": 30001.64,
+    "max_x": 29220.668,
+    "max_y": 30135.617
+  },
+  "road_boundary": {
+    "target_road_name": "KENG CHEOW STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 224,
+    "offroad_point_count": 61,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MERCHANT ROAD",
+        "point_count": 25
+      },
+      {
+        "road_name": "ANGUS STREET",
+        "point_count": 21
+      },
+      {
+        "road_name": "CUMMING STREET",
+        "point_count": 15
+      }
+    ],
+    "offroad_chainage_min_m": 64.0,
+    "offroad_chainage_max_m": 444.143,
+    "trimmed_offroad_points": 61
+  }
+}

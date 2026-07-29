@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serenade_walk,1,Serenade Walk_Cam4_20251231_083706_730_A.jpeg,,11.472,5.736,,,,
+serenade_walk,2,Serenade Walk_Cam4_20251231_083713_947_A.jpeg,,22.389,16.931,16.0,29.426,,
+serenade_walk,3,Serenade Walk_Cam4_20251231_083724_692_A.jpeg,,46.046,34.218,34.0,28.959,,
+serenade_walk,4,Serenade Walk_Cam4_20251231_083743_322_A.jpeg,,70.723,58.384,58.0,31.446,,
+serenade_walk,5,Serenade Walk_Cam4_20251231_083803_130_A.jpeg,,96.851,83.787,84.0,32.731,,
+serenade_walk,6,Serenade Walk_Cam4_20251231_083818_761_A.jpeg,,188.8,142.826,142.0,37.638,,
+serenade_walk,7,Serenade Walk_Cam4_20251231_084025_669_A.jpeg,,201.199,195.0,,,,

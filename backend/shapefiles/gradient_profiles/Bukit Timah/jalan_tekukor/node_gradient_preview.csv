@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tekukor,1,Jalan Tekukor_Cam4_20251122_094126_421_A.jpeg,,13.399,6.7,6.0,46.62,,
+jalan_tekukor,2,Jalan Tekukor_Cam4_20251122_094134_241_A.jpeg,,22.567,17.983,18.0,47.316,,
+jalan_tekukor,3,Jalan Tekukor_Cam4_20251122_094139_045_A.jpeg,,27.363,24.965,24.0,47.058,-10.505,2.0
+jalan_tekukor,4,Jalan Tekukor_Cam4_20251122_094145_051_A.jpeg,,123.717,75.54,76.0,45.576,,
+jalan_tekukor,5,Jalan Tekukor_Cam4_20251122_095051_771_A.jpeg,,131.3,127.509,128.0,42.01,,
+jalan_tekukor,6,Jalan Tekukor_Cam4_20251122_095054_775_A.jpeg,,141.165,136.233,136.0,43.005,,
+jalan_tekukor,7,Jalan Tekukor_Cam4_20251122_095058_379_A.jpeg,,151.44,146.303,146.0,43.947,,
+jalan_tekukor,8,Jalan Tekukor_Cam4_20251122_095101_981_A.jpeg,,165.112,158.276,158.0,43.822,,
+jalan_tekukor,9,Jalan Tekukor_Cam4_20251122_095120_613_A.jpeg,,193.963,179.537,180.0,42.448,,
+jalan_tekukor,10,Jalan Tekukor_Cam4_20251122_095131_333_A.jpeg,,231.516,212.739,212.0,39.668,-2.58,1.0
+jalan_tekukor,11,Jalan Tekukor_Cam4_20251122_100414_715_A.jpeg,,265.283,248.399,248.0,39.315,,
+jalan_tekukor,12,Jalan Tekukor_Cam4_20251122_100459_077_A.jpeg,,305.568,285.425,286.0,34.891,-3.025,1.0

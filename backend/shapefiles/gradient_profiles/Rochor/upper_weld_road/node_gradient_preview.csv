@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+upper_weld_road,1,Cam4_20251208_103352_919_A.jpeg,,10.726,5.363,6.0,2.04,,
+upper_weld_road,2,Cam4_20251208_103358_430_A.jpeg,,89.782,50.254,50.0,2.292,0.859,1.0
+upper_weld_road,3,Cam4_20251208_103531_681_A.jpeg,,99.541,94.661,94.0,7.08,,
+upper_weld_road,4,Cam4_20251208_103535_764_A.jpeg,,127.044,113.292,114.0,7.901,,
+upper_weld_road,5,Cam4_20251208_103546_800_A.jpeg,,136.568,131.806,132.0,7.181,,
+upper_weld_road,6,Cam4_20251208_103550_810_A.jpeg,,144.943,140.755,140.0,6.277,,
+upper_weld_road,7,Cam4_20251208_103553_843_A.jpeg,,170.496,157.719,158.0,6.797,,
+upper_weld_road,8,Cam4_20251208_103650_212_A.jpeg,,196.34,183.418,184.0,6.455,,
+upper_weld_road,9,Cam4_20251208_103707_988_A.jpeg,,208.024,202.182,202.0,3.337,,
+upper_weld_road,10,Cam4_20251208_103713_015_A.jpeg,,216.515,212.27,212.0,2.558,,
+upper_weld_road,11,Cam4_20251208_103717_024_A.jpeg,,243.014,229.765,230.0,4.955,,
+upper_weld_road,12,Cam4_20251208_103730_213_A.jpeg,,342.075,292.544,,,,
+upper_weld_road,13,Cam4_20251208_121239_539_C.jpeg,,462.016,402.045,,,,
+upper_weld_road,14,Cam4_20251208_121634_862_C.jpeg,,677.367,569.691,570.0,4.535,,
+upper_weld_road,15,Cam4_20251212_090452_963_A.jpeg,,687.419,682.393,,,,

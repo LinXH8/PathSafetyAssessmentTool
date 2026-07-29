@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_minggu,1,Jalan Minggu_Cam4_20260102_092013_476_A.jpeg,,11.695,5.847,6.0,20.094,,
+jalan_minggu,2,Jalan Minggu_Cam4_20260102_092017_079_A.jpeg,,35.895,23.795,24.0,19.021,,
+jalan_minggu,3,Jalan Minggu_Cam4_20260102_092024_287_A.jpeg,,47.659,41.777,42.0,15.777,,
+jalan_minggu,4,Jalan Minggu_Cam4_20260102_092027_289_A.jpeg,,59.128,53.393,54.0,16.946,,
+jalan_minggu,5,Jalan Minggu_Cam4_20260102_092030_285_A.jpeg,,65.243,62.185,62.0,17.685,,
+jalan_minggu,6,Jalan Minggu_Cam4_20260102_092032_086_A.jpeg,,124.572,94.908,94.0,17.013,,
+jalan_minggu,7,Jalan Minggu_Cam4_20260102_092052_523_A.jpeg,,134.116,129.344,130.0,13.565,-4.799,1.0
+jalan_minggu,8,Jalan Minggu_Cam4_20260102_092055_526_A.jpeg,,158.832,146.474,146.0,13.383,,
+jalan_minggu,9,Jalan Minggu_Cam4_20260102_092103_350_A.jpeg,,169.705,164.268,164.0,13.648,,
+jalan_minggu,10,Jalan Minggu_Cam4_20260102_092106_953_A.jpeg,,177.76,173.733,174.0,14.022,,

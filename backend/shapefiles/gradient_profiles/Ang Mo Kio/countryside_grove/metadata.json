@@ -1,0 +1,54 @@
+{
+  "path_key": "countryside_grove",
+  "display_name": "Countryside Grove",
+  "source_project": "Countryside Grove",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Countryside Grove\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T17:03:39.013691+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 162.983,
+  "profile_point_count": 80,
+  "valid_elevation_count": 80,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 45,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 23,
+  "usable_gradient_completion_pct": 28.75,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.25,
+  "gradient_min_pct": -4.219,
+  "gradient_max_pct": 2.755,
+  "path_bounds_svy21": {
+    "min_x": 28654.835,
+    "min_y": 41150.781,
+    "max_x": 28736.581,
+    "max_y": 41262.64
+  },
+  "road_boundary": {
+    "target_road_name": "COUNTRYSIDE GROVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 83,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "COUNTRYSIDE PLACE",
+        "point_count": 2
+      },
+      {
+        "road_name": "COUNTRYSIDE ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 162.983,
+    "trimmed_offroad_points": 3
+  }
+}

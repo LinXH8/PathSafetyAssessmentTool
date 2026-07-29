@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+duxton_hill,1,Duxton Hill_Cam4_20260109_075103_885_A.jpeg,,11.016,5.508,6.0,7.693,4.141,1.0
+duxton_hill,2,Duxton Hill_Cam4_20260109_075108_054_A.jpeg,,21.342,16.179,16.0,8.168,4.531,1.0
+duxton_hill,3,Duxton Hill_Cam4_20260109_075111_658_A.jpeg,,31.586,26.464,26.0,8.768,6.875,1.0
+duxton_hill,4,Duxton Hill_Cam4_20260109_075115_260_A.jpeg,,40.67,36.128,36.0,9.573,,
+duxton_hill,5,Duxton Hill_Cam4_20260109_075118_865_A.jpeg,,50.676,45.673,46.0,10.727,,
+duxton_hill,6,Duxton Hill_Cam4_20260109_075122_338_A.jpeg,,64.467,57.572,58.0,10.243,,
+duxton_hill,7,Duxton Hill_Cam4_20260109_075128_345_A.jpeg,,97.417,80.942,80.0,17.121,,
+duxton_hill,8,Duxton Hill_Cam4_20260109_075230_696_A.jpeg,,119.929,108.673,108.0,12.755,,
+duxton_hill,9,Duxton Hill_Cam4_20260109_075256_997_A.jpeg,,149.078,134.504,134.0,9.922,-4.748,1.0
+duxton_hill,10,Duxton Hill_Cam4_20260109_075339_055_A.jpeg,,226.95,188.014,188.0,12.629,,
+duxton_hill,11,Duxton Hill_Cam4_20260109_080204_568_A.jpeg,,238.943,232.946,232.0,13.276,,
+duxton_hill,12,Duxton Hill_Cam4_20260109_080218_386_A.jpeg,,249.694,244.318,244.0,12.446,,
+duxton_hill,13,Duxton Hill_Cam4_20260109_080223_195_A.jpeg,,261.35,255.522,256.0,13.339,,
+duxton_hill,14,Duxton Hill_Cam4_20260109_080229_205_A.jpeg,,270.943,266.146,266.0,13.496,,
+duxton_hill,15,Duxton Hill_Cam4_20260109_080234_011_A.jpeg,,277.289,274.116,274.0,13.429,,
+duxton_hill,16,Duxton Hill_Cam4_20260109_080237_014_A.jpeg,,287.113,282.201,282.0,13.395,,
+duxton_hill,17,Duxton Hill_Cam4_20260109_080241_818_A.jpeg,,297.858,292.485,292.0,14.18,,
+duxton_hill,18,Duxton Hill_Cam4_20260109_080247_226_A.jpeg,,310.071,303.964,304.0,14.256,0.954,1.0
+duxton_hill,19,Duxton Hill_Cam4_20260109_080253_232_A.jpeg,,442.265,376.168,376.0,13.138,,
+duxton_hill,20,Duxton Hill_Cam4_20260109_080447_174_A.jpeg,,478.848,460.557,,,,
+duxton_hill,21,Duxton Hill_Cam4_20260109_080526_220_A.jpeg,,489.34,484.094,484.0,7.066,-7.679,1.0
+duxton_hill,22,Duxton Hill_Cam4_20260109_080532_241_A.jpeg,,497.807,493.574,494.0,6.316,,
+duxton_hill,23,Duxton Hill_Cam4_20260109_080536_444_A.jpeg,,508.335,503.071,504.0,7.629,,

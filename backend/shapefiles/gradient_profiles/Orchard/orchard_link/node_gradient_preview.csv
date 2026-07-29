@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+orchard_link,1,Cam4_20260107_091140_646_B.jpeg,,11.176,5.588,6.0,11.582,,
+orchard_link,2,Cam4_20260107_094042_949_B.jpeg,,20.861,16.018,16.0,11.534,,
+orchard_link,3,Cam4_20260107_094046_629_B.jpeg,,48.161,34.511,34.0,11.828,,
+orchard_link,4,Cam4_20260107_094056_843_B.jpeg,,74.353,61.257,62.0,9.563,,
+orchard_link,5,Cam4_20260107_094104_049_B.jpeg,,143.222,108.788,108.0,16.14,,
+orchard_link,6,Cam4_20260107_094452_371_B.jpeg,,153.581,148.402,148.0,9.819,-5.335,1.0
+orchard_link,7,Cam4_20260107_094455_972_B.jpeg,,162.444,158.013,158.0,9.95,,
+orchard_link,8,Cam4_20260107_094458_975_B.jpeg,,173.83,168.137,168.0,11.402,,
+orchard_link,9,Cam4_20260107_094502_579_B.jpeg,,186.64,180.235,180.0,11.368,,
+orchard_link,10,Cam4_20260107_094506_787_B.jpeg,,196.498,191.569,192.0,11.189,,
+orchard_link,11,Cam4_20260107_094510_425_B.jpeg,,204.104,200.301,200.0,10.172,,
+orchard_link,12,Cam4_20260107_094512_828_B.jpeg,,214.171,209.137,210.0,9.127,,
+orchard_link,13,Cam4_20260107_094515_852_B.jpeg,,222.401,218.286,218.0,8.627,,

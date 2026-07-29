@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+toh_tuck_close,1,Toh Tuck Close_Cam4_20251216_075714_368_A.jpeg,,12.183,6.091,6.0,43.207,,
+toh_tuck_close,2,Toh Tuck Close_Cam4_20251216_075720_883_A.jpeg,,24.071,18.127,18.0,41.05,,
+toh_tuck_close,3,Toh Tuck Close_Cam4_20251216_075726_863_A.jpeg,,46.26,35.165,36.0,42.347,,
+toh_tuck_close,4,Toh Tuck Close_Cam4_20251216_075737_364_A.jpeg,,57.211,51.735,52.0,42.816,-1.064,1.0
+toh_tuck_close,5,Toh Tuck Close_Cam4_20251216_075742_873_A.jpeg,,151.945,104.578,104.0,43.189,,

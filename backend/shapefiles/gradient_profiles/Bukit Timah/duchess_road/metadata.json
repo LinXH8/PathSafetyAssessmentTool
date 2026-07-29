@@ -1,0 +1,62 @@
+{
+  "path_key": "duchess_road",
+  "display_name": "Duchess Road",
+  "source_project": "Duchess Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Duchess Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T11:40:30.413017+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 874.508,
+  "profile_point_count": 395,
+  "valid_elevation_count": 395,
+  "rejected_outlier_count": 27,
+  "rejected_step_jump_count": 224,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 98,
+  "usable_gradient_completion_pct": 24.81,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.71,
+  "gradient_min_pct": -10.685,
+  "gradient_max_pct": 14.407,
+  "path_bounds_svy21": {
+    "min_x": 24986.785,
+    "min_y": 33778.314,
+    "max_x": 25231.135,
+    "max_y": 34147.85
+  },
+  "road_boundary": {
+    "target_road_name": "DUCHESS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 439,
+    "offroad_point_count": 44,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PRINCE OF WALES ROAD",
+        "point_count": 18
+      },
+      {
+        "road_name": "CORONATION ROAD",
+        "point_count": 15
+      },
+      {
+        "road_name": "CORONATION DRIVE",
+        "point_count": 6
+      },
+      {
+        "road_name": "DUCHESS AVENUE",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 94.0,
+    "offroad_chainage_max_m": 874.508,
+    "trimmed_offroad_points": 44
+  }
+}

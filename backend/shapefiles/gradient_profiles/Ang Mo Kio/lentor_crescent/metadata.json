@@ -1,0 +1,58 @@
+{
+  "path_key": "lentor_crescent",
+  "display_name": "Lentor Crescent",
+  "source_project": "Lentor Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Crescent\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T18:15:40.167164+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 966.32,
+  "profile_point_count": 325,
+  "valid_elevation_count": 325,
+  "rejected_outlier_count": 36,
+  "rejected_step_jump_count": 226,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 30,
+  "usable_gradient_completion_pct": 9.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 69.54,
+  "gradient_min_pct": -13.148,
+  "gradient_max_pct": 5.344,
+  "path_bounds_svy21": {
+    "min_x": 28058.071,
+    "min_y": 41124.368,
+    "max_x": 28236.621,
+    "max_y": 41350.233
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 485,
+    "offroad_point_count": 160,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LENTOR LOOP",
+        "point_count": 95
+      },
+      {
+        "road_name": "LENTOR STREET",
+        "point_count": 62
+      },
+      {
+        "road_name": "LENTOR LINK",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 64.0,
+    "offroad_chainage_max_m": 966.32,
+    "trimmed_offroad_points": 160
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "cornwall_gardens",
+  "display_name": "Cornwall Gardens",
+  "source_project": "Cornwall Gardens",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cornwall Gardens\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T09:39:12.551875+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1089.541,
+  "profile_point_count": 543,
+  "valid_elevation_count": 543,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 258,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 208,
+  "usable_gradient_completion_pct": 38.31,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.51,
+  "gradient_min_pct": -12.036,
+  "gradient_max_pct": 10.443,
+  "path_bounds_svy21": {
+    "min_x": 24254.708,
+    "min_y": 32743.419,
+    "max_x": 24512.073,
+    "max_y": 33258.252
+  },
+  "road_boundary": {
+    "target_road_name": "CORNWALL GARDENS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 546,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LEEDON ROAD",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 628.0,
+    "offroad_chainage_max_m": 632.0,
+    "trimmed_offroad_points": 3
+  }
+}

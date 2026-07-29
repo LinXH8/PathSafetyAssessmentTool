@@ -1,0 +1,66 @@
+{
+  "path_key": "tanjong_katong_road",
+  "display_name": "Tanjong Katong Road",
+  "source_project": "Tanjong Katong Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Tanjong Katong Road\\geo_data.gpkg",
+  "lidar_bundle": "Marine Parade",
+  "lidar_root": "E:\\LIDAR\\Marine Parade",
+  "generated_at_utc": "2026-06-25T19:45:04.817746+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 9050.706,
+  "profile_point_count": 2325,
+  "valid_elevation_count": 1355,
+  "rejected_outlier_count": 194,
+  "rejected_step_jump_count": 713,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 543,
+  "usable_gradient_completion_pct": 23.35,
+  "elevation_hit_coverage_pct": 58.28,
+  "step_jump_rejection_pct": 30.67,
+  "gradient_min_pct": -12.111,
+  "gradient_max_pct": 13.515,
+  "path_bounds_svy21": {
+    "min_x": 34714.463,
+    "min_y": 31537.499,
+    "max_x": 35105.465,
+    "max_y": 33256.033
+  },
+  "road_boundary": {
+    "target_road_name": "TANJONG KATONG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4527,
+    "offroad_point_count": 2202,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 969
+      },
+      {
+        "road_name": "BUTTERWORTH LANE",
+        "point_count": 179
+      },
+      {
+        "road_name": "THIAM SIEW AVENUE",
+        "point_count": 158
+      },
+      {
+        "road_name": "IPOH LANE",
+        "point_count": 146
+      },
+      {
+        "road_name": "DUNMAN ROAD",
+        "point_count": 137
+      }
+    ],
+    "offroad_chainage_min_m": 296.0,
+    "offroad_chainage_max_m": 9050.706,
+    "trimmed_offroad_points": 2202
+  }
+}

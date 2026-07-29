@@ -1,0 +1,66 @@
+{
+  "path_key": "victoria_street",
+  "display_name": "Victoria Street",
+  "source_project": "Victoria Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Victoria Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-25T16:19:33.752404+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 13012.125,
+  "profile_point_count": 3133,
+  "valid_elevation_count": 2636,
+  "rejected_outlier_count": 273,
+  "rejected_step_jump_count": 1870,
+  "repaired_gradient_point_count": 55,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 617,
+  "usable_gradient_completion_pct": 19.69,
+  "elevation_hit_coverage_pct": 84.14,
+  "step_jump_rejection_pct": 59.69,
+  "gradient_min_pct": -13.32,
+  "gradient_max_pct": 10.842,
+  "path_bounds_svy21": {
+    "min_x": 29987.173,
+    "min_y": 30835.644,
+    "max_x": 31169.796,
+    "max_y": 32092.93
+  },
+  "road_boundary": {
+    "target_road_name": "VICTORIA STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 6508,
+    "offroad_point_count": 3375,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NORTH BRIDGE ROAD",
+        "point_count": 925
+      },
+      {
+        "road_name": "ROCHOR ROAD",
+        "point_count": 316
+      },
+      {
+        "road_name": "MIDDLE ROAD",
+        "point_count": 245
+      },
+      {
+        "road_name": "OPHIR ROAD",
+        "point_count": 240
+      },
+      {
+        "road_name": "VICTORIA LINK",
+        "point_count": 209
+      }
+    ],
+    "offroad_chainage_min_m": 146.0,
+    "offroad_chainage_max_m": 12940.0,
+    "trimmed_offroad_points": 3375
+  }
+}

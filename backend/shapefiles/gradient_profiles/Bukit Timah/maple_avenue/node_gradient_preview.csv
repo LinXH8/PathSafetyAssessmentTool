@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+maple_avenue,1,Maple Avenue_Cam4_20251217_080929_038_A.jpeg,,11.881,5.941,6.0,14.126,1.906,1.0
+maple_avenue,2,Maple Avenue_Cam4_20251217_081001_262_A.jpeg,,24.023,17.952,18.0,15.066,,
+maple_avenue,3,Maple Avenue_Cam4_20251217_081006_377_A.jpeg,,33.395,28.709,28.0,16.039,,
+maple_avenue,4,Maple Avenue_Cam4_20251217_081010_009_A.jpeg,,76.859,55.127,56.0,15.779,4.718,1.0
+maple_avenue,5,Maple Avenue_Cam4_20251217_081135_001_A.jpeg,,87.437,82.148,82.0,16.555,1.291,1.0
+maple_avenue,6,Maple Avenue_Cam4_20251217_081140_509_A.jpeg,,346.039,216.738,216.0,11.747,,
+maple_avenue,7,Maple Avenue_Cam4_20251217_081921_516_A.jpeg,,358.788,352.414,352.0,8.529,,
+maple_avenue,8,Maple Avenue_Cam4_20251217_081926_109_A.jpeg,,369.877,364.333,364.0,8.796,-3.299,1.0
+maple_avenue,9,Maple Avenue_Cam4_20251217_081930_686_A.jpeg,,376.102,372.989,372.0,8.51,-5.216,1.0
+maple_avenue,10,Maple Avenue_Cam4_20251217_081933_203_A.jpeg,,405.784,390.943,390.0,8.776,6.547,1.0
+maple_avenue,11,Maple Avenue_Cam4_20251217_082119_805_A.jpeg,,414.958,410.371,410.0,8.949,-1.04,1.0

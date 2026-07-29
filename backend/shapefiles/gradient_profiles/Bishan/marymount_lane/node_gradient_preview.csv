@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marymount_lane,1,Marymount Lane_Cam4_20260103_094307_807_A.jpeg,,11.55,5.775,,,,
+marymount_lane,2,Marymount Lane_Cam4_20260103_094311_411_A.jpeg,,40.12,25.835,26.0,7.458,8.898,2.0
+marymount_lane,3,Marymount Lane_Cam4_20260103_094322_839_A.jpeg,,53.902,47.011,48.0,7.9,,
+marymount_lane,4,Marymount Lane_Cam4_20260103_094327_662_A.jpeg,,61.025,57.463,58.0,7.838,,
+marymount_lane,5,Marymount Lane_Cam4_20260103_094330_065_A.jpeg,,70.62,65.822,66.0,6.861,,
+marymount_lane,6,Marymount Lane_Cam4_20260103_094333_067_A.jpeg,,80.079,75.35,76.0,6.801,-2.707,1.0
+marymount_lane,7,Marymount Lane_Cam4_20260103_094336_070_A.jpeg,,89.799,84.939,84.0,6.645,0.0,1.0
+marymount_lane,8,Marymount Lane_Cam4_20260103_094339_579_A.jpeg,,100.319,95.059,96.0,7.184,4.462,1.0
+marymount_lane,9,Marymount Lane_Cam4_20260103_094344_385_A.jpeg,,109.823,105.071,106.0,6.935,,
+marymount_lane,10,Marymount Lane_Cam4_20260103_094347_991_A.jpeg,,122.484,116.154,116.0,7.933,,
+marymount_lane,11,Marymount Lane_Cam4_20260103_094352_801_A.jpeg,,148.41,135.447,136.0,9.798,,
+marymount_lane,12,Marymount Lane_Cam4_20260103_094403_033_A.jpeg,,174.579,161.494,162.0,8.751,,
+marymount_lane,13,Marymount Lane_Cam4_20260103_094446_913_A.jpeg,,202.872,188.725,188.0,9.134,,
+marymount_lane,14,Marymount Lane_Cam4_20260103_101743_313_A.jpeg,,213.504,208.188,208.0,8.611,,
+marymount_lane,15,Marymount Lane_Cam4_20260103_101745_716_A.jpeg,,223.395,218.45,218.0,8.291,,
+marymount_lane,16,Marymount Lane_Cam4_20260103_101748_160_A.jpeg,,232.716,228.056,228.0,7.587,,
+marymount_lane,17,Marymount Lane_Cam4_20260103_101750_563_A.jpeg,,241.911,237.314,238.0,7.343,6.729,1.0
+marymount_lane,18,Marymount Lane_Cam4_20260103_101752_968_A.jpeg,,253.321,247.616,248.0,8.003,-1.767,1.0
+marymount_lane,19,Marymount Lane_Cam4_20260103_101756_028_A.jpeg,,261.969,257.645,258.0,7.499,,
+marymount_lane,20,Marymount Lane_Cam4_20260103_101758_325_A.jpeg,,272.919,267.444,268.0,8.428,,
+marymount_lane,21,Marymount Lane_Cam4_20260103_101801_351_A.jpeg,,282.78,277.85,278.0,9.763,,
+marymount_lane,22,Marymount Lane_Cam4_20260103_101803_753_A.jpeg,,382.109,332.444,332.0,6.843,,

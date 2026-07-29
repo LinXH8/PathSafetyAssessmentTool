@@ -1,0 +1,50 @@
+{
+  "path_key": "omar_khayyam_avenue",
+  "display_name": "Omar Khayyam Avenue",
+  "source_project": "Omar Khayyam Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Omar Khayyam Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T19:13:00.692680+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 268.407,
+  "profile_point_count": 127,
+  "valid_elevation_count": 127,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 71,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 33,
+  "usable_gradient_completion_pct": 25.98,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 55.91,
+  "gradient_min_pct": -9.107,
+  "gradient_max_pct": 10.994,
+  "path_bounds_svy21": {
+    "min_x": 27601.505,
+    "min_y": 40283.597,
+    "max_x": 27713.25,
+    "max_y": 40346.087
+  },
+  "road_boundary": {
+    "target_road_name": "OMAR KHAYYAM AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 136,
+    "offroad_point_count": 9,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TAGORE AVENUE",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 54.0,
+    "offroad_chainage_max_m": 226.0,
+    "trimmed_offroad_points": 9
+  }
+}

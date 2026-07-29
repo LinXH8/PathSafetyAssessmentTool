@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sultan_gate,1,Cam4_20251211_072908_298_C.jpeg,,11.936,5.968,,,,
+sultan_gate,2,Cam4_20251211_072915_508_C.jpeg,,40.158,26.047,,,,
+sultan_gate,3,Cam4_20251211_073032_990_C.jpeg,,52.561,46.36,,,,
+sultan_gate,4,Cam4_20251211_073035_994_C.jpeg,,74.638,63.6,64.0,3.142,,
+sultan_gate,5,Cam4_20251211_073055_817_C.jpeg,,86.118,80.378,80.0,3.364,2.78,1.0
+sultan_gate,6,Cam4_20251211_073100_027_C.jpeg,,94.4,90.259,90.0,3.201,,
+sultan_gate,7,Cam4_20251211_073117_448_C.jpeg,,139.98,117.19,118.0,4.569,,
+sultan_gate,8,Cam4_20251211_073228_332_C.jpeg,,154.159,147.069,148.0,4.494,-4.234,1.0
+sultan_gate,9,Cam4_20251211_073301_972_C.jpeg,,176.991,165.575,166.0,4.517,,
+sultan_gate,10,Cam4_20251211_073310_385_C.jpeg,,203.075,190.033,190.0,5.279,,

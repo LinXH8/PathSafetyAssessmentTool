@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sunrise_lane,1,Sunrise Lane_Cam4_20260105_095508_765_C.jpeg,,10.898,5.449,6.0,15.398,-1.719,1.0
+sunrise_lane,2,Sunrise Lane_Cam4_20260105_095511_771_C.jpeg,,22.116,16.507,16.0,15.867,,
+sunrise_lane,3,Sunrise Lane_Cam4_20260105_095514_776_C.jpeg,,31.506,26.811,26.0,16.681,,
+sunrise_lane,4,Sunrise Lane_Cam4_20260105_095517_178_C.jpeg,,44.083,37.794,38.0,15.438,,
+sunrise_lane,5,Sunrise Lane_Cam4_20260105_095520_193_C.jpeg,,51.819,47.951,48.0,15.292,,
+sunrise_lane,6,Sunrise Lane_Cam4_20260105_095521_994_C.jpeg,,62.01,56.914,56.0,14.892,,
+sunrise_lane,7,Sunrise Lane_Cam4_20260105_095524_397_C.jpeg,,71.322,66.666,66.0,15.389,,
+sunrise_lane,8,Sunrise Lane_Cam4_20260105_095526_800_C.jpeg,,81.515,76.418,76.0,16.309,,
+sunrise_lane,9,Sunrise Lane_Cam4_20260105_095529_804_C.jpeg,,91.465,86.49,86.0,15.47,,
+sunrise_lane,10,Sunrise Lane_Cam4_20260105_095532_892_C.jpeg,,100.238,95.852,96.0,15.531,,
+sunrise_lane,11,Sunrise Lane_Cam4_20260105_095535_248_C.jpeg,,112.198,106.218,106.0,15.099,,
+sunrise_lane,12,Sunrise Lane_Cam4_20260105_095538_254_C.jpeg,,124.683,118.441,118.0,13.804,,
+sunrise_lane,13,Sunrise Lane_Cam4_20260105_095541_257_C.jpeg,,131.295,127.989,128.0,13.201,,
+sunrise_lane,14,Sunrise Lane_Cam4_20260105_095543_058_C.jpeg,,138.061,134.678,134.0,13.043,,
+sunrise_lane,15,Sunrise Lane_Cam4_20260105_095549_071_C.jpeg,,147.804,142.932,142.0,12.776,,
+sunrise_lane,16,Sunrise Lane_Cam4_20260105_095551_474_C.jpeg,,155.705,151.754,152.0,13.207,,
+sunrise_lane,17,Sunrise Lane_Cam4_20260105_095553_276_C.jpeg,,182.852,169.279,170.0,13.871,-5.934,1.0
+sunrise_lane,18,Sunrise Lane_Cam4_20260105_095559_888_C.jpeg,,192.21,187.531,188.0,14.993,,
+sunrise_lane,19,Sunrise Lane_Cam4_20260105_095602_291_C.jpeg,,204.196,198.203,198.0,16.302,,

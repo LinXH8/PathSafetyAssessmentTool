@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sarkies_road,1,Cam4_20251204_083618_446_A.jpeg,,12.856,6.428,6.0,5.361,,
+sarkies_road,2,Cam4_20251204_083735_424_A.jpeg,,73.693,43.274,44.0,4.209,,
+sarkies_road,3,Cam4_20251204_083756_524_A.jpeg,,105.509,89.601,90.0,4.898,,
+sarkies_road,4,Cam4_20251204_083806_569_A.jpeg,,111.131,108.32,108.0,2.987,-2.917,1.0
+sarkies_road,5,Cam4_20251204_083808_072_A.jpeg,,121.025,116.078,116.0,2.895,,
+sarkies_road,6,Cam4_20251204_083811_080_A.jpeg,,130.95,125.988,126.0,4.143,,
+sarkies_road,7,Cam4_20251204_083814_083_A.jpeg,,167.228,149.089,150.0,2.67,-0.312,1.0
+sarkies_road,8,Cam4_20251204_083902_515_A.jpeg,,198.466,182.847,182.0,2.537,,
+sarkies_road,9,Cam4_20251204_083915_602_A.jpeg,,226.29,212.378,212.0,5.594,,
+sarkies_road,10,Cam4_20251204_083926_206_A.jpeg,,272.36,249.325,250.0,2.676,,
+sarkies_road,11,Cam4_20251204_083944_873_A.jpeg,,289.317,280.838,280.0,3.217,,

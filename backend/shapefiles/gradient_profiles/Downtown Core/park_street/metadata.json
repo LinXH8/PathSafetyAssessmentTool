@@ -1,0 +1,66 @@
+{
+  "path_key": "park_street",
+  "display_name": "Park Street",
+  "source_project": "Park Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Park Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-23T09:15:31.973300+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1809.254,
+  "profile_point_count": 635,
+  "valid_elevation_count": 635,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 215,
+  "repaired_gradient_point_count": 24,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 313,
+  "usable_gradient_completion_pct": 49.29,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 33.86,
+  "gradient_min_pct": -11.279,
+  "gradient_max_pct": 14.219,
+  "path_bounds_svy21": {
+    "min_x": 29822.444,
+    "min_y": 28648.46,
+    "max_x": 30319.779,
+    "max_y": 28970.174
+  },
+  "road_boundary": {
+    "target_road_name": "PARK STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 906,
+    "offroad_point_count": 271,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARINA VIEW",
+        "point_count": 98
+      },
+      {
+        "road_name": "STRAITS VIEW",
+        "point_count": 58
+      },
+      {
+        "road_name": "SHENTON LANE",
+        "point_count": 54
+      },
+      {
+        "road_name": "UNION LANE",
+        "point_count": 31
+      },
+      {
+        "road_name": "MARINA WAY",
+        "point_count": 30
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1810.0,
+    "trimmed_offroad_points": 271
+  }
+}

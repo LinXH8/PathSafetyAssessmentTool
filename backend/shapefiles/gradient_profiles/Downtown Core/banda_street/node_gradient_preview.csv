@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+banda_street,1,Banda Street_Cam4_20251230_073407_686_C.jpeg,,11.132,5.566,,,,
+banda_street,2,Banda Street_Cam4_20251230_073422_705_C.jpeg,,21.233,16.182,,,,
+banda_street,3,Banda Street_Cam4_20251230_073431_714_C.jpeg,,44.014,32.623,,,,
+banda_street,4,Banda Street_Cam4_20251230_073444_931_C.jpeg,,55.978,49.996,50.0,4.796,,
+banda_street,5,Banda Street_Cam4_20251230_073507_149_C.jpeg,,63.036,59.507,60.0,4.812,3.534,1.0
+banda_street,6,Banda Street_Cam4_20251230_073528_171_C.jpeg,,90.9,76.968,76.0,4.963,4.493,1.0
+banda_street,7,Banda Street_Cam4_20251230_073539_580_C.jpeg,,99.577,95.238,96.0,4.635,,
+banda_street,8,Banda Street_Cam4_20251230_073542_583_C.jpeg,,109.791,104.684,104.0,5.033,,
+banda_street,9,Banda Street_Cam4_20251230_073546_187_C.jpeg,,140.6,125.195,126.0,3.707,-3.88,1.0
+banda_street,10,Banda Street_Cam4_20251230_073558_199_C.jpeg,,188.22,164.41,164.0,3.24,2.5,1.0
+banda_street,11,Banda Street_Cam4_20251230_073623_434_C.jpeg,,248.527,218.374,218.0,6.169,,
+banda_street,12,Banda Street_Cam4_20251230_074316_815_C.jpeg,,282.49,265.509,,,,
+banda_street,13,Banda Street_Cam4_20251230_074346_869_C.jpeg,,294.093,288.292,288.0,6.613,,
+banda_street,14,Banda Street_Cam4_20251230_074353_474_C.jpeg,,302.966,298.529,,,,
+banda_street,15,Banda Street_Cam4_20251230_074403_684_C.jpeg,,312.607,307.786,,,,
+banda_street,16,Banda Street_Cam4_20251230_074407_889_C.jpeg,,319.785,316.196,,,,

@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+seletar_court,1,Seletar Court_Cam4_20260106_082339_778_C.jpeg,,11.272,5.636,6.0,20.399,1.642,1.0
+seletar_court,2,Seletar Court_Cam4_20260106_082345_183_C.jpeg,,22.282,16.777,16.0,20.432,-0.208,1.0
+seletar_court,3,Seletar Court_Cam4_20260106_082350_589_C.jpeg,,33.362,27.822,28.0,20.415,0.833,1.0
+seletar_court,4,Seletar Court_Cam4_20260106_082356_003_C.jpeg,,44.469,38.916,38.0,20.732,,
+seletar_court,5,Seletar Court_Cam4_20260106_082402_611_C.jpeg,,50.345,47.407,,,,
+seletar_court,6,Seletar Court_Cam4_20260106_082406_215_C.jpeg,,62.289,56.317,,,,
+seletar_court,7,Seletar Court_Cam4_20260106_082631_038_C.jpeg,,70.956,66.622,66.0,20.54,,
+seletar_court,8,Seletar Court_Cam4_20260106_082635_242_C.jpeg,,78.228,74.592,74.0,20.19,0.0,1.0
+seletar_court,9,Seletar Court_Cam4_20260106_082638_246_C.jpeg,,87.233,82.73,82.0,20.161,-0.833,1.0
+seletar_court,10,Seletar Court_Cam4_20260106_082641_851_C.jpeg,,140.269,113.751,114.0,19.819,,
+seletar_court,11,Seletar Court_Cam4_20260106_082702_271_C.jpeg,,150.466,145.367,146.0,19.167,,
+seletar_court,12,Seletar Court_Cam4_20260106_082706_476_C.jpeg,,160.269,155.367,156.0,18.643,,
+seletar_court,13,Seletar Court_Cam4_20260106_082743_128_C.jpeg,,166.794,163.532,164.0,19.563,,
+seletar_court,14,Seletar Court_Cam4_20260106_082746_132_C.jpeg,,372.736,269.765,270.0,22.423,,
+seletar_court,15,Seletar Court_Cam4_20260106_095904_748_C.jpeg,,384.552,378.644,378.0,19.882,,
+seletar_court,16,Seletar Court_Cam4_20260106_095908_953_C.jpeg,,408.564,396.558,396.0,18.553,-0.625,1.0
+seletar_court,17,Seletar Court_Cam4_20260106_100044_990_C.jpeg,,420.032,414.298,414.0,18.753,,
+seletar_court,18,Seletar Court_Cam4_20260106_100048_594_C.jpeg,,431.938,425.985,426.0,19.048,5.313,1.0
+seletar_court,19,Seletar Court_Cam4_20260106_100052_800_C.jpeg,,437.758,434.848,434.0,19.321,1.719,1.0
+seletar_court,20,Seletar Court_Cam4_20260106_100055_208_C.jpeg,,445.184,441.471,442.0,19.353,-0.313,1.0
+seletar_court,21,Seletar Court_Cam4_20260106_100101_815_C.jpeg,,452.562,448.873,448.0,19.328,-1.406,1.0
+seletar_court,22,Seletar Court_Cam4_20260106_100104_221_C.jpeg,,462.027,457.294,458.0,19.114,,
+seletar_court,23,Seletar Court_Cam4_20260106_100107_223_C.jpeg,,567.958,514.992,514.0,21.112,,
+seletar_court,24,Seletar Court_Cam4_20260106_100659_348_C.jpeg,,580.585,574.271,574.0,20.281,,
+seletar_court,25,Seletar Court_Cam4_20260106_100702_952_C.jpeg,,635.239,607.912,608.0,20.819,,
+seletar_court,26,Seletar Court_Cam4_20260106_100720_248_C.jpeg,,645.438,640.338,640.0,19.999,-3.945,1.0

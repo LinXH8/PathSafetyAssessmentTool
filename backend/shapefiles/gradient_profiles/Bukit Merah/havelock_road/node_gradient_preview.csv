@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+havelock_road,1,Havelock Road_Cam4_20251227_083849_656_C.jpeg,,10.768,5.384,,,,
+havelock_road,2,Havelock Road_Cam4_20251227_083853_861_C.jpeg,,20.175,15.471,,,,
+havelock_road,3,Havelock Road_Cam4_20251227_083856_871_C.jpeg,,30.193,25.184,,,,
+havelock_road,4,Havelock Road_Cam4_20251227_083859_873_C.jpeg,,39.728,34.961,,,,
+havelock_road,5,Havelock Road_Cam4_20251227_083902_875_C.jpeg,,50.709,45.219,,,,
+havelock_road,6,Havelock Road_Cam4_20251227_083906_481_C.jpeg,,60.282,55.496,,,,
+havelock_road,7,Havelock Road_Cam4_20251227_083909_484_C.jpeg,,70.483,65.383,,,,
+havelock_road,8,Havelock Road_Cam4_20251227_083912_488_C.jpeg,,80.938,75.711,,,,
+havelock_road,9,Havelock Road_Cam4_20251227_083916_090_C.jpeg,,89.609,85.274,,,,
+havelock_road,10,Havelock Road_Cam4_20251227_083919_095_C.jpeg,,99.538,94.574,,,,
+havelock_road,11,Havelock Road_Cam4_20251227_083922_698_C.jpeg,,169.307,134.423,,,,
+havelock_road,12,Havelock Road_Cam4_20251227_084029_388_C.jpeg,,180.767,175.037,,,,
+havelock_road,13,Havelock Road_Cam4_20251227_084035_396_C.jpeg,,189.511,185.139,,,,
+havelock_road,14,Havelock Road_Cam4_20251227_084039_601_C.jpeg,,202.631,196.071,,,,
+havelock_road,15,Havelock Road_Cam4_20251227_084046_210_C.jpeg,,262.536,232.584,,,,
+havelock_road,16,Havelock Road_Cam4_20260107_091832_279_C.jpeg,,578.167,420.352,420.0,8.806,4.653,1.0
+havelock_road,17,Havelock Road_Cam4_20260107_103349_331_C.jpeg,,589.023,583.595,584.0,3.184,-0.781,1.0
+havelock_road,18,Havelock Road_Cam4_20260107_103354_140_C.jpeg,,600.493,594.758,594.0,3.079,-1.042,1.0
+havelock_road,19,Havelock Road_Cam4_20260107_103421_978_C.jpeg,,603.768,602.13,602.0,2.996,-0.521,1.0
+havelock_road,20,Havelock Road_Cam4_20260107_103502_642_C.jpeg,,614.909,609.338,610.0,3.272,,
+havelock_road,21,Havelock Road_Cam4_20260107_103509_317_C.jpeg,,877.753,746.331,746.0,5.692,2.761,1.0
+havelock_road,22,Havelock Road_Cam4_20260107_103752_932_C.jpeg,,1100.581,989.167,990.0,,,
+havelock_road,23,Havelock Road_Cam4_20260109_081755_071_B.jpeg,,1110.923,1105.752,1106.0,3.829,,
+havelock_road,24,Havelock Road_Cam4_20260109_081758_075_B.jpeg,,1121.144,1116.033,1116.0,3.631,,
+havelock_road,25,Havelock Road_Cam4_20260109_081801_078_B.jpeg,,1133.18,1127.162,1128.0,4.363,,

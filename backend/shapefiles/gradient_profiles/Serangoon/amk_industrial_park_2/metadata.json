@@ -1,0 +1,30 @@
+{
+  "path_key": "amk_industrial_park_2",
+  "display_name": "AMK Industrial Park 2",
+  "source_project": "AMK Industrial Park 2",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\AMK Industrial Park 2\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-04-28T07:44:59.787867+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 6368.557,
+  "profile_point_count": 3186,
+  "valid_elevation_count": 3041,
+  "rejected_outlier_count": 352,
+  "rejected_step_jump_count": 2016,
+  "repaired_gradient_point_count": 28,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 700,
+  "gradient_min_pct": -14.922,
+  "gradient_max_pct": 14.143,
+  "path_bounds_svy21": {
+    "min_x": 30879.596,
+    "min_y": 39229.253,
+    "max_x": 31784.088,
+    "max_y": 40030.837
+  }
+}

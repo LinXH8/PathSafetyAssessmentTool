@@ -1,0 +1,50 @@
+{
+  "path_key": "duxton_road",
+  "display_name": "Duxton Road",
+  "source_project": "Duxton Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Duxton Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-07T08:49:06.583580+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 455.104,
+  "profile_point_count": 221,
+  "valid_elevation_count": 221,
+  "rejected_outlier_count": 33,
+  "rejected_step_jump_count": 133,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 52,
+  "usable_gradient_completion_pct": 23.53,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 60.18,
+  "gradient_min_pct": -7.813,
+  "gradient_max_pct": 8.281,
+  "path_bounds_svy21": {
+    "min_x": 29074.942,
+    "min_y": 28906.492,
+    "max_x": 29119.159,
+    "max_y": 29151.304
+  },
+  "road_boundary": {
+    "target_road_name": "DUXTON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 229,
+    "offroad_point_count": 8,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DUXTON HILL",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 56.0,
+    "offroad_chainage_max_m": 70.0,
+    "trimmed_offroad_points": 8
+  }
+}

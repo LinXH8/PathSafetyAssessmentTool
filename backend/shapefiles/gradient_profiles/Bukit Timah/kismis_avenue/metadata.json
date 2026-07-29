@@ -1,0 +1,62 @@
+{
+  "path_key": "kismis_avenue",
+  "display_name": "Kismis Avenue",
+  "source_project": "Kismis Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Kismis Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T00:31:02.168875+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1294.145,
+  "profile_point_count": 548,
+  "valid_elevation_count": 523,
+  "rejected_outlier_count": 26,
+  "rejected_step_jump_count": 294,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 176,
+  "usable_gradient_completion_pct": 32.12,
+  "elevation_hit_coverage_pct": 95.44,
+  "step_jump_rejection_pct": 53.65,
+  "gradient_min_pct": -12.012,
+  "gradient_max_pct": 11.042,
+  "path_bounds_svy21": {
+    "min_x": 20974.235,
+    "min_y": 35236.585,
+    "max_x": 21458.691,
+    "max_y": 35503.12
+  },
+  "road_boundary": {
+    "target_road_name": "KISMIS AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 649,
+    "offroad_point_count": 101,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHENG SOON GARDEN",
+        "point_count": 52
+      },
+      {
+        "road_name": "CHENG SOON LANE",
+        "point_count": 40
+      },
+      {
+        "road_name": "CHENG SOON CRESCENT",
+        "point_count": 7
+      },
+      {
+        "road_name": "KISMIS ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 176.0,
+    "offroad_chainage_max_m": 1222.0,
+    "trimmed_offroad_points": 101
+  }
+}

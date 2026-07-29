@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tong_lee_road,1,Tong Lee Road_Cam4_20260106_095427_275_A.jpeg,,11.446,5.723,6.0,20.588,,
+tong_lee_road,2,Tong Lee Road_Cam4_20260106_095433_885_A.jpeg,,19.182,15.314,16.0,21.239,,
+tong_lee_road,3,Tong Lee Road_Cam4_20260106_095437_490_A.jpeg,,121.15,70.166,,,,
+tong_lee_road,4,Tong Lee Road_Cam4_20260106_095609_435_A.jpeg,,167.293,144.221,144.0,13.31,,
+tong_lee_road,5,Tong Lee Road_Cam4_20260106_095903_266_A.jpeg,,198.239,182.766,182.0,12.444,,

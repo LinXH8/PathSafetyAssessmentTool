@@ -4,6 +4,14 @@ shapefiles/
 in/
 model/
 
+# Exception: promoted road gradient profiles. These are the deliverable of the
+# gradient workflow (see .clinerules/gradient-runner.md) and are shared with the
+# team. Git will not descend into an excluded directory, so the parent has to be
+# re-included first, then re-excluded except for gradient_profiles/.
+!backend/shapefiles/
+backend/shapefiles/*
+!backend/shapefiles/gradient_profiles/
+
 # Local basemap tile cache written by backend/app/api/tiles.py (see paths.py:
 # user_data_root() is the repo root in a source checkout).
 tiles/
@@ -42,7 +50,6 @@ obstacles/
 backend/scripts/
 tmp/
 temp/
-Gradient Calculation/
 profiles/
 .Rhistory
 run_attribute_inference.py
@@ -97,6 +104,8 @@ overlaps_*.txt
 !UI_V2_REDESIGN_GUIDE.md
 !gradient-runner.md
 !prompt.md
+# The LAZ->gradient operator guide ships with the gradient scripts it documents
+!Gradient Calculation/*.md
 *.lnk
 CycleRAP_User_Guide.pdf
 # docs/ is the canonical source for all in-app and developer docs (see REFACTOR_PLAN S0.6)

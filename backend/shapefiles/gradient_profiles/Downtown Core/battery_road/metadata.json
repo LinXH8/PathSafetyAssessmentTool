@@ -1,0 +1,58 @@
+{
+  "path_key": "battery_road",
+  "display_name": "Battery Road",
+  "source_project": "Battery Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Battery Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-06T22:32:36.816500+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 681.851,
+  "profile_point_count": 196,
+  "valid_elevation_count": 196,
+  "rejected_outlier_count": 34,
+  "rejected_step_jump_count": 147,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 20,
+  "usable_gradient_completion_pct": 10.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 75.0,
+  "gradient_min_pct": -12.556,
+  "gradient_max_pct": 3.982,
+  "path_bounds_svy21": {
+    "min_x": 30020.621,
+    "min_y": 29718.387,
+    "max_x": 30184.075,
+    "max_y": 29805.001
+  },
+  "road_boundary": {
+    "target_road_name": "BATTERY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 342,
+    "offroad_point_count": 146,
+    "offroad_top_road_names": [
+      {
+        "road_name": "FLINT STREET",
+        "point_count": 69
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 52
+      },
+      {
+        "road_name": "BONHAM STREET",
+        "point_count": 25
+      }
+    ],
+    "offroad_chainage_min_m": 100.0,
+    "offroad_chainage_max_m": 612.0,
+    "trimmed_offroad_points": 146
+  }
+}

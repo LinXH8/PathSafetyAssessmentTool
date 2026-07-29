@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_bingka,1,Jalan Bingka_Cam4_20251216_083443_868_C.jpeg,,13.708,6.854,6.0,17.654,,
+jalan_bingka,2,Jalan Bingka_Cam4_20251216_083454_678_C.jpeg,,20.622,17.165,18.0,17.463,-3.627,1.0
+jalan_bingka,3,Jalan Bingka_Cam4_20251216_083458_281_C.jpeg,,32.44,26.531,26.0,17.188,-1.406,1.0
+jalan_bingka,4,Jalan Bingka_Cam4_20251216_083501_285_C.jpeg,,40.496,36.468,36.0,17.088,2.891,1.0
+jalan_bingka,5,Jalan Bingka_Cam4_20251216_083503_089_C.jpeg,,50.388,45.442,46.0,17.439,,
+jalan_bingka,6,Jalan Bingka_Cam4_20251216_083505_492_C.jpeg,,60.525,55.456,56.0,18.44,,
+jalan_bingka,7,Jalan Bingka_Cam4_20251216_083508_495_C.jpeg,,91.105,75.815,76.0,18.988,,
+jalan_bingka,8,Jalan Bingka_Cam4_20251216_083520_516_C.jpeg,,163.061,127.083,128.0,17.725,,
+jalan_bingka,9,Jalan Bingka_Cam4_20251216_083552_978_C.jpeg,,236.014,199.537,,,,
+jalan_bingka,10,Jalan Bingka_Cam4_20251216_083721_924_C.jpeg,,277.081,256.547,256.0,19.257,,

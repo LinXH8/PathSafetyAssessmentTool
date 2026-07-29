@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+guan_chuan_street,1,Guan Chuan Street_Cam4_20251227_080158_648_B.jpeg,,10.281,5.14,6.0,13.091,,
+guan_chuan_street,2,Guan Chuan Street_Cam4_20251227_080204_054_B.jpeg,,22.018,16.149,16.0,12.516,,
+guan_chuan_street,3,Guan Chuan Street_Cam4_20251227_080211_263_B.jpeg,,31.173,26.595,26.0,11.608,-3.242,1.0
+guan_chuan_street,4,Guan Chuan Street_Cam4_20251227_080216_069_B.jpeg,,41.147,36.16,36.0,11.834,9.594,2.0
+guan_chuan_street,5,Guan Chuan Street_Cam4_20251227_080219_672_B.jpeg,,51.371,46.259,46.0,12.034,,
+guan_chuan_street,6,Guan Chuan Street_Cam4_20251227_080223_275_B.jpeg,,78.872,65.121,66.0,10.614,,
+guan_chuan_street,7,Guan Chuan Street_Cam4_20251227_080232_886_B.jpeg,,160.814,119.843,120.0,9.858,,
+guan_chuan_street,8,Guan Chuan Street_Cam4_20251227_081400_174_B.jpeg,,170.805,165.809,166.0,9.591,,
+guan_chuan_street,9,Guan Chuan Street_Cam4_20251227_081403_178_B.jpeg,,180.748,175.776,176.0,8.919,-2.917,1.0
+guan_chuan_street,10,Guan Chuan Street_Cam4_20251227_081406_185_B.jpeg,,190.85,185.799,186.0,8.797,1.771,1.0
+guan_chuan_street,11,Guan Chuan Street_Cam4_20251227_081409_188_B.jpeg,,203.582,197.216,198.0,9.361,8.875,2.0

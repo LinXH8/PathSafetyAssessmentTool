@@ -1,0 +1,66 @@
+{
+  "path_key": "sengkang_east_avenue",
+  "display_name": "Sengkang East Avenue",
+  "source_project": "Sengkang East Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sengkang East Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-05-31T21:17:37.272259+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8900.915,
+  "profile_point_count": 3767,
+  "valid_elevation_count": 1991,
+  "rejected_outlier_count": 466,
+  "rejected_step_jump_count": 1626,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 513,
+  "usable_gradient_completion_pct": 13.62,
+  "elevation_hit_coverage_pct": 52.85,
+  "step_jump_rejection_pct": 43.16,
+  "gradient_min_pct": -14.644,
+  "gradient_max_pct": 10.135,
+  "path_bounds_svy21": {
+    "min_x": 33456.054,
+    "min_y": 40368.264,
+    "max_x": 35783.751,
+    "max_y": 41487.873
+  },
+  "road_boundary": {
+    "target_road_name": "SENGKANG EAST AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4452,
+    "offroad_point_count": 685,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SENGKANG CENTRAL",
+        "point_count": 239
+      },
+      {
+        "road_name": "COMPASSVALE LINK",
+        "point_count": 176
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 104
+      },
+      {
+        "road_name": "SENGKANG EAST ROAD",
+        "point_count": 49
+      },
+      {
+        "road_name": "ANCHORVALE LINK",
+        "point_count": 23
+      }
+    ],
+    "offroad_chainage_min_m": 12.0,
+    "offroad_chainage_max_m": 8132.0,
+    "trimmed_offroad_points": 685
+  }
+}

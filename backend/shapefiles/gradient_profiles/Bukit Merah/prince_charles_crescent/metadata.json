@@ -1,0 +1,54 @@
+{
+  "path_key": "prince_charles_crescent",
+  "display_name": "Prince Charles Crescent",
+  "source_project": "Prince Charles Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Prince Charles Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:54:18.152637+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2034.196,
+  "profile_point_count": 863,
+  "valid_elevation_count": 808,
+  "rejected_outlier_count": 56,
+  "rejected_step_jump_count": 379,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 381,
+  "usable_gradient_completion_pct": 44.15,
+  "elevation_hit_coverage_pct": 93.63,
+  "step_jump_rejection_pct": 43.92,
+  "gradient_min_pct": -9.375,
+  "gradient_max_pct": 9.844,
+  "path_bounds_svy21": {
+    "min_x": 26382.044,
+    "min_y": 30367.225,
+    "max_x": 26969.052,
+    "max_y": 30704.072
+  },
+  "road_boundary": {
+    "target_road_name": "PRINCE CHARLES CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1019,
+    "offroad_point_count": 156,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ALEXANDRA ROAD",
+        "point_count": 131
+      },
+      {
+        "road_name": "JERVOIS LANE",
+        "point_count": 25
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2034.196,
+    "trimmed_offroad_points": 156
+  }
+}

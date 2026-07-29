@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+campbell_lane,1,Campbell Lane_Cam4_20251208_104715_009_A.jpeg,,13.786,6.893,,,,
+campbell_lane,2,Campbell Lane_Cam4_20251208_104721_691_A.jpeg,,21.217,17.501,,,,
+campbell_lane,3,Campbell Lane_Cam4_20251208_104727_219_A.jpeg,,28.56,24.888,26.0,2.692,,
+campbell_lane,4,Campbell Lane_Cam4_20251208_104746_906_A.jpeg,,57.999,43.279,44.0,2.211,0.781,1.0
+campbell_lane,5,Campbell Lane_Cam4_20251208_105240_614_A.jpeg,,63.547,60.773,60.0,2.117,,
+campbell_lane,6,Campbell Lane_Cam4_20251208_105242_620_A.jpeg,,73.998,68.772,68.0,2.686,,
+campbell_lane,7,Campbell Lane_Cam4_20251208_105246_167_A.jpeg,,101.714,87.856,88.0,4.636,,
+campbell_lane,8,Campbell Lane_Cam4_20251208_105259_441_A.jpeg,,266.77,184.242,186.0,3.451,,
+campbell_lane,9,Campbell Lane_Cam4_20251212_085201_421_A.jpeg,,275.793,271.281,272.0,3.252,,
+campbell_lane,10,Campbell Lane_Cam4_20251212_085206_742_A.jpeg,,282.553,279.173,280.0,4.258,,
+campbell_lane,11,Campbell Lane_Cam4_20251212_085229_688_A.jpeg,,293.117,287.835,288.0,4.955,,
+campbell_lane,12,Campbell Lane_Cam4_20251212_085235_271_A.jpeg,,305.45,299.283,300.0,5.548,,
+campbell_lane,13,Campbell Lane_Cam4_20251212_085244_115_A.jpeg,,330.264,317.857,318.0,10.761,,

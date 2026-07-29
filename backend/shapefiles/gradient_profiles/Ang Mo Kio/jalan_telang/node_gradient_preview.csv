@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_telang,1,Jalan Telang_Cam4_20251231_081746_028_A.jpeg,,10.518,5.259,6.0,32.518,0.565,1.0
+jalan_telang,2,Jalan Telang_Cam4_20251231_081750_831_A.jpeg,,23.215,16.867,16.0,32.029,,
+jalan_telang,3,Jalan Telang_Cam4_20251231_081755_635_A.jpeg,,34.374,28.795,28.0,32.103,,
+jalan_telang,4,Jalan Telang_Cam4_20251231_081759_268_A.jpeg,,44.058,39.216,40.0,30.451,,
+jalan_telang,5,Jalan Telang_Cam4_20251231_081802_279_A.jpeg,,51.86,47.959,48.0,30.143,-2.016,1.0
+jalan_telang,6,Jalan Telang_Cam4_20251231_081804_684_A.jpeg,,78.165,65.012,66.0,29.861,,
+jalan_telang,7,Jalan Telang_Cam4_20251231_081812_501_A.jpeg,,89.69,83.928,84.0,28.713,-3.75,1.0
+jalan_telang,8,Jalan Telang_Cam4_20251231_081815_511_A.jpeg,,98.607,94.149,94.0,28.413,,
+jalan_telang,9,Jalan Telang_Cam4_20251231_081817_914_A.jpeg,,109.006,103.806,104.0,29.577,,
+jalan_telang,10,Jalan Telang_Cam4_20251231_081820_917_A.jpeg,,121.385,115.195,116.0,31.803,,
+jalan_telang,11,Jalan Telang_Cam4_20251231_081824_521_A.jpeg,,244.534,182.96,182.0,29.715,,
+jalan_telang,12,Jalan Telang_Cam4_20251231_081956_213_A.jpeg,,286.316,265.425,264.0,38.864,,
+jalan_telang,13,Jalan Telang_Cam4_20251231_082023_850_A.jpeg,,366.173,326.244,326.0,39.763,,
+jalan_telang,14,Jalan Telang_Cam4_20260105_081740_061_A.jpeg,,375.233,370.703,,,,
+jalan_telang,15,Jalan Telang_Cam4_20260105_081742_464_A.jpeg,,386.152,380.693,,,,
+jalan_telang,16,Jalan Telang_Cam4_20260105_081745_466_A.jpeg,,395.027,390.589,,,,
+jalan_telang,17,Jalan Telang_Cam4_20260105_081747_868_A.jpeg,,453.088,424.058,,,,
+jalan_telang,18,Jalan Telang_Cam4_20260105_081804_082_A.jpeg,,463.517,458.303,,,,

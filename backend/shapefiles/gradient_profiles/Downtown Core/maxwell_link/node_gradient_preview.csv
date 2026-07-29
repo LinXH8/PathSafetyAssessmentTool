@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+maxwell_link,1,Cam4_20251230_074116_937_B.jpeg,,10.675,5.337,6.0,4.075,,
+maxwell_link,2,Cam4_20251230_074123_546_B.jpeg,,46.894,28.785,28.0,4.259,,
+maxwell_link,3,Cam4_20251230_074136_760_B.jpeg,,61.519,54.207,54.0,5.832,,
+maxwell_link,4,Cam4_20251230_074142_166_B.jpeg,,98.324,79.921,80.0,,,
+maxwell_link,5,Cam4_20251230_074422_586_B.jpeg,,108.232,103.278,104.0,5.596,,

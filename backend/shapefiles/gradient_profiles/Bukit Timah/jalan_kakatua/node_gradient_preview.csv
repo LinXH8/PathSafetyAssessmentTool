@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kakatua,1,Jalan Kakatua_Cam4_20251122_093923_376_A.jpeg,,13.333,6.667,6.0,38.366,,
+jalan_kakatua,2,Jalan Kakatua_Cam4_20251122_093927_581_A.jpeg,,20.457,16.895,16.0,38.799,2.083,1.0
+jalan_kakatua,3,Jalan Kakatua_Cam4_20251122_093929_983_A.jpeg,,31.472,25.964,26.0,39.359,,
+jalan_kakatua,4,Jalan Kakatua_Cam4_20251122_093934_788_A.jpeg,,55.585,43.528,44.0,40.049,0.532,1.0
+jalan_kakatua,5,Jalan Kakatua_Cam4_20251122_093943_077_A.jpeg,,65.304,60.445,60.0,41.239,,
+jalan_kakatua,6,Jalan Kakatua_Cam4_20251122_093950_890_A.jpeg,,76.951,71.128,72.0,41.599,0.0,1.0
+jalan_kakatua,7,Jalan Kakatua_Cam4_20251122_093956_901_A.jpeg,,84.777,80.864,80.0,41.335,-5.458,1.0
+jalan_kakatua,8,Jalan Kakatua_Cam4_20251122_094004_112_A.jpeg,,109.688,97.233,98.0,41.617,9.375,2.0
+jalan_kakatua,9,Jalan Kakatua_Cam4_20251122_094020_932_A.jpeg,,118.202,113.945,114.0,43.314,,
+jalan_kakatua,10,Jalan Kakatua_Cam4_20251122_094029_341_A.jpeg,,166.441,142.322,142.0,45.377,,
+jalan_kakatua,11,Jalan Kakatua_Cam4_20251122_094114_401_A.jpeg,,228.643,197.542,198.0,45.558,3.802,1.0
+jalan_kakatua,12,Jalan Kakatua_Cam4_20251122_094227_586_A.jpeg,,253.956,241.3,242.0,46.238,2.5,1.0
+jalan_kakatua,13,Jalan Kakatua_Cam4_20251122_094239_600_A.jpeg,,301.032,277.494,278.0,47.196,1.146,1.0
+jalan_kakatua,14,Jalan Kakatua_Cam4_20251122_094304_707_A.jpeg,,400.451,350.742,350.0,46.338,-2.5,1.0
+jalan_kakatua,15,Jalan Kakatua_Cam4_20251122_094525_782_A.jpeg,,502.777,451.614,452.0,45.36,0.0,1.0

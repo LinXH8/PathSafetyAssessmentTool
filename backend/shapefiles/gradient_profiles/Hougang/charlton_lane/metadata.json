@@ -1,0 +1,50 @@
+{
+  "path_key": "charlton_lane",
+  "display_name": "Charlton Lane",
+  "source_project": "Charlton Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Charlton Lane\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T19:22:45.286378+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 510.486,
+  "profile_point_count": 243,
+  "valid_elevation_count": 54,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 79,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 59,
+  "usable_gradient_completion_pct": 24.28,
+  "elevation_hit_coverage_pct": 22.22,
+  "step_jump_rejection_pct": 32.51,
+  "gradient_min_pct": -1.841,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 33346.819,
+    "min_y": 37500.194,
+    "max_x": 33519.277,
+    "max_y": 37633.947
+  },
+  "road_boundary": {
+    "target_road_name": "CHARLTON LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 257,
+    "offroad_point_count": 14,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHARLTON ROAD",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 246.0,
+    "offroad_chainage_max_m": 272.0,
+    "trimmed_offroad_points": 14
+  }
+}

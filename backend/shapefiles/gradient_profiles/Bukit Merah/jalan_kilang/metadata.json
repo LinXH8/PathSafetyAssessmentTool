@@ -1,0 +1,58 @@
+{
+  "path_key": "jalan_kilang",
+  "display_name": "Jalan Kilang",
+  "source_project": "Jalan Kilang",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Kilang\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T14:04:28.166642+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 711.879,
+  "profile_point_count": 270,
+  "valid_elevation_count": 270,
+  "rejected_outlier_count": 27,
+  "rejected_step_jump_count": 210,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 9.26,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.78,
+  "gradient_min_pct": -6.848,
+  "gradient_max_pct": 7.226,
+  "path_bounds_svy21": {
+    "min_x": 25223.521,
+    "min_y": 29723.437,
+    "max_x": 25450.203,
+    "max_y": 29808.396
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN KILANG",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 357,
+    "offroad_point_count": 87,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN KILANG BARAT",
+        "point_count": 42
+      },
+      {
+        "road_name": "JALAN KILANG TIMOR",
+        "point_count": 31
+      },
+      {
+        "road_name": "JALAN BUKIT MERAH",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 712.0,
+    "trimmed_offroad_points": 87
+  }
+}

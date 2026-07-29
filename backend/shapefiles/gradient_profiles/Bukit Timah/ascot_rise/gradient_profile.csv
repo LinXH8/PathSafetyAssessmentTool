@@ -1,0 +1,13 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+ascot_rise,Ascot Rise,4.0,23187.38,35123.264,9.934,,11.442,,,ASCOT RISE,10.113
+ascot_rise,Ascot Rise,6.0,23185.54,35124.049,9.598,11.442,11.442,,,ASCOT RISE,8.275
+ascot_rise,Ascot Rise,8.0,23183.7,35124.833,9.655,11.442,11.442,,,ASCOT RISE,6.438
+ascot_rise,Ascot Rise,10.0,23181.86,35125.618,9.605,11.442,11.442,,,ASCOT RISE,4.601
+ascot_rise,Ascot Rise,12.0,23180.021,35126.402,10.267,11.442,11.442,,,ASCOT RISE,2.763
+ascot_rise,Ascot Rise,14.0,23178.181,35127.187,12.336,11.741,11.741,,,ASCOT RISE,0.926
+ascot_rise,Ascot Rise,16.0,23176.226,35126.837,12.429,12.039,11.741,,,ASCOT RISE,1.031
+ascot_rise,Ascot Rise,18.0,23174.265,35126.44,11.743,11.743,11.741,,,ASCOT RISE,2.992
+ascot_rise,Ascot Rise,20.0,23172.305,35126.043,11.608,11.608,11.608,,,ASCOT RISE,4.953
+ascot_rise,Ascot Rise,22.0,23170.481,35126.817,11.778,11.524,11.524,-3.758,1.0,ASCOT RISE,6.776
+ascot_rise,Ascot Rise,24.0,23168.663,35127.651,11.44,11.44,11.482,-2.796,1.0,ASCOT RISE,8.591
+ascot_rise,Ascot Rise,26.0,23166.845,35128.485,11.216,11.216,11.44,,,ASCOT RISE,10.406

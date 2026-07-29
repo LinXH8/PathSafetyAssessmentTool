@@ -1,0 +1,58 @@
+{
+  "path_key": "telok_blangah_way",
+  "display_name": "Telok Blangah Way",
+  "source_project": "Telok Blangah Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Telok Blangah Way\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T07:13:29.642423+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2624.132,
+  "profile_point_count": 1034,
+  "valid_elevation_count": 989,
+  "rejected_outlier_count": 170,
+  "rejected_step_jump_count": 774,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 113,
+  "usable_gradient_completion_pct": 10.93,
+  "elevation_hit_coverage_pct": 95.65,
+  "step_jump_rejection_pct": 74.85,
+  "gradient_min_pct": -11.836,
+  "gradient_max_pct": 4.799,
+  "path_bounds_svy21": {
+    "min_x": 26138.407,
+    "min_y": 28462.67,
+    "max_x": 26814.075,
+    "max_y": 28997.756
+  },
+  "road_boundary": {
+    "target_road_name": "TELOK BLANGAH WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1314,
+    "offroad_point_count": 280,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TELOK BLANGAH RISE",
+        "point_count": 173
+      },
+      {
+        "road_name": "HENDERSON ROAD",
+        "point_count": 75
+      },
+      {
+        "road_name": "TELOK BLANGAH CRESCENT",
+        "point_count": 32
+      }
+    ],
+    "offroad_chainage_min_m": 40.0,
+    "offroad_chainage_max_m": 2328.0,
+    "trimmed_offroad_points": 280
+  }
+}

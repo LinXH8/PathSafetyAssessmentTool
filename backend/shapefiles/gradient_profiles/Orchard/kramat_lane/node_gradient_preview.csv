@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kramat_lane,1,Cam4_20260108_105251_266_B.jpeg,,10.635,5.317,6.0,4.707,,
+kramat_lane,2,Cam4_20260108_105253_673_B.jpeg,,19.767,15.201,16.0,5.765,,
+kramat_lane,3,Cam4_20260108_105256_084_B.jpeg,,30.789,25.278,26.0,6.014,,
+kramat_lane,4,Cam4_20260108_105259_089_B.jpeg,,83.323,57.056,58.0,6.073,,
+kramat_lane,5,Cam4_20260108_105316_523_B.jpeg,,91.115,87.219,88.0,5.386,,
+kramat_lane,6,Cam4_20260108_105319_527_B.jpeg,,102.078,96.597,96.0,5.031,,
+kramat_lane,7,Cam4_20260108_105323_130_B.jpeg,,111.264,106.671,106.0,6.16,,

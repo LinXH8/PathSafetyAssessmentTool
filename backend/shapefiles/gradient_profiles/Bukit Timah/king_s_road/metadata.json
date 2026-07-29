@@ -1,0 +1,66 @@
+{
+  "path_key": "king_s_road",
+  "display_name": "King's Road",
+  "source_project": "King's Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\King's Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T00:25:30.214747+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3736.204,
+  "profile_point_count": 1372,
+  "valid_elevation_count": 1370,
+  "rejected_outlier_count": 133,
+  "rejected_step_jump_count": 858,
+  "repaired_gradient_point_count": 24,
+  "removed_bad_gradient_point_count": 3,
+  "valid_gradient_count": 264,
+  "usable_gradient_completion_pct": 19.24,
+  "elevation_hit_coverage_pct": 99.85,
+  "step_jump_rejection_pct": 62.54,
+  "gradient_min_pct": -13.674,
+  "gradient_max_pct": 14.141,
+  "path_bounds_svy21": {
+    "min_x": 24631.314,
+    "min_y": 33175.073,
+    "max_x": 25498.757,
+    "max_y": 33915.766
+  },
+  "road_boundary": {
+    "target_road_name": "KING'S ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1870,
+    "offroad_point_count": 498,
+    "offroad_top_road_names": [
+      {
+        "road_name": "QUEEN'S ROAD",
+        "point_count": 307
+      },
+      {
+        "road_name": "CORONATION ROAD",
+        "point_count": 64
+      },
+      {
+        "road_name": "PRINCE ROAD",
+        "point_count": 61
+      },
+      {
+        "road_name": "LUTHERAN ROAD",
+        "point_count": 35
+      },
+      {
+        "road_name": "KING'S DRIVE",
+        "point_count": 26
+      }
+    ],
+    "offroad_chainage_min_m": 146.0,
+    "offroad_chainage_max_m": 3736.204,
+    "trimmed_offroad_points": 498
+  }
+}

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_seni,1,,JALAN SENI,59.55,29.775,30.0,8.705,,
+jalan_seni,2,,JALAN SENI,67.876,93.488,94.0,10.116,,
+jalan_seni,3,,JALAN SENI,79.781,235.193,236.0,10.569,,

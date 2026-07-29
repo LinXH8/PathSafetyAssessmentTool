@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+upper_circular_road,1,Cam4_20251211_094049_491_C.jpeg,,10.554,5.277,6.0,4.757,,
+upper_circular_road,2,Cam4_20251211_094053_095_C.jpeg,,37.516,24.035,,,,
+upper_circular_road,3,Cam4_20251211_110349_743_A.jpeg,,46.559,42.038,,,,
+upper_circular_road,4,Cam4_20251211_110351_755_A.jpeg,,72.5,59.53,60.0,4.757,,
+upper_circular_road,5,Cam4_20251211_110400_542_A.jpeg,,98.277,85.388,86.0,3.476,,
+upper_circular_road,6,Cam4_20251211_110409_300_A.jpeg,,110.377,104.327,104.0,2.069,3.39,1.0
+upper_circular_road,7,Cam4_20251211_110414_032_A.jpeg,,115.917,113.147,114.0,3.104,,
+upper_circular_road,8,Cam4_20251211_110416_039_A.jpeg,,126.329,121.123,122.0,4.049,,
+upper_circular_road,9,Cam4_20251211_110421_201_A.jpeg,,135.991,131.16,132.0,3.853,,
+upper_circular_road,10,Cam4_20251211_110425_205_A.jpeg,,183.714,159.852,160.0,3.125,-11.402,2.0
+upper_circular_road,11,Cam4_20251211_110451_679_A.jpeg,,196.879,190.296,190.0,3.727,,
+upper_circular_road,12,Cam4_20260204_121302_506_C.jpeg,,209.247,203.063,204.0,7.157,,
+upper_circular_road,13,Cam4_20260204_121306_713_C.jpeg,,254.924,232.086,232.0,5.817,,
+upper_circular_road,14,Cam4_20260204_121319_329_C.jpeg,,263.159,259.042,260.0,3.397,,
+upper_circular_road,15,Cam4_20260204_121321_131_C.jpeg,,274.74,268.949,268.0,2.556,,

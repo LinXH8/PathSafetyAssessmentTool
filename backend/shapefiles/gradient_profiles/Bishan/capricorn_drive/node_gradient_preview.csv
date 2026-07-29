@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+capricorn_drive,1,Capricorn Drive_Cam4_20260105_105918_413_A.jpeg,,11.108,5.554,6.0,30.036,4.258,1.0
+capricorn_drive,2,Capricorn Drive_Cam4_20260105_105923_820_A.jpeg,,20.576,15.842,16.0,30.641,7.187,1.0
+capricorn_drive,3,Capricorn Drive_Cam4_20260105_105929_826_A.jpeg,,29.594,25.085,26.0,30.651,,
+capricorn_drive,4,Capricorn Drive_Cam4_20260105_105936_434_A.jpeg,,118.596,74.095,74.0,26.859,,

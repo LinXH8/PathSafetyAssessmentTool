@@ -1,0 +1,42 @@
+{
+  "path_key": "peng_nguan_street",
+  "display_name": "Peng Nguan Street",
+  "source_project": "Peng Nguan Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Peng Nguan Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:52:26.992856+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 125.326,
+  "profile_point_count": 64,
+  "valid_elevation_count": 64,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 50,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 1,
+  "usable_gradient_completion_pct": 1.56,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 78.12,
+  "gradient_min_pct": 4.264,
+  "gradient_max_pct": 4.264,
+  "path_bounds_svy21": {
+    "min_x": 27739.902,
+    "min_y": 29383.15,
+    "max_x": 27788.905,
+    "max_y": 29431.262
+  },
+  "road_boundary": {
+    "target_road_name": "PENG NGUAN STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 64,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

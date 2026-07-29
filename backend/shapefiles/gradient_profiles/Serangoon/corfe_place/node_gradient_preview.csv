@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+corfe_place,1,CORFE PLACE_Cam4_20260202_083546_918_B.jpeg,,14.431,7.216,8.0,14.632,-2.737,1.0
+corfe_place,2,CORFE PLACE_Cam4_20260202_083551_122_B.jpeg,,20.604,17.517,18.0,14.398,-2.125,1.0
+corfe_place,3,CORFE PLACE_Cam4_20260202_083552_924_B.jpeg,,30.523,25.563,26.0,14.241,-1.856,1.0
+corfe_place,4,CORFE PLACE_Cam4_20260202_083555_927_B.jpeg,,63.705,47.114,46.0,14.11,,
+corfe_place,5,CORFE PLACE_Cam4_20260202_083619_954_B.jpeg,,75.176,69.441,70.0,16.505,,
+corfe_place,6,CORFE PLACE_Cam4_20260202_083624_764_B.jpeg,,84.319,79.748,80.0,16.919,,
+corfe_place,7,CORFE PLACE_Cam4_20260202_083627_768_B.jpeg,,104.019,94.169,94.0,14.647,,
+corfe_place,8,CORFE PLACE_Cam4_20260202_083640_986_B.jpeg,,114.113,109.066,110.0,14.54,-1.714,1.0

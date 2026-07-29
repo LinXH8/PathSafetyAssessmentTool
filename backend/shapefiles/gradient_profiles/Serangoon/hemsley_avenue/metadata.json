@@ -1,0 +1,54 @@
+{
+  "path_key": "hemsley_avenue",
+  "display_name": "Hemsley Avenue",
+  "source_project": "Hemsley Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Hemsley Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T14:56:13.873687+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 740.119,
+  "profile_point_count": 363,
+  "valid_elevation_count": 363,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 133,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 170,
+  "usable_gradient_completion_pct": 46.83,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 36.64,
+  "gradient_min_pct": -9.669,
+  "gradient_max_pct": 9.644,
+  "path_bounds_svy21": {
+    "min_x": 31488.663,
+    "min_y": 38865.533,
+    "max_x": 31686.437,
+    "max_y": 39102.787
+  },
+  "road_boundary": {
+    "target_road_name": "HEMSLEY AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 372,
+    "offroad_point_count": 9,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KINGSWEAR AVENUE",
+        "point_count": 7
+      },
+      {
+        "road_name": "KENSINGTON PARK ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 688.0,
+    "trimmed_offroad_points": 9
+  }
+}

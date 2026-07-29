@@ -1,0 +1,42 @@
+{
+  "path_key": "narayanan_chetty_road",
+  "display_name": "Narayanan Chetty Road",
+  "source_project": "Narayanan Chetty Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Narayanan Chetty Road\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-17T06:06:01.015843+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 43.117,
+  "profile_point_count": 23,
+  "valid_elevation_count": 23,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 18,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 3,
+  "usable_gradient_completion_pct": 13.04,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 78.26,
+  "gradient_min_pct": -3.754,
+  "gradient_max_pct": -2.879,
+  "path_bounds_svy21": {
+    "min_x": 28538.536,
+    "min_y": 30479.614,
+    "max_x": 28554.794,
+    "max_y": 30496.157
+  },
+  "road_boundary": {
+    "target_road_name": "NARAYANAN CHETTY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 23,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

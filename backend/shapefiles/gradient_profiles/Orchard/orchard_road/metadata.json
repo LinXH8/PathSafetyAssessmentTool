@@ -1,0 +1,66 @@
+{
+  "path_key": "orchard_road",
+  "display_name": "Orchard Road",
+  "source_project": "Orchard Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Orchard Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-23T08:23:45.381726+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 14796.581,
+  "profile_point_count": 2900,
+  "valid_elevation_count": 2537,
+  "rejected_outlier_count": 474,
+  "rejected_step_jump_count": 2080,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 12,
+  "valid_gradient_count": 425,
+  "usable_gradient_completion_pct": 14.66,
+  "elevation_hit_coverage_pct": 87.48,
+  "step_jump_rejection_pct": 71.72,
+  "gradient_min_pct": -25.588,
+  "gradient_max_pct": 11.743,
+  "path_bounds_svy21": {
+    "min_x": 27450.419,
+    "min_y": 31095.078,
+    "max_x": 29694.869,
+    "max_y": 32180.811
+  },
+  "road_boundary": {
+    "target_road_name": "ORCHARD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 7400,
+    "offroad_point_count": 4500,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ORCHARD TURN",
+        "point_count": 399
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 355
+      },
+      {
+        "road_name": "BIDEFORD ROAD",
+        "point_count": 264
+      },
+      {
+        "road_name": "EMERALD HILL ROAD",
+        "point_count": 253
+      },
+      {
+        "road_name": "ORCHARD LINK",
+        "point_count": 221
+      }
+    ],
+    "offroad_chainage_min_m": 70.0,
+    "offroad_chainage_max_m": 14796.581,
+    "trimmed_offroad_points": 4500
+  }
+}

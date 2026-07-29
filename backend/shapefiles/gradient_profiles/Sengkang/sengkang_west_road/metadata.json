@@ -1,0 +1,66 @@
+{
+  "path_key": "sengkang_west_road",
+  "display_name": "Sengkang West Road",
+  "source_project": "Sengkang West Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sengkang West Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-05-31T22:06:17.109863+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4958.615,
+  "profile_point_count": 1566,
+  "valid_elevation_count": 1566,
+  "rejected_outlier_count": 120,
+  "rejected_step_jump_count": 961,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 327,
+  "usable_gradient_completion_pct": 20.88,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.37,
+  "gradient_min_pct": -12.325,
+  "gradient_max_pct": 9.698,
+  "path_bounds_svy21": {
+    "min_x": 31932.445,
+    "min_y": 41141.798,
+    "max_x": 32322.104,
+    "max_y": 42458.77
+  },
+  "road_boundary": {
+    "target_road_name": "SENGKANG WEST ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2481,
+    "offroad_point_count": 915,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SENGKANG WEST AVENUE",
+        "point_count": 316
+      },
+      {
+        "road_name": "SENGKANG WEST WAY",
+        "point_count": 208
+      },
+      {
+        "road_name": "FERNVALE LANE",
+        "point_count": 179
+      },
+      {
+        "road_name": "JALAN KAYU",
+        "point_count": 147
+      },
+      {
+        "road_name": "SELETAR WEST ROAD 3",
+        "point_count": 23
+      }
+    ],
+    "offroad_chainage_min_m": 330.0,
+    "offroad_chainage_max_m": 4958.615,
+    "trimmed_offroad_points": 915
+  }
+}

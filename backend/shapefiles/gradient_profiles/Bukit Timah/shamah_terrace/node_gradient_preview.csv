@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+shamah_terrace,1,Shamah Terrace_Cam4_20251122_102216_609_A.jpeg,,13.319,6.66,6.0,23.681,-1.463,1.0
+shamah_terrace,2,Shamah Terrace_Cam4_20251122_102225_619_A.jpeg,,38.49,25.905,26.0,25.509,,
+shamah_terrace,3,Shamah Terrace_Cam4_20251122_102238_831_A.jpeg,,61.642,50.066,50.0,25.353,,
+shamah_terrace,4,Shamah Terrace_Cam4_20251122_102249_642_A.jpeg,,72.948,67.295,68.0,25.361,,
+shamah_terrace,5,Shamah Terrace_Cam4_20251122_102253_846_A.jpeg,,96.352,84.65,84.0,25.85,,
+shamah_terrace,6,Shamah Terrace_Cam4_20251122_102304_067_A.jpeg,,108.574,102.463,102.0,26.136,3.438,1.0
+shamah_terrace,7,Shamah Terrace_Cam4_20251122_102310_075_A.jpeg,,169.945,139.259,140.0,25.703,,
+shamah_terrace,8,Shamah Terrace_Cam4_20251122_102352_584_A.jpeg,,182.698,176.321,176.0,25.718,,

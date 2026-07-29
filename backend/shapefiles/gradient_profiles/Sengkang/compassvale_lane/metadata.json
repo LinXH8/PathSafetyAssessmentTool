@@ -1,0 +1,58 @@
+{
+  "path_key": "compassvale_lane",
+  "display_name": "Compassvale Lane",
+  "source_project": "Compassvale Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Compassvale Lane\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T01:57:43.325556+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2036.351,
+  "profile_point_count": 608,
+  "valid_elevation_count": 588,
+  "rejected_outlier_count": 80,
+  "rejected_step_jump_count": 296,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 246,
+  "usable_gradient_completion_pct": 40.46,
+  "elevation_hit_coverage_pct": 96.71,
+  "step_jump_rejection_pct": 48.68,
+  "gradient_min_pct": -5.123,
+  "gradient_max_pct": 9.09,
+  "path_bounds_svy21": {
+    "min_x": 35082.458,
+    "min_y": 40676.655,
+    "max_x": 35568.4,
+    "max_y": 41030.651
+  },
+  "road_boundary": {
+    "target_road_name": "COMPASSVALE LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1020,
+    "offroad_point_count": 412,
+    "offroad_top_road_names": [
+      {
+        "road_name": "COMPASSVALE DRIVE",
+        "point_count": 326
+      },
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 60
+      },
+      {
+        "road_name": "SENGKANG EAST AVENUE",
+        "point_count": 26
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2036.351,
+    "trimmed_offroad_points": 412
+  }
+}

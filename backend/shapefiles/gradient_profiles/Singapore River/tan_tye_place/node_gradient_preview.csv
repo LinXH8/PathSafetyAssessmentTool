@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tan_tye_place,1,Cam4_20260107_073027_955_C.jpeg,,10.126,5.063,6.0,2.374,-2.461,1.0
+tan_tye_place,2,Cam4_20260107_073032_166_C.jpeg,,20.604,15.365,16.0,2.386,3.203,1.0
+tan_tye_place,3,Cam4_20260107_073036_983_C.jpeg,,32.238,26.421,26.0,2.574,1.25,1.0
+tan_tye_place,4,Cam4_20260107_073043_592_C.jpeg,,40.486,36.362,36.0,3.061,3.542,1.0
+tan_tye_place,5,Cam4_20260107_073048_396_C.jpeg,,50.159,45.322,46.0,2.901,,
+tan_tye_place,6,Cam4_20260107_073053_201_C.jpeg,,60.157,55.158,56.0,2.664,,
+tan_tye_place,7,Cam4_20260107_073057_403_C.jpeg,,71.721,65.939,66.0,2.689,0.0,1.0

@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_batai,1,Jalan Batai_Cam4_20260105_082312_839_A.jpeg,,9.813,4.906,4.0,15.302,,
+jalan_batai,2,Jalan Batai_Cam4_20260105_082318_846_A.jpeg,,21.351,15.582,16.0,15.38,,
+jalan_batai,3,Jalan Batai_Cam4_20260105_082335_063_A.jpeg,,55.745,38.548,38.0,16.528,,
+jalan_batai,4,Jalan Batai_Cam4_20260105_082347_074_A.jpeg,,66.801,61.273,62.0,19.163,,
+jalan_batai,5,Jalan Batai_Cam4_20260105_082350_677_A.jpeg,,74.783,70.792,70.0,19.713,,
+jalan_batai,6,Jalan Batai_Cam4_20260105_082353_081_A.jpeg,,87.757,81.27,82.0,18.284,,
+jalan_batai,7,Jalan Batai_Cam4_20260105_082356_686_A.jpeg,,94.427,91.092,92.0,17.963,0.087,1.0
+jalan_batai,8,Jalan Batai_Cam4_20260105_082358_487_A.jpeg,,105.671,100.049,100.0,17.718,-6.181,1.0
+jalan_batai,9,Jalan Batai_Cam4_20260105_082401_491_A.jpeg,,114.436,110.054,110.0,17.727,4.549,1.0
+jalan_batai,10,Jalan Batai_Cam4_20260105_082403_893_A.jpeg,,124.87,119.653,120.0,17.584,,
+jalan_batai,11,Jalan Batai_Cam4_20260105_082406_895_A.jpeg,,165.897,145.383,146.0,17.97,,
+jalan_batai,12,Jalan Batai_Cam4_20260105_082421_310_A.jpeg,,175.864,170.881,170.0,18.764,,
+jalan_batai,13,Jalan Batai_Cam4_20260105_082523_815_A.jpeg,,187.021,181.443,182.0,21.743,,

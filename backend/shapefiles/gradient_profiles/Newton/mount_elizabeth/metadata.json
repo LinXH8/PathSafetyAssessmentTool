@@ -1,0 +1,66 @@
+{
+  "path_key": "mount_elizabeth",
+  "display_name": "Mount Elizabeth",
+  "source_project": "Mount Elizabeth",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Mount Elizabeth\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-17T03:53:54.273838+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1699.702,
+  "profile_point_count": 675,
+  "valid_elevation_count": 665,
+  "rejected_outlier_count": 92,
+  "rejected_step_jump_count": 434,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 144,
+  "usable_gradient_completion_pct": 21.33,
+  "elevation_hit_coverage_pct": 98.52,
+  "step_jump_rejection_pct": 64.3,
+  "gradient_min_pct": -11.076,
+  "gradient_max_pct": 7.212,
+  "path_bounds_svy21": {
+    "min_x": 28138.06,
+    "min_y": 31828.319,
+    "max_x": 28305.562,
+    "max_y": 32172.944
+  },
+  "road_boundary": {
+    "target_road_name": "MOUNT ELIZABETH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 851,
+    "offroad_point_count": 176,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN KAYU MANIS",
+        "point_count": 57
+      },
+      {
+        "road_name": "JALAN ELOK",
+        "point_count": 56
+      },
+      {
+        "road_name": "JALAN LADA PUTEH",
+        "point_count": 27
+      },
+      {
+        "road_name": "NUTMEG ROAD",
+        "point_count": 25
+      },
+      {
+        "road_name": "MOUNT ELIZABETH LINK",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1512.0,
+    "trimmed_offroad_points": 176
+  }
+}

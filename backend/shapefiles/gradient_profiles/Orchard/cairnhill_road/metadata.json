@@ -1,0 +1,66 @@
+{
+  "path_key": "cairnhill_road",
+  "display_name": "Cairnhill Road",
+  "source_project": "Cairnhill Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cairnhill Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-07T05:18:01.193101+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2725.651,
+  "profile_point_count": 502,
+  "valid_elevation_count": 129,
+  "rejected_outlier_count": 23,
+  "rejected_step_jump_count": 111,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 119,
+  "usable_gradient_completion_pct": 23.71,
+  "elevation_hit_coverage_pct": 25.7,
+  "step_jump_rejection_pct": 22.11,
+  "gradient_min_pct": -4.03,
+  "gradient_max_pct": 1.624,
+  "path_bounds_svy21": {
+    "min_x": 28251.737,
+    "min_y": 31793.826,
+    "max_x": 28509.95,
+    "max_y": 32531.987
+  },
+  "road_boundary": {
+    "target_road_name": "CAIRNHILL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1364,
+    "offroad_point_count": 862,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BIDEFORD ROAD",
+        "point_count": 322
+      },
+      {
+        "road_name": "MOUNT ELIZABETH",
+        "point_count": 149
+      },
+      {
+        "road_name": "PECK HAY ROAD",
+        "point_count": 133
+      },
+      {
+        "road_name": "CAIRNHILL CIRCLE",
+        "point_count": 94
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 63
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2726.0,
+    "trimmed_offroad_points": 862
+  }
+}

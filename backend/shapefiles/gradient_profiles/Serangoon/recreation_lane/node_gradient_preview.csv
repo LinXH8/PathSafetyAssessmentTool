@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+recreation_lane,1,Recreation Lane_Cam4_20260110_143617_228_B.jpeg,,11.25,5.625,6.0,18.072,,
+recreation_lane,2,Recreation Lane_Cam4_20260110_143620_231_B.jpeg,,36.485,23.868,24.0,19.859,,
+recreation_lane,3,Recreation Lane_Cam4_20260110_143632_246_B.jpeg,,42.598,39.542,40.0,21.814,,
+recreation_lane,4,Recreation Lane_Cam4_20260112_074457_899_A.jpeg,,76.327,59.462,60.0,21.146,,
+recreation_lane,5,Recreation Lane_Cam4_20260112_074526_012_A.jpeg,,100.72,88.523,88.0,19.327,,
+recreation_lane,6,Recreation Lane_Cam4_20260112_074535_623_A.jpeg,,125.548,113.134,114.0,18.94,-1.519,1.0
+recreation_lane,7,Recreation Lane_Cam4_20260112_074546_436_A.jpeg,,136.943,131.246,132.0,18.78,0.333,1.0
+recreation_lane,8,Recreation Lane_Cam4_20260112_074550_641_A.jpeg,,146.403,141.673,142.0,18.821,0.3,1.0
+recreation_lane,9,Recreation Lane_Cam4_20260112_074554_245_A.jpeg,,155.558,150.98,150.0,18.831,0.0,1.0
+recreation_lane,10,Recreation Lane_Cam4_20260112_074557_850_A.jpeg,,177.419,166.488,166.0,18.848,-0.012,1.0
+recreation_lane,11,Recreation Lane_Cam4_20260112_074609_265_A.jpeg,,277.487,227.453,228.0,18.833,,

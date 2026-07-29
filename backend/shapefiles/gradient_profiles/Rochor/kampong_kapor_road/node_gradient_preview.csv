@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kampong_kapor_road,1,Kampong Kapor Road_Cam4_20251208_075423_654_A.jpeg,,11.989,5.994,6.0,6.003,,
+kampong_kapor_road,2,Kampong Kapor Road_Cam4_20251208_075430_165_A.jpeg,,97.839,54.914,54.0,5.143,,
+kampong_kapor_road,3,Kampong Kapor Road_Cam4_20251208_081621_269_A.jpeg,,176.686,137.263,138.0,2.592,,
+kampong_kapor_road,4,Kampong Kapor Road_Cam4_20251208_092843_711_A.jpeg,,202.524,189.605,190.0,3.626,,
+kampong_kapor_road,5,Kampong Kapor Road_Cam4_20251208_092858_057_A.jpeg,,329.076,265.8,266.0,2.618,,
+kampong_kapor_road,6,Kampong Kapor Road_Cam4_20251208_110231_817_A.jpeg,,341.778,335.427,336.0,2.983,3.742,1.0
+kampong_kapor_road,7,Kampong Kapor Road_Cam4_20251208_110235_949_A.jpeg,,351.23,346.504,346.0,3.654,,
+kampong_kapor_road,8,Kampong Kapor Road_Cam4_20251208_110239_503_A.jpeg,,358.141,354.686,354.0,3.71,,
+kampong_kapor_road,9,Kampong Kapor Road_Cam4_20251208_110242_054_A.jpeg,,368.56,363.351,364.0,2.873,,
+kampong_kapor_road,10,Kampong Kapor Road_Cam4_20251208_110246_059_A.jpeg,,460.804,414.682,414.0,2.38,0.06,1.0
+kampong_kapor_road,11,Kampong Kapor Road_Cam4_20251212_090615_777_A.jpeg,,471.185,465.995,466.0,2.833,-1.339,1.0
+kampong_kapor_road,12,Kampong Kapor Road_Cam4_20251212_090618_858_A.jpeg,,481.467,476.326,476.0,2.396,-2.032,1.0
+kampong_kapor_road,13,Kampong Kapor Road_Cam4_20251212_090621_869_A.jpeg,,591.753,536.61,,,,

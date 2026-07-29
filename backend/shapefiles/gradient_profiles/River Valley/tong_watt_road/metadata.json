@@ -1,0 +1,42 @@
+{
+  "path_key": "tong_watt_road",
+  "display_name": "Tong Watt Road",
+  "source_project": "Tong Watt Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Tong Watt Road\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-25T15:39:40.927702+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 160.62,
+  "profile_point_count": 82,
+  "valid_elevation_count": 82,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 51,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 20,
+  "usable_gradient_completion_pct": 24.39,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.2,
+  "gradient_min_pct": -7.031,
+  "gradient_max_pct": 9.256,
+  "path_bounds_svy21": {
+    "min_x": 28724.114,
+    "min_y": 30548.561,
+    "max_x": 28848.742,
+    "max_y": 30647.633
+  },
+  "road_boundary": {
+    "target_road_name": "TONG WATT ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 82,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

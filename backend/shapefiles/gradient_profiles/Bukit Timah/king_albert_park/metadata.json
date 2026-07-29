@@ -1,0 +1,54 @@
+{
+  "path_key": "king_albert_park",
+  "display_name": "King Albert Park",
+  "source_project": "King Albert Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\King Albert Park\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T23:28:42.228417+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2982.486,
+  "profile_point_count": 1343,
+  "valid_elevation_count": 1330,
+  "rejected_outlier_count": 120,
+  "rejected_step_jump_count": 949,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 196,
+  "usable_gradient_completion_pct": 14.59,
+  "elevation_hit_coverage_pct": 99.03,
+  "step_jump_rejection_pct": 70.66,
+  "gradient_min_pct": -13.596,
+  "gradient_max_pct": 10.176,
+  "path_bounds_svy21": {
+    "min_x": 21856.967,
+    "min_y": 34965.909,
+    "max_x": 22124.677,
+    "max_y": 35484.842
+  },
+  "road_boundary": {
+    "target_road_name": "KING ALBERT PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1493,
+    "offroad_point_count": 150,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLEMENTI ROAD",
+        "point_count": 85
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 65
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2982.486,
+    "trimmed_offroad_points": 150
+  }
+}

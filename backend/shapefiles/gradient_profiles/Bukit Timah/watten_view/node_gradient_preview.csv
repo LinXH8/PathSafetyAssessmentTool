@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+watten_view,1,Watten View_Cam4_20251210_115915_223_A.jpeg,,11.675,5.837,6.0,16.898,,
+watten_view,2,Watten View_Cam4_20251210_115917_756_A.jpeg,,24.109,17.892,18.0,17.312,,
+watten_view,3,Watten View_Cam4_20251210_115920_544_A.jpeg,,30.623,27.366,28.0,16.702,,
+watten_view,4,Watten View_Cam4_20251210_115922_049_A.jpeg,,40.939,35.781,36.0,16.208,,
+watten_view,5,Watten View_Cam4_20251210_115924_563_A.jpeg,,50.209,45.574,46.0,15.591,,
+watten_view,6,Watten View_Cam4_20251210_115926_727_A.jpeg,,61.316,55.762,56.0,15.805,,
+watten_view,7,Watten View_Cam4_20251210_115929_235_A.jpeg,,70.461,65.889,66.0,15.592,,
+watten_view,8,Watten View_Cam4_20251210_115931_430_A.jpeg,,81.958,76.21,76.0,15.131,-1.25,1.0
+watten_view,9,Watten View_Cam4_20251210_115934_092_A.jpeg,,91.091,86.524,86.0,14.931,-1.25,1.0
+watten_view,10,Watten View_Cam4_20251210_115936_334_A.jpeg,,119.978,105.534,106.0,18.613,,
+watten_view,11,Watten View_Cam4_20251210_115943_567_A.jpeg,,144.477,132.227,132.0,18.413,,
+watten_view,12,Watten View_Cam4_20251210_115950_744_A.jpeg,,155.284,149.881,150.0,15.591,2.083,1.0
+watten_view,13,Watten View_Cam4_20251210_115955_415_A.jpeg,,164.118,159.701,160.0,16.119,3.125,1.0
+watten_view,14,Watten View_Cam4_20251210_120004_747_A.jpeg,,173.481,168.799,168.0,16.069,-3.437,1.0

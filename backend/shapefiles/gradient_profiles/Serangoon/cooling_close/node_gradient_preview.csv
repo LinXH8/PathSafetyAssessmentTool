@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cooling_close,1,Cam4_20260202_100316_777_B.jpeg,COOLING CLOSE,10.534,5.267,6.0,28.589,,
+cooling_close,2,Cam4_20260202_100321_037_B.jpeg,COOLING CLOSE,20.128,15.331,16.0,29.41,,
+cooling_close,3,Cam4_20260202_100325_843_B.jpeg,COOLING CLOSE,31.976,26.052,26.0,30.011,,
+cooling_close,4,Cam4_20260202_100331_279_B.jpeg,COOLING CLOSE,43.998,37.987,38.0,29.109,,
+cooling_close,5,Cam4_20260202_100336_110_B.jpeg,COOLING CLOSE,70.915,57.457,58.0,26.416,,
+cooling_close,6,Cam4_20260202_100344_627_B.jpeg,COOLING CLOSE,77.482,74.198,74.0,28.963,,
+cooling_close,7,Cam4_20260202_100346_428_B.jpeg,COOLING CLOSE,109.943,93.712,94.0,28.668,,
+cooling_close,8,Cam4_20260202_100355_565_B.jpeg,COOLING CLOSE,121.061,115.502,116.0,25.98,0.652,1.0
+cooling_close,9,Cam4_20260202_100359_781_B.jpeg,COOLING CLOSE,145.344,133.202,134.0,25.305,-2.147,1.0
+cooling_close,10,Cam4_20260202_100436_091_B.jpeg,COOLING CLOSE,169.322,157.333,158.0,25.877,4.041,1.0

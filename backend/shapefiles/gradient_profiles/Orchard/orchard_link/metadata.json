@@ -1,0 +1,42 @@
+{
+  "path_key": "orchard_link",
+  "display_name": "Orchard Link",
+  "source_project": "Orchard Link",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Orchard Link\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-23T08:42:37.945910+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 222.401,
+  "profile_point_count": 113,
+  "valid_elevation_count": 106,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 85,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 11,
+  "usable_gradient_completion_pct": 9.73,
+  "elevation_hit_coverage_pct": 93.81,
+  "step_jump_rejection_pct": 75.22,
+  "gradient_min_pct": -6.696,
+  "gradient_max_pct": 2.947,
+  "path_bounds_svy21": {
+    "min_x": 28164.176,
+    "min_y": 31435.61,
+    "max_x": 28247.366,
+    "max_y": 31550.073
+  },
+  "road_boundary": {
+    "target_road_name": "ORCHARD LINK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 113,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

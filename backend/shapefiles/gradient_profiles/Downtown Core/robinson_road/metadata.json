@@ -1,0 +1,66 @@
+{
+  "path_key": "robinson_road",
+  "display_name": "Robinson Road",
+  "source_project": "Robinson Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Robinson Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-24T03:02:51.531268+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3104.468,
+  "profile_point_count": 893,
+  "valid_elevation_count": 893,
+  "rejected_outlier_count": 126,
+  "rejected_step_jump_count": 509,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 243,
+  "usable_gradient_completion_pct": 27.21,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 57.0,
+  "gradient_min_pct": -13.594,
+  "gradient_max_pct": 11.289,
+  "path_bounds_svy21": {
+    "min_x": 29548.592,
+    "min_y": 28780.857,
+    "max_x": 29929.668,
+    "max_y": 29345.982
+  },
+  "road_boundary": {
+    "target_road_name": "ROBINSON ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1554,
+    "offroad_point_count": 661,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 274
+      },
+      {
+        "road_name": "MAXWELL LINK",
+        "point_count": 156
+      },
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 62
+      },
+      {
+        "road_name": "BOON TAT STREET",
+        "point_count": 61
+      },
+      {
+        "road_name": "MCCALLUM STREET",
+        "point_count": 55
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3040.0,
+    "trimmed_offroad_points": 661
+  }
+}

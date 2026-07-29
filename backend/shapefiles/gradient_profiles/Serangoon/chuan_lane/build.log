@@ -1,0 +1,8 @@
+project=Chuan Lane
+path_key=chuan_lane
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/3] 20240805_Serangoon_02_Track13.laz (65 samples)
+  [2/3] 20240805_Serangoon_02_Track14.laz (229 samples)
+  [3/3] 20240805_Serangoon_02_Track15.laz (229 samples)

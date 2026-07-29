@@ -1,0 +1,42 @@
+{
+  "path_key": "balestier_road",
+  "display_name": "Balestier Road",
+  "source_project": "Balestier Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Balestier Road\\geo_data.gpkg",
+  "lidar_bundle": "balestier_road",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\balestier_road",
+  "generated_at_utc": "2026-07-06T03:01:22.708302+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2458.378,
+  "profile_point_count": 1231,
+  "valid_elevation_count": 1231,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 485,
+  "repaired_gradient_point_count": 35,
+  "removed_bad_gradient_point_count": 8,
+  "valid_gradient_count": 535,
+  "usable_gradient_completion_pct": 43.46,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 39.4,
+  "gradient_min_pct": -12.95,
+  "gradient_max_pct": 14.236,
+  "path_bounds_svy21": {
+    "min_x": 28946.189,
+    "min_y": 33159.163,
+    "max_x": 30840.17,
+    "max_y": 34315.859
+  },
+  "road_boundary": {
+    "target_road_name": "BALESTIER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1231,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

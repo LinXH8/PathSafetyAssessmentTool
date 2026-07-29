@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_timah_link,1,Bukit Timah Link_Cam4_20251122_082718_747_A.jpeg,,11.038,5.519,,,,
+bukit_timah_link,2,Bukit Timah Link_Cam4_20251122_082728_362_A.jpeg,,75.935,43.487,46.0,27.163,,
+bukit_timah_link,3,Bukit Timah Link_Cam4_20251122_082824_219_A.jpeg,,212.397,144.166,144.0,24.317,,
+bukit_timah_link,4,Bukit Timah Link_Cam4_20251122_103312_929_C.jpeg,,223.609,218.003,218.0,23.041,,
+bukit_timah_link,5,Bukit Timah Link_Cam4_20251122_103318_334_C.jpeg,,247.703,235.656,236.0,22.197,-0.81,1.0
+bukit_timah_link,6,Bukit Timah Link_Cam4_20251122_103330_368_C.jpeg,,258.948,253.326,254.0,21.556,,
+bukit_timah_link,7,Bukit Timah Link_Cam4_20251122_103344_787_C.jpeg,,284.322,271.635,272.0,22.946,,
+bukit_timah_link,8,Bukit Timah Link_Cam4_20251122_103401_608_C.jpeg,,296.007,290.165,290.0,25.699,,
+bukit_timah_link,9,Bukit Timah Link_Cam4_20251122_103409_414_C.jpeg,,304.514,300.261,300.0,26.738,,
+bukit_timah_link,10,Bukit Timah Link_Cam4_20251122_103414_853_C.jpeg,,327.437,315.976,316.0,26.309,,
+bukit_timah_link,11,Bukit Timah Link_Cam4_20251122_103711_343_C.jpeg,,338.131,332.784,332.0,25.19,-1.849,1.0
+bukit_timah_link,12,Bukit Timah Link_Cam4_20251122_103714_946_C.jpeg,,350.78,344.455,344.0,25.544,,
+bukit_timah_link,13,Bukit Timah Link_Cam4_20251122_103719_031_C.jpeg,,361.901,356.341,356.0,25.504,,
+bukit_timah_link,14,Bukit Timah Link_Cam4_20251122_103722_036_C.jpeg,,383.327,372.614,372.0,24.871,,
+bukit_timah_link,15,Bukit Timah Link_Cam4_20251122_103729_242_C.jpeg,,396.497,389.912,390.0,21.439,,
+bukit_timah_link,16,Bukit Timah Link_Cam4_20251122_103740_057_C.jpeg,,422.246,409.372,410.0,20.56,,

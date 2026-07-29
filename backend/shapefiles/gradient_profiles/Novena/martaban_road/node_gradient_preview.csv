@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+martaban_road,1,,MARTABAN ROAD,0.017,0.009,0.0,8.886,,
+martaban_road,2,,MARTABAN ROAD,103.236,51.635,52.0,5.053,-2.684,1.0
+martaban_road,3,,MARTABAN ROAD,118.913,265.943,266.0,8.225,7.396,1.0
+martaban_road,4,,MARTABAN ROAD,231.932,560.277,560.0,8.762,,

@@ -1,0 +1,54 @@
+{
+  "path_key": "hougang_street_11",
+  "display_name": "Hougang Street 11",
+  "source_project": "Hougang Street 11",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Hougang Street 11\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T20:46:36.384980+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1225.3,
+  "profile_point_count": 539,
+  "valid_elevation_count": 523,
+  "rejected_outlier_count": 32,
+  "rejected_step_jump_count": 103,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 7,
+  "valid_gradient_count": 393,
+  "usable_gradient_completion_pct": 72.91,
+  "elevation_hit_coverage_pct": 97.03,
+  "step_jump_rejection_pct": 19.11,
+  "gradient_min_pct": -8.147,
+  "gradient_max_pct": 7.642,
+  "path_bounds_svy21": {
+    "min_x": 32966.862,
+    "min_y": 37052.204,
+    "max_x": 33305.861,
+    "max_y": 37219.094
+  },
+  "road_boundary": {
+    "target_road_name": "HOUGANG STREET 11",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 614,
+    "offroad_point_count": 75,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER PAYA LEBAR ROAD",
+        "point_count": 51
+      },
+      {
+        "road_name": "LORONG AH SOO",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 42.0,
+    "offroad_chainage_max_m": 294.0,
+    "trimmed_offroad_points": 75
+  }
+}

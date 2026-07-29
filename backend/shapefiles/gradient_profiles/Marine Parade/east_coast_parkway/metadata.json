@@ -1,0 +1,66 @@
+{
+  "path_key": "east_coast_parkway",
+  "display_name": "East Coast Parkway",
+  "source_project": "East Coast Parkway",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\East Coast Parkway\\geo_data.gpkg",
+  "lidar_bundle": "Marine Parade",
+  "lidar_root": "E:\\LIDAR\\Marine Parade",
+  "generated_at_utc": "2026-06-06T21:40:09.909300+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 24141.456,
+  "profile_point_count": 6654,
+  "valid_elevation_count": 124,
+  "rejected_outlier_count": 20,
+  "rejected_step_jump_count": 70,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 296,
+  "usable_gradient_completion_pct": 4.45,
+  "elevation_hit_coverage_pct": 1.86,
+  "step_jump_rejection_pct": 1.05,
+  "gradient_min_pct": -3.753,
+  "gradient_max_pct": 7.837,
+  "path_bounds_svy21": {
+    "min_x": 31893.451,
+    "min_y": 30781.236,
+    "max_x": 44185.142,
+    "max_y": 35261.45
+  },
+  "road_boundary": {
+    "target_road_name": "EAST COAST PARKWAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 12072,
+    "offroad_point_count": 5418,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER EAST COAST ROAD",
+        "point_count": 969
+      },
+      {
+        "road_name": "LAGUNA GOLF GREEN",
+        "point_count": 567
+      },
+      {
+        "road_name": "BAYSHORE DRIVE",
+        "point_count": 566
+      },
+      {
+        "road_name": "MARINE PARADE ROAD",
+        "point_count": 509
+      },
+      {
+        "road_name": "BAYSHORE ROAD",
+        "point_count": 285
+      }
+    ],
+    "offroad_chainage_min_m": 1420.0,
+    "offroad_chainage_max_m": 23916.0,
+    "trimmed_offroad_points": 5418
+  }
+}

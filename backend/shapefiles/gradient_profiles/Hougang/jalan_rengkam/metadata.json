@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_rengkam",
+  "display_name": "Jalan Rengkam",
+  "source_project": "Jalan Rengkam",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Rengkam\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T08:45:57.765204+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 245.258,
+  "profile_point_count": 122,
+  "valid_elevation_count": 122,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 17,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 101,
+  "usable_gradient_completion_pct": 82.79,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 13.93,
+  "gradient_min_pct": -4.425,
+  "gradient_max_pct": 4.829,
+  "path_bounds_svy21": {
+    "min_x": 34099.044,
+    "min_y": 38275.727,
+    "max_x": 34246.931,
+    "max_y": 38300.078
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN RENGKAM",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 124,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 20.0,
+    "offroad_chainage_max_m": 22.0,
+    "trimmed_offroad_points": 2
+  }
+}

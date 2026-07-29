@@ -1,0 +1,23 @@
+project=Chuan Place
+path_key=chuan_place
+lidar_bundle=Serangoon
+
+Road boundary check:
+  target: CHUAN PLACE
+  off-road points: 14/223
+    - CHUAN VIEW: 11
+    - CHUAN LINK: 3
+  trimmed off-road points: 14
+  [1/13] 20240805_Serangoon_02_Track27.laz (209 samples)
+  [2/13] 20240805_Serangoon_02_Track28.laz (209 samples)
+  [3/13] 20240805_Serangoon_02_Track69.laz (2 samples)
+  [4/13] 20240805_Serangoon_02_Track70.laz (18 samples)
+  [5/13] 20240808_Serangoon_03_Track70.laz (135 samples)
+  [6/13] 20240808_Serangoon_03_Track71.laz (209 samples)
+  [7/13] 20240808_Serangoon_03_Track72.laz (78 samples)
+  [8/13] 20240808_Serangoon_03_Track73.laz (91 samples)
+  [9/13] 20240808_Serangoon_03_Track75.laz (115 samples)
+  [10/13] 20240808_Serangoon_03_Track76.laz (42 samples)
+  [11/13] 20240808_Serangoon_03_Track77.laz (23 samples)
+  [12/13] 20240808_Serangoon_03_Track78.laz (65 samples)
+  [13/13] 20240808_Serangoon_03_Track84.laz (59 samples)

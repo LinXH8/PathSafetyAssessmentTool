@@ -1,0 +1,19 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+morley_road,Morley Road,0.0,24162.757,33441.378,21.516,21.516,21.233,-5.833,1.0,MORLEY ROAD,2.243
+morley_road,Morley Road,2.0,24160.995,33442.323,21.233,21.233,21.116,-8.056,1.0,MORLEY ROAD,2.264
+morley_road,Morley Road,4.0,24159.232,33443.268,21.0,21.0,21.0,-9.583,2.0,MORLEY ROAD,2.284
+morley_road,Morley Road,6.0,24157.469,33444.213,20.75,20.75,20.75,-10.208,2.0,MORLEY ROAD,2.305
+morley_road,Morley Road,8.0,24155.706,33445.158,20.466,20.466,20.466,-8.109,1.0,MORLEY ROAD,2.326
+morley_road,Morley Road,10.0,24153.944,33446.102,20.3,20.3,20.3,-6.01,1.0,MORLEY ROAD,2.347
+morley_road,Morley Road,12.0,24152.181,33447.047,19.971,20.151,20.269,,,MORLEY ROAD,2.367
+morley_road,Morley Road,14.0,24150.418,33447.993,20.002,20.002,20.269,,,MORLEY ROAD,2.388
+morley_road,Morley Road,16.0,24148.656,33448.938,19.821,20.269,20.269,,,MORLEY ROAD,2.409
+morley_road,Morley Road,18.0,24146.893,33449.883,19.721,20.535,20.535,,,MORLEY ROAD,2.429
+morley_road,Morley Road,20.0,24145.131,33450.828,20.652,20.802,20.802,,,MORLEY ROAD,2.45
+morley_road,Morley Road,22.0,24143.368,33451.773,22.846,20.928,20.816,,,MORLEY ROAD,2.47
+morley_road,Morley Road,24.0,24141.605,33452.718,21.933,21.054,20.816,,,MORLEY ROAD,2.491
+morley_road,Morley Road,26.0,24139.878,33453.726,21.771,20.816,20.816,,,MORLEY ROAD,2.439
+morley_road,Morley Road,28.0,24138.159,33454.747,20.927,20.578,20.578,,,MORLEY ROAD,2.373
+morley_road,Morley Road,30.0,24136.439,33455.768,20.34,20.34,20.34,,,MORLEY ROAD,2.306
+morley_road,Morley Road,32.0,24134.719,33456.788,20.265,20.265,20.302,,,MORLEY ROAD,2.24
+morley_road,Morley Road,34.0,24133.751,33457.363,19.821,20.265,20.265,,,MORLEY ROAD,2.203

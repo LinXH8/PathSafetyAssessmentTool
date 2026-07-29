@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+cook_street,Cook Street,0.0,29217.748,29036.285,5.957,8.587,8.587,,,COOK STREET,7.602
+cook_street,Cook Street,2.0,29219.619,29035.581,6.107,8.587,8.587,,,COOK STREET,7.234
+cook_street,Cook Street,4.0,29221.491,29034.876,6.752,8.587,8.587,,,COOK STREET,6.866
+cook_street,Cook Street,6.0,29223.363,29034.171,8.587,8.587,8.587,,,COOK STREET,6.498
+cook_street,Cook Street,8.0,29225.234,29033.466,9.177,8.494,8.494,,,COOK STREET,6.131
+cook_street,Cook Street,10.0,29227.106,29032.761,8.291,8.401,8.447,-3.773,1.0,COOK STREET,5.763
+cook_street,Cook Street,10.944,29227.99,29032.428,8.307,8.307,8.401,,,COOK STREET,5.589

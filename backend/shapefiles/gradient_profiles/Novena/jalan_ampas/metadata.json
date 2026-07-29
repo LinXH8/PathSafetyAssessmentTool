@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_ampas",
+  "display_name": "Jalan Ampas",
+  "source_project": "Jalan Ampas",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Jalan Ampas\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T07:15:25.398623+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 566.772,
+  "profile_point_count": 284,
+  "valid_elevation_count": 284,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 188,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 49,
+  "usable_gradient_completion_pct": 17.25,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.2,
+  "gradient_min_pct": -8.707,
+  "gradient_max_pct": 8.116,
+  "path_bounds_svy21": {
+    "min_x": 29913.617,
+    "min_y": 34147.633,
+    "max_x": 30143.656,
+    "max_y": 34381.363
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN AMPAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 285,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BALESTIER ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 566.772,
+    "offroad_chainage_max_m": 566.772,
+    "trimmed_offroad_points": 1
+  }
+}

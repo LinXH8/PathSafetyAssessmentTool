@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_lada_puteh,1,Jalan Lada Puteh_Cam4_20251204_100551_275_A.jpeg,,11.325,5.663,6.0,,,
+jalan_lada_puteh,2,Jalan Lada Puteh_Cam4_20251204_100559_925_A.jpeg,,22.542,16.933,16.0,,,
+jalan_lada_puteh,3,Jalan Lada Puteh_Cam4_20251204_100609_659_A.jpeg,,33.231,27.887,28.0,17.743,0.0,1.0
+jalan_lada_puteh,4,Jalan Lada Puteh_Cam4_20251204_100617_806_A.jpeg,,44.475,38.853,38.0,17.743,0.0,1.0
+jalan_lada_puteh,5,Jalan Lada Puteh_Cam4_20251204_100626_417_A.jpeg,,66.782,55.629,56.0,17.743,,
+jalan_lada_puteh,6,Jalan Lada Puteh_Cam4_20251204_100645_667_A.jpeg,,90.736,78.759,78.0,17.743,,
+jalan_lada_puteh,7,Jalan Lada Puteh_Cam4_20251204_100658_506_A.jpeg,,100.715,95.725,96.0,17.743,0.0,1.0
+jalan_lada_puteh,8,Jalan Lada Puteh_Cam4_20251204_100702_065_A.jpeg,,111.986,106.35,106.0,17.743,0.0,1.0
+jalan_lada_puteh,9,Jalan Lada Puteh_Cam4_20251204_100705_088_A.jpeg,,123.175,117.581,118.0,,,
+jalan_lada_puteh,10,Jalan Lada Puteh_Cam4_20251204_100707_825_A.jpeg,,134.128,128.651,128.0,,,
+jalan_lada_puteh,11,Jalan Lada Puteh_Cam4_20251204_100710_328_A.jpeg,,159.938,147.033,148.0,,,

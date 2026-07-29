@@ -1,0 +1,50 @@
+{
+  "path_key": "serangoon_terrace",
+  "display_name": "Serangoon Terrace",
+  "source_project": "Serangoon Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Serangoon Terrace\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T07:46:26.391849+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 312.364,
+  "profile_point_count": 146,
+  "valid_elevation_count": 145,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 98,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 37,
+  "usable_gradient_completion_pct": 25.34,
+  "elevation_hit_coverage_pct": 99.32,
+  "step_jump_rejection_pct": 67.12,
+  "gradient_min_pct": -4.077,
+  "gradient_max_pct": 9.905,
+  "path_bounds_svy21": {
+    "min_x": 32843.287,
+    "min_y": 36641.624,
+    "max_x": 32945.414,
+    "max_y": 36703.581
+  },
+  "road_boundary": {
+    "target_road_name": "SERANGOON TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 158,
+    "offroad_point_count": 12,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERANGOON AVENUE 1",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 290.0,
+    "trimmed_offroad_points": 12
+  }
+}

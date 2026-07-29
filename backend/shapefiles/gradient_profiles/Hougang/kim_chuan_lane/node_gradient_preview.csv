@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kim_chuan_lane,1,Kim Chuan Lane_Cam4_20260113_102600_417_B.jpeg,,11.766,5.883,6.0,6.075,,
+kim_chuan_lane,2,Kim Chuan Lane_Cam4_20260113_102605_356_B.jpeg,,73.665,42.715,42.0,6.514,,
+kim_chuan_lane,3,Kim Chuan Lane_Cam4_20260113_102629_070_B.jpeg,,80.428,77.047,78.0,7.328,,
+kim_chuan_lane,4,Kim Chuan Lane_Cam4_20260113_102631_631_B.jpeg,,91.11,85.769,86.0,7.444,,
+kim_chuan_lane,5,Kim Chuan Lane_Cam4_20260113_102635_356_B.jpeg,,101.456,96.283,96.0,7.522,1.022,1.0
+kim_chuan_lane,6,Kim Chuan Lane_Cam4_20260113_102639_746_B.jpeg,,170.079,135.767,136.0,7.43,,

@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+matlock_rise,1,Matlock Rise_Cam4_20260112_093954_283_B.jpeg,,10.353,5.177,6.0,10.879,4.083,1.0
+matlock_rise,2,Matlock Rise_Cam4_20260112_094115_115_B.jpeg,,21.485,15.919,16.0,11.889,,
+matlock_rise,3,Matlock Rise_Cam4_20260112_094120_550_B.jpeg,,32.033,26.759,26.0,13.849,,
+matlock_rise,4,Matlock Rise_Cam4_20260112_094125_354_B.jpeg,,43.095,37.564,38.0,13.869,,
+matlock_rise,5,Matlock Rise_Cam4_20260112_094130_163_B.jpeg,,54.717,48.906,48.0,13.36,3.885,1.0
+matlock_rise,6,Matlock Rise_Cam4_20260112_094135_569_B.jpeg,,76.62,65.668,66.0,14.529,6.537,1.0
+matlock_rise,7,Matlock Rise_Cam4_20260112_094232_780_B.jpeg,,87.497,82.059,82.0,15.577,6.763,1.0
+matlock_rise,8,Matlock Rise_Cam4_20260112_094247_239_B.jpeg,,98.681,93.089,94.0,16.343,7.125,1.0
+matlock_rise,9,Matlock Rise_Cam4_20260112_094313_688_B.jpeg,,109.947,104.314,104.0,17.032,6.381,1.0
+matlock_rise,10,Matlock Rise_Cam4_20260112_094335_349_B.jpeg,,117.024,113.485,114.0,17.718,6.637,1.0
+matlock_rise,11,Matlock Rise_Cam4_20260112_094343_810_B.jpeg,,144.662,130.843,130.0,18.65,2.938,1.0
+matlock_rise,12,Matlock Rise_Cam4_20260112_094431_393_B.jpeg,,155.814,150.238,150.0,18.665,-0.687,1.0
+matlock_rise,13,Matlock Rise_Cam4_20260112_094437_416_B.jpeg,,167.485,161.649,162.0,18.403,-4.887,1.0
+matlock_rise,14,Matlock Rise_Cam4_20260112_094442_822_B.jpeg,,188.69,178.087,178.0,17.094,,
+matlock_rise,15,Matlock Rise_Cam4_20260112_094449_480_B.jpeg,,201.243,194.966,194.0,15.756,-7.212,1.0
+matlock_rise,16,Matlock Rise_Cam4_20260112_094453_088_B.jpeg,,211.656,206.449,206.0,14.859,-9.188,2.0
+matlock_rise,17,Matlock Rise_Cam4_20260112_094456_691_B.jpeg,,222.606,217.131,218.0,13.859,-7.762,1.0
+matlock_rise,18,Matlock Rise_Cam4_20260112_094459_736_B.jpeg,,233.417,228.012,228.0,13.104,-7.625,1.0
+matlock_rise,19,Matlock Rise_Cam4_20260112_094502_175_B.jpeg,,256.559,244.988,244.0,12.076,-5.702,1.0
+matlock_rise,20,Matlock Rise_Cam4_20260112_094507_607_B.jpeg,,268.249,262.404,262.0,10.691,-8.962,2.0
+matlock_rise,21,Matlock Rise_Cam4_20260112_094510_009_B.jpeg,,278.025,273.137,274.0,9.711,-5.694,1.0

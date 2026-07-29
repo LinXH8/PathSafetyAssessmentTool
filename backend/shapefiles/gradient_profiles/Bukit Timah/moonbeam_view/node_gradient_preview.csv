@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+moonbeam_view,1,Moonbeam View_Cam4_20251219_083155_288_A.jpeg,,11.146,5.573,6.0,19.548,,
+moonbeam_view,2,Moonbeam View_Cam4_20251219_083200_562_A.jpeg,,22.497,16.821,16.0,19.901,,
+moonbeam_view,3,Moonbeam View_Cam4_20251219_083204_166_A.jpeg,,32.157,27.327,28.0,19.57,,
+moonbeam_view,4,Moonbeam View_Cam4_20251219_083206_569_A.jpeg,,40.294,36.226,36.0,19.156,,
+moonbeam_view,5,Moonbeam View_Cam4_20251219_083208_373_A.jpeg,,67.121,53.708,54.0,18.224,,
+moonbeam_view,6,Moonbeam View_Cam4_20251219_083213_180_A.jpeg,,96.422,81.771,82.0,14.498,,
+moonbeam_view,7,Moonbeam View_Cam4_20251219_083217_945_A.jpeg,,117.911,107.166,108.0,16.79,,
+moonbeam_view,8,Moonbeam View_Cam4_20251219_083225_151_A.jpeg,,127.917,122.914,122.0,15.59,,
+moonbeam_view,9,Moonbeam View_Cam4_20251219_083229_957_A.jpeg,,138.788,133.352,134.0,15.215,,
+moonbeam_view,10,Moonbeam View_Cam4_20251219_083233_563_A.jpeg,,150.854,144.821,144.0,14.834,-3.816,1.0
+moonbeam_view,11,Moonbeam View_Cam4_20251219_083237_769_A.jpeg,,223.766,187.31,188.0,16.902,,
+moonbeam_view,12,Moonbeam View_Cam4_20251219_083310_429_A.jpeg,,253.409,238.587,,,,

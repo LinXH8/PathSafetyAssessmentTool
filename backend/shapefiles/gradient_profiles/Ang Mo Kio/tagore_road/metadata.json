@@ -1,0 +1,54 @@
+{
+  "path_key": "tagore_road",
+  "display_name": "Tagore Road",
+  "source_project": "Tagore Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Tagore Road\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:39:35.445787+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1345.102,
+  "profile_point_count": 591,
+  "valid_elevation_count": 591,
+  "rejected_outlier_count": 94,
+  "rejected_step_jump_count": 492,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 21,
+  "usable_gradient_completion_pct": 3.55,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 83.25,
+  "gradient_min_pct": -10.895,
+  "gradient_max_pct": 14.131,
+  "path_bounds_svy21": {
+    "min_x": 27217.496,
+    "min_y": 40451.318,
+    "max_x": 27700.097,
+    "max_y": 40887.591
+  },
+  "road_boundary": {
+    "target_road_name": "TAGORE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 674,
+    "offroad_point_count": 83,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TAGORE LANE",
+        "point_count": 73
+      },
+      {
+        "road_name": "TAGORE INDUSTRIAL AVENUE",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 716.0,
+    "offroad_chainage_max_m": 1320.0,
+    "trimmed_offroad_points": 83
+  }
+}

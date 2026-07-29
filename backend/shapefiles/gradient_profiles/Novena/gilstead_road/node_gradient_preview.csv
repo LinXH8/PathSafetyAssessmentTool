@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+gilstead_road,1,,GILSTEAD ROAD,174.633,87.316,88.0,4.68,-3.77,1.0
+gilstead_road,2,,GILSTEAD ROAD,549.648,478.649,478.0,9.997,5.0,1.0
+gilstead_road,3,,GILSTEAD ROAD,147.793,827.55,828.0,3.855,,

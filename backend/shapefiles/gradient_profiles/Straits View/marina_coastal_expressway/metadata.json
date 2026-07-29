@@ -1,0 +1,66 @@
+{
+  "path_key": "marina_coastal_expressway",
+  "display_name": "Marina Coastal Expressway",
+  "source_project": "Marina Coastal Expressway",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Marina Coastal Expressway\\geo_data.gpkg",
+  "lidar_bundle": "D_Marina_South_&_Straits_View_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Marina_South_&_Straits_View_LTA",
+  "generated_at_utc": "2026-06-10T08:57:55.319591+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5671.976,
+  "profile_point_count": 810,
+  "valid_elevation_count": 810,
+  "rejected_outlier_count": 67,
+  "rejected_step_jump_count": 499,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 177,
+  "usable_gradient_completion_pct": 21.85,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.6,
+  "gradient_min_pct": -7.917,
+  "gradient_max_pct": 9.982,
+  "path_bounds_svy21": {
+    "min_x": 29808.782,
+    "min_y": 28129.851,
+    "max_x": 32214.04,
+    "max_y": 28987.514
+  },
+  "road_boundary": {
+    "target_road_name": "MARINA COASTAL EXPRESSWAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2837,
+    "offroad_point_count": 2027,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARINA COASTAL DRIVE",
+        "point_count": 489
+      },
+      {
+        "road_name": "MARINA SOUTH DRIVE",
+        "point_count": 281
+      },
+      {
+        "road_name": "MARINA GARDENS CRESCENT",
+        "point_count": 180
+      },
+      {
+        "road_name": "CENTRAL BOULEVARD",
+        "point_count": 165
+      },
+      {
+        "road_name": ".",
+        "point_count": 136
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 5590.0,
+    "trimmed_offroad_points": 2027
+  }
+}

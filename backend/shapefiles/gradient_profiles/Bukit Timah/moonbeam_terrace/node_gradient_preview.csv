@@ -1,0 +1,27 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+moonbeam_terrace,1,Moonbeam Terrace_Cam4_20251219_082720_774_A.jpeg,,10.882,5.441,6.0,24.114,,
+moonbeam_terrace,2,Moonbeam Terrace_Cam4_20251219_082726_655_A.jpeg,,22.747,16.815,16.0,23.16,,
+moonbeam_terrace,3,Moonbeam Terrace_Cam4_20251219_082745_149_A.jpeg,,30.179,26.463,26.0,21.734,,
+moonbeam_terrace,4,Moonbeam Terrace_Cam4_20251219_082747_554_A.jpeg,,39.802,34.991,34.0,21.934,,
+moonbeam_terrace,5,Moonbeam Terrace_Cam4_20251219_082750_558_A.jpeg,,49.377,44.589,44.0,23.089,,
+moonbeam_terrace,6,Moonbeam Terrace_Cam4_20251219_082753_560_A.jpeg,,60.143,54.76,54.0,23.07,,
+moonbeam_terrace,7,Moonbeam Terrace_Cam4_20251219_082757_165_A.jpeg,,94.026,77.085,78.0,19.767,,
+moonbeam_terrace,8,Moonbeam Terrace_Cam4_20251219_082812_652_A.jpeg,,99.989,97.008,98.0,18.783,-3.715,1.0
+moonbeam_terrace,9,Moonbeam Terrace_Cam4_20251219_082814_456_A.jpeg,,109.85,104.919,104.0,18.597,,
+moonbeam_terrace,10,Moonbeam Terrace_Cam4_20251219_082817_467_A.jpeg,,121.164,115.507,116.0,19.324,,
+moonbeam_terrace,11,Moonbeam Terrace_Cam4_20251219_082821_072_A.jpeg,,131.066,126.115,126.0,18.862,,
+moonbeam_terrace,12,Moonbeam Terrace_Cam4_20251219_082824_078_A.jpeg,,140.703,135.884,136.0,18.392,,
+moonbeam_terrace,13,Moonbeam Terrace_Cam4_20251219_082827_081_A.jpeg,,152.126,146.414,146.0,18.706,,
+moonbeam_terrace,14,Moonbeam Terrace_Cam4_20251219_082831_284_A.jpeg,,183.278,167.702,168.0,19.028,,
+moonbeam_terrace,15,Moonbeam Terrace_Cam4_20251219_082843_894_A.jpeg,,201.573,192.426,192.0,19.472,,
+moonbeam_terrace,16,Moonbeam Terrace_Cam4_20251219_082902_987_A.jpeg,,212.681,207.127,208.0,18.627,,
+moonbeam_terrace,17,Moonbeam Terrace_Cam4_20251219_082907_193_A.jpeg,,237.623,225.152,226.0,18.122,,
+moonbeam_terrace,18,Moonbeam Terrace_Cam4_20251219_082915_602_A.jpeg,,246.963,242.293,242.0,17.867,,
+moonbeam_terrace,19,Moonbeam Terrace_Cam4_20251219_082918_005_A.jpeg,,276.295,261.629,262.0,17.054,,
+moonbeam_terrace,20,Moonbeam Terrace_Cam4_20251219_082925_815_A.jpeg,,285.496,280.896,280.0,15.754,,
+moonbeam_terrace,21,Moonbeam Terrace_Cam4_20251219_082928_782_A.jpeg,,293.96,289.728,290.0,15.204,-2.083,1.0
+moonbeam_terrace,22,Moonbeam Terrace_Cam4_20251219_082931_185_A.jpeg,,303.59,298.775,298.0,14.787,-3.333,1.0
+moonbeam_terrace,23,Moonbeam Terrace_Cam4_20251219_082933_589_A.jpeg,,316.304,309.947,310.0,14.954,1.042,1.0
+moonbeam_terrace,24,Moonbeam Terrace_Cam4_20251219_082936_595_A.jpeg,,323.934,320.119,320.0,15.121,2.604,1.0
+moonbeam_terrace,25,Moonbeam Terrace_Cam4_20251219_082938_396_A.jpeg,,381.605,352.769,352.0,14.804,1.042,1.0
+moonbeam_terrace,26,Moonbeam Terrace_Cam4_20251219_083002_431_A.jpeg,,525.521,453.563,454.0,23.433,,

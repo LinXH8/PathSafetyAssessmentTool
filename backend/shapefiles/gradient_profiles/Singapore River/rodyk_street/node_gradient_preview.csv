@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+rodyk_street,1,Cam4_20251204_081503_736_C.jpeg,,12.712,6.356,6.0,5.847,,
+rodyk_street,2,Cam4_20251204_081509_141_C.jpeg,,24.6,18.656,18.0,5.32,0.066,1.0
+rodyk_street,3,Cam4_20251204_081514_548_C.jpeg,,31.366,27.983,28.0,5.745,,
+rodyk_street,4,Cam4_20251204_081516_952_C.jpeg,,40.052,35.709,36.0,5.646,,
+rodyk_street,5,Cam4_20251204_081519_923_C.jpeg,,84.35,62.201,62.0,6.524,,
+rodyk_street,6,Cam4_20251204_081537_932_C.jpeg,,109.411,96.88,96.0,4.292,,
+rodyk_street,7,Cam4_20251204_081548_759_C.jpeg,,122.279,115.845,116.0,2.836,,
+rodyk_street,8,Cam4_20251204_081555_934_C.jpeg,,190.987,156.633,156.0,4.132,,
+rodyk_street,9,Cam4_20251204_081710_730_C.jpeg,,202.066,196.526,196.0,4.341,,
+rodyk_street,10,Cam4_20251204_081714_934_C.jpeg,,226.033,214.05,214.0,5.647,,
+rodyk_street,11,Cam4_20251204_081725_625_C.jpeg,,237.853,231.943,232.0,5.335,,
+rodyk_street,12,Cam4_20251204_081731_032_C.jpeg,,414.86,326.356,326.0,9.899,,

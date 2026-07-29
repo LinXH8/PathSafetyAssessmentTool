@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hai_sing_road,1,Hai Sing Road_Cam4_20260131_114712_758_C.jpeg,,11.25,5.625,6.0,9.125,1.177,1.0
+hai_sing_road,2,Hai Sing Road_Cam4_20260131_114719_468_C.jpeg,,36.64,23.945,24.0,8.734,-2.156,1.0
+hai_sing_road,3,Hai Sing Road_Cam4_20260131_114828_373_C.jpeg,,57.459,47.05,48.0,9.751,10.691,2.0
+hai_sing_road,4,Hai Sing Road_Cam4_20260131_114925_272_C.jpeg,,66.802,62.131,62.0,10.1,,
+hai_sing_road,5,Hai Sing Road_Cam4_20260131_114928_274_C.jpeg,,78.86,72.831,72.0,11.257,,
+hai_sing_road,6,Hai Sing Road_Cam4_20260131_114931_881_C.jpeg,,117.759,98.31,98.0,8.508,,
+hai_sing_road,7,Hai Sing Road_Cam4_20260131_114950_007_C.jpeg,,125.923,121.841,122.0,6.622,,
+hai_sing_road,8,Hai Sing Road_Cam4_20260131_114952_408_C.jpeg,,134.536,130.229,130.0,6.508,-8.41,1.0
+hai_sing_road,9,Hai Sing Road_Cam4_20260131_114954_810_C.jpeg,,146.209,140.372,140.0,5.584,-4.11,1.0
+hai_sing_road,10,Hai Sing Road_Cam4_20260131_114958_414_C.jpeg,,155.812,151.01,152.0,5.175,-2.955,1.0
+hai_sing_road,11,Hai Sing Road_Cam4_20260131_115001_420_C.jpeg,,182.935,169.373,170.0,4.505,,

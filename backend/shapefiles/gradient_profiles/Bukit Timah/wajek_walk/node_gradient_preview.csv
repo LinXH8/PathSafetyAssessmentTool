@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+wajek_walk,1,Wajek Walk_Cam4_20251216_081925_204_C.jpeg,,12.653,6.326,6.0,15.85,,
+wajek_walk,2,Wajek Walk_Cam4_20251216_081930_621_C.jpeg,,37.746,25.199,26.0,14.884,,
+wajek_walk,3,Wajek Walk_Cam4_20251216_081938_432_C.jpeg,,44.907,41.326,42.0,14.8,-0.417,1.0
+wajek_walk,4,Wajek Walk_Cam4_20251216_081940_836_C.jpeg,,57.325,51.116,52.0,14.817,,
+wajek_walk,5,Wajek Walk_Cam4_20251216_081952_247_C.jpeg,,117.929,87.627,88.0,17.195,,
+wajek_walk,6,Wajek Walk_Cam4_20251216_082043_322_C.jpeg,,123.649,120.789,120.0,15.034,-0.833,1.0
+wajek_walk,7,Wajek Walk_Cam4_20251216_082046_324_C.jpeg,,134.462,129.055,130.0,15.523,9.716,2.0
+wajek_walk,8,Wajek Walk_Cam4_20251216_082052_936_C.jpeg,,169.881,152.171,152.0,15.934,,
+wajek_walk,9,Wajek Walk_Cam4_20251216_082124_776_C.jpeg,,198.616,184.248,184.0,14.942,,
+wajek_walk,10,Wajek Walk_Cam4_20251216_082134_984_C.jpeg,,220.988,209.802,210.0,15.784,,
+wajek_walk,11,Wajek Walk_Cam4_20251216_082143_996_C.jpeg,,232.518,226.753,226.0,15.322,,
+wajek_walk,12,Wajek Walk_Cam4_20251216_082148_800_C.jpeg,,240.946,236.732,236.0,15.084,,

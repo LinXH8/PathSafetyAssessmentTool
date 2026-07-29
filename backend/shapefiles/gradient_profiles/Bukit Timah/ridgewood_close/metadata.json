@@ -1,0 +1,42 @@
+{
+  "path_key": "ridgewood_close",
+  "display_name": "Ridgewood Close",
+  "source_project": "Ridgewood Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Ridgewood Close\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T16:09:36.852320+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 286.125,
+  "profile_point_count": 145,
+  "valid_elevation_count": 145,
+  "rejected_outlier_count": 15,
+  "rejected_step_jump_count": 61,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 60,
+  "usable_gradient_completion_pct": 41.38,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 42.07,
+  "gradient_min_pct": -3.524,
+  "gradient_max_pct": 14.294,
+  "path_bounds_svy21": {
+    "min_x": 21822.748,
+    "min_y": 33224.928,
+    "max_x": 21919.2,
+    "max_y": 33336.325
+  },
+  "road_boundary": {
+    "target_road_name": "RIDGEWOOD CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 145,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

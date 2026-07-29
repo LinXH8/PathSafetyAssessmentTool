@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_bahagia",
+  "display_name": "Jalan Bahagia",
+  "source_project": "Jalan Bahagia",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Jalan Bahagia\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T07:30:18.488191+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 676.213,
+  "profile_point_count": 340,
+  "valid_elevation_count": 340,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 143,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 142,
+  "usable_gradient_completion_pct": 41.76,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 42.06,
+  "gradient_min_pct": -11.016,
+  "gradient_max_pct": 8.129,
+  "path_bounds_svy21": {
+    "min_x": 30504.787,
+    "min_y": 34118.043,
+    "max_x": 30936.407,
+    "max_y": 34467.27
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN BAHAGIA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 340,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

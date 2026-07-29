@@ -1,0 +1,50 @@
+{
+  "path_key": "harlyn_road",
+  "display_name": "Harlyn Road",
+  "source_project": "Harlyn Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Harlyn Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T07:05:54.107044+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 342.795,
+  "profile_point_count": 172,
+  "valid_elevation_count": 172,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 97,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 48,
+  "usable_gradient_completion_pct": 27.91,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.4,
+  "gradient_min_pct": -7.258,
+  "gradient_max_pct": 9.349,
+  "path_bounds_svy21": {
+    "min_x": 26821.721,
+    "min_y": 33895.68,
+    "max_x": 26943.406,
+    "max_y": 34199.91
+  },
+  "road_boundary": {
+    "target_road_name": "HARLYN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 173,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BERRIMA ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 342.795,
+    "offroad_chainage_max_m": 342.795,
+    "trimmed_offroad_points": 1
+  }
+}

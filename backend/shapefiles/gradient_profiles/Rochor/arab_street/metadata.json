@@ -1,0 +1,62 @@
+{
+  "path_key": "arab_street",
+  "display_name": "Arab Street",
+  "source_project": "Arab Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Arab Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-06T22:23:00.022489+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1711.548,
+  "profile_point_count": 638,
+  "valid_elevation_count": 638,
+  "rejected_outlier_count": 33,
+  "rejected_step_jump_count": 410,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 113,
+  "usable_gradient_completion_pct": 17.71,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.26,
+  "gradient_min_pct": -8.691,
+  "gradient_max_pct": 11.895,
+  "path_bounds_svy21": {
+    "min_x": 30629.966,
+    "min_y": 31411.799,
+    "max_x": 30942.705,
+    "max_y": 31743.223
+  },
+  "road_boundary": {
+    "target_road_name": "ARAB STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 857,
+    "offroad_point_count": 219,
+    "offroad_top_road_names": [
+      {
+        "road_name": "VICTORIA STREET",
+        "point_count": 141
+      },
+      {
+        "road_name": "MUSCAT STREET",
+        "point_count": 34
+      },
+      {
+        "road_name": "NORTH BRIDGE ROAD",
+        "point_count": 30
+      },
+      {
+        "road_name": "BAGHDAD STREET",
+        "point_count": 14
+      }
+    ],
+    "offroad_chainage_min_m": 14.0,
+    "offroad_chainage_max_m": 1712.0,
+    "trimmed_offroad_points": 219
+  }
+}

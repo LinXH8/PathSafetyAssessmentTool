@@ -1,0 +1,60 @@
+COMMAND: ["C:\\Users\\Alaster\\miniconda3\\envs\\psat\\python.exe", "-u", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\Gradient Calculation\\build_path_gradient_profile.py", "--laz-dir", "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon", "--project-dir", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Burghley Drive", "--path-key", "burghley_drive", "--output-dir", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260528\\burghley_drive", "--target-road-name", "BURGHLEY DRIVE", "--offroad-policy", "trim"]
+Project: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\profiles\alaster\projects\Burghley Drive
+Path key: burghley_drive
+Loaded 64 ordered segments
+Centerline length: 3122.3 m
+Sampled 1563 chainage points
+Warning 3: Cannot find header.dxf (GDAL_DATA is not defined)
+C:\Users\Alaster\miniconda3\envs\psat\Lib\site-packages\pyogrio\core.py:35: RuntimeWarning: Could not detect GDAL data files.  Set GDAL_DATA environment variable to the correct path.
+  _init_gdal_data()
+
+Road boundary check:
+  target: BURGHLEY DRIVE
+  off-road points: 200/1563
+    - CRICHTON CLOSE: 46
+    - LI HWAN WALK: 36
+    - CORFE PLACE: 26
+    - LI HWAN TERRACE: 25
+    - BLANDFORD DRIVE: 24
+  trimmed off-road points: 200
+Road-boundary sample count after policy: 1363
+Indexing 269 LAZ files...
+  -> 269 usable tiles
+
+  [1/26] 20240805_Serangoon_02_Track07.laz (332 samples)
+  [2/26] 20240805_Serangoon_02_Track10.laz (24 samples)
+  [3/26] 20240805_Serangoon_02_Track13.laz (16 samples)
+  [4/26] 20240808_Serangoon_03_Track02.laz (258 samples)
+  [5/26] 20240808_Serangoon_03_Track11.laz (18 samples)
+  [6/26] 20240808_Serangoon_03_Track12.laz (2 samples)
+  [7/26] 20240808_Serangoon_03_Track13.laz (2 samples)
+  [8/26] 20240808_Serangoon_03_Track20.laz (147 samples)
+  [9/26] 20240808_Serangoon_03_Track21.laz (219 samples)
+  [10/26] 20240808_Serangoon_03_Track22.laz (142 samples)
+  [11/26] 20240808_Serangoon_03_Track23.laz (179 samples)
+  [12/26] 20240808_Serangoon_03_Track28.laz (22 samples)
+  [13/26] 20240808_Serangoon_03_Track32.laz (4 samples)
+  [14/26] 20240808_Serangoon_03_Track33.laz (206 samples)
+  [15/26] 20240808_Serangoon_03_Track34.laz (63 samples)
+  [16/26] 20240808_Serangoon_03_Track36.laz (185 samples)
+  [17/26] 20240808_Serangoon_03_Track84.laz (58 samples)
+  [18/26] 20240808_Serangoon_03_Track85.laz (733 samples)
+  [19/26] 20240808_Serangoon_03_Track86.laz (339 samples)
+  [20/26] 20240808_Serangoon_03_Track87.laz (375 samples)
+  [21/26] 20240808_Serangoon_03_Track89.laz (262 samples)
+  [22/26] 20240808_Serangoon_03_Track90.laz (71 samples)
+  [23/26] 20240808_Serangoon_03_Track91.laz (9 samples)
+  [24/26] 20240808_Serangoon_03_Track95.laz (592 samples)
+  [25/26] 20240808_Serangoon_03_Track96.laz (584 samples)
+  [26/26] 20240808_Serangoon_03_Track97.laz (227 samples)
+
+Elevation hits: 1358/1363
+Rejected elevation outliers: 161
+Rejected elevation step jumps: 624
+Repaired isolated bad gradient points: 16
+Removed bad gradient stretch points: 4
+Valid gradients: 578/1363
+Gradient range: -11.40% to 10.34%
+Profile CSV: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\burghley_drive\gradient_profile.csv
+Node preview CSV: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\burghley_drive\node_gradient_preview.csv
+Metadata JSON: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\burghley_drive\metadata.json

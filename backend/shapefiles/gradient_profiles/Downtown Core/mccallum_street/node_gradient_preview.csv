@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mccallum_street,1,Cam4_20260108_080440_764_A.jpeg,,11.596,5.798,6.0,4.082,,
+mccallum_street,2,Cam4_20260108_080444_967_A.jpeg,,20.044,15.82,16.0,4.267,,
+mccallum_street,3,Cam4_20260108_080449_176_A.jpeg,,34.363,27.203,28.0,3.229,,
+mccallum_street,4,Cam4_20260108_080455_183_A.jpeg,,39.698,37.03,38.0,2.741,,
+mccallum_street,5,Cam4_20260108_080458_185_A.jpeg,,87.31,63.504,64.0,5.461,,
+mccallum_street,6,Cam4_20260108_080953_966_A.jpeg,,98.652,92.981,,,,
+mccallum_street,7,Cam4_20260108_081001_188_A.jpeg,,106.261,102.457,,,,
+mccallum_street,8,Cam4_20260108_081005_990_A.jpeg,,210.086,158.174,158.0,10.274,,
+mccallum_street,9,Cam4_20260108_084937_293_A.jpeg,,339.215,274.651,274.0,8.003,,
+mccallum_street,10,Cam4_20260108_091049_355_B.jpeg,,632.919,486.067,486.0,3.426,,
+mccallum_street,11,Cam4_20260109_092302_129_C.jpeg,,645.257,639.088,,,,
+mccallum_street,12,Cam4_20260109_092306_936_C.jpeg,,652.978,649.118,,,,

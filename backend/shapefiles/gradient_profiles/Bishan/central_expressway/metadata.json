@@ -1,0 +1,42 @@
+{
+  "path_key": "central_expressway",
+  "display_name": "Central Expressway",
+  "source_project": "Central Expressway",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Central Expressway\\geo_data.gpkg",
+  "lidar_bundle": "central_expressway",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\central_expressway",
+  "generated_at_utc": "2026-07-06T07:44:43.301062+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 11611.417,
+  "profile_point_count": 5807,
+  "valid_elevation_count": 2302,
+  "rejected_outlier_count": 355,
+  "rejected_step_jump_count": 1698,
+  "repaired_gradient_point_count": 19,
+  "removed_bad_gradient_point_count": 55,
+  "valid_gradient_count": 517,
+  "usable_gradient_completion_pct": 8.9,
+  "elevation_hit_coverage_pct": 39.64,
+  "step_jump_rejection_pct": 29.24,
+  "gradient_min_pct": -14.747,
+  "gradient_max_pct": 13.312,
+  "path_bounds_svy21": {
+    "min_x": 28750.279,
+    "min_y": 31352.025,
+    "max_x": 31262.428,
+    "max_y": 41447.594
+  },
+  "road_boundary": {
+    "target_road_name": "CENTRAL EXPRESSWAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 5807,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kim_seng_promenade,1,Cam4_20260107_092257_903_C.jpeg,,10.339,5.17,6.0,2.987,,
+kim_seng_promenade,2,Cam4_20260107_092302_109_C.jpeg,,20.246,15.293,16.0,2.737,-1.25,1.0
+kim_seng_promenade,3,Cam4_20260107_092305_712_C.jpeg,,263.277,141.761,,,,
+kim_seng_promenade,4,Cam4_20260107_092510_200_C.jpeg,,377.758,320.518,,,,
+kim_seng_promenade,5,Cam4_20260109_080625_150_B.jpeg,,380.154,378.956,,,,
+kim_seng_promenade,6,Cam4_20260109_080625_751_B.jpeg,,390.69,385.422,,,,
+kim_seng_promenade,7,Cam4_20260109_080628_712_B.jpeg,,429.83,410.26,,,,
+kim_seng_promenade,8,Cam4_20260109_080945_051_B.jpeg,,441.797,435.813,,,,
+kim_seng_promenade,9,Cam4_20260109_080949_856_B.jpeg,,449.389,445.593,,,,
+kim_seng_promenade,10,Cam4_20260109_080952_860_B.jpeg,,468.229,458.809,,,,
+kim_seng_promenade,11,Cam4_20260109_080959_466_B.jpeg,,469.835,469.032,,,,
+kim_seng_promenade,12,Cam4_20260109_081000_067_B.jpeg,,478.643,474.239,,,,
+kim_seng_promenade,13,Cam4_20260109_081003_671_B.jpeg,,489.519,484.081,,,,
+kim_seng_promenade,14,Cam4_20260109_081010_879_B.jpeg,,500.159,494.839,,,,
+kim_seng_promenade,15,Cam4_20260109_081014_483_B.jpeg,,512.974,506.566,,,,
+kim_seng_promenade,16,Cam4_20260109_081019_292_B.jpeg,,524.716,518.845,,,,
+kim_seng_promenade,17,Cam4_20260109_081024_698_B.jpeg,,528.259,526.487,,,,
+kim_seng_promenade,18,Cam4_20260109_081026_499_B.jpeg,,538.305,533.282,,,,
+kim_seng_promenade,19,Cam4_20260109_081032_506_B.jpeg,,549.582,543.943,,,,
+kim_seng_promenade,20,Cam4_20260109_081037_910_B.jpeg,,560.148,554.865,,,,
+kim_seng_promenade,21,Cam4_20260109_081043_330_B.jpeg,,572.214,566.181,,,,
+kim_seng_promenade,22,Cam4_20260109_081048_740_B.jpeg,,578.438,575.326,576.0,8.284,0.0,1.0
+kim_seng_promenade,23,Cam4_20260109_081051_743_B.jpeg,,588.2,583.319,584.0,8.284,0.0,1.0
+kim_seng_promenade,24,Cam4_20260109_081056_548_B.jpeg,,598.721,593.461,594.0,8.284,0.0,1.0

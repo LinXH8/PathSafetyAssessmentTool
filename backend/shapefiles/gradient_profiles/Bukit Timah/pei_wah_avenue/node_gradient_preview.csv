@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pei_wah_avenue,1,Pei Wah Avenue_Cam4_20251122_092037_064_A.jpeg,,11.681,5.841,6.0,13.802,,
+pei_wah_avenue,2,Pei Wah Avenue_Cam4_20251122_092040_669_A.jpeg,,37.885,24.783,24.0,13.864,0.469,1.0
+pei_wah_avenue,3,Pei Wah Avenue_Cam4_20251216_105401_782_B.jpeg,,69.18,53.532,54.0,14.589,-5.547,1.0
+pei_wah_avenue,4,Pei Wah Avenue_Cam4_20251216_105427_436_B.jpeg,,81.151,75.165,76.0,14.848,,
+pei_wah_avenue,5,Pei Wah Avenue_Cam4_20251216_105432_309_B.jpeg,,87.178,84.164,84.0,15.496,,

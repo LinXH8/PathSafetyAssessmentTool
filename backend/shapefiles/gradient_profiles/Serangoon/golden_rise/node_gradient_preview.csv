@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+golden_rise,1,Golden Rise_Cam4_20260202_082729_770_A.jpeg,,10.865,5.432,6.0,20.953,1.95,1.0
+golden_rise,2,Golden Rise_Cam4_20260202_082733_373_A.jpeg,,22.593,16.729,16.0,21.303,,
+golden_rise,3,Golden Rise_Cam4_20260202_082737_577_A.jpeg,,33.124,27.859,28.0,22.592,,

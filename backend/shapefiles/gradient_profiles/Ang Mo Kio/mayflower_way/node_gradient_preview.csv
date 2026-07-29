@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayflower_way,1,Mayflower Way_Cam4_20251231_083613_865_C.jpeg,,10.443,5.222,6.0,25.342,,
+mayflower_way,2,Mayflower Way_Cam4_20251231_083619_878_C.jpeg,,20.009,15.226,16.0,24.079,,
+mayflower_way,3,Mayflower Way_Cam4_20251231_083624_684_C.jpeg,,31.051,25.53,26.0,23.8,-2.188,1.0
+mayflower_way,4,Mayflower Way_Cam4_20251231_083629_495_C.jpeg,,42.705,36.878,36.0,23.473,0.516,1.0
+mayflower_way,5,Mayflower Way_Cam4_20251231_083634_301_C.jpeg,,155.46,99.082,100.0,22.434,-5.0,1.0
+mayflower_way,6,Mayflower Way_Cam4_20251231_083734_946_C.jpeg,,184.978,170.219,,,,
+mayflower_way,7,Mayflower Way_Cam4_20251231_084624_820_C.jpeg,,212.907,198.942,200.0,23.198,,
+mayflower_way,8,Mayflower Way_Cam4_20251231_084703_138_C.jpeg,,224.189,218.548,218.0,22.562,,
+mayflower_way,9,Mayflower Way_Cam4_20251231_084707_944_C.jpeg,,247.322,235.755,236.0,22.321,,
+mayflower_way,10,Mayflower Way_Cam4_20251231_084718_156_C.jpeg,,257.844,252.583,252.0,22.767,,
+mayflower_way,11,Mayflower Way_Cam4_20251231_084722_360_C.jpeg,,268.889,263.366,264.0,22.87,-0.314,1.0
+mayflower_way,12,Mayflower Way_Cam4_20251231_084726_565_C.jpeg,,279.57,274.229,274.0,23.018,2.502,1.0
+mayflower_way,13,Mayflower Way_Cam4_20251231_084731_970_C.jpeg,,286.96,283.265,284.0,23.01,0.063,1.0
+mayflower_way,14,Mayflower Way_Cam4_20251231_084735_573_C.jpeg,,326.826,306.893,306.0,23.385,1.125,1.0
+mayflower_way,15,Mayflower Way_Cam4_20251231_084751_762_C.jpeg,,337.639,332.233,332.0,24.008,,
+mayflower_way,16,Mayflower Way_Cam4_20251231_084755_967_C.jpeg,,348.456,343.047,344.0,23.83,,
+mayflower_way,17,Mayflower Way_Cam4_20251231_084800_172_C.jpeg,,359.908,354.182,354.0,24.296,,
+mayflower_way,18,Mayflower Way_Cam4_20251231_084804_868_C.jpeg,,371.047,365.477,366.0,23.962,,
+mayflower_way,19,Mayflower Way_Cam4_20251231_084809_675_C.jpeg,,399.807,385.427,,,,

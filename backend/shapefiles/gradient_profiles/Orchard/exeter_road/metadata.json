@@ -1,0 +1,54 @@
+{
+  "path_key": "exeter_road",
+  "display_name": "Exeter Road",
+  "source_project": "Exeter Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Exeter Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-07T08:59:22.100221+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 619.371,
+  "profile_point_count": 262,
+  "valid_elevation_count": 206,
+  "rejected_outlier_count": 49,
+  "rejected_step_jump_count": 204,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 23,
+  "usable_gradient_completion_pct": 8.78,
+  "elevation_hit_coverage_pct": 78.63,
+  "step_jump_rejection_pct": 77.86,
+  "gradient_min_pct": -4.687,
+  "gradient_max_pct": 11.25,
+  "path_bounds_svy21": {
+    "min_x": 28473.869,
+    "min_y": 31298.626,
+    "max_x": 28682.069,
+    "max_y": 31378.544
+  },
+  "road_boundary": {
+    "target_road_name": "EXETER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 311,
+    "offroad_point_count": 49,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOMERSET ROAD",
+        "point_count": 32
+      },
+      {
+        "road_name": "DEVONSHIRE ROAD",
+        "point_count": 17
+      }
+    ],
+    "offroad_chainage_min_m": 374.0,
+    "offroad_chainage_max_m": 620.0,
+    "trimmed_offroad_points": 49
+  }
+}

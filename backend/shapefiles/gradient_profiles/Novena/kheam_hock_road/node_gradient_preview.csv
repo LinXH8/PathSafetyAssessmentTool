@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kheam_hock_road,1,,KHEAM HOCK ROAD,594.221,297.111,298.0,4.972,,
+kheam_hock_road,2,,KHEAM HOCK ROAD,0.223,594.364,594.0,11.497,0.365,1.0
+kheam_hock_road,3,,KHEAM HOCK ROAD,62.554,625.753,626.0,13.213,,
+kheam_hock_road,4,,KHEAM HOCK ROAD,28.286,720.47,720.0,13.757,,
+kheam_hock_road,5,,KHEAM HOCK ROAD,63.269,825.832,826.0,21.417,,
+kheam_hock_road,6,,KHEAM HOCK ROAD,868.981,1355.226,1356.0,18.141,5.389,1.0

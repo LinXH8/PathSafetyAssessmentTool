@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tiong,1,Jalan Tiong_Cam4_20251226_083853_089_C.jpeg,,9.642,4.821,4.0,5.427,-0.234,1.0
+jalan_tiong,2,Jalan Tiong_Cam4_20251226_083902_099_C.jpeg,,33.014,21.328,22.0,5.893,9.829,2.0
+jalan_tiong,3,Jalan Tiong_Cam4_20251226_083915_332_C.jpeg,,41.272,37.143,38.0,7.295,3.086,1.0
+jalan_tiong,4,Jalan Tiong_Cam4_20251226_083919_536_C.jpeg,,51.665,46.468,46.0,7.523,,
+jalan_tiong,5,Jalan Tiong_Cam4_20251226_083924_941_C.jpeg,,59.716,55.69,56.0,8.543,,
+jalan_tiong,6,Jalan Tiong_Cam4_20251226_083930_947_C.jpeg,,69.956,64.836,64.0,9.731,,
+jalan_tiong,7,Jalan Tiong_Cam4_20251226_083935_150_C.jpeg,,79.641,74.799,74.0,9.828,0.546,1.0
+jalan_tiong,8,Jalan Tiong_Cam4_20251226_083938_156_C.jpeg,,90.376,85.009,86.0,10.545,,
+jalan_tiong,9,Jalan Tiong_Cam4_20251226_083944_165_C.jpeg,,103.051,96.713,96.0,10.008,,
+jalan_tiong,10,Jalan Tiong_Cam4_20251226_083949_573_C.jpeg,,129.029,116.04,116.0,9.986,,
+jalan_tiong,11,Jalan Tiong_Cam4_20251226_083957_986_C.jpeg,,137.343,133.186,134.0,12.043,,
+jalan_tiong,12,Jalan Tiong_Cam4_20251226_084000_991_C.jpeg,,147.572,142.457,142.0,12.571,,
+jalan_tiong,13,Jalan Tiong_Cam4_20251226_084003_995_C.jpeg,,158.093,152.832,152.0,12.566,,
+jalan_tiong,14,Jalan Tiong_Cam4_20251226_084006_399_C.jpeg,,168.023,163.058,164.0,12.915,0.039,1.0

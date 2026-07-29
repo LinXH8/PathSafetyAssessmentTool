@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sirat_road,1,Sirat Road_Cam4_20260130_090718_956_B.jpeg,,10.241,5.121,6.0,,,
+sirat_road,2,Sirat Road_Cam4_20260130_090723_760_B.jpeg,,24.91,17.575,18.0,,,
+sirat_road,3,Sirat Road_Cam4_20260130_090729_766_B.jpeg,,30.753,27.831,28.0,,,
+sirat_road,4,Sirat Road_Cam4_20260130_090732_168_B.jpeg,,60.506,45.629,46.0,,,
+sirat_road,5,Sirat Road_Cam4_20260130_090745_385_B.jpeg,,71.02,65.763,66.0,,,
+sirat_road,6,Sirat Road_Cam4_20260130_090750_189_B.jpeg,,82.083,76.552,76.0,,,
+sirat_road,7,Sirat Road_Cam4_20260130_090754_993_B.jpeg,,138.235,110.159,110.0,,,
+sirat_road,8,Sirat Road_Cam4_20260130_090823_227_B.jpeg,,164.228,151.231,152.0,,,
+sirat_road,9,Sirat Road_Cam4_20260130_090846_653_B.jpeg,,207.563,185.895,186.0,,,
+sirat_road,10,Sirat Road_Cam4_20260130_090907_680_B.jpeg,,357.058,282.311,282.0,,,
+sirat_road,11,Sirat Road_Cam4_20260130_090953_354_B.jpeg,,370.121,363.59,364.0,25.53,,
+sirat_road,12,Sirat Road_Cam4_20260130_090956_957_B.jpeg,,399.079,384.6,384.0,25.53,0.0,1.0
+sirat_road,13,Sirat Road_Cam4_20260130_091005_968_B.jpeg,,408.641,403.86,404.0,25.594,,
+sirat_road,14,Sirat Road_Cam4_20260130_091009_571_B.jpeg,,419.247,413.944,414.0,25.345,,
+sirat_road,15,Sirat Road_Cam4_20260130_091013_176_B.jpeg,,425.719,422.483,422.0,25.518,,
+sirat_road,16,Sirat Road_Cam4_20260130_091015_578_B.jpeg,,436.356,431.037,432.0,24.833,,
+sirat_road,17,Sirat Road_Cam4_20260130_091019_783_B.jpeg,,446.631,441.493,442.0,24.287,,
+sirat_road,18,Sirat Road_Cam4_20260130_091023_387_B.jpeg,,457.479,452.055,452.0,24.149,-2.031,1.0
+sirat_road,19,Sirat Road_Cam4_20260130_091026_990_B.jpeg,,469.121,463.3,464.0,23.693,,
+sirat_road,20,Sirat Road_Cam4_20260130_091031_196_B.jpeg,,479.127,474.124,474.0,23.474,0.0,1.0
+sirat_road,21,Sirat Road_Cam4_20260130_091034_198_B.jpeg,,524.012,501.569,502.0,24.074,,
+sirat_road,22,Sirat Road_Cam4_20260130_091203_132_B.jpeg,,560.307,542.159,542.0,23.912,,
+sirat_road,23,Sirat Road_Cam4_20260130_092516_369_B.jpeg,,570.088,565.197,566.0,25.383,,
+sirat_road,24,Sirat Road_Cam4_20260130_092521_177_B.jpeg,,818.092,694.09,694.0,,,
+sirat_road,25,Sirat Road_Cam4_20260131_093648_900_B.jpeg,,848.673,833.382,,,,

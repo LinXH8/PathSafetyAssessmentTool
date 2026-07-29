@@ -1,0 +1,66 @@
+{
+  "path_key": "sheares_avenue",
+  "display_name": "Sheares Avenue",
+  "source_project": "Sheares Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Sheares Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-24T05:25:55.019467+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2816.082,
+  "profile_point_count": 1223,
+  "valid_elevation_count": 1223,
+  "rejected_outlier_count": 231,
+  "rejected_step_jump_count": 932,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 108,
+  "usable_gradient_completion_pct": 8.83,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 76.21,
+  "gradient_min_pct": -7.266,
+  "gradient_max_pct": 10.977,
+  "path_bounds_svy21": {
+    "min_x": 30684.513,
+    "min_y": 28778.801,
+    "max_x": 31156.31,
+    "max_y": 29687.285
+  },
+  "road_boundary": {
+    "target_road_name": "SHEARES AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1410,
+    "offroad_point_count": 187,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARINA BOULEVARD",
+        "point_count": 59
+      },
+      {
+        "road_name": "CENTRAL LANE 1",
+        "point_count": 42
+      },
+      {
+        "road_name": "BAYFRONT LANE 1",
+        "point_count": 29
+      },
+      {
+        "road_name": "BAYFRONT LANE 2",
+        "point_count": 26
+      },
+      {
+        "road_name": ".",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 54.0,
+    "offroad_chainage_max_m": 2788.0,
+    "trimmed_offroad_points": 187
+  }
+}

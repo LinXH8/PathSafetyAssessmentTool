@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sime_road,1,,SIME ROAD,225.123,112.561,112.0,32.294,,
+sime_road,2,,SIME ROAD,947.455,810.572,810.0,33.721,,

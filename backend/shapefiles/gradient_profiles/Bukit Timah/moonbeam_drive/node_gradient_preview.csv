@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+moonbeam_drive,1,Moonbeam Drive_Cam4_20251219_083015_049_A.jpeg,,11.426,5.713,,,,
+moonbeam_drive,2,Moonbeam Drive_Cam4_20251219_083019_856_A.jpeg,,20.933,16.179,,,,
+moonbeam_drive,3,Moonbeam Drive_Cam4_20251219_083022_860_A.jpeg,,64.685,42.809,42.0,19.429,,
+moonbeam_drive,4,Moonbeam Drive_Cam4_20251219_083042_682_A.jpeg,,71.627,68.156,68.0,15.229,,
+moonbeam_drive,5,Moonbeam Drive_Cam4_20251219_083045_687_A.jpeg,,80.84,76.234,76.0,14.528,0.0,1.0
+moonbeam_drive,6,Moonbeam Drive_Cam4_20251219_083049_891_A.jpeg,,106.944,93.892,94.0,16.469,,
+moonbeam_drive,7,Moonbeam Drive_Cam4_20251219_083057_659_A.jpeg,,116.016,111.48,112.0,16.217,,
+moonbeam_drive,8,Moonbeam Drive_Cam4_20251219_083100_062_A.jpeg,,164.79,140.403,140.0,16.923,,
+moonbeam_drive,9,Moonbeam Drive_Cam4_20251219_083121_048_A.jpeg,,221.459,193.125,194.0,21.714,,

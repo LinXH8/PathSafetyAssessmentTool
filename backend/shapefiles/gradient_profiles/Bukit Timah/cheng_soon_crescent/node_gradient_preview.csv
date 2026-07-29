@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cheng_soon_crescent,1,Cheng Soon Crescent_Cam4_20251216_084633_125_A.jpeg,,12.624,6.312,6.0,22.102,1.875,1.0
+cheng_soon_crescent,2,Cheng Soon Crescent_Cam4_20251216_084640_699_A.jpeg,,23.927,18.275,18.0,22.352,,
+cheng_soon_crescent,3,Cheng Soon Crescent_Cam4_20251216_084646_218_A.jpeg,,65.404,44.665,44.0,23.838,,

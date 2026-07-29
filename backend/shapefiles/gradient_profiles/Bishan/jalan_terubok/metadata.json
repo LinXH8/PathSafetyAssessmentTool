@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_terubok",
+  "display_name": "Jalan Terubok",
+  "source_project": "Jalan Terubok",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Terubok\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T04:54:47.413588+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 222.496,
+  "profile_point_count": 111,
+  "valid_elevation_count": 111,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 63,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 23,
+  "usable_gradient_completion_pct": 20.72,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 56.76,
+  "gradient_min_pct": -8.367,
+  "gradient_max_pct": 9.031,
+  "path_bounds_svy21": {
+    "min_x": 28186.616,
+    "min_y": 37297.205,
+    "max_x": 28287.972,
+    "max_y": 37492.459
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TERUBOK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 113,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN IKAN MERAH",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 222.0,
+    "offroad_chainage_max_m": 222.496,
+    "trimmed_offroad_points": 2
+  }
+}

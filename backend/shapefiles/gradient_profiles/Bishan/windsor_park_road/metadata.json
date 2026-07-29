@@ -1,0 +1,66 @@
+{
+  "path_key": "windsor_park_road",
+  "display_name": "Windsor Park Road",
+  "source_project": "Windsor Park Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Windsor Park Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T07:39:17.241875+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1442.773,
+  "profile_point_count": 695,
+  "valid_elevation_count": 695,
+  "rejected_outlier_count": 21,
+  "rejected_step_jump_count": 436,
+  "repaired_gradient_point_count": 20,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 152,
+  "usable_gradient_completion_pct": 21.87,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.73,
+  "gradient_min_pct": -12.812,
+  "gradient_max_pct": 10.418,
+  "path_bounds_svy21": {
+    "min_x": 26881.362,
+    "min_y": 37537.873,
+    "max_x": 27475.291,
+    "max_y": 37802.567
+  },
+  "road_boundary": {
+    "target_road_name": "WINDSOR PARK ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 723,
+    "offroad_point_count": 28,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER THOMSON ROAD",
+        "point_count": 18
+      },
+      {
+        "road_name": "ONTARIO AVENUE",
+        "point_count": 4
+      },
+      {
+        "road_name": "JUPITER ROAD",
+        "point_count": 2
+      },
+      {
+        "road_name": "TORONTO ROAD",
+        "point_count": 2
+      },
+      {
+        "road_name": "VENUS ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1406.0,
+    "trimmed_offroad_points": 28
+  }
+}

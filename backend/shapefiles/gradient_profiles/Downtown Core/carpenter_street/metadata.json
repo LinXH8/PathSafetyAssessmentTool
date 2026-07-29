@@ -1,0 +1,54 @@
+{
+  "path_key": "carpenter_street",
+  "display_name": "Carpenter Street",
+  "source_project": "Carpenter Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Carpenter Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T05:42:21.885434+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 148.131,
+  "profile_point_count": 59,
+  "valid_elevation_count": 4,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 2,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 22,
+  "usable_gradient_completion_pct": 37.29,
+  "elevation_hit_coverage_pct": 6.78,
+  "step_jump_rejection_pct": 3.39,
+  "gradient_min_pct": -4.844,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 29559.968,
+    "min_y": 30036.806,
+    "max_x": 29656.053,
+    "max_y": 30127.649
+  },
+  "road_boundary": {
+    "target_road_name": "CARPENTER STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 76,
+    "offroad_point_count": 17,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NEW BRIDGE ROAD",
+        "point_count": 10
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 148.131,
+    "trimmed_offroad_points": 17
+  }
+}

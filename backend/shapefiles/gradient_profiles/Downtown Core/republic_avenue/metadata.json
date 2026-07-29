@@ -1,0 +1,58 @@
+{
+  "path_key": "republic_avenue",
+  "display_name": "Republic Avenue",
+  "source_project": "Republic Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Republic Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-24T02:46:44.174467+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 6423.165,
+  "profile_point_count": 1468,
+  "valid_elevation_count": 1346,
+  "rejected_outlier_count": 78,
+  "rejected_step_jump_count": 676,
+  "repaired_gradient_point_count": 37,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 586,
+  "usable_gradient_completion_pct": 39.92,
+  "elevation_hit_coverage_pct": 91.69,
+  "step_jump_rejection_pct": 46.05,
+  "gradient_min_pct": -12.461,
+  "gradient_max_pct": 11.775,
+  "path_bounds_svy21": {
+    "min_x": 31248.271,
+    "min_y": 31057.272,
+    "max_x": 32198.897,
+    "max_y": 32076.852
+  },
+  "road_boundary": {
+    "target_road_name": "REPUBLIC AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3213,
+    "offroad_point_count": 1745,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NICOLL HIGHWAY",
+        "point_count": 1612
+      },
+      {
+        "road_name": "STADIUM ROAD",
+        "point_count": 108
+      },
+      {
+        "road_name": ".",
+        "point_count": 25
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 6424.0,
+    "trimmed_offroad_points": 1745
+  }
+}

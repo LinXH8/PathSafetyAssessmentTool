@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+blandford_drive,1,Blandford Drive_Cam4_20260202_083903_964_B.jpeg,,10.198,5.099,6.0,8.536,1.116,1.0
+blandford_drive,2,Blandford Drive_Cam4_20260202_083907_569_B.jpeg,,55.757,32.978,32.0,9.223,4.731,1.0
+blandford_drive,3,Blandford Drive_Cam4_20260202_083923_190_B.jpeg,,62.907,59.332,60.0,9.517,1.513,1.0
+blandford_drive,4,Blandford Drive_Cam4_20260202_083925_592_B.jpeg,,73.618,68.263,68.0,9.663,1.15,1.0
+blandford_drive,5,Blandford Drive_Cam4_20260202_083929_205_B.jpeg,,83.035,78.327,78.0,9.744,0.95,1.0
+blandford_drive,6,Blandford Drive_Cam4_20260202_083932_212_B.jpeg,,128.852,105.944,106.0,10.186,2.287,1.0
+blandford_drive,7,Blandford Drive_Cam4_20260202_083947_241_B.jpeg,,157.037,142.945,142.0,10.887,1.725,1.0
+blandford_drive,8,Blandford Drive_Cam4_20260202_083957_457_B.jpeg,,166.924,161.98,162.0,11.372,2.75,1.0
+blandford_drive,9,Blandford Drive_Cam4_20260202_084001_062_B.jpeg,,194.586,180.755,180.0,11.909,3.188,1.0
+blandford_drive,10,Blandford Drive_Cam4_20260202_084011_281_B.jpeg,,203.661,199.124,200.0,12.747,,
+blandford_drive,11,Blandford Drive_Cam4_20260202_084014_885_B.jpeg,,437.992,320.827,320.0,20.871,,
+blandford_drive,12,Blandford Drive_Cam4_20260202_084734_379_B.jpeg,,447.721,442.857,442.0,25.964,-2.719,1.0
+blandford_drive,13,Blandford Drive_Cam4_20260202_084737_384_B.jpeg,,457.278,452.499,452.0,25.453,-4.45,1.0
+blandford_drive,14,Blandford Drive_Cam4_20260202_084740_387_B.jpeg,,488.784,473.031,474.0,24.345,-4.525,1.0
+blandford_drive,15,Blandford Drive_Cam4_20260202_084749_414_B.jpeg,,501.456,495.12,496.0,23.17,-5.262,1.0
+blandford_drive,16,Blandford Drive_Cam4_20260202_084753_021_B.jpeg,,532.851,517.153,518.0,21.987,-5.706,1.0
+blandford_drive,17,Blandford Drive_Cam4_20260202_084801_432_B.jpeg,,541.487,537.169,538.0,20.855,-5.756,1.0
+blandford_drive,18,Blandford Drive_Cam4_20260202_084803_834_B.jpeg,,569.629,555.558,556.0,19.738,-6.712,1.0
+blandford_drive,19,Blandford Drive_Cam4_20260202_084811_642_B.jpeg,,580.226,574.928,574.0,18.589,-6.2,1.0
+blandford_drive,20,Blandford Drive_Cam4_20260202_084815_255_B.jpeg,,590.193,585.21,586.0,17.843,,
+blandford_drive,21,Blandford Drive_Cam4_20260202_084818_870_B.jpeg,,600.544,595.368,596.0,17.221,-6.162,1.0
+blandford_drive,22,Blandford Drive_Cam4_20260202_084822_473_B.jpeg,,627.889,614.216,614.0,16.142,-6.044,1.0
+blandford_drive,23,Blandford Drive_Cam4_20260202_084830_289_B.jpeg,,694.857,661.373,662.0,17.369,6.588,1.0
+blandford_drive,24,Blandford Drive_Cam4_20260202_085017_393_B.jpeg,,830.528,762.693,762.0,23.194,4.8,1.0
+blandford_drive,25,Blandford Drive_Cam4_20260202_085227_894_B.jpeg,,855.584,843.056,844.0,27.246,6.278,1.0

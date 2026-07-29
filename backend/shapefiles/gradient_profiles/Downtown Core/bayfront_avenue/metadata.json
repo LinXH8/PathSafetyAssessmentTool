@@ -1,0 +1,66 @@
+{
+  "path_key": "bayfront_avenue",
+  "display_name": "Bayfront Avenue",
+  "source_project": "Bayfront Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bayfront Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-06T22:36:47.923693+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7519.238,
+  "profile_point_count": 1899,
+  "valid_elevation_count": 1888,
+  "rejected_outlier_count": 161,
+  "rejected_step_jump_count": 1002,
+  "repaired_gradient_point_count": 33,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 612,
+  "usable_gradient_completion_pct": 32.23,
+  "elevation_hit_coverage_pct": 99.42,
+  "step_jump_rejection_pct": 52.76,
+  "gradient_min_pct": -12.232,
+  "gradient_max_pct": 11.655,
+  "path_bounds_svy21": {
+    "min_x": 30310.583,
+    "min_y": 28514.236,
+    "max_x": 31086.386,
+    "max_y": 30204.575
+  },
+  "road_boundary": {
+    "target_road_name": "BAYFRONT AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3761,
+    "offroad_point_count": 1862,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SHEARES AVENUE",
+        "point_count": 529
+      },
+      {
+        "road_name": "PARK STREET",
+        "point_count": 307
+      },
+      {
+        "road_name": "COMMERCE STREET",
+        "point_count": 218
+      },
+      {
+        "road_name": "MARINA BOULEVARD",
+        "point_count": 133
+      },
+      {
+        "road_name": "CENTRAL BOULEVARD",
+        "point_count": 101
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 7520.0,
+    "trimmed_offroad_points": 1862
+  }
+}

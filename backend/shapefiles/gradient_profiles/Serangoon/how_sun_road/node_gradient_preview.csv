@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+how_sun_road,1,How Sun Road_Cam4_20260112_082430_008_C.jpeg,,10.182,5.091,6.0,10.848,,
+how_sun_road,2,How Sun Road_Cam4_20260112_082434_212_C.jpeg,,97.697,53.94,,,,
+how_sun_road,3,How Sun Road_Cam4_20260112_090201_121_A.jpeg,,141.635,119.666,120.0,12.361,,
+how_sun_road,4,How Sun Road_Cam4_20260112_090220_337_A.jpeg,,148.342,144.988,144.0,12.443,1.225,1.0
+how_sun_road,5,How Sun Road_Cam4_20260112_090223_341_A.jpeg,,196.638,172.49,172.0,19.345,,
+how_sun_road,6,How Sun Road_Cam4_20260112_090329_980_A.jpeg,,207.092,201.865,,,,
+how_sun_road,7,How Sun Road_Cam4_20260112_090334_185_A.jpeg,,236.528,221.81,,,,
+how_sun_road,8,How Sun Road_Cam4_20260112_090346_204_A.jpeg,,260.522,248.525,,,,
+how_sun_road,9,How Sun Road_Cam4_20260112_090401_820_A.jpeg,,292.124,276.323,,,,

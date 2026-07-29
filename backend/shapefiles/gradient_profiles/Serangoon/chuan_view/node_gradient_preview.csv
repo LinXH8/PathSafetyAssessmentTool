@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chuan_view,1,Chuan View_Cam4_20260202_095829_536_C.jpeg,,12.07,6.035,6.0,13.692,,
+chuan_view,2,Chuan View_Cam4_20260202_095834_946_C.jpeg,,22.341,17.206,18.0,13.656,,
+chuan_view,3,Chuan View_Cam4_20260202_095839_218_C.jpeg,,33.783,28.062,28.0,14.015,,
+chuan_view,4,Chuan View_Cam4_20260202_095844_188_C.jpeg,,54.259,44.021,44.0,13.329,,
+chuan_view,5,Chuan View_Cam4_20260202_095855_613_C.jpeg,,65.506,59.883,60.0,12.578,,
+chuan_view,6,Chuan View_Cam4_20260202_095900_503_C.jpeg,,72.952,69.229,70.0,12.76,,
+chuan_view,7,Chuan View_Cam4_20260202_095903_552_C.jpeg,,82.41,77.681,78.0,12.61,0.217,1.0
+chuan_view,8,Chuan View_Cam4_20260202_095907_758_C.jpeg,,111.353,96.882,96.0,12.549,0.103,1.0
+chuan_view,9,Chuan View_Cam4_20260202_095926_532_C.jpeg,,123.508,117.43,118.0,13.752,,
+chuan_view,10,Chuan View_Cam4_20260202_095933_746_C.jpeg,,144.972,134.24,134.0,15.504,,
+chuan_view,11,Chuan View_Cam4_20260202_095943_377_C.jpeg,,157.217,151.094,152.0,16.551,,
+chuan_view,12,Chuan View_Cam4_20260202_095948_284_C.jpeg,,164.381,160.799,160.0,15.534,,
+chuan_view,13,Chuan View_Cam4_20260202_095951_286_C.jpeg,,191.181,177.781,178.0,15.682,4.008,1.0
+chuan_view,14,Chuan View_Cam4_20260202_100002_799_C.jpeg,,202.156,196.669,196.0,17.039,,
+chuan_view,15,Chuan View_Cam4_20260202_100007_609_C.jpeg,,213.569,207.863,208.0,18.28,,
+chuan_view,16,Chuan View_Cam4_20260202_100012_485_C.jpeg,,224.445,219.007,220.0,18.399,-0.352,1.0
+chuan_view,17,Chuan View_Cam4_20260202_100017_894_C.jpeg,,230.373,227.409,228.0,18.373,0.065,1.0
+chuan_view,18,Chuan View_Cam4_20260202_100021_387_C.jpeg,,312.144,271.258,272.0,16.891,,
+chuan_view,19,Chuan View_Cam4_20260202_100806_113_C.jpeg,,323.338,317.741,318.0,14.534,,
+chuan_view,20,Chuan View_Cam4_20260202_100810_330_C.jpeg,,334.322,328.83,328.0,13.655,,
+chuan_view,21,Chuan View_Cam4_20260202_100814_543_C.jpeg,,345.52,339.921,340.0,13.167,,
+chuan_view,22,Chuan View_Cam4_20260202_100818_828_C.jpeg,,368.569,357.045,358.0,12.783,,
+chuan_view,23,Chuan View_Cam4_20260202_100826_681_C.jpeg,,379.026,373.798,374.0,13.092,,
+chuan_view,24,Chuan View_Cam4_20260202_100830_285_C.jpeg,,390.261,384.644,384.0,14.012,4.042,1.0
+chuan_view,25,Chuan View_Cam4_20260202_100840_500_C.jpeg,,401.777,396.019,396.0,14.12,0.0,1.0

@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+brizay_park,1,Brizay Park_Cam4_20251217_072932_807_A.jpeg,,10.868,5.434,6.0,18.861,-5.648,1.0
+brizay_park,2,Brizay Park_Cam4_20251217_072938_844_A.jpeg,,21.536,16.202,16.0,18.639,,
+brizay_park,3,Brizay Park_Cam4_20251217_072944_377_A.jpeg,,34.21,27.873,28.0,19.67,,
+brizay_park,4,Brizay Park_Cam4_20251217_072950_898_A.jpeg,,57.004,45.607,46.0,20.574,,
+brizay_park,5,Brizay Park_Cam4_20251217_073003_923_A.jpeg,,68.239,62.622,62.0,21.482,,
+brizay_park,6,Brizay Park_Cam4_20251217_073008_434_A.jpeg,,79.586,73.912,74.0,19.623,,
+brizay_park,7,Brizay Park_Cam4_20251217_073012_963_A.jpeg,,85.443,82.514,82.0,19.658,4.688,1.0
+brizay_park,8,Brizay Park_Cam4_20251217_073015_483_A.jpeg,,114.09,99.766,100.0,20.958,4.375,1.0
+brizay_park,9,Brizay Park_Cam4_20251217_073027_537_A.jpeg,,126.783,120.437,120.0,22.582,,
+brizay_park,10,Brizay Park_Cam4_20251217_073032_059_A.jpeg,,149.321,138.052,138.0,21.335,,
+brizay_park,11,Brizay Park_Cam4_20251217_073038_080_A.jpeg,,161.392,155.356,156.0,19.524,,
+brizay_park,12,Brizay Park_Cam4_20251217_073041_071_A.jpeg,,169.38,165.386,166.0,18.82,-1.25,1.0
+brizay_park,13,Brizay Park_Cam4_20251217_073043_074_A.jpeg,,181.183,175.282,176.0,18.77,-1.25,1.0
+brizay_park,14,Brizay Park_Cam4_20251217_073046_081_A.jpeg,,190.886,186.035,186.0,18.67,0.0,1.0
+brizay_park,15,Brizay Park_Cam4_20251217_073048_585_A.jpeg,,199.945,195.416,196.0,18.67,0.625,1.0
+brizay_park,16,Brizay Park_Cam4_20251217_073051_093_A.jpeg,,232.543,216.244,216.0,19.22,3.125,1.0
+brizay_park,17,Brizay Park_Cam4_20251217_073102_135_A.jpeg,,260.193,246.368,246.0,21.998,,
+brizay_park,18,Brizay Park_Cam4_20251217_073113_154_A.jpeg,,270.61,265.401,266.0,25.581,0.313,1.0
+brizay_park,19,Brizay Park_Cam4_20251217_073122_179_A.jpeg,,293.12,281.865,282.0,26.643,,
+brizay_park,20,Brizay Park_Cam4_20251217_073140_692_A.jpeg,,303.901,298.51,298.0,26.733,,
+brizay_park,21,Brizay Park_Cam4_20251217_073153_269_A.jpeg,,315.574,309.738,310.0,29.313,,
+brizay_park,22,Brizay Park_Cam4_20251217_073200_296_A.jpeg,,337.562,326.568,326.0,30.059,,
+brizay_park,23,Brizay Park_Cam4_20251217_073210_345_A.jpeg,,348.349,342.956,342.0,28.301,,

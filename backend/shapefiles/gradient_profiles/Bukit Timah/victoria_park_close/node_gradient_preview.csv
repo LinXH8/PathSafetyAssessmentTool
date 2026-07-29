@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+victoria_park_close,1,Victoria Park Close_Cam4_20251218_091653_498_B.jpeg,,11.53,5.765,6.0,31.163,-1.699,1.0
+victoria_park_close,2,Victoria Park Close_Cam4_20251218_091701_307_B.jpeg,,22.086,16.808,16.0,30.841,,
+victoria_park_close,3,Victoria Park Close_Cam4_20251218_091706_112_B.jpeg,,33.472,27.779,28.0,30.32,-3.75,1.0
+victoria_park_close,4,Victoria Park Close_Cam4_20251218_091710_921_B.jpeg,,101.634,67.553,68.0,31.566,-5.248,1.0
+victoria_park_close,5,Victoria Park Close_Cam4_20251218_091808_560_B.jpeg,,128.428,115.031,116.0,30.775,,
+victoria_park_close,6,Victoria Park Close_Cam4_20251218_091817_572_B.jpeg,,139.897,134.162,134.0,31.737,,
+victoria_park_close,7,Victoria Park Close_Cam4_20251218_091821_777_B.jpeg,,164.558,152.227,152.0,28.971,-9.593,2.0
+victoria_park_close,8,Victoria Park Close_Cam4_20251218_091830_787_B.jpeg,,176.595,170.576,170.0,26.864,,
+victoria_park_close,9,Victoria Park Close_Cam4_20251218_091834_433_B.jpeg,,186.54,181.568,182.0,25.083,-7.344,1.0

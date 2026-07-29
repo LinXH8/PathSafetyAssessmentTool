@@ -1,0 +1,62 @@
+{
+  "path_key": "cuscaden_road",
+  "display_name": "Cuscaden Road",
+  "source_project": "Cuscaden Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cuscaden Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-07T08:27:43.079822+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1989.975,
+  "profile_point_count": 937,
+  "valid_elevation_count": 921,
+  "rejected_outlier_count": 165,
+  "rejected_step_jump_count": 778,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 59,
+  "usable_gradient_completion_pct": 6.3,
+  "elevation_hit_coverage_pct": 98.29,
+  "step_jump_rejection_pct": 83.03,
+  "gradient_min_pct": -10.893,
+  "gradient_max_pct": 9.458,
+  "path_bounds_svy21": {
+    "min_x": 26945.891,
+    "min_y": 31814.254,
+    "max_x": 27445.689,
+    "max_y": 32086.684
+  },
+  "road_boundary": {
+    "target_road_name": "CUSCADEN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 996,
+    "offroad_point_count": 59,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TANGLIN ROAD",
+        "point_count": 27
+      },
+      {
+        "road_name": "TOMLINSON ROAD",
+        "point_count": 25
+      },
+      {
+        "road_name": "CUSCADEN WALK",
+        "point_count": 6
+      },
+      {
+        "road_name": "ORCHARD SPRING LANE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 20.0,
+    "offroad_chainage_max_m": 1990.0,
+    "trimmed_offroad_points": 59
+  }
+}

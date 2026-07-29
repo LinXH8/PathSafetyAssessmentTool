@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_selaseh",
+  "display_name": "Jalan Selaseh",
+  "source_project": "Jalan Selaseh",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Selaseh\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T18:11:03.825727+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 928.804,
+  "profile_point_count": 434,
+  "valid_elevation_count": 434,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 265,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 75,
+  "usable_gradient_completion_pct": 17.28,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.06,
+  "gradient_min_pct": -9.833,
+  "gradient_max_pct": 9.682,
+  "path_bounds_svy21": {
+    "min_x": 32304.181,
+    "min_y": 40533.092,
+    "max_x": 32521.349,
+    "max_y": 40954.321
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN SELASEH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 466,
+    "offroad_point_count": 32,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN CHERMAI",
+        "point_count": 9
+      },
+      {
+        "road_name": "JALAN LAKUM",
+        "point_count": 7
+      },
+      {
+        "road_name": "JALAN KERUING",
+        "point_count": 6
+      },
+      {
+        "road_name": "KELULUT HILL",
+        "point_count": 4
+      },
+      {
+        "road_name": "SELETAR HILLS DRIVE",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 108.0,
+    "offroad_chainage_max_m": 896.0,
+    "trimmed_offroad_points": 32
+  }
+}

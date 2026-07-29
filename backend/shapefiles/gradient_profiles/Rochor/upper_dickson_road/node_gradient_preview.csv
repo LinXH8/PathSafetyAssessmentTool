@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+upper_dickson_road,1,Cam4_20251208_105849_054_A.jpeg,,11.196,5.598,6.0,3.008,,
+upper_dickson_road,2,Cam4_20251208_105853_114_A.jpeg,,40.362,25.779,26.0,2.992,-1.063,1.0
+upper_dickson_road,3,Cam4_20251208_105903_803_A.jpeg,,47.038,43.7,44.0,4.717,,
+upper_dickson_road,4,Cam4_20251208_105907_362_A.jpeg,,75.661,61.35,62.0,5.597,,
+upper_dickson_road,5,Cam4_20251208_105920_964_A.jpeg,,89.151,82.406,82.0,3.681,,
+upper_dickson_road,6,Cam4_20251208_105929_140_A.jpeg,,113.781,101.466,102.0,3.208,,
+upper_dickson_road,7,Cam4_20251208_105943_806_A.jpeg,,123.677,118.729,118.0,3.697,-0.65,1.0
+upper_dickson_road,8,Cam4_20251208_110008_560_A.jpeg,,211.889,167.783,168.0,5.36,,
+upper_dickson_road,9,Cam4_20251208_120805_508_C.jpeg,,240.059,225.974,,,,
+upper_dickson_road,10,Cam4_20251208_120829_537_C.jpeg,,246.468,243.264,,,,

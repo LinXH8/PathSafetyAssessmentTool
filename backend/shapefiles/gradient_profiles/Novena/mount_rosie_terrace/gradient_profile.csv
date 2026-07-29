@@ -1,0 +1,27 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+mount_rosie_terrace,Mount Rosie Terrace,0.0,28118.689,33784.594,17.338,15.228,15.228,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,2.0,28117.747,33786.358,15.228,15.228,15.338,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,4.0,28116.805,33788.122,15.673,15.448,15.448,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,6.0,28115.863,33789.886,15.085,15.668,15.448,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,8.0,28114.92,33791.65,16.313,15.466,15.448,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,10.0,28113.978,33793.414,16.108,15.264,15.264,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,12.0,28113.036,33795.178,16.093,15.062,15.062,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,14.0,28112.094,33796.943,14.86,14.86,14.86,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,16.0,28111.151,33798.707,14.81,14.81,14.81,,,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,18.0,28110.209,33800.471,14.76,14.76,14.76,-2.969,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,20.0,28109.267,33802.235,14.698,14.698,14.698,-2.891,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,22.0,28108.325,33803.999,14.623,14.623,14.623,-2.813,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,24.0,28107.382,33805.763,14.579,14.579,14.579,-3.02,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,26.0,28106.44,33807.527,14.535,14.535,14.535,-3.124,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,28.0,28105.498,33809.291,14.456,14.456,14.456,-3.411,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,30.0,28104.555,33811.056,14.373,14.373,14.373,-3.489,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,32.0,28103.613,33812.82,14.306,14.306,14.306,-3.75,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,34.0,28102.671,33814.584,14.256,14.256,14.256,-3.958,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,36.0,28101.729,33816.348,14.156,14.156,14.156,-4.375,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,38.0,28100.786,33818.112,14.056,14.056,14.056,-5.0,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,40.0,28099.844,33819.876,13.956,13.956,13.956,-5.0,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,42.0,28098.902,33821.64,13.856,13.856,13.856,-4.167,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,44.0,28097.96,33823.404,13.756,13.756,13.756,-2.917,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,46.0,28097.017,33825.169,13.723,13.723,13.723,-1.667,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,48.0,28096.075,33826.933,13.723,13.723,13.723,-0.556,1.0,MOUNT ROSIE TERRACE,0.0
+mount_rosie_terrace,Mount Rosie Terrace,50.0,28095.133,33828.697,13.723,13.723,13.723,0.0,1.0,MOUNT ROSIE TERRACE,0.0

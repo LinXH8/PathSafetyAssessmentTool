@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+namly_grove,1,Namly Grove_Cam4_20251217_090253_304_B.jpeg,,12.451,6.225,6.0,16.408,,
+namly_grove,2,Namly Grove_Cam4_20251217_090307_730_B.jpeg,,24.522,18.486,18.0,18.445,,
+namly_grove,3,Namly Grove_Cam4_20251217_090320_843_B.jpeg,,49.121,36.822,36.0,21.361,,
+namly_grove,4,Namly Grove_Cam4_20251217_090344_265_B.jpeg,,78.777,63.949,64.0,21.473,,
+namly_grove,5,Namly Grove_Cam4_20251217_090416_702_B.jpeg,,103.58,91.178,92.0,23.524,5.0,1.0
+namly_grove,6,Namly Grove_Cam4_20251217_090442_540_B.jpeg,,115.962,109.771,110.0,23.748,-1.875,1.0
+namly_grove,7,Namly Grove_Cam4_20251217_090523_953_B.jpeg,,123.028,119.495,120.0,23.324,-6.25,1.0
+namly_grove,8,Namly Grove_Cam4_20251217_090526_357_B.jpeg,,149.438,136.233,136.0,22.989,,
+namly_grove,9,Namly Grove_Cam4_20251217_090534_127_B.jpeg,,158.067,153.752,154.0,20.124,,
+namly_grove,10,Namly Grove_Cam4_20251217_090536_528_B.jpeg,,182.828,170.447,170.0,17.796,,
+namly_grove,11,Namly Grove_Cam4_20251217_090543_739_B.jpeg,,209.962,196.395,196.0,15.832,,
+namly_grove,12,Namly Grove_Cam4_20251217_090551_621_B.jpeg,,218.313,214.137,214.0,13.086,,

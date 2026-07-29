@@ -1,0 +1,58 @@
+{
+  "path_key": "moonbeam_terrace",
+  "display_name": "Moonbeam Terrace",
+  "source_project": "Moonbeam Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Moonbeam Terrace\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T08:07:24.171399+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 525.521,
+  "profile_point_count": 225,
+  "valid_elevation_count": 225,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 140,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 53,
+  "usable_gradient_completion_pct": 23.56,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 62.22,
+  "gradient_min_pct": -7.866,
+  "gradient_max_pct": 9.046,
+  "path_bounds_svy21": {
+    "min_x": 22273.164,
+    "min_y": 33273.381,
+    "max_x": 22422.687,
+    "max_y": 33490.223
+  },
+  "road_boundary": {
+    "target_road_name": "MOONBEAM TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 264,
+    "offroad_point_count": 39,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MOONBEAM DRIVE",
+        "point_count": 24
+      },
+      {
+        "road_name": "MOONBEAM VIEW",
+        "point_count": 12
+      },
+      {
+        "road_name": "MOONBEAM WALK",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 514.0,
+    "trimmed_offroad_points": 39
+  }
+}

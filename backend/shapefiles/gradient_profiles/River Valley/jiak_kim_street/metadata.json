@@ -1,0 +1,42 @@
+{
+  "path_key": "jiak_kim_street",
+  "display_name": "Jiak Kim Street",
+  "source_project": "Jiak Kim Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jiak Kim Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-07T14:56:19.639679+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 119.457,
+  "profile_point_count": 61,
+  "valid_elevation_count": 61,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 28,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 24,
+  "usable_gradient_completion_pct": 39.34,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 45.9,
+  "gradient_min_pct": -10.12,
+  "gradient_max_pct": 29.722,
+  "path_bounds_svy21": {
+    "min_x": 28143.656,
+    "min_y": 30310.587,
+    "max_x": 28203.849,
+    "max_y": 30397.782
+  },
+  "road_boundary": {
+    "target_road_name": "JIAK KIM STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 61,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

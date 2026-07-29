@@ -1,0 +1,42 @@
+{
+  "path_key": "holland_grove_lane",
+  "display_name": "Holland Grove Lane",
+  "source_project": "Holland Grove Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Holland Grove Lane\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T19:03:27.861631+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 78.074,
+  "profile_point_count": 41,
+  "valid_elevation_count": 41,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 27,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 7,
+  "usable_gradient_completion_pct": 17.07,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 65.85,
+  "gradient_min_pct": -10.729,
+  "gradient_max_pct": 2.144,
+  "path_bounds_svy21": {
+    "min_x": 22262.914,
+    "min_y": 32903.986,
+    "max_x": 22276.928,
+    "max_y": 32980.789
+  },
+  "road_boundary": {
+    "target_road_name": "HOLLAND GROVE LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 41,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

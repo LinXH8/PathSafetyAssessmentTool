@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+soo_chow_drive,1,Soo Chow Drive_Cam4_20260103_100837_460_A.jpeg,,13.918,6.959,6.0,21.085,-2.256,1.0
+soo_chow_drive,2,Soo Chow Drive_Cam4_20260103_100841_665_A.jpeg,,20.915,17.416,18.0,20.556,-0.668,1.0
+soo_chow_drive,3,Soo Chow Drive_Cam4_20260103_100843_466_A.jpeg,,30.499,25.707,26.0,20.795,5.606,1.0
+soo_chow_drive,4,Soo Chow Drive_Cam4_20260103_100845_869_A.jpeg,,44.048,37.273,36.0,20.714,,
+soo_chow_drive,5,Soo Chow Drive_Cam4_20260103_100849_474_A.jpeg,,51.676,47.862,,,,
+soo_chow_drive,6,Soo Chow Drive_Cam4_20260103_100851_877_A.jpeg,,74.726,63.201,,,,

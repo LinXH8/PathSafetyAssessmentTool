@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_sukachita,1,Jalan Sukachita_Cam4_20260112_080132_463_B.jpeg,,13.128,6.564,6.0,9.852,-1.298,1.0
+jalan_sukachita,2,Jalan Sukachita_Cam4_20260112_080137_869_B.jpeg,,38.125,25.627,26.0,9.83,,
+jalan_sukachita,3,Jalan Sukachita_Cam4_20260112_080145_680_B.jpeg,,68.917,53.521,54.0,9.796,,
+jalan_sukachita,4,Jalan Sukachita_Cam4_20260112_080155_889_B.jpeg,,75.795,72.356,72.0,9.878,0.562,1.0
+jalan_sukachita,5,Jalan Sukachita_Cam4_20260112_080158_292_B.jpeg,,123.69,99.743,100.0,9.954,0.513,1.0
+jalan_sukachita,6,Jalan Sukachita_Cam4_20260112_080213_309_B.jpeg,,129.764,126.727,126.0,9.969,0.119,1.0
+jalan_sukachita,7,Jalan Sukachita_Cam4_20260112_080215_111_B.jpeg,,179.68,154.722,154.0,10.013,0.169,1.0
+jalan_sukachita,8,Jalan Sukachita_Cam4_20260112_080230_739_B.jpeg,,186.694,183.187,184.0,10.134,0.775,1.0
+jalan_sukachita,9,Jalan Sukachita_Cam4_20260112_080233_142_B.jpeg,,196.393,191.544,192.0,10.148,-0.075,1.0
+jalan_sukachita,10,Jalan Sukachita_Cam4_20260112_080236_145_B.jpeg,,205.832,201.113,202.0,10.412,,
+jalan_sukachita,11,Jalan Sukachita_Cam4_20260112_080239_147_B.jpeg,,235.974,220.903,220.0,10.73,,

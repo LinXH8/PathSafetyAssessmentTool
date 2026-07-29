@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+eng_kong_lane,1,Eng Kong Lane_Cam4_20251216_092201_655_A.jpeg,,12.063,6.032,6.0,38.275,,
+eng_kong_lane,2,Eng Kong Lane_Cam4_20251216_092207_231_A.jpeg,,34.377,23.22,24.0,38.613,,
+eng_kong_lane,3,Eng Kong Lane_Cam4_20251216_092217_676_A.jpeg,,45.321,39.849,40.0,39.102,,
+eng_kong_lane,4,Eng Kong Lane_Cam4_20251216_092222_745_A.jpeg,,52.337,48.829,48.0,39.481,,
+eng_kong_lane,5,Eng Kong Lane_Cam4_20251216_092226_317_A.jpeg,,65.618,58.977,58.0,39.571,,
+eng_kong_lane,6,Eng Kong Lane_Cam4_20251216_092231_427_A.jpeg,,71.887,68.753,68.0,38.869,,
+eng_kong_lane,7,Eng Kong Lane_Cam4_20251216_092233_443_A.jpeg,,135.304,103.596,104.0,37.955,-1.339,1.0
+eng_kong_lane,8,Eng Kong Lane_Cam4_20251216_092255_977_A.jpeg,,145.406,140.355,140.0,38.867,,
+eng_kong_lane,9,Eng Kong Lane_Cam4_20251216_092258_692_A.jpeg,,151.135,148.271,148.0,39.985,,
+eng_kong_lane,10,Eng Kong Lane_Cam4_20251216_092300_253_A.jpeg,,180.655,165.895,166.0,41.109,,
+eng_kong_lane,11,Eng Kong Lane_Cam4_20251216_092310_558_A.jpeg,,192.407,186.531,186.0,42.127,,
+eng_kong_lane,12,Eng Kong Lane_Cam4_20251216_092315_274_A.jpeg,,216.376,204.392,204.0,41.707,,
+eng_kong_lane,13,Eng Kong Lane_Cam4_20251216_092347_304_A.jpeg,,250.243,233.31,234.0,40.073,,

@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+warna_road,1,Warna Road_Cam4_20251218_075146_129_C.jpeg,,10.41,5.205,6.0,15.365,,
+warna_road,2,Warna Road_Cam4_20251218_075149_733_C.jpeg,,22.043,16.227,16.0,16.971,,
+warna_road,3,Warna Road_Cam4_20251218_075221_322_C.jpeg,,32.903,27.473,28.0,19.515,,
+warna_road,4,Warna Road_Cam4_20251218_075224_931_C.jpeg,,44.921,38.912,38.0,21.072,,
+warna_road,5,Warna Road_Cam4_20251218_075229_135_C.jpeg,,53.326,49.124,50.0,19.623,,
+warna_road,6,Warna Road_Cam4_20251218_075232_139_C.jpeg,,61.516,57.421,58.0,18.675,,
+warna_road,7,Warna Road_Cam4_20251218_075235_143_C.jpeg,,71.542,66.529,66.0,19.025,4.755,1.0
+warna_road,8,Warna Road_Cam4_20251218_075238_746_C.jpeg,,100.268,85.905,86.0,21.39,,
+warna_road,9,Warna Road_Cam4_20251218_075250_039_C.jpeg,,112.067,106.168,106.0,20.085,,
+warna_road,10,Warna Road_Cam4_20251218_075313_881_C.jpeg,,122.843,117.455,118.0,22.962,,
+warna_road,11,Warna Road_Cam4_20251218_075317_969_C.jpeg,,146.834,134.839,134.0,28.38,,
+warna_road,12,Warna Road_Cam4_20251218_075326_980_C.jpeg,,174.48,160.657,160.0,36.132,,
+warna_road,13,Warna Road_Cam4_20251218_075336_589_C.jpeg,,200.283,187.382,188.0,37.85,,
+warna_road,14,Warna Road_Cam4_20251218_075346_199_C.jpeg,,209.588,204.936,204.0,37.976,,
+warna_road,15,Warna Road_Cam4_20251218_075349_803_C.jpeg,,218.415,214.002,214.0,37.717,,
+warna_road,16,Warna Road_Cam4_20251218_075354_007_C.jpeg,,245.561,231.988,232.0,29.959,,

@@ -1,0 +1,54 @@
+{
+  "path_key": "nankin_street",
+  "display_name": "Nankin Street",
+  "source_project": "Nankin Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Nankin Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-17T06:03:02.171373+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 176.236,
+  "profile_point_count": 83,
+  "valid_elevation_count": 48,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 52,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 21,
+  "usable_gradient_completion_pct": 25.3,
+  "elevation_hit_coverage_pct": 57.83,
+  "step_jump_rejection_pct": 62.65,
+  "gradient_min_pct": -1.406,
+  "gradient_max_pct": 8.584,
+  "path_bounds_svy21": {
+    "min_x": 29483.652,
+    "min_y": 29589.34,
+    "max_x": 29623.611,
+    "max_y": 29674.602
+  },
+  "road_boundary": {
+    "target_road_name": "NANKIN STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 90,
+    "offroad_point_count": 7,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOUTH BRIDGE ROAD",
+        "point_count": 4
+      },
+      {
+        "road_name": "CHINA STREET",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 176.236,
+    "trimmed_offroad_points": 7
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "path_key": "redwood_avenue",
+  "display_name": "Redwood Avenue",
+  "source_project": "Redwood Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Redwood Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T16:08:21.604553+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 210.241,
+  "profile_point_count": 107,
+  "valid_elevation_count": 107,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 83,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 6,
+  "usable_gradient_completion_pct": 5.61,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.57,
+  "gradient_min_pct": -0.268,
+  "gradient_max_pct": 2.076,
+  "path_bounds_svy21": {
+    "min_x": 23250.509,
+    "min_y": 34846.645,
+    "max_x": 23449.568,
+    "max_y": 34912.557
+  },
+  "road_boundary": {
+    "target_road_name": "REDWOOD AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 107,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

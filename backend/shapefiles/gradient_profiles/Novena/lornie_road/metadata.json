@@ -1,0 +1,50 @@
+{
+  "path_key": "lornie_road",
+  "display_name": "Lornie Road",
+  "source_project": "Lornie Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry2\\_projects\\Lornie Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T02:30:43.999101+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2756.077,
+  "profile_point_count": 1379,
+  "valid_elevation_count": 1379,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 433,
+  "repaired_gradient_point_count": 29,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 792,
+  "usable_gradient_completion_pct": 57.43,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 31.4,
+  "gradient_min_pct": -13.029,
+  "gradient_max_pct": 11.171,
+  "path_bounds_svy21": {
+    "min_x": 26351.775,
+    "min_y": 35222.444,
+    "max_x": 28564.023,
+    "max_y": 36205.09
+  },
+  "road_boundary": {
+    "target_road_name": "LORNIE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1380,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

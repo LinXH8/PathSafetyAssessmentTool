@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chulek,1,Jalan Chulek_Cam4_20260203_084602_609_A.jpeg,,10.073,5.037,6.0,8.787,,
+jalan_chulek,2,Jalan Chulek_Cam4_20260203_084606_814_A.jpeg,,21.379,15.726,16.0,9.035,,
+jalan_chulek,3,Jalan Chulek_Cam4_20260203_084611_619_A.jpeg,,32.922,27.151,28.0,7.822,,
+jalan_chulek,4,Jalan Chulek_Cam4_20260203_084617_398_A.jpeg,,40.659,36.791,36.0,6.903,,
+jalan_chulek,5,Jalan Chulek_Cam4_20260203_084621_002_A.jpeg,,53.551,47.105,48.0,6.832,,
+jalan_chulek,6,Jalan Chulek_Cam4_20260203_084637_822_A.jpeg,,84.341,68.946,68.0,7.145,,
+jalan_chulek,7,Jalan Chulek_Cam4_20260203_084659_932_A.jpeg,,93.748,89.045,90.0,7.563,,
+jalan_chulek,8,Jalan Chulek_Cam4_20260203_084703_536_A.jpeg,,103.735,98.742,98.0,6.677,,
+jalan_chulek,9,Jalan Chulek_Cam4_20260203_084707_145_A.jpeg,,113.196,108.466,108.0,6.307,,
+jalan_chulek,10,Jalan Chulek_Cam4_20260203_084710_147_A.jpeg,,124.921,119.059,120.0,8.255,,
+jalan_chulek,11,Jalan Chulek_Cam4_20260203_084713_752_A.jpeg,,136.449,130.685,130.0,9.505,,
+jalan_chulek,12,Jalan Chulek_Cam4_20260203_084717_357_A.jpeg,,147.325,141.887,142.0,8.55,,
+jalan_chulek,13,Jalan Chulek_Cam4_20260203_084720_961_A.jpeg,,260.667,203.996,204.0,8.831,,
+jalan_chulek,14,Jalan Chulek_Cam4_20260203_085031_781_A.jpeg,,271.072,265.869,266.0,7.003,,
+jalan_chulek,15,Jalan Chulek_Cam4_20260203_085035_386_A.jpeg,,279.461,275.266,276.0,7.076,,
+jalan_chulek,16,Jalan Chulek_Cam4_20260203_085038_389_A.jpeg,,293.571,286.516,286.0,7.122,0.375,1.0

@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_garden_rise,1,Serangoon Garden Rise_Cam4_20260202_092841_479_B.jpeg,,10.454,5.227,,,,
+serangoon_garden_rise,2,Serangoon Garden Rise_Cam4_20260202_092844_482_B.jpeg,,20.152,15.303,,,,
+serangoon_garden_rise,3,Serangoon Garden Rise_Cam4_20260202_092848_087_B.jpeg,,31.118,25.635,26.0,13.849,-3.183,1.0
+serangoon_garden_rise,4,Serangoon Garden Rise_Cam4_20260202_092853_500_B.jpeg,,42.436,36.777,36.0,13.69,,
+serangoon_garden_rise,5,Serangoon Garden Rise_Cam4_20260202_092857_704_B.jpeg,,54.643,48.54,48.0,15.274,,
+serangoon_garden_rise,6,Serangoon Garden Rise_Cam4_20260202_092901_309_B.jpeg,,64.394,59.519,60.0,14.551,,
+serangoon_garden_rise,7,Serangoon Garden Rise_Cam4_20260202_092904_313_B.jpeg,,89.597,76.996,76.0,13.759,-1.212,1.0
+serangoon_garden_rise,8,Serangoon Garden Rise_Cam4_20260202_092912_719_B.jpeg,,99.226,94.412,94.0,13.324,-0.681,1.0
+serangoon_garden_rise,9,Serangoon Garden Rise_Cam4_20260202_092916_326_B.jpeg,,109.357,104.292,104.0,13.355,1.838,1.0

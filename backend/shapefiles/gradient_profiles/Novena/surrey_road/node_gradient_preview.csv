@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+surrey_road,1,,SURREY ROAD,63.904,31.952,32.0,5.204,,
+surrey_road,2,,SURREY ROAD,89.221,108.515,108.0,2.334,,
+surrey_road,3,,SURREY ROAD,154.498,319.496,320.0,5.806,,

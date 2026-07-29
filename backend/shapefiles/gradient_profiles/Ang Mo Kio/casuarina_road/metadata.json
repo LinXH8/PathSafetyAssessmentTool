@@ -1,0 +1,62 @@
+{
+  "path_key": "casuarina_road",
+  "display_name": "Casuarina Road",
+  "source_project": "Casuarina Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Casuarina Road\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:59:48.867114+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2037.286,
+  "profile_point_count": 756,
+  "valid_elevation_count": 756,
+  "rejected_outlier_count": 77,
+  "rejected_step_jump_count": 576,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 71,
+  "usable_gradient_completion_pct": 9.39,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 76.19,
+  "gradient_min_pct": -8.813,
+  "gradient_max_pct": 11.333,
+  "path_bounds_svy21": {
+    "min_x": 27379.069,
+    "min_y": 39441.836,
+    "max_x": 27455.451,
+    "max_y": 39930.255
+  },
+  "road_boundary": {
+    "target_road_name": "CASUARINA ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1020,
+    "offroad_point_count": 264,
+    "offroad_top_road_names": [
+      {
+        "road_name": "UPPER THOMSON ROAD",
+        "point_count": 217
+      },
+      {
+        "road_name": "JACARANDA ROAD",
+        "point_count": 27
+      },
+      {
+        "road_name": "SERAYA CRESCENT",
+        "point_count": 11
+      },
+      {
+        "road_name": "OLD UPPER THOMSON ROAD",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 376.0,
+    "offroad_chainage_max_m": 2038.0,
+    "trimmed_offroad_points": 264
+  }
+}

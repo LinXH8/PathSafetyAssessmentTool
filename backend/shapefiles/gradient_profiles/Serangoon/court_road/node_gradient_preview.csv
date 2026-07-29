@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+court_road,1,COURT ROAD_Cam4_20260203_085313_761_A.jpeg,,9.627,4.813,4.0,6.261,-0.054,1.0
+court_road,2,COURT ROAD_Cam4_20260203_085633_526_A.jpeg,,20.915,15.271,16.0,7.214,,
+court_road,3,COURT ROAD_Cam4_20260203_085637_730_A.jpeg,,31.365,26.14,26.0,8.976,,

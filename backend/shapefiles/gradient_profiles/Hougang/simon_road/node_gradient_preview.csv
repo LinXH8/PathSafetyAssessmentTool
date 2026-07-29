@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+simon_road,1,Simon Road_Cam4_20260110_142459_778_B.jpeg,,10.033,5.016,6.0,6.659,,
+simon_road,2,Simon Road_Cam4_20260110_142502_780_B.jpeg,,20.916,15.474,16.0,7.736,,
+simon_road,3,Simon Road_Cam4_20260110_142506_389_B.jpeg,,32.395,26.655,,,,
+simon_road,4,Simon Road_Cam4_20260110_142511_201_B.jpeg,,41.691,37.043,,,,
+simon_road,5,Simon Road_Cam4_20260110_142514_203_B.jpeg,,111.321,76.506,,,,
+simon_road,6,Simon Road_Cam4_20260130_081242_396_B.jpeg,,117.249,114.285,114.0,16.818,,
+simon_road,7,Simon Road_Cam4_20260130_081246_000_B.jpeg,,174.474,145.861,146.0,24.532,,

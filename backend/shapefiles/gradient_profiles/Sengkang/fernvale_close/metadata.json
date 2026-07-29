@@ -1,0 +1,42 @@
+{
+  "path_key": "fernvale_close",
+  "display_name": "Fernvale Close",
+  "source_project": "Fernvale Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Fernvale Close\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T02:05:29.531856+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 151.551,
+  "profile_point_count": 77,
+  "valid_elevation_count": 77,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 17,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 47,
+  "usable_gradient_completion_pct": 61.04,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 22.08,
+  "gradient_min_pct": -1.875,
+  "gradient_max_pct": 13.889,
+  "path_bounds_svy21": {
+    "min_x": 33118.211,
+    "min_y": 41805.875,
+    "max_x": 33211.089,
+    "max_y": 41840.698
+  },
+  "road_boundary": {
+    "target_road_name": "FERNVALE CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 77,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

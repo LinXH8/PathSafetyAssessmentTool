@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_drive,1,Lentor Drive_Cam4_20251231_100705_094_B.jpeg,,11.282,5.641,,,,
+lentor_drive,2,Lentor Drive_Cam4_20251231_100708_100_B.jpeg,,21.267,16.275,16.0,20.678,,
+lentor_drive,3,Lentor Drive_Cam4_20251231_100710_572_B.jpeg,,193.518,107.393,108.0,22.447,,
+lentor_drive,4,Lentor Drive_Cam4_20251231_100813_031_B.jpeg,,217.52,205.519,206.0,22.543,1.875,1.0
+lentor_drive,5,Lentor Drive_Cam4_20251231_100821_476_B.jpeg,,688.851,453.186,454.0,23.435,,
+lentor_drive,6,Lentor Drive_Cam4_20251231_101105_734_B.jpeg,,697.643,693.247,694.0,15.449,,
+lentor_drive,7,Lentor Drive_Cam4_20251231_101109_389_B.jpeg,,707.123,702.383,702.0,14.326,,
+lentor_drive,8,Lentor Drive_Cam4_20251231_101113_598_B.jpeg,,717.532,712.327,712.0,12.501,,
+lentor_drive,9,Lentor Drive_Cam4_20251231_101117_801_B.jpeg,,727.365,722.449,722.0,12.656,12.8,2.0
+lentor_drive,10,Lentor Drive_Cam4_20251231_101121_466_B.jpeg,,753.834,740.6,740.0,14.287,,
+lentor_drive,11,Lentor Drive_Cam4_20251231_101130_484_B.jpeg,,766.078,759.956,760.0,14.727,0.0,1.0
+lentor_drive,12,Lentor Drive_Cam4_20251231_101134_767_B.jpeg,,774.295,770.187,770.0,14.99,4.375,1.0
+lentor_drive,13,Lentor Drive_Cam4_20251231_101137_770_B.jpeg,,783.951,779.123,780.0,15.427,2.188,1.0
+lentor_drive,14,Lentor Drive_Cam4_20251231_101141_374_B.jpeg,,795.091,789.521,790.0,15.3,-3.187,1.0
+lentor_drive,15,Lentor Drive_Cam4_20251231_101145_595_B.jpeg,,808.177,801.634,802.0,14.917,-3.187,1.0
+lentor_drive,16,Lentor Drive_Cam4_20251231_101150_511_B.jpeg,,814.533,811.355,812.0,14.726,1.673,1.0
+lentor_drive,17,Lentor Drive_Cam4_20251231_101152_915_B.jpeg,,824.87,819.702,820.0,15.11,,
+lentor_drive,18,Lentor Drive_Cam4_20251231_101156_595_B.jpeg,,835.228,830.049,830.0,16.57,,
+lentor_drive,19,Lentor Drive_Cam4_20251231_101200_209_B.jpeg,,847.651,841.439,842.0,18.243,,
+lentor_drive,20,Lentor Drive_Cam4_20251231_101205_085_B.jpeg,,854.204,850.927,850.0,18.218,,
+lentor_drive,21,Lentor Drive_Cam4_20251231_101208_816_B.jpeg,,864.377,859.29,860.0,18.028,,
+lentor_drive,22,Lentor Drive_Cam4_20251231_101213_624_B.jpeg,,873.793,869.085,870.0,17.645,-5.03,1.0
+lentor_drive,23,Lentor Drive_Cam4_20251231_101218_430_B.jpeg,,886.179,879.986,880.0,17.186,3.37,1.0
+lentor_drive,24,Lentor Drive_Cam4_20251231_101224_509_B.jpeg,,893.609,889.894,890.0,18.164,,

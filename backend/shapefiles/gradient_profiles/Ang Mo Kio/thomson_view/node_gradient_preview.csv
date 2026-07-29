@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_view,1,Thomson View_Cam4_20260101_083552_173_B.jpeg,,10.734,5.367,6.0,32.185,,
+thomson_view,2,Thomson View_Cam4_20260101_083556_978_B.jpeg,,36.141,23.438,,,,
+thomson_view,3,Thomson View_Cam4_20260101_083607_195_B.jpeg,,79.451,57.796,58.0,32.465,,
+thomson_view,4,Thomson View_Cam4_20260101_083903_920_B.jpeg,,88.943,84.197,84.0,32.814,,
+thomson_view,5,Thomson View_Cam4_20260101_083906_927_B.jpeg,,98.91,93.926,94.0,32.203,,
+thomson_view,6,Thomson View_Cam4_20260101_083909_931_B.jpeg,,110.244,104.577,104.0,32.216,,
+thomson_view,7,Thomson View_Cam4_20260101_083913_533_B.jpeg,,119.982,115.113,116.0,31.724,,
+thomson_view,8,Thomson View_Cam4_20260101_083917_138_B.jpeg,,129.909,124.946,124.0,31.535,-1.771,1.0
+thomson_view,9,Thomson View_Cam4_20260101_083920_742_B.jpeg,,139.324,134.616,134.0,31.398,3.75,1.0
+thomson_view,10,Thomson View_Cam4_20260101_083923_752_B.jpeg,,149.391,144.358,144.0,31.898,,
+thomson_view,11,Thomson View_Cam4_20260101_083926_753_B.jpeg,,160.184,154.788,154.0,33.266,13.672,2.0
+thomson_view,12,Thomson View_Cam4_20260101_083930_358_B.jpeg,,171.45,165.817,166.0,33.708,,
+thomson_view,13,Thomson View_Cam4_20260101_083934_560_B.jpeg,,179.289,175.37,176.0,33.748,2.61,1.0
+thomson_view,14,Thomson View_Cam4_20260101_083937_565_B.jpeg,,189.787,184.538,184.0,33.891,1.354,1.0
+thomson_view,15,Thomson View_Cam4_20260101_083941_175_B.jpeg,,214.685,202.236,202.0,34.476,5.417,1.0
+thomson_view,16,Thomson View_Cam4_20260101_083949_587_B.jpeg,,225.221,219.953,220.0,35.293,2.917,1.0

@@ -1,0 +1,42 @@
+{
+  "path_key": "irrawaddy_road",
+  "display_name": "Irrawaddy Road",
+  "source_project": "Irrawaddy Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry2\\_projects\\Irrawaddy Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T01:57:47.505925+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 855.496,
+  "profile_point_count": 429,
+  "valid_elevation_count": 429,
+  "rejected_outlier_count": 16,
+  "rejected_step_jump_count": 185,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 181,
+  "usable_gradient_completion_pct": 42.19,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 43.12,
+  "gradient_min_pct": -12.878,
+  "gradient_max_pct": 9.557,
+  "path_bounds_svy21": {
+    "min_x": 29004.666,
+    "min_y": 33658.949,
+    "max_x": 29398.383,
+    "max_y": 34303.699
+  },
+  "road_boundary": {
+    "target_road_name": "IRRAWADDY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 429,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

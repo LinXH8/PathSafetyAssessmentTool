@@ -1,0 +1,66 @@
+{
+  "path_key": "mountbatten_road",
+  "display_name": "Mountbatten Road",
+  "source_project": "Mountbatten Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Mountbatten Road\\geo_data.gpkg",
+  "lidar_bundle": "Marine Parade",
+  "lidar_root": "E:\\LIDAR\\Marine Parade",
+  "generated_at_utc": "2026-06-25T19:00:31.151981+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 14606.083,
+  "profile_point_count": 4260,
+  "valid_elevation_count": 3171,
+  "rejected_outlier_count": 540,
+  "rejected_step_jump_count": 1797,
+  "repaired_gradient_point_count": 33,
+  "removed_bad_gradient_point_count": 16,
+  "valid_gradient_count": 1109,
+  "usable_gradient_completion_pct": 26.03,
+  "elevation_hit_coverage_pct": 74.44,
+  "step_jump_rejection_pct": 42.18,
+  "gradient_min_pct": -12.247,
+  "gradient_max_pct": 11.235,
+  "path_bounds_svy21": {
+    "min_x": 32906.612,
+    "min_y": 31372.078,
+    "max_x": 35664.967,
+    "max_y": 32293.533
+  },
+  "road_boundary": {
+    "target_road_name": "MOUNTBATTEN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 7305,
+    "offroad_point_count": 3045,
+    "offroad_top_road_names": [
+      {
+        "road_name": "GOODMAN ROAD",
+        "point_count": 330
+      },
+      {
+        "road_name": "BRANKSOME ROAD",
+        "point_count": 330
+      },
+      {
+        "road_name": "OLD AIRPORT ROAD",
+        "point_count": 240
+      },
+      {
+        "road_name": "BOURNEMOUTH ROAD",
+        "point_count": 226
+      },
+      {
+        "road_name": "JALAN TEMBUSU",
+        "point_count": 219
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 14606.083,
+    "trimmed_offroad_points": 3045
+  }
+}

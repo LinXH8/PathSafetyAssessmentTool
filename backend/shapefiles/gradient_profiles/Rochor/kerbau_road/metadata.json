@@ -1,0 +1,58 @@
+{
+  "path_key": "kerbau_road",
+  "display_name": "Kerbau Road",
+  "source_project": "Kerbau Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Kerbau Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-10T06:51:28.743031+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 553.125,
+  "profile_point_count": 95,
+  "valid_elevation_count": 87,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 54,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 28.42,
+  "elevation_hit_coverage_pct": 91.58,
+  "step_jump_rejection_pct": 56.84,
+  "gradient_min_pct": -9.187,
+  "gradient_max_pct": 8.894,
+  "path_bounds_svy21": {
+    "min_x": 29906.537,
+    "min_y": 32096.139,
+    "max_x": 30029.585,
+    "max_y": 32208.156
+  },
+  "road_boundary": {
+    "target_road_name": "KERBAU ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 278,
+    "offroad_point_count": 183,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BELILIOS LANE",
+        "point_count": 72
+      },
+      {
+        "road_name": "CHANDER ROAD",
+        "point_count": 65
+      },
+      {
+        "road_name": "BUFFALO ROAD",
+        "point_count": 46
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 554.0,
+    "trimmed_offroad_points": 183
+  }
+}

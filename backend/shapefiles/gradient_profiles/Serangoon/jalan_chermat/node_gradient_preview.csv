@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_chermat,1,Jalan Chermat_Cam4_20260112_080143_759_A.jpeg,,12.107,6.053,,,,
+jalan_chermat,2,Jalan Chermat_Cam4_20260112_080151_568_A.jpeg,,21.474,16.79,16.0,20.816,-0.119,1.0
+jalan_chermat,3,Jalan Chermat_Cam4_20260112_080156_973_A.jpeg,,30.191,25.833,26.0,21.37,,
+jalan_chermat,4,Jalan Chermat_Cam4_20260112_080201_064_A.jpeg,,39.97,35.081,36.0,21.531,-2.33,1.0
+jalan_chermat,5,Jalan Chermat_Cam4_20260112_080205_871_A.jpeg,,50.926,45.448,46.0,20.447,-14.674,2.0
+jalan_chermat,6,Jalan Chermat_Cam4_20260112_080210_676_A.jpeg,,80.02,65.473,66.0,19.332,,
+jalan_chermat,7,Jalan Chermat_Cam4_20260112_080223_892_A.jpeg,,111.587,95.804,96.0,18.214,-7.128,1.0
+jalan_chermat,8,Jalan Chermat_Cam4_20260112_080237_104_A.jpeg,,124.167,117.877,118.0,18.153,,
+jalan_chermat,9,Jalan Chermat_Cam4_20260112_080241_307_A.jpeg,,218.329,171.248,172.0,18.886,6.193,1.0
+jalan_chermat,10,Jalan Chermat_Cam4_20260112_080401_196_A.jpeg,,348.639,283.484,284.0,23.197,,

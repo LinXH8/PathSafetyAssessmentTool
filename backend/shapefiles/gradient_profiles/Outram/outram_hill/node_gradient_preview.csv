@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+outram_hill,1,Cam4_20251229_082132_637_B.jpeg,,12.96,6.48,,,,
+outram_hill,2,Cam4_20251229_082138_041_B.jpeg,,54.459,33.71,,,,
+outram_hill,3,Cam4_20251229_082154_863_B.jpeg,,65.56,60.01,60.0,9.381,-2.812,1.0
+outram_hill,4,Cam4_20251229_082215_285_B.jpeg,,89.977,77.768,78.0,10.474,10.375,2.0
+outram_hill,5,Cam4_20251229_082236_963_B.jpeg,,102.045,96.011,96.0,12.132,,
+outram_hill,6,Cam4_20251229_082247_173_B.jpeg,,125.694,113.869,114.0,13.872,,
+outram_hill,7,Cam4_20251229_082318_331_B.jpeg,,137.51,131.602,132.0,14.582,,
+outram_hill,8,Cam4_20251229_082327_829_B.jpeg,,161.588,149.549,150.0,14.461,,
+outram_hill,9,Cam4_20251229_082354_859_B.jpeg,,173.185,167.386,168.0,14.927,2.177,1.0
+outram_hill,10,Cam4_20251229_082359_065_B.jpeg,,182.751,177.968,178.0,15.255,,
+outram_hill,11,Cam4_20251229_082403_270_B.jpeg,,189.55,186.151,186.0,15.327,,

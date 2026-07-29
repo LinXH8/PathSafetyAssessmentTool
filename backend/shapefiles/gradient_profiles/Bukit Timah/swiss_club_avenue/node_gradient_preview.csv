@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+swiss_club_avenue,1,Swiss Club Avenue_Cam4_20251217_082225_410_C.jpeg,,11.164,5.582,6.0,26.89,-6.303,1.0
+swiss_club_avenue,2,Swiss Club Avenue_Cam4_20251217_082229_492_C.jpeg,,22.519,16.842,16.0,26.677,6.413,1.0
+swiss_club_avenue,3,Swiss Club Avenue_Cam4_20251217_082233_578_C.jpeg,,32.233,27.376,28.0,27.269,,
+swiss_club_avenue,4,Swiss Club Avenue_Cam4_20251217_082237_185_C.jpeg,,44.567,38.4,38.0,26.444,,
+swiss_club_avenue,5,Swiss Club Avenue_Cam4_20251217_082241_394_C.jpeg,,65.96,55.264,56.0,23.716,,
+swiss_club_avenue,6,Swiss Club Avenue_Cam4_20251217_082248_603_C.jpeg,,77.726,71.843,72.0,21.675,,
+swiss_club_avenue,7,Swiss Club Avenue_Cam4_20251217_082252_205_C.jpeg,,88.245,82.986,82.0,20.299,,
+swiss_club_avenue,8,Swiss Club Avenue_Cam4_20251217_082255_807_C.jpeg,,112.432,100.339,100.0,19.442,,
+swiss_club_avenue,9,Swiss Club Avenue_Cam4_20251217_082303_620_C.jpeg,,121.474,116.953,116.0,16.86,,
+swiss_club_avenue,10,Swiss Club Avenue_Cam4_20251217_082306_623_C.jpeg,,128.991,125.232,126.0,16.118,,
+swiss_club_avenue,11,Swiss Club Avenue_Cam4_20251217_082312_029_C.jpeg,,186.043,157.517,158.0,20.352,,

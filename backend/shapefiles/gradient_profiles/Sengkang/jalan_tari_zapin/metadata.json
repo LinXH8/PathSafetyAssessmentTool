@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_tari_zapin",
+  "display_name": "Jalan Tari Zapin",
+  "source_project": "Jalan Tari Zapin",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Tari Zapin\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T02:20:42.737910+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 125.078,
+  "profile_point_count": 62,
+  "valid_elevation_count": 58,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 22,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 31,
+  "usable_gradient_completion_pct": 50.0,
+  "elevation_hit_coverage_pct": 93.55,
+  "step_jump_rejection_pct": 35.48,
+  "gradient_min_pct": -2.5,
+  "gradient_max_pct": 6.352,
+  "path_bounds_svy21": {
+    "min_x": 32307.143,
+    "min_y": 42060.012,
+    "max_x": 32320.343,
+    "max_y": 42181.285
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TARI ZAPIN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 64,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN TARI SERIMPI",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 124.0,
+    "offroad_chainage_max_m": 126.0,
+    "trimmed_offroad_points": 2
+  }
+}

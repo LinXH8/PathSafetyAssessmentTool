@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_grove,1,Lentor Grove_Cam4_20251231_095314_068_B.jpeg,,14.932,7.466,8.0,20.859,,
+lentor_grove,2,Lentor Grove_Cam4_20251231_095321_876_B.jpeg,,44.469,29.7,30.0,20.474,4.983,1.0
+lentor_grove,3,Lentor Grove_Cam4_20251231_095346_706_B.jpeg,,54.2,49.335,50.0,20.444,4.479,1.0
+lentor_grove,4,Lentor Grove_Cam4_20251231_095350_310_B.jpeg,,67.376,60.788,60.0,20.796,,
+lentor_grove,5,Lentor Grove_Cam4_20251231_095355_734_B.jpeg,,73.972,70.674,70.0,21.996,,
+lentor_grove,6,Lentor Grove_Cam4_20251231_095358_737_B.jpeg,,84.9,79.436,80.0,22.496,,
+lentor_grove,7,Lentor Grove_Cam4_20251231_095403_552_B.jpeg,,106.983,95.941,96.0,21.039,,
+lentor_grove,8,Lentor Grove_Cam4_20251231_095415_037_B.jpeg,,114.728,110.855,110.0,20.125,,
+lentor_grove,9,Lentor Grove_Cam4_20251231_095417_440_B.jpeg,,127.741,121.234,122.0,18.463,,
+lentor_grove,10,Lentor Grove_Cam4_20251231_095424_050_B.jpeg,,158.923,143.332,144.0,19.201,,
+lentor_grove,11,Lentor Grove_Cam4_20251231_095436_859_B.jpeg,,170.864,164.894,164.0,21.912,,
+lentor_grove,12,Lentor Grove_Cam4_20251231_095441_750_B.jpeg,,198.94,184.902,184.0,22.612,,
+lentor_grove,13,Lentor Grove_Cam4_20251231_095455_624_B.jpeg,,223.709,211.324,212.0,21.045,,
+lentor_grove,14,Lentor Grove_Cam4_20251231_095507_097_B.jpeg,,304.96,264.334,264.0,21.779,,
+lentor_grove,15,Lentor Grove_Cam4_20251231_095837_502_B.jpeg,,349.721,327.34,328.0,20.698,,
+lentor_grove,16,Lentor Grove_Cam4_20251231_095853_162_B.jpeg,,359.514,354.617,354.0,20.281,-1.161,1.0
+lentor_grove,17,Lentor Grove_Cam4_20251231_095857_366_B.jpeg,,370.988,365.251,366.0,20.338,3.496,1.0

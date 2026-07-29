@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+punggol_north_avenue,1,Punggol North Avenue_Cam4_20260127_082226_235_C.jpeg,,12.336,6.168,6.0,12.582,,
+punggol_north_avenue,2,Punggol North Avenue_Cam4_20260127_082231_042_C.jpeg,,40.973,26.654,26.0,12.387,,
+punggol_north_avenue,3,Punggol North Avenue_Cam4_20260127_082303_475_C.jpeg,,84.465,62.719,,,,
+punggol_north_avenue,4,Punggol North Avenue_Cam4_20260127_085921_766_C.jpeg,,94.423,89.444,90.0,11.06,-1.234,1.0
+punggol_north_avenue,5,Punggol North Avenue_Cam4_20260127_085925_373_C.jpeg,,106.378,100.4,100.0,11.643,,

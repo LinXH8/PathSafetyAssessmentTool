@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+duxton_road,1,Duxton Road_Cam4_20260109_074943_117_A.jpeg,,11.675,5.837,6.0,6.283,,
+duxton_road,2,Duxton Road_Cam4_20260109_074946_719_A.jpeg,,23.127,17.401,18.0,6.429,,
+duxton_road,3,Duxton Road_Cam4_20260109_075040_491_A.jpeg,,34.665,28.896,28.0,8.098,,
+duxton_road,4,Duxton Road_Cam4_20260109_075047_697_A.jpeg,,57.395,46.03,46.0,10.533,,
+duxton_road,5,Duxton Road_Cam4_20260109_075057_879_A.jpeg,,226.086,141.74,142.0,16.026,,
+duxton_road,6,Duxton Road_Cam4_20260109_075930_428_A.jpeg,,232.562,229.324,230.0,5.482,-2.5,1.0
+duxton_road,7,Duxton Road_Cam4_20260109_075944_723_A.jpeg,,261.62,247.091,248.0,4.932,-2.812,1.0
+duxton_road,8,Duxton Road_Cam4_20260109_080009_950_A.jpeg,,315.441,288.53,288.0,5.757,5.625,1.0
+duxton_road,9,Duxton Road_Cam4_20260109_080041_797_A.jpeg,,329.253,322.347,322.0,6.582,5.469,1.0
+duxton_road,10,Duxton Road_Cam4_20260109_080047_806_A.jpeg,,335.385,332.319,332.0,7.319,,
+duxton_road,11,Duxton Road_Cam4_20260109_080050_210_A.jpeg,,345.069,340.227,340.0,7.294,,
+duxton_road,12,Duxton Road_Cam4_20260109_080053_689_A.jpeg,,355.402,350.236,350.0,7.694,,
+duxton_road,13,Duxton Road_Cam4_20260109_080057_293_A.jpeg,,365.907,360.655,360.0,7.594,,
+duxton_road,14,Duxton Road_Cam4_20260109_080100_897_A.jpeg,,376.514,371.211,372.0,6.957,,
+duxton_road,15,Duxton Road_Cam4_20260109_080104_502_A.jpeg,,400.541,388.527,388.0,8.452,,
+duxton_road,16,Duxton Road_Cam4_20260109_080112_317_A.jpeg,,410.478,405.509,406.0,15.322,,
+duxton_road,17,Duxton Road_Cam4_20260109_080115_320_A.jpeg,,420.796,415.637,416.0,17.97,,
+duxton_road,18,Duxton Road_Cam4_20260109_080118_323_A.jpeg,,431.162,425.979,426.0,18.055,,
+duxton_road,19,Duxton Road_Cam4_20260109_080121_325_A.jpeg,,455.104,443.133,444.0,13.242,,

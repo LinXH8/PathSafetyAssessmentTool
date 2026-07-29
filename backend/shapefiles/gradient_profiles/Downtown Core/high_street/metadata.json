@@ -1,0 +1,54 @@
+{
+  "path_key": "high_street",
+  "display_name": "High Street",
+  "source_project": "High Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\High Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T14:22:01.398221+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 502.348,
+  "profile_point_count": 212,
+  "valid_elevation_count": 212,
+  "rejected_outlier_count": 39,
+  "rejected_step_jump_count": 164,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 18,
+  "usable_gradient_completion_pct": 8.49,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 77.36,
+  "gradient_min_pct": -7.088,
+  "gradient_max_pct": 8.012,
+  "path_bounds_svy21": {
+    "min_x": 29749.845,
+    "min_y": 30307.288,
+    "max_x": 29880.226,
+    "max_y": 30404.32
+  },
+  "road_boundary": {
+    "target_road_name": "HIGH STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 253,
+    "offroad_point_count": 41,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NORTH BRIDGE ROAD",
+        "point_count": 26
+      },
+      {
+        "road_name": "HILL STREET",
+        "point_count": 15
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 350.0,
+    "trimmed_offroad_points": 41
+  }
+}

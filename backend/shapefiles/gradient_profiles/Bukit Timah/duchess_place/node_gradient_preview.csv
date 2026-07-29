@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+duchess_place,1,Duchess Place_Cam4_20251218_092913_767_B.jpeg,,14.519,7.26,8.0,6.981,,
+duchess_place,2,Duchess Place_Cam4_20251218_092919_774_B.jpeg,,36.513,25.516,26.0,6.497,4.271,1.0
+duchess_place,3,Duchess Place_Cam4_20251218_092927_583_B.jpeg,,48.345,42.429,42.0,6.666,0.983,1.0
+duchess_place,4,Duchess Place_Cam4_20251218_092931_790_B.jpeg,,56.808,52.577,52.0,7.141,6.25,1.0
+duchess_place,5,Duchess Place_Cam4_20251218_092934_812_B.jpeg,,70.322,63.565,64.0,7.716,1.875,1.0

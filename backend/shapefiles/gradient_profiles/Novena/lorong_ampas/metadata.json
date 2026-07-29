@@ -1,0 +1,50 @@
+{
+  "path_key": "lorong_ampas",
+  "display_name": "Lorong Ampas",
+  "source_project": "Lorong Ampas",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry7\\_projects\\Lorong Ampas\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-09T05:06:32.062956+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 267.499,
+  "profile_point_count": 134,
+  "valid_elevation_count": 134,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 78,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 34,
+  "usable_gradient_completion_pct": 25.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.21,
+  "gradient_min_pct": -3.49,
+  "gradient_max_pct": 2.427,
+  "path_bounds_svy21": {
+    "min_x": 30073.787,
+    "min_y": 34193.387,
+    "max_x": 30295.076,
+    "max_y": 34343.601
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG AMPAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 135,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN AMPAS",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

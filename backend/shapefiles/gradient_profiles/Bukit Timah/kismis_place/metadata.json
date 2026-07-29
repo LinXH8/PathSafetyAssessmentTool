@@ -1,0 +1,50 @@
+{
+  "path_key": "kismis_place",
+  "display_name": "Kismis Place",
+  "source_project": "Kismis Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Kismis Place\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T00:33:04.473576+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 312.925,
+  "profile_point_count": 124,
+  "valid_elevation_count": 123,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 91,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 15,
+  "usable_gradient_completion_pct": 12.1,
+  "elevation_hit_coverage_pct": 99.19,
+  "step_jump_rejection_pct": 73.39,
+  "gradient_min_pct": -6.094,
+  "gradient_max_pct": 1.875,
+  "path_bounds_svy21": {
+    "min_x": 20367.721,
+    "min_y": 35314.45,
+    "max_x": 20444.97,
+    "max_y": 35414.115
+  },
+  "road_boundary": {
+    "target_road_name": "KISMIS PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 158,
+    "offroad_point_count": 34,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG KISMIS",
+        "point_count": 34
+      }
+    ],
+    "offroad_chainage_min_m": 112.0,
+    "offroad_chainage_max_m": 312.925,
+    "trimmed_offroad_points": 34
+  }
+}

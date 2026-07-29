@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_senandong,1,Jalan Senandong_Cam4_20251217_082826_240_C.jpeg,,12.458,6.229,6.0,24.031,,
+jalan_senandong,2,Jalan Senandong_Cam4_20251217_082831_648_C.jpeg,,20.563,16.511,16.0,22.645,,
+jalan_senandong,3,Jalan Senandong_Cam4_20251217_082834_050_C.jpeg,,44.843,32.703,32.0,21.151,,
+jalan_senandong,4,Jalan Senandong_Cam4_20251217_082841_827_C.jpeg,,72.869,58.856,58.0,21.367,,
+jalan_senandong,5,Jalan Senandong_Cam4_20251217_082851_416_C.jpeg,,95.221,84.045,84.0,22.151,5.625,1.0
+jalan_senandong,6,Jalan Senandong_Cam4_20251217_082905_240_C.jpeg,,106.512,100.866,100.0,22.951,3.125,1.0
+jalan_senandong,7,Jalan Senandong_Cam4_20251217_082909_321_C.jpeg,,119.221,112.866,112.0,23.946,,
+jalan_senandong,8,Jalan Senandong_Cam4_20251217_082913_526_C.jpeg,,129.353,124.287,124.0,26.723,,
+jalan_senandong,9,Jalan Senandong_Cam4_20251217_082917_129_C.jpeg,,136.675,133.014,134.0,27.402,,
+jalan_senandong,10,Jalan Senandong_Cam4_20251217_082919_409_C.jpeg,,180.117,158.396,158.0,27.481,,
+jalan_senandong,11,Jalan Senandong_Cam4_20251217_082935_026_C.jpeg,,190.516,185.317,186.0,28.482,,
+jalan_senandong,12,Jalan Senandong_Cam4_20251217_082938_631_C.jpeg,,300.944,245.73,246.0,28.661,,

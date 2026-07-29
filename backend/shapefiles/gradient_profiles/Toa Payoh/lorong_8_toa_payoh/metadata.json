@@ -1,0 +1,28 @@
+{
+  "path_key": "lorong_8_toa_payoh",
+  "display_name": "TPYLor82Q25",
+  "source_project": "TPYLor82Q25",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\TPYLor82Q25\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_05_TPY_01",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_05_TPY_01",
+  "generated_at_utc": "2026-04-27T07:09:24.417564+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 60.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1439.874,
+  "profile_point_count": 558,
+  "valid_elevation_count": 557,
+  "rejected_outlier_count": 82,
+  "rejected_step_jump_count": 158,
+  "valid_gradient_count": 326,
+  "gradient_min_pct": -5.763,
+  "gradient_max_pct": 3.912,
+  "path_bounds_svy21": {
+    "min_x": 30362.675,
+    "min_y": 35285.77,
+    "max_x": 30935.606,
+    "max_y": 35765.32
+  }
+}

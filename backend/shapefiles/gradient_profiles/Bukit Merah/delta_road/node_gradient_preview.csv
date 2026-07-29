@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+delta_road,1,Delta Road_Cam4_20251229_092559_744_C.jpeg,,10.097,5.048,6.0,6.294,,
+delta_road,2,Delta Road_Cam4_20251229_092603_953_C.jpeg,,23.328,16.712,16.0,5.802,,
+delta_road,3,Delta Road_Cam4_20251229_092608_757_C.jpeg,,34.587,28.957,28.0,4.838,,
+delta_road,4,Delta Road_Cam4_20251229_092612_961_C.jpeg,,44.432,39.51,40.0,4.573,,

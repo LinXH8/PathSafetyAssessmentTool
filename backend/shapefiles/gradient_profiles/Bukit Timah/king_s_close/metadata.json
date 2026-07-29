@@ -1,0 +1,50 @@
+{
+  "path_key": "king_s_close",
+  "display_name": "King's Close",
+  "source_project": "King's Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\King's Close\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T23:30:14.814486+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 560.859,
+  "profile_point_count": 278,
+  "valid_elevation_count": 278,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 145,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 92,
+  "usable_gradient_completion_pct": 33.09,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 52.16,
+  "gradient_min_pct": -4.892,
+  "gradient_max_pct": 6.311,
+  "path_bounds_svy21": {
+    "min_x": 24574.697,
+    "min_y": 33225.679,
+    "max_x": 24754.692,
+    "max_y": 33399.706
+  },
+  "road_boundary": {
+    "target_road_name": "KING'S CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 282,
+    "offroad_point_count": 4,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KING'S WALK",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 138.0,
+    "offroad_chainage_max_m": 144.0,
+    "trimmed_offroad_points": 4
+  }
+}

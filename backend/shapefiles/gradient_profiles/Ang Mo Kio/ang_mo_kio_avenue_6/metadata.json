@@ -1,0 +1,66 @@
+{
+  "path_key": "ang_mo_kio_avenue_6",
+  "display_name": "Ang Mo Kio Avenue 6",
+  "source_project": "Ang Mo Kio Avenue 6",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Avenue 6\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T13:24:10.461430+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7159.059,
+  "profile_point_count": 2401,
+  "valid_elevation_count": 1881,
+  "rejected_outlier_count": 241,
+  "rejected_step_jump_count": 1478,
+  "repaired_gradient_point_count": 19,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 509,
+  "usable_gradient_completion_pct": 21.2,
+  "elevation_hit_coverage_pct": 78.34,
+  "step_jump_rejection_pct": 61.56,
+  "gradient_min_pct": -19.492,
+  "gradient_max_pct": 14.037,
+  "path_bounds_svy21": {
+    "min_x": 28874.958,
+    "min_y": 38832.82,
+    "max_x": 29482.074,
+    "max_y": 41021.95
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO AVENUE 6",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3581,
+    "offroad_point_count": 1180,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANG MO KIO STREET 61",
+        "point_count": 533
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 9",
+        "point_count": 268
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 5",
+        "point_count": 191
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 3",
+        "point_count": 120
+      },
+      {
+        "road_name": "YIO CHU KANG ROAD",
+        "point_count": 58
+      }
+    ],
+    "offroad_chainage_min_m": 334.0,
+    "offroad_chainage_max_m": 6882.0,
+    "trimmed_offroad_points": 1180
+  }
+}

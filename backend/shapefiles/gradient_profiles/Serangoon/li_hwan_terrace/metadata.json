@@ -1,0 +1,42 @@
+{
+  "path_key": "li_hwan_terrace",
+  "display_name": "Li Hwan Terrace",
+  "source_project": "Li Hwan Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Li Hwan Terrace\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T19:11:56.484921+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 237.949,
+  "profile_point_count": 120,
+  "valid_elevation_count": 120,
+  "rejected_outlier_count": 6,
+  "rejected_step_jump_count": 20,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 93,
+  "usable_gradient_completion_pct": 77.5,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 16.67,
+  "gradient_min_pct": -6.163,
+  "gradient_max_pct": 3.969,
+  "path_bounds_svy21": {
+    "min_x": 31438.722,
+    "min_y": 37430.199,
+    "max_x": 31532.904,
+    "max_y": 37559.564
+  },
+  "road_boundary": {
+    "target_road_name": "LI HWAN TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 120,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

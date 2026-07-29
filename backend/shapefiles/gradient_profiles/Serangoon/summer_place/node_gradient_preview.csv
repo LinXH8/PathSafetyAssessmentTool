@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+summer_place,1,Summer Place_Cam4_20260202_074648_600_C.jpeg,,10.0,5.0,6.0,11.855,0.252,1.0
+summer_place,2,Summer Place_Cam4_20260202_074745_675_C.jpeg,,17.023,13.511,14.0,11.903,,
+summer_place,3,Summer Place_Cam4_20260202_074759_377_C.jpeg,,43.59,30.306,30.0,12.582,,
+summer_place,4,Summer Place_Cam4_20260202_074809_591_C.jpeg,,54.608,49.099,50.0,16.21,,
+summer_place,5,Summer Place_Cam4_20260202_074813_193_C.jpeg,,69.873,62.24,62.0,18.002,-0.675,1.0
+summer_place,6,Summer Place_Cam4_20260202_074829_412_C.jpeg,,98.332,84.102,84.0,16.852,,
+summer_place,7,Summer Place_Cam4_20260202_074848_643_C.jpeg,,125.855,112.094,112.0,14.223,,
+summer_place,8,Summer Place_Cam4_20260202_074916_870_C.jpeg,,137.319,131.587,132.0,11.68,1.921,1.0
+summer_place,9,Summer Place_Cam4_20260202_074922_275_C.jpeg,,148.761,143.04,144.0,12.038,,
+summer_place,10,Summer Place_Cam4_20260202_074927_080_C.jpeg,,159.256,154.009,154.0,11.316,-2.638,1.0
+summer_place,11,Summer Place_Cam4_20260202_075018_133_C.jpeg,,182.509,170.882,170.0,11.085,,
+summer_place,12,Summer Place_Cam4_20260202_075030_146_C.jpeg,,193.783,188.146,188.0,11.954,,
+summer_place,13,Summer Place_Cam4_20260202_075034_351_C.jpeg,,204.51,199.147,200.0,10.911,,
+summer_place,14,Summer Place_Cam4_20260202_075038_558_C.jpeg,,211.394,207.952,208.0,10.986,,
+summer_place,15,Summer Place_Cam4_20260202_075041_562_C.jpeg,,220.798,216.096,216.0,11.655,,
+summer_place,16,Summer Place_Cam4_20260202_075047_568_C.jpeg,,349.959,285.379,286.0,11.309,3.212,1.0
+summer_place,17,Summer Place_Cam4_20260202_104357_812_C.jpeg,,360.769,355.364,356.0,12.356,1.663,1.0
+summer_place,18,Summer Place_Cam4_20260202_104416_334_C.jpeg,,369.75,365.259,366.0,12.743,2.894,1.0
+summer_place,19,Summer Place_Cam4_20260202_104423_822_C.jpeg,,381.658,375.704,376.0,12.676,-0.106,1.0

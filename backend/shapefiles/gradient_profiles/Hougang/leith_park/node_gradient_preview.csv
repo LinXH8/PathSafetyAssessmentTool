@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+leith_park,1,Leith Park_Cam4_20260130_094607_537_B.jpeg,,14.009,7.005,8.0,,,
+leith_park,2,Leith Park_Cam4_20260130_094636_989_B.jpeg,,21.888,17.949,18.0,,,
+leith_park,3,Leith Park_Cam4_20260130_094641_192_B.jpeg,,50.421,36.155,36.0,,,
+leith_park,4,Leith Park_Cam4_20260130_094655_657_B.jpeg,,61.603,56.012,56.0,30.827,0.0,1.0
+leith_park,5,Leith Park_Cam4_20260130_094701_066_B.jpeg,,87.039,74.321,74.0,30.827,,
+leith_park,6,Leith Park_Cam4_20260130_094714_911_B.jpeg,,99.238,93.139,94.0,30.987,0.0,1.0
+leith_park,7,Leith Park_Cam4_20260130_094720_918_B.jpeg,,109.891,104.564,104.0,30.987,0.0,1.0
+leith_park,8,Leith Park_Cam4_20260130_094725_722_B.jpeg,,117.077,113.484,114.0,30.987,0.0,1.0
+leith_park,9,Leith Park_Cam4_20260130_094729_331_B.jpeg,,192.199,154.638,154.0,30.569,1.6,1.0
+leith_park,10,Leith Park_Cam4_20260130_094800_027_B.jpeg,,206.353,199.276,200.0,,,
+leith_park,11,Leith Park_Cam4_20260130_094805_433_B.jpeg,,230.826,218.59,218.0,,,
+leith_park,12,Leith Park_Cam4_20260130_094813_856_B.jpeg,,238.114,234.47,234.0,,,
+leith_park,13,Leith Park_Cam4_20260130_094816_260_B.jpeg,,248.279,243.197,244.0,,,

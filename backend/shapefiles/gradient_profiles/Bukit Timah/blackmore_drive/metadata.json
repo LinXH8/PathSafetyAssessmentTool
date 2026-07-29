@@ -1,0 +1,58 @@
+{
+  "path_key": "blackmore_drive",
+  "display_name": "Blackmore Drive",
+  "source_project": "Blackmore Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Blackmore Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T05:17:06.215079+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1170.335,
+  "profile_point_count": 319,
+  "valid_elevation_count": 319,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 152,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 129,
+  "usable_gradient_completion_pct": 40.44,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.65,
+  "gradient_min_pct": -8.75,
+  "gradient_max_pct": 7.135,
+  "path_bounds_svy21": {
+    "min_x": 22330.23,
+    "min_y": 34873.397,
+    "max_x": 22562.713,
+    "max_y": 35342.43
+  },
+  "road_boundary": {
+    "target_road_name": "BLACKMORE DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 587,
+    "offroad_point_count": 268,
+    "offroad_top_road_names": [
+      {
+        "road_name": "OLD HOLLAND ROAD",
+        "point_count": 116
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 115
+      },
+      {
+        "road_name": "DUNEARN ROAD",
+        "point_count": 37
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1170.335,
+    "trimmed_offroad_points": 268
+  }
+}

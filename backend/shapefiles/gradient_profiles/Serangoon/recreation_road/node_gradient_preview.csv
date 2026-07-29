@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+recreation_road,1,Recreation Road_Cam4_20260112_074732_771_A.jpeg,,9.152,4.576,4.0,19.789,-5.308,1.0
+recreation_road,2,Recreation Road_Cam4_20260112_074739_979_A.jpeg,,19.405,14.279,14.0,20.024,,
+recreation_road,3,Recreation Road_Cam4_20260112_074743_581_A.jpeg,,64.522,41.964,42.0,22.814,,
+recreation_road,4,Recreation Road_Cam4_20260112_074807_608_A.jpeg,,71.013,67.767,68.0,24.44,,
+recreation_road,5,Recreation Road_Cam4_20260112_074811_213_A.jpeg,,80.769,75.891,76.0,22.628,,
+recreation_road,6,Recreation Road_Cam4_20260112_074816_020_A.jpeg,,94.037,87.403,88.0,22.352,0.306,1.0
+recreation_road,7,Recreation Road_Cam4_20260112_074822_629_A.jpeg,,104.098,99.068,100.0,22.36,-1.24,1.0
+recreation_road,8,Recreation Road_Cam4_20260112_074827_434_A.jpeg,,110.697,107.398,108.0,22.229,-0.42,1.0
+recreation_road,9,Recreation Road_Cam4_20260112_074830_437_A.jpeg,,121.356,116.027,116.0,22.288,0.606,1.0
+recreation_road,10,Recreation Road_Cam4_20260112_074835_243_A.jpeg,,162.461,141.909,142.0,21.725,,
+recreation_road,11,Recreation Road_Cam4_20260112_074923_693_A.jpeg,,174.142,168.301,168.0,21.362,-1.094,1.0
+recreation_road,12,Recreation Road_Cam4_20260112_074927_897_A.jpeg,,182.555,178.348,178.0,21.264,-0.712,1.0
+recreation_road,13,Recreation Road_Cam4_20260112_074930_899_A.jpeg,,191.884,187.219,188.0,21.184,-0.513,1.0
+recreation_road,14,Recreation Road_Cam4_20260112_074934_504_A.jpeg,,194.943,193.413,194.0,21.183,0.137,1.0
+recreation_road,15,Recreation Road_Cam4_20260112_074947_728_A.jpeg,,381.157,288.05,288.0,22.64,-4.658,1.0

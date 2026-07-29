@@ -1,0 +1,50 @@
+{
+  "path_key": "cuppage_road",
+  "display_name": "Cuppage Road",
+  "source_project": "Cuppage Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Cuppage Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Orchard_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Orchard_LTA",
+  "generated_at_utc": "2026-06-07T08:23:59.458759+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 310.601,
+  "profile_point_count": 75,
+  "valid_elevation_count": 58,
+  "rejected_outlier_count": 17,
+  "rejected_step_jump_count": 36,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 29,
+  "usable_gradient_completion_pct": 38.67,
+  "elevation_hit_coverage_pct": 77.33,
+  "step_jump_rejection_pct": 48.0,
+  "gradient_min_pct": -6.635,
+  "gradient_max_pct": 7.918,
+  "path_bounds_svy21": {
+    "min_x": 28703.903,
+    "min_y": 31521.893,
+    "max_x": 28771.018,
+    "max_y": 31744.194
+  },
+  "road_boundary": {
+    "target_road_name": "CUPPAGE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 157,
+    "offroad_point_count": 82,
+    "offroad_top_road_names": [
+      {
+        "road_name": "EMERALD HILL ROAD",
+        "point_count": 82
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 162.0,
+    "trimmed_offroad_points": 82
+  }
+}

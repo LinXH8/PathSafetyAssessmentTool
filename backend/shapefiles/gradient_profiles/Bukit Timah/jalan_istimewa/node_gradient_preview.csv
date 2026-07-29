@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_istimewa,1,Jalan Istimewa_Cam4_20251218_093211_145_C.jpeg,,13.729,6.865,6.0,26.065,,
+jalan_istimewa,2,Jalan Istimewa_Cam4_20251218_093217_233_C.jpeg,,21.182,17.456,18.0,24.311,,
+jalan_istimewa,3,Jalan Istimewa_Cam4_20251218_093220_251_C.jpeg,,30.528,25.855,26.0,23.725,0.0,1.0
+jalan_istimewa,4,Jalan Istimewa_Cam4_20251218_093223_913_C.jpeg,,43.383,36.955,36.0,23.725,0.0,1.0
+jalan_istimewa,5,Jalan Istimewa_Cam4_20251218_093228_801_C.jpeg,,51.689,47.536,48.0,23.675,-0.625,1.0
+jalan_istimewa,6,Jalan Istimewa_Cam4_20251218_093231_819_C.jpeg,,61.1,56.395,56.0,23.675,0.0,1.0
+jalan_istimewa,7,Jalan Istimewa_Cam4_20251218_093235_480_C.jpeg,,106.332,83.716,84.0,23.575,-0.625,1.0
+jalan_istimewa,8,Jalan Istimewa_Cam4_20251218_093252_915_C.jpeg,,112.877,109.604,110.0,24.24,,
+jalan_istimewa,9,Jalan Istimewa_Cam4_20251218_093255_919_C.jpeg,,122.724,117.801,118.0,25.196,,
+jalan_istimewa,10,Jalan Istimewa_Cam4_20251218_093300_208_C.jpeg,,132.037,127.38,128.0,25.874,,
+jalan_istimewa,11,Jalan Istimewa_Cam4_20251218_093305_020_C.jpeg,,144.55,138.293,138.0,24.525,,

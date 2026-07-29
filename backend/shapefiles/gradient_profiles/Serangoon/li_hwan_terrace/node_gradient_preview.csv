@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+li_hwan_terrace,1,Li Hwan Terrace_Cam4_20260202_075012_711_A.jpeg,,13.744,6.872,6.0,17.05,2.725,1.0
+li_hwan_terrace,2,Li Hwan Terrace_Cam4_20260202_075020_519_A.jpeg,,21.493,17.618,18.0,17.25,1.281,1.0
+li_hwan_terrace,3,Li Hwan Terrace_Cam4_20260202_075024_722_A.jpeg,,55.267,38.38,38.0,17.62,1.091,1.0
+li_hwan_terrace,4,Li Hwan Terrace_Cam4_20260202_075040_442_A.jpeg,,61.116,58.192,58.0,17.245,0.0,1.0
+li_hwan_terrace,5,Li Hwan Terrace_Cam4_20260202_075042_845_A.jpeg,,95.45,78.283,78.0,17.41,1.559,1.0
+li_hwan_terrace,6,Li Hwan Terrace_Cam4_20260202_075125_376_A.jpeg,,126.048,110.749,110.0,18.348,3.0,1.0
+li_hwan_terrace,7,Li Hwan Terrace_Cam4_20260202_075139_229_A.jpeg,,133.704,129.876,130.0,18.672,1.238,1.0
+li_hwan_terrace,8,Li Hwan Terrace_Cam4_20260202_075142_233_A.jpeg,,146.872,140.288,140.0,18.858,1.806,1.0
+li_hwan_terrace,9,Li Hwan Terrace_Cam4_20260202_075147_647_A.jpeg,,154.887,150.88,150.0,19.508,,
+li_hwan_terrace,10,Li Hwan Terrace_Cam4_20260202_075151_251_A.jpeg,,163.022,158.955,158.0,20.014,,
+li_hwan_terrace,11,Li Hwan Terrace_Cam4_20260202_075155_932_A.jpeg,,237.949,200.486,200.0,18.559,-0.684,1.0

@@ -1,0 +1,58 @@
+{
+  "path_key": "leng_kee_road",
+  "display_name": "Leng Kee Road",
+  "source_project": "Leng Kee Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Leng Kee Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T07:03:44.604798+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2364.843,
+  "profile_point_count": 1118,
+  "valid_elevation_count": 1118,
+  "rejected_outlier_count": 92,
+  "rejected_step_jump_count": 682,
+  "repaired_gradient_point_count": 14,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 237,
+  "usable_gradient_completion_pct": 21.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.0,
+  "gradient_min_pct": -11.835,
+  "gradient_max_pct": 14.875,
+  "path_bounds_svy21": {
+    "min_x": 25231.117,
+    "min_y": 30275.846,
+    "max_x": 25982.237,
+    "max_y": 30444.163
+  },
+  "road_boundary": {
+    "target_road_name": "LENG KEE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1184,
+    "offroad_point_count": 66,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOY FATT ROAD",
+        "point_count": 33
+      },
+      {
+        "road_name": "KUNG CHONG ROAD",
+        "point_count": 32
+      },
+      {
+        "road_name": "TIONG BAHRU ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 1248.0,
+    "offroad_chainage_max_m": 2364.843,
+    "trimmed_offroad_points": 66
+  }
+}

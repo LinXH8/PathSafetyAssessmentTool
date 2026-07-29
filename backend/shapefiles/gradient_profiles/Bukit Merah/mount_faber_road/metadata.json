@@ -1,0 +1,54 @@
+{
+  "path_key": "mount_faber_road",
+  "display_name": "Mount Faber Road",
+  "source_project": "Mount Faber Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Mount Faber Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:22:27.328564+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2431.03,
+  "profile_point_count": 856,
+  "valid_elevation_count": 541,
+  "rejected_outlier_count": 109,
+  "rejected_step_jump_count": 388,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 133,
+  "usable_gradient_completion_pct": 15.54,
+  "elevation_hit_coverage_pct": 63.2,
+  "step_jump_rejection_pct": 45.33,
+  "gradient_min_pct": -10.625,
+  "gradient_max_pct": 5.379,
+  "path_bounds_svy21": {
+    "min_x": 26393.686,
+    "min_y": 27797.125,
+    "max_x": 27080.865,
+    "max_y": 28303.668
+  },
+  "road_boundary": {
+    "target_road_name": "MOUNT FABER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1217,
+    "offroad_point_count": 361,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TELOK BLANGAH RISE",
+        "point_count": 360
+      },
+      {
+        "road_name": "KAMPONG BAHRU ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1112.0,
+    "trimmed_offroad_points": 361
+  }
+}

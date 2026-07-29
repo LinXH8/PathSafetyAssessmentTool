@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+fir_avenue,1,Fir Avenue_Cam4_20251217_081937_318_A.jpeg,,12.458,6.229,6.0,8.411,,
+fir_avenue,2,Fir Avenue_Cam4_20251217_081941_321_A.jpeg,,23.935,18.197,18.0,8.819,,
+fir_avenue,3,Fir Avenue_Cam4_20251217_081944_825_A.jpeg,,46.973,35.454,36.0,8.773,,
+fir_avenue,4,Fir Avenue_Cam4_20251217_081951_389_A.jpeg,,57.819,52.396,52.0,8.257,0.625,1.0
+fir_avenue,5,Fir Avenue_Cam4_20251217_081954_429_A.jpeg,,71.006,64.413,64.0,8.282,0.625,1.0
+fir_avenue,6,Fir Avenue_Cam4_20251217_081957_970_A.jpeg,,93.927,82.467,82.0,8.432,0.0,1.0
+fir_avenue,7,Fir Avenue_Cam4_20251217_082004_578_A.jpeg,,106.201,100.064,100.0,8.507,0.313,1.0
+fir_avenue,8,Fir Avenue_Cam4_20251217_082008_110_A.jpeg,,118.415,112.308,112.0,8.532,,
+fir_avenue,9,Fir Avenue_Cam4_20251217_082011_639_A.jpeg,,140.661,129.538,130.0,10.288,,

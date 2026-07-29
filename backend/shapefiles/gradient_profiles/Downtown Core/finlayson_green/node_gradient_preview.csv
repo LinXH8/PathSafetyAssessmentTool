@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+finlayson_green,1,Finlayson Green_Cam4_20251211_084202_933_C.jpeg,,12.656,6.328,,,,
+finlayson_green,2,Finlayson Green_Cam4_20251211_084203_534_C.jpeg,,32.156,22.406,,,,
+finlayson_green,3,Finlayson Green_Cam4_20251211_084234_772_C.jpeg,,44.23,38.193,38.0,5.527,,
+finlayson_green,4,Finlayson Green_Cam4_20251211_084238_379_C.jpeg,,128.883,86.557,86.0,2.799,,
+finlayson_green,5,Finlayson Green_Cam4_20251211_084445_748_C.jpeg,,195.617,162.25,,,,
+finlayson_green,6,Finlayson Green_Cam4_20260108_083258_377_A.jpeg,,203.019,199.318,,,,

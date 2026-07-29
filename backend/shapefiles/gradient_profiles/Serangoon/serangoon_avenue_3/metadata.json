@@ -1,0 +1,58 @@
+{
+  "path_key": "serangoon_avenue_3",
+  "display_name": "Serangoon Avenue 3",
+  "source_project": "Serangoon Avenue 3",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Serangoon Avenue 3\\geo_data.gpkg",
+  "lidar_bundle": "serangoon_avenue_3_sparse_bundle",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\serangoon_avenue_3_sparse_bundle",
+  "generated_at_utc": "2026-05-11T05:13:23.850612+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2879.97,
+  "profile_point_count": 1307,
+  "valid_elevation_count": 114,
+  "rejected_outlier_count": 41,
+  "rejected_step_jump_count": 89,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 126,
+  "usable_gradient_completion_pct": 9.64,
+  "elevation_hit_coverage_pct": 8.72,
+  "step_jump_rejection_pct": 6.81,
+  "gradient_min_pct": -5.681,
+  "gradient_max_pct": 9.6,
+  "path_bounds_svy21": {
+    "min_x": 31263.453,
+    "min_y": 36790.137,
+    "max_x": 32232.672,
+    "max_y": 37500.59
+  },
+  "road_boundary": {
+    "target_road_name": "SERANGOON AVENUE 3",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1441,
+    "offroad_point_count": 134,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERANGOON AVENUE 2",
+        "point_count": 118
+      },
+      {
+        "road_name": "JALAN GIRANG",
+        "point_count": 9
+      },
+      {
+        "road_name": "LORONG CHUAN",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 32.0,
+    "offroad_chainage_max_m": 2432.0,
+    "trimmed_offroad_points": 134
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "path_key": "chancery_hill_road",
+  "display_name": "Chancery Hill Road",
+  "source_project": "Chancery Hill Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry4\\_projects\\Chancery Hill Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T06:56:16.150127+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 498.331,
+  "profile_point_count": 251,
+  "valid_elevation_count": 251,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 90,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 127,
+  "usable_gradient_completion_pct": 50.6,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 35.86,
+  "gradient_min_pct": -10.052,
+  "gradient_max_pct": 4.583,
+  "path_bounds_svy21": {
+    "min_x": 28455.344,
+    "min_y": 33869.102,
+    "max_x": 28649.244,
+    "max_y": 34180.09
+  },
+  "road_boundary": {
+    "target_road_name": "CHANCERY HILL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 251,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

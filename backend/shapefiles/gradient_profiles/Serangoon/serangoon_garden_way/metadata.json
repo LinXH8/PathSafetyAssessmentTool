@@ -1,0 +1,63 @@
+{
+  "path_key": "serangoon_garden_way",
+  "display_name": "Serangoon Garden Way",
+  "source_project": "Serangoon Garden Way",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Serangoon Garden Way\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-04-28T08:40:22.225007+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5350.339,
+  "profile_point_count": 2100,
+  "valid_elevation_count": 2094,
+  "rejected_outlier_count": 178,
+  "rejected_step_jump_count": 959,
+  "repaired_gradient_point_count": 39,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 829,
+  "gradient_min_pct": -10.898,
+  "gradient_max_pct": 14.356,
+  "path_bounds_svy21": {
+    "min_x": 30946.763,
+    "min_y": 38251.844,
+    "max_x": 32433.372,
+    "max_y": 38916.166
+  },
+  "road_boundary": {
+    "target_road_name": "SERANGOON GARDEN WAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2677,
+    "offroad_point_count": 577,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CHUAN GARDEN",
+        "point_count": 104
+      },
+      {
+        "road_name": "BRIGHTON CRESCENT",
+        "point_count": 88
+      },
+      {
+        "road_name": "BRIGHTON AVENUE",
+        "point_count": 70
+      },
+      {
+        "road_name": "PENSHURST PLACE",
+        "point_count": 65
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 56
+      }
+    ],
+    "offroad_chainage_min_m": 106.0,
+    "offroad_chainage_max_m": 5198.0,
+    "trimmed_offroad_points": 577
+  }
+}

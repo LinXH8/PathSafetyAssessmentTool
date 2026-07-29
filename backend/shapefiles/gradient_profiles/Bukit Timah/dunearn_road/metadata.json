@@ -1,0 +1,42 @@
+{
+  "path_key": "dunearn_road",
+  "display_name": "Dunearn Road",
+  "source_project": "Dunearn Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Dunearn Road\\geo_data.gpkg",
+  "lidar_bundle": "dunearn_road",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\dunearn_road",
+  "generated_at_utc": "2026-07-06T03:35:13.650052+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7387.165,
+  "profile_point_count": 3695,
+  "valid_elevation_count": 3151,
+  "rejected_outlier_count": 445,
+  "rejected_step_jump_count": 2206,
+  "repaired_gradient_point_count": 31,
+  "removed_bad_gradient_point_count": 23,
+  "valid_gradient_count": 719,
+  "usable_gradient_completion_pct": 19.46,
+  "elevation_hit_coverage_pct": 85.28,
+  "step_jump_rejection_pct": 59.7,
+  "gradient_min_pct": -14.587,
+  "gradient_max_pct": 11.597,
+  "path_bounds_svy21": {
+    "min_x": 21953.387,
+    "min_y": 32822.341,
+    "max_x": 28663.737,
+    "max_y": 35561.188
+  },
+  "road_boundary": {
+    "target_road_name": "DUNEARN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3695,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "path_key": "telok_ayer_street",
+  "display_name": "Telok Ayer Street",
+  "source_project": "Telok Ayer Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Telok Ayer Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T13:11:50.610998+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2044.906,
+  "profile_point_count": 789,
+  "valid_elevation_count": 651,
+  "rejected_outlier_count": 81,
+  "rejected_step_jump_count": 487,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 183,
+  "usable_gradient_completion_pct": 23.19,
+  "elevation_hit_coverage_pct": 82.51,
+  "step_jump_rejection_pct": 61.72,
+  "gradient_min_pct": -11.592,
+  "gradient_max_pct": 33.226,
+  "path_bounds_svy21": {
+    "min_x": 29454.701,
+    "min_y": 28931.078,
+    "max_x": 29665.489,
+    "max_y": 29375.851
+  },
+  "road_boundary": {
+    "target_road_name": "TELOK AYER STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1024,
+    "offroad_point_count": 235,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MCCALLUM STREET",
+        "point_count": 62
+      },
+      {
+        "road_name": "BOON TAT STREET",
+        "point_count": 53
+      },
+      {
+        "road_name": "STANLEY STREET",
+        "point_count": 50
+      },
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 46
+      },
+      {
+        "road_name": "AMOY STREET",
+        "point_count": 18
+      }
+    ],
+    "offroad_chainage_min_m": 190.0,
+    "offroad_chainage_max_m": 1888.0,
+    "trimmed_offroad_points": 235
+  }
+}

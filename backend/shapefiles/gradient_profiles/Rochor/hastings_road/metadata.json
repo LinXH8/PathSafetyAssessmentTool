@@ -1,0 +1,42 @@
+{
+  "path_key": "hastings_road",
+  "display_name": "Hastings Road",
+  "source_project": "Hastings Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Hastings Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-07T15:29:49.461871+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 69.822,
+  "profile_point_count": 36,
+  "valid_elevation_count": 30,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 23,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 25.0,
+  "elevation_hit_coverage_pct": 83.33,
+  "step_jump_rejection_pct": 63.89,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 31.953,
+  "path_bounds_svy21": {
+    "min_x": 30005.683,
+    "min_y": 31942.532,
+    "max_x": 30064.476,
+    "max_y": 31976.5
+  },
+  "road_boundary": {
+    "target_road_name": "HASTINGS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 36,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

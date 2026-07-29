@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+conway_grove,1,Conway Grove_Cam4_20260202_105454_684_A.jpeg,,11.552,5.776,6.0,17.284,4.444,1.0
+conway_grove,2,Conway Grove_Cam4_20260202_105458_888_A.jpeg,,23.034,17.293,18.0,17.85,,
+conway_grove,3,Conway Grove_Cam4_20260202_105503_136_A.jpeg,,31.288,27.161,28.0,18.161,2.288,1.0
+conway_grove,4,Conway Grove_Cam4_20260202_105506_140_A.jpeg,,56.685,43.986,44.0,18.455,1.195,1.0
+conway_grove,5,Conway Grove_Cam4_20260202_105514_577_A.jpeg,,66.839,61.762,62.0,18.773,0.975,1.0
+conway_grove,6,Conway Grove_Cam4_20260202_105518_190_A.jpeg,,75.694,71.266,72.0,18.869,0.0,1.0
+conway_grove,7,Conway Grove_Cam4_20260202_105521_192_A.jpeg,,101.817,88.755,88.0,19.076,,
+conway_grove,8,Conway Grove_Cam4_20260202_105529_601_A.jpeg,,111.348,106.583,106.0,19.995,,
+conway_grove,9,Conway Grove_Cam4_20260202_105532_605_A.jpeg,,123.284,117.316,118.0,21.133,,
+conway_grove,10,Conway Grove_Cam4_20260202_105536_210_A.jpeg,,135.69,129.487,130.0,20.207,,
+conway_grove,11,Conway Grove_Cam4_20260202_105539_816_A.jpeg,,158.201,146.945,146.0,19.31,-6.931,1.0
+conway_grove,12,Conway Grove_Cam4_20260202_105545_824_A.jpeg,,168.864,163.532,164.0,19.15,2.819,1.0
+conway_grove,13,Conway Grove_Cam4_20260202_105548_828_A.jpeg,,179.4,174.132,174.0,19.65,,
+conway_grove,14,Conway Grove_Cam4_20260202_105551_832_A.jpeg,,190.43,184.915,184.0,20.723,,
+conway_grove,15,Conway Grove_Cam4_20260202_105554_843_A.jpeg,,200.998,195.714,196.0,19.635,,
+conway_grove,16,Conway Grove_Cam4_20260202_105557_846_A.jpeg,,235.233,218.116,218.0,19.218,0.009,1.0
+conway_grove,17,Conway Grove_Cam4_20260202_105727_370_A.jpeg,,247.444,241.339,242.0,20.726,,
+conway_grove,18,Conway Grove_Cam4_20260202_105730_986_A.jpeg,,255.869,251.656,252.0,21.644,,
+conway_grove,19,Conway Grove_Cam4_20260202_105733_390_A.jpeg,,269.253,262.561,262.0,21.815,,
+conway_grove,20,Conway Grove_Cam4_20260202_105736_995_A.jpeg,,275.698,272.476,272.0,21.967,,
+conway_grove,21,Conway Grove_Cam4_20260202_105738_805_A.jpeg,,286.252,280.975,280.0,21.763,,
+conway_grove,22,Conway Grove_Cam4_20260202_105741_812_A.jpeg,,312.798,299.525,300.0,19.882,,
+conway_grove,23,Conway Grove_Cam4_20260202_105752_026_A.jpeg,,383.793,348.296,348.0,21.585,,
+conway_grove,24,Conway Grove_Cam4_20260202_105819_721_A.jpeg,,394.086,388.94,388.0,19.942,,
+conway_grove,25,Conway Grove_Cam4_20260202_105822_724_A.jpeg,,404.165,399.125,400.0,19.159,0.191,1.0

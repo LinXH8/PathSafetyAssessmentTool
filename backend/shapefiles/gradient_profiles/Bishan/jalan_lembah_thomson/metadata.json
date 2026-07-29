@@ -1,0 +1,54 @@
+{
+  "path_key": "jalan_lembah_thomson",
+  "display_name": "Jalan Lembah Thomson",
+  "source_project": "Jalan Lembah Thomson",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Lembah Thomson\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T03:41:14.925794+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 484.098,
+  "profile_point_count": 219,
+  "valid_elevation_count": 219,
+  "rejected_outlier_count": 23,
+  "rejected_step_jump_count": 141,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 44,
+  "usable_gradient_completion_pct": 20.09,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.38,
+  "gradient_min_pct": -12.808,
+  "gradient_max_pct": 9.141,
+  "path_bounds_svy21": {
+    "min_x": 27798.058,
+    "min_y": 37109.645,
+    "max_x": 28024.728,
+    "max_y": 37247.885
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN LEMBAH THOMSON",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 244,
+    "offroad_point_count": 25,
+    "offroad_top_road_names": [
+      {
+        "road_name": "THOMSON RIDGE",
+        "point_count": 13
+      },
+      {
+        "road_name": "SOO CHOW WALK",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 258.0,
+    "offroad_chainage_max_m": 484.098,
+    "trimmed_offroad_points": 25
+  }
+}

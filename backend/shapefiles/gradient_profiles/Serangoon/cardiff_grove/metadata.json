@@ -1,0 +1,62 @@
+{
+  "path_key": "cardiff_grove",
+  "display_name": "Cardiff Grove",
+  "source_project": "Cardiff Grove",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Cardiff Grove\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-28T02:10:35.927963+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1122.502,
+  "profile_point_count": 539,
+  "valid_elevation_count": 537,
+  "rejected_outlier_count": 42,
+  "rejected_step_jump_count": 198,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 288,
+  "usable_gradient_completion_pct": 53.43,
+  "elevation_hit_coverage_pct": 99.63,
+  "step_jump_rejection_pct": 36.73,
+  "gradient_min_pct": -7.829,
+  "gradient_max_pct": 11.132,
+  "path_bounds_svy21": {
+    "min_x": 31565.121,
+    "min_y": 37427.335,
+    "max_x": 31698.332,
+    "max_y": 37990.114
+  },
+  "road_boundary": {
+    "target_road_name": "CARDIFF GROVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 563,
+    "offroad_point_count": 24,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BURGHLEY DRIVE",
+        "point_count": 13
+      },
+      {
+        "road_name": "LI HWAN TERRACE",
+        "point_count": 5
+      },
+      {
+        "road_name": "LI HWAN PLACE",
+        "point_count": 5
+      },
+      {
+        "road_name": "CARISBROOKE GROVE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 124.0,
+    "offroad_chainage_max_m": 928.0,
+    "trimmed_offroad_points": 24
+  }
+}

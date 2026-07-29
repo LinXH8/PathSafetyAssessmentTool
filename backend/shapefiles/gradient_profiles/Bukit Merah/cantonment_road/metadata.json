@@ -1,0 +1,66 @@
+{
+  "path_key": "cantonment_road",
+  "display_name": "Cantonment Road",
+  "source_project": "Cantonment Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Cantonment Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T04:40:22.567064+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7470.804,
+  "profile_point_count": 1859,
+  "valid_elevation_count": 1843,
+  "rejected_outlier_count": 345,
+  "rejected_step_jump_count": 1449,
+  "repaired_gradient_point_count": 15,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 173,
+  "usable_gradient_completion_pct": 9.31,
+  "elevation_hit_coverage_pct": 99.14,
+  "step_jump_rejection_pct": 77.95,
+  "gradient_min_pct": -13.337,
+  "gradient_max_pct": 10.312,
+  "path_bounds_svy21": {
+    "min_x": 28560.188,
+    "min_y": 28364.988,
+    "max_x": 28999.29,
+    "max_y": 29421.628
+  },
+  "road_boundary": {
+    "target_road_name": "CANTONMENT ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3737,
+    "offroad_point_count": 1878,
+    "offroad_top_road_names": [
+      {
+        "road_name": "OUTRAM ROAD",
+        "point_count": 568
+      },
+      {
+        "road_name": "NEIL ROAD",
+        "point_count": 298
+      },
+      {
+        "road_name": "NEW BRIDGE ROAD",
+        "point_count": 251
+      },
+      {
+        "road_name": "EU TONG SEN STREET",
+        "point_count": 245
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 172
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 7470.804,
+    "trimmed_offroad_points": 1878
+  }
+}

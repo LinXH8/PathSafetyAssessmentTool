@@ -1,0 +1,47 @@
+{
+  "path_key": "upper_paya_lebar_road",
+  "display_name": "Upper Paya Lebar Road",
+  "source_project": "Upper Paya Lebar Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Upper Paya Lebar Road\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-04-28T08:04:49.301247+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 626.674,
+  "profile_point_count": 236,
+  "valid_elevation_count": 196,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 137,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 16,
+  "valid_gradient_count": 55,
+  "gradient_min_pct": -11.425,
+  "gradient_max_pct": 2.369,
+  "path_bounds_svy21": {
+    "min_x": 32888.668,
+    "min_y": 37061.332,
+    "max_x": 33094.703,
+    "max_y": 37230.749
+  },
+  "road_boundary": {
+    "target_road_name": "UPPER PAYA LEBAR ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 315,
+    "offroad_point_count": 79,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOUGANG STREET 11",
+        "point_count": 79
+      }
+    ],
+    "offroad_chainage_min_m": 134.0,
+    "offroad_chainage_max_m": 508.0,
+    "trimmed_offroad_points": 79
+  }
+}

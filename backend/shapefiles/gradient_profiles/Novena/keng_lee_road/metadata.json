@@ -1,0 +1,54 @@
+{
+  "path_key": "keng_lee_road",
+  "display_name": "Keng Lee Road",
+  "source_project": "Keng Lee Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry7\\_projects\\Keng Lee Road\\geo_data.gpkg",
+  "lidar_bundle": "novena_kallang",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry7\\_lazdirs\\novena_kallang",
+  "generated_at_utc": "2026-07-09T04:40:29.779414+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1188.112,
+  "profile_point_count": 594,
+  "valid_elevation_count": 594,
+  "rejected_outlier_count": 36,
+  "rejected_step_jump_count": 394,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 90,
+  "usable_gradient_completion_pct": 15.15,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.33,
+  "gradient_min_pct": -10.662,
+  "gradient_max_pct": 12.291,
+  "path_bounds_svy21": {
+    "min_x": 28661.893,
+    "min_y": 32557.391,
+    "max_x": 29642.162,
+    "max_y": 32925.023
+  },
+  "road_boundary": {
+    "target_road_name": "KENG LEE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 596,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 1
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1188.112,
+    "trimmed_offroad_points": 2
+  }
+}

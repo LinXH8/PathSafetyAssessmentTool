@@ -1,0 +1,24 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kingswear_avenue,1,Kingswear Avenue_Cam4_20260203_082613_829_A.jpeg,,11.253,5.627,6.0,5.319,0.208,1.0
+kingswear_avenue,2,Kingswear Avenue_Cam4_20260203_082618_037_A.jpeg,,299.506,155.379,156.0,12.369,,
+kingswear_avenue,3,Kingswear Avenue_Cam4_20260203_083240_523_B.jpeg,,310.816,305.161,306.0,8.315,,
+kingswear_avenue,4,Kingswear Avenue_Cam4_20260203_083243_525_B.jpeg,,318.167,314.492,314.0,8.827,,
+kingswear_avenue,5,Kingswear Avenue_Cam4_20260203_083245_327_B.jpeg,,345.078,331.623,332.0,7.425,,
+kingswear_avenue,6,Kingswear Avenue_Cam4_20260203_083252_535_B.jpeg,,357.738,351.408,352.0,6.452,-0.475,1.0
+kingswear_avenue,7,Kingswear Avenue_Cam4_20260203_083256_137_B.jpeg,,364.912,361.325,362.0,6.394,-0.806,1.0
+kingswear_avenue,8,Kingswear Avenue_Cam4_20260203_083257_939_B.jpeg,,376.772,370.842,370.0,6.325,-0.9,1.0
+kingswear_avenue,9,Kingswear Avenue_Cam4_20260203_083300_942_B.jpeg,,388.513,382.642,382.0,6.251,-0.375,1.0
+kingswear_avenue,10,Kingswear Avenue_Cam4_20260203_083303_948_B.jpeg,,395.308,391.911,392.0,6.2,-0.531,1.0
+kingswear_avenue,11,Kingswear Avenue_Cam4_20260203_083305_749_B.jpeg,,431.109,413.209,414.0,6.387,,
+kingswear_avenue,12,Kingswear Avenue_Cam4_20260203_083314_762_B.jpeg,,438.421,434.765,434.0,6.082,,
+kingswear_avenue,13,Kingswear Avenue_Cam4_20260203_083316_563_B.jpeg,,448.259,443.34,444.0,5.912,-0.547,1.0
+kingswear_avenue,14,Kingswear Avenue_Cam4_20260203_083318_965_B.jpeg,,489.305,468.782,468.0,6.2,,
+kingswear_avenue,15,Kingswear Avenue_Cam4_20260203_083330_377_B.jpeg,,533.473,511.389,512.0,5.654,,
+kingswear_avenue,16,Kingswear Avenue_Cam4_20260203_083342_990_B.jpeg,,561.71,547.592,548.0,6.162,,
+kingswear_avenue,17,Kingswear Avenue_Cam4_20260203_083351_396_B.jpeg,,568.847,565.278,566.0,10.884,,
+kingswear_avenue,18,Kingswear Avenue_Cam4_20260203_083353_799_B.jpeg,,579.218,574.032,574.0,10.619,,
+kingswear_avenue,19,Kingswear Avenue_Cam4_20260203_083357_402_B.jpeg,,595.045,587.131,588.0,6.016,,
+kingswear_avenue,20,Kingswear Avenue_Cam4_20260203_083416_623_B.jpeg,,698.287,646.666,646.0,5.578,,
+kingswear_avenue,21,Kingswear Avenue_Cam4_20260203_083443_052_B.jpeg,,882.065,790.176,790.0,10.516,,
+kingswear_avenue,22,Kingswear Avenue_Cam4_20260203_083617_951_B.jpeg,,893.18,887.623,888.0,6.196,-1.849,1.0
+kingswear_avenue,23,Kingswear Avenue_Cam4_20260203_083621_555_B.jpeg,,903.305,898.243,898.0,6.003,,

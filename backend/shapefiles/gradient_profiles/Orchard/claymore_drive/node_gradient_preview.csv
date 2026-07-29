@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+claymore_drive,1,Claymore Drive_Cam4_20251204_100113_670_B.jpeg,,11.243,5.621,,,,
+claymore_drive,2,Claymore Drive_Cam4_20251204_100117_311_B.jpeg,,21.561,16.402,,,,
+claymore_drive,3,Claymore Drive_Cam4_20251204_100120_315_B.jpeg,,31.688,26.624,,,,
+claymore_drive,4,Claymore Drive_Cam4_20251204_100122_792_B.jpeg,,43.9,37.794,,,,
+claymore_drive,5,Claymore Drive_Cam4_20251204_100126_408_B.jpeg,,51.208,47.554,,,,
+claymore_drive,6,Claymore Drive_Cam4_20251204_100128_814_B.jpeg,,75.013,63.11,64.0,6.985,,
+claymore_drive,7,Claymore Drive_Cam4_20251204_100145_230_B.jpeg,,86.859,80.936,80.0,5.785,,
+claymore_drive,8,Claymore Drive_Cam4_20251204_100150_035_B.jpeg,,95.191,91.025,92.0,5.65,0.812,1.0

@@ -1,0 +1,42 @@
+{
+  "path_key": "ontario_avenue",
+  "display_name": "Ontario Avenue",
+  "source_project": "Ontario Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Ontario Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T05:32:15.633211+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 220.743,
+  "profile_point_count": 112,
+  "valid_elevation_count": 112,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 89,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 13,
+  "usable_gradient_completion_pct": 11.61,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 79.46,
+  "gradient_min_pct": -10.765,
+  "gradient_max_pct": 10.26,
+  "path_bounds_svy21": {
+    "min_x": 27222.65,
+    "min_y": 37662.607,
+    "max_x": 27378.012,
+    "max_y": 37768.264
+  },
+  "road_boundary": {
+    "target_road_name": "ONTARIO AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 112,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

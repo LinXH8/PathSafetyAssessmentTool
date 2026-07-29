@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ang_mo_kio_central_2,1,Ang Mo Kio Central 2_Cam4_20260102_073130_883_B.jpeg,,10.845,5.423,6.0,18.034,-1.641,1.0
+ang_mo_kio_central_2,2,Ang Mo Kio Central 2_Cam4_20260102_073136_892_B.jpeg,,307.626,159.235,160.0,36.374,,
+ang_mo_kio_central_2,3,Ang Mo Kio Central 2_Cam4_20260102_074931_042_B.jpeg,,320.13,313.878,,,,

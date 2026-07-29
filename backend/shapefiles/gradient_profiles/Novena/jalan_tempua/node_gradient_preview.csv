@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tempua,1,,JALAN TEMPUA,35.881,17.94,18.0,5.013,,
+jalan_tempua,2,,JALAN TEMPUA,61.043,66.402,66.0,4.827,,
+jalan_tempua,3,,JALAN TEMPUA,66.369,191.152,192.0,5.202,,
+jalan_tempua,4,,JALAN TEMPUA,65.259,317.467,318.0,5.543,,
+jalan_tempua,5,,JALAN TEMPUA,119.985,410.089,410.0,4.415,,

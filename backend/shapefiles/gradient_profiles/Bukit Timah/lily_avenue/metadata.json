@@ -1,0 +1,50 @@
+{
+  "path_key": "lily_avenue",
+  "display_name": "Lily Avenue",
+  "source_project": "Lily Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Lily Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T06:06:56.645881+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 385.371,
+  "profile_point_count": 192,
+  "valid_elevation_count": 192,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 112,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 35,
+  "usable_gradient_completion_pct": 18.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.33,
+  "gradient_min_pct": -5.964,
+  "gradient_max_pct": 13.945,
+  "path_bounds_svy21": {
+    "min_x": 23540.441,
+    "min_y": 34708.619,
+    "max_x": 23732.718,
+    "max_y": 34793.27
+  },
+  "road_boundary": {
+    "target_road_name": "LILY AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 194,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LOTUS AVENUE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 126.0,
+    "offroad_chainage_max_m": 128.0,
+    "trimmed_offroad_points": 2
+  }
+}

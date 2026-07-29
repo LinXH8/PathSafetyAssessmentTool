@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayflower_lane,1,Mayflower Lane_Cam4_20251231_084020_734_C.jpeg,,11.484,5.742,6.0,17.786,,
+mayflower_lane,2,Mayflower Lane_Cam4_20251231_084026_142_C.jpeg,,22.922,17.203,18.0,17.295,3.75,1.0
+mayflower_lane,3,Mayflower Lane_Cam4_20251231_084030_946_C.jpeg,,30.02,26.471,26.0,17.845,5.937,1.0
+mayflower_lane,4,Mayflower Lane_Cam4_20251231_084033_950_C.jpeg,,57.269,43.644,44.0,19.19,,
+mayflower_lane,5,Mayflower Lane_Cam4_20251231_084045_360_C.jpeg,,67.847,62.558,62.0,21.83,,
+mayflower_lane,6,Mayflower Lane_Cam4_20251231_084050_167_C.jpeg,,79.998,73.923,74.0,22.695,,
+mayflower_lane,7,Mayflower Lane_Cam4_20251231_084054_987_C.jpeg,,102.327,91.162,92.0,21.875,,
+mayflower_lane,8,Mayflower Lane_Cam4_20251231_084128_627_C.jpeg,,110.074,106.2,106.0,22.532,,
+mayflower_lane,9,Mayflower Lane_Cam4_20251231_084135_234_C.jpeg,,162.923,136.499,136.0,23.095,,
+mayflower_lane,10,Mayflower Lane_Cam4_20251231_084217_899_C.jpeg,,174.712,168.818,168.0,20.975,,
+mayflower_lane,11,Mayflower Lane_Cam4_20251231_084223_306_C.jpeg,,180.814,177.763,178.0,18.929,,
+mayflower_lane,12,Mayflower Lane_Cam4_20251231_084225_707_C.jpeg,,208.236,194.525,194.0,19.053,,

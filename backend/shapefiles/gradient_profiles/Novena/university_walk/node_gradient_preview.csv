@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+university_walk,1,,UNIVERSITY WALK,18.401,9.201,10.0,7.931,,
+university_walk,2,,UNIVERSITY WALK,39.535,38.169,38.0,10.25,,
+university_walk,3,,UNIVERSITY WALK,158.775,176.86,176.0,5.75,,

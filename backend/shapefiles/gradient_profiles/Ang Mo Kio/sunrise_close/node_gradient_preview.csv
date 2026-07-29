@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sunrise_close,1,Sunrise Close_Cam4_20260105_094254_845_C.jpeg,,11.732,5.866,6.0,17.712,,
+sunrise_close,2,Sunrise Close_Cam4_20260105_094354_330_C.jpeg,,20.883,16.307,16.0,16.992,,
+sunrise_close,3,Sunrise Close_Cam4_20260105_094357_963_C.jpeg,,34.172,27.527,28.0,15.432,,
+sunrise_close,4,Sunrise Close_Cam4_20260105_094403_372_C.jpeg,,57.87,46.021,46.0,15.02,-2.135,1.0
+sunrise_close,5,Sunrise Close_Cam4_20260105_094413_588_C.jpeg,,67.491,62.68,62.0,14.258,,
+sunrise_close,6,Sunrise Close_Cam4_20260105_094416_591_C.jpeg,,77.156,72.323,72.0,14.297,,
+sunrise_close,7,Sunrise Close_Cam4_20260105_094419_616_C.jpeg,,102.526,89.841,90.0,14.535,,
+sunrise_close,8,Sunrise Close_Cam4_20260105_094427_427_C.jpeg,,113.573,108.05,108.0,13.882,0.625,1.0
+sunrise_close,9,Sunrise Close_Cam4_20260105_094430_431_C.jpeg,,124.403,118.988,118.0,14.326,5.208,1.0
+sunrise_close,10,Sunrise Close_Cam4_20260105_094433_434_C.jpeg,,135.163,129.783,130.0,14.432,,
+sunrise_close,11,Sunrise Close_Cam4_20260105_094437_647_C.jpeg,,155.372,145.268,146.0,13.632,0.0,1.0
+sunrise_close,12,Sunrise Close_Cam4_20260105_094447_257_C.jpeg,,168.888,162.13,162.0,13.615,3.125,1.0
+sunrise_close,13,Sunrise Close_Cam4_20260105_094452_061_C.jpeg,,175.462,172.175,172.0,13.706,-3.021,1.0
+sunrise_close,14,Sunrise Close_Cam4_20260105_094454_476_C.jpeg,,185.052,180.257,180.0,13.37,-0.833,1.0
+sunrise_close,15,Sunrise Close_Cam4_20260105_094458_082_C.jpeg,,196.657,190.854,190.0,13.164,-4.605,1.0
+sunrise_close,16,Sunrise Close_Cam4_20260105_094502_299_C.jpeg,,205.03,200.844,200.0,12.957,,
+sunrise_close,17,Sunrise Close_Cam4_20260105_094505_303_C.jpeg,,217.44,211.235,212.0,12.888,,
+sunrise_close,18,Sunrise Close_Cam4_20260105_094510_077_C.jpeg,,225.596,221.518,222.0,12.913,0.417,1.0
+sunrise_close,19,Sunrise Close_Cam4_20260105_094513_698_C.jpeg,,262.089,243.843,244.0,12.963,0.625,1.0
+sunrise_close,20,Sunrise Close_Cam4_20260105_094530_529_C.jpeg,,273.132,267.61,268.0,13.063,0.937,1.0
+sunrise_close,21,Sunrise Close_Cam4_20260105_094534_733_C.jpeg,,280.509,276.82,276.0,13.206,1.577,1.0
+sunrise_close,22,Sunrise Close_Cam4_20260105_094537_135_C.jpeg,,419.349,349.929,350.0,14.048,0.89,1.0

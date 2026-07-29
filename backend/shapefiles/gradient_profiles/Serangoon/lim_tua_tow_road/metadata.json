@@ -1,0 +1,54 @@
+{
+  "path_key": "lim_tua_tow_road",
+  "display_name": "Lim Tua Tow Road",
+  "source_project": "Lim Tua Tow Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lim Tua Tow Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T19:28:06.426124+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 923.742,
+  "profile_point_count": 407,
+  "valid_elevation_count": 391,
+  "rejected_outlier_count": 26,
+  "rejected_step_jump_count": 141,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 230,
+  "usable_gradient_completion_pct": 56.51,
+  "elevation_hit_coverage_pct": 96.07,
+  "step_jump_rejection_pct": 34.64,
+  "gradient_min_pct": -11.0,
+  "gradient_max_pct": 9.587,
+  "path_bounds_svy21": {
+    "min_x": 32677.073,
+    "min_y": 37291.579,
+    "max_x": 32920.921,
+    "max_y": 37496.967
+  },
+  "road_boundary": {
+    "target_road_name": "LIM TUA TOW ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 463,
+    "offroad_point_count": 56,
+    "offroad_top_road_names": [
+      {
+        "road_name": "YIO CHU KANG ROAD",
+        "point_count": 52
+      },
+      {
+        "road_name": "UPPER SERANGOON ROAD",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 924.0,
+    "trimmed_offroad_points": 56
+  }
+}

@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+parsi_road,1,Cam4_20251230_074754_658_B.jpeg,,11.316,5.658,6.0,9.231,0.031,1.0
+parsi_road,2,Cam4_20251230_074758_864_B.jpeg,,92.35,51.833,52.0,9.486,,
+parsi_road,3,Cam4_20251230_075003_809_B.jpeg,,104.619,98.485,98.0,7.934,,
+parsi_road,4,Cam4_20251230_075008_614_B.jpeg,,111.932,108.276,108.0,6.385,,
+parsi_road,5,Cam4_20251230_075010_416_B.jpeg,,121.224,116.578,,,,
+parsi_road,6,Cam4_20251230_075013_421_B.jpeg,,139.699,130.461,130.0,5.512,,

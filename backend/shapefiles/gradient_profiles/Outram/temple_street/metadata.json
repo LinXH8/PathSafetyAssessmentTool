@@ -1,0 +1,50 @@
+{
+  "path_key": "temple_street",
+  "display_name": "Temple Street",
+  "source_project": "Temple Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Temple Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-25T15:33:29.568877+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 497.27,
+  "profile_point_count": 242,
+  "valid_elevation_count": 242,
+  "rejected_outlier_count": 32,
+  "rejected_step_jump_count": 170,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 22,
+  "usable_gradient_completion_pct": 9.09,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 70.25,
+  "gradient_min_pct": -3.662,
+  "gradient_max_pct": 6.094,
+  "path_bounds_svy21": {
+    "min_x": 29088.458,
+    "min_y": 29423.86,
+    "max_x": 29306.177,
+    "max_y": 29550.36
+  },
+  "road_boundary": {
+    "target_road_name": "TEMPLE STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 250,
+    "offroad_point_count": 8,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TRENGGANU STREET",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 112.0,
+    "offroad_chainage_max_m": 386.0,
+    "trimmed_offroad_points": 8
+  }
+}

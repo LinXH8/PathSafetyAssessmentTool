@@ -1,0 +1,66 @@
+{
+  "path_key": "compassvale_road",
+  "display_name": "Compassvale Road",
+  "source_project": "Compassvale Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Compassvale Road\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T00:36:43.287969+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3578.518,
+  "profile_point_count": 1283,
+  "valid_elevation_count": 1204,
+  "rejected_outlier_count": 212,
+  "rejected_step_jump_count": 787,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 312,
+  "usable_gradient_completion_pct": 24.32,
+  "elevation_hit_coverage_pct": 93.84,
+  "step_jump_rejection_pct": 61.34,
+  "gradient_min_pct": -9.897,
+  "gradient_max_pct": 13.411,
+  "path_bounds_svy21": {
+    "min_x": 34957.752,
+    "min_y": 40864.366,
+    "max_x": 35379.373,
+    "max_y": 41858.405
+  },
+  "road_boundary": {
+    "target_road_name": "COMPASSVALE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1791,
+    "offroad_point_count": 508,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SENGKANG EAST WAY",
+        "point_count": 307
+      },
+      {
+        "road_name": "SENGKANG SQUARE",
+        "point_count": 149
+      },
+      {
+        "road_name": "COMPASSVALE STREET",
+        "point_count": 26
+      },
+      {
+        "road_name": "COMPASSVALE WALK",
+        "point_count": 23
+      },
+      {
+        "road_name": "COMPASSVALE DRIVE",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3082.0,
+    "trimmed_offroad_points": 508
+  }
+}

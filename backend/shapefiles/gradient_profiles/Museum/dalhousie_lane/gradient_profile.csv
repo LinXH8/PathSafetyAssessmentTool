@@ -1,0 +1,17 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+dalhousie_lane,Dalhousie Lane,0.0,30082.916,31941.746,2.952,2.952,2.952,,,DALHOUSIE LANE,3.148
+dalhousie_lane,Dalhousie Lane,2.0,30083.963,31940.042,3.073,3.073,2.939,,,DALHOUSIE LANE,2.652
+dalhousie_lane,Dalhousie Lane,4.0,30085.01,31938.338,4.2,2.925,2.925,,,DALHOUSIE LANE,2.156
+dalhousie_lane,Dalhousie Lane,6.0,30086.057,31936.634,3.883,2.778,2.86,,,DALHOUSIE LANE,1.66
+dalhousie_lane,Dalhousie Lane,8.0,30087.104,31934.93,2.262,2.63,2.86,,,DALHOUSIE LANE,1.164
+dalhousie_lane,Dalhousie Lane,10.0,30088.151,31933.226,2.482,2.86,2.86,,,DALHOUSIE LANE,0.668
+dalhousie_lane,Dalhousie Lane,12.0,30089.198,31931.522,2.433,3.09,3.09,,,DALHOUSIE LANE,0.172
+dalhousie_lane,Dalhousie Lane,14.0,30090.359,31929.903,3.32,3.32,3.227,,,DALHOUSIE LANE,0.183
+dalhousie_lane,Dalhousie Lane,16.0,30091.693,31928.412,3.227,3.227,3.227,,,DALHOUSIE LANE,0.326
+dalhousie_lane,Dalhousie Lane,18.0,30093.027,31926.922,3.293,3.293,3.227,-2.383,1.0,DALHOUSIE LANE,0.469
+dalhousie_lane,Dalhousie Lane,20.0,30094.361,31925.433,3.037,3.037,3.037,-2.383,1.0,DALHOUSIE LANE,0.611
+dalhousie_lane,Dalhousie Lane,22.0,30095.91,31924.167,2.959,2.959,3.037,-1.484,1.0,DALHOUSIE LANE,0.442
+dalhousie_lane,Dalhousie Lane,24.0,30097.46,31922.902,2.89,2.89,3.037,,,DALHOUSIE LANE,0.274
+dalhousie_lane,Dalhousie Lane,26.0,30099.009,31921.637,3.109,3.109,3.109,,,DALHOUSIE LANE,0.105
+dalhousie_lane,Dalhousie Lane,28.0,30100.558,31920.372,3.424,3.109,3.109,,,DALHOUSIE LANE,0.064
+dalhousie_lane,Dalhousie Lane,30.0,30102.086,31919.124,3.82,3.109,3.109,,,DALHOUSIE LANE,0.23

@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sixth_crescent,1,Sixth Crescent_Cam4_20251217_092326_433_A.jpeg,,14.51,7.255,,,,
+sixth_crescent,2,Sixth Crescent_Cam4_20251217_092331_159_A.jpeg,,19.999,17.254,,,,
+sixth_crescent,3,Sixth Crescent_Cam4_20251217_092333_215_A.jpeg,,30.718,25.359,26.0,13.22,-0.403,1.0
+sixth_crescent,4,Sixth Crescent_Cam4_20251217_092339_272_A.jpeg,,44.273,37.496,38.0,12.643,,
+sixth_crescent,5,Sixth Crescent_Cam4_20251217_092346_822_A.jpeg,,54.177,49.225,50.0,12.051,,
+sixth_crescent,6,Sixth Crescent_Cam4_20251217_092350_345_A.jpeg,,59.9,57.039,58.0,13.155,,
+sixth_crescent,7,Sixth Crescent_Cam4_20251217_092352_346_A.jpeg,,92.538,76.219,76.0,12.31,,
+sixth_crescent,8,Sixth Crescent_Cam4_20251217_092403_478_A.jpeg,,103.211,97.875,98.0,12.423,,
+sixth_crescent,9,Sixth Crescent_Cam4_20251217_092406_990_A.jpeg,,111.138,107.174,108.0,13.405,,
+sixth_crescent,10,Sixth Crescent_Cam4_20251217_092409_588_A.jpeg,,120.881,116.009,116.0,13.708,,
+sixth_crescent,11,Sixth Crescent_Cam4_20251217_092412_090_A.jpeg,,131.991,126.436,126.0,14.085,,
+sixth_crescent,12,Sixth Crescent_Cam4_20251217_092414_602_A.jpeg,,144.555,138.273,138.0,13.842,,
+sixth_crescent,13,Sixth Crescent_Cam4_20251217_092417_614_A.jpeg,,168.421,156.488,156.0,12.214,,
+sixth_crescent,14,Sixth Crescent_Cam4_20251217_092425_195_A.jpeg,,173.81,171.116,172.0,11.634,,
+sixth_crescent,15,Sixth Crescent_Cam4_20251217_092426_698_A.jpeg,,188.081,180.946,180.0,12.564,,
+sixth_crescent,16,Sixth Crescent_Cam4_20251217_092430_371_A.jpeg,,194.19,191.136,192.0,14.717,,
+sixth_crescent,17,Sixth Crescent_Cam4_20251217_092431_873_A.jpeg,,238.384,216.287,216.0,13.234,,
+sixth_crescent,18,Sixth Crescent_Cam4_20251217_092522_059_A.jpeg,,308.501,273.442,274.0,16.491,,
+sixth_crescent,19,Sixth Crescent_Cam4_20251217_092610_887_A.jpeg,,321.802,315.152,,,,
+sixth_crescent,20,Sixth Crescent_Cam4_20251217_092614_945_A.jpeg,,357.439,339.621,,,,
+sixth_crescent,21,Sixth Crescent_Cam4_20251217_092624_385_A.jpeg,,382.427,369.933,370.0,8.86,0.0,1.0
+sixth_crescent,22,Sixth Crescent_Cam4_20251217_092631_767_A.jpeg,,390.919,386.673,,,,

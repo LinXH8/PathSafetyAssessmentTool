@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+begonia_walk,1,Begonia Walk_Cam4_20260105_083441_460_C.jpeg,,11.331,5.666,6.0,14.885,0.521,1.0
+begonia_walk,2,Begonia Walk_Cam4_20260105_083446_866_C.jpeg,,116.695,64.013,64.0,15.223,-0.235,1.0
+begonia_walk,3,Begonia Walk_Cam4_20260105_084407_229_C.jpeg,,127.276,121.985,122.0,16.583,-5.0,1.0
+begonia_walk,4,Begonia Walk_Cam4_20260105_084410_834_C.jpeg,,139.114,133.195,134.0,15.933,-4.375,1.0
+begonia_walk,5,Begonia Walk_Cam4_20260105_084415_638_C.jpeg,,145.556,142.335,142.0,15.595,-4.531,1.0
+begonia_walk,6,Begonia Walk_Cam4_20260105_084418_516_C.jpeg,,154.885,150.221,150.0,15.183,-2.656,1.0
+begonia_walk,7,Begonia Walk_Cam4_20260105_084422_726_C.jpeg,,165.16,160.022,160.0,15.433,,
+begonia_walk,8,Begonia Walk_Cam4_20260105_084427_410_C.jpeg,,175.13,170.145,170.0,15.093,,
+begonia_walk,9,Begonia Walk_Cam4_20260105_084431_015_C.jpeg,,186.221,180.676,180.0,15.085,0.729,1.0
+begonia_walk,10,Begonia Walk_Cam4_20260105_084434_619_C.jpeg,,196.678,191.45,192.0,15.226,,
+begonia_walk,11,Begonia Walk_Cam4_20260105_084438_226_C.jpeg,,208.877,202.777,202.0,15.068,-1.458,1.0
+begonia_walk,12,Begonia Walk_Cam4_20260105_084443_032_C.jpeg,,217.314,213.095,214.0,14.901,,
+begonia_walk,13,Begonia Walk_Cam4_20260105_084501_058_C.jpeg,,250.771,234.043,234.0,15.507,,
+begonia_walk,14,Begonia Walk_Cam4_20260105_084513_079_C.jpeg,,262.545,256.658,256.0,15.274,0.278,1.0
+begonia_walk,15,Begonia Walk_Cam4_20260105_084519_083_C.jpeg,,298.267,280.406,280.0,15.283,0.703,1.0

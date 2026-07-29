@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mimosa_view,1,Mimosa View_Cam4_20260105_082300_478_C.jpeg,,12.619,6.31,6.0,16.986,-0.312,1.0
+mimosa_view,2,Mimosa View_Cam4_20260105_082305_883_C.jpeg,,23.327,17.973,18.0,17.811,,
+mimosa_view,3,Mimosa View_Cam4_20260105_082309_486_C.jpeg,,32.905,28.116,28.0,19.227,,
+mimosa_view,4,Mimosa View_Cam4_20260105_082313_091_C.jpeg,,64.789,48.847,48.0,18.451,,
+mimosa_view,5,Mimosa View_Cam4_20260105_082329_308_C.jpeg,,75.09,69.94,70.0,17.625,,
+mimosa_view,6,Mimosa View_Cam4_20260105_082332_912_C.jpeg,,86.119,80.605,80.0,17.985,,
+mimosa_view,7,Mimosa View_Cam4_20260105_082337_117_C.jpeg,,88.844,87.481,88.0,18.15,-0.625,1.0
+mimosa_view,8,Mimosa View_Cam4_20260105_082347_806_C.jpeg,,100.794,94.819,94.0,18.025,-3.438,1.0
+mimosa_view,9,Mimosa View_Cam4_20260105_082352_010_C.jpeg,,108.514,104.654,104.0,17.675,-3.125,1.0
+mimosa_view,10,Mimosa View_Cam4_20260105_082354_413_C.jpeg,,118.24,113.377,114.0,17.45,,
+mimosa_view,11,Mimosa View_Cam4_20260105_082357_417_C.jpeg,,127.067,122.654,122.0,17.3,,
+mimosa_view,12,Mimosa View_Cam4_20260105_082400_421_C.jpeg,,137.419,132.243,132.0,17.25,0.0,1.0
+mimosa_view,13,Mimosa View_Cam4_20260105_082404_625_C.jpeg,,147.469,142.444,142.0,17.3,0.625,1.0
+mimosa_view,14,Mimosa View_Cam4_20260105_082410_633_C.jpeg,,156.69,152.08,152.0,17.35,0.625,1.0
+mimosa_view,15,Mimosa View_Cam4_20260105_082414_107_C.jpeg,,167.936,162.313,162.0,17.4,0.938,1.0
+mimosa_view,16,Mimosa View_Cam4_20260105_082417_710_C.jpeg,,179.298,173.617,174.0,17.775,3.438,1.0
+mimosa_view,17,Mimosa View_Cam4_20260105_082421_316_C.jpeg,,186.267,182.782,182.0,17.682,0.937,1.0
+mimosa_view,18,Mimosa View_Cam4_20260105_082423_717_C.jpeg,,213.169,199.718,200.0,17.825,1.562,1.0
+mimosa_view,19,Mimosa View_Cam4_20260105_082438_738_C.jpeg,,224.913,219.041,220.0,17.764,,
+mimosa_view,20,Mimosa View_Cam4_20260105_082442_943_C.jpeg,,235.303,230.108,230.0,19.089,,
+mimosa_view,21,Mimosa View_Cam4_20260105_082446_546_C.jpeg,,258.737,247.02,248.0,20.52,,
+mimosa_view,22,Mimosa View_Cam4_20260105_082454_353_C.jpeg,,319.837,289.287,290.0,20.064,,
+mimosa_view,23,Mimosa View_Cam4_20260105_082522_589_C.jpeg,,381.293,350.565,350.0,18.813,,
+mimosa_view,24,Mimosa View_Cam4_20260105_082548_634_C.jpeg,,511.857,446.575,446.0,25.357,,

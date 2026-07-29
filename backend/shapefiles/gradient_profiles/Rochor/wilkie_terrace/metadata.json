@@ -1,0 +1,42 @@
+{
+  "path_key": "wilkie_terrace",
+  "display_name": "Wilkie Terrace",
+  "source_project": "Wilkie Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Wilkie Terrace\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-25T16:28:51.236731+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 54.562,
+  "profile_point_count": 29,
+  "valid_elevation_count": 29,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 2,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 86.21,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 6.9,
+  "gradient_min_pct": 2.5,
+  "gradient_max_pct": 8.125,
+  "path_bounds_svy21": {
+    "min_x": 29715.38,
+    "min_y": 31621.792,
+    "max_x": 29746.971,
+    "max_y": 31666.105
+  },
+  "road_boundary": {
+    "target_road_name": "WILKIE TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 29,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

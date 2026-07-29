@@ -1,0 +1,50 @@
+{
+  "path_key": "sommerville_walk",
+  "display_name": "Sommerville Walk",
+  "source_project": "Sommerville Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sommerville Walk\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T07:56:56.588168+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 523.802,
+  "profile_point_count": 254,
+  "valid_elevation_count": 254,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 105,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 117,
+  "usable_gradient_completion_pct": 46.06,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 41.34,
+  "gradient_min_pct": -13.869,
+  "gradient_max_pct": 11.88,
+  "path_bounds_svy21": {
+    "min_x": 32082.469,
+    "min_y": 36147.813,
+    "max_x": 32144.09,
+    "max_y": 36444.643
+  },
+  "road_boundary": {
+    "target_road_name": "SOMMERVILLE WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 263,
+    "offroad_point_count": 9,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOMMERVILLE ROAD",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 322.0,
+    "offroad_chainage_max_m": 338.0,
+    "trimmed_offroad_points": 9
+  }
+}

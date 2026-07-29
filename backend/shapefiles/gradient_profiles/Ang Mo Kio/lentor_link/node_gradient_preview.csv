@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_link,1,Lentor Link_Cam4_20251231_075738_909_B.jpeg,,10.391,5.195,6.0,7.63,0.833,1.0
+lentor_link,2,Lentor Link_Cam4_20251231_075741_911_B.jpeg,,22.243,16.317,16.0,7.646,-0.104,1.0
+lentor_link,3,Lentor Link_Cam4_20251231_075744_914_B.jpeg,,31.833,27.038,28.0,7.921,6.619,1.0
+lentor_link,4,Lentor Link_Cam4_20251231_075747_317_B.jpeg,,58.15,44.991,44.0,9.241,,
+lentor_link,5,Lentor Link_Cam4_20251231_075754_525_B.jpeg,,70.766,64.458,64.0,8.412,0.997,1.0
+lentor_link,6,Lentor Link_Cam4_20251231_075758_129_B.jpeg,,81.836,76.301,76.0,8.387,,
+lentor_link,7,Lentor Link_Cam4_20251231_075801_733_B.jpeg,,88.491,85.164,86.0,7.736,,
+lentor_link,8,Lentor Link_Cam4_20251231_075804_135_B.jpeg,,97.064,92.778,92.0,7.995,9.409,2.0
+lentor_link,9,Lentor Link_Cam4_20251231_075813_746_B.jpeg,,106.723,101.894,102.0,8.405,-2.467,1.0
+lentor_link,10,Lentor Link_Cam4_20251231_075819_753_B.jpeg,,177.542,142.133,142.0,9.241,,

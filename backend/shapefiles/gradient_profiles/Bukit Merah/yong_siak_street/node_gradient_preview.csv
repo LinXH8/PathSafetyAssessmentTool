@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+yong_siak_street,1,Yong Siak Street_Cam4_20251227_081557_944_B.jpeg,,13.207,6.603,6.0,11.26,,
+yong_siak_street,2,Yong Siak Street_Cam4_20251227_081601_548_B.jpeg,,21.865,17.536,18.0,9.85,,
+yong_siak_street,3,Yong Siak Street_Cam4_20251227_081603_957_B.jpeg,,30.228,26.046,26.0,8.724,,
+yong_siak_street,4,Yong Siak Street_Cam4_20251227_081606_362_B.jpeg,,42.547,36.388,36.0,8.382,-1.146,1.0
+yong_siak_street,5,Yong Siak Street_Cam4_20251227_081610_566_B.jpeg,,52.204,47.376,48.0,7.62,,
+yong_siak_street,6,Yong Siak Street_Cam4_20251227_081613_572_B.jpeg,,60.898,56.551,56.0,7.432,-2.236,1.0
+yong_siak_street,7,Yong Siak Street_Cam4_20251227_081615_975_B.jpeg,,71.153,66.026,66.0,7.37,,
+yong_siak_street,8,Yong Siak Street_Cam4_20251227_081618_978_B.jpeg,,84.05,77.601,78.0,7.828,,
+yong_siak_street,9,Yong Siak Street_Cam4_20251227_081622_591_B.jpeg,,90.547,87.299,88.0,7.988,,
+yong_siak_street,10,Yong Siak Street_Cam4_20251227_081624_393_B.jpeg,,100.555,95.551,96.0,7.97,,
+yong_siak_street,11,Yong Siak Street_Cam4_20251227_081627_394_B.jpeg,,111.479,106.017,106.0,9.116,,

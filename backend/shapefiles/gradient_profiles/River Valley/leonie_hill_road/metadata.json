@@ -1,0 +1,42 @@
+{
+  "path_key": "leonie_hill_road",
+  "display_name": "Leonie Hill Road",
+  "source_project": "Leonie Hill Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Leonie Hill Road\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-10T08:30:47.974871+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 724.465,
+  "profile_point_count": 364,
+  "valid_elevation_count": 364,
+  "rejected_outlier_count": 42,
+  "rejected_step_jump_count": 208,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 108,
+  "usable_gradient_completion_pct": 29.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 57.14,
+  "gradient_min_pct": -8.125,
+  "gradient_max_pct": 8.125,
+  "path_bounds_svy21": {
+    "min_x": 28004.573,
+    "min_y": 30984.784,
+    "max_x": 28075.116,
+    "max_y": 31346.111
+  },
+  "road_boundary": {
+    "target_road_name": "LEONIE HILL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 364,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

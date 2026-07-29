@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+john_road,1,,JOHN ROAD,46.979,23.489,24.0,17.64,,
+john_road,2,,JOHN ROAD,87.005,90.481,90.0,23.603,,
+john_road,3,,JOHN ROAD,121.994,280.89,280.0,13.554,,

@@ -1,0 +1,50 @@
+{
+  "path_key": "java_road",
+  "display_name": "Java Road",
+  "source_project": "Java Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Java Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T14:53:13.833545+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 291.534,
+  "profile_point_count": 135,
+  "valid_elevation_count": 13,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 11,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 20.74,
+  "elevation_hit_coverage_pct": 9.63,
+  "step_jump_rejection_pct": 8.15,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 31277.754,
+    "min_y": 31466.959,
+    "max_x": 31355.86,
+    "max_y": 31559.454
+  },
+  "road_boundary": {
+    "target_road_name": "JAVA ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 147,
+    "offroad_point_count": 12,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NICOLL HIGHWAY",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 156.0,
+    "offroad_chainage_max_m": 178.0,
+    "trimmed_offroad_points": 12
+  }
+}

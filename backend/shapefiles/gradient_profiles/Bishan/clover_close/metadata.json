@@ -1,0 +1,54 @@
+{
+  "path_key": "clover_close",
+  "display_name": "Clover Close",
+  "source_project": "Clover Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clover Close\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T02:35:43.473913+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 337.747,
+  "profile_point_count": 113,
+  "valid_elevation_count": 113,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 86,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 4,
+  "usable_gradient_completion_pct": 3.54,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 76.11,
+  "gradient_min_pct": -4.167,
+  "gradient_max_pct": 4.638,
+  "path_bounds_svy21": {
+    "min_x": 29233.572,
+    "min_y": 36815.584,
+    "max_x": 29387.778,
+    "max_y": 36876.83
+  },
+  "road_boundary": {
+    "target_road_name": "CLOVER CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 170,
+    "offroad_point_count": 57,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLOVER WAY",
+        "point_count": 36
+      },
+      {
+        "road_name": "BINCHANG RISE",
+        "point_count": 21
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 338.0,
+    "trimmed_offroad_points": 57
+  }
+}

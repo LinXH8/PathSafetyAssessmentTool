@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kubor,1,Jalan Kubor_Cam4_20251208_085912_862_C.jpeg,,10.522,5.261,,,,
+jalan_kubor,2,Jalan Kubor_Cam4_20251208_085917_668_C.jpeg,,23.252,16.887,,,,
+jalan_kubor,3,Jalan Kubor_Cam4_20251208_085924_876_C.jpeg,,34.183,28.717,,,,
+jalan_kubor,4,Jalan Kubor_Cam4_20251208_085955_517_C.jpeg,,42.827,38.505,40.0,6.062,,
+jalan_kubor,5,Jalan Kubor_Cam4_20251208_090000_326_C.jpeg,,50.952,46.89,46.0,6.092,0.921,1.0
+jalan_kubor,6,Jalan Kubor_Cam4_20251208_090005_135_C.jpeg,,59.899,55.426,56.0,6.151,,
+jalan_kubor,7,Jalan Kubor_Cam4_20251208_090015_220_C.jpeg,,68.385,64.142,64.0,5.347,,
+jalan_kubor,8,Jalan Kubor_Cam4_20251208_090018_226_C.jpeg,,102.188,85.287,86.0,5.869,,
+jalan_kubor,9,Jalan Kubor_Cam4_20251208_090229_805_C.jpeg,,110.931,106.56,108.0,5.455,,
+jalan_kubor,10,Jalan Kubor_Cam4_20251208_090233_407_C.jpeg,,164.012,137.472,,,,
+jalan_kubor,11,Jalan Kubor_Cam4_20251208_090821_254_C.jpeg,,178.194,171.103,172.0,4.724,,
+jalan_kubor,12,Jalan Kubor_Cam4_20251208_090832_070_C.jpeg,,201.661,189.928,190.0,3.696,,
+jalan_kubor,13,Jalan Kubor_Cam4_20251208_090834_475_C.jpeg,,211.26,206.46,206.0,3.131,0.237,1.0
+jalan_kubor,14,Jalan Kubor_Cam4_20251208_090840_483_C.jpeg,,220.57,215.915,216.0,3.399,1.309,1.0
+jalan_kubor,15,Jalan Kubor_Cam4_20251208_090844_686_C.jpeg,,250.216,235.393,236.0,2.241,2.614,1.0
+jalan_kubor,16,Jalan Kubor_Cam4_20251208_090856_110_C.jpeg,,274.614,262.415,262.0,2.229,0.0,1.0
+jalan_kubor,17,Jalan Kubor_Cam4_20251208_090905_122_C.jpeg,,282.508,278.561,278.0,2.045,,
+jalan_kubor,18,Jalan Kubor_Cam4_20251208_090908_726_C.jpeg,,294.208,288.358,288.0,2.024,,
+jalan_kubor,19,Jalan Kubor_Cam4_20251208_090914_730_C.jpeg,,316.649,305.428,306.0,2.138,5.676,1.0
+jalan_kubor,20,Jalan Kubor_Cam4_20251208_090932_753_C.jpeg,,346.834,331.741,332.0,2.191,,
+jalan_kubor,21,Jalan Kubor_Cam4_20251208_091005_200_C.jpeg,,357.267,352.05,352.0,4.37,,
+jalan_kubor,22,Jalan Kubor_Cam4_20251208_091007_002_C.jpeg,,411.965,384.616,384.0,4.313,,
+jalan_kubor,23,Jalan Kubor_Cam4_20251208_091018_413_C.jpeg,,424.042,418.004,418.0,2.624,,
+jalan_kubor,24,Jalan Kubor_Cam4_20251208_091021_418_C.jpeg,,444.763,434.402,434.0,3.895,,

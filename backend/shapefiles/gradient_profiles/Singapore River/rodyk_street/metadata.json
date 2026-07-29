@@ -1,0 +1,54 @@
+{
+  "path_key": "rodyk_street",
+  "display_name": "Rodyk Street",
+  "source_project": "Rodyk Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Rodyk Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-24T03:16:12.697818+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 414.86,
+  "profile_point_count": 168,
+  "valid_elevation_count": 168,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 137,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 7,
+  "usable_gradient_completion_pct": 4.17,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 81.55,
+  "gradient_min_pct": 0.066,
+  "gradient_max_pct": 5.804,
+  "path_bounds_svy21": {
+    "min_x": 28504.231,
+    "min_y": 30250.745,
+    "max_x": 28560.566,
+    "max_y": 30427.594
+  },
+  "road_boundary": {
+    "target_road_name": "RODYK STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 209,
+    "offroad_point_count": 41,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SAIBOO STREET",
+        "point_count": 35
+      },
+      {
+        "road_name": "ROBERTSON QUAY",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 162.0,
+    "offroad_chainage_max_m": 414.86,
+    "trimmed_offroad_points": 41
+  }
+}

@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+maple_lane,1,Maple Lane_Cam4_20251217_081147_089_A.jpeg,,11.344,5.672,6.0,16.629,,
+maple_lane,2,Maple Lane_Cam4_20251217_081201_184_A.jpeg,,36.107,23.726,24.0,16.629,,
+maple_lane,3,Maple Lane_Cam4_20251217_081227_399_A.jpeg,,47.873,41.99,42.0,15.479,,
+maple_lane,4,Maple Lane_Cam4_20251217_081230_958_A.jpeg,,79.693,63.783,64.0,15.978,,
+maple_lane,5,Maple Lane_Cam4_20251217_081246_713_A.jpeg,,86.357,83.025,84.0,14.49,,
+maple_lane,6,Maple Lane_Cam4_20251217_081248_214_A.jpeg,,96.731,91.544,92.0,12.806,,
+maple_lane,7,Maple Lane_Cam4_20251217_081250_753_A.jpeg,,121.863,109.297,110.0,10.119,-7.708,1.0
+maple_lane,8,Maple Lane_Cam4_20251217_081256_765_A.jpeg,,134.477,128.17,128.0,9.142,-1.271,1.0
+maple_lane,9,Maple Lane_Cam4_20251217_081259_366_A.jpeg,,158.312,146.394,146.0,9.121,,
+maple_lane,10,Maple Lane_Cam4_20251217_081304_482_A.jpeg,,171.534,164.923,164.0,8.965,-0.417,1.0
+maple_lane,11,Maple Lane_Cam4_20251217_081307_489_A.jpeg,,194.813,183.173,184.0,8.773,-0.937,1.0
+maple_lane,12,Maple Lane_Cam4_20251217_081313_000_A.jpeg,,217.867,206.34,206.0,8.523,-1.25,1.0
+maple_lane,13,Maple Lane_Cam4_20251217_081318_534_A.jpeg,,230.584,224.225,224.0,8.348,-0.625,1.0
+maple_lane,14,Maple Lane_Cam4_20251217_081321_582_A.jpeg,,238.182,234.383,234.0,8.31,-0.152,1.0

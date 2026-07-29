@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_toa_payoh,1,,JALAN TOA PAYOH,640.316,320.158,320.0,8.987,,
+jalan_toa_payoh,2,,JALAN TOA PAYOH,2317.774,1799.203,1800.0,4.126,0.625,1.0
+jalan_toa_payoh,3,,JALAN TOA PAYOH,253.635,3084.907,3084.0,11.161,,

@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+leo_drive,1,Leo Drive_Cam4_20260105_105707_434_A.jpeg,,10.237,5.119,6.0,22.019,-3.912,1.0
+leo_drive,2,Leo Drive_Cam4_20260105_105712_839_A.jpeg,,23.911,17.074,18.0,21.907,,
+leo_drive,3,Leo Drive_Cam4_20260105_105720_049_A.jpeg,,47.12,35.516,36.0,22.204,1.719,1.0
+leo_drive,4,Leo Drive_Cam4_20260105_105730_860_A.jpeg,,58.356,52.738,52.0,22.496,-0.729,1.0

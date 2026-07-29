@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_todak",
+  "display_name": "Jalan Todak",
+  "source_project": "Jalan Todak",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Jalan Todak\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T01:23:58.237957+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 173.194,
+  "profile_point_count": 87,
+  "valid_elevation_count": 87,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 63,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 8,
+  "usable_gradient_completion_pct": 9.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 72.41,
+  "gradient_min_pct": -3.737,
+  "gradient_max_pct": 0.694,
+  "path_bounds_svy21": {
+    "min_x": 28180.968,
+    "min_y": 37252.226,
+    "max_x": 28249.859,
+    "max_y": 37312.037
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TODAK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 88,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN IKAN MERAH",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 116.0,
+    "offroad_chainage_max_m": 116.0,
+    "trimmed_offroad_points": 1
+  }
+}

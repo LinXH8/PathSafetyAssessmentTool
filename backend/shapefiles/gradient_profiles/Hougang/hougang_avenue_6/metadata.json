@@ -1,0 +1,50 @@
+{
+  "path_key": "hougang_avenue_6",
+  "display_name": "Hougang Avenue 6",
+  "source_project": "Hougang Avenue 6",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Hougang Avenue 6\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T16:53:53.270370+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 794.303,
+  "profile_point_count": 391,
+  "valid_elevation_count": 391,
+  "rejected_outlier_count": 60,
+  "rejected_step_jump_count": 164,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 174,
+  "usable_gradient_completion_pct": 44.5,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 41.94,
+  "gradient_min_pct": -3.624,
+  "gradient_max_pct": 11.966,
+  "path_bounds_svy21": {
+    "min_x": 34593.005,
+    "min_y": 39471.816,
+    "max_x": 34637.227,
+    "max_y": 39850.352
+  },
+  "road_boundary": {
+    "target_road_name": "HOUGANG AVENUE 6",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 399,
+    "offroad_point_count": 8,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOUGANG AVENUE 8",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 364.0,
+    "offroad_chainage_max_m": 412.0,
+    "trimmed_offroad_points": 8
+  }
+}

@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+aliwal_street,1,Aliwal Street_Cam4_20251211_072608_695_C.jpeg,,10.986,5.493,6.0,4.845,-1.569,1.0
+aliwal_street,2,Aliwal Street_Cam4_20251211_072612_302_C.jpeg,,20.402,15.694,16.0,4.961,3.255,1.0
+aliwal_street,3,Aliwal Street_Cam4_20251211_072615_306_C.jpeg,,61.931,41.166,42.0,5.946,,
+aliwal_street,4,Aliwal Street_Cam4_20251211_072632_724_C.jpeg,,87.766,74.848,74.0,10.054,,
+aliwal_street,5,Aliwal Street_Cam4_20251211_072641_133_C.jpeg,,97.329,92.547,92.0,7.944,,
+aliwal_street,6,Aliwal Street_Cam4_20251211_072644_137_C.jpeg,,179.111,138.22,138.0,4.293,,
+aliwal_street,7,Aliwal Street_Cam4_20251211_072723_783_C.jpeg,,187.687,183.399,184.0,2.662,-0.417,1.0
+aliwal_street,8,Aliwal Street_Cam4_20251211_072726_789_C.jpeg,,276.321,232.004,232.0,3.471,,
+aliwal_street,9,Aliwal Street_Cam4_20251211_073433_290_C.jpeg,,284.696,280.508,278.0,11.186,,
+aliwal_street,10,Aliwal Street_Cam4_20251211_073438_095_C.jpeg,,298.072,291.384,,,,
+aliwal_street,11,Aliwal Street_Cam4_20251211_073444_703_C.jpeg,,304.239,301.156,302.0,15.8,,
+aliwal_street,12,Aliwal Street_Cam4_20251211_073446_506_C.jpeg,,314.163,309.201,310.0,17.595,,
+aliwal_street,13,Aliwal Street_Cam4_20251211_073449_509_C.jpeg,,326.207,320.185,320.0,14.87,,
+aliwal_street,14,Aliwal Street_Cam4_20251211_073455_514_C.jpeg,,335.519,330.863,330.0,11.503,,
+aliwal_street,15,Aliwal Street_Cam4_20251211_073542_966_C.jpeg,,440.791,388.155,,,,
+aliwal_street,16,Aliwal Street_Cam4_20251211_075121_903_C.jpeg,,546.964,493.877,,,,
+aliwal_street,17,Aliwal Street_Cam4_20260204_085914_680_C.jpeg,,557.423,552.194,,,,
+aliwal_street,18,Aliwal Street_Cam4_20260204_085918_284_C.jpeg,,568.195,562.809,,,,
+aliwal_street,19,Aliwal Street_Cam4_20260204_085921_887_C.jpeg,,688.724,628.46,628.0,4.413,,
+aliwal_street,20,Aliwal Street_Cam4_20260204_090249_625_C.jpeg,,698.704,693.714,,,,
+aliwal_street,21,Aliwal Street_Cam4_20260204_090252_628_C.jpeg,,862.646,780.675,780.0,7.456,,

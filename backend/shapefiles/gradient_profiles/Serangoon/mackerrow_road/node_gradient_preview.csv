@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mackerrow_road,1,Mackerrow Road_Cam4_20260112_090359_761_B.jpeg,,11.675,5.837,6.0,4.057,,
+mackerrow_road,2,Mackerrow Road_Cam4_20260112_090403_966_B.jpeg,,20.079,15.877,16.0,5.077,,
+mackerrow_road,3,Mackerrow Road_Cam4_20260112_090406_974_B.jpeg,,30.846,25.463,26.0,5.66,,
+mackerrow_road,4,Mackerrow Road_Cam4_20260112_090410_579_B.jpeg,,42.414,36.63,36.0,5.161,,
+mackerrow_road,5,Mackerrow Road_Cam4_20260112_090414_186_B.jpeg,,53.512,47.963,48.0,3.543,,
+mackerrow_road,6,Mackerrow Road_Cam4_20260112_090417_791_B.jpeg,,61.017,57.264,58.0,3.504,,
+mackerrow_road,7,Mackerrow Road_Cam4_20260112_090420_193_B.jpeg,,71.001,66.009,66.0,3.521,0.225,1.0
+mackerrow_road,8,Mackerrow Road_Cam4_20260112_090423_196_B.jpeg,,81.04,76.02,76.0,3.588,0.406,1.0
+mackerrow_road,9,Mackerrow Road_Cam4_20260112_090426_200_B.jpeg,,90.62,85.83,86.0,3.579,0.462,1.0
+mackerrow_road,10,Mackerrow Road_Cam4_20260112_090429_202_B.jpeg,,100.586,95.603,96.0,3.637,0.55,1.0
+mackerrow_road,11,Mackerrow Road_Cam4_20260112_090432_206_B.jpeg,,111.568,106.077,106.0,3.73,,
+mackerrow_road,12,Mackerrow Road_Cam4_20260112_090435_812_B.jpeg,,120.193,115.881,116.0,4.606,,
+mackerrow_road,13,Mackerrow Road_Cam4_20260112_090438_815_B.jpeg,,146.362,133.278,134.0,6.04,,
+mackerrow_road,14,Mackerrow Road_Cam4_20260112_090448_432_B.jpeg,,194.447,170.404,170.0,3.709,-0.344,1.0
+mackerrow_road,15,Mackerrow Road_Cam4_20260112_090727_650_B.jpeg,,206.113,200.28,200.0,3.567,2.777,1.0
+mackerrow_road,16,Mackerrow Road_Cam4_20260112_090731_257_B.jpeg,,230.422,218.268,218.0,3.462,0.5,1.0
+mackerrow_road,17,Mackerrow Road_Cam4_20260112_090739_071_B.jpeg,,241.435,235.929,236.0,6.048,,
+mackerrow_road,18,Mackerrow Road_Cam4_20260112_090742_677_B.jpeg,,252.411,246.923,246.0,7.499,,
+mackerrow_road,19,Mackerrow Road_Cam4_20260112_090746_883_B.jpeg,,259.135,255.773,256.0,5.418,,

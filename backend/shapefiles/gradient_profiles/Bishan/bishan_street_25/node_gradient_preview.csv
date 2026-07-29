@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bishan_street_25,1,Bishan Street 25_Cam4_20260102_100356_479_A.jpeg,,14.142,7.071,8.0,8.78,-1.641,1.0
+bishan_street_25,2,Bishan Street 25_Cam4_20260102_100359_482_A.jpeg,,22.088,18.115,18.0,8.705,0.391,1.0
+bishan_street_25,3,Bishan Street 25_Cam4_20260102_100401_286_A.jpeg,,32.301,27.194,28.0,9.236,,
+bishan_street_25,4,Bishan Street 25_Cam4_20260102_100403_689_A.jpeg,,40.142,36.221,36.0,9.279,,
+bishan_street_25,5,Bishan Street 25_Cam4_20260102_100405_492_A.jpeg,,65.907,53.024,54.0,7.871,-2.292,1.0
+bishan_street_25,6,Bishan Street 25_Cam4_20260102_100412_735_A.jpeg,,82.797,74.352,74.0,7.089,-0.417,1.0
+bishan_street_25,7,Bishan Street 25_Cam4_20260102_100450_741_A.jpeg,,108.627,95.712,96.0,7.738,,
+bishan_street_25,8,Bishan Street 25_Cam4_20260102_100500_433_A.jpeg,,121.148,114.888,114.0,8.154,0.833,1.0
+bishan_street_25,9,Bishan Street 25_Cam4_20260102_100505_840_A.jpeg,,132.287,126.718,126.0,8.471,1.771,1.0
+bishan_street_25,10,Bishan Street 25_Cam4_20260102_100510_095_A.jpeg,,163.503,147.895,148.0,9.721,,
+bishan_street_25,11,Bishan Street 25_Cam4_20260102_100521_617_A.jpeg,,170.042,166.772,166.0,12.699,6.56,1.0
+bishan_street_25,12,Bishan Street 25_Cam4_20260102_100524_084_A.jpeg,,180.904,175.473,176.0,12.774,,
+bishan_street_25,13,Bishan Street 25_Cam4_20260102_100527_688_A.jpeg,,192.638,186.771,186.0,12.289,,

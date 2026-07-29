@@ -1,0 +1,66 @@
+{
+  "path_key": "guillemard_road",
+  "display_name": "Guillemard Road",
+  "source_project": "Guillemard Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Guillemard Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Geylang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Geylang_LTA",
+  "generated_at_utc": "2026-06-25T18:24:17.510767+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 5378.958,
+  "profile_point_count": 1711,
+  "valid_elevation_count": 610,
+  "rejected_outlier_count": 67,
+  "rejected_step_jump_count": 601,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 11,
+  "valid_gradient_count": 457,
+  "usable_gradient_completion_pct": 26.71,
+  "elevation_hit_coverage_pct": 35.65,
+  "step_jump_rejection_pct": 35.13,
+  "gradient_min_pct": -13.272,
+  "gradient_max_pct": 27.924,
+  "path_bounds_svy21": {
+    "min_x": 33068.839,
+    "min_y": 32406.315,
+    "max_x": 34763.318,
+    "max_y": 33024.097
+  },
+  "road_boundary": {
+    "target_road_name": "GUILLEMARD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2691,
+    "offroad_point_count": 980,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 255
+      },
+      {
+        "road_name": "GUILLEMARD CRESCENT",
+        "point_count": 105
+      },
+      {
+        "road_name": "LORONG 40 GEYLANG",
+        "point_count": 99
+      },
+      {
+        "road_name": "PEBBLE LANE",
+        "point_count": 71
+      },
+      {
+        "road_name": "LIM AH WOO ROAD",
+        "point_count": 65
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 4998.0,
+    "trimmed_offroad_points": 980
+  }
+}

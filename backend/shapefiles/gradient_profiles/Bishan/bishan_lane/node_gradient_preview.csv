@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bishan_lane,1,Bishan Lane_Cam4_20260102_081336_338_A.jpeg,,12.259,6.129,6.0,5.642,1.875,1.0
+bishan_lane,2,Bishan Lane_Cam4_20260102_081341_744_A.jpeg,,23.519,17.889,18.0,6.021,4.036,1.0
+bishan_lane,3,Bishan Lane_Cam4_20260102_081346_549_A.jpeg,,34.852,29.186,30.0,6.326,0.104,1.0
+bishan_lane,4,Bishan Lane_Cam4_20260102_081351_354_A.jpeg,,56.464,45.658,46.0,7.386,,
+bishan_lane,5,Bishan Lane_Cam4_20260102_081359_763_A.jpeg,,66.424,61.444,62.0,8.304,,
+bishan_lane,6,Bishan Lane_Cam4_20260102_081403_367_A.jpeg,,79.356,72.89,72.0,11.366,,
+bishan_lane,7,Bishan Lane_Cam4_20260102_081408_140_A.jpeg,,89.517,84.437,84.0,14.203,,
+bishan_lane,8,Bishan Lane_Cam4_20260102_081411_744_A.jpeg,,95.423,92.47,92.0,15.123,,
+bishan_lane,9,Bishan Lane_Cam4_20260102_081414_146_A.jpeg,,123.407,109.415,110.0,13.922,,
+bishan_lane,10,Bishan Lane_Cam4_20260102_081427_365_A.jpeg,,133.913,128.66,128.0,10.686,,
+bishan_lane,11,Bishan Lane_Cam4_20260102_081432_774_A.jpeg,,145.692,139.802,140.0,8.262,,
+bishan_lane,12,Bishan Lane_Cam4_20260102_081437_580_A.jpeg,,167.116,156.404,156.0,7.959,,
+bishan_lane,13,Bishan Lane_Cam4_20260102_081444_786_A.jpeg,,178.751,172.933,172.0,8.059,1.25,1.0
+bishan_lane,14,Bishan Lane_Cam4_20260102_081449_004_A.jpeg,,189.683,184.217,184.0,8.159,1.25,1.0
+bishan_lane,15,Bishan Lane_Cam4_20260102_081453_209_A.jpeg,,200.803,195.243,196.0,8.259,0.625,1.0
+bishan_lane,16,Bishan Lane_Cam4_20260102_081457_414_A.jpeg,,206.493,203.648,204.0,8.309,0.625,1.0
+bishan_lane,17,Bishan Lane_Cam4_20260102_081500_417_A.jpeg,,217.524,212.009,212.0,8.359,-0.234,1.0

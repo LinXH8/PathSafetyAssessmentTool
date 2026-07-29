@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+chancery_lane,1,,CHANCERY LANE,361.19,180.595,180.0,4.276,2.069,1.0
+chancery_lane,2,,CHANCERY LANE,356.7,539.54,540.0,5.539,,
+chancery_lane,3,,CHANCERY LANE,448.622,942.201,942.0,15.2,,
+chancery_lane,4,,CHANCERY LANE,33.023,1266.87,1266.0,10.135,0.208,1.0

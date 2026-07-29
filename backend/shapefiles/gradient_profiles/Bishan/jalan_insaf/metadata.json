@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_insaf",
+  "display_name": "Jalan Insaf",
+  "source_project": "Jalan Insaf",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Insaf\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T03:27:38.763518+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 222.387,
+  "profile_point_count": 113,
+  "valid_elevation_count": 113,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 75,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 14,
+  "usable_gradient_completion_pct": 12.39,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.37,
+  "gradient_min_pct": -7.331,
+  "gradient_max_pct": 10.414,
+  "path_bounds_svy21": {
+    "min_x": 29389.433,
+    "min_y": 37207.164,
+    "max_x": 29486.428,
+    "max_y": 37306.795
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN INSAF",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 113,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

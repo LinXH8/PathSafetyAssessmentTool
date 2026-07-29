@@ -1,0 +1,66 @@
+{
+  "path_key": "mohamed_sultan_road",
+  "display_name": "Mohamed Sultan Road",
+  "source_project": "Mohamed Sultan Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Mohamed Sultan Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-17T03:48:25.104414+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1134.217,
+  "profile_point_count": 471,
+  "valid_elevation_count": 471,
+  "rejected_outlier_count": 65,
+  "rejected_step_jump_count": 335,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 67,
+  "usable_gradient_completion_pct": 14.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 71.13,
+  "gradient_min_pct": -8.374,
+  "gradient_max_pct": 8.268,
+  "path_bounds_svy21": {
+    "min_x": 28650.344,
+    "min_y": 30385.376,
+    "max_x": 28967.641,
+    "max_y": 30727.858
+  },
+  "road_boundary": {
+    "target_road_name": "MOHAMED SULTAN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 569,
+    "offroad_point_count": 98,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 53
+      },
+      {
+        "road_name": "KIM YAM ROAD",
+        "point_count": 13
+      },
+      {
+        "road_name": "TONG WATT ROAD",
+        "point_count": 10
+      },
+      {
+        "road_name": "UNITY STREET",
+        "point_count": 9
+      },
+      {
+        "road_name": "CASEEN STREET",
+        "point_count": 7
+      }
+    ],
+    "offroad_chainage_min_m": 290.0,
+    "offroad_chainage_max_m": 1134.217,
+    "trimmed_offroad_points": 98
+  }
+}

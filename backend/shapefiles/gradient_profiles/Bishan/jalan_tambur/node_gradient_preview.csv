@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tambur,1,Jalan Tambur_Cam4_20260103_092507_247_B.jpeg,,12.754,6.377,6.0,10.33,-2.183,1.0
+jalan_tambur,2,Jalan Tambur_Cam4_20260103_092511_451_B.jpeg,,23.887,18.32,18.0,10.065,,
+jalan_tambur,3,Jalan Tambur_Cam4_20260103_092515_059_B.jpeg,,31.653,27.77,28.0,10.594,,
+jalan_tambur,4,Jalan Tambur_Cam4_20260103_092517_461_B.jpeg,,56.858,44.255,44.0,10.14,,
+jalan_tambur,5,Jalan Tambur_Cam4_20260103_092526_475_B.jpeg,,69.345,63.102,64.0,12.628,,
+jalan_tambur,6,Jalan Tambur_Cam4_20260103_092541_513_B.jpeg,,94.978,82.162,82.0,12.587,,
+jalan_tambur,7,Jalan Tambur_Cam4_20260103_092605_386_B.jpeg,,106.679,100.828,100.0,13.801,,
+jalan_tambur,8,Jalan Tambur_Cam4_20260103_092616_199_B.jpeg,,131.726,119.202,120.0,15.789,,
+jalan_tambur,9,Jalan Tambur_Cam4_20260103_092643_232_B.jpeg,,157.08,144.403,144.0,18.335,,
+jalan_tambur,10,Jalan Tambur_Cam4_20260103_092717_441_B.jpeg,,169.562,163.321,164.0,18.452,1.973,1.0
+jalan_tambur,11,Jalan Tambur_Cam4_20260103_092722_245_B.jpeg,,174.764,172.163,172.0,18.609,-4.604,1.0
+jalan_tambur,12,Jalan Tambur_Cam4_20260103_092724_046_B.jpeg,,185.202,179.983,180.0,18.241,3.597,1.0
+jalan_tambur,13,Jalan Tambur_Cam4_20260103_092728_251_B.jpeg,,195.595,190.398,190.0,19.115,,
+jalan_tambur,14,Jalan Tambur_Cam4_20260103_092733_659_B.jpeg,,207.343,201.469,202.0,20.123,,
+jalan_tambur,15,Jalan Tambur_Cam4_20260103_092738_473_B.jpeg,,218.589,212.966,212.0,18.914,,
+jalan_tambur,16,Jalan Tambur_Cam4_20260103_092743_885_B.jpeg,,244.383,231.486,232.0,18.883,-0.234,1.0
+jalan_tambur,17,Jalan Tambur_Cam4_20260103_092755_316_B.jpeg,,256.106,250.244,250.0,18.745,-1.484,1.0
+jalan_tambur,18,Jalan Tambur_Cam4_20260103_092801_325_B.jpeg,,262.176,259.141,260.0,18.77,0.156,1.0
+jalan_tambur,19,Jalan Tambur_Cam4_20260103_092803_728_B.jpeg,,271.773,266.974,266.0,18.77,0.0,1.0
+jalan_tambur,20,Jalan Tambur_Cam4_20260103_092807_336_B.jpeg,,281.32,276.547,276.0,18.795,0.469,1.0
+jalan_tambur,21,Jalan Tambur_Cam4_20260103_092811_506_B.jpeg,,294.555,287.937,288.0,18.87,0.781,1.0
+jalan_tambur,22,Jalan Tambur_Cam4_20260103_092817_518_B.jpeg,,305.387,299.971,300.0,19.008,0.625,1.0
+jalan_tambur,23,Jalan Tambur_Cam4_20260103_092822_339_B.jpeg,,310.103,307.745,308.0,19.045,-0.625,1.0
+jalan_tambur,24,Jalan Tambur_Cam4_20260103_092827_142_B.jpeg,,565.556,437.829,438.0,18.726,,
+jalan_tambur,25,Jalan Tambur_Cam4_20260103_093011_110_B.jpeg,,612.583,589.069,590.0,10.385,,

@@ -1,0 +1,50 @@
+{
+  "path_key": "trevose_crescent",
+  "display_name": "Trevose Crescent",
+  "source_project": "Trevose Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry10\\_projects\\Trevose Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-13T01:37:56.999932+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1436.77,
+  "profile_point_count": 719,
+  "valid_elevation_count": 719,
+  "rejected_outlier_count": 44,
+  "rejected_step_jump_count": 461,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 7,
+  "valid_gradient_count": 153,
+  "usable_gradient_completion_pct": 21.28,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.12,
+  "gradient_min_pct": -12.344,
+  "gradient_max_pct": 9.201,
+  "path_bounds_svy21": {
+    "min_x": 26522.801,
+    "min_y": 33844.492,
+    "max_x": 27086.44,
+    "max_y": 34416.902
+  },
+  "road_boundary": {
+    "target_road_name": "TREVOSE CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 720,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KHEAM HOCK ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

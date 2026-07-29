@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_terrace,1,Lentor Terrace_Cam4_20251231_073709_863_B.jpeg,,10.812,5.406,6.0,19.495,1.271,1.0
+lentor_terrace,2,Lentor Terrace_Cam4_20251231_073716_471_B.jpeg,,36.932,23.872,24.0,19.072,,
+lentor_terrace,3,Lentor Terrace_Cam4_20251231_073727_283_B.jpeg,,61.085,49.009,50.0,17.726,,
+lentor_terrace,4,Lentor Terrace_Cam4_20251231_073733_888_B.jpeg,,72.919,67.002,68.0,15.716,,
+lentor_terrace,5,Lentor Terrace_Cam4_20251231_073736_892_B.jpeg,,84.793,78.856,78.0,15.481,,
+lentor_terrace,6,Lentor Terrace_Cam4_20251231_073739_896_B.jpeg,,92.065,88.429,88.0,16.26,,
+lentor_terrace,7,Lentor Terrace_Cam4_20251231_073741_696_B.jpeg,,102.283,97.174,98.0,15.531,,
+lentor_terrace,8,Lentor Terrace_Cam4_20251231_073744_099_B.jpeg,,110.226,106.254,106.0,14.431,,
+lentor_terrace,9,Lentor Terrace_Cam4_20251231_073745_902_B.jpeg,,120.738,115.482,116.0,13.465,,
+lentor_terrace,10,Lentor Terrace_Cam4_20251231_073748_305_B.jpeg,,131.606,126.172,126.0,13.297,,
+lentor_terrace,11,Lentor Terrace_Cam4_20251231_073750_707_B.jpeg,,142.207,136.907,136.0,13.472,,
+lentor_terrace,12,Lentor Terrace_Cam4_20251231_073753_109_B.jpeg,,154.6,148.403,148.0,12.426,,
+lentor_terrace,13,Lentor Terrace_Cam4_20251231_073756_113_B.jpeg,,162.086,158.343,158.0,11.936,,
+lentor_terrace,14,Lentor Terrace_Cam4_20251231_073757_914_B.jpeg,,171.653,166.869,166.0,11.659,-4.063,1.0
+lentor_terrace,15,Lentor Terrace_Cam4_20251231_073800_317_B.jpeg,,180.919,176.286,176.0,11.036,,
+lentor_terrace,16,Lentor Terrace_Cam4_20251231_073802_718_B.jpeg,,190.195,185.557,186.0,10.608,-3.002,1.0
+lentor_terrace,17,Lentor Terrace_Cam4_20251231_073805_120_B.jpeg,,201.786,195.991,196.0,10.409,-5.469,1.0
+lentor_terrace,18,Lentor Terrace_Cam4_20251231_073808_123_B.jpeg,,213.511,207.648,208.0,9.854,,
+lentor_terrace,19,Lentor Terrace_Cam4_20251231_073811_726_B.jpeg,,237.512,225.511,226.0,9.556,,
+lentor_terrace,20,Lentor Terrace_Cam4_20251231_073818_333_B.jpeg,,250.015,243.763,244.0,8.962,,
+lentor_terrace,21,Lentor Terrace_Cam4_20251231_073821_335_B.jpeg,,260.744,255.38,256.0,8.007,,
+lentor_terrace,22,Lentor Terrace_Cam4_20251231_073823_738_B.jpeg,,266.012,263.378,264.0,7.45,-0.188,1.0
+lentor_terrace,23,Lentor Terrace_Cam4_20251231_073824_939_B.jpeg,,277.343,271.678,272.0,7.894,,
+lentor_terrace,24,Lentor Terrace_Cam4_20251231_073827_943_B.jpeg,,285.814,281.579,282.0,9.114,,
+lentor_terrace,25,Lentor Terrace_Cam4_20251231_073832_147_B.jpeg,,299.353,292.584,292.0,8.337,,

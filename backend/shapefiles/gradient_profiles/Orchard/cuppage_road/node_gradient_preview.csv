@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+cuppage_road,1,Cuppage Road_Cam4_20260107_090844_904_A.jpeg,,9.564,4.782,,,,
+cuppage_road,2,Cuppage Road_Cam4_20260107_090850_911_A.jpeg,,23.872,16.718,,,,
+cuppage_road,3,Cuppage Road_Cam4_20260107_090903_528_A.jpeg,,59.235,41.554,,,,
+cuppage_road,4,Cuppage Road_Cam4_20260107_091014_327_A.jpeg,,70.217,64.726,,,,
+cuppage_road,5,Cuppage Road_Cam4_20260107_091019_732_A.jpeg,,80.694,75.456,,,,
+cuppage_road,6,Cuppage Road_Cam4_20260107_091025_740_A.jpeg,,85.921,83.308,,,,
+cuppage_road,7,Cuppage Road_Cam4_20260107_091028_141_A.jpeg,,95.928,90.925,,,,
+cuppage_road,8,Cuppage Road_Cam4_20260107_091032_944_A.jpeg,,105.942,100.935,,,,
+cuppage_road,9,Cuppage Road_Cam4_20260107_091410_944_A.jpeg,,113.093,109.518,,,,
+cuppage_road,10,Cuppage Road_Cam4_20260107_091413_948_A.jpeg,,268.018,190.556,190.0,26.674,0.0,1.0
+cuppage_road,11,Cuppage Road_Cam4_20260108_104955_202_B.jpeg,,276.471,272.245,272.0,4.688,,
+cuppage_road,12,Cuppage Road_Cam4_20260108_104959_406_B.jpeg,,310.601,293.536,294.0,7.034,,

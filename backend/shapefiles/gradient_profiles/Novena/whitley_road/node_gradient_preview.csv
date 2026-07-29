@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+whitley_road,1,,WHITLEY ROAD,520.635,260.318,260.0,3.897,-1.022,1.0
+whitley_road,2,,WHITLEY ROAD,97.643,569.456,570.0,8.078,-0.758,1.0
+whitley_road,3,,WHITLEY ROAD,107.393,769.823,770.0,8.582,,
+whitley_road,4,,WHITLEY ROAD,221.931,934.485,934.0,9.256,0.166,1.0
+whitley_road,5,,WHITLEY ROAD,764.992,1429.694,1430.0,10.575,2.662,1.0
+whitley_road,6,,WHITLEY ROAD,645.025,2239.131,2240.0,5.38,,

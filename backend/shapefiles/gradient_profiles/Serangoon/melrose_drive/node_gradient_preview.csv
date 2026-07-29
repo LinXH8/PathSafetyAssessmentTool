@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+melrose_drive,1,Melrose Drive_Cam4_20260112_094734_652_B.jpeg,,14.214,7.107,8.0,10.914,,
+melrose_drive,2,Melrose Drive_Cam4_20260112_094749_773_B.jpeg,,20.673,17.444,18.0,12.058,,
+melrose_drive,3,Melrose Drive_Cam4_20260112_094755_182_B.jpeg,,83.57,52.122,52.0,13.758,,
+melrose_drive,4,Melrose Drive_Cam4_20260112_094851_258_B.jpeg,,91.539,87.555,88.0,16.1,,
+melrose_drive,5,Melrose Drive_Cam4_20260112_094858_473_B.jpeg,,139.36,115.449,116.0,17.891,6.312,1.0
+melrose_drive,6,Melrose Drive_Cam4_20260112_094949_084_B.jpeg,,146.738,143.049,144.0,19.746,6.387,1.0
+melrose_drive,7,Melrose Drive_Cam4_20260112_094956_290_B.jpeg,,194.794,170.766,170.0,23.12,,

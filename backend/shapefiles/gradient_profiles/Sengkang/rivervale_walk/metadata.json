@@ -1,0 +1,58 @@
+{
+  "path_key": "rivervale_walk",
+  "display_name": "Rivervale Walk",
+  "source_project": "Rivervale Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Rivervale Walk\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T02:51:54.491549+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 939.914,
+  "profile_point_count": 263,
+  "valid_elevation_count": 255,
+  "rejected_outlier_count": 40,
+  "rejected_step_jump_count": 157,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 70,
+  "usable_gradient_completion_pct": 26.62,
+  "elevation_hit_coverage_pct": 96.96,
+  "step_jump_rejection_pct": 59.7,
+  "gradient_min_pct": -6.509,
+  "gradient_max_pct": 14.755,
+  "path_bounds_svy21": {
+    "min_x": 35294.092,
+    "min_y": 40543.137,
+    "max_x": 35650.285,
+    "max_y": 40719.11
+  },
+  "road_boundary": {
+    "target_road_name": "RIVERVALE WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 471,
+    "offroad_point_count": 208,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL ROAD",
+        "point_count": 122
+      },
+      {
+        "road_name": "RIVERVALE DRIVE",
+        "point_count": 85
+      },
+      {
+        "road_name": "SENGKANG EAST AVENUE",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 422.0,
+    "offroad_chainage_max_m": 940.0,
+    "trimmed_offroad_points": 208
+  }
+}

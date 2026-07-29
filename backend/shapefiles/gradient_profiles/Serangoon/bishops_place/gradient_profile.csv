@@ -1,0 +1,23 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+bishops_place,Bishops Place,0.0,31428.1,38895.87,7.716,7.716,7.751,1.369,1.0,BISHOPS PLACE,2.818
+bishops_place,Bishops Place,2.0,31426.426,38894.775,7.751,7.751,7.778,1.533,1.0,BISHOPS PLACE,2.562
+bishops_place,Bishops Place,4.0,31424.752,38893.681,7.805,7.805,7.805,,,BISHOPS PLACE,2.306
+bishops_place,Bishops Place,6.0,31423.078,38892.587,7.842,7.842,7.842,,,BISHOPS PLACE,2.05
+bishops_place,Bishops Place,8.0,31421.404,38891.492,7.882,8.172,8.172,,,BISHOPS PLACE,1.794
+bishops_place,Bishops Place,10.0,31419.73,38890.398,7.934,8.502,8.502,,,BISHOPS PLACE,1.537
+bishops_place,Bishops Place,12.0,31418.07,38889.282,7.98,8.832,8.832,,,BISHOPS PLACE,1.307
+bishops_place,Bishops Place,14.0,31416.412,38888.163,8.036,9.162,9.162,,,BISHOPS PLACE,1.08
+bishops_place,Bishops Place,16.0,31414.755,38887.044,9.96,9.492,9.439,,,BISHOPS PLACE,0.854
+bishops_place,Bishops Place,18.0,31413.097,38885.925,10.19,9.699,9.439,,,BISHOPS PLACE,0.627
+bishops_place,Bishops Place,20.0,31411.439,38884.806,10.572,9.439,9.439,,,BISHOPS PLACE,0.4
+bishops_place,Bishops Place,22.0,31409.916,38883.518,10.524,9.179,9.179,,,BISHOPS PLACE,0.389
+bishops_place,Bishops Place,24.0,31408.448,38882.159,9.669,8.919,8.919,,,BISHOPS PLACE,0.468
+bishops_place,Bishops Place,26.0,31406.98,38880.801,8.496,8.755,8.82,,,BISHOPS PLACE,0.546
+bishops_place,Bishops Place,28.0,31405.513,38879.442,8.59,8.59,8.82,,,BISHOPS PLACE,0.625
+bishops_place,Bishops Place,30.0,31404.045,38878.084,8.82,8.82,8.82,,,BISHOPS PLACE,0.704
+bishops_place,Bishops Place,32.0,31402.598,38876.704,9.658,8.978,8.978,3.951,1.0,BISHOPS PLACE,0.812
+bishops_place,Bishops Place,34.0,31401.255,38875.222,9.678,9.136,9.136,3.951,1.0,BISHOPS PLACE,1.066
+bishops_place,Bishops Place,36.0,31399.912,38873.74,9.294,9.294,9.136,,,BISHOPS PLACE,1.319
+bishops_place,Bishops Place,38.0,31398.569,38872.258,9.318,9.318,9.136,,,BISHOPS PLACE,1.573
+bishops_place,Bishops Place,40.0,31397.226,38870.776,8.729,9.066,9.18,-1.446,1.0,BISHOPS PLACE,1.826
+bishops_place,Bishops Place,40.827,31396.671,38870.164,8.814,8.814,9.066,-2.468,1.0,BISHOPS PLACE,1.931

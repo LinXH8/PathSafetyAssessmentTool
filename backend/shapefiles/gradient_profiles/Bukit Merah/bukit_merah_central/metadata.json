@@ -1,0 +1,50 @@
+{
+  "path_key": "bukit_merah_central",
+  "display_name": "Bukit Merah Central",
+  "source_project": "Bukit Merah Central",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Bukit Merah Central\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T06:02:51.970972+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1257.544,
+  "profile_point_count": 468,
+  "valid_elevation_count": 415,
+  "rejected_outlier_count": 51,
+  "rejected_step_jump_count": 281,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 107,
+  "usable_gradient_completion_pct": 22.86,
+  "elevation_hit_coverage_pct": 88.68,
+  "step_jump_rejection_pct": 60.04,
+  "gradient_min_pct": -9.914,
+  "gradient_max_pct": 12.869,
+  "path_bounds_svy21": {
+    "min_x": 25870.962,
+    "min_y": 29375.298,
+    "max_x": 26408.46,
+    "max_y": 29704.304
+  },
+  "road_boundary": {
+    "target_road_name": "BUKIT MERAH CENTRAL",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 630,
+    "offroad_point_count": 162,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN BUKIT MERAH",
+        "point_count": 162
+      }
+    ],
+    "offroad_chainage_min_m": 454.0,
+    "offroad_chainage_max_m": 1258.0,
+    "trimmed_offroad_points": 162
+  }
+}

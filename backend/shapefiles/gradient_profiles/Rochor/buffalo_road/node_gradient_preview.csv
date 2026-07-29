@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+buffalo_road,1,Buffalo Road_Cam4_20251212_083910_993_A.jpeg,,11.633,5.817,6.0,10.243,,
+buffalo_road,2,Buffalo Road_Cam4_20251212_083941_181_A.jpeg,,33.888,22.76,22.0,5.62,,
+buffalo_road,3,Buffalo Road_Cam4_20251212_084019_153_A.jpeg,,58.238,46.063,46.0,3.381,,
+buffalo_road,4,Buffalo Road_Cam4_20251212_084043_990_A.jpeg,,84.993,71.615,72.0,3.809,,
+buffalo_road,5,Buffalo Road_Cam4_20251212_084058_201_A.jpeg,,205.376,145.185,146.0,,,
+buffalo_road,6,Buffalo Road_Cam4_20251212_084521_280_A.jpeg,,215.506,210.441,210.0,3.982,,
+buffalo_road,7,Buffalo Road_Cam4_20251212_084524_288_A.jpeg,,224.839,220.172,220.0,3.914,,
+buffalo_road,8,Buffalo Road_Cam4_20251212_084526_795_A.jpeg,,234.735,229.787,230.0,3.116,,
+buffalo_road,9,Buffalo Road_Cam4_20251212_084529_364_A.jpeg,,246.133,240.434,240.0,3.246,0.5,1.0
+buffalo_road,10,Buffalo Road_Cam4_20251212_084532_367_A.jpeg,,255.734,250.934,250.0,3.265,,
+buffalo_road,11,Buffalo Road_Cam4_20251212_084534_871_A.jpeg,,267.939,261.836,262.0,3.996,,
+buffalo_road,12,Buffalo Road_Cam4_20251212_084538_174_A.jpeg,,293.754,280.846,280.0,3.596,,
+buffalo_road,13,Buffalo Road_Cam4_20251212_084545_008_A.jpeg,,412.685,353.22,354.0,13.325,,
+buffalo_road,14,Buffalo Road_Cam4_20260108_120628_775_A.jpeg,,476.656,444.671,,,,
+buffalo_road,15,Buffalo Road_Cam4_20260108_120650_195_A.jpeg,,488.207,482.431,,,,
+buffalo_road,16,Buffalo Road_Cam4_20260108_120653_198_A.jpeg,,499.88,494.043,,,,

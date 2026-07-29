@@ -1,0 +1,58 @@
+{
+  "path_key": "eng_neo_avenue",
+  "display_name": "Eng Neo Avenue",
+  "source_project": "Eng Neo Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Eng Neo Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-04T19:28:59.634370+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1281.552,
+  "profile_point_count": 599,
+  "valid_elevation_count": 599,
+  "rejected_outlier_count": 54,
+  "rejected_step_jump_count": 273,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 3,
+  "valid_gradient_count": 223,
+  "usable_gradient_completion_pct": 37.23,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 45.58,
+  "gradient_min_pct": -9.653,
+  "gradient_max_pct": 11.25,
+  "path_bounds_svy21": {
+    "min_x": 24058.279,
+    "min_y": 34816.599,
+    "max_x": 24154.938,
+    "max_y": 35369.414
+  },
+  "road_boundary": {
+    "target_road_name": "ENG NEO AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 642,
+    "offroad_point_count": 43,
+    "offroad_top_road_names": [
+      {
+        "road_name": "VANDA LINK",
+        "point_count": 30
+      },
+      {
+        "road_name": ".",
+        "point_count": 7
+      },
+      {
+        "road_name": "DUNEARN ROAD",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 64.0,
+    "offroad_chainage_max_m": 1282.0,
+    "trimmed_offroad_points": 43
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "florence_close",
+  "display_name": "Florence Close",
+  "source_project": "Florence Close",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Florence Close\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-30T19:59:28.894844+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 138.016,
+  "profile_point_count": 30,
+  "valid_elevation_count": 30,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 8,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 63.33,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 26.67,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 6.756,
+  "path_bounds_svy21": {
+    "min_x": 33842.393,
+    "min_y": 38199.659,
+    "max_x": 33912.347,
+    "max_y": 38245.793
+  },
+  "road_boundary": {
+    "target_road_name": "FLORENCE CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 71,
+    "offroad_point_count": 41,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 41
+      }
+    ],
+    "offroad_chainage_min_m": 60.0,
+    "offroad_chainage_max_m": 138.016,
+    "trimmed_offroad_points": 41
+  }
+}

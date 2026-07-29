@@ -1,0 +1,54 @@
+{
+  "path_key": "kadayanallur_street",
+  "display_name": "Kadayanallur Street",
+  "source_project": "Kadayanallur Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Kadayanallur Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-07T14:56:57.450801+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 269.312,
+  "profile_point_count": 100,
+  "valid_elevation_count": 100,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 59,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 22,
+  "usable_gradient_completion_pct": 22.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 59.0,
+  "gradient_min_pct": -9.375,
+  "gradient_max_pct": 9.633,
+  "path_bounds_svy21": {
+    "min_x": 29232.431,
+    "min_y": 29131.663,
+    "max_x": 29357.078,
+    "max_y": 29199.912
+  },
+  "road_boundary": {
+    "target_road_name": "KADAYANALLUR STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 136,
+    "offroad_point_count": 36,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MAXWELL ROAD",
+        "point_count": 31
+      },
+      {
+        "road_name": "ANN SIANG ROAD",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 270.0,
+    "trimmed_offroad_points": 36
+  }
+}

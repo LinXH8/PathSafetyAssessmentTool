@@ -1,0 +1,58 @@
+{
+  "path_key": "begonia_drive",
+  "display_name": "Begonia Drive",
+  "source_project": "Begonia Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Begonia Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-20T05:01:06.575506+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1769.662,
+  "profile_point_count": 815,
+  "valid_elevation_count": 815,
+  "rejected_outlier_count": 47,
+  "rejected_step_jump_count": 419,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 251,
+  "usable_gradient_completion_pct": 30.8,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 51.41,
+  "gradient_min_pct": -10.313,
+  "gradient_max_pct": 10.0,
+  "path_bounds_svy21": {
+    "min_x": 31053.504,
+    "min_y": 40915.044,
+    "max_x": 31502.579,
+    "max_y": 41118.546
+  },
+  "road_boundary": {
+    "target_road_name": "BEGONIA DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 886,
+    "offroad_point_count": 71,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BEGONIA ROAD",
+        "point_count": 26
+      },
+      {
+        "road_name": "BEGONIA TERRACE",
+        "point_count": 24
+      },
+      {
+        "road_name": "TAMARIND ROAD",
+        "point_count": 21
+      }
+    ],
+    "offroad_chainage_min_m": 1254.0,
+    "offroad_chainage_max_m": 1560.0,
+    "trimmed_offroad_points": 71
+  }
+}

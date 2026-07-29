@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+binchang_walk,1,Binchang Walk_Cam4_20260103_082017_980_A.jpeg,,10.72,5.36,6.0,10.232,,
+binchang_walk,2,Binchang Walk_Cam4_20260103_082021_585_A.jpeg,,21.898,16.309,16.0,11.203,,
+binchang_walk,3,Binchang Walk_Cam4_20260103_082026_389_A.jpeg,,33.319,27.608,28.0,12.495,,
+binchang_walk,4,Binchang Walk_Cam4_20260103_082031_194_A.jpeg,,55.019,44.169,44.0,13.347,2.3,1.0
+binchang_walk,5,Binchang Walk_Cam4_20260103_082043_085_A.jpeg,,66.645,60.832,60.0,13.35,-1.317,1.0
+binchang_walk,6,Binchang Walk_Cam4_20260103_082048_491_A.jpeg,,75.277,70.961,70.0,13.186,-1.25,1.0
+binchang_walk,7,Binchang Walk_Cam4_20260103_082052_095_A.jpeg,,88.818,82.048,82.0,13.399,,
+binchang_walk,8,Binchang Walk_Cam4_20260103_082058_099_A.jpeg,,95.247,92.033,92.0,13.554,,
+binchang_walk,9,Binchang Walk_Cam4_20260103_082100_501_A.jpeg,,105.042,100.144,100.0,13.117,-4.911,1.0
+binchang_walk,10,Binchang Walk_Cam4_20260103_082104_108_A.jpeg,,115.737,110.389,110.0,12.949,-0.391,1.0
+binchang_walk,11,Binchang Walk_Cam4_20260103_082108_321_A.jpeg,,124.915,120.326,120.0,12.886,-0.859,1.0
+binchang_walk,12,Binchang Walk_Cam4_20260103_082111_931_A.jpeg,,135.71,130.312,130.0,12.586,-3.203,1.0
+binchang_walk,13,Binchang Walk_Cam4_20260103_082116_136_A.jpeg,,145.174,140.442,140.0,12.274,-0.186,1.0
+binchang_walk,14,Binchang Walk_Cam4_20260103_082119_740_A.jpeg,,154.707,149.94,150.0,12.223,,
+binchang_walk,15,Binchang Walk_Cam4_20260103_082123_343_A.jpeg,,165.44,160.074,160.0,10.753,,

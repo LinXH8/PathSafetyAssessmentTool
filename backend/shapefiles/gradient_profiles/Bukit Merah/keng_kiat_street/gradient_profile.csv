@@ -1,0 +1,13 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+keng_kiat_street,Keng Kiat Street,0.0,27908.447,29429.871,10.137,10.137,10.212,3.75,1.0,KENG KIAT STREET,6.005
+keng_kiat_street,Keng Kiat Street,2.0,27909.32,29428.071,10.212,10.212,10.287,3.333,1.0,KENG KIAT STREET,5.092
+keng_kiat_street,Keng Kiat Street,4.0,27910.192,29426.271,10.362,10.362,10.362,2.969,1.0,KENG KIAT STREET,4.178
+keng_kiat_street,Keng Kiat Street,6.0,27911.064,29424.472,10.412,10.412,10.412,2.031,1.0,KENG KIAT STREET,3.264
+keng_kiat_street,Keng Kiat Street,8.0,27911.936,29422.672,10.45,10.45,10.45,1.094,1.0,KENG KIAT STREET,2.351
+keng_kiat_street,Keng Kiat Street,10.0,27912.809,29420.872,10.487,10.487,10.45,-0.625,1.0,KENG KIAT STREET,1.437
+keng_kiat_street,Keng Kiat Street,12.0,27911.17,29420.733,10.487,10.487,10.45,-1.094,1.0,KENG KIAT STREET,0.34
+keng_kiat_street,Keng Kiat Street,14.0,27909.172,29420.83,10.362,10.362,10.362,-1.094,1.0,KENG KIAT STREET,0.783
+keng_kiat_street,Keng Kiat Street,16.0,27907.174,29420.928,10.362,10.362,10.362,,,KENG KIAT STREET,1.906
+keng_kiat_street,Keng Kiat Street,18.0,27905.177,29421.025,10.362,10.362,10.362,,,KENG KIAT STREET,3.029
+keng_kiat_street,Keng Kiat Street,20.0,27903.179,29421.123,12.125,10.362,10.362,,,KENG KIAT STREET,4.153
+keng_kiat_street,Keng Kiat Street,20.643,27902.537,29421.154,11.506,10.362,10.362,,,KENG KIAT STREET,4.514

@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+handy_road,1,Handy Road_Cam4_20260108_110045_425_B.jpeg,,12.714,6.357,6.0,11.397,,
+handy_road,2,Handy Road_Cam4_20260108_110052_042_B.jpeg,,20.743,16.728,16.0,11.7,,
+handy_road,3,Handy Road_Cam4_20260108_110115_475_B.jpeg,,46.069,33.406,34.0,8.404,,
+handy_road,4,Handy Road_Cam4_20260108_110131_099_B.jpeg,,56.509,51.289,52.0,8.622,,
+handy_road,5,Handy Road_Cam4_20260108_110143_712_B.jpeg,,78.647,67.578,68.0,8.912,,
+handy_road,6,Handy Road_Cam4_20260108_110151_526_B.jpeg,,105.095,91.871,92.0,8.102,,
+handy_road,7,Handy Road_Cam4_20260108_110159_339_B.jpeg,,115.006,110.05,110.0,7.091,,
+handy_road,8,Handy Road_Cam4_20260108_110202_343_B.jpeg,,227.335,171.17,172.0,10.226,,
+handy_road,9,Handy Road_Cam4_20260108_110312_699_B.jpeg,,235.561,231.448,232.0,7.192,8.75,2.0
+handy_road,10,Handy Road_Cam4_20260108_110313_905_B.jpeg,,246.55,241.056,242.0,7.504,-0.868,1.0
+handy_road,11,Handy Road_Cam4_20260108_110315_717_B.jpeg,,255.573,251.062,252.0,7.377,-1.599,1.0
+handy_road,12,Handy Road_Cam4_20260108_110319_320_B.jpeg,,289.835,272.704,272.0,7.057,-1.599,1.0
+handy_road,13,Handy Road_Cam4_20260108_110333_146_B.jpeg,,298.9,294.367,294.0,6.705,-1.599,1.0
+handy_road,14,Handy Road_Cam4_20260108_110336_150_B.jpeg,,307.416,303.158,304.0,6.736,3.176,1.0
+handy_road,15,Handy Road_Cam4_20260108_110339_155_B.jpeg,,317.964,312.69,312.0,7.329,,
+handy_road,16,Handy Road_Cam4_20260108_110344_025_B.jpeg,,327.119,322.542,322.0,8.977,,
+handy_road,17,Handy Road_Cam4_20260108_110347_629_B.jpeg,,338.202,332.66,332.0,10.712,,
+handy_road,18,Handy Road_Cam4_20260108_110351_235_B.jpeg,,347.305,342.753,342.0,11.78,,
+handy_road,19,Handy Road_Cam4_20260108_110353_647_B.jpeg,,356.936,352.121,352.0,11.396,,
+handy_road,20,Handy Road_Cam4_20260108_110357_250_B.jpeg,,367.323,362.129,362.0,10.028,,
+handy_road,21,Handy Road_Cam4_20260108_110402_656_B.jpeg,,379.525,373.424,374.0,7.361,,
+handy_road,22,Handy Road_Cam4_20260108_110405_662_B.jpeg,,460.279,419.902,420.0,8.175,,
+handy_road,23,Handy Road_Cam4_20260108_110429_099_B.jpeg,,469.885,465.082,466.0,10.499,,
+handy_road,24,Handy Road_Cam4_20260108_110432_107_B.jpeg,,522.989,496.437,496.0,9.914,,

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_tunggal_road,1,,BUKIT TUNGGAL ROAD,140.82,70.41,70.0,10.573,,
+bukit_tunggal_road,2,,BUKIT TUNGGAL ROAD,359.396,320.518,320.0,16.137,,
+bukit_tunggal_road,3,,BUKIT TUNGGAL ROAD,333.841,753.419,754.0,3.98,-0.625,1.0

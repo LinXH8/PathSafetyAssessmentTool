@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dublin_road,1,Dublin Road_Cam4_20251204_073726_851_C.jpeg,,10.671,5.335,6.0,6.453,,
+dublin_road,2,Dublin Road_Cam4_20251204_073732_259_C.jpeg,,20.358,15.514,16.0,7.396,,
+dublin_road,3,Dublin Road_Cam4_20251204_073737_065_C.jpeg,,33.071,26.715,26.0,11.469,,
+dublin_road,4,Dublin Road_Cam4_20251204_073744_279_C.jpeg,,39.878,36.474,,,,
+dublin_road,5,Dublin Road_Cam4_20251204_073747_884_C.jpeg,,50.413,45.145,,,,
+dublin_road,6,Dublin Road_Cam4_20251204_073753_289_C.jpeg,,78.813,64.613,,,,
+dublin_road,7,Dublin Road_Cam4_20251204_073817_077_C.jpeg,,90.472,84.643,84.0,18.251,-5.81,1.0
+dublin_road,8,Dublin Road_Cam4_20251204_073823_684_C.jpeg,,96.752,93.612,94.0,17.477,-7.747,1.0
+dublin_road,9,Dublin Road_Cam4_20251204_073826_687_C.jpeg,,106.908,101.83,102.0,16.857,-7.747,1.0
+dublin_road,10,Dublin Road_Cam4_20251204_073831_499_C.jpeg,,120.401,113.654,114.0,15.927,-7.747,1.0
+dublin_road,11,Dublin Road_Cam4_20251204_073838_708_C.jpeg,,130.117,125.259,126.0,15.153,,
+dublin_road,12,Dublin Road_Cam4_20251204_073848_321_C.jpeg,,190.058,160.087,160.0,,,
+dublin_road,13,Dublin Road_Cam4_20251204_074055_943_C.jpeg,,199.717,194.887,194.0,9.73,-7.747,1.0
+dublin_road,14,Dublin Road_Cam4_20251204_074058_947_C.jpeg,,255.147,227.432,228.0,7.096,-9.186,2.0

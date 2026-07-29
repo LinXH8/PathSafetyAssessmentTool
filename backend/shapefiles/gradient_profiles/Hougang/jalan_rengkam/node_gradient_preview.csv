@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rengkam,1,Jalan Rengkam_Cam4_20260130_115802_340_C.jpeg,,10.263,5.132,6.0,7.103,2.709,1.0
+jalan_rengkam,2,Jalan Rengkam_Cam4_20260130_115804_742_C.jpeg,,20.838,15.551,16.0,7.5,2.561,1.0
+jalan_rengkam,3,Jalan Rengkam_Cam4_20260130_115807_145_C.jpeg,,33.707,27.272,28.0,7.783,-0.364,1.0
+jalan_rengkam,4,Jalan Rengkam_Cam4_20260130_115810_749_C.jpeg,,43.406,38.556,38.0,7.536,0.0,1.0
+jalan_rengkam,5,Jalan Rengkam_Cam4_20260130_115813_153_C.jpeg,,54.18,48.793,48.0,7.183,-4.05,1.0
+jalan_rengkam,6,Jalan Rengkam_Cam4_20260130_115815_559_C.jpeg,,62.419,58.3,58.0,7.14,-0.25,1.0
+jalan_rengkam,7,Jalan Rengkam_Cam4_20260130_115817_360_C.jpeg,,88.075,75.247,76.0,7.042,-1.138,1.0
+jalan_rengkam,8,Jalan Rengkam_Cam4_20260130_115822_768_C.jpeg,,98.765,93.42,94.0,6.881,-0.5,1.0
+jalan_rengkam,9,Jalan Rengkam_Cam4_20260130_115825_170_C.jpeg,,111.601,105.183,106.0,6.784,-0.713,1.0
+jalan_rengkam,10,Jalan Rengkam_Cam4_20260130_115828_175_C.jpeg,,116.799,114.2,114.0,6.75,-0.587,1.0
+jalan_rengkam,11,Jalan Rengkam_Cam4_20260130_115829_376_C.jpeg,,127.266,122.033,122.0,6.693,-0.763,1.0
+jalan_rengkam,12,Jalan Rengkam_Cam4_20260130_115831_780_C.jpeg,,154.349,140.808,140.0,6.581,-1.262,1.0
+jalan_rengkam,13,Jalan Rengkam_Cam4_20260130_115839_593_C.jpeg,,176.971,165.66,166.0,6.931,,
+jalan_rengkam,14,Jalan Rengkam_Cam4_20260130_115855_820_C.jpeg,,189.679,183.325,184.0,7.42,,
+jalan_rengkam,15,Jalan Rengkam_Cam4_20260130_115859_428_C.jpeg,,200.02,194.849,194.0,6.705,1.05,1.0
+jalan_rengkam,16,Jalan Rengkam_Cam4_20260130_115901_835_C.jpeg,,222.909,211.465,212.0,6.899,0.55,1.0
+jalan_rengkam,17,Jalan Rengkam_Cam4_20260130_115906_642_C.jpeg,,234.491,228.7,228.0,6.972,0.7,1.0
+jalan_rengkam,18,Jalan Rengkam_Cam4_20260130_115909_045_C.jpeg,,245.258,239.874,240.0,7.071,0.15,1.0

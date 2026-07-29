@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+enggor_street,1,Enggor Street_Cam4_20260108_093536_662_A.jpeg,,13.484,6.742,,,,
+enggor_street,2,Enggor Street_Cam4_20260108_093542_067_A.jpeg,,58.385,35.935,36.0,6.199,,
+enggor_street,3,Enggor Street_Cam4_20260108_093548_676_A.jpeg,,67.117,62.751,62.0,4.843,,
+enggor_street,4,Enggor Street_Cam4_20260108_093551_078_A.jpeg,,180.643,123.88,124.0,3.796,,
+enggor_street,5,Enggor Street_Cam4_20260108_095100_504_A.jpeg,,192.075,186.359,186.0,4.069,,
+enggor_street,6,Enggor Street_Cam4_20260108_095101_705_A.jpeg,,196.335,194.205,194.0,4.413,,
+enggor_street,7,Enggor Street_Cam4_20260108_095103_511_A.jpeg,,298.057,247.196,,,,
+enggor_street,8,Enggor Street_Cam4_20260108_095215_110_A.jpeg,,310.627,304.342,304.0,5.571,-3.125,1.0
+enggor_street,9,Enggor Street_Cam4_20260108_095215_710_A.jpeg,,316.666,313.646,314.0,5.358,0.312,1.0
+enggor_street,10,Enggor Street_Cam4_20260108_095216_311_A.jpeg,,326.422,321.544,322.0,5.383,0.313,1.0
+enggor_street,11,Enggor Street_Cam4_20260108_095218_713_A.jpeg,,335.453,330.937,330.0,5.396,4.676,1.0
+enggor_street,12,Enggor Street_Cam4_20260108_095222_331_A.jpeg,,343.573,339.513,,,,

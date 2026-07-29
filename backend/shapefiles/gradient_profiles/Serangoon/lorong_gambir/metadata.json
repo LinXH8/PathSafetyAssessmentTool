@@ -1,0 +1,58 @@
+{
+  "path_key": "lorong_gambir",
+  "display_name": "Lorong Gambir",
+  "source_project": "Lorong Gambir",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Gambir\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T19:43:02.760566+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 431.021,
+  "profile_point_count": 141,
+  "valid_elevation_count": 141,
+  "rejected_outlier_count": 22,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 62,
+  "usable_gradient_completion_pct": 43.97,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 46.1,
+  "gradient_min_pct": -3.569,
+  "gradient_max_pct": 5.46,
+  "path_bounds_svy21": {
+    "min_x": 32544.953,
+    "min_y": 36353.486,
+    "max_x": 32920.369,
+    "max_y": 36485.098
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG GAMBIR",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 217,
+    "offroad_point_count": 76,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN RINDU",
+        "point_count": 67
+      },
+      {
+        "road_name": "SERANGOON AVENUE 1",
+        "point_count": 7
+      },
+      {
+        "road_name": "JALAN LABU AYER",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 432.0,
+    "trimmed_offroad_points": 76
+  }
+}

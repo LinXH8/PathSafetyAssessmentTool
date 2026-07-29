@@ -1,0 +1,54 @@
+{
+  "path_key": "lorong_6_realty_park",
+  "display_name": "Lorong 6 Realty Park",
+  "source_project": "Lorong 6 Realty Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong 6 Realty Park\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T10:36:59.331160+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 573.316,
+  "profile_point_count": 260,
+  "valid_elevation_count": 260,
+  "rejected_outlier_count": 23,
+  "rejected_step_jump_count": 141,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 73,
+  "usable_gradient_completion_pct": 28.08,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 54.23,
+  "gradient_min_pct": -8.323,
+  "gradient_max_pct": 4.648,
+  "path_bounds_svy21": {
+    "min_x": 34066.498,
+    "min_y": 38858.862,
+    "max_x": 34247.266,
+    "max_y": 39019.731
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG 6 REALTY PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 288,
+    "offroad_point_count": 28,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG 7 REALTY PARK",
+        "point_count": 15
+      },
+      {
+        "road_name": "HOUGANG AVENUE 2",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 556.0,
+    "trimmed_offroad_points": 28
+  }
+}

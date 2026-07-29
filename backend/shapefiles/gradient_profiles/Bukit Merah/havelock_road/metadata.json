@@ -1,0 +1,54 @@
+{
+  "path_key": "havelock_road",
+  "display_name": "Havelock Road",
+  "source_project": "Havelock Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Havelock Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T13:58:35.979434+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1133.18,
+  "profile_point_count": 325,
+  "valid_elevation_count": 86,
+  "rejected_outlier_count": 11,
+  "rejected_step_jump_count": 67,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 197,
+  "usable_gradient_completion_pct": 60.62,
+  "elevation_hit_coverage_pct": 26.46,
+  "step_jump_rejection_pct": 20.62,
+  "gradient_min_pct": -6.154,
+  "gradient_max_pct": 13.904,
+  "path_bounds_svy21": {
+    "min_x": 28155.082,
+    "min_y": 30163.704,
+    "max_x": 28458.636,
+    "max_y": 30370.841
+  },
+  "road_boundary": {
+    "target_road_name": "HAVELOCK ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 568,
+    "offroad_point_count": 243,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JIAK KIM STREET",
+        "point_count": 128
+      },
+      {
+        "road_name": "KIM SENG ROAD",
+        "point_count": 115
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 948.0,
+    "trimmed_offroad_points": 243
+  }
+}

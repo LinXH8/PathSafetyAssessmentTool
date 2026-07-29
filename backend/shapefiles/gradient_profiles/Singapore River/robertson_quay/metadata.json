@@ -1,0 +1,66 @@
+{
+  "path_key": "robertson_quay",
+  "display_name": "Robertson Quay",
+  "source_project": "Robertson Quay",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Robertson Quay\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-24T02:58:12.071866+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3708.959,
+  "profile_point_count": 568,
+  "valid_elevation_count": 463,
+  "rejected_outlier_count": 69,
+  "rejected_step_jump_count": 390,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 93,
+  "usable_gradient_completion_pct": 16.37,
+  "elevation_hit_coverage_pct": 81.51,
+  "step_jump_rejection_pct": 68.66,
+  "gradient_min_pct": -10.785,
+  "gradient_max_pct": 9.092,
+  "path_bounds_svy21": {
+    "min_x": 28050.276,
+    "min_y": 30159.929,
+    "max_x": 28983.062,
+    "max_y": 30520.716
+  },
+  "road_boundary": {
+    "target_road_name": "ROBERTSON QUAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1856,
+    "offroad_point_count": 1288,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NANSON ROAD",
+        "point_count": 220
+      },
+      {
+        "road_name": "JIAK KIM STREET",
+        "point_count": 205
+      },
+      {
+        "road_name": "SAIBOO STREET",
+        "point_count": 171
+      },
+      {
+        "road_name": "KIM SENG ROAD",
+        "point_count": 136
+      },
+      {
+        "road_name": "HAVELOCK ROAD",
+        "point_count": 116
+      }
+    ],
+    "offroad_chainage_min_m": 56.0,
+    "offroad_chainage_max_m": 3708.959,
+    "trimmed_offroad_points": 1288
+  }
+}

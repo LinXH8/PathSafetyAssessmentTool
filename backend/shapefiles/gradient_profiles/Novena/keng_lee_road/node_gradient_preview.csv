@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+keng_lee_road,1,,KENG LEE ROAD,390.395,195.197,196.0,2.575,0.0,1.0
+keng_lee_road,2,,KENG LEE ROAD,80.15,430.47,430.0,8.763,,
+keng_lee_road,3,,KENG LEE ROAD,716.198,830.013,830.0,4.162,,

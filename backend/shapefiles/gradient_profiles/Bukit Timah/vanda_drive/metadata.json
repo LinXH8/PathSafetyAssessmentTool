@@ -1,0 +1,42 @@
+{
+  "path_key": "vanda_drive",
+  "display_name": "Vanda Drive",
+  "source_project": "Vanda Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Vanda Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:37:55.076974+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 255.526,
+  "profile_point_count": 129,
+  "valid_elevation_count": 29,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 20,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 25,
+  "usable_gradient_completion_pct": 19.38,
+  "elevation_hit_coverage_pct": 22.48,
+  "step_jump_rejection_pct": 15.5,
+  "gradient_min_pct": -1.753,
+  "gradient_max_pct": 0.0,
+  "path_bounds_svy21": {
+    "min_x": 24186.171,
+    "min_y": 34922.279,
+    "max_x": 24348.652,
+    "max_y": 35071.406
+  },
+  "road_boundary": {
+    "target_road_name": "VANDA DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 129,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

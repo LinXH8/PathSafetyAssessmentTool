@@ -1,0 +1,58 @@
+{
+  "path_key": "marina_south_drive",
+  "display_name": "Marina South Drive",
+  "source_project": "Marina South Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Marina South Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Marina_South_&_Straits_View_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Marina_South_&_Straits_View_LTA",
+  "generated_at_utc": "2026-06-17T02:06:50.613832+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1131.44,
+  "profile_point_count": 206,
+  "valid_elevation_count": 206,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 62,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 113,
+  "usable_gradient_completion_pct": 54.85,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 30.1,
+  "gradient_min_pct": -6.641,
+  "gradient_max_pct": 6.387,
+  "path_bounds_svy21": {
+    "min_x": 31655.444,
+    "min_y": 28544.356,
+    "max_x": 32206.985,
+    "max_y": 29033.402
+  },
+  "road_boundary": {
+    "target_road_name": "MARINA SOUTH DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 567,
+    "offroad_point_count": 361,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARINA COASTAL EXPRESSWAY",
+        "point_count": 258
+      },
+      {
+        "road_name": "MARINA GROVE",
+        "point_count": 66
+      },
+      {
+        "road_name": "MARINA GARDENS DRIVE",
+        "point_count": 37
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1132.0,
+    "trimmed_offroad_points": 361
+  }
+}

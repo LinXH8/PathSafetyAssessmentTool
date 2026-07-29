@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lentor_walk,1,Lentor Walk_Cam4_20251231_082050_891_B.jpeg,,11.151,5.575,6.0,9.94,,
+lentor_walk,2,Lentor Walk_Cam4_20251231_082055_096_B.jpeg,,23.26,17.205,18.0,10.297,,
+lentor_walk,3,Lentor Walk_Cam4_20251231_082059_300_B.jpeg,,55.549,39.405,40.0,9.908,,

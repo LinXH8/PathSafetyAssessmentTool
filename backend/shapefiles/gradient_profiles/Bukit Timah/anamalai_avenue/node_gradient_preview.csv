@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+anamalai_avenue,1,Anamalai Avenue_Cam4_20251217_090518_010_A.jpeg,,12.054,6.027,6.0,9.377,,
+anamalai_avenue,2,Anamalai Avenue_Cam4_20251217_090525_554_A.jpeg,,50.086,31.07,32.0,9.49,,
+anamalai_avenue,3,Anamalai Avenue_Cam4_20251217_090630_204_A.jpeg,,52.044,51.065,52.0,9.926,,
+anamalai_avenue,4,Anamalai Avenue_Cam4_20251217_090641_828_A.jpeg,,65.265,58.654,58.0,10.276,,
+anamalai_avenue,5,Anamalai Avenue_Cam4_20251217_090724_842_A.jpeg,,73.793,69.529,70.0,9.794,,
+anamalai_avenue,6,Anamalai Avenue_Cam4_20251217_090728_491_A.jpeg,,84.669,79.231,80.0,9.296,,
+anamalai_avenue,7,Anamalai Avenue_Cam4_20251217_090733_603_A.jpeg,,124.75,104.709,104.0,7.138,-0.625,1.0
+anamalai_avenue,8,Anamalai Avenue_Cam4_20251217_090812_175_A.jpeg,,133.885,129.318,130.0,6.913,-0.313,1.0
+anamalai_avenue,9,Anamalai Avenue_Cam4_20251217_090815_178_A.jpeg,,146.904,140.395,140.0,6.938,0.313,1.0
+anamalai_avenue,10,Anamalai Avenue_Cam4_20251217_090819_684_A.jpeg,,157.51,152.207,152.0,7.023,,
+anamalai_avenue,11,Anamalai Avenue_Cam4_20251217_090823_215_A.jpeg,,180.083,168.797,168.0,7.823,,
+anamalai_avenue,12,Anamalai Avenue_Cam4_20251217_090830_793_A.jpeg,,280.554,230.319,230.0,6.907,,
+anamalai_avenue,13,Anamalai Avenue_Cam4_20251217_090914_551_A.jpeg,,391.816,336.185,336.0,6.988,-1.25,1.0
+anamalai_avenue,14,Anamalai Avenue_Cam4_20260109_131504_192_B.jpeg,,406.28,399.048,400.0,6.888,0.082,1.0
+anamalai_avenue,15,Anamalai Avenue_Cam4_20260109_131509_001_B.jpeg,,427.761,417.02,,,,
+anamalai_avenue,16,Anamalai Avenue_Cam4_20260109_131515_607_B.jpeg,,439.96,433.86,,,,
+anamalai_avenue,17,Anamalai Avenue_Cam4_20260109_131519_209_B.jpeg,,463.709,451.835,,,,
+anamalai_avenue,18,Anamalai Avenue_Cam4_20260109_131526_420_B.jpeg,,476.8,470.255,,,,
+anamalai_avenue,19,Anamalai Avenue_Cam4_20260109_131530_024_B.jpeg,,487.423,482.112,,,,
+anamalai_avenue,20,Anamalai Avenue_Cam4_20260109_131533_026_B.jpeg,,510.194,498.809,,,,

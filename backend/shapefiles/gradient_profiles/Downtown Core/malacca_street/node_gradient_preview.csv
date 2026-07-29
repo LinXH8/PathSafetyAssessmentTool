@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+malacca_street,1,Cam4_20251211_084950_889_C.jpeg,,11.198,5.599,6.0,5.241,-8.037,1.0
+malacca_street,2,Cam4_20251211_084955_094_C.jpeg,,23.303,17.25,18.0,4.636,,
+malacca_street,3,Cam4_20251211_085009_508_C.jpeg,,35.9,29.602,30.0,4.361,,
+malacca_street,4,Cam4_20251211_085014_914_C.jpeg,,46.805,41.353,42.0,5.246,,
+malacca_street,5,Cam4_20251211_085028_726_C.jpeg,,57.617,52.211,52.0,5.281,,
+malacca_street,6,Cam4_20251211_085032_932_C.jpeg,,71.801,64.709,64.0,4.486,,
+malacca_street,7,Cam4_20251211_085037_735_C.jpeg,,74.638,73.219,,,,
+malacca_street,8,Cam4_20251211_085038_937_C.jpeg,,85.18,79.909,,,,
+malacca_street,9,Cam4_20251211_085044_345_C.jpeg,,109.256,97.218,,,,
+malacca_street,10,Cam4_20260205_081117_172_C.jpeg,,112.969,111.113,,,,
+malacca_street,11,Cam4_20260205_081117_773_C.jpeg,,121.28,117.124,,,,
+malacca_street,12,Cam4_20260205_081120_779_C.jpeg,,125.995,123.637,,,,

@@ -1,0 +1,66 @@
+{
+  "path_key": "clemenceau_avenue_north",
+  "display_name": "Clemenceau Avenue North",
+  "source_project": "Clemenceau Avenue North",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clemenceau Avenue North\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-07T09:18:44.177410+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1523.808,
+  "profile_point_count": 330,
+  "valid_elevation_count": 330,
+  "rejected_outlier_count": 50,
+  "rejected_step_jump_count": 268,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 20,
+  "usable_gradient_completion_pct": 6.06,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 81.21,
+  "gradient_min_pct": -7.284,
+  "gradient_max_pct": 5.933,
+  "path_bounds_svy21": {
+    "min_x": 28615.959,
+    "min_y": 32069.266,
+    "max_x": 28761.386,
+    "max_y": 32738.99
+  },
+  "road_boundary": {
+    "target_road_name": "CLEMENCEAU AVENUE NORTH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 763,
+    "offroad_point_count": 433,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CAIRNHILL RISE",
+        "point_count": 109
+      },
+      {
+        "road_name": "ANTHONY ROAD",
+        "point_count": 79
+      },
+      {
+        "road_name": "CAIRNHILL CIRCLE",
+        "point_count": 66
+      },
+      {
+        "road_name": "BUKIT TIMAH ROAD",
+        "point_count": 58
+      },
+      {
+        "road_name": "MONK'S HILL ROAD",
+        "point_count": 49
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1524.0,
+    "trimmed_offroad_points": 433
+  }
+}

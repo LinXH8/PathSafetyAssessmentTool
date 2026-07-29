@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_jambu_batu,1,Jalan Jambu Batu_Cam4_20251217_095722_093_C.jpeg,,10.96,5.48,6.0,13.603,,
+jalan_jambu_batu,2,Jalan Jambu Batu_Cam4_20251217_095737_098_C.jpeg,,24.105,17.532,18.0,13.456,-4.934,1.0
+jalan_jambu_batu,3,Jalan Jambu Batu_Cam4_20251217_095742_508_C.jpeg,,34.153,29.129,30.0,13.45,,
+jalan_jambu_batu,4,Jalan Jambu Batu_Cam4_20251217_095745_550_C.jpeg,,40.914,37.534,38.0,13.212,,
+jalan_jambu_batu,5,Jalan Jambu Batu_Cam4_20251217_095747_952_C.jpeg,,50.516,45.715,46.0,13.286,,
+jalan_jambu_batu,6,Jalan Jambu Batu_Cam4_20251217_095751_583_C.jpeg,,83.05,66.783,66.0,10.652,,
+jalan_jambu_batu,7,Jalan Jambu Batu_Cam4_20251217_095801_839_C.jpeg,,94.735,88.893,88.0,9.83,-0.938,1.0
+jalan_jambu_batu,8,Jalan Jambu Batu_Cam4_20251217_095805_477_C.jpeg,,102.691,98.713,98.0,9.78,-0.313,1.0
+jalan_jambu_batu,9,Jalan Jambu Batu_Cam4_20251217_095807_880_C.jpeg,,130.494,116.593,116.0,9.664,-0.625,1.0

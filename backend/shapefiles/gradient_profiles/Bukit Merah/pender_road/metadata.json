@@ -1,0 +1,42 @@
+{
+  "path_key": "pender_road",
+  "display_name": "Pender Road",
+  "source_project": "Pender Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Pender Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T16:26:56.241313+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 561.889,
+  "profile_point_count": 282,
+  "valid_elevation_count": 282,
+  "rejected_outlier_count": 43,
+  "rejected_step_jump_count": 184,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 66,
+  "usable_gradient_completion_pct": 23.4,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 65.25,
+  "gradient_min_pct": -13.437,
+  "gradient_max_pct": 4.754,
+  "path_bounds_svy21": {
+    "min_x": 25681.267,
+    "min_y": 28158.014,
+    "max_x": 25883.764,
+    "max_y": 28391.913
+  },
+  "road_boundary": {
+    "target_road_name": "PENDER ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 282,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "third_avenue",
+  "display_name": "Third Avenue",
+  "source_project": "Third Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Third Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:25:27.105413+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1163.32,
+  "profile_point_count": 524,
+  "valid_elevation_count": 475,
+  "rejected_outlier_count": 69,
+  "rejected_step_jump_count": 357,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 106,
+  "usable_gradient_completion_pct": 20.23,
+  "elevation_hit_coverage_pct": 90.65,
+  "step_jump_rejection_pct": 68.13,
+  "gradient_min_pct": -9.521,
+  "gradient_max_pct": 14.687,
+  "path_bounds_svy21": {
+    "min_x": 23949.776,
+    "min_y": 34376.601,
+    "max_x": 24150.811,
+    "max_y": 34721.233
+  },
+  "road_boundary": {
+    "target_road_name": "THIRD AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 583,
+    "offroad_point_count": 59,
+    "offroad_top_road_names": [
+      {
+        "road_name": "FOURTH AVENUE",
+        "point_count": 59
+      }
+    ],
+    "offroad_chainage_min_m": 164.0,
+    "offroad_chainage_max_m": 280.0,
+    "trimmed_offroad_points": 59
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "path_key": "pemimpin_drive",
+  "display_name": "Pemimpin Drive",
+  "source_project": "Pemimpin Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Pemimpin Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T01:29:36.114741+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 562.592,
+  "profile_point_count": 283,
+  "valid_elevation_count": 283,
+  "rejected_outlier_count": 20,
+  "rejected_step_jump_count": 227,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 21,
+  "usable_gradient_completion_pct": 7.42,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 80.21,
+  "gradient_min_pct": -9.115,
+  "gradient_max_pct": 11.449,
+  "path_bounds_svy21": {
+    "min_x": 28849.325,
+    "min_y": 37136.167,
+    "max_x": 29114.578,
+    "max_y": 37271.66
+  },
+  "road_boundary": {
+    "target_road_name": "PEMIMPIN DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 283,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

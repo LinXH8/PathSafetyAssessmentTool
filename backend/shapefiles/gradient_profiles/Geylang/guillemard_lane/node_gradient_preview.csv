@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+guillemard_lane,1,Cam4_20260116_081511_569_B.jpeg,,10.059,5.03,6.0,2.566,-2.656,1.0
+guillemard_lane,2,Cam4_20260116_081514_572_B.jpeg,,23.35,16.705,16.0,2.591,,
+guillemard_lane,3,Cam4_20260116_081518_173_B.jpeg,,34.572,28.961,28.0,4.581,,
+guillemard_lane,4,Cam4_20260116_081521_777_B.jpeg,,40.482,37.527,38.0,5.125,,
+guillemard_lane,5,Cam4_20260116_081524_781_B.jpeg,,66.752,53.617,54.0,3.9,,
+guillemard_lane,6,Cam4_20260116_081540_398_B.jpeg,,78.85,72.801,72.0,3.726,8.751,2.0
+guillemard_lane,7,Cam4_20260116_081545_204_B.jpeg,,102.325,90.588,,,,
+guillemard_lane,8,Cam4_20260116_081554_213_B.jpeg,,134.343,118.334,,,,
+guillemard_lane,9,Cam4_20260116_081721_667_B.jpeg,,145.429,139.886,140.0,4.496,,
+guillemard_lane,10,Cam4_20260116_081724_671_B.jpeg,,166.969,156.199,156.0,6.412,,

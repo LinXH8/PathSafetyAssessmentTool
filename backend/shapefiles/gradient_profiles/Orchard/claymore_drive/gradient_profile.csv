@@ -1,0 +1,23 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+claymore_drive,Claymore Drive,54.0,27544.773,32198.751,7.248,8.052,8.052,,,CLAYMORE DRIVE,14.138
+claymore_drive,Claymore Drive,56.0,27546.16,32197.31,8.052,8.052,7.918,,,CLAYMORE DRIVE,13.518
+claymore_drive,Claymore Drive,58.0,27547.547,32195.869,7.828,7.784,7.784,,,CLAYMORE DRIVE,12.898
+claymore_drive,Claymore Drive,60.0,27548.934,32194.428,10.023,7.516,7.516,,,CLAYMORE DRIVE,12.278
+claymore_drive,Claymore Drive,62.0,27550.321,32192.987,8.661,7.25,7.25,,,CLAYMORE DRIVE,11.658
+claymore_drive,Claymore Drive,64.0,27551.708,32191.546,9.842,6.985,6.985,,,CLAYMORE DRIVE,11.038
+claymore_drive,Claymore Drive,66.0,27553.095,32190.106,6.188,6.719,6.719,,,CLAYMORE DRIVE,10.418
+claymore_drive,Claymore Drive,68.0,27554.482,32188.665,5.75,6.454,6.454,,,CLAYMORE DRIVE,9.798
+claymore_drive,Claymore Drive,70.0,27555.869,32187.224,5.957,6.188,6.188,,,CLAYMORE DRIVE,9.178
+claymore_drive,Claymore Drive,72.0,27557.256,32185.783,5.181,5.923,5.923,,,CLAYMORE DRIVE,8.558
+claymore_drive,Claymore Drive,74.0,27558.643,32184.342,7.385,5.888,5.888,,,CLAYMORE DRIVE,7.938
+claymore_drive,Claymore Drive,76.0,27560.198,32183.115,6.455,5.854,5.854,,,CLAYMORE DRIVE,7.586
+claymore_drive,Claymore Drive,78.0,27561.927,32182.109,5.71,5.82,5.82,,,CLAYMORE DRIVE,7.511
+claymore_drive,Claymore Drive,80.0,27563.655,32181.103,5.785,5.785,5.785,,,CLAYMORE DRIVE,7.435
+claymore_drive,Claymore Drive,82.0,27565.384,32180.097,5.455,5.703,5.703,,,CLAYMORE DRIVE,7.359
+claymore_drive,Claymore Drive,84.0,27567.112,32179.091,5.62,5.62,5.64,-2.063,1.0,CLAYMORE DRIVE,7.284
+claymore_drive,Claymore Drive,86.0,27568.841,32178.085,5.64,5.64,5.62,-0.969,1.0,CLAYMORE DRIVE,7.208
+claymore_drive,Claymore Drive,88.0,27570.667,32177.295,5.455,5.455,5.62,0.125,1.0,CLAYMORE DRIVE,7.369
+claymore_drive,Claymore Drive,90.0,27572.566,32176.668,5.585,5.585,5.64,0.594,1.0,CLAYMORE DRIVE,7.707
+claymore_drive,Claymore Drive,92.0,27574.465,32176.04,5.65,5.65,5.65,0.812,1.0,CLAYMORE DRIVE,8.046
+claymore_drive,Claymore Drive,94.0,27576.364,32175.413,5.685,5.685,5.668,0.75,1.0,CLAYMORE DRIVE,8.385
+claymore_drive,Claymore Drive,96.0,27577.495,32175.039,5.74,5.74,5.685,0.875,1.0,CLAYMORE DRIVE,8.586

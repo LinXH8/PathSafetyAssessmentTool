@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+duke_s_road,1,Duke's Road_Cam4_20251217_094516_972_B.jpeg,,13.425,6.713,6.0,3.691,-0.625,1.0
+duke_s_road,2,Duke's Road_Cam4_20251217_094525_381_B.jpeg,,21.438,17.431,18.0,4.531,,
+duke_s_road,3,Duke's Road_Cam4_20251217_094528_350_B.jpeg,,31.641,26.539,26.0,6.272,,
+duke_s_road,4,Duke's Road_Cam4_20251217_094531_434_B.jpeg,,124.563,78.102,78.0,3.61,,
+duke_s_road,5,Duke's Road_Cam4_20251217_094600_559_B.jpeg,,148.646,136.604,136.0,5.559,,
+duke_s_road,6,Duke's Road_Cam4_20251217_094609_626_B.jpeg,,195.869,172.258,172.0,11.97,,
+duke_s_road,7,Duke's Road_Cam4_20251217_094633_202_B.jpeg,,234.415,215.142,216.0,10.724,,
+duke_s_road,8,Duke's Road_Cam4_20251217_094653_770_B.jpeg,,296.076,265.245,266.0,5.87,,
+duke_s_road,9,Duke's Road_Cam4_20251217_094714_226_B.jpeg,,412.103,354.089,354.0,3.586,,
+duke_s_road,10,Duke's Road_Cam4_20251217_094752_195_B.jpeg,,441.587,426.845,426.0,5.92,,
+duke_s_road,11,Duke's Road_Cam4_20251217_094802_467_B.jpeg,,672.89,557.238,558.0,4.52,,
+duke_s_road,12,Duke's Road_Cam4_20260109_130149_718_B.jpeg,,685.254,679.072,,,,

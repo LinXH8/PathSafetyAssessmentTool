@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+vanda_drive,1,Vanda Drive_Cam4_20251210_111729_623_A.jpeg,,10.867,5.434,6.0,,,
+vanda_drive,2,Vanda Drive_Cam4_20251210_112143_733_A.jpeg,,23.126,16.996,16.0,,,
+vanda_drive,3,Vanda Drive_Cam4_20251210_112148_916_A.jpeg,,33.493,28.309,28.0,,,
+vanda_drive,4,Vanda Drive_Cam4_20251210_112152_049_A.jpeg,,55.851,44.672,44.0,,,
+vanda_drive,5,Vanda Drive_Cam4_20251210_112203_543_A.jpeg,,66.938,61.395,62.0,,,
+vanda_drive,6,Vanda Drive_Cam4_20251210_112210_872_A.jpeg,,97.532,82.235,82.0,,,
+vanda_drive,7,Vanda Drive_Cam4_20251210_112222_908_A.jpeg,,104.392,100.962,100.0,,,
+vanda_drive,8,Vanda Drive_Cam4_20251210_112225_032_A.jpeg,,137.667,121.03,122.0,,,
+vanda_drive,9,Vanda Drive_Cam4_20251210_112235_324_A.jpeg,,144.196,140.932,140.0,,,
+vanda_drive,10,Vanda Drive_Cam4_20251210_112236_828_A.jpeg,,155.842,150.019,150.0,15.849,,
+vanda_drive,11,Vanda Drive_Cam4_20251210_112239_451_A.jpeg,,164.781,160.311,160.0,15.849,0.0,1.0
+vanda_drive,12,Vanda Drive_Cam4_20251210_112241_555_A.jpeg,,174.641,169.711,170.0,15.849,0.0,1.0
+vanda_drive,13,Vanda Drive_Cam4_20251210_112244_162_A.jpeg,,216.597,195.619,196.0,15.849,0.0,1.0
+vanda_drive,14,Vanda Drive_Cam4_20251210_112300_991_A.jpeg,,227.42,222.009,222.0,14.928,,
+vanda_drive,15,Vanda Drive_Cam4_20251210_112304_174_A.jpeg,,233.764,230.592,230.0,14.154,,
+vanda_drive,16,Vanda Drive_Cam4_20251210_112305_820_A.jpeg,,243.013,238.389,238.0,12.943,,
+vanda_drive,17,Vanda Drive_Cam4_20251210_112307_826_A.jpeg,,255.526,249.269,250.0,11.121,,

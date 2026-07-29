@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+newton_road,1,,NEWTON ROAD,557.963,278.982,278.0,5.425,,
+newton_road,2,,NEWTON ROAD,370.924,798.098,798.0,5.578,,

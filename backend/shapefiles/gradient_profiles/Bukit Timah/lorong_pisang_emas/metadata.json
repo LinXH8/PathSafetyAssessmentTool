@@ -1,0 +1,62 @@
+{
+  "path_key": "lorong_pisang_emas",
+  "display_name": "Lorong Pisang Emas",
+  "source_project": "Lorong Pisang Emas",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Lorong Pisang Emas\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T07:03:52.816107+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1180.784,
+  "profile_point_count": 473,
+  "valid_elevation_count": 313,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 230,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 165,
+  "usable_gradient_completion_pct": 34.88,
+  "elevation_hit_coverage_pct": 66.17,
+  "step_jump_rejection_pct": 48.63,
+  "gradient_min_pct": -12.954,
+  "gradient_max_pct": 5.0,
+  "path_bounds_svy21": {
+    "min_x": 21112.159,
+    "min_y": 36062.263,
+    "max_x": 21362.026,
+    "max_y": 36321.296
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG PISANG EMAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 592,
+    "offroad_point_count": 119,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG PISANG RAJA",
+        "point_count": 42
+      },
+      {
+        "road_name": "LORONG PISANG ASAM",
+        "point_count": 42
+      },
+      {
+        "road_name": "LORONG PISANG UDANG",
+        "point_count": 34
+      },
+      {
+        "road_name": "LORONG PISANG BATU",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 622.0,
+    "trimmed_offroad_points": 119
+  }
+}

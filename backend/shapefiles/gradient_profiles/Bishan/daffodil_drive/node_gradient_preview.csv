@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+daffodil_drive,1,Daffodil Drive_Cam4_20260105_100451_533_A.jpeg,,11.599,5.799,6.0,22.581,,
+daffodil_drive,2,Daffodil Drive_Cam4_20260105_100459_340_A.jpeg,,36.625,24.112,24.0,26.49,,
+daffodil_drive,3,Daffodil Drive_Cam4_20260105_100520_965_A.jpeg,,66.928,51.776,52.0,28.461,,
+daffodil_drive,4,Daffodil Drive_Cam4_20260105_100603_035_A.jpeg,,74.836,70.882,70.0,30.921,,
+daffodil_drive,5,Daffodil Drive_Cam4_20260105_100610_243_A.jpeg,,192.487,133.662,134.0,39.311,14.856,2.0
+daffodil_drive,6,Daffodil Drive_Cam4_20260105_100752_442_A.jpeg,,206.341,199.414,200.0,34.251,,
+daffodil_drive,7,Daffodil Drive_Cam4_20260105_100757_848_A.jpeg,,212.61,209.476,210.0,34.848,5.312,1.0
+daffodil_drive,8,Daffodil Drive_Cam4_20260105_100800_251_A.jpeg,,221.585,217.098,218.0,34.935,,
+daffodil_drive,9,Daffodil Drive_Cam4_20260105_100803_864_A.jpeg,,232.706,227.146,228.0,34.261,,
+daffodil_drive,10,Daffodil Drive_Cam4_20260105_100808_674_A.jpeg,,242.86,237.783,238.0,34.772,,
+daffodil_drive,11,Daffodil Drive_Cam4_20260105_100812_882_A.jpeg,,253.889,248.374,248.0,34.169,,

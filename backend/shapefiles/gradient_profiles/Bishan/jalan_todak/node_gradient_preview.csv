@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_todak,1,Jalan Todak_Cam4_20260103_075726_075_B.jpeg,,14.268,7.134,8.0,13.797,,
+jalan_todak,2,Jalan Todak_Cam4_20260103_075732_084_B.jpeg,,20.701,17.484,18.0,13.769,,
+jalan_todak,3,Jalan Todak_Cam4_20260103_075734_485_B.jpeg,,30.599,25.65,26.0,14.18,,
+jalan_todak,4,Jalan Todak_Cam4_20260103_075738_696_B.jpeg,,40.064,35.332,36.0,14.388,,
+jalan_todak,5,Jalan Todak_Cam4_20260103_075742_901_B.jpeg,,50.256,45.16,46.0,11.596,,
+jalan_todak,6,Jalan Todak_Cam4_20260103_075747_104_B.jpeg,,64.279,57.267,58.0,9.799,,
+jalan_todak,7,Jalan Todak_Cam4_20260103_075753_110_B.jpeg,,70.97,67.624,68.0,11.139,,
+jalan_todak,8,Jalan Todak_Cam4_20260103_075755_384_B.jpeg,,80.353,75.662,76.0,12.129,,
+jalan_todak,9,Jalan Todak_Cam4_20260103_075758_988_B.jpeg,,133.058,106.706,106.0,9.787,-1.394,1.0
+jalan_todak,10,Jalan Todak_Cam4_20260103_082621_397_B.jpeg,,142.991,138.024,138.0,14.354,,
+jalan_todak,11,Jalan Todak_Cam4_20260103_082625_000_B.jpeg,,157.897,150.444,150.0,15.359,,
+jalan_todak,12,Jalan Todak_Cam4_20260103_082629_803_B.jpeg,,162.974,160.436,160.0,12.725,,
+jalan_todak,13,Jalan Todak_Cam4_20260103_082631_604_B.jpeg,,173.194,168.084,168.0,10.617,,

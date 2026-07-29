@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_berseh,1,Jalan Berseh_Cam4_20251208_094016_939_A.jpeg,,10.158,5.079,6.0,2.708,-1.437,1.0
+jalan_berseh,2,Jalan Berseh_Cam4_20251208_094019_941_A.jpeg,,20.99,15.574,16.0,2.867,,
+jalan_berseh,3,Jalan Berseh_Cam4_20251208_094022_944_A.jpeg,,30.903,25.946,26.0,2.673,,
+jalan_berseh,4,Jalan Berseh_Cam4_20251208_094026_456_A.jpeg,,105.707,68.305,68.0,2.466,3.015,1.0
+jalan_berseh,5,Jalan Berseh_Cam4_20251208_094052_825_A.jpeg,,115.472,110.59,110.0,1.79,1.454,1.0
+jalan_berseh,6,Jalan Berseh_Cam4_20251208_094055_841_A.jpeg,,126.588,121.03,122.0,2.749,,
+jalan_berseh,7,Jalan Berseh_Cam4_20251208_094059_925_A.jpeg,,128.903,127.746,128.0,2.476,-6.82,1.0
+jalan_berseh,8,Jalan Berseh_Cam4_20251208_094719_890_A.jpeg,,137.752,133.328,134.0,2.203,,
+jalan_berseh,9,Jalan Berseh_Cam4_20251209_103442_484_A.jpeg,,277.495,207.624,,,,
+jalan_berseh,10,Jalan Berseh_Cam4_20251212_080449_325_B.jpeg,,287.043,282.269,,,,

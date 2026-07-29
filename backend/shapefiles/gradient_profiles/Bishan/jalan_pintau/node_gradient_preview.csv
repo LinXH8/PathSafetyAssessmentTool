@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_pintau,1,Jalan Pintau_Cam4_20260102_091258_901_A.jpeg,,11.985,5.992,6.0,19.979,,
+jalan_pintau,2,Jalan Pintau_Cam4_20260102_091303_717_A.jpeg,,22.867,17.426,18.0,21.186,,
+jalan_pintau,3,Jalan Pintau_Cam4_20260102_091307_921_A.jpeg,,33.678,28.273,28.0,22.034,,
+jalan_pintau,4,Jalan Pintau_Cam4_20260102_091311_525_A.jpeg,,56.526,45.102,46.0,18.485,,
+jalan_pintau,5,Jalan Pintau_Cam4_20260102_091319_332_A.jpeg,,67.792,62.159,62.0,19.683,,
+jalan_pintau,6,Jalan Pintau_Cam4_20260102_091322_947_A.jpeg,,79.244,73.518,74.0,20.236,,
+jalan_pintau,7,Jalan Pintau_Cam4_20260102_091325_952_A.jpeg,,87.476,83.36,84.0,19.56,,
+jalan_pintau,8,Jalan Pintau_Cam4_20260102_091328_375_A.jpeg,,97.525,92.501,92.0,18.553,,
+jalan_pintau,9,Jalan Pintau_Cam4_20260102_091331_403_A.jpeg,,106.513,102.019,102.0,18.594,1.875,1.0
+jalan_pintau,10,Jalan Pintau_Cam4_20260102_091334_419_A.jpeg,,115.924,111.219,112.0,19.206,,
+jalan_pintau,11,Jalan Pintau_Cam4_20260102_091338_026_A.jpeg,,126.302,121.113,122.0,19.636,,
+jalan_pintau,12,Jalan Pintau_Cam4_20260102_091342_240_A.jpeg,,170.027,148.164,148.0,19.581,1.456,1.0
+jalan_pintau,13,Jalan Pintau_Cam4_20260102_091428_008_A.jpeg,,194.863,182.445,182.0,20.584,,
+jalan_pintau,14,Jalan Pintau_Cam4_20260102_091436_479_A.jpeg,,207.286,201.074,202.0,21.05,,
+jalan_pintau,15,Jalan Pintau_Cam4_20260102_091440_684_A.jpeg,,231.356,219.321,220.0,22.758,,
+jalan_pintau,16,Jalan Pintau_Cam4_20260102_091449_705_A.jpeg,,244.089,237.722,238.0,21.063,,
+jalan_pintau,17,Jalan Pintau_Cam4_20260102_091457_430_A.jpeg,,251.411,247.75,248.0,20.574,3.371,1.0
+jalan_pintau,18,Jalan Pintau_Cam4_20260102_091459_834_A.jpeg,,259.161,255.286,256.0,21.351,,
+jalan_pintau,19,Jalan Pintau_Cam4_20260102_091502_249_A.jpeg,,269.222,264.192,264.0,21.708,,
+jalan_pintau,20,Jalan Pintau_Cam4_20260102_091505_255_A.jpeg,,279.316,274.269,274.0,21.204,,
+jalan_pintau,21,Jalan Pintau_Cam4_20260102_091508_260_A.jpeg,,289.213,284.264,284.0,21.376,-2.113,1.0
+jalan_pintau,22,Jalan Pintau_Cam4_20260102_091511_191_A.jpeg,,301.687,295.45,296.0,21.654,3.482,1.0
+jalan_pintau,23,Jalan Pintau_Cam4_20260102_091514_795_A.jpeg,,324.443,313.065,314.0,21.623,-1.046,1.0
+jalan_pintau,24,Jalan Pintau_Cam4_20260102_091521_401_A.jpeg,,334.41,329.427,330.0,21.317,,
+jalan_pintau,25,Jalan Pintau_Cam4_20260102_091524_316_A.jpeg,,361.779,348.095,348.0,25.79,,

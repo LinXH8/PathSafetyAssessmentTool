@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tenang,1,Jalan Tenang_Cam4_20251218_092636_509_C.jpeg,,11.478,5.739,6.0,26.17,,
+jalan_tenang,2,Jalan Tenang_Cam4_20251218_092641_336_C.jpeg,,22.613,17.045,18.0,26.009,1.221,1.0
+jalan_tenang,3,Jalan Tenang_Cam4_20251218_092645_011_C.jpeg,,34.37,28.491,28.0,26.601,10.938,2.0
+jalan_tenang,4,Jalan Tenang_Cam4_20251218_092649_271_C.jpeg,,56.363,45.367,46.0,27.609,,
+jalan_tenang,5,Jalan Tenang_Cam4_20251218_092656_480_C.jpeg,,69.99,63.177,64.0,26.375,-2.812,1.0
+jalan_tenang,6,Jalan Tenang_Cam4_20251218_092700_740_C.jpeg,,95.146,82.568,82.0,26.188,,
+jalan_tenang,7,Jalan Tenang_Cam4_20251218_092709_152_C.jpeg,,104.387,99.766,100.0,27.036,,
+jalan_tenang,8,Jalan Tenang_Cam4_20251218_092712_187_C.jpeg,,111.628,108.007,108.0,26.305,,
+jalan_tenang,9,Jalan Tenang_Cam4_20251218_092714_590_C.jpeg,,122.579,117.104,118.0,26.996,,
+jalan_tenang,10,Jalan Tenang_Cam4_20251218_092718_244_C.jpeg,,147.657,135.118,136.0,27.527,,
+jalan_tenang,11,Jalan Tenang_Cam4_20251218_092727_806_C.jpeg,,156.435,152.046,152.0,26.406,-1.875,1.0
+jalan_tenang,12,Jalan Tenang_Cam4_20251218_092731_279_C.jpeg,,167.304,161.87,162.0,26.544,0.312,1.0
+jalan_tenang,13,Jalan Tenang_Cam4_20251218_092735_484_C.jpeg,,180.585,173.945,174.0,26.341,0.0,1.0
+jalan_tenang,14,Jalan Tenang_Cam4_20251218_092740_290_C.jpeg,,189.11,184.847,184.0,26.369,0.781,1.0
+jalan_tenang,15,Jalan Tenang_Cam4_20251218_092743_294_C.jpeg,,196.23,192.67,192.0,26.469,,
+jalan_tenang,16,Jalan Tenang_Cam4_20251218_092745_696_C.jpeg,,206.39,201.31,202.0,27.291,,
+jalan_tenang,17,Jalan Tenang_Cam4_20251218_092749_308_C.jpeg,,219.397,212.894,212.0,28.653,,
+jalan_tenang,18,Jalan Tenang_Cam4_20251218_092754_174_C.jpeg,,227.902,223.65,224.0,27.409,,
+jalan_tenang,19,Jalan Tenang_Cam4_20251218_092757_261_C.jpeg,,240.16,234.031,234.0,26.479,,
+jalan_tenang,20,Jalan Tenang_Cam4_20251218_092801_469_C.jpeg,,246.693,243.427,244.0,26.984,,
+jalan_tenang,21,Jalan Tenang_Cam4_20251218_092812_297_C.jpeg,,441.918,344.306,344.0,32.384,,

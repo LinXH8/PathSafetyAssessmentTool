@@ -1,0 +1,42 @@
+{
+  "path_key": "golden_rise",
+  "display_name": "Golden Rise",
+  "source_project": "Golden Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Golden Rise\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T12:54:43.612067+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 33.124,
+  "profile_point_count": 18,
+  "valid_elevation_count": 18,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 8,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 7,
+  "usable_gradient_completion_pct": 38.89,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.44,
+  "gradient_min_pct": 0.7,
+  "gradient_max_pct": 3.816,
+  "path_bounds_svy21": {
+    "min_x": 31153.666,
+    "min_y": 37415.778,
+    "max_x": 31186.647,
+    "max_y": 37417.231
+  },
+  "road_boundary": {
+    "target_road_name": "GOLDEN RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 18,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

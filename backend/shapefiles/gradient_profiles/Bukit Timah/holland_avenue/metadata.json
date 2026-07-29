@@ -1,0 +1,66 @@
+{
+  "path_key": "holland_avenue",
+  "display_name": "Holland Avenue",
+  "source_project": "Holland Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Holland Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T05:21:53.044456+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4018.816,
+  "profile_point_count": 1161,
+  "valid_elevation_count": 513,
+  "rejected_outlier_count": 72,
+  "rejected_step_jump_count": 405,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 143,
+  "usable_gradient_completion_pct": 12.32,
+  "elevation_hit_coverage_pct": 44.19,
+  "step_jump_rejection_pct": 34.88,
+  "gradient_min_pct": -12.5,
+  "gradient_max_pct": 12.733,
+  "path_bounds_svy21": {
+    "min_x": 23575.189,
+    "min_y": 32075.648,
+    "max_x": 23971.149,
+    "max_y": 32783.328
+  },
+  "road_boundary": {
+    "target_road_name": "HOLLAND AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2011,
+    "offroad_point_count": 850,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOLLAND ROAD",
+        "point_count": 222
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 164
+      },
+      {
+        "road_name": "HOLLAND VILLAGE WAY",
+        "point_count": 117
+      },
+      {
+        "road_name": "WARNA ROAD",
+        "point_count": 93
+      },
+      {
+        "road_name": "LORONG LIPUT",
+        "point_count": 83
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3756.0,
+    "trimmed_offroad_points": 850
+  }
+}

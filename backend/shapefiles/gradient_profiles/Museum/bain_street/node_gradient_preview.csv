@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bain_street,1,Bain Street_Cam4_20251211_094531_498_A.jpeg,,9.777,4.889,,,,
+bain_street,2,Bain Street_Cam4_20251211_094536_003_A.jpeg,,21.46,15.619,,,,
+bain_street,3,Bain Street_Cam4_20251211_094540_516_A.jpeg,,33.679,27.57,28.0,,,
+bain_street,4,Bain Street_Cam4_20251211_094548_037_A.jpeg,,63.475,48.577,48.0,,,
+bain_street,5,Bain Street_Cam4_20251211_094605_576_A.jpeg,,70.296,66.885,66.0,6.068,,
+bain_street,6,Bain Street_Cam4_20251211_094607_579_A.jpeg,,83.577,76.936,76.0,6.068,0.0,1.0
+bain_street,7,Bain Street_Cam4_20251211_094611_589_A.jpeg,,122.876,103.226,104.0,6.068,0.0,1.0
+bain_street,8,Bain Street_Cam4_20251211_094624_112_A.jpeg,,148.092,135.484,136.0,5.691,-4.722,1.0
+bain_street,9,Bain Street_Cam4_20251211_094647_167_A.jpeg,,159.066,153.579,154.0,9.334,,
+bain_street,10,Bain Street_Cam4_20251211_094651_679_A.jpeg,,189.004,174.035,,,,
+bain_street,11,Bain Street_Cam4_20251211_094702_193_A.jpeg,,197.516,193.26,,,,
+bain_street,12,Bain Street_Cam4_20251211_094704_704_A.jpeg,,270.313,233.915,,,,
+bain_street,13,Bain Street_Cam4_20251211_094754_841_A.jpeg,,281.529,275.921,,,,
+bain_street,14,Bain Street_Cam4_20251211_094759_349_A.jpeg,,289.354,285.442,,,,
+bain_street,15,Bain Street_Cam4_20251211_094802_856_A.jpeg,,299.837,294.596,,,,
+bain_street,16,Bain Street_Cam4_20251211_094806_864_A.jpeg,,323.88,311.859,,,,
+bain_street,17,Bain Street_Cam4_20251211_100313_990_C.jpeg,,352.86,338.37,,,,
+bain_street,18,Bain Street_Cam4_20251211_100327_204_C.jpeg,,359.648,356.254,,,,
+bain_street,19,Bain Street_Cam4_20251211_100330_212_C.jpeg,,407.475,383.562,,,,
+bain_street,20,Bain Street_Cam4_20251211_100352_494_C.jpeg,,415.036,411.255,412.0,24.236,,
+bain_street,21,Bain Street_Cam4_20251211_100353_695_C.jpeg,,442.068,428.552,428.0,33.204,,
+bain_street,22,Bain Street_Cam4_20260204_111028_398_A.jpeg,,450.77,446.419,446.0,36.194,0.0,1.0

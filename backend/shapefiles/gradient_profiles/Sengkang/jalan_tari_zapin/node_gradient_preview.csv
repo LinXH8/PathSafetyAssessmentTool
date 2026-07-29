@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_tari_zapin,1,Jalan Tari Zapin_Cam4_20260106_100027_475_A.jpeg,,13.447,6.723,6.0,8.785,,
+jalan_tari_zapin,2,Jalan Tari Zapin_Cam4_20260106_100031_684_A.jpeg,,23.902,18.675,18.0,9.73,,
+jalan_tari_zapin,3,Jalan Tari Zapin_Cam4_20260106_100034_688_A.jpeg,,47.564,35.733,36.0,10.143,,
+jalan_tari_zapin,4,Jalan Tari Zapin_Cam4_20260106_100040_695_A.jpeg,,57.268,52.416,52.0,8.859,,
+jalan_tari_zapin,5,Jalan Tari Zapin_Cam4_20260106_100043_099_A.jpeg,,68.302,62.785,62.0,7.097,,
+jalan_tari_zapin,6,Jalan Tari Zapin_Cam4_20260106_100046_105_A.jpeg,,79.244,73.773,74.0,6.847,-1.875,1.0
+jalan_tari_zapin,7,Jalan Tari Zapin_Cam4_20260106_100049_114_A.jpeg,,85.718,82.481,82.0,6.722,0.312,1.0
+jalan_tari_zapin,8,Jalan Tari Zapin_Cam4_20260106_100050_916_A.jpeg,,100.036,92.877,92.0,7.097,5.832,1.0
+jalan_tari_zapin,9,Jalan Tari Zapin_Cam4_20260106_100201_875_A.jpeg,,125.078,112.557,112.0,7.855,4.375,1.0

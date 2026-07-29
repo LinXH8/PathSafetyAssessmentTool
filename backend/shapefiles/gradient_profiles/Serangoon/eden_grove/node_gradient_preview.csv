@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+eden_grove,1,Eden Grove_Cam4_20260112_103355_507_A.jpeg,,11.161,5.581,6.0,20.064,3.396,1.0
+eden_grove,2,Eden Grove_Cam4_20260112_103359_112_A.jpeg,,22.822,16.992,16.0,19.942,1.418,1.0
+eden_grove,3,Eden Grove_Cam4_20260112_103403_327_A.jpeg,,33.578,28.2,28.0,20.287,2.544,1.0
+eden_grove,4,Eden Grove_Cam4_20260112_103407_531_A.jpeg,,57.04,45.309,46.0,20.868,,
+eden_grove,5,Eden Grove_Cam4_20260112_103417_894_A.jpeg,,68.766,62.903,62.0,22.334,4.091,1.0
+eden_grove,6,Eden Grove_Cam4_20260112_103423_904_A.jpeg,,78.029,73.397,74.0,22.386,,
+eden_grove,7,Eden Grove_Cam4_20260112_103428_160_A.jpeg,,103.584,90.807,90.0,22.763,6.253,1.0
+eden_grove,8,Eden Grove_Cam4_20260112_103440_987_A.jpeg,,116.053,109.818,110.0,23.4,,
+eden_grove,9,Eden Grove_Cam4_20260112_103447_595_A.jpeg,,138.59,127.322,128.0,24.712,,
+eden_grove,10,Eden Grove_Cam4_20260112_103500_923_A.jpeg,,152.203,145.397,146.0,24.57,3.186,1.0
+eden_grove,11,Eden Grove_Cam4_20260112_103508_312_A.jpeg,,172.897,162.55,162.0,24.33,,
+eden_grove,12,Eden Grove_Cam4_20260112_103518_528_A.jpeg,,187.068,179.982,180.0,24.465,-0.188,1.0
+eden_grove,13,Eden Grove_Cam4_20260112_103524_103_A.jpeg,,212.93,199.999,200.0,25.002,,
+eden_grove,14,Eden Grove_Cam4_20260112_103531_384_A.jpeg,,238.056,225.493,226.0,24.019,-1.275,1.0
+eden_grove,15,Eden Grove_Cam4_20260112_103538_132_A.jpeg,,248.455,243.256,244.0,24.735,,
+eden_grove,16,Eden Grove_Cam4_20260112_105418_761_A.jpeg,,257.139,252.797,252.0,25.475,,
+eden_grove,17,Eden Grove_Cam4_20260112_105423_565_A.jpeg,,451.129,354.134,354.0,24.778,-2.013,1.0
+eden_grove,18,Eden Grove_Cam4_20260112_105531_010_A.jpeg,,476.309,463.719,464.0,20.173,-0.919,1.0
+eden_grove,19,Eden Grove_Cam4_20260112_105536_539_A.jpeg,,485.898,481.103,482.0,20.737,,
+eden_grove,20,Eden Grove_Cam4_20260112_105538_942_A.jpeg,,495.516,490.707,490.0,21.698,,
+eden_grove,21,Eden Grove_Cam4_20260112_105541_983_A.jpeg,,504.821,500.169,,,,

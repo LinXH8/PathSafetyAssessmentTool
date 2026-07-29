@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hongkong_street,1,Hongkong Street_Cam4_20251211_110824_953_A.jpeg,,10.433,5.216,6.0,7.194,,
+hongkong_street,2,Hongkong Street_Cam4_20251211_110827_959_A.jpeg,,24.759,17.596,18.0,7.252,,
+hongkong_street,3,Hongkong Street_Cam4_20251211_110832_061_A.jpeg,,30.628,27.693,28.0,6.304,,
+hongkong_street,4,Hongkong Street_Cam4_20251211_110833_632_A.jpeg,,41.602,36.115,36.0,5.252,,
+hongkong_street,5,Hongkong Street_Cam4_20251211_110836_635_A.jpeg,,52.759,47.18,48.0,3.769,,
+hongkong_street,6,Hongkong Street_Cam4_20251211_110840_309_A.jpeg,,63.215,57.987,58.0,4.006,,
+hongkong_street,7,Hongkong Street_Cam4_20251211_110843_953_A.jpeg,,90.634,76.924,76.0,6.032,,
+hongkong_street,8,Hongkong Street_Cam4_20251211_110852_593_A.jpeg,,116.739,103.686,104.0,6.892,,
+hongkong_street,9,Hongkong Street_Cam4_20251211_110928_317_A.jpeg,,124.01,120.374,120.0,6.538,,
+hongkong_street,10,Hongkong Street_Cam4_20251211_110930_978_A.jpeg,,153.765,138.887,138.0,5.631,,
+hongkong_street,11,Hongkong Street_Cam4_20251211_110946_340_A.jpeg,,175.704,164.734,164.0,4.249,,
+hongkong_street,12,Hongkong Street_Cam4_20251211_110953_846_A.jpeg,,207.738,191.721,192.0,2.601,-2.145,1.0
+hongkong_street,13,Hongkong Street_Cam4_20251211_111003_109_A.jpeg,,218.601,213.17,214.0,3.894,,

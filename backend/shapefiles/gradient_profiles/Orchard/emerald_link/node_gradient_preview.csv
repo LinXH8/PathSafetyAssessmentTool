@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+emerald_link,1,Emerald Link_Cam4_20260107_092554_787_A.jpeg,,10.607,5.304,6.0,9.475,0.938,1.0
+emerald_link,2,Emerald Link_Cam4_20260107_092559_593_A.jpeg,,22.677,16.642,16.0,9.575,0.0,1.0
+emerald_link,3,Emerald Link_Cam4_20260107_092606_201_A.jpeg,,33.463,28.07,28.0,9.884,1.406,1.0
+emerald_link,4,Emerald Link_Cam4_20260107_092612_809_A.jpeg,,40.68,37.072,38.0,10.075,0.748,1.0

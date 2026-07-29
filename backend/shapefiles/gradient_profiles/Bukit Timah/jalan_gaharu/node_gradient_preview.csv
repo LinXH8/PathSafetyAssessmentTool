@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_gaharu,1,Jalan Gaharu_Cam4_20251216_074023_240_C.jpeg,,11.776,5.888,6.0,18.414,4.818,1.0
+jalan_gaharu,2,Jalan Gaharu_Cam4_20251216_074129_926_C.jpeg,,23.41,17.593,18.0,19.505,,
+jalan_gaharu,3,Jalan Gaharu_Cam4_20251216_074136_539_C.jpeg,,34.349,28.879,28.0,20.596,,
+jalan_gaharu,4,Jalan Gaharu_Cam4_20251216_074141_343_C.jpeg,,40.919,37.634,38.0,21.771,,
+jalan_gaharu,5,Jalan Gaharu_Cam4_20251216_074144_346_C.jpeg,,69.791,55.355,56.0,22.531,,
+jalan_gaharu,6,Jalan Gaharu_Cam4_20251216_074156_958_C.jpeg,,83.095,76.443,76.0,23.51,,
+jalan_gaharu,7,Jalan Gaharu_Cam4_20251216_074202_371_C.jpeg,,106.879,94.987,94.0,22.128,,
+jalan_gaharu,8,Jalan Gaharu_Cam4_20251216_074212_585_C.jpeg,,119.388,113.134,114.0,20.789,-0.863,1.0
+jalan_gaharu,9,Jalan Gaharu_Cam4_20251216_074221_598_C.jpeg,,129.67,124.529,124.0,20.425,-5.703,1.0
+jalan_gaharu,10,Jalan Gaharu_Cam4_20251216_074225_801_C.jpeg,,135.677,132.673,132.0,20.238,,
+jalan_gaharu,11,Jalan Gaharu_Cam4_20251216_074228_204_C.jpeg,,146.602,141.139,142.0,20.427,,
+jalan_gaharu,12,Jalan Gaharu_Cam4_20251216_074231_811_C.jpeg,,172.919,159.761,160.0,22.352,,
+jalan_gaharu,13,Jalan Gaharu_Cam4_20251216_074242_025_C.jpeg,,182.756,177.837,178.0,26.565,,
+jalan_gaharu,14,Jalan Gaharu_Cam4_20251216_074245_627_C.jpeg,,195.849,189.302,190.0,25.674,,
+jalan_gaharu,15,Jalan Gaharu_Cam4_20251216_074249_832_C.jpeg,,220.905,208.377,208.0,24.504,,
+jalan_gaharu,16,Jalan Gaharu_Cam4_20251216_074257_640_C.jpeg,,248.632,234.769,234.0,24.551,,
+jalan_gaharu,17,Jalan Gaharu_Cam4_20251216_074306_052_C.jpeg,,259.944,254.288,254.0,25.137,,
+jalan_gaharu,18,Jalan Gaharu_Cam4_20251216_074309_657_C.jpeg,,269.254,264.599,264.0,26.279,,
+jalan_gaharu,19,Jalan Gaharu_Cam4_20251216_074318_666_C.jpeg,,425.974,347.614,348.0,26.597,,
+jalan_gaharu,20,Jalan Gaharu_Cam4_20251216_082356_777_C.jpeg,,435.074,430.524,430.0,18.15,,
+jalan_gaharu,21,Jalan Gaharu_Cam4_20251216_082359_782_C.jpeg,,463.32,449.197,450.0,21.651,,
+jalan_gaharu,22,Jalan Gaharu_Cam4_20251216_082426_818_C.jpeg,,544.279,503.799,504.0,22.653,,
+jalan_gaharu,23,Jalan Gaharu_Cam4_20251216_082935_658_C.jpeg,,571.462,557.87,558.0,20.852,,
+jalan_gaharu,24,Jalan Gaharu_Cam4_20251216_082946_470_C.jpeg,,600.551,586.007,586.0,20.76,,
+jalan_gaharu,25,Jalan Gaharu_Cam4_20251216_082957_285_C.jpeg,,742.47,671.511,672.0,25.412,,

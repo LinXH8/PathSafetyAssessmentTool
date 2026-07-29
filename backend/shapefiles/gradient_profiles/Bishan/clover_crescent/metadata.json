@@ -1,0 +1,54 @@
+{
+  "path_key": "clover_crescent",
+  "display_name": "Clover Crescent",
+  "source_project": "Clover Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clover Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T02:37:29.423602+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 643.905,
+  "profile_point_count": 237,
+  "valid_elevation_count": 231,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 124,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 81,
+  "usable_gradient_completion_pct": 34.18,
+  "elevation_hit_coverage_pct": 97.47,
+  "step_jump_rejection_pct": 52.32,
+  "gradient_min_pct": -10.0,
+  "gradient_max_pct": 8.853,
+  "path_bounds_svy21": {
+    "min_x": 29172.02,
+    "min_y": 36915.233,
+    "max_x": 29460.968,
+    "max_y": 37039.511
+  },
+  "road_boundary": {
+    "target_road_name": "CLOVER CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 323,
+    "offroad_point_count": 86,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLOVER WAY",
+        "point_count": 70
+      },
+      {
+        "road_name": "BINCHANG WALK",
+        "point_count": 16
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 644.0,
+    "trimmed_offroad_points": 86
+  }
+}

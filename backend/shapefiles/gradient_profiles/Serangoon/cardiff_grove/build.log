@@ -1,0 +1,51 @@
+COMMAND: ["C:\\Users\\Alaster\\miniconda3\\envs\\psat\\python.exe", "-u", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\Gradient Calculation\\build_path_gradient_profile.py", "--laz-dir", "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon", "--project-dir", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Cardiff Grove", "--path-key", "cardiff_grove", "--output-dir", "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260528\\cardiff_grove", "--target-road-name", "CARDIFF GROVE", "--offroad-policy", "trim"]
+Project: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\profiles\alaster\projects\Cardiff Grove
+Path key: cardiff_grove
+Loaded 44 ordered segments
+Centerline length: 1122.5 m
+Sampled 563 chainage points
+Warning 3: Cannot find header.dxf (GDAL_DATA is not defined)
+C:\Users\Alaster\miniconda3\envs\psat\Lib\site-packages\pyogrio\core.py:35: RuntimeWarning: Could not detect GDAL data files.  Set GDAL_DATA environment variable to the correct path.
+  _init_gdal_data()
+
+Road boundary check:
+  target: CARDIFF GROVE
+  off-road points: 24/563
+    - BURGHLEY DRIVE: 13
+    - LI HWAN TERRACE: 5
+    - LI HWAN PLACE: 5
+    - CARISBROOKE GROVE: 1
+  trimmed off-road points: 24
+Road-boundary sample count after policy: 539
+Indexing 269 LAZ files...
+  -> 269 usable tiles
+
+  [1/18] 20240805_Serangoon_02_Track07.laz (475 samples)
+  [2/18] 20240805_Serangoon_02_Track10.laz (159 samples)
+  [3/18] 20240805_Serangoon_02_Track13.laz (132 samples)
+  [4/18] 20240808_Serangoon_03_Track23.laz (539 samples)
+  [5/18] 20240808_Serangoon_03_Track24.laz (59 samples)
+  [6/18] 20240808_Serangoon_03_Track25.laz (12 samples)
+  [7/18] 20240808_Serangoon_03_Track27.laz (65 samples)
+  [8/18] 20240808_Serangoon_03_Track28.laz (259 samples)
+  [9/18] 20240808_Serangoon_03_Track30.laz (41 samples)
+  [10/18] 20240808_Serangoon_03_Track34.laz (147 samples)
+  [11/18] 20240808_Serangoon_03_Track35.laz (1 samples)
+  [12/18] 20240808_Serangoon_03_Track36.laz (71 samples)
+  [13/18] 20240808_Serangoon_03_Track37.laz (57 samples)
+  [14/18] 20240808_Serangoon_03_Track38.laz (17 samples)
+  [15/18] 20240808_Serangoon_03_Track69.laz (3 samples)
+  [16/18] 20240808_Serangoon_03_Track84.laz (136 samples)
+  [17/18] 20240808_Serangoon_03_Track86.laz (368 samples)
+  [18/18] 20240808_Serangoon_03_Track87.laz (351 samples)
+
+Elevation hits: 537/539
+Rejected elevation outliers: 42
+Rejected elevation step jumps: 198
+Repaired isolated bad gradient points: 2
+Removed bad gradient stretch points: 0
+Valid gradients: 288/539
+Gradient range: -7.83% to 11.13%
+Profile CSV: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\cardiff_grove\gradient_profile.csv
+Node preview CSV: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\cardiff_grove\node_gradient_preview.csv
+Metadata JSON: C:\Users\Alaster\Documents\GitHub\PathSafetyAssessmentTool\tmp\gradient_batch_20260528\cardiff_grove\metadata.json

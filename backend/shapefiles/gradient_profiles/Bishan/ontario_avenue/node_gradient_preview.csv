@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+ontario_avenue,1,Ontario Avenue_Cam4_20260105_103603_330_A.jpeg,,10.906,5.453,6.0,14.026,,
+ontario_avenue,2,Ontario Avenue_Cam4_20260105_103608_137_A.jpeg,,20.961,15.934,16.0,14.524,,
+ontario_avenue,3,Ontario Avenue_Cam4_20260105_103612_352_A.jpeg,,33.925,27.443,28.0,14.178,-0.763,1.0
+ontario_avenue,4,Ontario Avenue_Cam4_20260105_103617_157_A.jpeg,,56.273,45.099,46.0,15.33,,
+ontario_avenue,5,Ontario Avenue_Cam4_20260105_103730_484_A.jpeg,,68.3,62.287,62.0,19.369,,
+ontario_avenue,6,Ontario Avenue_Cam4_20260105_103737_695_A.jpeg,,79.758,74.029,74.0,20.831,,
+ontario_avenue,7,Ontario Avenue_Cam4_20260105_103743_102_A.jpeg,,85.493,82.626,82.0,22.185,,
+ontario_avenue,8,Ontario Avenue_Cam4_20260105_103746_705_A.jpeg,,95.302,90.398,90.0,23.914,,
+ontario_avenue,9,Ontario Avenue_Cam4_20260105_103751_511_A.jpeg,,126.294,110.798,110.0,24.189,,
+ontario_avenue,10,Ontario Avenue_Cam4_20260105_103801_728_A.jpeg,,136.911,131.603,132.0,24.365,,
+ontario_avenue,11,Ontario Avenue_Cam4_20260105_103806_534_A.jpeg,,148.01,142.461,142.0,25.963,,
+ontario_avenue,12,Ontario Avenue_Cam4_20260105_103816_030_A.jpeg,,170.802,159.406,160.0,27.465,,
+ontario_avenue,13,Ontario Avenue_Cam4_20260105_103833_458_A.jpeg,,184.531,177.667,178.0,29.986,,
+ontario_avenue,14,Ontario Avenue_Cam4_20260105_103839_474_A.jpeg,,190.189,187.36,188.0,30.628,,
+ontario_avenue,15,Ontario Avenue_Cam4_20260105_103841_877_A.jpeg,,201.515,195.852,196.0,28.998,,
+ontario_avenue,16,Ontario Avenue_Cam4_20260105_103846_697_A.jpeg,,210.656,206.085,206.0,26.466,,
+ontario_avenue,17,Ontario Avenue_Cam4_20260105_103850_901_A.jpeg,,220.743,215.699,216.0,24.051,,

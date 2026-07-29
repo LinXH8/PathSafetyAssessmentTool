@@ -1,0 +1,66 @@
+{
+  "path_key": "maxwell_road",
+  "display_name": "Maxwell Road",
+  "source_project": "Maxwell Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Maxwell Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Downtown_Core_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Downtown_Core_LTA",
+  "generated_at_utc": "2026-06-17T03:22:27.007214+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2683.657,
+  "profile_point_count": 726,
+  "valid_elevation_count": 726,
+  "rejected_outlier_count": 104,
+  "rejected_step_jump_count": 511,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 94,
+  "usable_gradient_completion_pct": 12.95,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 70.39,
+  "gradient_min_pct": -8.437,
+  "gradient_max_pct": 9.526,
+  "path_bounds_svy21": {
+    "min_x": 29265.334,
+    "min_y": 28712.773,
+    "max_x": 29642.461,
+    "max_y": 29157.006
+  },
+  "road_boundary": {
+    "target_road_name": "MAXWELL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1343,
+    "offroad_point_count": 617,
+    "offroad_top_road_names": [
+      {
+        "road_name": "WALLICH STREET",
+        "point_count": 237
+      },
+      {
+        "road_name": "TELOK AYER STREET",
+        "point_count": 75
+      },
+      {
+        "road_name": "CECIL STREET",
+        "point_count": 74
+      },
+      {
+        "road_name": "ROBINSON ROAD",
+        "point_count": 59
+      },
+      {
+        "road_name": "CHOON GUAN STREET",
+        "point_count": 46
+      }
+    ],
+    "offroad_chainage_min_m": 6.0,
+    "offroad_chainage_max_m": 2676.0,
+    "trimmed_offroad_points": 617
+  }
+}

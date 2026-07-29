@@ -1,0 +1,42 @@
+{
+  "path_key": "lengkok_angsa",
+  "display_name": "Lengkok Angsa",
+  "source_project": "Lengkok Angsa",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Lengkok Angsa\\geo_data.gpkg",
+  "lidar_bundle": "D_River Valley_LTA",
+  "lidar_root": "E:\\LIDAR\\D_River Valley_LTA",
+  "generated_at_utc": "2026-06-10T08:26:18.591240+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 150.175,
+  "profile_point_count": 77,
+  "valid_elevation_count": 77,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 65,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 1,
+  "usable_gradient_completion_pct": 1.3,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 84.42,
+  "gradient_min_pct": 10.415,
+  "gradient_max_pct": 10.415,
+  "path_bounds_svy21": {
+    "min_x": 27625.682,
+    "min_y": 31476.974,
+    "max_x": 27661.49,
+    "max_y": 31538.819
+  },
+  "road_boundary": {
+    "target_road_name": "LENGKOK ANGSA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 77,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_kuala,1,Jalan Kuala_Cam4_20251205_074756_193_B.jpeg,,11.855,5.927,6.0,14.834,,
+jalan_kuala,2,Jalan Kuala_Cam4_20251205_074802_197_B.jpeg,,22.257,17.056,18.0,14.856,,
+jalan_kuala,3,Jalan Kuala_Cam4_20251205_074806_403_B.jpeg,,32.82,27.539,28.0,14.592,,
+jalan_kuala,4,Jalan Kuala_Cam4_20251205_074811_216_B.jpeg,,44.617,38.719,38.0,14.717,,
+jalan_kuala,5,Jalan Kuala_Cam4_20251205_074816_020_B.jpeg,,54.021,49.319,50.0,15.183,,
+jalan_kuala,6,Jalan Kuala_Cam4_20251205_074843_667_B.jpeg,,64.775,59.398,60.0,15.584,,
+jalan_kuala,7,Jalan Kuala_Cam4_20251205_074847_872_B.jpeg,,75.717,70.246,70.0,14.75,,
+jalan_kuala,8,Jalan Kuala_Cam4_20251205_074852_078_B.jpeg,,87.57,81.644,82.0,14.971,,
+jalan_kuala,9,Jalan Kuala_Cam4_20251205_074856_887_B.jpeg,,98.033,92.802,92.0,15.295,,
+jalan_kuala,10,Jalan Kuala_Cam4_20251205_074901_692_B.jpeg,,190.232,144.133,,,,

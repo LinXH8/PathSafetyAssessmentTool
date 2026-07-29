@@ -1,0 +1,54 @@
+{
+  "path_key": "bin_tong_park",
+  "display_name": "Bin Tong Park",
+  "source_project": "Bin Tong Park",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Bin Tong Park\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-05T07:36:25.742221+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1188.695,
+  "profile_point_count": 551,
+  "valid_elevation_count": 551,
+  "rejected_outlier_count": 54,
+  "rejected_step_jump_count": 243,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 219,
+  "usable_gradient_completion_pct": 39.75,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 44.1,
+  "gradient_min_pct": -10.373,
+  "gradient_max_pct": 11.25,
+  "path_bounds_svy21": {
+    "min_x": 23945.189,
+    "min_y": 33323.492,
+    "max_x": 24272.922,
+    "max_y": 33746.714
+  },
+  "road_boundary": {
+    "target_road_name": "BIN TONG PARK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 596,
+    "offroad_point_count": 45,
+    "offroad_top_road_names": [
+      {
+        "road_name": "REBECCA ROAD",
+        "point_count": 42
+      },
+      {
+        "road_name": "CORONATION ROAD WEST",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 332.0,
+    "offroad_chainage_max_m": 670.0,
+    "trimmed_offroad_points": 45
+  }
+}

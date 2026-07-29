@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+institution_hill,1,Institution Hill_Cam4_20251204_075730_098_C.jpeg,,14.547,7.273,8.0,19.358,,
+institution_hill,2,Institution Hill_Cam4_20251204_075740_910_C.jpeg,,36.829,25.688,26.0,21.604,,
+institution_hill,3,Institution Hill_Cam4_20251204_075900_221_C.jpeg,,47.656,42.243,42.0,23.181,,
+institution_hill,4,Institution Hill_Cam4_20251204_075910_975_C.jpeg,,68.675,58.165,58.0,25.9,,
+institution_hill,5,Institution Hill_Cam4_20251204_075924_792_C.jpeg,,78.672,73.673,74.0,25.179,,
+institution_hill,6,Institution Hill_Cam4_20251204_075930_200_C.jpeg,,88.637,83.654,84.0,24.478,,
+institution_hill,7,Institution Hill_Cam4_20251204_075936_084_C.jpeg,,99.217,93.927,94.0,24.828,5.625,1.0
+institution_hill,8,Institution Hill_Cam4_20251204_075943_293_C.jpeg,,111.939,105.578,106.0,25.178,3.125,1.0
+institution_hill,9,Institution Hill_Cam4_20251204_075951_104_C.jpeg,,135.288,123.613,124.0,26.028,8.125,1.0
+institution_hill,10,Institution Hill_Cam4_20251204_080004_918_C.jpeg,,170.043,152.666,152.0,27.225,,
+institution_hill,11,Institution Hill_Cam4_20251204_080039_165_C.jpeg,,180.433,175.238,176.0,27.27,,
+institution_hill,12,Institution Hill_Cam4_20251204_080042_768_C.jpeg,,203.574,192.003,192.0,24.036,,
+institution_hill,13,Institution Hill_Cam4_20251204_080051_144_C.jpeg,,216.488,210.031,210.0,24.912,,

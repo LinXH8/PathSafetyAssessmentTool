@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+exeter_road,1,Exeter Road_Cam4_20260107_082110_631_B.jpeg,,14.788,7.394,8.0,3.921,0.0,1.0
+exeter_road,2,Exeter Road_Cam4_20260107_082114_719_B.jpeg,,20.407,17.598,18.0,4.596,,
+exeter_road,3,Exeter Road_Cam4_20260107_082115_920_B.jpeg,,30.848,25.628,26.0,5.495,,
+exeter_road,4,Exeter Road_Cam4_20260107_082118_322_B.jpeg,,40.749,35.799,36.0,6.323,-0.781,1.0
+exeter_road,5,Exeter Road_Cam4_20260107_082120_123_B.jpeg,,52.818,46.784,46.0,6.167,-1.562,1.0
+exeter_road,6,Exeter Road_Cam4_20260107_082122_526_B.jpeg,,60.948,56.883,56.0,6.073,,
+exeter_road,7,Exeter Road_Cam4_20260107_082124_328_B.jpeg,,74.217,67.583,68.0,6.838,,
+exeter_road,8,Exeter Road_Cam4_20260107_082127_332_B.jpeg,,81.736,77.977,78.0,5.903,,
+exeter_road,9,Exeter Road_Cam4_20260107_082129_134_B.jpeg,,91.957,86.846,86.0,5.125,,
+exeter_road,10,Exeter Road_Cam4_20260107_082131_535_B.jpeg,,101.545,96.751,96.0,4.548,-4.687,1.0
+exeter_road,11,Exeter Road_Cam4_20260107_082133_938_B.jpeg,,110.484,106.015,106.0,4.267,,
+exeter_road,12,Exeter Road_Cam4_20260107_082136_341_B.jpeg,,142.908,126.696,126.0,5.992,,
+exeter_road,13,Exeter Road_Cam4_20260107_082145_951_B.jpeg,,152.762,147.835,148.0,10.135,,
+exeter_road,14,Exeter Road_Cam4_20260107_082148_953_B.jpeg,,164.292,158.527,158.0,10.733,,
+exeter_road,15,Exeter Road_Cam4_20260107_082152_555_B.jpeg,,175.848,170.07,170.0,10.012,,
+exeter_road,16,Exeter Road_Cam4_20260107_082157_362_B.jpeg,,334.365,255.107,256.0,13.624,,
+exeter_road,17,Exeter Road_Cam4_20260107_082332_895_B.jpeg,,345.619,339.992,340.0,4.976,,
+exeter_road,18,Exeter Road_Cam4_20260107_082337_100_B.jpeg,,356.025,350.822,350.0,5.504,,
+exeter_road,19,Exeter Road_Cam4_20260107_082340_705_B.jpeg,,363.267,359.646,360.0,5.515,,
+exeter_road,20,Exeter Road_Cam4_20260107_082343_109_B.jpeg,,389.099,376.183,,,,
+exeter_road,21,Exeter Road_Cam4_20260107_082405_941_B.jpeg,,610.394,499.747,500.0,6.807,,
+exeter_road,22,Exeter Road_Cam4_20260107_103423_048_A.jpeg,,619.371,614.883,,,,

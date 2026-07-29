@@ -1,0 +1,16 @@
+project=Conway Circle
+path_key=conway_circle
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/11] 20240808_Serangoon_03_Track23.laz (61 samples)
+  [2/11] 20240808_Serangoon_03_Track28.laz (66 samples)
+  [3/11] 20240808_Serangoon_03_Track30.laz (246 samples)
+  [4/11] 20240808_Serangoon_03_Track32.laz (246 samples)
+  [5/11] 20240808_Serangoon_03_Track42.laz (41 samples)
+  [6/11] 20240808_Serangoon_03_Track69.laz (15 samples)
+  [7/11] 20240808_Serangoon_03_Track79.laz (67 samples)
+  [8/11] 20240808_Serangoon_03_Track81.laz (182 samples)
+  [9/11] 20240808_Serangoon_03_Track83.laz (210 samples)
+  [10/11] 20240808_Serangoon_03_Track84.laz (170 samples)
+  [11/11] 20240808_Serangoon_03_Track85.laz (246 samples)

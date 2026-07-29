@@ -1,0 +1,66 @@
+{
+  "path_key": "stamford_road",
+  "display_name": "Stamford Road",
+  "source_project": "Stamford Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Stamford Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Museum_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Museum_LTA",
+  "generated_at_utc": "2026-06-25T12:10:47.935119+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2969.143,
+  "profile_point_count": 888,
+  "valid_elevation_count": 496,
+  "rejected_outlier_count": 69,
+  "rejected_step_jump_count": 392,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 213,
+  "usable_gradient_completion_pct": 23.99,
+  "elevation_hit_coverage_pct": 55.86,
+  "step_jump_rejection_pct": 44.14,
+  "gradient_min_pct": -9.538,
+  "gradient_max_pct": 10.432,
+  "path_bounds_svy21": {
+    "min_x": 29691.31,
+    "min_y": 30496.654,
+    "max_x": 30317.674,
+    "max_y": 31174.634
+  },
+  "road_boundary": {
+    "target_road_name": "STAMFORD ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1486,
+    "offroad_point_count": 598,
+    "offroad_top_road_names": [
+      {
+        "road_name": "VICTORIA STREET",
+        "point_count": 180
+      },
+      {
+        "road_name": "QUEEN STREET",
+        "point_count": 134
+      },
+      {
+        "road_name": "NORTH BRIDGE ROAD",
+        "point_count": 93
+      },
+      {
+        "road_name": "BENCOOLEN STREET",
+        "point_count": 71
+      },
+      {
+        "road_name": "ORCHARD ROAD",
+        "point_count": 67
+      }
+    ],
+    "offroad_chainage_min_m": 142.0,
+    "offroad_chainage_max_m": 2970.0,
+    "trimmed_offroad_points": 598
+  }
+}

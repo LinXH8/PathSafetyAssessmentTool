@@ -1,0 +1,50 @@
+{
+  "path_key": "punggol_north_avenue",
+  "display_name": "Punggol North Avenue",
+  "source_project": "Punggol North Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Punggol North Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T05:30:19.915173+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 106.378,
+  "profile_point_count": 46,
+  "valid_elevation_count": 46,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 22,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 13,
+  "usable_gradient_completion_pct": 28.26,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.83,
+  "gradient_min_pct": -1.731,
+  "gradient_max_pct": 10.67,
+  "path_bounds_svy21": {
+    "min_x": 35493.983,
+    "min_y": 43862.882,
+    "max_x": 35550.736,
+    "max_y": 43907.769
+  },
+  "road_boundary": {
+    "target_road_name": "PUNGGOL NORTH AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 55,
+    "offroad_point_count": 9,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL WAY",
+        "point_count": 9
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 68.0,
+    "trimmed_offroad_points": 9
+  }
+}

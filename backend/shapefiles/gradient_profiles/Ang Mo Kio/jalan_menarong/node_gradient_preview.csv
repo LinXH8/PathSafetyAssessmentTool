@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_menarong,1,Jalan Menarong_Cam4_20260105_083557_579_A.jpeg,,13.481,6.741,,,,
+jalan_menarong,2,Jalan Menarong_Cam4_20260105_083601_782_A.jpeg,,20.3,16.89,16.0,20.192,,
+jalan_menarong,3,Jalan Menarong_Cam4_20260105_083604_784_A.jpeg,,26.698,23.499,24.0,19.789,,
+jalan_menarong,4,Jalan Menarong_Cam4_20260105_083621_001_A.jpeg,,38.101,32.4,32.0,19.649,,
+jalan_menarong,5,Jalan Menarong_Cam4_20260105_083625_206_A.jpeg,,48.704,43.402,44.0,19.832,0.469,1.0
+jalan_menarong,6,Jalan Menarong_Cam4_20260105_083628_809_A.jpeg,,56.278,52.491,52.0,19.965,1.202,1.0
+jalan_menarong,7,Jalan Menarong_Cam4_20260105_083631_214_A.jpeg,,67.805,62.042,62.0,19.954,0.625,1.0
+jalan_menarong,8,Jalan Menarong_Cam4_20260105_083634_818_A.jpeg,,78.024,72.915,72.0,20.354,3.594,1.0
+jalan_menarong,9,Jalan Menarong_Cam4_20260105_083637_822_A.jpeg,,86.544,82.284,82.0,20.823,5.625,1.0
+jalan_menarong,10,Jalan Menarong_Cam4_20260105_083640_225_A.jpeg,,96.475,91.51,92.0,20.889,,
+jalan_menarong,11,Jalan Menarong_Cam4_20260105_083643_229_A.jpeg,,107.2,101.838,102.0,20.779,,
+jalan_menarong,12,Jalan Menarong_Cam4_20260105_083646_234_A.jpeg,,116.351,111.776,112.0,21.954,,
+jalan_menarong,13,Jalan Menarong_Cam4_20260105_083648_635_A.jpeg,,127.731,122.041,122.0,22.199,,
+jalan_menarong,14,Jalan Menarong_Cam4_20260105_083651_640_A.jpeg,,139.143,133.437,134.0,23.149,7.5,1.0
+jalan_menarong,15,Jalan Menarong_Cam4_20260105_083655_245_A.jpeg,,150.173,144.658,144.0,23.899,8.125,1.0
+jalan_menarong,16,Jalan Menarong_Cam4_20260105_083712_066_A.jpeg,,173.734,161.953,162.0,25.199,6.25,1.0
+jalan_menarong,17,Jalan Menarong_Cam4_20260105_083727_684_A.jpeg,,184.379,179.057,180.0,25.949,1.25,1.0
+jalan_menarong,18,Jalan Menarong_Cam4_20260105_083731_887_A.jpeg,,194.881,189.63,190.0,26.121,,
+jalan_menarong,19,Jalan Menarong_Cam4_20260105_083735_491_A.jpeg,,203.878,199.379,200.0,27.66,,
+jalan_menarong,20,Jalan Menarong_Cam4_20260105_083738_495_A.jpeg,,212.521,208.2,208.0,27.943,,

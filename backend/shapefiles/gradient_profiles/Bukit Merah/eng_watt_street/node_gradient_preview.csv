@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+eng_watt_street,1,Eng Watt Street_Cam4_20251227_080457_678_B.jpeg,,12.014,6.007,6.0,7.335,,
+eng_watt_street,2,Eng Watt Street_Cam4_20251227_080500_681_B.jpeg,,21.593,16.804,16.0,7.332,,
+eng_watt_street,3,Eng Watt Street_Cam4_20251227_080503_084_B.jpeg,,31.856,26.725,26.0,7.135,,
+eng_watt_street,4,Eng Watt Street_Cam4_20251227_080505_486_B.jpeg,,42.287,37.072,38.0,8.568,,
+eng_watt_street,5,Eng Watt Street_Cam4_20251227_080507_890_B.jpeg,,52.663,47.475,48.0,7.856,,
+eng_watt_street,6,Eng Watt Street_Cam4_20251227_080510_292_B.jpeg,,60.481,56.572,56.0,7.173,,
+eng_watt_street,7,Eng Watt Street_Cam4_20251227_080512_094_B.jpeg,,70.767,65.624,66.0,6.246,0.63,1.0
+eng_watt_street,8,Eng Watt Street_Cam4_20251227_080514_496_B.jpeg,,80.86,75.814,76.0,6.644,2.695,1.0
+eng_watt_street,9,Eng Watt Street_Cam4_20251227_080516_898_B.jpeg,,90.402,85.631,86.0,6.844,,
+eng_watt_street,10,Eng Watt Street_Cam4_20251227_080520_501_B.jpeg,,101.98,96.191,96.0,7.371,,
+eng_watt_street,11,Eng Watt Street_Cam4_20251227_080525_305_B.jpeg,,111.166,106.573,106.0,8.8,,
+eng_watt_street,12,Eng Watt Street_Cam4_20251227_080528_309_B.jpeg,,120.93,116.048,116.0,10.317,,
+eng_watt_street,13,Eng Watt Street_Cam4_20251227_080531_314_B.jpeg,,155.795,138.363,138.0,11.149,,
+eng_watt_street,14,Eng Watt Street_Cam4_20251227_080619_368_B.jpeg,,165.999,160.897,160.0,6.695,,
+eng_watt_street,15,Eng Watt Street_Cam4_20251227_080623_572_B.jpeg,,175.681,170.84,170.0,6.048,-5.273,1.0

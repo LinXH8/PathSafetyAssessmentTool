@@ -1,0 +1,62 @@
+{
+  "path_key": "jalan_tari_lilin",
+  "display_name": "Jalan Tari Lilin",
+  "source_project": "Jalan Tari Lilin",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Tari Lilin\\geo_data.gpkg",
+  "lidar_bundle": "D_Sengkang_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Sengkang_LTA",
+  "generated_at_utc": "2026-06-01T02:16:19.096803+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 384.136,
+  "profile_point_count": 76,
+  "valid_elevation_count": 76,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 30,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 27,
+  "usable_gradient_completion_pct": 35.53,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 39.47,
+  "gradient_min_pct": -7.577,
+  "gradient_max_pct": 13.676,
+  "path_bounds_svy21": {
+    "min_x": 32277.279,
+    "min_y": 42192.256,
+    "max_x": 32416.012,
+    "max_y": 42367.347
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN TARI LILIN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 194,
+    "offroad_point_count": 118,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN KAYU",
+        "point_count": 105
+      },
+      {
+        "road_name": "FERNVALE STREET",
+        "point_count": 9
+      },
+      {
+        "road_name": "JALAN TARI SERIMPI",
+        "point_count": 3
+      },
+      {
+        "road_name": "JALAN TARI ZAPIN",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 38.0,
+    "offroad_chainage_max_m": 384.136,
+    "trimmed_offroad_points": 118
+  }
+}

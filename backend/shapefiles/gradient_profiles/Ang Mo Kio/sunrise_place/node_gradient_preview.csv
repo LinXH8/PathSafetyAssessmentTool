@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+sunrise_place,1,Sunrise Place_Cam4_20260105_094039_111_C.jpeg,,10.806,5.403,6.0,14.243,,
+sunrise_place,2,Sunrise Place_Cam4_20260105_094043_318_C.jpeg,,22.234,16.52,16.0,13.395,,
+sunrise_place,3,Sunrise Place_Cam4_20260105_094046_921_C.jpeg,,30.172,26.203,26.0,13.414,4.153,1.0
+sunrise_place,4,Sunrise Place_Cam4_20260105_094049_325_C.jpeg,,43.94,37.056,38.0,13.651,0.823,1.0
+sunrise_place,5,Sunrise Place_Cam4_20260105_094053_528_C.jpeg,,66.585,55.262,56.0,13.293,-4.297,1.0
+sunrise_place,6,Sunrise Place_Cam4_20260105_094100_139_C.jpeg,,76.329,71.457,72.0,13.349,,
+sunrise_place,7,Sunrise Place_Cam4_20260105_094103_147_C.jpeg,,89.754,83.042,84.0,13.579,,
+sunrise_place,8,Sunrise Place_Cam4_20260105_094107_351_C.jpeg,,100.683,95.218,96.0,14.448,,
+sunrise_place,9,Sunrise Place_Cam4_20260105_094110_958_C.jpeg,,107.863,104.273,104.0,14.667,,
+sunrise_place,10,Sunrise Place_Cam4_20260105_094113_315_C.jpeg,,133.665,120.764,120.0,14.347,-3.716,1.0
+sunrise_place,11,Sunrise Place_Cam4_20260105_094122_326_C.jpeg,,144.505,139.085,140.0,12.19,,
+sunrise_place,12,Sunrise Place_Cam4_20260105_094125_933_C.jpeg,,157.16,150.832,150.0,12.19,-1.458,1.0
+sunrise_place,13,Sunrise Place_Cam4_20260105_094130_137_C.jpeg,,184.743,170.951,170.0,12.19,0.0,1.0
+sunrise_place,14,Sunrise Place_Cam4_20260105_094145_767_C.jpeg,,190.08,187.411,188.0,12.29,-0.313,1.0
+sunrise_place,15,Sunrise Place_Cam4_20260105_094147_569_C.jpeg,,217.41,203.745,204.0,12.44,,
+sunrise_place,16,Sunrise Place_Cam4_20260105_094157_183_C.jpeg,,229.059,223.235,224.0,13.845,,
+sunrise_place,17,Sunrise Place_Cam4_20260105_094200_785_C.jpeg,,241.019,235.039,236.0,13.093,,

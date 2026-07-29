@@ -1,0 +1,62 @@
+{
+  "path_key": "nim_crescent",
+  "display_name": "Nim Crescent",
+  "source_project": "Nim Crescent",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Nim Crescent\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T05:15:20.486288+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 338.993,
+  "profile_point_count": 139,
+  "valid_elevation_count": 139,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 90,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 26,
+  "usable_gradient_completion_pct": 18.71,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 64.75,
+  "gradient_min_pct": -3.168,
+  "gradient_max_pct": 11.052,
+  "path_bounds_svy21": {
+    "min_x": 31734.963,
+    "min_y": 40380.178,
+    "max_x": 31832.505,
+    "max_y": 40622.302
+  },
+  "road_boundary": {
+    "target_road_name": "NIM CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 171,
+    "offroad_point_count": 32,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SELETAR ROAD",
+        "point_count": 15
+      },
+      {
+        "road_name": "NIM DRIVE",
+        "point_count": 11
+      },
+      {
+        "road_name": "NIM GREEN",
+        "point_count": 4
+      },
+      {
+        "road_name": "NERAM ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 338.993,
+    "trimmed_offroad_points": 32
+  }
+}

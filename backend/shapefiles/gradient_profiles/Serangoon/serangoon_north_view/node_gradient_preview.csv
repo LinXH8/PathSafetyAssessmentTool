@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_north_view,1,Serangoon North View_Cam4_20260203_090525_292_A.jpeg,,10.767,5.383,6.0,24.47,1.505,1.0
+serangoon_north_view,2,Serangoon North View_Cam4_20260203_090529_497_A.jpeg,,22.236,16.502,16.0,24.613,1.444,1.0
+serangoon_north_view,3,Serangoon North View_Cam4_20260203_090533_700_A.jpeg,,31.418,26.827,24.0,24.714,,
+serangoon_north_view,4,Serangoon North View_Cam4_20260203_090536_702_A.jpeg,,59.047,45.233,,,,
+serangoon_north_view,5,Serangoon North View_Cam4_20260203_090548_114_A.jpeg,,131.566,95.306,,,,

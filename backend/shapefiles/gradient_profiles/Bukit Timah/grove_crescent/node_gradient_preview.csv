@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+grove_crescent,1,Grove Crescent_Cam4_20251219_074302_192_B.jpeg,,12.224,6.112,6.0,19.602,,
+grove_crescent,2,Grove Crescent_Cam4_20251219_074307_596_B.jpeg,,20.771,16.497,16.0,19.602,,
+grove_crescent,3,Grove Crescent_Cam4_20251219_074311_801_B.jpeg,,33.803,27.287,28.0,19.113,-3.854,1.0
+grove_crescent,4,Grove Crescent_Cam4_20251219_074317_207_B.jpeg,,57.998,45.901,46.0,18.74,-9.109,2.0
+grove_crescent,5,Grove Crescent_Cam4_20251219_074327_896_B.jpeg,,69.48,63.739,64.0,20.118,,
+grove_crescent,6,Grove Crescent_Cam4_20251219_074332_102_B.jpeg,,81.264,75.372,76.0,21.558,,
+grove_crescent,7,Grove Crescent_Cam4_20251219_074336_305_B.jpeg,,103.452,92.358,92.0,17.072,,
+grove_crescent,8,Grove Crescent_Cam4_20251219_074343_512_B.jpeg,,114.777,109.115,110.0,15.769,-4.688,1.0
+grove_crescent,9,Grove Crescent_Cam4_20251219_074347_715_B.jpeg,,123.732,119.254,120.0,15.253,,
+grove_crescent,10,Grove Crescent_Cam4_20251219_074350_718_B.jpeg,,149.361,136.547,136.0,14.621,,
+grove_crescent,11,Grove Crescent_Cam4_20251219_074359_144_B.jpeg,,163.165,156.263,156.0,20.446,,
+grove_crescent,12,Grove Crescent_Cam4_20251219_074404_551_B.jpeg,,170.222,166.693,166.0,18.52,,
+grove_crescent,13,Grove Crescent_Cam4_20251219_074407_556_B.jpeg,,179.161,174.691,174.0,15.835,,
+grove_crescent,14,Grove Crescent_Cam4_20251219_074411_160_B.jpeg,,209.73,194.445,194.0,14.074,,
+grove_crescent,15,Grove Crescent_Cam4_20251219_074429_781_B.jpeg,,215.819,212.774,212.0,13.033,,
+grove_crescent,16,Grove Crescent_Cam4_20251219_074433_986_B.jpeg,,328.295,272.057,272.0,15.281,,
+grove_crescent,17,Grove Crescent_Cam4_20251219_074534_546_B.jpeg,,366.249,347.272,348.0,15.955,9.583,2.0
+grove_crescent,18,Grove Crescent_Cam4_20251219_074655_498_B.jpeg,,376.807,371.528,372.0,19.076,,
+grove_crescent,19,Grove Crescent_Cam4_20251219_074659_702_B.jpeg,,387.61,382.208,382.0,19.357,,
+grove_crescent,20,Grove Crescent_Cam4_20251219_074703_907_B.jpeg,,530.08,458.845,458.0,15.34,,

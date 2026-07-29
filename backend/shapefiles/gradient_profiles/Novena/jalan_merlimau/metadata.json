@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_merlimau",
+  "display_name": "Jalan Merlimau",
+  "source_project": "Jalan Merlimau",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry6\\_projects\\Jalan Merlimau\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T08:39:00.866144+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 479.815,
+  "profile_point_count": 241,
+  "valid_elevation_count": 241,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 84,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 129,
+  "usable_gradient_completion_pct": 53.53,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 34.85,
+  "gradient_min_pct": -3.125,
+  "gradient_max_pct": 8.472,
+  "path_bounds_svy21": {
+    "min_x": 28724.908,
+    "min_y": 33906.266,
+    "max_x": 28932.354,
+    "max_y": 34039.055
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN MERLIMAU",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 241,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

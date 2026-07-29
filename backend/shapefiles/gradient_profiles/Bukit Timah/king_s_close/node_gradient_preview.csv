@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+king_s_close,1,King's Close_Cam4_20251217_102146_461_B.jpeg,,10.242,5.121,6.0,8.26,0.833,1.0
+king_s_close,2,King's Close_Cam4_20251217_102150_669_B.jpeg,,20.269,15.256,16.0,8.443,2.917,1.0
+king_s_close,3,King's Close_Cam4_20251217_102153_674_B.jpeg,,31.691,25.98,26.0,8.71,1.667,1.0
+king_s_close,4,King's Close_Cam4_20251217_102156_776_B.jpeg,,40.992,36.341,36.0,8.9,1.957,1.0
+king_s_close,5,King's Close_Cam4_20251217_102159_179_B.jpeg,,51.812,46.402,46.0,9.1,1.875,1.0
+king_s_close,6,King's Close_Cam4_20251217_102202_148_B.jpeg,,61.134,56.473,56.0,9.25,2.469,1.0
+king_s_close,7,King's Close_Cam4_20251217_102204_641_B.jpeg,,70.857,65.995,66.0,9.489,,
+king_s_close,8,King's Close_Cam4_20251217_102207_645_B.jpeg,,80.455,75.656,76.0,9.806,,
+king_s_close,9,King's Close_Cam4_20251217_102211_313_B.jpeg,,91.326,85.891,86.0,10.197,5.0,1.0
+king_s_close,10,King's Close_Cam4_20251217_102214_919_B.jpeg,,103.426,97.376,98.0,10.456,3.75,1.0
+king_s_close,11,King's Close_Cam4_20251217_102219_125_B.jpeg,,132.941,118.183,118.0,12.049,,
+king_s_close,12,King's Close_Cam4_20251217_102230_062_B.jpeg,,199.386,166.163,166.0,15.515,,
+king_s_close,13,King's Close_Cam4_20251217_102531_737_B.jpeg,,226.856,213.121,214.0,19.033,5.313,1.0
+king_s_close,14,King's Close_Cam4_20251217_102542_224_B.jpeg,,235.032,230.944,230.0,19.677,,
+king_s_close,15,King's Close_Cam4_20251217_102545_226_B.jpeg,,244.351,239.691,240.0,19.912,4.06,1.0
+king_s_close,16,King's Close_Cam4_20251217_102548_972_B.jpeg,,279.851,262.101,262.0,19.233,-4.844,1.0
+king_s_close,17,King's Close_Cam4_20251217_102602_877_B.jpeg,,290.201,285.026,286.0,19.134,,
+king_s_close,18,King's Close_Cam4_20251217_102605_298_B.jpeg,,302.416,296.308,296.0,19.166,,
+king_s_close,19,King's Close_Cam4_20251217_102608_302_B.jpeg,,313.417,307.917,308.0,18.929,,
+king_s_close,20,King's Close_Cam4_20251217_102611_308_B.jpeg,,334.754,324.085,324.0,21.186,,
+king_s_close,21,King's Close_Cam4_20251217_102618_037_B.jpeg,,346.534,340.644,340.0,22.058,,
+king_s_close,22,King's Close_Cam4_20251217_102622_938_B.jpeg,,357.918,352.226,352.0,20.161,,
+king_s_close,23,King's Close_Cam4_20251217_102628_477_B.jpeg,,449.701,403.809,404.0,18.718,,
+king_s_close,24,King's Close_Cam4_20251217_102740_660_B.jpeg,,560.859,505.28,506.0,9.765,,

@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_membina",
+  "display_name": "Jalan Membina",
+  "source_project": "Jalan Membina",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Jalan Membina\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T06:16:07.613081+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2125.357,
+  "profile_point_count": 778,
+  "valid_elevation_count": 748,
+  "rejected_outlier_count": 125,
+  "rejected_step_jump_count": 579,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 80,
+  "usable_gradient_completion_pct": 10.28,
+  "elevation_hit_coverage_pct": 96.14,
+  "step_jump_rejection_pct": 74.42,
+  "gradient_min_pct": -8.262,
+  "gradient_max_pct": 12.39,
+  "path_bounds_svy21": {
+    "min_x": 27073.116,
+    "min_y": 29314.316,
+    "max_x": 27524.494,
+    "max_y": 29814.482
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN MEMBINA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1064,
+    "offroad_point_count": 286,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TIONG BAHRU ROAD",
+        "point_count": 153
+      },
+      {
+        "road_name": "KIM TIAN ROAD",
+        "point_count": 89
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 40
+      },
+      {
+        "road_name": "LOWER DELTA ROAD",
+        "point_count": 3
+      },
+      {
+        "road_name": "BUKIT HO SWEE LINK",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 236.0,
+    "offroad_chainage_max_m": 2126.0,
+    "trimmed_offroad_points": 286
+  }
+}

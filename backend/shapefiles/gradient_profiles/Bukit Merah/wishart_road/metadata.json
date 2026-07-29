@@ -1,0 +1,62 @@
+{
+  "path_key": "wishart_road",
+  "display_name": "Wishart Road",
+  "source_project": "Wishart Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Wishart Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T18:01:55.044767+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1238.256,
+  "profile_point_count": 441,
+  "valid_elevation_count": 441,
+  "rejected_outlier_count": 34,
+  "rejected_step_jump_count": 349,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 28,
+  "usable_gradient_completion_pct": 6.35,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 79.14,
+  "gradient_min_pct": -9.565,
+  "gradient_max_pct": 7.387,
+  "path_bounds_svy21": {
+    "min_x": 25698.717,
+    "min_y": 27937.133,
+    "max_x": 25977.311,
+    "max_y": 28195.877
+  },
+  "road_boundary": {
+    "target_road_name": "WISHART ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 621,
+    "offroad_point_count": 180,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MORSE ROAD",
+        "point_count": 86
+      },
+      {
+        "road_name": "PENDER ROAD",
+        "point_count": 59
+      },
+      {
+        "road_name": "TELOK BLANGAH ROAD",
+        "point_count": 32
+      },
+      {
+        "road_name": "KEPPEL HILL",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 32.0,
+    "offroad_chainage_max_m": 1238.256,
+    "trimmed_offroad_points": 180
+  }
+}

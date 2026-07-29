@@ -1,0 +1,66 @@
+{
+  "path_key": "sin_ming_avenue",
+  "display_name": "Sin Ming Avenue",
+  "source_project": "Sin Ming Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Sin Ming Avenue\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-02T08:38:48.397267+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 4682.044,
+  "profile_point_count": 2119,
+  "valid_elevation_count": 1889,
+  "rejected_outlier_count": 113,
+  "rejected_step_jump_count": 1235,
+  "repaired_gradient_point_count": 27,
+  "removed_bad_gradient_point_count": 10,
+  "valid_gradient_count": 500,
+  "usable_gradient_completion_pct": 23.6,
+  "elevation_hit_coverage_pct": 89.15,
+  "step_jump_rejection_pct": 58.28,
+  "gradient_min_pct": -12.701,
+  "gradient_max_pct": 12.128,
+  "path_bounds_svy21": {
+    "min_x": 27512.604,
+    "min_y": 37922.918,
+    "max_x": 28981.946,
+    "max_y": 38497.428
+  },
+  "road_boundary": {
+    "target_road_name": "SIN MING AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 2343,
+    "offroad_point_count": 224,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MARYMOUNT ROAD",
+        "point_count": 125
+      },
+      {
+        "road_name": "FULTON ROAD",
+        "point_count": 22
+      },
+      {
+        "road_name": "SIN MING WALK",
+        "point_count": 22
+      },
+      {
+        "road_name": "LORONG PUNTONG",
+        "point_count": 13
+      },
+      {
+        "road_name": "SIN MING PLACE",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 492.0,
+    "offroad_chainage_max_m": 4424.0,
+    "trimmed_offroad_points": 224
+  }
+}

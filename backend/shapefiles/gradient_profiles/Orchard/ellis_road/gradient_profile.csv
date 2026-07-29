@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+ellis_road,Ellis Road,0.0,27059.457,31951.234,12.369,12.369,12.208,-3.42,1.0,ELLIS ROAD,3.791
+ellis_road,Ellis Road,2.0,27059.849,31949.273,12.208,12.208,12.139,-4.56,1.0,ELLIS ROAD,3.635
+ellis_road,Ellis Road,4.0,27060.24,31947.311,9.447,12.071,12.071,,,ELLIS ROAD,3.48
+ellis_road,Ellis Road,6.0,27060.631,31945.35,11.934,11.934,11.934,,,ELLIS ROAD,3.325
+ellis_road,Ellis Road,8.0,27061.023,31943.389,11.098,11.696,11.696,-9.529,2.0,ELLIS ROAD,3.17
+ellis_road,Ellis Road,10.0,27061.414,31941.427,11.269,11.457,11.576,-10.74,2.0,ELLIS ROAD,3.015
+ellis_road,Ellis Road,10.442,27061.501,31940.993,11.219,11.219,11.457,,,ELLIS ROAD,2.981

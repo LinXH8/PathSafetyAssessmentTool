@@ -1,0 +1,21 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+moonbeam_walk,1,Moonbeam Walk_Cam4_20251219_082541_699_A.jpeg,,13.456,6.728,6.0,19.143,,
+moonbeam_walk,2,Moonbeam Walk_Cam4_20251219_082545_903_A.jpeg,,20.175,16.816,16.0,18.109,,
+moonbeam_walk,3,Moonbeam Walk_Cam4_20251219_082548_306_A.jpeg,,30.498,25.336,26.0,17.545,,
+moonbeam_walk,4,Moonbeam Walk_Cam4_20251219_082551_910_A.jpeg,,41.565,36.031,36.0,17.295,,
+moonbeam_walk,5,Moonbeam Walk_Cam4_20251219_082555_515_A.jpeg,,54.217,47.891,48.0,17.8,3.281,1.0
+moonbeam_walk,6,Moonbeam Walk_Cam4_20251219_082609_930_A.jpeg,,60.484,57.35,58.0,18.15,1.458,1.0
+moonbeam_walk,7,Moonbeam Walk_Cam4_20251219_082614_103_A.jpeg,,70.429,65.457,66.0,18.442,4.792,1.0
+moonbeam_walk,8,Moonbeam Walk_Cam4_20251219_082620_712_A.jpeg,,99.357,84.893,84.0,19.46,,
+moonbeam_walk,9,Moonbeam Walk_Cam4_20251219_082634_527_A.jpeg,,109.133,104.245,104.0,20.543,,
+moonbeam_walk,10,Moonbeam Walk_Cam4_20251219_082638_131_A.jpeg,,116.916,113.025,114.0,21.659,,
+moonbeam_walk,11,Moonbeam Walk_Cam4_20251219_082641_133_A.jpeg,,127.473,122.194,122.0,21.913,,
+moonbeam_walk,12,Moonbeam Walk_Cam4_20251219_082645_337_A.jpeg,,136.768,132.12,132.0,23.153,,
+moonbeam_walk,13,Moonbeam Walk_Cam4_20251219_082648_940_A.jpeg,,170.567,153.668,154.0,27.368,,
+moonbeam_walk,14,Moonbeam Walk_Cam4_20251219_082702_154_A.jpeg,,176.279,173.423,174.0,26.459,,
+moonbeam_walk,15,Moonbeam Walk_Cam4_20251219_082705_759_A.jpeg,,184.258,180.268,180.0,26.507,,
+moonbeam_walk,16,Moonbeam Walk_Cam4_20251219_082713_566_A.jpeg,,195.185,189.722,190.0,25.157,,
+moonbeam_walk,17,Moonbeam Walk_Cam4_20251219_082717_170_A.jpeg,,228.559,211.872,210.0,25.649,,
+moonbeam_walk,18,Moonbeam Walk_Cam4_20251219_083333_854_A.jpeg,,255.702,242.13,242.0,25.008,,
+moonbeam_walk,19,Moonbeam Walk_Cam4_20251219_083344_062_A.jpeg,,328.611,292.157,292.0,18.283,,
+moonbeam_walk,20,Moonbeam Walk_Cam4_20251219_083400_249_A.jpeg,,355.886,342.249,342.0,18.079,,

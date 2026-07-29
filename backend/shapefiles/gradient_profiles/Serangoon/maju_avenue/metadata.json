@@ -1,0 +1,66 @@
+{
+  "path_key": "maju_avenue",
+  "display_name": "Maju Avenue",
+  "source_project": "Maju Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Maju Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T20:33:34.720142+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 320.217,
+  "profile_point_count": 20,
+  "valid_elevation_count": 20,
+  "rejected_outlier_count": 2,
+  "rejected_step_jump_count": 7,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 10,
+  "usable_gradient_completion_pct": 50.0,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 35.0,
+  "gradient_min_pct": -5.273,
+  "gradient_max_pct": 6.869,
+  "path_bounds_svy21": {
+    "min_x": 31519.19,
+    "min_y": 38530.8,
+    "max_x": 31606.242,
+    "max_y": 38615.13
+  },
+  "road_boundary": {
+    "target_road_name": "MAJU AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 162,
+    "offroad_point_count": 142,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 63
+      },
+      {
+        "road_name": "FARLEIGH AVENUE",
+        "point_count": 34
+      },
+      {
+        "road_name": "SANDOWN PLACE",
+        "point_count": 23
+      },
+      {
+        "road_name": "PORTCHESTER AVENUE",
+        "point_count": 20
+      },
+      {
+        "road_name": "BRIDPORT AVENUE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 320.217,
+    "trimmed_offroad_points": 142
+  }
+}

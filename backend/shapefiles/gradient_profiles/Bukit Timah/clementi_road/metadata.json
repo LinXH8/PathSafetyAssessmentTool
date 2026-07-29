@@ -1,0 +1,66 @@
+{
+  "path_key": "clementi_road",
+  "display_name": "Clementi Road",
+  "source_project": "Clementi Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clementi Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-04T19:20:52.632859+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7134.528,
+  "profile_point_count": 2925,
+  "valid_elevation_count": 2526,
+  "rejected_outlier_count": 332,
+  "rejected_step_jump_count": 1765,
+  "repaired_gradient_point_count": 42,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 607,
+  "usable_gradient_completion_pct": 20.75,
+  "elevation_hit_coverage_pct": 86.36,
+  "step_jump_rejection_pct": 60.34,
+  "gradient_min_pct": -13.344,
+  "gradient_max_pct": 18.45,
+  "path_bounds_svy21": {
+    "min_x": 21018.717,
+    "min_y": 33400.696,
+    "max_x": 21957.967,
+    "max_y": 35511.513
+  },
+  "road_boundary": {
+    "target_road_name": "CLEMENTI ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3569,
+    "offroad_point_count": 644,
+    "offroad_top_road_names": [
+      {
+        "road_name": "CLEMENTI CRESCENT",
+        "point_count": 206
+      },
+      {
+        "road_name": "BROOKVALE DRIVE",
+        "point_count": 175
+      },
+      {
+        "road_name": "ULU PANDAN ROAD",
+        "point_count": 115
+      },
+      {
+        "road_name": "KING ALBERT PARK",
+        "point_count": 89
+      },
+      {
+        "road_name": "SUNSET LANE",
+        "point_count": 28
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 6916.0,
+    "trimmed_offroad_points": 644
+  }
+}

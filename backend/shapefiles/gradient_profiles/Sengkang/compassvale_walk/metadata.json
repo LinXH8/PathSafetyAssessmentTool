@@ -1,0 +1,42 @@
+{
+  "path_key": "compassvale_walk",
+  "display_name": "Compassvale Walk",
+  "source_project": "Compassvale Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Compassvale Walk\\geo_data.gpkg",
+  "lidar_bundle": "Sengkang",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Sengkang",
+  "generated_at_utc": "2026-06-01T00:52:52.153634+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 625.461,
+  "profile_point_count": 314,
+  "valid_elevation_count": 314,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 37,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 265,
+  "usable_gradient_completion_pct": 84.39,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 11.78,
+  "gradient_min_pct": -3.012,
+  "gradient_max_pct": 1.587,
+  "path_bounds_svy21": {
+    "min_x": 35141.107,
+    "min_y": 41074.374,
+    "max_x": 35493.119,
+    "max_y": 41346.899
+  },
+  "road_boundary": {
+    "target_road_name": "COMPASSVALE WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 314,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

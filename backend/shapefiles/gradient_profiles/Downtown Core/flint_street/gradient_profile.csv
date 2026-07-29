@@ -1,0 +1,10 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+flint_street,Flint Street,0.0,30132.775,29786.738,11.242,3.74,3.74,0.0,1.0,FLINT STREET,0.578
+flint_street,Flint Street,2.0,30133.986,29785.146,9.439,3.74,3.74,0.238,1.0,FLINT STREET,0.171
+flint_street,Flint Street,4.0,30135.197,29783.555,3.74,3.74,3.74,0.357,1.0,FLINT STREET,0.236
+flint_street,Flint Street,6.0,30136.409,29781.963,3.768,3.768,3.754,0.357,1.0,FLINT STREET,0.709
+flint_street,Flint Street,8.0,30137.62,29780.371,3.768,3.768,3.768,1.786,1.0,FLINT STREET,1.228
+flint_street,Flint Street,10.0,30138.831,29778.78,3.754,3.754,3.768,,,FLINT STREET,1.747
+flint_street,Flint Street,12.0,30140.042,29777.188,3.882,3.882,3.882,,,FLINT STREET,2.265
+flint_street,Flint Street,14.0,30141.253,29775.597,5.333,3.882,3.882,,,FLINT STREET,2.784
+flint_street,Flint Street,14.08,30141.301,29775.533,5.339,3.882,3.882,,,FLINT STREET,2.805

@@ -1,0 +1,18 @@
+project=Chuan Walk
+path_key=chuan_walk
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/13] 20240805_Serangoon_02_Track07.laz (323 samples)
+  [2/13] 20240805_Serangoon_02_Track10.laz (158 samples)
+  [3/13] 20240805_Serangoon_02_Track13.laz (121 samples)
+  [4/13] 20240805_Serangoon_02_Track27.laz (170 samples)
+  [5/13] 20240805_Serangoon_02_Track28.laz (118 samples)
+  [6/13] 20240805_Serangoon_02_Track76.laz (17 samples)
+  [7/13] 20240805_Serangoon_02_Track78.laz (25 samples)
+  [8/13] 20240808_Serangoon_03_Track23.laz (86 samples)
+  [9/13] 20240808_Serangoon_03_Track25.laz (144 samples)
+  [10/13] 20240808_Serangoon_03_Track26.laz (83 samples)
+  [11/13] 20240808_Serangoon_03_Track34.laz (6 samples)
+  [12/13] 20240808_Serangoon_03_Track86.laz (323 samples)
+  [13/13] 20240808_Serangoon_03_Track87.laz (323 samples)

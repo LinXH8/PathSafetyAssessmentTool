@@ -1,0 +1,58 @@
+{
+  "path_key": "depot_road",
+  "display_name": "Depot Road",
+  "source_project": "Depot Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Depot Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bukit_Merah_&_Clementi_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Bukit_Merah_&_Clementi_LTA",
+  "generated_at_utc": "2026-06-04T06:06:52.026455+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1651.678,
+  "profile_point_count": 785,
+  "valid_elevation_count": 71,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 69,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 43,
+  "usable_gradient_completion_pct": 5.48,
+  "elevation_hit_coverage_pct": 9.04,
+  "step_jump_rejection_pct": 8.79,
+  "gradient_min_pct": -0.673,
+  "gradient_max_pct": -0.337,
+  "path_bounds_svy21": {
+    "min_x": 24588.862,
+    "min_y": 29210.438,
+    "max_x": 26198.151,
+    "max_y": 29410.243
+  },
+  "road_boundary": {
+    "target_road_name": "DEPOT ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 827,
+    "offroad_point_count": 42,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DEPOT WALK",
+        "point_count": 15
+      },
+      {
+        "road_name": "DEPOT CLOSE",
+        "point_count": 14
+      },
+      {
+        "road_name": "DEPOT LANE",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 394.0,
+    "offroad_chainage_max_m": 1318.0,
+    "trimmed_offroad_points": 42
+  }
+}

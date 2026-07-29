@@ -1,0 +1,58 @@
+{
+  "path_key": "ulu_pandan_road",
+  "display_name": "Ulu Pandan Road",
+  "source_project": "Ulu Pandan Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Ulu Pandan Road\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-04T20:24:01.057176+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2984.335,
+  "profile_point_count": 1403,
+  "valid_elevation_count": 1352,
+  "rejected_outlier_count": 211,
+  "rejected_step_jump_count": 783,
+  "repaired_gradient_point_count": 33,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 432,
+  "usable_gradient_completion_pct": 30.79,
+  "elevation_hit_coverage_pct": 96.36,
+  "step_jump_rejection_pct": 55.81,
+  "gradient_min_pct": -13.125,
+  "gradient_max_pct": 11.545,
+  "path_bounds_svy21": {
+    "min_x": 21104.827,
+    "min_y": 33469.387,
+    "max_x": 22210.625,
+    "max_y": 33709.993
+  },
+  "road_boundary": {
+    "target_road_name": "ULU PANDAN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1494,
+    "offroad_point_count": 91,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOLLAND ROAD",
+        "point_count": 54
+      },
+      {
+        "road_name": "PANDAN VALLEY",
+        "point_count": 36
+      },
+      {
+        "road_name": "CLEMENTI ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1214.0,
+    "trimmed_offroad_points": 91
+  }
+}

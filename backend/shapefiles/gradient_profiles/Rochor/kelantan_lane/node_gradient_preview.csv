@@ -1,0 +1,15 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+kelantan_lane,1,Kelantan Lane_Cam4_20251208_094155_772_A.jpeg,,10.231,5.116,6.0,2.414,,
+kelantan_lane,2,Kelantan Lane_Cam4_20251208_094203_336_A.jpeg,,23.76,16.996,16.0,2.129,-1.343,1.0
+kelantan_lane,3,Kelantan Lane_Cam4_20251208_094209_922_A.jpeg,,30.38,27.07,28.0,2.185,,
+kelantan_lane,4,Kelantan Lane_Cam4_20251208_094212_956_A.jpeg,,40.551,35.466,36.0,2.161,,
+kelantan_lane,5,Kelantan Lane_Cam4_20251208_094217_962_A.jpeg,,63.32,51.936,52.0,3.658,,
+kelantan_lane,6,Kelantan Lane_Cam4_20251208_094229_565_A.jpeg,,72.939,68.13,68.0,6.605,,
+kelantan_lane,7,Kelantan Lane_Cam4_20251208_094233_079_A.jpeg,,84.559,78.749,78.0,7.323,,
+kelantan_lane,8,Kelantan Lane_Cam4_20251208_094237_092_A.jpeg,,116.429,100.494,100.0,15.913,,
+kelantan_lane,9,Kelantan Lane_Cam4_20251208_094248_800_A.jpeg,,121.75,119.09,120.0,13.271,,
+kelantan_lane,10,Kelantan Lane_Cam4_20251208_094250_802_A.jpeg,,132.244,126.997,126.0,11.517,,
+kelantan_lane,11,Kelantan Lane_Cam4_20251208_094254_932_A.jpeg,,161.976,147.11,148.0,4.286,,
+kelantan_lane,12,Kelantan Lane_Cam4_20251208_094309_505_A.jpeg,,168.219,165.098,166.0,1.865,,
+kelantan_lane,13,Kelantan Lane_Cam4_20251208_094312_519_A.jpeg,,289.299,228.759,228.0,9.747,,
+kelantan_lane,14,Kelantan Lane_Cam4_20251208_094637_649_A.jpeg,,298.496,293.898,294.0,2.394,,

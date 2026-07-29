@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+carnation_drive,1,Carnation Drive_Cam4_20260105_101639_343_A.jpeg,,12.168,6.084,6.0,18.309,,
+carnation_drive,2,Carnation Drive_Cam4_20260105_101641_750_A.jpeg,,23.289,17.729,18.0,20.63,,
+carnation_drive,3,Carnation Drive_Cam4_20260105_101644_153_A.jpeg,,34.834,29.062,30.0,24.03,,
+carnation_drive,4,Carnation Drive_Cam4_20260105_101647_156_A.jpeg,,43.686,39.26,40.0,23.956,,
+carnation_drive,5,Carnation Drive_Cam4_20260105_101649_559_A.jpeg,,71.604,57.645,58.0,23.417,,
+carnation_drive,6,Carnation Drive_Cam4_20260105_101657_376_A.jpeg,,81.291,76.447,76.0,24.747,,
+carnation_drive,7,Carnation Drive_Cam4_20260105_101700_379_A.jpeg,,93.03,87.16,88.0,23.782,,
+carnation_drive,8,Carnation Drive_Cam4_20260105_101703_987_A.jpeg,,101.275,97.152,98.0,24.136,,
+carnation_drive,9,Carnation Drive_Cam4_20260105_101706_390_A.jpeg,,111.459,106.367,106.0,25.049,,
+carnation_drive,10,Carnation Drive_Cam4_20260105_101709_399_A.jpeg,,124.995,118.227,118.0,24.158,,
+carnation_drive,11,Carnation Drive_Cam4_20260105_101713_003_A.jpeg,,131.822,128.408,128.0,22.698,,
+carnation_drive,12,Carnation Drive_Cam4_20260105_101714_804_A.jpeg,,141.225,136.524,136.0,22.048,-4.479,1.0
+carnation_drive,13,Carnation Drive_Cam4_20260105_101717_210_A.jpeg,,153.022,147.124,148.0,22.254,,
+carnation_drive,14,Carnation Drive_Cam4_20260105_101720_213_A.jpeg,,165.964,159.493,160.0,21.767,,
+carnation_drive,15,Carnation Drive_Cam4_20260105_101723_818_A.jpeg,,171.481,168.722,168.0,21.182,,

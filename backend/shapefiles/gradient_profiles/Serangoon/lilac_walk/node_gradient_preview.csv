@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lilac_walk,1,Lilac Walk_Cam4_20260106_105315_093_C.jpeg,,11.691,5.845,,,,
+lilac_walk,2,Lilac Walk_Cam4_20260106_105319_299_C.jpeg,,23.187,17.439,18.0,19.026,,
+lilac_walk,3,Lilac Walk_Cam4_20260106_105324_707_C.jpeg,,30.552,26.869,26.0,18.21,,
+lilac_walk,4,Lilac Walk_Cam4_20260106_105328_310_C.jpeg,,40.069,35.31,36.0,16.812,,
+lilac_walk,5,Lilac Walk_Cam4_20260106_105332_539_C.jpeg,,49.809,44.939,44.0,16.088,-5.0,1.0
+lilac_walk,6,Lilac Walk_Cam4_20260106_105336_144_C.jpeg,,60.435,55.122,56.0,15.488,-5.625,1.0
+lilac_walk,7,Lilac Walk_Cam4_20260106_105339_164_C.jpeg,,71.524,65.98,66.0,15.013,-5.625,1.0
+lilac_walk,8,Lilac Walk_Cam4_20260106_105342_178_C.jpeg,,80.377,75.951,76.0,14.513,-5.0,1.0
+lilac_walk,9,Lilac Walk_Cam4_20260106_105344_580_C.jpeg,,90.105,85.241,86.0,13.963,-5.625,1.0
+lilac_walk,10,Lilac Walk_Cam4_20260106_105347_582_C.jpeg,,100.172,95.139,96.0,13.563,-2.5,1.0
+lilac_walk,11,Lilac Walk_Cam4_20260106_105350_467_C.jpeg,,112.075,106.124,106.0,13.363,-0.938,1.0
+lilac_walk,12,Lilac Walk_Cam4_20260106_105354_555_C.jpeg,,116.634,114.354,114.0,13.313,,
+lilac_walk,13,Lilac Walk_Cam4_20260106_105358_636_C.jpeg,,127.36,121.997,122.0,13.263,,
+lilac_walk,14,Lilac Walk_Cam4_20260106_105402_245_C.jpeg,,137.024,132.192,132.0,14.166,,
+lilac_walk,15,Lilac Walk_Cam4_20260106_105405_247_C.jpeg,,166.852,151.938,152.0,14.501,,
+lilac_walk,16,Lilac Walk_Cam4_20260106_105415_466_C.jpeg,,174.459,170.655,170.0,15.447,4.375,1.0
+lilac_walk,17,Lilac Walk_Cam4_20260106_105417_869_C.jpeg,,204.907,189.683,190.0,16.338,,

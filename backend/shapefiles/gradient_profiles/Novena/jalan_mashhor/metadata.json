@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_mashhor",
+  "display_name": "Jalan Mashhor",
+  "source_project": "Jalan Mashhor",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry6\\_projects\\Jalan Mashhor\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T08:35:31.690185+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 68.146,
+  "profile_point_count": 36,
+  "valid_elevation_count": 36,
+  "rejected_outlier_count": 3,
+  "rejected_step_jump_count": 26,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 4,
+  "usable_gradient_completion_pct": 11.11,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 72.22,
+  "gradient_min_pct": -0.842,
+  "gradient_max_pct": 1.466,
+  "path_bounds_svy21": {
+    "min_x": 28331.828,
+    "min_y": 35225.437,
+    "max_x": 28332.115,
+    "max_y": 35293.582
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN MASHHOR",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 36,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

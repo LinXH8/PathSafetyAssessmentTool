@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_arang_road,1,Bukit Arang Road_Cam4_20260112_082133_428_B.jpeg,,14.097,7.049,8.0,19.504,,
+bukit_arang_road,2,Bukit Arang Road_Cam4_20260112_082140_035_B.jpeg,,47.157,30.627,30.0,17.913,,
+bukit_arang_road,3,Bukit Arang Road_Cam4_20260112_082430_067_B.jpeg,,73.42,60.288,60.0,17.558,,

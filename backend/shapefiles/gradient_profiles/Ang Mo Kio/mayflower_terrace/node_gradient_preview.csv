@@ -1,0 +1,23 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayflower_terrace,1,Mayflower Terrace_Cam4_20251231_084346_062_C.jpeg,,11.49,5.745,,,,
+mayflower_terrace,2,Mayflower Terrace_Cam4_20251231_084350_866_C.jpeg,,36.648,24.069,26.0,20.258,,
+mayflower_terrace,3,Mayflower Terrace_Cam4_20251231_084407_687_C.jpeg,,43.203,39.925,40.0,20.708,,
+mayflower_terrace,4,Mayflower Terrace_Cam4_20251231_084410_691_C.jpeg,,54.653,48.928,48.0,20.836,,
+mayflower_terrace,5,Mayflower Terrace_Cam4_20251231_084416_097_C.jpeg,,66.221,60.437,60.0,20.678,1.562,1.0
+mayflower_terrace,6,Mayflower Terrace_Cam4_20251231_084421_502_C.jpeg,,76.837,71.529,72.0,21.565,10.938,2.0
+mayflower_terrace,7,Mayflower Terrace_Cam4_20251231_084426_307_C.jpeg,,84.176,80.506,80.0,21.932,1.25,1.0
+mayflower_terrace,8,Mayflower Terrace_Cam4_20251231_084429_313_C.jpeg,,93.1,88.638,88.0,22.036,1.719,1.0
+mayflower_terrace,9,Mayflower Terrace_Cam4_20251231_084432_916_C.jpeg,,103.029,98.065,98.0,22.301,1.696,1.0
+mayflower_terrace,10,Mayflower Terrace_Cam4_20251231_084437_591_C.jpeg,,113.567,108.298,108.0,22.001,-3.542,1.0
+mayflower_terrace,11,Mayflower Terrace_Cam4_20251231_084443_599_C.jpeg,,123.755,118.661,118.0,21.868,-0.694,1.0
+mayflower_terrace,12,Mayflower Terrace_Cam4_20251231_084449_006_C.jpeg,,133.906,128.831,128.0,22.126,,
+mayflower_terrace,13,Mayflower Terrace_Cam4_20251231_084453_178_C.jpeg,,144.717,139.311,140.0,22.818,,
+mayflower_terrace,14,Mayflower Terrace_Cam4_20251231_084458_583_C.jpeg,,155.615,150.166,150.0,22.653,,
+mayflower_terrace,15,Mayflower Terrace_Cam4_20251231_084503_387_C.jpeg,,167.504,161.559,162.0,23.465,,
+mayflower_terrace,16,Mayflower Terrace_Cam4_20251231_084510_599_C.jpeg,,172.676,170.09,170.0,23.033,,
+mayflower_terrace,17,Mayflower Terrace_Cam4_20251231_084513_603_C.jpeg,,186.673,179.674,180.0,22.576,0.443,1.0
+mayflower_terrace,18,Mayflower Terrace_Cam4_20251231_084520_211_C.jpeg,,192.765,189.719,190.0,22.747,,
+mayflower_terrace,19,Mayflower Terrace_Cam4_20251231_084522_613_C.jpeg,,242.512,217.639,218.0,22.981,,
+mayflower_terrace,20,Mayflower Terrace_Cam4_20251231_084541_239_C.jpeg,,254.342,248.427,248.0,22.416,,
+mayflower_terrace,21,Mayflower Terrace_Cam4_20251231_084546_045_C.jpeg,,265.103,259.723,260.0,21.565,,
+mayflower_terrace,22,Mayflower Terrace_Cam4_20251231_084550_120_C.jpeg,,275.924,270.514,270.0,20.332,,

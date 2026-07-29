@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+seletar_west_road_3,Seletar West Road 3,0.0,31961.229,41916.8,11.407,11.407,11.484,0.99,1.0,SELETAR WEST ROAD 3,3.495
+seletar_west_road_3,Seletar West Road 3,2.0,31960.999,41918.787,11.484,11.484,11.504,0.66,1.0,SELETAR WEST ROAD 3,1.53
+seletar_west_road_3,Seletar West Road 3,4.0,31960.769,41920.773,11.523,11.523,11.523,0.495,1.0,SELETAR WEST ROAD 3,0.436
+seletar_west_road_3,Seletar West Road 3,6.0,31960.539,41922.76,11.576,11.576,11.523,0.312,1.0,SELETAR WEST ROAD 3,2.401
+seletar_west_road_3,Seletar West Road 3,8.0,31960.308,41924.747,11.563,11.563,11.523,-0.43,1.0,SELETAR WEST ROAD 3,4.366
+seletar_west_road_3,Seletar West Road 3,10.0,31960.078,41926.733,11.494,11.494,11.529,-0.607,1.0,SELETAR WEST ROAD 3,6.331
+seletar_west_road_3,Seletar West Road 3,10.85,31959.98,41927.578,11.49,11.49,11.494,-1.034,1.0,SELETAR WEST ROAD 3,7.166

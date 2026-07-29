@@ -1,0 +1,66 @@
+{
+  "path_key": "veerasamy_road",
+  "display_name": "Veerasamy Road",
+  "source_project": "Veerasamy Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Veerasamy Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-25T16:10:09.711279+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 558.185,
+  "profile_point_count": 156,
+  "valid_elevation_count": 154,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 80,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 51,
+  "usable_gradient_completion_pct": 32.69,
+  "elevation_hit_coverage_pct": 98.72,
+  "step_jump_rejection_pct": 51.28,
+  "gradient_min_pct": -7.764,
+  "gradient_max_pct": 9.197,
+  "path_bounds_svy21": {
+    "min_x": 30191.988,
+    "min_y": 32015.483,
+    "max_x": 30373.103,
+    "max_y": 32241.027
+  },
+  "road_boundary": {
+    "target_road_name": "VEERASAMY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 281,
+    "offroad_point_count": 125,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 50
+      },
+      {
+        "road_name": "CHITTY ROAD",
+        "point_count": 28
+      },
+      {
+        "road_name": "KAMPONG KAPOR ROAD",
+        "point_count": 23
+      },
+      {
+        "road_name": "UPPER WELD ROAD",
+        "point_count": 21
+      },
+      {
+        "road_name": "NORRIS ROAD",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 490.0,
+    "trimmed_offroad_points": 125
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "seletar_terrace",
+  "display_name": "Seletar Terrace",
+  "source_project": "Seletar Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Seletar Terrace\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T06:45:46.504331+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1012.145,
+  "profile_point_count": 433,
+  "valid_elevation_count": 433,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 262,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 97,
+  "usable_gradient_completion_pct": 22.4,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 60.51,
+  "gradient_min_pct": -9.825,
+  "gradient_max_pct": 7.292,
+  "path_bounds_svy21": {
+    "min_x": 31850.655,
+    "min_y": 40321.097,
+    "max_x": 32049.987,
+    "max_y": 40504.144
+  },
+  "road_boundary": {
+    "target_road_name": "SELETAR TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 508,
+    "offroad_point_count": 75,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SELETAR CLOSE",
+        "point_count": 75
+      }
+    ],
+    "offroad_chainage_min_m": 20.0,
+    "offroad_chainage_max_m": 168.0,
+    "trimmed_offroad_points": 75
+  }
+}

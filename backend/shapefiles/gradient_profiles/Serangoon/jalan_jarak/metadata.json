@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_jarak",
+  "display_name": "Jalan Jarak",
+  "source_project": "Jalan Jarak",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Jarak\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T16:17:36.226159+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1693.188,
+  "profile_point_count": 804,
+  "valid_elevation_count": 804,
+  "rejected_outlier_count": 32,
+  "rejected_step_jump_count": 436,
+  "repaired_gradient_point_count": 13,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 205,
+  "usable_gradient_completion_pct": 25.5,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 54.23,
+  "gradient_min_pct": -11.033,
+  "gradient_max_pct": 13.151,
+  "path_bounds_svy21": {
+    "min_x": 31931.505,
+    "min_y": 40435.176,
+    "max_x": 32756.263,
+    "max_y": 40579.024
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN JARAK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 848,
+    "offroad_point_count": 44,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN PERADUN",
+        "point_count": 11
+      },
+      {
+        "road_name": "SELETAR CLOSE",
+        "point_count": 6
+      },
+      {
+        "road_name": "JALAN JITONG",
+        "point_count": 6
+      },
+      {
+        "road_name": "JALAN REDOP",
+        "point_count": 6
+      },
+      {
+        "road_name": "JALAN SELASEH",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 782.0,
+    "offroad_chainage_max_m": 1560.0,
+    "trimmed_offroad_points": 44
+  }
+}

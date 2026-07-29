@@ -1,0 +1,66 @@
+{
+  "path_key": "sin_ming_road",
+  "display_name": "Sin Ming Road",
+  "source_project": "Sin Ming Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Sin Ming Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T01:42:49.137886+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3065.321,
+  "profile_point_count": 1313,
+  "valid_elevation_count": 1313,
+  "rejected_outlier_count": 72,
+  "rejected_step_jump_count": 763,
+  "repaired_gradient_point_count": 30,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 330,
+  "usable_gradient_completion_pct": 25.13,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 58.11,
+  "gradient_min_pct": -10.139,
+  "gradient_max_pct": 11.656,
+  "path_bounds_svy21": {
+    "min_x": 28216.692,
+    "min_y": 37183.457,
+    "max_x": 28730.621,
+    "max_y": 37968.675
+  },
+  "road_boundary": {
+    "target_road_name": "SIN MING ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1534,
+    "offroad_point_count": 221,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SIN MING DRIVE",
+        "point_count": 60
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 49
+      },
+      {
+        "road_name": "JALAN MINGGU",
+        "point_count": 43
+      },
+      {
+        "road_name": "JALAN TODAK",
+        "point_count": 39
+      },
+      {
+        "road_name": "JALAN ISNIN",
+        "point_count": 22
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2558.0,
+    "trimmed_offroad_points": 221
+  }
+}

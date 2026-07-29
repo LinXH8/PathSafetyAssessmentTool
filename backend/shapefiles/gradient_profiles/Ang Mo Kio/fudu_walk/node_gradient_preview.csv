@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+fudu_walk,1,Fudu Walk_Cam4_20251231_082636_946_B.jpeg,,10.131,5.066,6.0,9.126,,
+fudu_walk,2,Fudu Walk_Cam4_20251231_082640_559_B.jpeg,,84.593,47.362,48.0,10.355,,
+fudu_walk,3,Fudu Walk_Cam4_20251231_082808_257_B.jpeg,,92.432,88.513,88.0,7.367,,
+fudu_walk,4,Fudu Walk_Cam4_20251231_082810_661_B.jpeg,,103.894,98.163,98.0,8.217,,
+fudu_walk,5,Fudu Walk_Cam4_20251231_082814_265_B.jpeg,,127.823,115.859,116.0,9.624,,
+fudu_walk,6,Fudu Walk_Cam4_20251231_082822_072_B.jpeg,,140.36,134.092,134.0,10.419,,
+fudu_walk,7,Fudu Walk_Cam4_20251231_082826_276_B.jpeg,,163.097,151.728,152.0,11.506,,
+fudu_walk,8,Fudu Walk_Cam4_20251231_082855_123_B.jpeg,,188.102,175.6,176.0,9.504,,
+fudu_walk,9,Fudu Walk_Cam4_20251231_082909_542_B.jpeg,,199.995,194.049,194.0,9.404,,

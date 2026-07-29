@@ -1,0 +1,66 @@
+{
+  "path_key": "kensington_park_road",
+  "display_name": "Kensington Park Road",
+  "source_project": "Kensington Park Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Kensington Park Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T18:35:16.694601+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1775.973,
+  "profile_point_count": 595,
+  "valid_elevation_count": 593,
+  "rejected_outlier_count": 67,
+  "rejected_step_jump_count": 346,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 139,
+  "usable_gradient_completion_pct": 23.36,
+  "elevation_hit_coverage_pct": 99.66,
+  "step_jump_rejection_pct": 58.15,
+  "gradient_min_pct": -8.317,
+  "gradient_max_pct": 7.19,
+  "path_bounds_svy21": {
+    "min_x": 31621.712,
+    "min_y": 38460.527,
+    "max_x": 31888.019,
+    "max_y": 38926.192
+  },
+  "road_boundary": {
+    "target_road_name": "KENSINGTON PARK ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 889,
+    "offroad_point_count": 294,
+    "offroad_top_road_names": [
+      {
+        "road_name": "WORTHING ROAD",
+        "point_count": 80
+      },
+      {
+        "road_name": "HYTHE ROAD",
+        "point_count": 53
+      },
+      {
+        "road_name": "FARLEIGH AVENUE",
+        "point_count": 36
+      },
+      {
+        "road_name": "PORTCHESTER AVENUE",
+        "point_count": 34
+      },
+      {
+        "road_name": "JALAN CHULEK",
+        "point_count": 33
+      }
+    ],
+    "offroad_chainage_min_m": 30.0,
+    "offroad_chainage_max_m": 1508.0,
+    "trimmed_offroad_points": 294
+  }
+}

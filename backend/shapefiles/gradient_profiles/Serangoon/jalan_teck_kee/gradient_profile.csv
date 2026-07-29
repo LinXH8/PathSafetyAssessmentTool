@@ -1,0 +1,13 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+jalan_teck_kee,Jalan Teck Kee,0.0,32510.71,37757.222,23.558,20.707,21.005,,,JALAN TECK KEE,11.884
+jalan_teck_kee,Jalan Teck Kee,2.0,32511.5,37759.059,20.707,21.005,21.154,8.81,2.0,JALAN TECK KEE,10.261
+jalan_teck_kee,Jalan Teck Kee,4.0,32512.289,37760.897,20.852,21.304,21.304,6.841,1.0,JALAN TECK KEE,8.795
+jalan_teck_kee,Jalan Teck Kee,6.0,32513.079,37762.735,21.602,21.602,21.534,,,JALAN TECK KEE,7.577
+jalan_teck_kee,Jalan Teck Kee,8.0,32513.869,37764.572,21.714,21.714,21.552,,,JALAN TECK KEE,6.743
+jalan_teck_kee,Jalan Teck Kee,10.0,32514.658,37766.41,21.534,21.534,21.572,0.475,1.0,JALAN TECK KEE,6.444
+jalan_teck_kee,Jalan Teck Kee,12.0,32515.448,37768.247,21.552,21.552,21.572,1.5,1.0,JALAN TECK KEE,6.751
+jalan_teck_kee,Jalan Teck Kee,14.0,32516.237,37770.085,21.572,21.572,21.572,1.373,1.0,JALAN TECK KEE,7.389
+jalan_teck_kee,Jalan Teck Kee,16.0,32516.777,37771.995,21.672,21.672,21.672,,,JALAN TECK KEE,7.775
+jalan_teck_kee,Jalan Teck Kee,18.0,32517.103,37773.969,21.682,21.682,21.682,,,JALAN TECK KEE,7.942
+jalan_teck_kee,Jalan Teck Kee,20.0,32517.429,37775.942,23.91,21.682,21.682,,,JALAN TECK KEE,8.109
+jalan_teck_kee,Jalan Teck Kee,20.807,32517.56,37776.739,23.365,21.682,21.682,,,JALAN TECK KEE,8.176

@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+buyong_road,1,Buyong Road_Cam4_20251204_090103_866_C.jpeg,,12.185,6.092,6.0,7.395,,
+buyong_road,2,Buyong Road_Cam4_20251204_090111_072_C.jpeg,,44.978,28.581,28.0,8.919,,
+buyong_road,3,Buyong Road_Cam4_20260107_081424_797_B.jpeg,,55.875,50.426,50.0,13.271,,
+buyong_road,4,Buyong Road_Cam4_20260107_081428_400_B.jpeg,,134.16,95.017,98.0,5.491,-0.668,1.0
+buyong_road,5,Buyong Road_Cam4_20260107_085110_942_A.jpeg,,234.72,184.44,,,,
+buyong_road,6,Buyong Road_Cam4_20260107_093536_773_A.jpeg,,246.443,240.581,,,,

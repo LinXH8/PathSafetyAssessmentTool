@@ -1,0 +1,9 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+fudu_park,1,Fudu Park_Cam4_20251231_082242_636_B.jpeg,,10.637,5.319,6.0,7.753,,
+fudu_park,2,Fudu Park_Cam4_20251231_082246_839_B.jpeg,,21.13,15.884,16.0,7.098,,
+fudu_park,3,Fudu Park_Cam4_20251231_082250_443_B.jpeg,,31.936,26.533,26.0,7.42,,
+fudu_park,4,Fudu Park_Cam4_20251231_082254_048_B.jpeg,,57.218,44.577,44.0,8.225,1.042,1.0
+fudu_park,5,Fudu Park_Cam4_20251231_082303_060_B.jpeg,,81.955,69.587,70.0,8.822,6.062,1.0
+fudu_park,6,Fudu Park_Cam4_20251231_082311_474_B.jpeg,,108.095,95.025,96.0,9.776,8.319,1.0
+fudu_park,7,Fudu Park_Cam4_20251231_082320_483_B.jpeg,,121.568,114.831,114.0,11.238,,
+fudu_park,8,Fudu Park_Cam4_20251231_082325_290_B.jpeg,,144.031,132.8,132.0,13.878,,

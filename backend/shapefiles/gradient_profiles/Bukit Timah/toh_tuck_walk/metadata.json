@@ -1,0 +1,42 @@
+{
+  "path_key": "toh_tuck_walk",
+  "display_name": "Toh Tuck Walk",
+  "source_project": "Toh Tuck Walk",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Toh Tuck Walk\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:31:55.716444+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 255.387,
+  "profile_point_count": 129,
+  "valid_elevation_count": 129,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 31,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 82,
+  "usable_gradient_completion_pct": 63.57,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 24.03,
+  "gradient_min_pct": -2.24,
+  "gradient_max_pct": 6.125,
+  "path_bounds_svy21": {
+    "min_x": 20344.866,
+    "min_y": 35454.301,
+    "max_x": 20508.374,
+    "max_y": 35536.185
+  },
+  "road_boundary": {
+    "target_road_name": "TOH TUCK WALK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 129,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "path_key": "penang_road",
+  "display_name": "Penang Road",
+  "source_project": "Penang Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Penang Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Museum_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Museum_LTA",
+  "generated_at_utc": "2026-06-24T01:17:37.908551+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2025.25,
+  "profile_point_count": 929,
+  "valid_elevation_count": 906,
+  "rejected_outlier_count": 170,
+  "rejected_step_jump_count": 768,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 57,
+  "usable_gradient_completion_pct": 6.14,
+  "elevation_hit_coverage_pct": 97.52,
+  "step_jump_rejection_pct": 82.67,
+  "gradient_min_pct": -9.27,
+  "gradient_max_pct": 13.056,
+  "path_bounds_svy21": {
+    "min_x": 28781.879,
+    "min_y": 31146.162,
+    "max_x": 29546.177,
+    "max_y": 31369.168
+  },
+  "road_boundary": {
+    "target_road_name": "PENANG ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1014,
+    "offroad_point_count": 85,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PENANG LANE",
+        "point_count": 36
+      },
+      {
+        "road_name": "OXLEY ROAD",
+        "point_count": 31
+      },
+      {
+        "road_name": "BUYONG ROAD",
+        "point_count": 12
+      },
+      {
+        "road_name": "CLEMENCEAU AVENUE",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1898.0,
+    "trimmed_offroad_points": 85
+  }
+}

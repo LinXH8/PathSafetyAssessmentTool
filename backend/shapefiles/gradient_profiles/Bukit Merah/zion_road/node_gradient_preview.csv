@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+zion_road,1,Zion Road_Cam4_20260109_080820_416_B.jpeg,,10.803,5.402,6.0,,,
+zion_road,2,Zion Road_Cam4_20260109_080824_020_B.jpeg,,23.365,17.084,18.0,,,
+zion_road,3,Zion Road_Cam4_20260109_080828_225_B.jpeg,,31.236,27.301,28.0,,,
+zion_road,4,Zion Road_Cam4_20260109_080830_631_B.jpeg,,60.192,45.714,46.0,,,
+zion_road,5,Zion Road_Cam4_20260109_080841_454_B.jpeg,,73.938,67.065,68.0,,,
+zion_road,6,Zion Road_Cam4_20260109_080847_461_B.jpeg,,410.193,242.065,242.0,5.389,,
+zion_road,7,Zion Road_Cam4_20260109_081354_416_B.jpeg,,608.457,509.325,510.0,10.188,,
+zion_road,8,Zion Road_Cam4_20260109_081502_653_B.jpeg,,645.504,626.98,626.0,3.391,1.87,1.0
+zion_road,9,Zion Road_Cam4_20260109_081519_474_B.jpeg,,654.856,650.18,650.0,2.97,,

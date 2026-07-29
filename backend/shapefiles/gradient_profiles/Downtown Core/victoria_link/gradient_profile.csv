@@ -1,0 +1,8 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+victoria_link,Victoria Link,0.0,30606.497,31459.005,6.64,6.64,6.743,-2.441,1.0,VICTORIA LINK,7.7
+victoria_link,Victoria Link,2.0,30605.083,31460.419,7.076,6.743,6.691,-1.628,1.0,VICTORIA LINK,7.518
+victoria_link,Victoria Link,4.0,30603.669,31461.833,6.845,6.845,6.645,-1.299,1.0,VICTORIA LINK,7.337
+victoria_link,Victoria Link,6.0,30602.255,31463.247,6.639,6.639,6.645,,,VICTORIA LINK,7.156
+victoria_link,Victoria Link,8.0,30600.84,31464.662,6.645,6.645,6.639,,,VICTORIA LINK,6.975
+victoria_link,Victoria Link,10.0,30599.426,31466.076,6.526,6.526,6.582,,,VICTORIA LINK,6.793
+victoria_link,Victoria Link,12.0,30598.271,31467.231,6.864,6.526,6.526,,,VICTORIA LINK,6.645

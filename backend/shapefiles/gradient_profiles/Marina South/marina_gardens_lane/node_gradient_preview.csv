@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+marina_gardens_lane,1,Cam4_20251230_093245_051_A.jpeg,,14.121,7.06,10.0,3.885,-0.625,1.0
+marina_gardens_lane,2,Cam4_20251230_093250_462_A.jpeg,,21.316,17.718,18.0,3.901,0.521,1.0

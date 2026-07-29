@@ -1,0 +1,66 @@
+{
+  "path_key": "ang_mo_kio_avenue_1",
+  "display_name": "Ang Mo Kio Avenue 1",
+  "source_project": "Ang Mo Kio Avenue 1",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Avenue 1\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-02T07:58:17.494412+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 13518.52,
+  "profile_point_count": 5378,
+  "valid_elevation_count": 1246,
+  "rejected_outlier_count": 131,
+  "rejected_step_jump_count": 912,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 1262,
+  "usable_gradient_completion_pct": 23.47,
+  "elevation_hit_coverage_pct": 23.17,
+  "step_jump_rejection_pct": 16.96,
+  "gradient_min_pct": -10.41,
+  "gradient_max_pct": 10.052,
+  "path_bounds_svy21": {
+    "min_x": 27463.797,
+    "min_y": 37503.356,
+    "max_x": 30596.69,
+    "max_y": 38903.416
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO AVENUE 1",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 6761,
+    "offroad_point_count": 1383,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANG MO KIO STREET 22",
+        "point_count": 777
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 6",
+        "point_count": 148
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 8",
+        "point_count": 122
+      },
+      {
+        "road_name": "BISHAN ROAD",
+        "point_count": 121
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 3",
+        "point_count": 61
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 13518.52,
+    "trimmed_offroad_points": 1383
+  }
+}

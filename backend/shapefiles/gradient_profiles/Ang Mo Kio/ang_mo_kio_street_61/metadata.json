@@ -1,0 +1,54 @@
+{
+  "path_key": "ang_mo_kio_street_61",
+  "display_name": "Ang Mo Kio Street 61",
+  "source_project": "Ang Mo Kio Street 61",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Street 61\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T15:54:25.945876+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2007.358,
+  "profile_point_count": 742,
+  "valid_elevation_count": 737,
+  "rejected_outlier_count": 119,
+  "rejected_step_jump_count": 410,
+  "repaired_gradient_point_count": 8,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 222,
+  "usable_gradient_completion_pct": 29.92,
+  "elevation_hit_coverage_pct": 99.33,
+  "step_jump_rejection_pct": 55.26,
+  "gradient_min_pct": -10.473,
+  "gradient_max_pct": 12.25,
+  "path_bounds_svy21": {
+    "min_x": 28748.185,
+    "min_y": 39957.455,
+    "max_x": 29217.823,
+    "max_y": 40544.84
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO STREET 61",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1005,
+    "offroad_point_count": 263,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ANG MO KIO AVENUE 6",
+        "point_count": 211
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 5",
+        "point_count": 52
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2008.0,
+    "trimmed_offroad_points": 263
+  }
+}

@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+charlton_road,1,Charlton Road_Cam4_20260110_142735_711_C.jpeg,,12.095,6.048,6.0,22.598,,
+charlton_road,2,Charlton Road_Cam4_20260110_142740_556_C.jpeg,,69.801,40.948,40.0,23.041,,
+charlton_road,3,Charlton Road_Cam4_20260130_084938_217_A.jpeg,,77.147,73.474,74.0,23.156,,
+charlton_road,4,Charlton Road_Cam4_20260130_084940_619_A.jpeg,,105.564,91.355,92.0,25.262,,
+charlton_road,5,Charlton Road_Cam4_20260130_084949_033_A.jpeg,,133.391,119.478,120.0,22.925,,
+charlton_road,6,Charlton Road_Cam4_20260130_085236_102_A.jpeg,,159.813,146.602,146.0,24.451,0.0,1.0
+charlton_road,7,Charlton Road_Cam4_20260130_085245_699_A.jpeg,,169.775,164.794,164.0,24.451,0.0,1.0
+charlton_road,8,Charlton Road_Cam4_20260130_085249_308_A.jpeg,,178.99,174.383,174.0,24.451,0.0,1.0
+charlton_road,9,Charlton Road_Cam4_20260130_085252_912_A.jpeg,,189.402,184.196,184.0,24.451,0.0,1.0
+charlton_road,10,Charlton Road_Cam4_20260130_085256_514_A.jpeg,,246.769,218.085,216.0,,,
+charlton_road,11,Charlton Road_Cam4_20260130_091335_308_A.jpeg,,255.317,251.043,252.0,,,
+charlton_road,12,Charlton Road_Cam4_20260130_091337_710_A.jpeg,,266.859,261.088,262.0,,,
+charlton_road,13,Charlton Road_Cam4_20260130_091340_719_A.jpeg,,275.856,271.357,272.0,,,
+charlton_road,14,Charlton Road_Cam4_20260130_091343_121_A.jpeg,,287.707,281.781,282.0,,,
+charlton_road,15,Charlton Road_Cam4_20260130_091346_724_A.jpeg,,295.762,291.734,292.0,,,
+charlton_road,16,Charlton Road_Cam4_20260130_091349_129_A.jpeg,,326.564,311.163,312.0,,,
+charlton_road,17,Charlton Road_Cam4_20260130_091359_349_A.jpeg,,348.452,337.508,338.0,,,
+charlton_road,18,Charlton Road_Cam4_20260130_091405_962_A.jpeg,,360.552,354.502,354.0,,,
+charlton_road,19,Charlton Road_Cam4_20260130_091409_000_A.jpeg,,368.098,364.325,364.0,,,
+charlton_road,20,Charlton Road_Cam4_20260130_091410_804_A.jpeg,,377.48,372.789,372.0,,,
+charlton_road,21,Charlton Road_Cam4_20260130_091413_235_A.jpeg,,386.943,382.212,382.0,,,
+charlton_road,22,Charlton Road_Cam4_20260130_091418_082_A.jpeg,,393.561,390.252,390.0,,,
+charlton_road,23,Charlton Road_Cam4_20260130_091530_962_A.jpeg,,405.502,399.532,400.0,,,
+charlton_road,24,Charlton Road_Cam4_20260130_091533_965_A.jpeg,,416.758,411.13,412.0,,,

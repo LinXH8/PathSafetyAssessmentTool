@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+merbau_road,1,Cam4_20260107_080854_728_C.jpeg,,13.403,6.702,6.0,5.271,,
+merbau_road,2,Cam4_20260107_080902_538_C.jpeg,,24.14,18.772,18.0,4.011,,
+merbau_road,3,Cam4_20260107_080906_742_C.jpeg,,30.85,27.495,28.0,3.336,,
+merbau_road,4,Cam4_20260107_080909_746_C.jpeg,,42.242,36.546,36.0,3.345,1.839,1.0
+merbau_road,5,Cam4_20260107_080915_155_C.jpeg,,49.359,45.8,46.0,3.133,-1.185,1.0
+merbau_road,6,Cam4_20260107_080918_158_C.jpeg,,182.645,116.002,116.0,5.229,,
+merbau_road,7,Cam4_20260107_081253_263_C.jpeg,,194.875,188.76,,,,
+merbau_road,8,Cam4_20260107_081310_685_C.jpeg,,221.396,208.135,,,,
+merbau_road,9,Cam4_20260107_081337_117_C.jpeg,,227.492,224.444,,,,
+merbau_road,10,Cam4_20260107_081340_123_C.jpeg,,258.794,243.143,,,,
+merbau_road,11,Cam4_20260107_081403_548_C.jpeg,,272.35,265.572,,,,
+merbau_road,12,Cam4_20260107_081410_754_C.jpeg,,277.879,275.115,,,,
+merbau_road,13,Cam4_20260107_081413_761_C.jpeg,,287.886,282.883,,,,
+merbau_road,14,Cam4_20260107_081422_773_C.jpeg,,299.942,293.914,,,,
+merbau_road,15,Cam4_20260107_081429_382_C.jpeg,,324.693,312.317,,,,
+merbau_road,16,Cam4_20260107_081442_596_C.jpeg,,337.053,330.873,,,,
+merbau_road,17,Cam4_20260107_081452_806_C.jpeg,,360.474,348.763,,,,
+merbau_road,18,Cam4_20260107_081506_620_C.jpeg,,371.917,366.195,,,,

@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_pemimpin",
+  "display_name": "Jalan Pemimpin",
+  "source_project": "Jalan Pemimpin",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Pemimpin\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T01:09:51.002643+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2128.045,
+  "profile_point_count": 986,
+  "valid_elevation_count": 986,
+  "rejected_outlier_count": 58,
+  "rejected_step_jump_count": 588,
+  "repaired_gradient_point_count": 18,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 263,
+  "usable_gradient_completion_pct": 26.67,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 59.63,
+  "gradient_min_pct": -12.561,
+  "gradient_max_pct": 11.655,
+  "path_bounds_svy21": {
+    "min_x": 28833.069,
+    "min_y": 36674.107,
+    "max_x": 29169.58,
+    "max_y": 37359.101
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN PEMIMPIN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1066,
+    "offroad_point_count": 80,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PEMIMPIN DRIVE",
+        "point_count": 47
+      },
+      {
+        "road_name": "PEMIMPIN PLACE",
+        "point_count": 18
+      },
+      {
+        "road_name": "CLOVER AVENUE",
+        "point_count": 6
+      },
+      {
+        "road_name": "CLOVER WAY",
+        "point_count": 5
+      },
+      {
+        "road_name": "JALAN BINCHANG",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 484.0,
+    "offroad_chainage_max_m": 1302.0,
+    "trimmed_offroad_points": 80
+  }
+}

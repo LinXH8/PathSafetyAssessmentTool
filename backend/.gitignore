@@ -29,6 +29,18 @@ data/
 models/
 shapefiles/
 
+# Exception: promoted road gradient profiles are the deliverable of the gradient
+# workflow (see .clinerules/gradient-runner.md) and are shared with the team.
+# Git will not descend into an excluded directory, so re-include the parent
+# first, then re-exclude everything in it except gradient_profiles/.
+# This mirrors the same exception in the repo-root .gitignore; a nested
+# .gitignore takes precedence for paths under backend/, so both are needed.
+!shapefiles/
+shapefiles/*
+!shapefiles/gradient_profiles/
+# ... and keep the per-road build logs, which *.log above would otherwise drop
+!shapefiles/gradient_profiles/**/*.log
+
 # Temporary files
 *.tmp
 *.bak

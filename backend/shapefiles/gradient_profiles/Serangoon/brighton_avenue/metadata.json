@@ -1,0 +1,58 @@
+{
+  "path_key": "brighton_avenue",
+  "display_name": "Brighton Avenue",
+  "source_project": "Brighton Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Brighton Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-20T06:47:46.306682+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 965.166,
+  "profile_point_count": 388,
+  "valid_elevation_count": 388,
+  "rejected_outlier_count": 24,
+  "rejected_step_jump_count": 110,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 233,
+  "usable_gradient_completion_pct": 60.05,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 28.35,
+  "gradient_min_pct": -9.966,
+  "gradient_max_pct": 11.572,
+  "path_bounds_svy21": {
+    "min_x": 32210.925,
+    "min_y": 37880.711,
+    "max_x": 32486.614,
+    "max_y": 38293.165
+  },
+  "road_boundary": {
+    "target_road_name": "BRIGHTON AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 484,
+    "offroad_point_count": 96,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PLANTATION AVENUE",
+        "point_count": 78
+      },
+      {
+        "road_name": "ST. HELIER'S AVENUE",
+        "point_count": 12
+      },
+      {
+        "road_name": "MARLENE AVENUE",
+        "point_count": 6
+      }
+    ],
+    "offroad_chainage_min_m": 268.0,
+    "offroad_chainage_max_m": 846.0,
+    "trimmed_offroad_points": 96
+  }
+}

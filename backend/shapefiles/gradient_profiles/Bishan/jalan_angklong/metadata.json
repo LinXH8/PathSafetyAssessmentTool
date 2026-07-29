@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_angklong",
+  "display_name": "Jalan Angklong",
+  "source_project": "Jalan Angklong",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Angklong\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T03:02:11.476702+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 135.637,
+  "profile_point_count": 69,
+  "valid_elevation_count": 69,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 22,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 35,
+  "usable_gradient_completion_pct": 50.72,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 31.88,
+  "gradient_min_pct": -5.75,
+  "gradient_max_pct": 9.405,
+  "path_bounds_svy21": {
+    "min_x": 27470.844,
+    "min_y": 38309.749,
+    "max_x": 27563.621,
+    "max_y": 38346.14
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN ANGKLONG",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 69,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

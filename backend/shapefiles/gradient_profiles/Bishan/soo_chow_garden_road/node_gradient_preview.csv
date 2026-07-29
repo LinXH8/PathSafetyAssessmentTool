@@ -1,0 +1,11 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+soo_chow_garden_road,1,Soo Chow Garden Road_Cam4_20260105_102444_620_A.jpeg,,12.024,6.012,6.0,30.086,,
+soo_chow_garden_road,2,Soo Chow Garden Road_Cam4_20260105_102449_430_A.jpeg,,36.663,24.343,24.0,30.834,,
+soo_chow_garden_road,3,Soo Chow Garden Road_Cam4_20260105_102458_443_A.jpeg,,105.682,71.172,72.0,26.836,,
+soo_chow_garden_road,4,Soo Chow Garden Road_Cam4_20260105_102623_055_A.jpeg,,114.176,109.929,110.0,24.206,,
+soo_chow_garden_road,5,Soo Chow Garden Road_Cam4_20260105_102625_458_A.jpeg,,123.74,118.958,118.0,23.084,,
+soo_chow_garden_road,6,Soo Chow Garden Road_Cam4_20260105_102627_861_A.jpeg,,134.225,128.983,128.0,21.713,,
+soo_chow_garden_road,7,Soo Chow Garden Road_Cam4_20260105_102630_866_A.jpeg,,226.995,180.61,180.0,17.945,,
+soo_chow_garden_road,8,Soo Chow Garden Road_Cam4_20260105_102720_135_A.jpeg,,234.574,230.785,230.0,12.654,,
+soo_chow_garden_road,9,Soo Chow Garden Road_Cam4_20260105_102721_941_A.jpeg,,266.348,250.461,250.0,11.379,0.328,1.0
+soo_chow_garden_road,10,Soo Chow Garden Road_Cam4_20260105_102729_151_A.jpeg,,274.077,270.213,270.0,11.024,,

@@ -1,0 +1,42 @@
+{
+  "path_key": "trevose_place",
+  "display_name": "Trevose Place",
+  "source_project": "Trevose Place",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry10\\_projects\\Trevose Place\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-13T01:38:35.434626+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 58.199,
+  "profile_point_count": 31,
+  "valid_elevation_count": 31,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 19,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 6,
+  "usable_gradient_completion_pct": 19.35,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.29,
+  "gradient_min_pct": 0.0,
+  "gradient_max_pct": 5.063,
+  "path_bounds_svy21": {
+    "min_x": 26625.098,
+    "min_y": 34416.742,
+    "max_x": 26664.359,
+    "max_y": 34459.703
+  },
+  "road_boundary": {
+    "target_road_name": "TREVOSE PLACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 31,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "path_key": "ang_mo_kio_rise",
+  "display_name": "Ang Mo Kio Rise",
+  "source_project": "Ang Mo Kio Rise",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Rise\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T15:11:08.192998+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 30.931,
+  "profile_point_count": 17,
+  "valid_elevation_count": 17,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 1,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 16,
+  "usable_gradient_completion_pct": 94.12,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 5.88,
+  "gradient_min_pct": -4.875,
+  "gradient_max_pct": 2.047,
+  "path_bounds_svy21": {
+    "min_x": 27949.42,
+    "min_y": 38858.234,
+    "max_x": 27975.879,
+    "max_y": 38867.74
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO RISE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 17,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

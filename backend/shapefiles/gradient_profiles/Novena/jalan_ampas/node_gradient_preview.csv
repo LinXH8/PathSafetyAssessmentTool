@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_ampas,1,,JALAN AMPAS,111.17,55.585,56.0,1.818,,
+jalan_ampas,2,,JALAN AMPAS,132.252,177.296,178.0,4.439,,
+jalan_ampas,3,,JALAN AMPAS,191.098,471.223,472.0,12.836,,

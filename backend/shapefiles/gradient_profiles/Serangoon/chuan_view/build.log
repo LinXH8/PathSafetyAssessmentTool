@@ -1,0 +1,25 @@
+project=Chuan View
+path_key=chuan_view
+lidar_bundle=Serangoon
+C:\Users\Alaster\miniconda3\envs\psat\Lib\site-packages\pyogrio\core.py:35: RuntimeWarning: Could not detect GDAL data files.  Set GDAL_DATA environment variable to the correct path.
+  _init_gdal_data()
+
+Road boundary check:
+  target: CHUAN VIEW
+  off-road points: 7/202
+    - CHUAN PLACE: 4
+    - CHUAN DRIVE: 3
+  trimmed off-road points: 7
+  [1/13] 20240805_Serangoon_02_Track27.laz (85 samples)
+  [2/13] 20240805_Serangoon_02_Track28.laz (65 samples)
+  [3/13] 20240805_Serangoon_02_Track41.laz (22 samples)
+  [4/13] 20240805_Serangoon_02_Track69.laz (36 samples)
+  [5/13] 20240808_Serangoon_03_Track30.laz (28 samples)
+  [6/13] 20240808_Serangoon_03_Track69.laz (122 samples)
+  [7/13] 20240808_Serangoon_03_Track71.laz (91 samples)
+  [8/13] 20240808_Serangoon_03_Track73.laz (95 samples)
+  [9/13] 20240808_Serangoon_03_Track74.laz (126 samples)
+  [10/13] 20240808_Serangoon_03_Track78.laz (195 samples)
+  [11/13] 20240808_Serangoon_03_Track80.laz (30 samples)
+  [12/13] 20240808_Serangoon_03_Track83.laz (14 samples)
+  [13/13] 20240808_Serangoon_03_Track88.laz (25 samples)

@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_klapa",
+  "display_name": "Jalan Klapa",
+  "source_project": "Jalan Klapa",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Klapa\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T14:42:01.458391+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 191.946,
+  "profile_point_count": 84,
+  "valid_elevation_count": 84,
+  "rejected_outlier_count": 12,
+  "rejected_step_jump_count": 52,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 18,
+  "usable_gradient_completion_pct": 21.43,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 61.9,
+  "gradient_min_pct": -10.06,
+  "gradient_max_pct": 3.991,
+  "path_bounds_svy21": {
+    "min_x": 30916.498,
+    "min_y": 31808.76,
+    "max_x": 30971.72,
+    "max_y": 31869.862
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN KLAPA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 97,
+    "offroad_point_count": 13,
+    "offroad_top_road_names": [
+      {
+        "road_name": "VICTORIA STREET",
+        "point_count": 13
+      }
+    ],
+    "offroad_chainage_min_m": 26.0,
+    "offroad_chainage_max_m": 50.0,
+    "trimmed_offroad_points": 13
+  }
+}

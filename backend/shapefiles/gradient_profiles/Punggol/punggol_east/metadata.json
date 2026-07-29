@@ -1,0 +1,66 @@
+{
+  "path_key": "punggol_east",
+  "display_name": "Punggol East",
+  "source_project": "Punggol East",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Punggol East\\geo_data.gpkg",
+  "lidar_bundle": "Punggol",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Punggol",
+  "generated_at_utc": "2026-06-01T05:28:13.139894+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 7415.282,
+  "profile_point_count": 2537,
+  "valid_elevation_count": 2352,
+  "rejected_outlier_count": 303,
+  "rejected_step_jump_count": 1490,
+  "repaired_gradient_point_count": 20,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 605,
+  "usable_gradient_completion_pct": 23.85,
+  "elevation_hit_coverage_pct": 92.71,
+  "step_jump_rejection_pct": 58.73,
+  "gradient_min_pct": -18.02,
+  "gradient_max_pct": 13.073,
+  "path_bounds_svy21": {
+    "min_x": 36850.73,
+    "min_y": 41299.849,
+    "max_x": 37735.191,
+    "max_y": 42538.019
+  },
+  "road_boundary": {
+    "target_road_name": "PUNGGOL EAST",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 3709,
+    "offroad_point_count": 1172,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PUNGGOL CENTRAL",
+        "point_count": 578
+      },
+      {
+        "road_name": "PASIR RIS INDUSTRIAL DRIVE 1",
+        "point_count": 195
+      },
+      {
+        "road_name": "PUNGGOL DRIVE",
+        "point_count": 144
+      },
+      {
+        "road_name": "TEBING LANE",
+        "point_count": 122
+      },
+      {
+        "road_name": "PUNGGOL FIELD",
+        "point_count": 107
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 7416.0,
+    "trimmed_offroad_points": 1172
+  }
+}

@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mayflower_drive,1,Mayflower Drive_Cam4_20251231_082352_553_C.jpeg,,10.906,5.453,6.0,30.136,-4.286,1.0
+mayflower_drive,2,Mayflower Drive_Cam4_20251231_082357_960_C.jpeg,,24.048,17.477,18.0,29.452,,
+mayflower_drive,3,Mayflower Drive_Cam4_20251231_082403_967_C.jpeg,,33.067,28.558,28.0,28.707,,
+mayflower_drive,4,Mayflower Drive_Cam4_20251231_082408_771_C.jpeg,,40.52,36.793,36.0,27.349,,
+mayflower_drive,5,Mayflower Drive_Cam4_20251231_082412_375_C.jpeg,,50.72,45.62,46.0,25.831,-12.5,2.0
+mayflower_drive,6,Mayflower Drive_Cam4_20251231_082417_180_C.jpeg,,59.953,55.336,56.0,24.531,-9.375,2.0
+mayflower_drive,7,Mayflower Drive_Cam4_20251231_082421_385_C.jpeg,,70.851,65.402,66.0,23.906,-8.438,1.0
+mayflower_drive,8,Mayflower Drive_Cam4_20251231_082426_791_C.jpeg,,80.353,75.602,76.0,23.081,-8.125,1.0
+mayflower_drive,9,Mayflower Drive_Cam4_20251231_082431_595_C.jpeg,,90.353,85.353,86.0,22.531,-0.625,1.0
+mayflower_drive,10,Mayflower Drive_Cam4_20251231_082436_398_C.jpeg,,151.691,121.022,122.0,24.381,,
+mayflower_drive,11,Mayflower Drive_Cam4_20251231_083102_559_C.jpeg,,177.471,164.581,164.0,28.868,,
+mayflower_drive,12,Mayflower Drive_Cam4_20251231_083125_298_C.jpeg,,189.795,183.633,,,,
+mayflower_drive,13,Mayflower Drive_Cam4_20251231_083132_507_C.jpeg,,197.08,193.438,,,,

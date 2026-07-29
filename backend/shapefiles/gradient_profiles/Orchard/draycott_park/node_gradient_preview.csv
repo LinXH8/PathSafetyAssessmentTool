@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+draycott_park,1,Draycott Park_Cam4_20251203_074816_933_C.jpeg,,12.298,6.149,6.0,,,
+draycott_park,2,Draycott Park_Cam4_20251203_074819_937_C.jpeg,,272.178,142.238,142.0,,,
+draycott_park,3,Draycott Park_Cam4_20251204_094141_763_B.jpeg,,279.406,275.792,276.0,26.188,0.0,1.0
+draycott_park,4,Draycott Park_Cam4_20251204_094143_566_B.jpeg,,311.924,295.665,296.0,,,
+draycott_park,5,Draycott Park_Cam4_20251204_094148_972_B.jpeg,,320.106,316.015,316.0,,,
+draycott_park,6,Draycott Park_Cam4_20251204_094150_790_B.jpeg,,333.362,326.734,326.0,,,
+draycott_park,7,Draycott Park_Cam4_20251204_094153_796_B.jpeg,,342.804,338.083,338.0,,,
+draycott_park,8,Draycott Park_Cam4_20251204_094156_199_B.jpeg,,351.602,347.203,348.0,,,
+draycott_park,9,Draycott Park_Cam4_20251204_094158_600_B.jpeg,,522.085,436.843,436.0,,,
+draycott_park,10,Draycott Park_Cam4_20251204_094345_761_B.jpeg,,531.487,526.786,526.0,,,
+draycott_park,11,Draycott Park_Cam4_20251204_094349_965_B.jpeg,,560.056,545.772,546.0,,,
+draycott_park,12,Draycott Park_Cam4_20251204_094403_783_B.jpeg,,572.239,566.147,566.0,,,
+draycott_park,13,Draycott Park_Cam4_20251204_094411_019_B.jpeg,,580.274,576.256,576.0,,,
+draycott_park,14,Draycott Park_Cam4_20251204_094415_827_B.jpeg,,607.948,594.111,594.0,,,
+draycott_park,15,Draycott Park_Cam4_20251204_094432_051_B.jpeg,,616.704,612.326,612.0,,,
+draycott_park,16,Draycott Park_Cam4_20251204_094436_906_B.jpeg,,630.441,623.573,624.0,,,
+draycott_park,17,Draycott Park_Cam4_20251204_094444_733_B.jpeg,,637.442,633.941,634.0,,,
+draycott_park,18,Draycott Park_Cam4_20251204_094448_943_B.jpeg,,664.676,651.059,652.0,,,
+draycott_park,19,Draycott Park_Cam4_20251204_094503_363_B.jpeg,,710.801,687.738,688.0,,,
+draycott_park,20,Draycott Park_Cam4_20251204_094524_414_B.jpeg,,720.063,715.432,716.0,,,
+draycott_park,21,Draycott Park_Cam4_20251204_094528_031_B.jpeg,,733.452,726.757,726.0,26.188,,
+draycott_park,22,Draycott Park_Cam4_20251204_094533_469_B.jpeg,,758.619,746.035,746.0,26.188,0.0,1.0
+draycott_park,23,Draycott Park_Cam4_20251204_094607_057_B.jpeg,,771.1,764.859,764.0,25.761,,
+draycott_park,24,Draycott Park_Cam4_20251204_094736_288_B.jpeg,,798.773,784.936,784.0,24.264,0.0,1.0
+draycott_park,25,Draycott Park_Cam4_20251204_094839_511_B.jpeg,,807.069,802.921,802.0,24.264,0.0,1.0

@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+york_place,1,York Place_Cam4_20260203_083453_862_B.jpeg,,11.538,5.769,6.0,6.363,,
+york_place,2,York Place_Cam4_20260203_083457_466_B.jpeg,,24.282,17.91,18.0,7.553,,
+york_place,3,York Place_Cam4_20260203_083501_068_B.jpeg,,30.288,27.285,28.0,8.067,,
+york_place,4,York Place_Cam4_20260203_083502_871_B.jpeg,,40.741,35.514,36.0,7.99,,
+york_place,5,York Place_Cam4_20260203_083506_477_B.jpeg,,53.895,47.318,48.0,6.821,,

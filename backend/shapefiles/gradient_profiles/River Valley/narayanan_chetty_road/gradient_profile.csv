@@ -1,0 +1,24 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+narayanan_chetty_road,Narayanan Chetty Road,0.0,28538.536,30485.861,4.208,3.815,4.091,,,NARAYANAN CHETTY ROAD,11.321
+narayanan_chetty_road,Narayanan Chetty Road,2.0,28540.444,30486.462,3.815,4.091,4.229,,,NARAYANAN CHETTY ROAD,9.991
+narayanan_chetty_road,Narayanan Chetty Road,4.0,28542.351,30487.064,3.825,4.367,4.367,,,NARAYANAN CHETTY ROAD,8.66
+narayanan_chetty_road,Narayanan Chetty Road,6.0,28544.259,30487.665,3.753,4.644,4.644,,,NARAYANAN CHETTY ROAD,7.33
+narayanan_chetty_road,Narayanan Chetty Road,8.0,28546.166,30488.266,4.308,4.79,4.79,,,NARAYANAN CHETTY ROAD,6.0
+narayanan_chetty_road,Narayanan Chetty Road,10.0,28548.074,30488.867,7.79,4.937,4.79,,,NARAYANAN CHETTY ROAD,4.67
+narayanan_chetty_road,Narayanan Chetty Road,12.0,28549.74,30489.82,7.815,4.816,4.79,,,NARAYANAN CHETTY ROAD,3.727
+narayanan_chetty_road,Narayanan Chetty Road,14.0,28550.987,30491.383,11.545,4.696,4.696,,,NARAYANAN CHETTY ROAD,3.457
+narayanan_chetty_road,Narayanan Chetty Road,16.0,28552.234,30492.947,14.537,4.575,4.575,,,NARAYANAN CHETTY ROAD,3.188
+narayanan_chetty_road,Narayanan Chetty Road,18.0,28553.481,30494.511,11.584,4.454,4.454,,,NARAYANAN CHETTY ROAD,2.918
+narayanan_chetty_road,Narayanan Chetty Road,20.0,28554.728,30496.074,7.537,4.334,4.334,,,NARAYANAN CHETTY ROAD,2.648
+narayanan_chetty_road,Narayanan Chetty Road,22.0,28553.477,30494.795,11.546,4.213,4.213,,,NARAYANAN CHETTY ROAD,3.067
+narayanan_chetty_road,Narayanan Chetty Road,24.0,28552.087,30493.357,15.115,4.092,4.092,,,NARAYANAN CHETTY ROAD,3.524
+narayanan_chetty_road,Narayanan Chetty Road,26.0,28550.697,30491.919,11.071,3.971,3.971,,,NARAYANAN CHETTY ROAD,3.981
+narayanan_chetty_road,Narayanan Chetty Road,28.0,28549.307,30490.482,7.922,3.851,3.851,,,NARAYANAN CHETTY ROAD,4.438
+narayanan_chetty_road,Narayanan Chetty Road,30.0,28547.917,30489.044,7.545,3.73,3.73,,,NARAYANAN CHETTY ROAD,4.896
+narayanan_chetty_road,Narayanan Chetty Road,32.0,28546.526,30487.606,3.921,3.609,3.609,,,NARAYANAN CHETTY ROAD,5.353
+narayanan_chetty_road,Narayanan Chetty Road,34.0,28545.136,30486.168,3.196,3.488,3.488,,,NARAYANAN CHETTY ROAD,5.81
+narayanan_chetty_road,Narayanan Chetty Road,36.0,28543.746,30484.73,3.368,3.368,3.368,,,NARAYANAN CHETTY ROAD,6.267
+narayanan_chetty_road,Narayanan Chetty Road,38.0,28542.356,30483.292,3.24,3.24,3.24,,,NARAYANAN CHETTY ROAD,6.724
+narayanan_chetty_road,Narayanan Chetty Road,40.0,28540.966,30481.855,3.211,3.211,3.211,-3.754,1.0,NARAYANAN CHETTY ROAD,7.182
+narayanan_chetty_road,Narayanan Chetty Road,42.0,28539.576,30480.417,3.067,3.067,3.139,-2.879,1.0,NARAYANAN CHETTY ROAD,7.639
+narayanan_chetty_road,Narayanan Chetty Road,44.0,28538.799,30479.614,2.871,2.871,3.067,-3.58,1.0,NARAYANAN CHETTY ROAD,7.894

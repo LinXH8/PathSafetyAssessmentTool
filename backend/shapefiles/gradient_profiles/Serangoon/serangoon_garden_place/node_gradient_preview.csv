@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_garden_place,1,Serangoon Garden Place_Cam4_20260202_093101_466_B.jpeg,,11.67,5.835,,,,
+serangoon_garden_place,2,Serangoon Garden Place_Cam4_20260202_093104_467_B.jpeg,,23.077,17.374,,,,
+serangoon_garden_place,3,Serangoon Garden Place_Cam4_20260202_093108_673_B.jpeg,,46.421,34.749,34.0,10.613,0.091,1.0
+serangoon_garden_place,4,Serangoon Garden Place_Cam4_20260202_093115_897_B.jpeg,,59.239,52.83,52.0,10.824,,
+serangoon_garden_place,5,Serangoon Garden Place_Cam4_20260202_093120_704_B.jpeg,,94.191,76.715,76.0,11.303,,

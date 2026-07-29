@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tai_hwan_grove,1,Tai Hwan Grove_Cam4_20260202_083801_080_A.jpeg,,7.617,3.809,4.0,10.461,,
+tai_hwan_grove,2,Tai Hwan Grove_Cam4_20260202_083811_264_A.jpeg,,71.726,39.671,40.0,8.424,0.325,1.0
+tai_hwan_grove,3,Tai Hwan Grove_Cam4_20260202_084023_751_A.jpeg,,83.122,77.424,78.0,8.599,2.791,1.0
+tai_hwan_grove,4,Tai Hwan Grove_Cam4_20260202_084027_955_A.jpeg,,95.032,89.077,90.0,9.064,3.231,1.0
+tai_hwan_grove,5,Tai Hwan Grove_Cam4_20260202_084032_760_A.jpeg,,115.133,105.083,106.0,9.538,2.434,1.0
+tai_hwan_grove,6,Tai Hwan Grove_Cam4_20260202_084054_388_A.jpeg,,125.0,120.067,120.0,9.762,,
+tai_hwan_grove,7,Tai Hwan Grove_Cam4_20260202_084058_591_A.jpeg,,137.082,131.041,132.0,12.076,,
+tai_hwan_grove,8,Tai Hwan Grove_Cam4_20260202_084102_799_A.jpeg,,147.37,142.226,142.0,13.001,,
+tai_hwan_grove,9,Tai Hwan Grove_Cam4_20260202_084106_403_A.jpeg,,154.778,151.074,152.0,11.446,,
+tai_hwan_grove,10,Tai Hwan Grove_Cam4_20260202_084108_804_A.jpeg,,185.753,170.265,170.0,10.308,,
+tai_hwan_grove,11,Tai Hwan Grove_Cam4_20260202_084119_013_A.jpeg,,205.322,195.537,196.0,10.766,,
+tai_hwan_grove,12,Tai Hwan Grove_Cam4_20260202_084128_625_A.jpeg,,217.415,211.368,212.0,10.191,,
+tai_hwan_grove,13,Tai Hwan Grove_Cam4_20260202_084134_030_A.jpeg,,223.089,220.252,220.0,10.055,-0.8,1.0
+tai_hwan_grove,14,Tai Hwan Grove_Cam4_20260202_084135_831_A.jpeg,,296.541,259.815,260.0,17.104,-10.064,2.0
+tai_hwan_grove,15,Tai Hwan Grove_Cam4_20260202_084210_078_A.jpeg,,320.777,308.659,308.0,11.308,,

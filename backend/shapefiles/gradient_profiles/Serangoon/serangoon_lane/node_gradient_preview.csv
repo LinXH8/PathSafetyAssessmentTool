@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_lane,1,Serangoon Lane_Cam4_20260112_081723_492_A.jpeg,,11.611,5.806,6.0,8.045,,
+serangoon_lane,2,Serangoon Lane_Cam4_20260112_081728_298_A.jpeg,,22.187,16.899,16.0,9.146,,
+serangoon_lane,3,Serangoon Lane_Cam4_20260112_081732_501_A.jpeg,,32.909,27.548,28.0,9.963,,
+serangoon_lane,4,Serangoon Lane_Cam4_20260112_081736_707_A.jpeg,,44.615,38.762,38.0,11.528,,
+serangoon_lane,5,Serangoon Lane_Cam4_20260112_081741_512_A.jpeg,,102.457,73.536,74.0,9.987,,
+serangoon_lane,6,Serangoon Lane_Cam4_20260112_084742_324_A.jpeg,,113.366,107.911,,,,
+serangoon_lane,7,Serangoon Lane_Cam4_20260112_084746_529_A.jpeg,,142.893,128.13,128.0,11.386,,
+serangoon_lane,8,Serangoon Lane_Cam4_20260112_084841_193_A.jpeg,,153.571,148.232,148.0,10.099,,
+serangoon_lane,9,Serangoon Lane_Cam4_20260112_084845_950_A.jpeg,,177.303,165.437,166.0,9.072,,
+serangoon_lane,10,Serangoon Lane_Cam4_20260112_084859_165_A.jpeg,,187.95,182.627,182.0,8.373,3.1,1.0
+serangoon_lane,11,Serangoon Lane_Cam4_20260112_084905_781_A.jpeg,,199.902,193.926,192.0,8.55,0.379,1.0
+serangoon_lane,12,Serangoon Lane_Cam4_20260112_084911_187_A.jpeg,,210.533,205.217,,,,

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+whampoa_drive,1,,WHAMPOA DRIVE,816.537,408.269,408.0,3.471,,
+whampoa_drive,2,,WHAMPOA DRIVE,42.535,837.805,838.0,8.469,,
+whampoa_drive,3,,WHAMPOA DRIVE,38.163,920.689,920.0,8.643,,

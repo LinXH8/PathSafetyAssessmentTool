@@ -1,0 +1,66 @@
+{
+  "path_key": "still_road",
+  "display_name": "Still Road",
+  "source_project": "Still Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Still Road\\geo_data.gpkg",
+  "lidar_bundle": "Marine Parade",
+  "lidar_root": "E:\\LIDAR\\Marine Parade",
+  "generated_at_utc": "2026-06-25T19:15:46.570386+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8521.39,
+  "profile_point_count": 2999,
+  "valid_elevation_count": 1966,
+  "rejected_outlier_count": 307,
+  "rejected_step_jump_count": 1270,
+  "repaired_gradient_point_count": 19,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 590,
+  "usable_gradient_completion_pct": 19.67,
+  "elevation_hit_coverage_pct": 65.56,
+  "step_jump_rejection_pct": 42.35,
+  "gradient_min_pct": -13.786,
+  "gradient_max_pct": 11.636,
+  "path_bounds_svy21": {
+    "min_x": 35972.262,
+    "min_y": 32291.314,
+    "max_x": 36373.815,
+    "max_y": 33313.225
+  },
+  "road_boundary": {
+    "target_road_name": "STILL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4262,
+    "offroad_point_count": 1263,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JOO CHIAT PLACE",
+        "point_count": 164
+      },
+      {
+        "road_name": "LORONG H TELOK KURAU",
+        "point_count": 132
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 129
+      },
+      {
+        "road_name": "LORONG NANGKA",
+        "point_count": 91
+      },
+      {
+        "road_name": "KOON SENG ROAD",
+        "point_count": 85
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 8456.0,
+    "trimmed_offroad_points": 1263
+  }
+}

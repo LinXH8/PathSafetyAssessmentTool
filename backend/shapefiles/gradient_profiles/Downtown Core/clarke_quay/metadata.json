@@ -1,0 +1,66 @@
+{
+  "path_key": "clarke_quay",
+  "display_name": "Clarke Quay",
+  "source_project": "Clarke Quay",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Clarke Quay\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-07T05:54:52.418280+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1467.972,
+  "profile_point_count": 342,
+  "valid_elevation_count": 257,
+  "rejected_outlier_count": 14,
+  "rejected_step_jump_count": 183,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 10,
+  "valid_gradient_count": 95,
+  "usable_gradient_completion_pct": 27.78,
+  "elevation_hit_coverage_pct": 75.15,
+  "step_jump_rejection_pct": 53.51,
+  "gradient_min_pct": -10.091,
+  "gradient_max_pct": 9.561,
+  "path_bounds_svy21": {
+    "min_x": 29119.617,
+    "min_y": 30140.839,
+    "max_x": 29461.075,
+    "max_y": 30510.15
+  },
+  "road_boundary": {
+    "target_road_name": "CLARKE QUAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 735,
+    "offroad_point_count": 393,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BOAT QUAY",
+        "point_count": 103
+      },
+      {
+        "road_name": ".",
+        "point_count": 76
+      },
+      {
+        "road_name": "NORTH BOAT QUAY",
+        "point_count": 53
+      },
+      {
+        "road_name": "TAN TYE PLACE",
+        "point_count": 45
+      },
+      {
+        "road_name": "RIVER VALLEY ROAD",
+        "point_count": 39
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1196.0,
+    "trimmed_offroad_points": 393
+  }
+}

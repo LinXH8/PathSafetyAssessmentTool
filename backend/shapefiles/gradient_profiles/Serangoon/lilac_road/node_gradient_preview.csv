@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lilac_road,1,Lilac Road_Cam4_20260106_105148_493_C.jpeg,,10.109,5.055,6.0,21.513,,
+lilac_road,2,Lilac Road_Cam4_20260106_105153_913_C.jpeg,,21.3,15.705,16.0,21.573,,
+lilac_road,3,Lilac Road_Cam4_20260106_105158_118_C.jpeg,,32.797,27.049,28.0,20.273,,
+lilac_road,4,Lilac Road_Cam4_20260106_105202_346_C.jpeg,,40.771,36.784,36.0,19.551,,
+lilac_road,5,Lilac Road_Cam4_20260106_105204_751_C.jpeg,,51.281,46.026,46.0,19.0,,
+lilac_road,6,Lilac Road_Cam4_20260106_105208_354_C.jpeg,,61.223,56.252,56.0,18.676,,
+lilac_road,7,Lilac Road_Cam4_20260106_105211_963_C.jpeg,,70.339,65.781,66.0,18.871,,
+lilac_road,8,Lilac Road_Cam4_20260106_105214_984_C.jpeg,,81.101,75.72,76.0,17.704,,
+lilac_road,9,Lilac Road_Cam4_20260106_105218_586_C.jpeg,,90.263,85.682,86.0,17.784,1.875,1.0
+lilac_road,10,Lilac Road_Cam4_20260106_105222_189_C.jpeg,,100.792,95.527,96.0,17.72,0.937,1.0
+lilac_road,11,Lilac Road_Cam4_20260106_105226_392_C.jpeg,,111.254,106.023,106.0,17.646,,
+lilac_road,12,Lilac Road_Cam4_20260106_105229_995_C.jpeg,,123.586,117.42,118.0,17.97,,
+lilac_road,13,Lilac Road_Cam4_20260106_105234_221_C.jpeg,,175.613,149.599,150.0,17.579,0.625,1.0
+lilac_road,14,Lilac Road_Cam4_20260106_105439_512_C.jpeg,,229.326,202.469,202.0,18.639,,
+lilac_road,15,Lilac Road_Cam4_20260106_105708_992_C.jpeg,,238.57,233.948,234.0,19.656,,
+lilac_road,16,Lilac Road_Cam4_20260106_105713_078_C.jpeg,,248.28,243.425,244.0,20.52,,

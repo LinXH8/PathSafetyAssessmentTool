@@ -1,0 +1,54 @@
+{
+  "path_key": "lentor_hills_road",
+  "display_name": "Lentor Hills Road",
+  "source_project": "Lentor Hills Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lentor Hills Road\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T16:08:50.064703+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 794.229,
+  "profile_point_count": 352,
+  "valid_elevation_count": 352,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 99,
+  "repaired_gradient_point_count": 12,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 210,
+  "usable_gradient_completion_pct": 59.66,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 28.12,
+  "gradient_min_pct": -11.025,
+  "gradient_max_pct": 10.562,
+  "path_bounds_svy21": {
+    "min_x": 28048.927,
+    "min_y": 40380.276,
+    "max_x": 28242.171,
+    "max_y": 40766.941
+  },
+  "road_boundary": {
+    "target_road_name": "LENTOR HILLS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 399,
+    "offroad_point_count": 47,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LENTOR GARDENS",
+        "point_count": 39
+      },
+      {
+        "road_name": "LENTOR CENTRAL",
+        "point_count": 8
+      }
+    ],
+    "offroad_chainage_min_m": 298.0,
+    "offroad_chainage_max_m": 794.229,
+    "trimmed_offroad_points": 47
+  }
+}

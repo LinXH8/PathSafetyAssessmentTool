@@ -1,0 +1,25 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+watten_drive,1,Watten Drive_Cam4_20251210_114143_259_A.jpeg,,10.314,5.157,6.0,5.934,,
+watten_drive,2,Watten Drive_Cam4_20251210_114146_021_A.jpeg,,24.404,17.359,20.0,5.976,,
+watten_drive,3,Watten Drive_Cam4_20251210_114149_858_A.jpeg,,30.848,27.626,28.0,5.876,,
+watten_drive,4,Watten Drive_Cam4_20251210_114151_537_A.jpeg,,41.605,36.227,36.0,5.907,-0.781,1.0
+watten_drive,5,Watten Drive_Cam4_20251210_114154_261_A.jpeg,,52.791,47.198,48.0,5.813,-0.312,1.0
+watten_drive,6,Watten Drive_Cam4_20251210_114156_986_A.jpeg,,64.275,58.533,58.0,5.82,1.094,1.0
+watten_drive,7,Watten Drive_Cam4_20251210_114159_731_A.jpeg,,71.723,67.999,68.0,5.863,-4.844,1.0
+watten_drive,8,Watten Drive_Cam4_20251210_114201_310_A.jpeg,,81.241,76.482,76.0,5.488,-0.156,1.0
+watten_drive,9,Watten Drive_Cam4_20251210_114203_509_A.jpeg,,90.603,85.922,86.0,5.601,1.562,1.0
+watten_drive,10,Watten Drive_Cam4_20251210_114205_729_A.jpeg,,101.528,96.065,96.0,5.779,,
+watten_drive,11,Watten Drive_Cam4_20251210_114208_366_A.jpeg,,130.768,116.148,116.0,6.082,2.344,1.0
+watten_drive,12,Watten Drive_Cam4_20251210_114215_448_A.jpeg,,140.687,135.727,136.0,6.314,,
+watten_drive,13,Watten Drive_Cam4_20251210_114217_755_A.jpeg,,150.656,145.671,146.0,6.372,4.168,1.0
+watten_drive,14,Watten Drive_Cam4_20251210_114219_946_A.jpeg,,160.775,155.715,156.0,6.584,,
+watten_drive,15,Watten Drive_Cam4_20251210_114222_158_A.jpeg,,171.753,166.264,166.0,5.808,,
+watten_drive,16,Watten Drive_Cam4_20251210_114228_750_A.jpeg,,184.147,177.95,178.0,5.922,-1.328,1.0
+watten_drive,17,Watten Drive_Cam4_20251210_114316_744_A.jpeg,,213.558,198.853,198.0,5.6,,
+watten_drive,18,Watten Drive_Cam4_20251210_114327_703_A.jpeg,,221.1,217.329,218.0,6.216,,
+watten_drive,19,Watten Drive_Cam4_20251210_114329_928_A.jpeg,,231.067,226.083,226.0,5.54,-11.042,2.0
+watten_drive,20,Watten Drive_Cam4_20251210_114332_660_A.jpeg,,241.694,236.38,236.0,5.552,6.728,1.0
+watten_drive,21,Watten Drive_Cam4_20251210_114335_521_A.jpeg,,270.502,256.098,256.0,6.163,,
+watten_drive,22,Watten Drive_Cam4_20251210_114343_305_A.jpeg,,279.177,274.84,274.0,5.325,,
+watten_drive,23,Watten Drive_Cam4_20251210_114345_533_A.jpeg,,308.817,293.997,294.0,4.913,-2.793,1.0
+watten_drive,24,Watten Drive_Cam4_20251210_114353_846_A.jpeg,,320.04,314.429,314.0,5.065,6.444,1.0

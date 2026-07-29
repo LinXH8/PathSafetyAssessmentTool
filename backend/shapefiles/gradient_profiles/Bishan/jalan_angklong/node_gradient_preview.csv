@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_angklong,1,Jalan Angklong_Cam4_20260103_091703_550_B.jpeg,,11.746,5.873,6.0,15.352,2.227,1.0
+jalan_angklong,2,Jalan Angklong_Cam4_20260103_091707_154_B.jpeg,,21.108,16.427,16.0,15.607,,
+jalan_angklong,3,Jalan Angklong_Cam4_20260103_091710_160_B.jpeg,,33.512,27.31,28.0,16.111,2.367,1.0
+jalan_angklong,4,Jalan Angklong_Cam4_20260103_091714_366_B.jpeg,,43.655,38.583,38.0,16.505,9.405,2.0
+jalan_angklong,5,Jalan Angklong_Cam4_20260103_091717_975_B.jpeg,,51.256,47.456,48.0,17.217,,
+jalan_angklong,6,Jalan Angklong_Cam4_20260103_091720_377_B.jpeg,,60.48,55.868,56.0,17.278,0.0,1.0
+jalan_angklong,7,Jalan Angklong_Cam4_20260103_091723_379_B.jpeg,,71.032,65.756,66.0,17.232,-0.885,1.0
+jalan_angklong,8,Jalan Angklong_Cam4_20260103_091726_986_B.jpeg,,80.312,75.672,76.0,17.222,0.104,1.0
+jalan_angklong,9,Jalan Angklong_Cam4_20260103_091729_989_B.jpeg,,94.746,87.529,88.0,17.1,,
+jalan_angklong,10,Jalan Angklong_Cam4_20260103_091735_396_B.jpeg,,100.327,97.537,98.0,16.883,-2.717,1.0
+jalan_angklong,11,Jalan Angklong_Cam4_20260103_091737_799_B.jpeg,,135.637,117.982,118.0,17.574,,

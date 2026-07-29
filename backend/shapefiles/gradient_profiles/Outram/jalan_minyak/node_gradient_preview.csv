@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_minyak,1,Jalan Minyak_Cam4_20251229_082925_139_B.jpeg,,8.485,4.243,4.0,24.722,0.833,1.0
+jalan_minyak,2,Jalan Minyak_Cam4_20251229_082932_350_B.jpeg,,19.253,13.869,14.0,24.755,-1.25,1.0
+jalan_minyak,3,Jalan Minyak_Cam4_20251229_082940_046_B.jpeg,,31.592,25.423,26.0,24.382,,
+jalan_minyak,4,Jalan Minyak_Cam4_20251229_082946_060_B.jpeg,,42.583,37.087,38.0,23.763,-3.914,1.0
+jalan_minyak,5,Jalan Minyak_Cam4_20251229_082950_865_B.jpeg,,67.013,54.798,54.0,23.321,-1.312,1.0
+jalan_minyak,6,Jalan Minyak_Cam4_20251229_082959_886_B.jpeg,,79.607,73.31,74.0,21.552,,
+jalan_minyak,7,Jalan Minyak_Cam4_20251229_083004_091_B.jpeg,,103.565,91.586,92.0,20.805,-2.083,1.0
+jalan_minyak,8,Jalan Minyak_Cam4_20251229_083012_505_B.jpeg,,114.44,109.002,110.0,20.455,-0.521,1.0
+jalan_minyak,9,Jalan Minyak_Cam4_20251229_083016_112_B.jpeg,,124.638,119.539,120.0,20.489,0.0,1.0
+jalan_minyak,10,Jalan Minyak_Cam4_20251229_083019_720_B.jpeg,,150.353,137.496,138.0,21.157,,
+jalan_minyak,11,Jalan Minyak_Cam4_20251229_083030_420_B.jpeg,,163.409,156.881,156.0,20.814,3.125,1.0
+jalan_minyak,12,Jalan Minyak_Cam4_20251229_083036_427_B.jpeg,,186.384,174.897,174.0,20.639,,
+jalan_minyak,13,Jalan Minyak_Cam4_20251229_083046_038_B.jpeg,,197.968,192.176,192.0,20.672,,
+jalan_minyak,14,Jalan Minyak_Cam4_20251229_083050_848_B.jpeg,,222.343,210.156,210.0,22.564,,
+jalan_minyak,15,Jalan Minyak_Cam4_20251229_083114_158_B.jpeg,,228.06,225.202,226.0,20.789,,
+jalan_minyak,16,Jalan Minyak_Cam4_20251229_083204_017_B.jpeg,,316.685,272.372,272.0,20.819,5.73,1.0
+jalan_minyak,17,Jalan Minyak_Cam4_20251229_083238_856_B.jpeg,,378.009,347.347,348.0,20.405,,

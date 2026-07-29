@@ -1,0 +1,54 @@
+{
+  "path_key": "how_sun_road",
+  "display_name": "How Sun Road",
+  "source_project": "How Sun Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\How Sun Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T15:28:01.849922+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 292.124,
+  "profile_point_count": 85,
+  "valid_elevation_count": 84,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 64,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 9,
+  "usable_gradient_completion_pct": 10.59,
+  "elevation_hit_coverage_pct": 98.82,
+  "step_jump_rejection_pct": 75.29,
+  "gradient_min_pct": -3.459,
+  "gradient_max_pct": 5.657,
+  "path_bounds_svy21": {
+    "min_x": 33267.404,
+    "min_y": 36312.019,
+    "max_x": 33362.007,
+    "max_y": 36408.53
+  },
+  "road_boundary": {
+    "target_road_name": "HOW SUN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 148,
+    "offroad_point_count": 63,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HOW SUN AVENUE",
+        "point_count": 39
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 20.0,
+    "offroad_chainage_max_m": 280.0,
+    "trimmed_offroad_points": 63
+  }
+}

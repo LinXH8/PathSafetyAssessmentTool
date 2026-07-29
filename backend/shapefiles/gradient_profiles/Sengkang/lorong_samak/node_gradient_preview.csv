@@ -1,0 +1,18 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_samak,1,Lorong Samak_Cam4_20260106_102300_423_A.jpeg,,10.729,5.365,6.0,15.403,,
+lorong_samak,2,Lorong Samak_Cam4_20260106_102303_438_A.jpeg,,20.964,15.847,16.0,16.446,,
+lorong_samak,3,Lorong Samak_Cam4_20260106_102306_443_A.jpeg,,32.017,26.491,26.0,18.036,,
+lorong_samak,4,Lorong Samak_Cam4_20260106_102309_447_A.jpeg,,41.53,36.773,36.0,18.381,,
+lorong_samak,5,Lorong Samak_Cam4_20260106_102311_848_A.jpeg,,51.422,46.476,46.0,18.416,,
+lorong_samak,6,Lorong Samak_Cam4_20260106_102314_251_A.jpeg,,60.975,56.199,56.0,18.45,,
+lorong_samak,7,Lorong Samak_Cam4_20260106_102316_654_A.jpeg,,71.603,66.289,66.0,19.167,7.5,1.0
+lorong_samak,8,Lorong Samak_Cam4_20260106_102320_257_A.jpeg,,83.095,77.349,,,,
+lorong_samak,9,Lorong Samak_Cam4_20260106_103839_124_A.jpeg,,90.71,86.903,86.0,19.758,1.944,1.0
+lorong_samak,10,Lorong Samak_Cam4_20260106_103841_528_A.jpeg,,118.402,104.556,104.0,20.534,4.271,1.0
+lorong_samak,11,Lorong Samak_Cam4_20260106_103850_543_A.jpeg,,128.828,123.615,124.0,21.425,5.208,1.0
+lorong_samak,12,Lorong Samak_Cam4_20260106_103854_153_A.jpeg,,140.303,134.566,134.0,22.042,2.396,1.0
+lorong_samak,13,Lorong Samak_Cam4_20260106_103858_361_A.jpeg,,150.66,145.482,146.0,22.85,4.271,1.0
+lorong_samak,14,Lorong Samak_Cam4_20260106_103902_607_A.jpeg,,156.057,153.359,154.0,23.01,,
+lorong_samak,15,Lorong Samak_Cam4_20260106_103905_014_A.jpeg,,198.617,177.337,178.0,23.518,,
+lorong_samak,16,Lorong Samak_Cam4_20260106_104005_147_A.jpeg,,209.655,204.136,204.0,24.753,,
+lorong_samak,17,Lorong Samak_Cam4_20260106_104008_763_A.jpeg,,219.017,214.336,214.0,26.306,,

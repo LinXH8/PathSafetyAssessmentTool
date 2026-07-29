@@ -1,0 +1,62 @@
+{
+  "path_key": "kelantan_road",
+  "display_name": "Kelantan Road",
+  "source_project": "Kelantan Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Kelantan Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T15:09:46.171979+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 365.316,
+  "profile_point_count": 71,
+  "valid_elevation_count": 63,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 49,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 8,
+  "usable_gradient_completion_pct": 11.27,
+  "elevation_hit_coverage_pct": 88.73,
+  "step_jump_rejection_pct": 69.01,
+  "gradient_min_pct": -6.881,
+  "gradient_max_pct": 2.091,
+  "path_bounds_svy21": {
+    "min_x": 30470.576,
+    "min_y": 31884.644,
+    "max_x": 30574.719,
+    "max_y": 32041.795
+  },
+  "road_boundary": {
+    "target_road_name": "KELANTAN ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 184,
+    "offroad_point_count": 113,
+    "offroad_top_road_names": [
+      {
+        "road_name": "WELD ROAD",
+        "point_count": 77
+      },
+      {
+        "road_name": "JALAN BESAR",
+        "point_count": 28
+      },
+      {
+        "road_name": "KELANTAN LANE",
+        "point_count": 6
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 366.0,
+    "trimmed_offroad_points": 113
+  }
+}

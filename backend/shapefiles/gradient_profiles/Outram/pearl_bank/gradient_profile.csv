@@ -1,0 +1,12 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+pearl_bank,Pearl Bank,0.0,28646.729,29450.171,10.858,10.858,10.695,-1.25,1.0,PEARL BANK,7.541
+pearl_bank,Pearl Bank,2.0,28645.971,29448.321,10.695,10.695,10.67,,,PEARL BANK,5.658
+pearl_bank,Pearl Bank,4.0,28645.212,29446.47,10.645,10.645,10.645,,,PEARL BANK,3.776
+pearl_bank,Pearl Bank,6.0,28644.453,29444.62,10.57,10.374,10.374,-10.313,2.0,PEARL BANK,1.893
+pearl_bank,Pearl Bank,8.0,28643.694,29442.769,9.895,10.103,10.103,-10.156,2.0,PEARL BANK,0.011
+pearl_bank,Pearl Bank,10.0,28642.935,29440.919,9.833,9.833,9.845,,,PEARL BANK,1.872
+pearl_bank,Pearl Bank,12.0,28641.904,29439.254,9.845,9.845,9.833,,,PEARL BANK,3.581
+pearl_bank,Pearl Bank,14.0,28640.46,29437.871,9.833,9.833,9.833,-1.797,1.0,PEARL BANK,5.028
+pearl_bank,Pearl Bank,16.0,28639.016,29436.487,9.72,9.72,9.72,-1.875,1.0,PEARL BANK,6.475
+pearl_bank,Pearl Bank,18.0,28637.572,29435.103,9.683,9.683,9.701,-2.5,1.0,PEARL BANK,7.922
+pearl_bank,Pearl Bank,20.0,28636.215,29433.803,9.633,9.633,9.683,-0.938,1.0,PEARL BANK,9.281

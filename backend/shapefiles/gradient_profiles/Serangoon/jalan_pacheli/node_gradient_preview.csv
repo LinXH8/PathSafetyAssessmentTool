@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_pacheli,1,Jalan Pacheli_Cam4_20260202_082116_141_A.jpeg,,12.563,6.281,6.0,16.397,-0.481,1.0
+jalan_pacheli,2,Jalan Pacheli_Cam4_20260202_082120_945_A.jpeg,,43.232,27.898,28.0,16.665,,
+jalan_pacheli,3,Jalan Pacheli_Cam4_20260202_082145_572_A.jpeg,,49.229,46.23,46.0,15.619,-2.8,1.0
+jalan_pacheli,4,Jalan Pacheli_Cam4_20260202_082147_376_A.jpeg,,60.201,54.715,54.0,15.44,-2.35,1.0
+jalan_pacheli,5,Jalan Pacheli_Cam4_20260202_082150_381_A.jpeg,,69.551,64.876,64.0,15.18,-1.675,1.0
+jalan_pacheli,6,Jalan Pacheli_Cam4_20260202_082152_783_A.jpeg,,83.43,76.49,76.0,15.097,-0.112,1.0
+jalan_pacheli,7,Jalan Pacheli_Cam4_20260202_082156_385_A.jpeg,,90.062,86.746,86.0,15.188,2.912,1.0
+jalan_pacheli,8,Jalan Pacheli_Cam4_20260202_082158_186_A.jpeg,,100.056,95.059,96.0,15.646,5.963,1.0
+jalan_pacheli,9,Jalan Pacheli_Cam4_20260202_082201_190_A.jpeg,,108.9,104.478,104.0,16.134,6.725,1.0
+jalan_pacheli,10,Jalan Pacheli_Cam4_20260202_082204_193_A.jpeg,,152.771,130.835,130.0,18.073,7.7,1.0
+jalan_pacheli,11,Jalan Pacheli_Cam4_20260202_082221_612_A.jpeg,,159.454,156.112,156.0,19.935,4.175,1.0
+jalan_pacheli,12,Jalan Pacheli_Cam4_20260202_082224_613_A.jpeg,,169.153,164.303,164.0,20.165,2.163,1.0
+jalan_pacheli,13,Jalan Pacheli_Cam4_20260202_082230_618_A.jpeg,,179.743,174.448,174.0,20.281,1.05,1.0
+jalan_pacheli,14,Jalan Pacheli_Cam4_20260202_082236_625_A.jpeg,,372.329,276.036,276.0,18.449,,
+jalan_pacheli,15,Jalan Pacheli_Cam4_20260202_084931_776_A.jpeg,,385.052,378.691,,,,
+jalan_pacheli,16,Jalan Pacheli_Cam4_20260202_084937_783_A.jpeg,,405.023,395.038,396.0,17.364,,
+jalan_pacheli,17,Jalan Pacheli_Cam4_20260202_084948_597_A.jpeg,,415.112,410.068,410.0,17.213,5.0,1.0
+jalan_pacheli,18,Jalan Pacheli_Cam4_20260202_084952_201_A.jpeg,,445.514,430.313,430.0,17.445,,
+jalan_pacheli,19,Jalan Pacheli_Cam4_20260202_085003_616_A.jpeg,,515.283,480.398,480.0,17.236,,

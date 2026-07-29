@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+buckley_road,1,,BUCKLEY ROAD,79.096,39.548,40.0,3.796,,
+buckley_road,2,,BUCKLEY ROAD,93.332,125.762,126.0,4.352,-0.59,1.0
+buckley_road,3,,BUCKLEY ROAD,319.888,425.704,426.0,6.148,,

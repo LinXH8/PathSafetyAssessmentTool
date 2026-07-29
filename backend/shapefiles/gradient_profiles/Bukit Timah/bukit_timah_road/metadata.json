@@ -1,0 +1,50 @@
+{
+  "path_key": "bukit_timah_road",
+  "display_name": "Bukit Timah Road",
+  "source_project": "Bukit Timah Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_projects\\Bukit Timah Road\\geo_data.gpkg",
+  "lidar_bundle": "bukit_timah_road",
+  "lidar_root": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706\\_lazdirs\\bukit_timah_road",
+  "generated_at_utc": "2026-07-06T04:28:34.693131+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 8971.506,
+  "profile_point_count": 4486,
+  "valid_elevation_count": 4101,
+  "rejected_outlier_count": 317,
+  "rejected_step_jump_count": 2500,
+  "repaired_gradient_point_count": 73,
+  "removed_bad_gradient_point_count": 15,
+  "valid_gradient_count": 1136,
+  "usable_gradient_completion_pct": 25.32,
+  "elevation_hit_coverage_pct": 91.42,
+  "step_jump_rejection_pct": 55.73,
+  "gradient_min_pct": -14.415,
+  "gradient_max_pct": 13.417,
+  "path_bounds_svy21": {
+    "min_x": 21940.397,
+    "min_y": 31920.576,
+    "max_x": 29945.299,
+    "max_y": 35525.286
+  },
+  "road_boundary": {
+    "target_road_name": "BUKIT TIMAH ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 4487,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KENG CHIN ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 6208.0,
+    "offroad_chainage_max_m": 6208.0,
+    "trimmed_offroad_points": 1
+  }
+}

@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+highgate_walk,1,Highgate Walk_Cam4_20251121_122446_693_B.jpeg,,11.627,5.814,,,,
+highgate_walk,2,Highgate Walk_Cam4_20251121_122449_695_B.jpeg,,23.457,17.542,18.0,36.616,1.406,1.0
+highgate_walk,3,Highgate Walk_Cam4_20251121_122453_901_B.jpeg,,30.71,27.084,28.0,36.916,1.953,1.0
+highgate_walk,4,Highgate Walk_Cam4_20251121_122455_102_B.jpeg,,40.844,35.777,36.0,36.61,-3.594,1.0
+highgate_walk,5,Highgate Walk_Cam4_20251121_122458_109_B.jpeg,,51.217,46.031,46.0,36.647,1.484,1.0
+highgate_walk,6,Highgate Walk_Cam4_20251121_122500_511_B.jpeg,,71.416,61.317,62.0,36.895,,
+highgate_walk,7,Highgate Walk_Cam4_20251121_122521_531_B.jpeg,,83.477,77.446,78.0,36.922,-8.125,1.0
+highgate_walk,8,Highgate Walk_Cam4_20251121_122525_133_B.jpeg,,94.878,89.177,90.0,36.675,3.876,1.0
+highgate_walk,9,Highgate Walk_Cam4_20251121_122528_738_B.jpeg,,104.758,99.818,100.0,37.103,5.781,1.0
+highgate_walk,10,Highgate Walk_Cam4_20251121_122531_741_B.jpeg,,125.782,115.27,116.0,36.186,,
+highgate_walk,11,Highgate Walk_Cam4_20251121_122541_353_B.jpeg,,138.115,131.949,132.0,36.739,,
+highgate_walk,12,Highgate Walk_Cam4_20251121_122546_157_B.jpeg,,144.214,141.165,142.0,35.957,,
+highgate_walk,13,Highgate Walk_Cam4_20251121_122550_962_B.jpeg,,173.161,158.688,158.0,36.339,,
+highgate_walk,14,Highgate Walk_Cam4_20251121_122600_571_B.jpeg,,184.88,179.021,180.0,37.935,,
+highgate_walk,15,Highgate Walk_Cam4_20251121_122605_406_B.jpeg,,194.797,189.838,190.0,38.358,,
+highgate_walk,16,Highgate Walk_Cam4_20251121_122609_010_B.jpeg,,206.547,200.672,200.0,37.577,,
+highgate_walk,17,Highgate Walk_Cam4_20251121_122614_417_B.jpeg,,228.955,217.751,218.0,37.47,,
+highgate_walk,18,Highgate Walk_Cam4_20251121_122623_436_B.jpeg,,238.474,233.714,234.0,38.388,,

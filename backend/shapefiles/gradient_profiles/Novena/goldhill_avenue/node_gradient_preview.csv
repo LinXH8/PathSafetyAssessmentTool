@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+goldhill_avenue,1,,GOLDHILL AVENUE,166.591,83.296,84.0,15.859,,
+goldhill_avenue,2,,GOLDHILL AVENUE,251.107,292.145,292.0,,,
+goldhill_avenue,3,,GOLDHILL AVENUE,166.438,519.733,520.0,12.042,,

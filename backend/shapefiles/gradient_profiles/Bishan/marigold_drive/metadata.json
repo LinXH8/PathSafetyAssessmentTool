@@ -1,0 +1,54 @@
+{
+  "path_key": "marigold_drive",
+  "display_name": "Marigold Drive",
+  "source_project": "Marigold Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Marigold Drive\\geo_data.gpkg",
+  "lidar_bundle": "D_Bishan",
+  "lidar_root": "E:\\LIDAR\\D_Bishan",
+  "generated_at_utc": "2026-06-03T05:23:33.380984+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 324.879,
+  "profile_point_count": 161,
+  "valid_elevation_count": 161,
+  "rejected_outlier_count": 8,
+  "rejected_step_jump_count": 108,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 11.8,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 67.08,
+  "gradient_min_pct": -10.893,
+  "gradient_max_pct": 5.238,
+  "path_bounds_svy21": {
+    "min_x": 27408.563,
+    "min_y": 37295.725,
+    "max_x": 27616.945,
+    "max_y": 37415.776
+  },
+  "road_boundary": {
+    "target_road_name": "MARIGOLD DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 164,
+    "offroad_point_count": 3,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SOO CHOW VIEW",
+        "point_count": 2
+      },
+      {
+        "road_name": "JASMINE ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 194.0,
+    "offroad_chainage_max_m": 272.0,
+    "trimmed_offroad_points": 3
+  }
+}

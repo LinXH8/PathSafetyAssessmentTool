@@ -1,0 +1,66 @@
+{
+  "path_key": "ang_mo_kio_avenue_2",
+  "display_name": "Ang Mo Kio Avenue 2",
+  "source_project": "Ang Mo Kio Avenue 2",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Ang Mo Kio Avenue 2\\geo_data.gpkg",
+  "lidar_bundle": "Ang Mo Kio",
+  "lidar_root": "E:\\Ang Mo Kio",
+  "generated_at_utc": "2026-06-03T14:56:09.167615+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2318.09,
+  "profile_point_count": 929,
+  "valid_elevation_count": 929,
+  "rejected_outlier_count": 121,
+  "rejected_step_jump_count": 656,
+  "repaired_gradient_point_count": 9,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 132,
+  "usable_gradient_completion_pct": 14.21,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 70.61,
+  "gradient_min_pct": -12.07,
+  "gradient_max_pct": 9.347,
+  "path_bounds_svy21": {
+    "min_x": 27726.353,
+    "min_y": 38881.596,
+    "max_x": 28331.439,
+    "max_y": 40045.077
+  },
+  "road_boundary": {
+    "target_road_name": "ANG MO KIO AVENUE 2",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1161,
+    "offroad_point_count": 232,
+    "offroad_top_road_names": [
+      {
+        "road_name": "ST. NICHOLAS VIEW",
+        "point_count": 81
+      },
+      {
+        "road_name": "ANG MO KIO STREET 13",
+        "point_count": 41
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 5",
+        "point_count": 29
+      },
+      {
+        "road_name": "ANG MO KIO AVENUE 1",
+        "point_count": 21
+      },
+      {
+        "road_name": "SEMBAWANG HILLS DRIVE",
+        "point_count": 19
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2318.09,
+    "trimmed_offroad_points": 232
+  }
+}

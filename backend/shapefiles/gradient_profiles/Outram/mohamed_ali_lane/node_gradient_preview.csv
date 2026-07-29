@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mohamed_ali_lane,1,Cam4_20251230_080814_607_C.jpeg,,9.382,4.691,4.0,3.093,2.518,1.0
+mohamed_ali_lane,2,Cam4_20251230_080820_012_C.jpeg,,19.438,14.41,14.0,3.716,,
+mohamed_ali_lane,3,Cam4_20251230_080824_817_C.jpeg,,31.151,25.295,26.0,3.475,,
+mohamed_ali_lane,4,Cam4_20251230_080830_822_C.jpeg,,40.789,35.97,36.0,3.821,,
+mohamed_ali_lane,5,Cam4_20251230_080842_840_C.jpeg,,49.261,45.025,46.0,4.127,,

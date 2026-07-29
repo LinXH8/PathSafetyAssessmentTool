@@ -1,0 +1,19 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+casuarina_walk,1,Casuarina Walk_Cam4_20260105_085005_616_B.jpeg,,11.27,5.635,6.0,28.943,4.217,1.0
+casuarina_walk,2,Casuarina Walk_Cam4_20260105_085011_023_B.jpeg,,23.413,17.341,18.0,28.462,-5.797,1.0
+casuarina_walk,3,Casuarina Walk_Cam4_20260105_085015_829_B.jpeg,,33.614,28.513,28.0,28.2,,
+casuarina_walk,4,Casuarina Walk_Cam4_20260105_085020_634_B.jpeg,,54.378,43.996,44.0,28.238,,
+casuarina_walk,5,Casuarina Walk_Cam4_20260105_085032_649_B.jpeg,,68.231,61.304,62.0,27.139,,
+casuarina_walk,6,Casuarina Walk_Cam4_20260105_085037_455_B.jpeg,,78.703,73.467,74.0,27.064,,
+casuarina_walk,7,Casuarina Walk_Cam4_20260105_085040_458_B.jpeg,,85.361,82.032,82.0,26.664,,
+casuarina_walk,8,Casuarina Walk_Cam4_20260105_085042_262_B.jpeg,,94.327,89.844,90.0,26.439,-3.437,1.0
+casuarina_walk,9,Casuarina Walk_Cam4_20260105_085044_666_B.jpeg,,105.62,99.974,100.0,26.389,,
+casuarina_walk,10,Casuarina Walk_Cam4_20260105_085047_669_B.jpeg,,114.845,110.232,110.0,26.048,,
+casuarina_walk,11,Casuarina Walk_Cam4_20260105_085050_071_B.jpeg,,126.435,120.64,120.0,25.764,-1.25,1.0
+casuarina_walk,12,Casuarina Walk_Cam4_20260105_085053_074_B.jpeg,,135.586,131.011,132.0,25.614,-1.042,1.0
+casuarina_walk,13,Casuarina Walk_Cam4_20260105_085055_477_B.jpeg,,145.879,140.732,140.0,25.798,,
+casuarina_walk,14,Casuarina Walk_Cam4_20260105_085058_481_B.jpeg,,156.447,151.163,152.0,27.498,,
+casuarina_walk,15,Casuarina Walk_Cam4_20260105_085103_886_B.jpeg,,214.5,185.473,186.0,26.511,,
+casuarina_walk,16,Casuarina Walk_Cam4_20260105_085140_541_B.jpeg,,238.126,226.313,226.0,26.614,,
+casuarina_walk,17,Casuarina Walk_Cam4_20260105_085149_550_B.jpeg,,281.776,259.951,260.0,27.106,0.833,1.0
+casuarina_walk,18,Casuarina Walk_Cam4_20260105_085205_770_B.jpeg,,292.593,287.184,288.0,27.802,3.672,1.0

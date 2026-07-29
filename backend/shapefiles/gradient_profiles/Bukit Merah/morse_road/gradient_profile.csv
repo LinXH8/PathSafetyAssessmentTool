@@ -1,0 +1,18 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+morse_road,Morse Road,0.0,25852.185,28006.219,4.231,4.231,4.407,,,MORSE ROAD,9.35
+morse_road,Morse Road,2.0,25853.165,28007.962,3.349,4.407,4.495,,,MORSE ROAD,9.332
+morse_road,Morse Road,4.0,25854.145,28009.706,3.686,4.583,4.583,,,MORSE ROAD,9.314
+morse_road,Morse Road,6.0,25855.125,28011.449,4.74,4.759,4.759,,,MORSE ROAD,9.296
+morse_road,Morse Road,8.0,25856.106,28013.192,4.383,4.935,4.935,,,MORSE ROAD,9.278
+morse_road,Morse Road,10.0,25857.086,28014.936,5.13,5.112,5.112,,,MORSE ROAD,9.26
+morse_road,Morse Road,12.0,25858.066,28016.679,5.699,5.288,5.288,,,MORSE ROAD,9.242
+morse_road,Morse Road,14.0,25858.954,28018.47,5.464,5.464,5.374,,,MORSE ROAD,9.12
+morse_road,Morse Road,16.0,25859.8,28020.282,6.049,5.419,5.374,,,MORSE ROAD,8.951
+morse_road,Morse Road,18.0,25860.646,28022.094,5.796,5.374,5.419,1.591,1.0,MORSE ROAD,8.783
+morse_road,Morse Road,20.0,25861.492,28023.906,5.33,5.33,5.419,,,MORSE ROAD,8.614
+morse_road,Morse Road,22.0,25862.339,28025.718,5.522,5.522,5.502,,,MORSE ROAD,8.446
+morse_road,Morse Road,24.0,25863.185,28027.53,4.954,5.512,5.502,,,MORSE ROAD,8.277
+morse_road,Morse Road,26.0,25864.1,28029.308,5.829,5.502,5.502,-0.195,1.0,MORSE ROAD,8.186
+morse_road,Morse Road,28.0,25865.048,28031.069,5.297,5.491,5.491,,,MORSE ROAD,8.131
+morse_road,Morse Road,30.0,25865.996,28032.83,5.481,5.481,5.486,,,MORSE ROAD,8.076
+morse_road,Morse Road,32.0,25866.925,28034.557,5.339,5.339,5.481,,,MORSE ROAD,8.022

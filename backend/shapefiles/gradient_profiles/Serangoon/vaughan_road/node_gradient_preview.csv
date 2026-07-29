@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+vaughan_road,1,Vaughan Road_Cam4_20260112_082452_900_B.jpeg,,12.947,6.474,,,,
+vaughan_road,2,Vaughan Road_Cam4_20260112_082500_107_B.jpeg,,24.03,18.489,18.0,18.186,,
+vaughan_road,3,Vaughan Road_Cam4_20260112_082504_914_B.jpeg,,49.61,36.82,36.0,19.489,,
+vaughan_road,4,Vaughan Road_Cam4_20260112_082512_722_B.jpeg,,62.551,56.081,56.0,15.533,,
+vaughan_road,5,Vaughan Road_Cam4_20260112_082516_337_B.jpeg,,74.252,68.402,68.0,14.397,-3.363,1.0
+vaughan_road,6,Vaughan Road_Cam4_20260112_082519_339_B.jpeg,,84.054,79.153,80.0,13.934,-4.288,1.0
+vaughan_road,7,Vaughan Road_Cam4_20260112_082521_742_B.jpeg,,108.106,96.08,96.0,13.417,-3.587,1.0
+vaughan_road,8,Vaughan Road_Cam4_20260112_082527_750_B.jpeg,,117.925,113.016,114.0,12.92,,
+vaughan_road,9,Vaughan Road_Cam4_20260112_082530_151_B.jpeg,,127.869,122.897,122.0,12.728,-1.875,1.0
+vaughan_road,10,Vaughan Road_Cam4_20260112_082532_554_B.jpeg,,139.206,133.537,134.0,12.53,-1.937,1.0
+vaughan_road,11,Vaughan Road_Cam4_20260112_082535_560_B.jpeg,,162.17,150.688,150.0,12.352,-0.688,1.0
+vaughan_road,12,Vaughan Road_Cam4_20260112_082542_771_B.jpeg,,172.335,167.252,168.0,12.252,-0.906,1.0
+vaughan_road,13,Vaughan Road_Cam4_20260112_082546_375_B.jpeg,,183.483,177.909,178.0,12.127,-0.917,1.0
+vaughan_road,14,Vaughan Road_Cam4_20260112_082551_185_B.jpeg,,219.664,201.574,202.0,12.207,0.125,1.0
+vaughan_road,15,Vaughan Road_Cam4_20260112_082611_007_B.jpeg,,229.989,224.827,224.0,12.493,3.275,1.0
+vaughan_road,16,Vaughan Road_Cam4_20260112_082615_814_B.jpeg,,241.819,235.904,236.0,12.562,,

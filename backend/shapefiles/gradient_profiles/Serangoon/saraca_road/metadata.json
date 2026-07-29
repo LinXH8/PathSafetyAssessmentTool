@@ -1,0 +1,66 @@
+{
+  "path_key": "saraca_road",
+  "display_name": "Saraca Road",
+  "source_project": "Saraca Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Saraca Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-30T06:35:07.970743+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 3796.622,
+  "profile_point_count": 1554,
+  "valid_elevation_count": 1554,
+  "rejected_outlier_count": 119,
+  "rejected_step_jump_count": 734,
+  "repaired_gradient_point_count": 24,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 598,
+  "usable_gradient_completion_pct": 38.48,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 47.23,
+  "gradient_min_pct": -12.437,
+  "gradient_max_pct": 12.924,
+  "path_bounds_svy21": {
+    "min_x": 30860.257,
+    "min_y": 40672.416,
+    "max_x": 31878.731,
+    "max_y": 40885.694
+  },
+  "road_boundary": {
+    "target_road_name": "SARACA ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1900,
+    "offroad_point_count": 346,
+    "offroad_top_road_names": [
+      {
+        "road_name": "MIMOSA CRESCENT",
+        "point_count": 164
+      },
+      {
+        "road_name": "NIM ROAD",
+        "point_count": 51
+      },
+      {
+        "road_name": "NERAM ROAD",
+        "point_count": 37
+      },
+      {
+        "road_name": "MIMOSA TERRACE",
+        "point_count": 34
+      },
+      {
+        "road_name": "SARACA HILL",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 3796.622,
+    "trimmed_offroad_points": 346
+  }
+}

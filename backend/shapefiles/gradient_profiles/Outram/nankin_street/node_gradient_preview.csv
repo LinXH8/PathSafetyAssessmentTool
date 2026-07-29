@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+nankin_street,1,Cam4_20251211_092108_031_C.jpeg,,12.75,6.375,8.0,3.916,,
+nankin_street,2,Cam4_20251211_092112_233_C.jpeg,,20.839,16.794,16.0,3.627,,
+nankin_street,3,Cam4_20251211_092114_034_C.jpeg,,176.236,98.537,98.0,6.941,8.584,1.0

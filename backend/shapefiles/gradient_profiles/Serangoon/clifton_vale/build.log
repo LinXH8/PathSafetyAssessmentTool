@@ -1,0 +1,20 @@
+project=Clifton Vale
+path_key=clifton_vale
+lidar_bundle=Serangoon
+
+Road boundary check:
+  target: CLIFTON VALE
+  off-road points: 20/316
+    - LYNWOOD GROVE: 13
+    - MATLOCK RISE: 4
+    - SUNDRIDGE PARK ROAD: 3
+  trimmed off-road points: 20
+  [1/9] 20240802_Serangoon_01_Track73.laz (32 samples)
+  [2/9] 20240802_Serangoon_01_Track79.laz (30 samples)
+  [3/9] 20240802_Serangoon_01_Track83.laz (296 samples)
+  [4/9] 20240802_Serangoon_01_Track85.laz (35 samples)
+  [5/9] 20240802_Serangoon_01_Track88.laz (7 samples)
+  [6/9] 20240802_Serangoon_01_Track90.laz (277 samples)
+  [7/9] 20240802_Serangoon_01_Track91.laz (206 samples)
+  [8/9] 20240802_Serangoon_01_Track92.laz (144 samples)
+  [9/9] 20240805_Serangoon_02_Track13.laz (296 samples)

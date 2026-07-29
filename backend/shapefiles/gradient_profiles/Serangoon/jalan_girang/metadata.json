@@ -1,0 +1,58 @@
+{
+  "path_key": "jalan_girang",
+  "display_name": "Jalan Girang",
+  "source_project": "Jalan Girang",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Girang\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T16:12:41.421761+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1072.606,
+  "profile_point_count": 413,
+  "valid_elevation_count": 413,
+  "rejected_outlier_count": 35,
+  "rejected_step_jump_count": 150,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 197,
+  "usable_gradient_completion_pct": 47.7,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 36.32,
+  "gradient_min_pct": -12.733,
+  "gradient_max_pct": 12.323,
+  "path_bounds_svy21": {
+    "min_x": 31556.634,
+    "min_y": 36558.226,
+    "max_x": 31946.779,
+    "max_y": 36793.848
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN GIRANG",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 538,
+    "offroad_point_count": 125,
+    "offroad_top_road_names": [
+      {
+        "road_name": "JALAN SUKACHITA",
+        "point_count": 118
+      },
+      {
+        "road_name": "JALAN RIANG",
+        "point_count": 6
+      },
+      {
+        "road_name": "SERANGOON AVENUE 3",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 740.0,
+    "trimmed_offroad_points": 125
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "path_key": "kim_chuan_lane",
+  "display_name": "Kim Chuan Lane",
+  "source_project": "Kim Chuan Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Kim Chuan Lane\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_05_TPY_01",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_05_TPY_01",
+  "generated_at_utc": "2026-05-31T09:11:51.966380+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 170.079,
+  "profile_point_count": 85,
+  "valid_elevation_count": 85,
+  "rejected_outlier_count": 17,
+  "rejected_step_jump_count": 49,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 22,
+  "usable_gradient_completion_pct": 25.88,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 57.65,
+  "gradient_min_pct": -1.825,
+  "gradient_max_pct": 3.34,
+  "path_bounds_svy21": {
+    "min_x": 34424.859,
+    "min_y": 35710.082,
+    "max_x": 34497.882,
+    "max_y": 35778.545
+  },
+  "road_boundary": {
+    "target_road_name": "KIM CHUAN LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 87,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "KIM CHUAN DRIVE",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2.0,
+    "trimmed_offroad_points": 2
+  }
+}

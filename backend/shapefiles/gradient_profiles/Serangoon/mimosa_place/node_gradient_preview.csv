@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+mimosa_place,1,Mimosa Place_Cam4_20260105_082048_922_C.jpeg,,11.445,5.722,6.0,20.806,,
+mimosa_place,2,Mimosa Place_Cam4_20260105_082054_941_C.jpeg,,23.492,17.468,18.0,19.493,,
+mimosa_place,3,Mimosa Place_Cam4_20260105_082059_745_C.jpeg,,31.266,27.379,28.0,18.404,,
+mimosa_place,4,Mimosa Place_Cam4_20260105_082102_147_C.jpeg,,56.31,43.788,44.0,17.799,,
+mimosa_place,5,Mimosa Place_Cam4_20260105_082109_956_C.jpeg,,67.243,61.776,62.0,17.786,1.875,1.0
+mimosa_place,6,Mimosa Place_Cam4_20260105_082113_558_C.jpeg,,79.264,73.253,74.0,17.699,,
+mimosa_place,7,Mimosa Place_Cam4_20260105_082117_763_C.jpeg,,85.251,82.257,82.0,17.449,,
+mimosa_place,8,Mimosa Place_Cam4_20260105_082120_167_C.jpeg,,95.872,90.562,90.0,17.603,,
+mimosa_place,9,Mimosa Place_Cam4_20260105_082124_371_C.jpeg,,124.596,110.234,110.0,17.036,,
+mimosa_place,10,Mimosa Place_Cam4_20260105_082135_180_C.jpeg,,135.112,129.854,130.0,16.937,,
+mimosa_place,11,Mimosa Place_Cam4_20260105_082139_985_C.jpeg,,145.842,140.477,140.0,17.136,,
+mimosa_place,12,Mimosa Place_Cam4_20260105_082144_189_C.jpeg,,157.688,151.765,152.0,17.286,1.875,1.0
+mimosa_place,13,Mimosa Place_Cam4_20260105_082148_395_C.jpeg,,163.955,160.821,160.0,17.437,1.875,1.0
+mimosa_place,14,Mimosa Place_Cam4_20260105_082150_801_C.jpeg,,217.907,190.931,190.0,17.086,-1.25,1.0
+mimosa_place,15,Mimosa Place_Cam4_20260105_082610_858_C.jpeg,,318.94,268.423,268.0,17.949,-1.406,1.0
+mimosa_place,16,Mimosa Place_Cam4_20260105_082645_100_C.jpeg,,328.702,323.821,324.0,20.331,,
+mimosa_place,17,Mimosa Place_Cam4_20260105_082648_705_C.jpeg,,338.262,333.482,334.0,20.459,,
+mimosa_place,18,Mimosa Place_Cam4_20260105_082655_313_C.jpeg,,348.644,343.453,,,,
+mimosa_place,19,Mimosa Place_Cam4_20260105_082700_118_C.jpeg,,359.973,354.309,,,,

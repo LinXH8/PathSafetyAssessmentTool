@@ -1,0 +1,8 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+thomson_road,1,,THOMSON ROAD,344.089,172.045,172.0,20.217,,
+thomson_road,2,,THOMSON ROAD,0.891,344.535,344.0,15.527,,
+thomson_road,3,,THOMSON ROAD,962.349,827.046,828.0,20.781,1.025,1.0
+thomson_road,4,,THOMSON ROAD,2060.499,2424.328,2424.0,5.249,-1.579,1.0
+thomson_road,5,,THOMSON ROAD,124.413,3516.784,3516.0,11.964,,
+thomson_road,6,,THOMSON ROAD,79.331,3713.863,3714.0,10.14,,
+thomson_road,7,,THOMSON ROAD,1233.337,4370.197,4370.0,5.844,,

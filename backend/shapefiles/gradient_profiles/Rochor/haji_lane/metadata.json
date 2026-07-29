@@ -1,0 +1,42 @@
+{
+  "path_key": "haji_lane",
+  "display_name": "Haji Lane",
+  "source_project": "Haji Lane",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Haji Lane\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T14:10:04.396839+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 156.968,
+  "profile_point_count": 80,
+  "valid_elevation_count": 43,
+  "rejected_outlier_count": 5,
+  "rejected_step_jump_count": 20,
+  "repaired_gradient_point_count": 4,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 55,
+  "usable_gradient_completion_pct": 68.75,
+  "elevation_hit_coverage_pct": 53.75,
+  "step_jump_rejection_pct": 25.0,
+  "gradient_min_pct": -10.666,
+  "gradient_max_pct": 9.233,
+  "path_bounds_svy21": {
+    "min_x": 30807.952,
+    "min_y": 31433.023,
+    "max_x": 30886.058,
+    "max_y": 31532.355
+  },
+  "road_boundary": {
+    "target_road_name": "HAJI LANE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 80,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

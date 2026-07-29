@@ -1,0 +1,50 @@
+{
+  "path_key": "bridport_avenue",
+  "display_name": "Bridport Avenue",
+  "source_project": "Bridport Avenue",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Bridport Avenue\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-20T06:35:24.496789+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 995.136,
+  "profile_point_count": 480,
+  "valid_elevation_count": 480,
+  "rejected_outlier_count": 42,
+  "rejected_step_jump_count": 156,
+  "repaired_gradient_point_count": 5,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 261,
+  "usable_gradient_completion_pct": 54.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 32.5,
+  "gradient_min_pct": -13.602,
+  "gradient_max_pct": 11.816,
+  "path_bounds_svy21": {
+    "min_x": 31330.243,
+    "min_y": 38623.657,
+    "max_x": 31560.246,
+    "max_y": 39042.663
+  },
+  "road_boundary": {
+    "target_road_name": "BRIDPORT AVENUE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 499,
+    "offroad_point_count": 19,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BISHOPS PLACE",
+        "point_count": 19
+      }
+    ],
+    "offroad_chainage_min_m": 194.0,
+    "offroad_chainage_max_m": 820.0,
+    "trimmed_offroad_points": 19
+  }
+}

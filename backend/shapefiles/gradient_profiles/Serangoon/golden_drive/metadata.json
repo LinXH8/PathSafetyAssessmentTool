@@ -1,0 +1,42 @@
+{
+  "path_key": "golden_drive",
+  "display_name": "Golden Drive",
+  "source_project": "Golden Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Golden Drive\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T12:51:42.141911+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 324.045,
+  "profile_point_count": 164,
+  "valid_elevation_count": 161,
+  "rejected_outlier_count": 16,
+  "rejected_step_jump_count": 106,
+  "repaired_gradient_point_count": 3,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 41,
+  "usable_gradient_completion_pct": 25.0,
+  "elevation_hit_coverage_pct": 98.17,
+  "step_jump_rejection_pct": 64.63,
+  "gradient_min_pct": -5.769,
+  "gradient_max_pct": 11.145,
+  "path_bounds_svy21": {
+    "min_x": 31093.557,
+    "min_y": 37426.215,
+    "max_x": 31208.567,
+    "max_y": 37538.75
+  },
+  "road_boundary": {
+    "target_road_name": "GOLDEN DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 164,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

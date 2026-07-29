@@ -1,0 +1,22 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+nim_crescent,1,Nim Crescent_Cam4_20260101_093515_928_B.jpeg,,11.61,5.805,,,,
+nim_crescent,2,Nim Crescent_Cam4_20260101_093519_550_B.jpeg,,34.946,23.278,24.0,14.925,,
+nim_crescent,3,Nim Crescent_Cam4_20260101_093527_977_B.jpeg,,44.361,39.654,40.0,16.465,,
+nim_crescent,4,Nim Crescent_Cam4_20260101_093530_981_B.jpeg,,55.704,50.033,50.0,17.984,,
+nim_crescent,5,Nim Crescent_Cam4_20260101_093534_585_B.jpeg,,65.041,60.373,60.0,18.101,,
+nim_crescent,6,Nim Crescent_Cam4_20260101_093537_605_B.jpeg,,74.111,69.576,70.0,17.156,,
+nim_crescent,7,Nim Crescent_Cam4_20260101_093540_608_B.jpeg,,85.543,79.827,80.0,15.922,,
+nim_crescent,8,Nim Crescent_Cam4_20260101_093544_243_B.jpeg,,97.167,91.355,92.0,16.008,,
+nim_crescent,9,Nim Crescent_Cam4_20260101_093547_849_B.jpeg,,104.435,100.801,100.0,16.892,,
+nim_crescent,10,Nim Crescent_Cam4_20260101_093550_251_B.jpeg,,130.616,117.526,118.0,16.917,,
+nim_crescent,11,Nim Crescent_Cam4_20260101_093559_261_B.jpeg,,142.314,136.465,136.0,,,
+nim_crescent,12,Nim Crescent_Cam4_20260101_093604_065_B.jpeg,,170.152,156.233,158.0,18.291,,
+nim_crescent,13,Nim Crescent_Cam4_20260101_093815_302_B.jpeg,,179.262,174.707,174.0,18.101,4.688,1.0
+nim_crescent,14,Nim Crescent_Cam4_20260101_093818_310_B.jpeg,,189.494,184.378,184.0,18.82,,
+nim_crescent,15,Nim Crescent_Cam4_20260101_093821_913_B.jpeg,,200.703,195.099,196.0,20.335,,
+nim_crescent,16,Nim Crescent_Cam4_20260101_093825_517_B.jpeg,,241.302,221.003,222.0,20.925,,
+nim_crescent,17,Nim Crescent_Cam4_20260101_093838_207_B.jpeg,,265.484,253.393,254.0,22.167,,
+nim_crescent,18,Nim Crescent_Cam4_20260101_093847_978_B.jpeg,,291.57,278.527,278.0,22.24,,
+nim_crescent,19,Nim Crescent_Cam4_20260101_093856_957_B.jpeg,,303.39,297.48,298.0,23.172,1.56,1.0
+nim_crescent,20,Nim Crescent_Cam4_20260101_093902_362_B.jpeg,,328.752,316.071,,,,
+nim_crescent,21,Nim Crescent_Cam4_20260106_101641_718_C.jpeg,,338.993,333.873,,,,

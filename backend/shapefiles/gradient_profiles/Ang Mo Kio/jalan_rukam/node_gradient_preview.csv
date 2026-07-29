@@ -1,0 +1,26 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_rukam,1,Jalan Rukam_Cam4_20260105_083916_405_A.jpeg,,10.039,5.019,6.0,25.031,,
+jalan_rukam,2,Jalan Rukam_Cam4_20260105_083921_811_A.jpeg,,19.538,14.788,14.0,25.528,,
+jalan_rukam,3,Jalan Rukam_Cam4_20260105_083925_419_A.jpeg,,29.855,24.696,24.0,25.53,,
+jalan_rukam,4,Jalan Rukam_Cam4_20260105_083929_024_A.jpeg,,41.394,35.625,36.0,27.222,,
+jalan_rukam,5,Jalan Rukam_Cam4_20260105_083932_627_A.jpeg,,50.664,46.029,46.0,27.064,,
+jalan_rukam,6,Jalan Rukam_Cam4_20260105_083935_632_A.jpeg,,59.462,55.063,56.0,26.464,-7.298,1.0
+jalan_rukam,7,Jalan Rukam_Cam4_20260105_083938_635_A.jpeg,,70.536,64.999,64.0,26.093,,
+jalan_rukam,8,Jalan Rukam_Cam4_20260105_083942_238_A.jpeg,,80.077,75.306,76.0,25.936,,
+jalan_rukam,9,Jalan Rukam_Cam4_20260105_083945_243_A.jpeg,,89.984,85.031,86.0,25.534,,
+jalan_rukam,10,Jalan Rukam_Cam4_20260105_083948_247_A.jpeg,,100.194,95.089,96.0,25.955,,
+jalan_rukam,11,Jalan Rukam_Cam4_20260105_083951_250_A.jpeg,,110.099,105.147,106.0,26.097,,
+jalan_rukam,12,Jalan Rukam_Cam4_20260105_083954_253_A.jpeg,,119.86,114.98,114.0,26.464,3.864,1.0
+jalan_rukam,13,Jalan Rukam_Cam4_20260105_083957_257_A.jpeg,,130.92,125.39,126.0,26.567,0.186,1.0
+jalan_rukam,14,Jalan Rukam_Cam4_20260105_084000_861_A.jpeg,,142.328,136.624,136.0,26.364,-1.384,1.0
+jalan_rukam,15,Jalan Rukam_Cam4_20260105_084005_067_A.jpeg,,153.439,147.883,148.0,26.431,0.625,1.0
+jalan_rukam,16,Jalan Rukam_Cam4_20260105_084009_877_A.jpeg,,159.722,156.58,156.0,26.489,1.875,1.0
+jalan_rukam,17,Jalan Rukam_Cam4_20260105_084012_880_A.jpeg,,186.583,173.152,174.0,26.048,-2.148,1.0
+jalan_rukam,18,Jalan Rukam_Cam4_20260105_084035_105_A.jpeg,,195.765,191.174,192.0,25.827,,
+jalan_rukam,19,Jalan Rukam_Cam4_20260105_084048_920_A.jpeg,,220.905,208.335,208.0,27.633,,
+jalan_rukam,20,Jalan Rukam_Cam4_20260105_084100_336_A.jpeg,,266.491,243.698,244.0,25.915,,
+jalan_rukam,21,Jalan Rukam_Cam4_20260105_084126_767_A.jpeg,,279.147,272.819,272.0,25.784,7.031,1.0
+jalan_rukam,22,Jalan Rukam_Cam4_20260105_084133_377_A.jpeg,,286.058,282.602,282.0,26.292,,
+jalan_rukam,23,Jalan Rukam_Cam4_20260105_084136_379_A.jpeg,,334.991,310.524,310.0,25.934,,
+jalan_rukam,24,Jalan Rukam_Cam4_20260105_084155_609_A.jpeg,,453.208,394.099,394.0,30.676,,
+jalan_rukam,25,Jalan Rukam_Cam4_20260105_084330_532_A.jpeg,,464.808,459.008,,,,

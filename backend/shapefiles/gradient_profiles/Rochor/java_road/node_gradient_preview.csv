@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+java_road,1,Java Road_Cam4_20251208_081411_253_C.jpeg,,11.043,5.522,6.0,23.271,0.0,1.0
+java_road,2,Java Road_Cam4_20251208_081415_458_C.jpeg,,42.743,26.893,26.0,19.786,,
+java_road,3,Java Road_Cam4_20251208_081537_030_C.jpeg,,49.382,46.062,46.0,17.128,0.0,1.0
+java_road,4,Java Road_Cam4_20251208_081540_633_C.jpeg,,59.09,54.236,54.0,17.128,0.0,1.0
+java_road,5,Java Road_Cam4_20251208_081545_435_C.jpeg,,70.303,64.696,64.0,17.128,0.0,1.0
+java_road,6,Java Road_Cam4_20251208_081550_839_C.jpeg,,83.352,76.827,76.0,17.128,0.0,1.0
+java_road,7,Java Road_Cam4_20251208_081556_847_C.jpeg,,91.681,87.517,88.0,17.128,,
+java_road,8,Java Road_Cam4_20251208_081601_051_C.jpeg,,98.866,95.274,96.0,,,
+java_road,9,Java Road_Cam4_20251208_081605_870_C.jpeg,,109.686,104.276,104.0,,,
+java_road,10,Java Road_Cam4_20251208_081614_891_C.jpeg,,119.056,114.371,114.0,,,
+java_road,11,Java Road_Cam4_20251208_081620_295_C.jpeg,,128.725,123.89,124.0,,,
+java_road,12,Java Road_Cam4_20251208_081631_104_C.jpeg,,165.313,147.019,148.0,,,
+java_road,13,Java Road_Cam4_20251208_081732_726_C.jpeg,,175.781,170.547,,,,
+java_road,14,Java Road_Cam4_20251208_081733_326_C.jpeg,,210.373,193.077,194.0,,,
+java_road,15,Java Road_Cam4_20251208_084805_987_C.jpeg,,244.406,227.389,228.0,,,
+java_road,16,Java Road_Cam4_20251208_084928_158_C.jpeg,,291.534,267.97,268.0,,,

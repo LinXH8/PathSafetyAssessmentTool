@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+leedon_road,1,Leedon Road_Cam4_20251218_094805_908_A.jpeg,,11.745,5.872,6.0,24.964,0.938,1.0
+leedon_road,2,Leedon Road_Cam4_20251218_094822_128_A.jpeg,,22.466,17.106,18.0,24.952,-0.625,1.0
+leedon_road,3,Leedon Road_Cam4_20251218_094826_936_A.jpeg,,34.213,28.34,28.0,24.885,-0.625,1.0
+leedon_road,4,Leedon Road_Cam4_20251218_094832_342_A.jpeg,,55.719,44.966,44.0,24.712,3.886,1.0
+leedon_road,5,Leedon Road_Cam4_20251218_094841_952_A.jpeg,,229.799,142.759,142.0,25.034,,

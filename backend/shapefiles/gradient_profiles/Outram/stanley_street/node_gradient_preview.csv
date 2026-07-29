@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stanley_street,1,Cam4_20260108_080426_952_A.jpeg,,10.444,5.222,6.0,5.031,,
+stanley_street,2,Cam4_20260108_080431_157_A.jpeg,,171.519,90.982,90.0,41.395,,
+stanley_street,3,Cam4_20260109_084742_533_C.jpeg,,264.588,218.054,218.0,24.125,,
+stanley_street,4,Cam4_20260109_091248_849_C.jpeg,,292.047,278.318,278.0,34.552,,
+stanley_street,5,Cam4_20260109_091303_881_C.jpeg,,304.575,298.311,298.0,29.435,-18.097,2.0
+stanley_street,6,Cam4_20260109_091312_291_C.jpeg,,311.304,307.94,308.0,,,
+stanley_street,7,Cam4_20260109_091314_701_C.jpeg,,342.701,327.003,328.0,,,
+stanley_street,8,Cam4_20260109_091326_714_C.jpeg,,351.764,347.232,348.0,14.668,,
+stanley_street,9,Cam4_20260109_091332_721_C.jpeg,,358.975,355.37,356.0,13.107,,
+stanley_street,10,Cam4_20260109_091444_218_C.jpeg,,435.117,397.046,398.0,19.968,,
+stanley_street,11,Cam4_20260109_091513_052_C.jpeg,,473.105,454.111,454.0,29.82,,

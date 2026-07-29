@@ -1,0 +1,66 @@
+{
+  "path_key": "north_canal_road",
+  "display_name": "North Canal Road",
+  "source_project": "North Canal Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\North Canal Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-17T08:49:18.542973+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2095.912,
+  "profile_point_count": 494,
+  "valid_elevation_count": 494,
+  "rejected_outlier_count": 30,
+  "rejected_step_jump_count": 327,
+  "repaired_gradient_point_count": 10,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 88,
+  "usable_gradient_completion_pct": 17.81,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 66.19,
+  "gradient_min_pct": -13.611,
+  "gradient_max_pct": 13.351,
+  "path_bounds_svy21": {
+    "min_x": 29462.332,
+    "min_y": 29793.818,
+    "max_x": 29796.056,
+    "max_y": 30019.939
+  },
+  "road_boundary": {
+    "target_road_name": "NORTH CANAL ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1049,
+    "offroad_point_count": 555,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 322
+      },
+      {
+        "road_name": "SOUTH CANAL ROAD",
+        "point_count": 110
+      },
+      {
+        "road_name": "SOUTH BRIDGE ROAD",
+        "point_count": 84
+      },
+      {
+        "road_name": "NEW BRIDGE ROAD",
+        "point_count": 17
+      },
+      {
+        "road_name": "LORONG TELOK",
+        "point_count": 10
+      }
+    ],
+    "offroad_chainage_min_m": 292.0,
+    "offroad_chainage_max_m": 2018.0,
+    "trimmed_offroad_points": 555
+  }
+}

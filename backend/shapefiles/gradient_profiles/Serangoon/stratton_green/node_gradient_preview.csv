@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+stratton_green,1,Stratton Green_Cam4_20260101_094718_767_B.jpeg,,11.45,5.725,6.0,21.939,,
+stratton_green,2,Stratton Green_Cam4_20260101_094722_550_B.jpeg,,20.821,16.136,16.0,21.388,0.879,1.0
+stratton_green,3,Stratton Green_Cam4_20260101_094726_786_B.jpeg,,30.587,25.704,26.0,21.638,,
+stratton_green,4,Stratton Green_Cam4_20260101_094730_992_B.jpeg,,40.062,35.324,36.0,22.313,3.828,1.0
+stratton_green,5,Stratton Green_Cam4_20260101_094734_667_B.jpeg,,51.236,45.649,46.0,22.663,6.274,1.0

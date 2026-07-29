@@ -1,0 +1,42 @@
+{
+  "path_key": "handy_road",
+  "display_name": "Handy Road",
+  "source_project": "Handy Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Handy Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Museum_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Museum_LTA",
+  "generated_at_utc": "2026-06-07T14:13:31.484807+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 522.989,
+  "profile_point_count": 263,
+  "valid_elevation_count": 234,
+  "rejected_outlier_count": 49,
+  "rejected_step_jump_count": 188,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 43,
+  "usable_gradient_completion_pct": 16.35,
+  "elevation_hit_coverage_pct": 88.97,
+  "step_jump_rejection_pct": 71.48,
+  "gradient_min_pct": -10.162,
+  "gradient_max_pct": 8.75,
+  "path_bounds_svy21": {
+    "min_x": 29403.794,
+    "min_y": 31285.966,
+    "max_x": 29577.898,
+    "max_y": 31451.041
+  },
+  "road_boundary": {
+    "target_road_name": "HANDY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 263,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

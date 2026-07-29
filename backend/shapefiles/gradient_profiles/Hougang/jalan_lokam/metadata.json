@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_lokam",
+  "display_name": "Jalan Lokam",
+  "source_project": "Jalan Lokam",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Lokam\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-31T08:13:47.133229+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1513.339,
+  "profile_point_count": 624,
+  "valid_elevation_count": 88,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 74,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 73,
+  "usable_gradient_completion_pct": 11.7,
+  "elevation_hit_coverage_pct": 14.1,
+  "step_jump_rejection_pct": 11.86,
+  "gradient_min_pct": -1.425,
+  "gradient_max_pct": 0.605,
+  "path_bounds_svy21": {
+    "min_x": 33386.802,
+    "min_y": 36408.716,
+    "max_x": 33773.227,
+    "max_y": 36795.671
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN LOKAM",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 758,
+    "offroad_point_count": 134,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TAI KENG GARDENS",
+        "point_count": 107
+      },
+      {
+        "road_name": "PAYA LEBAR CRESCENT",
+        "point_count": 9
+      },
+      {
+        "road_name": "TAI KENG LANE",
+        "point_count": 7
+      },
+      {
+        "road_name": "UPPER PAYA LEBAR ROAD",
+        "point_count": 4
+      },
+      {
+        "road_name": "TAI KENG AVENUE",
+        "point_count": 4
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 1316.0,
+    "trimmed_offroad_points": 134
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "path_key": "river_valley_road",
+  "display_name": "River Valley Road",
+  "source_project": "River Valley Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\River Valley Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Singapore_River_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Singapore_River_LTA",
+  "generated_at_utc": "2026-06-24T02:54:17.892493+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 13341.472,
+  "profile_point_count": 3058,
+  "valid_elevation_count": 1446,
+  "rejected_outlier_count": 133,
+  "rejected_step_jump_count": 855,
+  "repaired_gradient_point_count": 31,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 609,
+  "usable_gradient_completion_pct": 19.91,
+  "elevation_hit_coverage_pct": 47.29,
+  "step_jump_rejection_pct": 27.96,
+  "gradient_min_pct": -14.48,
+  "gradient_max_pct": 11.936,
+  "path_bounds_svy21": {
+    "min_x": 27179.811,
+    "min_y": 30222.8,
+    "max_x": 29644.363,
+    "max_y": 30991.762
+  },
+  "road_boundary": {
+    "target_road_name": "RIVER VALLEY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 6672,
+    "offroad_point_count": 3614,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 663
+      },
+      {
+        "road_name": "KIM SENG ROAD",
+        "point_count": 445
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 413
+      },
+      {
+        "road_name": "NORTH BOAT QUAY",
+        "point_count": 340
+      },
+      {
+        "road_name": "MARTIN PLACE",
+        "point_count": 143
+      }
+    ],
+    "offroad_chainage_min_m": 150.0,
+    "offroad_chainage_max_m": 13322.0,
+    "trimmed_offroad_points": 3614
+  }
+}

@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+camden_park,1,,CAMDEN PARK,0.177,0.089,0.0,8.259,,
+camden_park,2,,CAMDEN PARK,27.903,14.129,14.0,9.445,,
+camden_park,3,,CAMDEN PARK,65.104,225.746,226.0,15.75,10.0,2.0
+camden_park,4,,CAMDEN PARK,171.842,493.692,494.0,15.353,-3.636,1.0
+camden_park,5,,CAMDEN PARK,58.754,608.991,608.0,10.702,,
+camden_park,6,,CAMDEN PARK,0.213,852.936,852.0,5.056,,
+camden_park,7,,CAMDEN PARK,342.356,1024.432,1024.0,7.395,,
+camden_park,8,,CAMDEN PARK,317.796,1354.508,1354.0,17.237,-2.5,1.0
+camden_park,9,,CAMDEN PARK,22.149,1524.481,1524.0,5.216,-3.936,1.0

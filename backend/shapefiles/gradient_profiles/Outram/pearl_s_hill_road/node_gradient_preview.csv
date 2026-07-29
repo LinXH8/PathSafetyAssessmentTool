@@ -1,0 +1,17 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pearl_s_hill_road,1,Cam4_20251229_092441_725_B.jpeg,,10.198,5.099,6.0,6.778,,
+pearl_s_hill_road,2,Cam4_20251229_092448_353_B.jpeg,,23.228,16.713,16.0,5.752,,
+pearl_s_hill_road,3,Cam4_20251229_092458_563_B.jpeg,,30.148,26.688,26.0,4.55,,
+pearl_s_hill_road,4,Cam4_20251229_092505_778_B.jpeg,,40.005,35.077,36.0,4.55,0.687,1.0
+pearl_s_hill_road,5,Cam4_20251229_092516_009_B.jpeg,,49.71,44.858,44.0,5.091,10.404,2.0
+pearl_s_hill_road,6,Cam4_20251229_092528_643_B.jpeg,,62.187,55.949,56.0,6.176,8.957,2.0
+pearl_s_hill_road,7,Cam4_20251229_092542_498_B.jpeg,,73.733,67.96,68.0,7.001,7.5,1.0
+pearl_s_hill_road,8,Cam4_20251229_092552_108_B.jpeg,,84.492,79.112,80.0,8.076,10.0,2.0
+pearl_s_hill_road,9,Cam4_20251229_092602_323_B.jpeg,,108.929,96.71,96.0,9.663,7.812,1.0
+pearl_s_hill_road,10,Cam4_20251229_092627_603_B.jpeg,,123.453,116.191,116.0,10.801,0.625,1.0
+pearl_s_hill_road,11,Cam4_20251229_092645_054_B.jpeg,,134.058,128.756,128.0,10.726,-3.125,1.0
+pearl_s_hill_road,12,Cam4_20251229_092649_858_B.jpeg,,146.29,140.174,140.0,10.026,-8.75,2.0
+pearl_s_hill_road,13,Cam4_20251229_092654_665_B.jpeg,,175.924,161.107,162.0,7.792,-11.25,2.0
+pearl_s_hill_road,14,Cam4_20251229_092703_074_B.jpeg,,245.96,210.942,210.0,4.505,,
+pearl_s_hill_road,15,Cam4_20251229_092734_876_B.jpeg,,251.855,248.908,248.0,5.896,,
+pearl_s_hill_road,16,Cam4_20251229_092736_682_B.jpeg,,262.19,257.023,258.0,5.859,,

@@ -1,0 +1,19 @@
+project=Conway Grove
+path_key=conway_grove
+lidar_bundle=Serangoon
+
+Road boundary check: no off-road points detected
+  [1/14] 20240805_Serangoon_02_Track07.laz (157 samples)
+  [2/14] 20240808_Serangoon_03_Track21.laz (29 samples)
+  [3/14] 20240808_Serangoon_03_Track23.laz (204 samples)
+  [4/14] 20240808_Serangoon_03_Track28.laz (85 samples)
+  [5/14] 20240808_Serangoon_03_Track29.laz (52 samples)
+  [6/14] 20240808_Serangoon_03_Track30.laz (23 samples)
+  [7/14] 20240808_Serangoon_03_Track32.laz (161 samples)
+  [8/14] 20240808_Serangoon_03_Track33.laz (120 samples)
+  [9/14] 20240808_Serangoon_03_Track40.laz (67 samples)
+  [10/14] 20240808_Serangoon_03_Track41.laz (15 samples)
+  [11/14] 20240808_Serangoon_03_Track84.laz (113 samples)
+  [12/14] 20240808_Serangoon_03_Track85.laz (85 samples)
+  [13/14] 20240808_Serangoon_03_Track86.laz (68 samples)
+  [14/14] 20240808_Serangoon_03_Track87.laz (71 samples)

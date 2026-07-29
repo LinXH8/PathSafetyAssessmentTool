@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+olive_road,1,,OLIVE ROAD,583.452,291.726,292.0,26.207,-4.481,1.0
+olive_road,2,,OLIVE ROAD,361.8,764.352,764.0,20.113,,
+olive_road,3,,OLIVE ROAD,91.521,992.769,992.0,3.959,,

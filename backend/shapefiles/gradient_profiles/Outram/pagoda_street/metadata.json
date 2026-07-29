@@ -1,0 +1,50 @@
+{
+  "path_key": "pagoda_street",
+  "display_name": "Pagoda Street",
+  "source_project": "Pagoda Street",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Pagoda Street\\geo_data.gpkg",
+  "lidar_bundle": "D_Outram_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Outram_LTA",
+  "generated_at_utc": "2026-06-23T09:07:09.112461+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 415.705,
+  "profile_point_count": 198,
+  "valid_elevation_count": 68,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 70,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 3,
+  "valid_gradient_count": 81,
+  "usable_gradient_completion_pct": 40.91,
+  "elevation_hit_coverage_pct": 34.34,
+  "step_jump_rejection_pct": 35.35,
+  "gradient_min_pct": -10.57,
+  "gradient_max_pct": 10.332,
+  "path_bounds_svy21": {
+    "min_x": 29130.418,
+    "min_y": 29470.968,
+    "max_x": 29339.072,
+    "max_y": 29565.34
+  },
+  "road_boundary": {
+    "target_road_name": "PAGODA STREET",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 209,
+    "offroad_point_count": 11,
+    "offroad_top_road_names": [
+      {
+        "road_name": "TRENGGANU STREET",
+        "point_count": 11
+      }
+    ],
+    "offroad_chainage_min_m": 48.0,
+    "offroad_chainage_max_m": 68.0,
+    "trimmed_offroad_points": 11
+  }
+}

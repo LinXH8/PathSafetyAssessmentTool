@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+serangoon_terrace,1,Serangoon Terrace_Cam4_20260112_084321_602_A.jpeg,,11.706,5.853,,,,
+serangoon_terrace,2,Serangoon Terrace_Cam4_20260112_084326_413_A.jpeg,,22.095,16.901,16.0,15.542,,
+serangoon_terrace,3,Serangoon Terrace_Cam4_20260112_084330_620_A.jpeg,,33.448,27.771,28.0,18.788,,
+serangoon_terrace,4,Serangoon Terrace_Cam4_20260112_084335_441_A.jpeg,,44.544,38.996,38.0,22.897,,
+serangoon_terrace,5,Serangoon Terrace_Cam4_20260112_084340_255_A.jpeg,,50.018,47.281,48.0,27.584,,
+serangoon_terrace,6,Serangoon Terrace_Cam4_20260112_084342_658_A.jpeg,,115.471,82.745,82.0,24.446,,
+serangoon_terrace,7,Serangoon Terrace_Cam4_20260112_084435_459_A.jpeg,,129.19,122.331,122.0,13.239,,
+serangoon_terrace,8,Serangoon Terrace_Cam4_20260112_084441_466_A.jpeg,,151.056,140.123,140.0,11.449,,
+serangoon_terrace,9,Serangoon Terrace_Cam4_20260112_084450_474_A.jpeg,,176.886,163.971,164.0,9.099,-2.9,1.0
+serangoon_terrace,10,Serangoon Terrace_Cam4_20260112_084458_332_A.jpeg,,214.827,195.856,196.0,8.176,,
+serangoon_terrace,11,Serangoon Terrace_Cam4_20260112_084515_153_A.jpeg,,224.411,219.619,220.0,7.906,0.725,1.0
+serangoon_terrace,12,Serangoon Terrace_Cam4_20260112_084518_763_A.jpeg,,251.776,238.093,238.0,7.974,0.35,1.0
+serangoon_terrace,13,Serangoon Terrace_Cam4_20260112_084530_775_A.jpeg,,312.364,282.07,282.0,10.11,,

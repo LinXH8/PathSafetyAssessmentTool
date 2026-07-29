@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_chulek",
+  "display_name": "Jalan Chulek",
+  "source_project": "Jalan Chulek",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Chulek\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T16:05:27.950885+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 293.571,
+  "profile_point_count": 148,
+  "valid_elevation_count": 148,
+  "rejected_outlier_count": 13,
+  "rejected_step_jump_count": 102,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 19,
+  "usable_gradient_completion_pct": 12.84,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 68.92,
+  "gradient_min_pct": -0.941,
+  "gradient_max_pct": 9.772,
+  "path_bounds_svy21": {
+    "min_x": 31753.379,
+    "min_y": 38702.619,
+    "max_x": 31899.172,
+    "max_y": 38725.104
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN CHULEK",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 148,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

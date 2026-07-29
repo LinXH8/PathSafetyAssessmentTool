@@ -1,0 +1,42 @@
+{
+  "path_key": "jalan_bahasa",
+  "display_name": "Jalan Bahasa",
+  "source_project": "Jalan Bahasa",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry5\\_projects\\Jalan Bahasa\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-08T07:37:08.203932+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 585.165,
+  "profile_point_count": 294,
+  "valid_elevation_count": 294,
+  "rejected_outlier_count": 18,
+  "rejected_step_jump_count": 217,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 36,
+  "usable_gradient_completion_pct": 12.24,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 73.81,
+  "gradient_min_pct": -7.229,
+  "gradient_max_pct": 5.878,
+  "path_bounds_svy21": {
+    "min_x": 26225.176,
+    "min_y": 34269.59,
+    "max_x": 26411.701,
+    "max_y": 34706.351
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN BAHASA",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 294,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

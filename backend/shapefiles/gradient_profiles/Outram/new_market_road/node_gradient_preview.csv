@@ -1,0 +1,16 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+new_market_road,1,Cam4_20251230_084209_308_C.jpeg,,14.841,7.421,,,,
+new_market_road,2,Cam4_20251230_084210_510_C.jpeg,,21.564,18.203,,,,
+new_market_road,3,Cam4_20251230_084211_110_C.jpeg,,361.291,191.427,,,,
+new_market_road,4,Cam4_20251230_084746_943_C.jpeg,,375.659,368.475,368.0,3.335,,
+new_market_road,5,Cam4_20251230_084752_350_C.jpeg,,381.077,378.368,378.0,3.565,,
+new_market_road,6,Cam4_20251230_084754_750_C.jpeg,,451.698,416.387,416.0,2.408,0.271,1.0
+new_market_road,7,Cam4_20251230_084839_828_C.jpeg,,459.663,455.68,456.0,2.464,,
+new_market_road,8,Cam4_20251230_084843_436_C.jpeg,,469.289,464.476,464.0,2.839,,
+new_market_road,9,Cam4_20251230_084854_853_C.jpeg,,495.291,482.29,482.0,2.202,,
+new_market_road,10,Cam4_20251230_084948_916_C.jpeg,,504.224,499.757,500.0,2.2,,
+new_market_road,11,Cam4_20251230_084953_120_C.jpeg,,518.795,511.51,512.0,2.663,6.114,1.0
+new_market_road,12,Cam4_20251230_085000_929_C.jpeg,,523.991,521.393,522.0,2.625,-3.442,1.0
+new_market_road,13,Cam4_20251230_085003_331_C.jpeg,,918.16,721.075,,,,
+new_market_road,14,Cam4_20260109_075437_249_C.jpeg,,981.592,949.876,,,,
+new_market_road,15,Cam4_20260109_075505_479_C.jpeg,,1020.968,1001.28,,,,

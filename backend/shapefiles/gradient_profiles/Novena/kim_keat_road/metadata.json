@@ -1,0 +1,54 @@
+{
+  "path_key": "kim_keat_road",
+  "display_name": "Kim Keat Road",
+  "source_project": "Kim Keat Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260706_retry2\\_projects\\Kim Keat Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Novena",
+  "lidar_root": "E:\\LIDAR\\D_Novena",
+  "generated_at_utc": "2026-07-07T02:11:25.776017+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 652.831,
+  "profile_point_count": 326,
+  "valid_elevation_count": 326,
+  "rejected_outlier_count": 15,
+  "rejected_step_jump_count": 136,
+  "repaired_gradient_point_count": 13,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 142,
+  "usable_gradient_completion_pct": 43.56,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 41.72,
+  "gradient_min_pct": -8.548,
+  "gradient_max_pct": 9.955,
+  "path_bounds_svy21": {
+    "min_x": 30096.643,
+    "min_y": 33960.559,
+    "max_x": 30504.787,
+    "max_y": 34467.27
+  },
+  "road_boundary": {
+    "target_road_name": "KIM KEAT ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 328,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": ".",
+        "point_count": 1
+      },
+      {
+        "road_name": "JALAN BAHAGIA",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 652.831,
+    "trimmed_offroad_points": 2
+  }
+}

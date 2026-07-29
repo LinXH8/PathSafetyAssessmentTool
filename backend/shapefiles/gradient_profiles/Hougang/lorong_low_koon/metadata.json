@@ -1,0 +1,50 @@
+{
+  "path_key": "lorong_low_koon",
+  "display_name": "Lorong Low Koon",
+  "source_project": "Lorong Low Koon",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Lorong Low Koon\\geo_data.gpkg",
+  "lidar_bundle": "Hougang_02",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Hougang_02",
+  "generated_at_utc": "2026-05-31T10:47:25.671155+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 381.146,
+  "profile_point_count": 187,
+  "valid_elevation_count": 187,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 48,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 110,
+  "usable_gradient_completion_pct": 58.82,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 25.67,
+  "gradient_min_pct": -12.56,
+  "gradient_max_pct": 8.017,
+  "path_bounds_svy21": {
+    "min_x": 34581.195,
+    "min_y": 38671.866,
+    "max_x": 34777.025,
+    "max_y": 38771.452
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG LOW KOON",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 192,
+    "offroad_point_count": 5,
+    "offroad_top_road_names": [
+      {
+        "road_name": "HAI SING ROAD",
+        "point_count": 5
+      }
+    ],
+    "offroad_chainage_min_m": 282.0,
+    "offroad_chainage_max_m": 290.0,
+    "trimmed_offroad_points": 5
+  }
+}

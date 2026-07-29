@@ -1,0 +1,54 @@
+{
+  "path_key": "hythe_road",
+  "display_name": "Hythe Road",
+  "source_project": "Hythe Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Hythe Road\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T15:43:20.768288+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 824.476,
+  "profile_point_count": 406,
+  "valid_elevation_count": 406,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 119,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 237,
+  "usable_gradient_completion_pct": 58.37,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 29.31,
+  "gradient_min_pct": -7.196,
+  "gradient_max_pct": 10.825,
+  "path_bounds_svy21": {
+    "min_x": 31785.077,
+    "min_y": 38733.676,
+    "max_x": 31800.423,
+    "max_y": 39196.792
+  },
+  "road_boundary": {
+    "target_road_name": "HYTHE ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 414,
+    "offroad_point_count": 8,
+    "offroad_top_road_names": [
+      {
+        "road_name": "COURT ROAD",
+        "point_count": 5
+      },
+      {
+        "road_name": "KENSINGTON PARK ROAD",
+        "point_count": 3
+      }
+    ],
+    "offroad_chainage_min_m": 396.0,
+    "offroad_chainage_max_m": 572.0,
+    "trimmed_offroad_points": 8
+  }
+}

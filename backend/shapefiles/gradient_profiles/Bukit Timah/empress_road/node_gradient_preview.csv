@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+empress_road,1,Empress Road_Cam4_20251218_082608_596_B.jpeg,,11.664,5.832,6.0,7.991,,
+empress_road,2,Empress Road_Cam4_20251218_082612_807_B.jpeg,,75.436,43.55,44.0,10.419,4.219,1.0
+empress_road,3,Empress Road_Cam4_20251218_082634_443_B.jpeg,,84.183,79.81,80.0,10.984,,
+empress_road,4,Empress Road_Cam4_20251218_082638_048_B.jpeg,,96.638,90.41,90.0,,,
+empress_road,5,Empress Road_Cam4_20251218_082642_851_B.jpeg,,125.609,111.123,112.0,8.682,,
+empress_road,6,Empress Road_Cam4_20251218_082656_539_B.jpeg,,144.825,135.217,136.0,8.703,-4.375,1.0
+empress_road,7,Empress Road_Cam4_20251218_082727_220_B.jpeg,,154.816,149.821,150.0,8.461,-0.047,1.0
+empress_road,8,Empress Road_Cam4_20251218_082730_823_B.jpeg,,220.251,187.533,,,,
+empress_road,9,Empress Road_Cam4_20251218_082800_254_B.jpeg,,228.065,224.158,224.0,6.306,,
+empress_road,10,Empress Road_Cam4_20251218_082803_859_B.jpeg,,238.756,233.411,234.0,6.28,,
+empress_road,11,Empress Road_Cam4_20251218_082807_462_B.jpeg,,248.99,243.873,244.0,6.85,3.976,1.0

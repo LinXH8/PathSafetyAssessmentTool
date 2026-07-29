@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+jalan_gendang,1,Jalan Gendang_Cam4_20260103_092000_185_B.jpeg,,13.019,6.509,6.0,21.571,,
+jalan_gendang,2,Jalan Gendang_Cam4_20260103_092006_194_B.jpeg,,23.839,18.429,18.0,21.097,,
+jalan_gendang,3,Jalan Gendang_Cam4_20260103_092011_000_B.jpeg,,31.25,27.544,28.0,19.762,,
+jalan_gendang,4,Jalan Gendang_Cam4_20260103_092014_005_B.jpeg,,41.437,36.343,36.0,19.212,-7.5,1.0
+jalan_gendang,5,Jalan Gendang_Cam4_20260103_092017_608_B.jpeg,,51.008,46.222,46.0,18.412,-6.25,1.0
+jalan_gendang,6,Jalan Gendang_Cam4_20260103_092020_612_B.jpeg,,60.412,55.71,56.0,17.953,,
+jalan_gendang,7,Jalan Gendang_Cam4_20260103_092023_613_B.jpeg,,74.0,67.206,68.0,16.678,,
+jalan_gendang,8,Jalan Gendang_Cam4_20260103_092027_817_B.jpeg,,80.76,77.38,78.0,15.799,,
+jalan_gendang,9,Jalan Gendang_Cam4_20260103_092030_227_B.jpeg,,90.109,85.435,86.0,14.955,,
+jalan_gendang,10,Jalan Gendang_Cam4_20260103_092034_432_B.jpeg,,96.587,93.348,94.0,14.78,0.703,1.0
+jalan_gendang,11,Jalan Gendang_Cam4_20260103_092041_039_B.jpeg,,118.933,107.76,108.0,14.036,-7.188,1.0

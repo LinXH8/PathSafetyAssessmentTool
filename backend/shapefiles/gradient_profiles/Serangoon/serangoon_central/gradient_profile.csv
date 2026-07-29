@@ -1,0 +1,9 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+serangoon_central,Serangoon Central,0.0,32473.943,37493.777,18.696,15.189,15.189,0.0,1.0,SERANGOON CENTRAL,15.497
+serangoon_central,Serangoon Central,2.0,32472.6,37495.259,16.898,15.189,15.189,-2.044,1.0,SERANGOON CENTRAL,13.58
+serangoon_central,Serangoon Central,4.0,32471.257,37496.741,15.189,15.189,15.189,-2.795,1.0,SERANGOON CENTRAL,11.663
+serangoon_central,Serangoon Central,6.0,32469.914,37498.223,14.966,14.966,15.067,-4.031,1.0,SERANGOON CENTRAL,9.746
+serangoon_central,Serangoon Central,8.0,32468.571,37499.705,15.067,15.067,14.966,-5.266,1.0,SERANGOON CENTRAL,7.829
+serangoon_central,Serangoon Central,10.0,32467.228,37501.187,14.634,14.866,14.866,-6.472,1.0,SERANGOON CENTRAL,5.912
+serangoon_central,Serangoon Central,12.0,32465.886,37502.669,14.666,14.666,14.768,-7.161,1.0,SERANGOON CENTRAL,3.995
+serangoon_central,Serangoon Central,12.132,32465.797,37502.767,14.67,14.67,14.67,,,SERANGOON CENTRAL,3.869

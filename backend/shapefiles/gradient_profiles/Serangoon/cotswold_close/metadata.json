@@ -1,0 +1,50 @@
+{
+  "path_key": "cotswold_close",
+  "display_name": "Cotswold Close",
+  "source_project": "COTSWOLD CLOSE",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\tmp\\requested_source_projects_20260529\\COTSWOLD CLOSE\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-29T04:09:29.847646+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 767.088,
+  "profile_point_count": 373,
+  "valid_elevation_count": 373,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 160,
+  "repaired_gradient_point_count": 1,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 167,
+  "usable_gradient_completion_pct": 44.77,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 42.9,
+  "gradient_min_pct": -14.303,
+  "gradient_max_pct": 11.81,
+  "path_bounds_svy21": {
+    "min_x": 31076.658,
+    "min_y": 36398.913,
+    "max_x": 31287.501,
+    "max_y": 36629.281
+  },
+  "road_boundary": {
+    "target_road_name": "COTSWOLD CLOSE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 385,
+    "offroad_point_count": 12,
+    "offroad_top_road_names": [
+      {
+        "road_name": "DUNSFOLD DRIVE",
+        "point_count": 12
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 22.0,
+    "trimmed_offroad_points": 12
+  }
+}

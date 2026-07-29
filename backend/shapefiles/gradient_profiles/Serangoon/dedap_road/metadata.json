@@ -1,0 +1,58 @@
+{
+  "path_key": "dedap_road",
+  "display_name": "Dedap Road",
+  "source_project": "Dedap Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Dedap Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T10:39:12.838476+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 1512.892,
+  "profile_point_count": 590,
+  "valid_elevation_count": 590,
+  "rejected_outlier_count": 39,
+  "rejected_step_jump_count": 267,
+  "repaired_gradient_point_count": 16,
+  "removed_bad_gradient_point_count": 4,
+  "valid_gradient_count": 235,
+  "usable_gradient_completion_pct": 39.83,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 45.25,
+  "gradient_min_pct": -13.984,
+  "gradient_max_pct": 11.68,
+  "path_bounds_svy21": {
+    "min_x": 31341.35,
+    "min_y": 41084.142,
+    "max_x": 31734.568,
+    "max_y": 41207.674
+  },
+  "road_boundary": {
+    "target_road_name": "DEDAP ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 758,
+    "offroad_point_count": 168,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 116
+      },
+      {
+        "road_name": "BEGONIA ROAD",
+        "point_count": 28
+      },
+      {
+        "road_name": "UPPER NERAM ROAD",
+        "point_count": 24
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 966.0,
+    "trimmed_offroad_points": 168
+  }
+}

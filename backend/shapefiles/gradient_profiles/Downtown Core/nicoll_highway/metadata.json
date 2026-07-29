@@ -1,0 +1,66 @@
+{
+  "path_key": "nicoll_highway",
+  "display_name": "Nicoll Highway",
+  "source_project": "Nicoll Highway",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Nicoll Highway\\geo_data.gpkg",
+  "lidar_bundle": "D_Kallang_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Kallang_LTA",
+  "generated_at_utc": "2026-06-17T08:31:48.501666+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 15905.835,
+  "profile_point_count": 4329,
+  "valid_elevation_count": 3001,
+  "rejected_outlier_count": 173,
+  "rejected_step_jump_count": 1706,
+  "repaired_gradient_point_count": 53,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 1102,
+  "usable_gradient_completion_pct": 25.46,
+  "elevation_hit_coverage_pct": 69.32,
+  "step_jump_rejection_pct": 39.41,
+  "gradient_min_pct": -11.373,
+  "gradient_max_pct": 14.866,
+  "path_bounds_svy21": {
+    "min_x": 30217.069,
+    "min_y": 30447.514,
+    "max_x": 32891.273,
+    "max_y": 32236.275
+  },
+  "road_boundary": {
+    "target_road_name": "NICOLL HIGHWAY",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 7954,
+    "offroad_point_count": 3625,
+    "offroad_top_road_names": [
+      {
+        "road_name": "REPUBLIC AVENUE",
+        "point_count": 976
+      },
+      {
+        "road_name": "STADIUM DRIVE",
+        "point_count": 557
+      },
+      {
+        "road_name": ".",
+        "point_count": 428
+      },
+      {
+        "road_name": "STADIUM ROAD",
+        "point_count": 382
+      },
+      {
+        "road_name": "EAST COAST PARKWAY",
+        "point_count": 364
+      }
+    ],
+    "offroad_chainage_min_m": 462.0,
+    "offroad_chainage_max_m": 15906.0,
+    "trimmed_offroad_points": 3625
+  }
+}

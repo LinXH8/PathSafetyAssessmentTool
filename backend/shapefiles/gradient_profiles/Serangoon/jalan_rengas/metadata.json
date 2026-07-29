@@ -1,0 +1,50 @@
+{
+  "path_key": "jalan_rengas",
+  "display_name": "Jalan Rengas",
+  "source_project": "Jalan Rengas",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Jalan Rengas\\geo_data.gpkg",
+  "lidar_bundle": "D_Serangoon_LTA",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\D_Serangoon_LTA",
+  "generated_at_utc": "2026-05-29T17:16:47.167345+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 190.396,
+  "profile_point_count": 95,
+  "valid_elevation_count": 95,
+  "rejected_outlier_count": 9,
+  "rejected_step_jump_count": 67,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 6,
+  "usable_gradient_completion_pct": 6.32,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 70.53,
+  "gradient_min_pct": -6.205,
+  "gradient_max_pct": 3.388,
+  "path_bounds_svy21": {
+    "min_x": 32155.21,
+    "min_y": 40792.951,
+    "max_x": 32253.653,
+    "max_y": 40811.401
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN RENGAS",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 97,
+    "offroad_point_count": 2,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SELETAR COURT",
+        "point_count": 2
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 2.0,
+    "trimmed_offroad_points": 2
+  }
+}

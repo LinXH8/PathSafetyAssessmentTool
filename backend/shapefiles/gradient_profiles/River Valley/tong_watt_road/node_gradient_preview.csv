@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+tong_watt_road,1,Cam4_20251204_080617_085_C.jpeg,,14.257,7.129,8.0,17.575,,
+tong_watt_road,2,Cam4_20251204_080621_891_C.jpeg,,20.611,17.434,18.0,16.244,,
+tong_watt_road,3,Cam4_20251204_080624_254_C.jpeg,,30.94,25.776,26.0,13.606,,
+tong_watt_road,4,Cam4_20251204_080628_458_C.jpeg,,40.083,35.511,36.0,10.573,,
+tong_watt_road,5,Cam4_20251204_080632_061_C.jpeg,,52.471,46.277,46.0,10.423,,
+tong_watt_road,6,Cam4_20251204_080636_867_C.jpeg,,62.883,57.677,58.0,12.14,,
+tong_watt_road,7,Cam4_20251204_080640_472_C.jpeg,,70.683,66.783,66.0,13.0,,
+tong_watt_road,8,Cam4_20251204_080643_473_C.jpeg,,81.528,76.106,76.0,12.635,,
+tong_watt_road,9,Cam4_20251204_080647_676_C.jpeg,,93.105,87.316,88.0,10.122,,
+tong_watt_road,10,Cam4_20251204_080652_481_C.jpeg,,132.102,112.603,112.0,8.394,,
+tong_watt_road,11,Cam4_20251204_080707_247_C.jpeg,,142.145,137.123,138.0,5.799,-3.176,1.0
+tong_watt_road,12,Cam4_20251204_080710_250_C.jpeg,,151.806,146.975,146.0,5.584,-3.125,1.0
+tong_watt_road,13,Cam4_20251204_080713_253_C.jpeg,,160.62,156.213,156.0,5.176,,

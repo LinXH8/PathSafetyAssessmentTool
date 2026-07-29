@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+crichton_close,1,Crichton Close_Cam4_20260202_105602_066_A.jpeg,,10.601,5.301,6.0,19.54,4.203,1.0
+crichton_close,2,Crichton Close_Cam4_20260202_105605_071_A.jpeg,,21.635,16.118,16.0,20.046,4.962,1.0
+crichton_close,3,Crichton Close_Cam4_20260202_105608_082_A.jpeg,,33.281,27.458,28.0,20.838,7.425,1.0
+crichton_close,4,Crichton Close_Cam4_20260202_105611_686_A.jpeg,,40.776,37.028,38.0,21.697,7.617,1.0
+crichton_close,5,Crichton Close_Cam4_20260202_105614_099_A.jpeg,,51.588,46.182,46.0,21.784,1.044,1.0
+crichton_close,6,Crichton Close_Cam4_20260202_105617_705_A.jpeg,,76.701,64.145,64.0,22.341,,
+crichton_close,7,Crichton Close_Cam4_20260202_105628_552_A.jpeg,,89.93,83.316,84.0,22.727,1.5,1.0
+crichton_close,8,Crichton Close_Cam4_20260202_105633_956_A.jpeg,,112.647,101.288,102.0,22.982,2.85,1.0
+crichton_close,9,Crichton Close_Cam4_20260202_105642_903_A.jpeg,,187.382,150.014,150.0,28.837,,

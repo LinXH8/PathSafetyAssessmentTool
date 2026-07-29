@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+hastings_road,1,Hastings Road_Cam4_20251208_105208_032_A.jpeg,,4.858,2.429,2.0,33.258,0.0,1.0
+hastings_road,2,Hastings Road_Cam4_20251212_085551_737_A.jpeg,,17.032,10.945,10.0,33.258,,
+hastings_road,3,Hastings Road_Cam4_20251212_085555_489_A.jpeg,,23.377,20.204,20.0,28.958,,
+hastings_road,4,Hastings Road_Cam4_20251212_085557_491_A.jpeg,,54.855,39.116,40.0,13.967,,
+hastings_road,5,Hastings Road_Cam4_20251212_085609_396_A.jpeg,,67.082,60.968,60.0,3.88,7.208,1.0
+hastings_road,6,Hastings Road_Cam4_20251212_085630_995_A.jpeg,,69.822,68.452,68.0,5.643,31.953,2.0

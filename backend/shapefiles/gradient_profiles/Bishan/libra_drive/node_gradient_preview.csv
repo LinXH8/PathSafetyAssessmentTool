@@ -1,0 +1,13 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+libra_drive,1,Libra Drive_Cam4_20260105_105833_947_A.jpeg,,10.108,5.054,,,,
+libra_drive,2,Libra Drive_Cam4_20260105_105837_550_A.jpeg,,19.989,15.049,,,,
+libra_drive,3,Libra Drive_Cam4_20260105_105846_559_A.jpeg,,30.39,25.189,,,,
+libra_drive,4,Libra Drive_Cam4_20260105_105856_768_A.jpeg,,42.356,36.373,,,,
+libra_drive,5,Libra Drive_Cam4_20260105_105907_587_A.jpeg,,66.212,54.284,54.0,35.337,0.0,1.0
+libra_drive,6,Libra Drive_Cam4_20260105_105944_251_A.jpeg,,76.891,71.552,72.0,36.014,,
+libra_drive,7,Libra Drive_Cam4_20260105_105948_480_A.jpeg,,86.7,81.796,82.0,,,
+libra_drive,8,Libra Drive_Cam4_20260105_105952_687_A.jpeg,,98.841,92.771,92.0,33.934,,
+libra_drive,9,Libra Drive_Cam4_20260105_105958_695_A.jpeg,,108.562,103.701,104.0,33.236,,
+libra_drive,10,Libra Drive_Cam4_20260105_110005_310_A.jpeg,,144.578,126.57,,,,
+libra_drive,11,Libra Drive_Cam4_20260105_110252_358_A.jpeg,,154.669,149.624,,,,
+libra_drive,12,Libra Drive_Cam4_20260105_110255_362_A.jpeg,,164.417,159.543,,,,

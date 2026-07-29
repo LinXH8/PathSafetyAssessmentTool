@@ -1,0 +1,50 @@
+{
+  "path_key": "serangoon_central_drive",
+  "display_name": "Serangoon Central Drive",
+  "source_project": "Serangoon Central Drive",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\data\\Serangoon Central Drive\\geo_data.gpkg",
+  "lidar_bundle": "Serangoon",
+  "lidar_root": "E:\\3D point cloud GSV_NorthEast_30092025\\Serangoon",
+  "generated_at_utc": "2026-05-30T07:10:17.060151+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 495.879,
+  "profile_point_count": 222,
+  "valid_elevation_count": 216,
+  "rejected_outlier_count": 25,
+  "rejected_step_jump_count": 44,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 164,
+  "usable_gradient_completion_pct": 73.87,
+  "elevation_hit_coverage_pct": 97.3,
+  "step_jump_rejection_pct": 19.82,
+  "gradient_min_pct": -3.306,
+  "gradient_max_pct": 3.703,
+  "path_bounds_svy21": {
+    "min_x": 32199.76,
+    "min_y": 37397.36,
+    "max_x": 32389.053,
+    "max_y": 37513.835
+  },
+  "road_boundary": {
+    "target_road_name": "SERANGOON CENTRAL DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 249,
+    "offroad_point_count": 27,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BOUNDARY ROAD",
+        "point_count": 27
+      }
+    ],
+    "offroad_chainage_min_m": 444.0,
+    "offroad_chainage_max_m": 496.0,
+    "trimmed_offroad_points": 27
+  }
+}

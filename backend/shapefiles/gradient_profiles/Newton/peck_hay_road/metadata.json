@@ -1,0 +1,42 @@
+{
+  "path_key": "peck_hay_road",
+  "display_name": "Peck Hay Road",
+  "source_project": "Peck Hay Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Peck Hay Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Newton_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Newton_LTA",
+  "generated_at_utc": "2026-06-24T01:07:54.316282+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 652.681,
+  "profile_point_count": 328,
+  "valid_elevation_count": 328,
+  "rejected_outlier_count": 61,
+  "rejected_step_jump_count": 227,
+  "repaired_gradient_point_count": 6,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 64,
+  "usable_gradient_completion_pct": 19.51,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 69.21,
+  "gradient_min_pct": -9.531,
+  "gradient_max_pct": 10.833,
+  "path_bounds_svy21": {
+    "min_x": 28485.994,
+    "min_y": 32328.588,
+    "max_x": 28726.994,
+    "max_y": 32509.473
+  },
+  "road_boundary": {
+    "target_road_name": "PECK HAY ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 328,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

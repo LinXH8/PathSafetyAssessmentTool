@@ -1,0 +1,50 @@
+{
+  "path_key": "toh_tuck_terrace",
+  "display_name": "Toh Tuck Terrace",
+  "source_project": "Toh Tuck Terrace",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Toh Tuck Terrace\\geo_data.gpkg",
+  "lidar_bundle": "D_BukitTimah",
+  "lidar_root": "E:\\LIDAR\\D_BukitTimah",
+  "generated_at_utc": "2026-06-06T17:31:14.192933+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 726.489,
+  "profile_point_count": 302,
+  "valid_elevation_count": 302,
+  "rejected_outlier_count": 10,
+  "rejected_step_jump_count": 199,
+  "repaired_gradient_point_count": 7,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 58,
+  "usable_gradient_completion_pct": 19.21,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 65.89,
+  "gradient_min_pct": -9.531,
+  "gradient_max_pct": 11.937,
+  "path_bounds_svy21": {
+    "min_x": 20706.121,
+    "min_y": 35496.492,
+    "max_x": 20839.459,
+    "max_y": 35733.194
+  },
+  "road_boundary": {
+    "target_road_name": "TOH TUCK TERRACE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 365,
+    "offroad_point_count": 63,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG KISMIS",
+        "point_count": 63
+      }
+    ],
+    "offroad_chainage_min_m": 604.0,
+    "offroad_chainage_max_m": 726.489,
+    "trimmed_offroad_points": 63
+  }
+}

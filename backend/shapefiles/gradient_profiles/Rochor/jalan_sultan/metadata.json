@@ -1,0 +1,66 @@
+{
+  "path_key": "jalan_sultan",
+  "display_name": "Jalan Sultan",
+  "source_project": "Jalan Sultan",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\uat-profile\\projects\\Jalan Sultan\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-07T14:52:43.350502+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 2415.252,
+  "profile_point_count": 736,
+  "valid_elevation_count": 731,
+  "rejected_outlier_count": 94,
+  "rejected_step_jump_count": 480,
+  "repaired_gradient_point_count": 18,
+  "removed_bad_gradient_point_count": 6,
+  "valid_gradient_count": 161,
+  "usable_gradient_completion_pct": 21.88,
+  "elevation_hit_coverage_pct": 99.32,
+  "step_jump_rejection_pct": 65.22,
+  "gradient_min_pct": -11.095,
+  "gradient_max_pct": 9.309,
+  "path_bounds_svy21": {
+    "min_x": 30918.41,
+    "min_y": 31556.299,
+    "max_x": 31218.764,
+    "max_y": 32008.326
+  },
+  "road_boundary": {
+    "target_road_name": "JALAN SULTAN",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 1209,
+    "offroad_point_count": 473,
+    "offroad_top_road_names": [
+      {
+        "road_name": "NORTH BRIDGE ROAD",
+        "point_count": 153
+      },
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 121
+      },
+      {
+        "road_name": "VICTORIA STREET",
+        "point_count": 86
+      },
+      {
+        "road_name": "ALIWAL STREET",
+        "point_count": 51
+      },
+      {
+        "road_name": "PAHANG STREET",
+        "point_count": 39
+      }
+    ],
+    "offroad_chainage_min_m": 10.0,
+    "offroad_chainage_max_m": 2398.0,
+    "trimmed_offroad_points": 473
+  }
+}

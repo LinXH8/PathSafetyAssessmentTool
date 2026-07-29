@@ -1,0 +1,10 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+bukit_timah_road,1,,BUKIT TIMAH ROAD,885.904,442.952,442.0,13.161,,
+bukit_timah_road,2,,BUKIT TIMAH ROAD,1857.987,1814.897,1814.0,15.463,,
+bukit_timah_road,3,,BUKIT TIMAH ROAD,468.2,2978.296,2978.0,,,
+bukit_timah_road,4,,BUKIT TIMAH ROAD,1118.651,3779.717,3780.0,4.759,,
+bukit_timah_road,5,,BUKIT TIMAH ROAD,843.967,4761.604,4762.0,7.413,,
+bukit_timah_road,6,,BUKIT TIMAH ROAD,203.142,5286.41,5286.0,3.577,,
+bukit_timah_road,7,,BUKIT TIMAH ROAD,819.497,5797.73,5798.0,4.355,,
+bukit_timah_road,8,,BUKIT TIMAH ROAD,952.482,6684.632,6684.0,3.526,,
+bukit_timah_road,9,,BUKIT TIMAH ROAD,1810.633,8066.19,8066.0,7.973,-1.799,1.0

@@ -1,0 +1,20 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+dedap_link,1,Dedap Link_Cam4_20260106_075718_911_C.jpeg,,11.982,5.991,6.0,17.412,,
+dedap_link,2,Dedap Link_Cam4_20260106_075726_718_C.jpeg,,20.102,16.042,16.0,17.47,,
+dedap_link,3,Dedap Link_Cam4_20260106_075730_320_C.jpeg,,29.093,24.598,24.0,18.687,,
+dedap_link,4,Dedap Link_Cam4_20260106_075734_526_C.jpeg,,39.464,34.278,34.0,19.599,,
+dedap_link,5,Dedap Link_Cam4_20260106_075739_335_C.jpeg,,50.978,45.221,46.0,18.601,,
+dedap_link,6,Dedap Link_Cam4_20260106_075744_747_C.jpeg,,59.674,55.326,56.0,19.005,2.822,1.0
+dedap_link,7,Dedap Link_Cam4_20260106_075748_953_C.jpeg,,120.912,90.293,90.0,18.25,,
+dedap_link,8,Dedap Link_Cam4_20260106_080132_504_C.jpeg,,133.454,127.183,,,,
+dedap_link,9,Dedap Link_Cam4_20260106_080137_909_C.jpeg,,139.245,136.35,,,,
+dedap_link,10,Dedap Link_Cam4_20260106_080140_913_C.jpeg,,149.441,144.343,144.0,17.617,,
+dedap_link,11,Dedap Link_Cam4_20260106_080146_317_C.jpeg,,175.777,162.609,162.0,16.212,-2.292,1.0
+dedap_link,12,Dedap Link_Cam4_20260106_080155_929_C.jpeg,,186.777,181.277,182.0,15.579,-2.917,1.0
+dedap_link,13,Dedap Link_Cam4_20260106_080159_533_C.jpeg,,195.696,191.237,192.0,14.712,,
+dedap_link,14,Dedap Link_Cam4_20260106_080203_137_C.jpeg,,205.284,200.49,200.0,14.504,1.771,1.0
+dedap_link,15,Dedap Link_Cam4_20260106_080209_142_C.jpeg,,212.785,209.034,210.0,15.404,9.115,2.0
+dedap_link,16,Dedap Link_Cam4_20260106_080212_144_C.jpeg,,222.885,217.835,218.0,15.812,2.708,1.0
+dedap_link,17,Dedap Link_Cam4_20260106_080216_347_C.jpeg,,231.707,227.296,228.0,16.324,8.241,1.0
+dedap_link,18,Dedap Link_Cam4_20260106_080221_750_C.jpeg,,242.01,236.858,,,,
+dedap_link,19,Dedap Link_Cam4_20260106_080315_433_C.jpeg,,251.837,246.923,,,,

@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+telegraph_street,1,Cam4_20251211_084003_400_C.jpeg,,10.832,5.416,6.0,3.297,1.556,1.0
+telegraph_street,2,Cam4_20251211_084005_803_C.jpeg,,22.194,16.513,16.0,3.093,-1.991,1.0
+telegraph_street,3,Cam4_20251211_084008_204_C.jpeg,,36.804,29.499,30.0,3.604,-1.076,1.0

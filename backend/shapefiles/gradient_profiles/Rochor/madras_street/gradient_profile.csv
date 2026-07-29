@@ -1,0 +1,15 @@
+path_key,source_project,chainage_m,x_svy21,y_svy21,elevation_m_raw,elevation_m_filtered,elevation_m_smooth,gradient_pct,Grade,nearest_road_name,nearest_road_dist_m
+madras_street,Madras Street,6.0,30208.846,31957.702,4.936,4.467,4.467,,,MADRAS STREET,3.421
+madras_street,Madras Street,8.0,30207.462,31956.258,3.258,4.467,4.467,,,MADRAS STREET,3.367
+madras_street,Madras Street,10.0,30206.078,31954.814,3.359,4.467,4.467,,,MADRAS STREET,3.312
+madras_street,Madras Street,12.0,30204.695,31953.369,4.467,4.467,4.467,,,MADRAS STREET,3.258
+madras_street,Madras Street,14.0,30203.311,31951.925,4.642,4.642,4.467,,,MADRAS STREET,3.204
+madras_street,Madras Street,16.0,30201.927,31950.481,4.678,4.678,4.467,,,MADRAS STREET,3.15
+madras_street,Madras Street,18.0,30200.544,31949.037,4.821,4.384,4.384,-8.395,1.0,MADRAS STREET,3.095
+madras_street,Madras Street,20.0,30199.16,31947.593,4.546,4.09,4.09,,,MADRAS STREET,3.041
+madras_street,Madras Street,22.0,30197.777,31946.149,3.796,3.796,3.796,,,MADRAS STREET,2.987
+madras_street,Madras Street,24.0,30196.393,31944.704,2.924,3.752,3.752,,,MADRAS STREET,2.933
+madras_street,Madras Street,26.0,30195.009,31943.26,3.289,3.708,3.708,-1.914,1.0,MADRAS STREET,2.879
+madras_street,Madras Street,28.0,30195.55,31944.0,2.871,3.664,3.664,,,MADRAS STREET,2.781
+madras_street,Madras Street,30.0,30196.808,31945.555,3.621,3.621,3.643,,,MADRAS STREET,2.668
+madras_street,Madras Street,32.0,30197.824,31946.812,4.909,3.621,3.621,,,MADRAS STREET,2.576

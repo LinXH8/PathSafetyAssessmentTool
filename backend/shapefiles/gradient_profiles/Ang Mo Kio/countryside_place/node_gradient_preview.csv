@@ -1,0 +1,14 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+countryside_place,1,Countryside Place_Cam4_20251231_083335_075_B.jpeg,,11.625,5.813,6.0,8.379,0.417,1.0
+countryside_place,2,Countryside Place_Cam4_20251231_083338_679_B.jpeg,,20.059,15.842,16.0,8.683,2.215,1.0
+countryside_place,3,Countryside Place_Cam4_20251231_083341_085_B.jpeg,,31.498,25.778,26.0,8.512,,
+countryside_place,4,Countryside Place_Cam4_20251231_083344_689_B.jpeg,,40.984,36.241,36.0,8.904,,
+countryside_place,5,Countryside Place_Cam4_20251231_083348_296_B.jpeg,,69.399,55.191,56.0,9.211,,
+countryside_place,6,Countryside Place_Cam4_20251231_083400_914_B.jpeg,,82.38,75.889,76.0,9.198,,
+countryside_place,7,Countryside Place_Cam4_20251231_083405_720_B.jpeg,,87.5,84.94,84.0,9.345,,
+countryside_place,8,Countryside Place_Cam4_20251231_083504_610_B.jpeg,,190.097,138.798,138.0,8.762,-1.406,1.0
+countryside_place,9,Countryside Place_Cam4_20251231_083543_656_B.jpeg,,199.3,194.698,194.0,8.329,0.0,1.0
+countryside_place,10,Countryside Place_Cam4_20251231_083548_460_B.jpeg,,212.677,205.988,206.0,8.329,0.0,1.0
+countryside_place,11,Countryside Place_Cam4_20251231_083555_069_B.jpeg,,235.253,223.965,,,,
+countryside_place,12,Countryside Place_Cam4_20251231_083607_679_B.jpeg,,247.393,241.323,,,,
+countryside_place,13,Countryside Place_Cam4_20251231_083613_085_B.jpeg,,257.591,252.492,,,,

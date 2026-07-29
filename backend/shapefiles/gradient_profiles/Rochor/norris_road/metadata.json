@@ -1,0 +1,54 @@
+{
+  "path_key": "norris_road",
+  "display_name": "Norris Road",
+  "source_project": "Norris Road",
+  "source_geo_data": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\profiles\\alaster\\projects\\Norris Road\\geo_data.gpkg",
+  "lidar_bundle": "D_Rochor_LTA",
+  "lidar_root": "E:\\LIDAR\\D_Rochor_LTA",
+  "generated_at_utc": "2026-06-17T08:37:06.439190+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 165.491,
+  "profile_point_count": 74,
+  "valid_elevation_count": 74,
+  "rejected_outlier_count": 4,
+  "rejected_step_jump_count": 62,
+  "repaired_gradient_point_count": 0,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 3,
+  "usable_gradient_completion_pct": 4.05,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 83.78,
+  "gradient_min_pct": -8.956,
+  "gradient_max_pct": 0.688,
+  "path_bounds_svy21": {
+    "min_x": 30204.944,
+    "min_y": 32230.926,
+    "max_x": 30357.858,
+    "max_y": 32266.727
+  },
+  "road_boundary": {
+    "target_road_name": "NORRIS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\Users\\Alaster\\Documents\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 84,
+    "offroad_point_count": 10,
+    "offroad_top_road_names": [
+      {
+        "road_name": "SERVICE ROAD",
+        "point_count": 9
+      },
+      {
+        "road_name": ".",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 136.0,
+    "trimmed_offroad_points": 10
+  }
+}
