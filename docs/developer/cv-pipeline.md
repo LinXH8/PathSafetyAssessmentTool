@@ -6,21 +6,21 @@ PSAT uses YOLO-based computer-vision models to automatically infer CycleRAP attr
 
 ## Table of Contents
 
-- [5.1 Overview & Pipeline Flowchart](#5-1-overview-pipeline-flowchart)
-- [5.2 Model Files](#5-2-model-files)
-  - [5.21 Model Loading](#5-21-model-loading)
-  - [5.22 Replacing or Updating a Model](#5-22-replacing-or-updating-a-model)
-- [5.3 Inference Steps](#5-3-inference-steps)
-  - [5.31 Step 1 — Path Segmentation](#5-31-step-1-path-segmentation)
-  - [5.32 Step 2 — Light Segregation](#5-32-step-2-light-segregation)
-  - [5.33 Step 3 — Adjacent Road Classification](#5-33-step-3-adjacent-road-classification)
-  - [5.34 Step 4 — Off-Road Bicycle Path](#5-34-step-4-off-road-bicycle-path)
-  - [5.35 Step 5 — Facility Type Decision](#5-35-step-5-facility-type-decision)
-  - [5.36 Step 6 — Fixed Obstacle & Delineation](#5-36-step-6-fixed-obstacle-delineation)
-- [5.4 Bulk Auto-coding Modes](#5-4-bulk-auto-coding-modes)
-- [5.5 Confidence Thresholds](#5-5-confidence-thresholds)
-- [5.6 Attributes Auto-coded by CV](#5-6-attributes-auto-coded-by-cv)
-- [5.7 GIS Auto-coding](#5-7-gis-auto-coding)
+- [5.1 Overview & Pipeline Flowchart](#51-overview--pipeline-flowchart)
+- [5.2 Model Files](#52-model-files)
+  - [5.21 Model Loading](#521-model-loading)
+  - [5.22 Replacing or Updating a Model](#522-replacing-or-updating-a-model)
+- [5.3 Inference Steps](#53-inference-steps)
+  - [5.31 Step 1 — Path Segmentation](#531-step-1--path-segmentation)
+  - [5.32 Step 2 — Light Segregation](#532-step-2--light-segregation)
+  - [5.33 Step 3 — Adjacent Road Classification](#533-step-3--adjacent-road-classification)
+  - [5.34 Step 4 — Off-Road Bicycle Path](#534-step-4--off-road-bicycle-path)
+  - [5.35 Step 5 — Facility Type Decision](#535-step-5--facility-type-decision)
+  - [5.36 Step 6 — Fixed Obstacle & Delineation](#536-step-6--fixed-obstacle--delineation)
+- [5.4 Bulk Auto-coding Modes](#54-bulk-auto-coding-modes)
+- [5.5 Confidence Thresholds](#55-confidence-thresholds)
+- [5.6 Attributes Auto-coded by CV](#56-attributes-auto-coded-by-cv)
+- [5.7 GIS Auto-coding](#57-gis-auto-coding)
 
 ## 5.1 Overview & Pipeline Flowchart
 

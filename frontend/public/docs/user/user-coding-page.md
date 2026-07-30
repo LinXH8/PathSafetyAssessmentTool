@@ -345,7 +345,7 @@ Points ABC form lines AB and BC. Lopsided 3x signifies that AB:BC > 1:3 or vice 
 - Any vertex deflection angle > 45 deg
 - Must have >1m arm lengths (to account for drawing error)
 
-![Path intersection deflection angle diagram](/docs/user/img/grade-curvature/image6.jpeg)
+![Path intersection deflection angle diagram](/docs/user/img/grade-curvature/image6.png)
 
 **EXACT NUMBER JUSTIFICATIONS**
 

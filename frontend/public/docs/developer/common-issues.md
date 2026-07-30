@@ -95,8 +95,7 @@ This page covers the issues that show up most often in current PSAT workflows, e
 2. Regenerate it after adding or renaming folders in `in/`:
 
 ```bash
-cd backend
-python generate_road_reference.py
+python scripts/generate_road_reference.py
 ```
 
 3. Confirm the road-name shapefiles are present under `backend/shapefiles/`.

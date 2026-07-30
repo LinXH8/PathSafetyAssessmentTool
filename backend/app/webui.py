@@ -16,6 +16,8 @@ works; only the UI is unavailable. That keeps ``npm run dev`` workflows and
 API-only/test runs functional.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 from pathlib import Path

@@ -29,6 +29,8 @@ The PSAT frontend is a React + TypeScript SPA built with Vite and served by ngin
 
 ---
 
+## 7.1 Route map
+
 | URL pattern | Component | Purpose |
 |---|---|---|
 | `/` | `LandingPage` | Entry screen |

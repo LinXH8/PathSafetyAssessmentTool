@@ -29,6 +29,8 @@ The PSAT frontend is a React + TypeScript SPA built with Vite and served by ngin
 
 ---
 
+## 7.1 Route map
+
 | URL pattern | Component | Purpose |
 |---|---|---|
 | `/` | `LandingPage` | Entry screen |
@@ -38,9 +40,13 @@ The PSAT frontend is a React + TypeScript SPA built with Vite and served by ngin
 | `/treatment` | `TreatmentPage` | Project picker for treatment workflows |
 | `/treatment/:projectName` | `TreatmentDetailPage` | Treatment detail for one or more selected projects |
 | `/analysis/path` | `PathAnalysisPage` | Multi-project analysis and export workspace |
+| `/analysis/report` | `ReportBuilderPage` | Report canvas and PDF/Word/PPTX export |
 | `/projects/create` | `CreateProjectPage` | Project creation wizard |
 | `/gis-layers` | `GisLayersPage` | GIS layer browser and management page |
+| `/generated-reports` | `GeneratedReportsPage` | Previously generated report listing |
 | `*` | `Navigate -> /home` | Catch-all redirect |
+
+Except `/` and `/help`, all routes are wrapped in `RequireProfile` (profile login gate) inside the shared `AppLayout`.
 
 `HelpButton` is rendered globally, so the help entry point is available from anywhere in the app.
 
@@ -183,9 +189,14 @@ It currently supports:
 
 ## 7.3 API client highlights
 
-All client-side fetch wrappers live in `src/api/index.ts`.
+The client-side fetch wrappers were split (July 2026 refactor) into per-domain modules under
+`src/api/` — `projects.ts`, `geo.ts`, `attributes.ts`, `autocode.ts`, `treatments.ts`,
+`shapefiles.ts`, `sourceFolders.ts`, `auth.ts`, `media.ts`, `reports.ts` — over a shared
+`_client.ts` fetch/error helper. `src/api/index.ts` is now a **re-export barrel**, so existing
+`import { … } from "../api"` call sites are unchanged. `src/api/projectDataCache.ts` layers a
+session read-cache over the project read endpoints for the Coding and Path Analysis pages.
 
-Notable newer exports include:
+Notable exports include:
 
 - `queryRoadsInPolygon()`
 - `queryRoadsInBounds()`
@@ -199,17 +210,27 @@ Notable newer exports include:
 
 ## 7.4 Visual analysis components
 
-### 7.41 CurvatureVisualizationPanel
+Curvature and width visualization now render **inside `GeoDataPanel`** (Coding map) rather than
+as standalone panels — the old `CurvatureVisualizationPanel` / `WidthVisualizationPanel` modules
+were removed as dead code in the July 2026 cleanup. `GeoDataPanel` was decomposed into a
+`components/GeoDataPanel/` folder of hooks and sub-components.
 
-Calls `POST /api/projects/<name>/curvature/visualize` and renders the local path geometry, 5 m analysis window, derived radius, and curvature classification.
+### 7.41 Curvature overlay
 
-### 7.42 WidthVisualizationPanel
+`GeoDataPanel/useCurvatureOverlay.ts` calls the curvature-visualize endpoint (via
+`api/curvatureVisualization.ts`) and `GeoDataPanel/CurvatureOverlay.tsx` renders the local path
+geometry, analysis window, derived radius, and curvature classification.
 
-Calls `POST /api/projects/<name>/width/visualize` and renders the expanding search rings, candidate paths, and derived width category.
+### 7.42 Width overlay
+
+The width-visualize flow (via `api/widthVisualization.ts`) renders the expanding search rings,
+candidate paths, and derived width category on the same map.
 
 ### 7.43 GeoDataPanel GIS overlays
 
-When a single project is active, the coding map can request nearby GIS layers from `POST /api/projects/<name>/gis/layers` to show map context around the active segment.
+When a single project is active, the coding map can request nearby GIS layers from
+`POST /api/projects/<name>/gis/layers` (via `GeoDataPanel/useGISLayerData.ts` /
+`useGISToggleState.ts`) to show map context around the active segment.
 
 ---
 
@@ -217,9 +238,9 @@ When a single project is active, the coding map can request nearby GIS layers fr
 
 PSAT still relies on page-local React state rather than a global state library. The main shared patterns are:
 
-- local `useState` / `useEffect` for page data
-- memoized derived views with `useMemo`
-- browser storage for selected Path Analysis filters
+- page containers own data/state, increasingly via extracted page-local `hooks/` (e.g. `useReportData`, `useTreatmentEngine`, `useAttributeEditing`) — see `UI_V2_REDESIGN_GUIDE.md`
+- local `useState` / `useEffect` for page data; memoized derived views with `useMemo`
+- typed browser storage through the `useSessionState` hook + the central `constants/sessionKeys.ts` (`SESSION_KEYS`) registry — used for Path Analysis filters, viewport, and filter-colour context
 - custom browser events to push metadata changes back to listing pages
 
 ---
@@ -249,4 +270,4 @@ location /api/ {
 
 - the Help page reads markdown from `frontend/public/docs/`
 - shared fuzzy matching lives in `src/utils/projectSearch.ts`
-- all backend calls are centralized in `src/api/index.ts`
+- backend calls go through the per-domain modules under `src/api/`, re-exported from the `src/api/index.ts` barrel

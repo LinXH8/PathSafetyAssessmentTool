@@ -25,33 +25,33 @@ PSAT implements the **CycleRAP v2.11** risk scoring algorithm as a pure Python m
 
 ## Table of Contents
 
-- [6.1 Overview](#6-1-overview)
-- [6.2 Risk Bands](#6-2-risk-bands)
-  - [6.21 BB, BP, SB](#6-21-bb-bp-sb)
-  - [6.22 VB](#6-22-vb)
-  - [6.23 Overall Risk Level Band](#6-23-overall-risk-level-band)
-- [6.3 Algorithm: Component Formulas](#6-3-algorithm-component-formulas)
-  - [6.31 CM3 — Main Cycling Environment Risk](#6-31-cm3-main-cycling-environment-risk)
-  - [6.32 CM16 — Departure and Fall Scenarios](#6-32-cm16-departure-and-fall-scenarios)
-  - [6.33 CM25 — Speed-Related Incidents](#6-33-cm25-speed-related-incidents)
-  - [6.34 CM40 — Vehicle Interaction](#6-34-cm40-vehicle-interaction)
-  - [6.35 Final Score Combination](#6-35-final-score-combination)
-- [6.4 Worked Example: CM3](#6-4-worked-example-cm3)
-  - [6.41 Road Speed Risk Factor](#6-41-road-speed-risk-factor)
-- [6.5 Attribute Fields Reference](#6-5-attribute-fields-reference)
-  - [6.51 Facility Configuration](#6-51-facility-configuration)
-  - [6.52 Facility Clear Width](#6-52-facility-clear-width)
-  - [6.53 Facility Surface Conditions](#6-53-facility-surface-conditions)
-  - [6.54 Intersection](#6-54-intersection)
-  - [6.55 Flow & Speed](#6-55-flow-speed)
-- [6.6 `cyclerap_scoring.py` — Function Reference](#6-6-cyclerap-scoring-py-function-reference)
-  - [6.61 Output Columns](#6-61-output-columns)
-- [6.7 Treatment Logic](#6-7-treatment-logic)
-  - [6.71 Treatment List](#6-71-treatment-list)
-- [6.8 Updating the CycleRAP Algorithm](#6-8-updating-the-cyclerap-algorithm)
-- [6.9 Treatment Configuration](#6-9-treatment-configuration)
-- [6.10 How to Add a New Treatment](#6-10-how-to-add-a-new-treatment)
-- [6.11 Implementation Details](#6-11-implementation-details)
+- [6.1 Overview](#61-overview)
+- [6.2 Risk Bands](#62-risk-bands)
+  - [6.21 BB, BP, SB](#621-bb-bp-sb)
+  - [6.22 VB](#622-vb)
+  - [6.23 Overall Risk Level Band](#623-overall-risk-level-band)
+- [6.3 Algorithm: Component Formulas](#63-algorithm-component-formulas)
+  - [6.31 CM3 — Main Cycling Environment Risk](#631-cm3--main-cycling-environment-risk)
+  - [6.32 CM16 — Departure and Fall Scenarios](#632-cm16--departure-and-fall-scenarios)
+  - [6.33 CM25 — Speed-Related Incidents](#633-cm25--speed-related-incidents)
+  - [6.34 CM40 — Vehicle Interaction](#634-cm40--vehicle-interaction)
+  - [6.35 Final Score Combination](#635-final-score-combination)
+- [6.4 Worked Example: CM3](#64-worked-example-cm3)
+  - [6.41 Road Speed Risk Factor](#641-road-speed-risk-factor)
+- [6.5 Attribute Fields Reference](#65-attribute-fields-reference)
+  - [6.51 Facility Configuration](#651-facility-configuration)
+  - [6.52 Facility Clear Width](#652-facility-clear-width)
+  - [6.53 Facility Surface Conditions](#653-facility-surface-conditions)
+  - [6.54 Intersection](#654-intersection)
+  - [6.55 Flow & Speed](#655-flow--speed)
+- [6.6 `cyclerap_scoring.py` — Function Reference](#66-cyclerap_scoringpy--function-reference)
+  - [6.61 Output Columns](#661-output-columns)
+- [6.7 Treatment Logic](#67-treatment-logic)
+  - [6.71 Treatment List](#671-treatment-list)
+- [6.8 Updating the CycleRAP Algorithm](#68-updating-the-cyclerap-algorithm)
+- [6.9 Treatment Configuration](#69-treatment-configuration)
+- [6.10 How to Add a New Treatment](#610-how-to-add-a-new-treatment)
+- [6.11 Implementation Details](#611-implementation-details)
 
 ## 6.1 Overview
 
@@ -405,7 +405,7 @@ The table below documents every field stored per segment. **39 fields are active
 
 ## 6.7 Treatment Logic
 
-The 25 predefined treatments (defined in `routes.py`) each have:
+The 25 predefined treatments (defined in the `TREATMENTS` list in `backend/app/api/projects/treatments.py`) each have:
 - **Triggers:** one or more sets of `{field: [allowed_values]}` conditions. If any trigger set matches, the treatment is applicable.
 - **Effects:** `{field: new_value}` pairs applied to the segment's attributes before re-scoring.
 
@@ -495,7 +495,7 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 
 To add a new treatment to the system:
 
-1. Open `backend/app/api/projects/routes.py`.
+1. Open `backend/app/api/projects/treatments.py`.
 2. Find the `TREATMENTS = [...]` variable near the top of the file.
 3. Append a new dictionary to the end of the list:
    - Ensure the `id` is the next available integer.

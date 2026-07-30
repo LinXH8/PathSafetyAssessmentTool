@@ -114,19 +114,37 @@ function MarkdownContent({ content }: { content: string }) {
 
   const getHeadingId = (children: any): string => {
     const text = Array.isArray(children) ? children.join("") : String(children);
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return text.toLowerCase().replace(/[^a-z0-9_\- ]/g, '').replace(/ /g, '-');
   };
 
   const components = {
     h1: ({ children }: any) => <h1 id={getHeadingId(children)} style={{ ...headingStyle, fontSize: "1.4rem" }}>{children}</h1>,
     h2: ({ children }: any) => <h2 id={getHeadingId(children)} style={{ ...headingStyle, fontSize: "1.2rem" }}>{children}</h2>,
     h3: ({ children }: any) => <h3 id={getHeadingId(children)} style={{ ...headingStyle, fontSize: "1.05rem" }}>{children}</h3>,
+    h4: ({ children }: any) => <h4 id={getHeadingId(children)} style={{ ...headingStyle, fontSize: "0.95rem" }}>{children}</h4>,
+    h5: ({ children }: any) => <h5 id={getHeadingId(children)} style={{ ...headingStyle, fontSize: "0.9rem" }}>{children}</h5>,
     p: ({ children }: any) => <p style={{ marginBottom: "1rem", color: colors.fgMuted }}>{children}</p>,
     ul: ({ children }: any) => <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: colors.fgMuted }}>{children}</ul>,
     ol: ({ children }: any) => <ol style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: colors.fgMuted }}>{children}</ol>,
     li: ({ children }: any) => <li style={{ marginBottom: "0.25rem" }}>{children}</li>,
     strong: ({ children }: any) => <strong style={{ color: colors.strongColor, fontWeight: 600 }}>{children}</strong>,
-    a: ({ href, children }: any) => <a href={href} style={{ color: colors.linkColor, textDecoration: "underline" }}>{children}</a>,
+    a: ({ href, children }: any) => {
+      if (href?.startsWith("#")) {
+        return (
+          <a
+            href={href}
+            style={{ color: colors.linkColor, textDecoration: "underline", cursor: "pointer" }}
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            {children}
+          </a>
+        );
+      }
+      return <a href={href} style={{ color: colors.linkColor, textDecoration: "underline" }}>{children}</a>;
+    },
     blockquote: ({ children }: any) => (
       <blockquote style={{ borderLeft: `4px solid ${colors.linkColor}`, paddingLeft: "1rem", fontStyle: "italic", margin: "1rem 0", color: colors.fgMuted }}>
         {children}

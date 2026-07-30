@@ -38,6 +38,6 @@ Algorithm updates require changes to the backend scoring logic and are not self-
 |---|---|
 | Scoring multipliers and formulas | `backend/app/services/cycleRAP_interface.py` |
 | Risk band thresholds | Same file, band definitions section |
-| Treatment effect mappings | `backend/app/api/projects/routes.py` (treatment triggers) |
+| Treatment effect mappings | `backend/app/api/projects/treatments.py` (`TREATMENTS` triggers/effects) |
 
 > For full implementation details, testing procedures, and the scoring formula reference, see the [Developer Guide → 6. Scoring Logic](../developer/scoring.md).

@@ -1,5 +1,12 @@
 # Curvature Attribute Implementation
 
+> **Post-refactor note (July 2026):** the curvature logic described below was extracted out of the
+> `GIS` class in `gis_mapping.py` into `backend/app/services/curvature_analyzer.py`
+> (`CurvatureAnalyzer`); the `GIS` class now delegates to it. The autocode integration that this
+> doc attributes to `routes.py` now lives in `backend/app/api/projects/autocode.py` (with the
+> visualize endpoint in `gis_queries.py`). Behaviour is unchanged; only the file locations and
+> line numbers below have moved.
+
 ## Overview
 
 The **Curvature** attribute indicates whether a sharp turn is present on the cycling facility path at a segment location. It uses actual path centerline shapefiles from Singapore's infrastructure database to determine the real path geometry, then applies the circumcircle method to detect sharp turns.

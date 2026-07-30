@@ -6,10 +6,10 @@
 
 ## Table of Contents
 
-- [1.1 What PSAT Does](#1-1-what-psat-does)
-- [1.2 Quick Start](#1-2-quick-start)
-- [1.3 Repository Layout](#1-3-repository-layout)
-- [1.4 Documentation Index](#1-4-documentation-index)
+- [1.1 What PSAT Does](#11-what-psat-does)
+- [1.2 Quick Start](#12-quick-start)
+- [1.3 Repository Layout](#13-repository-layout)
+- [1.4 Documentation Index](#14-documentation-index)
 
 ## 1.1 What PSAT Does
 

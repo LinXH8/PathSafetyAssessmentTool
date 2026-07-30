@@ -195,7 +195,7 @@ export default function HelpPageLayoutV2({ activeTab, setActiveTab }: HelpPageVi
 function V2MarkdownContent({ content }: { content: string }) {
   const toId = (children: unknown): string => {
     const t = Array.isArray(children) ? children.join("") : String(children);
-    return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return t.toLowerCase().replace(/[^a-z0-9_\- ]/g, "").replace(/ /g, "-");
   };
 
   const headingBase: React.CSSProperties = {
@@ -211,6 +211,8 @@ function V2MarkdownContent({ content }: { content: string }) {
     h1: ({ children }: any) => <h1 id={toId(children)} style={{ ...headingBase, fontSize: "1.4rem" }}>{children}</h1>,
     h2: ({ children }: any) => <h2 id={toId(children)} style={{ ...headingBase, fontSize: "1.2rem" }}>{children}</h2>,
     h3: ({ children }: any) => <h3 id={toId(children)} style={{ ...headingBase, fontSize: "1.05rem" }}>{children}</h3>,
+    h4: ({ children }: any) => <h4 id={toId(children)} style={{ ...headingBase, fontSize: "0.95rem" }}>{children}</h4>,
+    h5: ({ children }: any) => <h5 id={toId(children)} style={{ ...headingBase, fontSize: "0.9rem" }}>{children}</h5>,
     p:  ({ children }: any) => <p style={{ marginBottom: "1rem", color: COLOR.gray600, fontSize: "1rem", lineHeight: 1.65 }}>{children}</p>,
     ul: ({ children }: any) => <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: COLOR.gray600 }}>{children}</ul>,
     ol: ({ children }: any) => <ol style={{ paddingLeft: "1.5rem", marginBottom: "1rem", color: COLOR.gray600 }}>{children}</ol>,

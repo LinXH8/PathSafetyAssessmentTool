@@ -6,27 +6,27 @@ PSAT is a two-container application orchestrated by Docker Compose. The frontend
 
 ## Table of Contents
 
-- [3.1 System Diagram](#3-1-system-diagram)
-- [3.2 High-Level Flow](#3-2-high-level-flow)
-- [3.3 Key Ideas](#3-3-key-ideas)
-- [3.4 Backend Structure](#3-4-backend-structure)
-  - [3.41 Registered Blueprints](#3-41-registered-blueprints)
-  - [3.42 Lazy Initialization](#3-42-lazy-initialization)
-  - [3.43 GIS Caches and Helper Assets](#3-43-gis-caches-and-helper-assets)
-- [3.5 Frontend Structure](#3-5-frontend-structure)
-- [3.6 Project Storage Model](#3-6-project-storage-model)
-  - [3.61 `project_metadata.json`](#3-61-project-metadata-json)
-  - [3.62 Snapshot Behavior](#3-62-snapshot-behavior)
-  - [3.63 Sidecar Directories](#3-63-sidecar-directories)
-- [3.7 Project Creation Pipeline](#3-7-project-creation-pipeline)
-- [3.8 Multi-Project Aggregation Pattern](#3-8-multi-project-aggregation-pattern)
-- [3.9 Shapefile Management Architecture](#3-9-shapefile-management-architecture)
-- [3.10 Key Design Choices](#3-10-key-design-choices)
-  - [3.101 API-Only Frontend Communication](#3-101-api-only-frontend-communication)
-  - [3.102 Native Scoring Path](#3-102-native-scoring-path)
-  - [3.103 CRS Handling](#3-103-crs-handling)
-  - [3.104 Thread Safety](#3-104-thread-safety)
-- [3.11 GIS Layer Definition System](#3-11-gis-layer-definition-system)
+- [3.1 System Diagram](#31-system-diagram)
+- [3.2 High-Level Flow](#32-high-level-flow)
+- [3.3 Key Ideas](#33-key-ideas)
+- [3.4 Backend Structure](#34-backend-structure)
+  - [3.41 Registered Blueprints](#341-registered-blueprints)
+  - [3.42 Lazy Initialization](#342-lazy-initialization)
+  - [3.43 GIS Caches and Helper Assets](#343-gis-caches-and-helper-assets)
+- [3.5 Frontend Structure](#35-frontend-structure)
+- [3.6 Project Storage Model](#36-project-storage-model)
+  - [3.61 `project_metadata.json`](#361-project_metadatajson)
+  - [3.62 Snapshot Behavior](#362-snapshot-behavior)
+  - [3.63 Sidecar Directories](#363-sidecar-directories)
+- [3.7 Project Creation Pipeline](#37-project-creation-pipeline)
+- [3.8 Multi-Project Aggregation Pattern](#38-multi-project-aggregation-pattern)
+- [3.9 Shapefile Management Architecture](#39-shapefile-management-architecture)
+- [3.10 Key Design Choices](#310-key-design-choices)
+  - [3.101 API-Only Frontend Communication](#3101-api-only-frontend-communication)
+  - [3.102 Native Scoring Path](#3102-native-scoring-path)
+  - [3.103 CRS Handling](#3103-crs-handling)
+  - [3.104 Thread Safety](#3104-thread-safety)
+- [3.11 GIS Layer Definition System](#311-gis-layer-definition-system)
 
 ## 3.1 System Diagram
 
@@ -85,32 +85,59 @@ backend/
 │   ├── api/
 │   │   ├── health.py               # /api/ping, /api/health
 │   │   ├── gis_layers/routes.py    # /api/shapefiles/*
-│   │   └── projects/routes.py      # /api/projects/*
+│   │   ├── profiles/               # /api/profiles/*
+│   │   ├── report/                 # /api/report/*
+│   │   ├── defects/                # /api/defects/*
+│   │   ├── admin/                  # /api/admin/*
+│   │   └── projects/               # /api/projects/* — blueprint package (see 3.41)
+│   │       ├── routes.py           #   compat shim (re-exports get_ctx, warmup_gis, …)
+│   │       ├── _helpers.py         #   get_ctx(), invalidate_ctx(), ok()/fail()
+│   │       ├── crud.py             #   list / metadata / create / delete
+│   │       ├── segments.py         #   segment edit / delete / copy
+│   │       ├── autocode.py         #   CV + GIS + bulk autocode
+│   │       ├── gis_queries.py      #   GIS context / curvature / width lookups
+│   │       ├── treatments.py       #   treatment preview / apply / effectiveness
+│   │       ├── images.py           #   image + post-treatment image serving
+│   │       ├── source_folders.py   #   in/ folders, roads-in-polygon
+│   │       ├── export.py           #   CSV / shapefile / ZIP exports
+│   │       ├── baseline.py         #   autocode baseline save / compare
+│   │       └── gradient.py         #   gradient-profile injection
 │   ├── services/
-│   │   ├── project_manager.py
+│   │   ├── project_manager.py      # project lifecycle façade
+│   │   ├── project_version.py      # ProjectVersion snapshot data/serialization
+│   │   ├── image_storage.py        # image dedup / materialization
 │   │   ├── serializer.py
 │   │   ├── prediction.py
 │   │   ├── cyclerap_scoring.py
 │   │   ├── cycleRAP_VA.py
-│   │   ├── gis_mapping.py
+│   │   ├── gis_mapping.py          # proximity/speed lookups + query_nearby()
+│   │   ├── curvature_analyzer.py   # CurvatureAnalyzer (extracted from gis_mapping)
+│   │   ├── width_analyzer.py       # WidthAnalyzer (extracted from gis_mapping)
+│   │   ├── profile_store.py
 │   │   └── global_var.py
 │   └── utils/
 │       └── path_width_curvature.py
-├── generate_road_reference.py
 ├── models/
 └── shapefiles/
 ```
 *Layman's explanation: This is a directory map showing how the background system's files are organized to handle project logic and data.*
 
+> The July 2026 refactor split the former 6,455-line `projects/routes.py` monolith into the
+> per-domain blueprint modules above (all still registered on the single `projects` blueprint,
+> so URLs and endpoint names are unchanged), and extracted `CurvatureAnalyzer` / `WidthAnalyzer`
+> out of the former ~2,600-line `gis_mapping.py`. Dev utility scripts (including
+> `generate_road_reference.py`) moved to the repo-root `scripts/` directory.
+
 ### 3.41 Registered Blueprints
 
 - `health.py` exposes the liveness checks
-- `projects/routes.py` owns project lifecycle, coding, scoring, treatment, baseline, and project-discovery endpoints
+- the `projects/` package owns project lifecycle, coding, autocode, scoring, treatment, baseline, GIS-context, and project-discovery endpoints — split across `crud.py`, `segments.py`, `autocode.py`, `gis_queries.py`, `treatments.py`, `images.py`, `source_folders.py`, `export.py`, `baseline.py`, and `gradient.py`; `routes.py` is a backwards-compatibility shim and `_helpers.py` holds the shared context/response helpers
 - `gis_layers/routes.py` exposes shapefile inventory, preview, upload, replace, and delete operations under `/api/shapefiles`
+- `profiles/`, `report/`, `defects/`, and `admin/` expose the profile/login, report-export, daily-defect, and telemetry surfaces respectively
 
 ### 3.42 Lazy Initialization
 
-`get_ctx()` in `projects/routes.py` lazily initializes and caches:
+`get_ctx()` in `projects/_helpers.py` (re-exported from `projects/routes.py` for legacy imports) lazily initializes and caches:
 
 - `project_manager` over `data/`
 - serializer / attribute-mapping data
@@ -134,27 +161,39 @@ frontend/
 │   ├── README.md
 │   └── docs/
 ├── src/
-│   ├── api/index.ts
+│   ├── api/                 # typed fetch helpers split by domain + barrel index.ts
+│   │   ├── index.ts         #   re-exports every domain module
+│   │   ├── _client.ts       #   shared fetch/error helper
+│   │   └── projects.ts, geo.ts, attributes.ts, treatments.ts, … (per-domain)
 │   ├── App.tsx
 │   ├── layouts/AppLayout.tsx
-│   ├── pages/
+│   ├── pages/               # each page: container + layouts/{*ViewModel,*LayoutV1,*LayoutV2}
 │   │   ├── CreateProjectPage/
-│   │   ├── CodingPage/
+│   │   ├── CodingPage/          # + hooks/ (data/state) + components/ (GeoDataPanel, …)
 │   │   ├── GisLayersPage/
 │   │   ├── HelpPage/
-│   │   ├── PathAnalysisPage/
+│   │   ├── PathAnalysisPage/    # + components/mapView/ (PathAnalysisMapView hooks/parts)
+│   │   ├── ReportBuilderPage/   # + hooks/ (useReportData, usePdfExport, useReportLayout)
 │   │   ├── Projects/
-│   │   └── TreatmentPage/
-│   ├── components/
-│   └── utils/projectSearch.ts
+│   │   └── TreatmentPage/       # + hooks/ (useTreatmentEngine, useTreatmentState, …)
+│   ├── hooks/useSessionState.ts
+│   ├── components/map/          # shared DraggableMarker / PolygonDrawing
+│   ├── constants/{autocodeAttributes,sessionKeys}.ts
+│   └── utils/{projectSearch,riskColors,projection}.ts
 ```
 *Layman's explanation: This is a directory map showing how the website's interface files are organized for building the user interface.*
 
+The July 2026 refactor split the monolithic `src/api/index.ts` API client into per-domain modules
+(with `index.ts` kept as a re-export barrel) and decomposed the largest page components into a
+**container / `*ViewModel.ts` / `*LayoutV1|V2.tsx` shell** seam, with page-local `hooks/` folders
+owning data and state. This split is governed by the `UI_V2_REDESIGN_GUIDE.md` rulebook.
 
-Two frontend details are easy to miss but now matter architecturally:
+Several frontend details are easy to miss but matter architecturally:
 
 - `frontend/public/docs/` contains the markdown actually served in the Help page
 - `utils/projectSearch.ts` centralizes the project-or-road fuzzy matching used across multiple pages
+- `utils/riskColors.ts` and `utils/projection.ts` are the single sources for risk-band colours and CRS conversions
+- `hooks/useSessionState.ts` + `constants/sessionKeys.ts` centralize typed sessionStorage access
 
 ## 3.6 Project Storage Model
 
