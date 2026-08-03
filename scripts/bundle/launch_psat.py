@@ -186,19 +186,129 @@ def _read_json(path: Path, default):
         return default
 
 
-def _top_level_targets(archive: Path) -> set[str]:
-    """First path segment of every entry, i.e. which install dirs an archive touches."""
-    with zipfile.ZipFile(archive) as zf:
-        return {name.split("/")[0] for name in zf.namelist() if "/" in name or name}
+# The install subtree each update component OWNS. This MUST mirror
+# app.services.updater.component_source: the manifest/digest side uses that mapping to
+# decide what changed, so if the two disagree, apply would back up or overwrite the
+# wrong files. It is duplicated here (not imported) so the launcher stays dependency-free.
+#
+# The critical entry is `backend`, which owns backend/ EXCEPT models/ and shapefiles/ --
+# those are their OWN components (backend/models, backend/shapefiles/<cat>). Earlier code
+# applied updates at whole-top-level-directory granularity: it moved the entire backend/
+# dir aside and extracted backend.zip (which excludes models+shapefiles) in its place, so
+# ANY release that did not also re-ship models and every shapefile category PERMANENTLY
+# deleted them. Component-scoped moves are the fix: each component only ever backs up and
+# replaces its own subtree, so a backend-only update can never touch models/ or shapefiles/.
+_BACKEND_EXCLUDE = {"models", "shapefiles"}
+
+
+def _component_target(name: str) -> tuple[Path, set[str]]:
+    """(install directory, excluded top-level child names) a component owns."""
+    if name == "webui":
+        return BUNDLE_ROOT / "webui", set()
+    if name == "backend":
+        return BUNDLE_ROOT / "backend", set(_BACKEND_EXCLUDE)
+    if name == "models":
+        return BUNDLE_ROOT / "backend" / "models", set()
+    if name == "python":
+        return BUNDLE_ROOT / "python", set()
+    if name == "launcher":
+        return BUNDLE_ROOT / "launcher", set()
+    if name.startswith("shp-"):
+        return BUNDLE_ROOT / "backend" / "shapefiles" / name[len("shp-"):], set()
+    # Unknown component: an isolated path so a bad name can never map onto a real dir.
+    return BUNDLE_ROOT / "__unknown_component__" / name, set()
+
+
+def _backup_dest(target: Path) -> Path:
+    return BACKUP_DIR / target.relative_to(BUNDLE_ROOT)
+
+
+def _backup_component(name: str) -> None:
+    """Move a component's CURRENT files aside into rollback/, honouring excludes.
+
+    A component with excludes (only `backend`) moves each child that is NOT excluded,
+    leaving the excluded sub-components (models/, shapefiles/) untouched in place. A
+    component without excludes moves its whole directory -- a fast same-volume rename.
+    """
+    target, excludes = _component_target(name)
+    dest = _backup_dest(target)
+    if excludes:
+        dest.mkdir(parents=True, exist_ok=True)
+        if target.is_dir():
+            for child in list(target.iterdir()):
+                if child.name in excludes:
+                    continue
+                child.rename(dest / child.name)
+    elif target.exists():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        target.rename(dest)
+
+
+def _restore_component(name: str) -> None:
+    """Reverse _backup_component: undo a (possibly partial) apply of one component."""
+    target, excludes = _component_target(name)
+    dest = _backup_dest(target)
+    if excludes:
+        # Remove freshly-extracted (non-excluded) children, then move the saved ones
+        # back. Excluded sub-components (models/, shapefiles/) were never touched.
+        if target.is_dir():
+            for child in list(target.iterdir()):
+                if child.name in excludes:
+                    continue
+                if child.is_dir():
+                    shutil.rmtree(child, ignore_errors=True)
+                else:
+                    child.unlink(missing_ok=True)
+        if dest.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            for child in list(dest.iterdir()):
+                child.rename(target / child.name)
+    elif dest.exists():
+        # Component existed before -- swap the new dir out and the saved one back.
+        if target.exists():
+            shutil.rmtree(target, ignore_errors=True)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        dest.rename(target)
+    elif target.exists():
+        # Nothing was backed up => the component did not exist before this apply (e.g.
+        # restoring GIS onto a damaged machine) => it is purely new; remove it to roll back.
+        shutil.rmtree(target, ignore_errors=True)
+
+
+def _guard_no_nested_components(names: list[str]) -> None:
+    """Safety net against the very bug this fixes: a whole-directory (no-exclude)
+    component must not contain another applied component's subtree, or backing it up
+    wholesale would drag the other one along. With the current mapping only `backend`
+    nests others and it always carries excludes, so this never fires -- it exists so a
+    future mapping change cannot silently reintroduce the data-loss class."""
+    targets = {n: _component_target(n) for n in names}
+    for a, (dir_a, excl_a) in targets.items():
+        if excl_a:
+            continue
+        for b, (dir_b, _e) in targets.items():
+            if a == b:
+                continue
+            try:
+                dir_b.relative_to(dir_a)
+            except ValueError:
+                continue
+            fail(f"Refusing to apply update: component '{a}' would overwrite '{b}'.\n"
+                 f"  This is a packaging error; PSAT will start on the current version.")
+
+
+def _applied_marker() -> Path:
+    return BACKUP_DIR / "applied.json"
 
 
 def apply_pending_update() -> bool:
     """Apply a staged update. Returns True if anything was applied.
 
-    Strategy: move the directories an update touches into rollback/, extract the
-    new ones, and keep rollback/ until the new version passes its health check.
-    Moves are same-volume renames, so they are effectively atomic and fast even
-    for the 5 GB shapefile tree.
+    Strategy: for EACH component, move only that component's own subtree into rollback/
+    (never a sibling's), extract the new files, and keep rollback/ until the new version
+    passes its health check. Moves are same-volume renames -- effectively atomic and fast
+    even for the 5 GB shapefile tree. Component-scoped (not top-level-directory)
+    granularity is what stops a backend-only update from deleting backend/models and
+    backend/shapefiles.
     """
     plan_path = PENDING_DIR / PLAN_FILE
     if not plan_path.is_file():
@@ -211,9 +321,11 @@ def apply_pending_update() -> bool:
 
     print(f"Applying update {plan.get('app_version', '?')} ...")
 
-    # Reconstruct split archives and work out which top-level dirs are affected.
+    names = list(plan["components"].keys())
+    _guard_no_nested_components(names)
+
+    # Reconstruct any split archives.
     archives: list[tuple[str, Path]] = []
-    touched: set[str] = set()
     for name, spec in plan["components"].items():
         parts = [PENDING_DIR / p for p in spec.get("parts", [])]
         if not parts or not all(p.is_file() for p in parts):
@@ -228,42 +340,38 @@ def apply_pending_update() -> bool:
                     with open(part, "rb") as chunk:
                         shutil.copyfileobj(chunk, out, length=8 * 1024 * 1024)
         archives.append((name, archive))
-        touched |= _top_level_targets(archive)
 
     if BACKUP_DIR.exists():
         shutil.rmtree(BACKUP_DIR, ignore_errors=True)
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    # Record which components this apply touched so a later (post-health-check) rollback
+    # reverses exactly these, each within its own subtree.
+    _applied_marker().write_text(
+        json.dumps({"components": names}) + "\n", encoding="utf-8"
+    )
 
+    done: list[str] = []
     try:
-        # 1. move current versions aside (rename, not copy)
-        for target in sorted(touched):
-            src = BUNDLE_ROOT / target
-            if src.exists():
-                src.rename(BACKUP_DIR / target)
-
-        # 2. extract the new ones
         for name, archive in archives:
             print(f"  installing {name} ...")
+            _backup_component(name)          # move THIS component's old files aside
             with zipfile.ZipFile(archive) as zf:
-                zf.extractall(BUNDLE_ROOT)
+                zf.extractall(BUNDLE_ROOT)   # extract the new ones (merges into backend/)
+            done.append(name)
     except Exception as exc:
-        # Put everything back before anything else can run.
+        # Put back only what we had started, before anything else can run.
         print(f"  update failed ({exc}); rolling back ...")
-        for target in sorted(touched):
-            live = BUNDLE_ROOT / target
-            saved = BACKUP_DIR / target
-            if saved.exists():
-                if live.exists():
-                    shutil.rmtree(live, ignore_errors=True)
-                saved.rename(live)
+        for name in reversed(done):
+            _restore_component(name)
         shutil.rmtree(PENDING_DIR, ignore_errors=True)
+        shutil.rmtree(BACKUP_DIR, ignore_errors=True)
         fail("The update could not be installed. PSAT has been restored to the "
              "previous version and will start normally next time.")
 
-    # 3. Drop the updater's digest cache. It computes each component's identity
-    #    from the files on disk, so it will simply re-hash the now-updated files on
-    #    its next check and see they match the new version. Deleting the stale cache
-    #    (keyed by the OLD files' fingerprints) just makes that recompute clean.
+    # Drop the updater's digest cache. It computes each component's identity from the
+    # files on disk, so it will simply re-hash the now-updated files on its next check
+    # and see they match the new version. Deleting the stale cache (keyed by the OLD
+    # files' fingerprints) just makes that recompute clean.
     try:
         INSTALLED_STATE.unlink(missing_ok=True)
     except OSError:
@@ -275,18 +383,20 @@ def apply_pending_update() -> bool:
 
 
 def rollback_after_failed_start(touched_marker: bool) -> None:
-    """Restore the previous version after the updated app failed to become healthy."""
+    """Restore the previous version after the updated app failed to become healthy.
+
+    Reverses exactly the components recorded in rollback/applied.json, each within its
+    own subtree, so restoring backend never disturbs the preserved models/shapefiles.
+    """
     if not touched_marker or not BACKUP_DIR.is_dir():
         return
     print("The updated version did not start. Rolling back ...")
-    for saved in BACKUP_DIR.iterdir():
-        live = BUNDLE_ROOT / saved.name
-        if live.exists():
-            shutil.rmtree(live, ignore_errors=True)
+    marker = _read_json(_applied_marker(), {})
+    for name in reversed(marker.get("components") or []):
         try:
-            saved.rename(live)
+            _restore_component(name)
         except OSError as exc:
-            print(f"  could not restore {saved.name}: {exc}")
+            print(f"  could not restore {name}: {exc}")
     shutil.rmtree(BACKUP_DIR, ignore_errors=True)
     # Drop the digest cache: with the previous version's files restored, the updater
     # re-hashes them on its next check, sees they differ from the new manifest, and

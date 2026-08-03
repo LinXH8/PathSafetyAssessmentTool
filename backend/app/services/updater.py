@@ -153,6 +153,11 @@ def component_source(name: str, base: Path) -> tuple[Path, set[str]]:
         return base / "backend" / "models", set()
     if name == "python":
         return base / "python", set()
+    if name == "launcher":
+        # The bootstrapper that applies updates. Shipping it as its own component lets a
+        # fix to the apply logic itself be delivered remotely. It is a standalone
+        # top-level dir, so it is safe to replace wholesale even by an older launcher.
+        return base / "launcher", set()
     if name.startswith("shp-"):
         return base / "backend" / "shapefiles" / name[len("shp-"):], set()
     return base / "__unknown_component__" / name, set()  # -> empty tree -> "changed"

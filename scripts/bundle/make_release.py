@@ -137,7 +137,30 @@ def main() -> int:
                                                        "clients can derive it from the release URL)")
     parser.add_argument("--skip-python", action="store_true",
                         help="Skip the ~3.9 GB interpreter when it has not changed")
+    parser.add_argument("--only", default="",
+                        help="Comma-separated allow-list of components to package, e.g. "
+                             "'launcher' or 'backend,models,shp'. Tokens: webui, backend, "
+                             "models, python, launcher, shp-<cat>, or 'shp' for ALL shapefile "
+                             "categories. Empty = package everything present in the bundle.")
+    parser.add_argument("--stamp", action="store_true",
+                        help="Write a per-release marker into every packaged component so it "
+                             "re-downloads on EVERY machine even if byte-identical. Use for a "
+                             "restore release that must be safe under an OLD (pre-fix) launcher, "
+                             "which can only preserve GIS by re-extracting it.")
     args = parser.parse_args()
+
+    # Selective packaging. Lets us build a launcher-only release (--only launcher) or a
+    # GIS restore release (--only backend,models,shp) without shipping unchanged parts.
+    only_tokens = {t.strip() for t in args.only.split(",") if t.strip()}
+
+    def want(name: str) -> bool:
+        if not only_tokens:
+            return True
+        if name in only_tokens:
+            return True
+        if name.startswith("shp-") and ("shp" in only_tokens or "shapefiles" in only_tokens):
+            return True
+        return False
 
     bundle = Path(args.bundle).resolve()
     out = Path(args.out).resolve()
@@ -173,10 +196,22 @@ def main() -> int:
 
     components: dict[str, dict] = {}
 
+    def stamp(src: Path) -> None:
+        """Write a per-release marker into a component's source dir so its tree digest
+        changes even when its real contents are byte-identical to what a machine already
+        has. This FORCES that component to re-download on every machine -- essential for a
+        restore release: a machine whose models/shapefiles are still intact would
+        otherwise skip them, and an OLD (pre-fix) launcher, having renamed backend/ aside,
+        would then delete them for lack of a re-extract. The marker is harmless (a tiny
+        text file that ships inside the component)."""
+        if args.stamp and src.is_dir():
+            (src / ".psat-release").write_text(f"{args.version}\n", encoding="utf-8")
+
     def add(name: str, src: Path, arc_root: str) -> None:
         if not src.is_dir():
             print(f"  skip {name}: {src} missing")
             return
+        stamp(src)
         print(f"  packing {name} ...", flush=True)
         archive = out / f"{name}.zip"
         zip_dir(src, archive, arc_root)
@@ -185,37 +220,52 @@ def main() -> int:
         print(f"    {components[name]['size'] / 1e6:,.0f} MB in {len(parts)} part(s)")
 
     print("Packing components:")
-    add("webui", bundle / "webui", "webui")
-    add("models", bundle / "backend" / "models", "backend/models")
+    if want("webui"):
+        add("webui", bundle / "webui", "webui")
+    if want("models"):
+        add("models", bundle / "backend" / "models", "backend/models")
 
     # backend code only -- models and shapefiles are their own components so that
     # a code fix does not drag 5 GB of GIS data along with it.
-    backend_src = bundle / "backend"
-    print("  packing backend ...", flush=True)
-    backend_zip = out / "backend.zip"
-    backend_zip.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(backend_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
-        for path in sorted(backend_src.rglob("*")):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(backend_src)
-            if rel.parts and rel.parts[0] in ("models", "shapefiles"):
-                continue
-            zf.write(path, Path("backend") / rel)
-    backend_parts = split_file(backend_zip, PART_MAX_BYTES)
-    components["backend"] = describe(backend_parts)
-    print(f"    {components['backend']['size'] / 1e6:,.0f} MB in {len(backend_parts)} part(s)")
+    if want("backend"):
+        backend_src = bundle / "backend"
+        stamp(backend_src)
+        print("  packing backend ...", flush=True)
+        backend_zip = out / "backend.zip"
+        backend_zip.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(backend_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
+            for path in sorted(backend_src.rglob("*")):
+                if not path.is_file():
+                    continue
+                rel = path.relative_to(backend_src)
+                if rel.parts and rel.parts[0] in ("models", "shapefiles"):
+                    continue
+                zf.write(path, Path("backend") / rel)
+        backend_parts = split_file(backend_zip, PART_MAX_BYTES)
+        components["backend"] = describe(backend_parts)
+        print(f"    {components['backend']['size'] / 1e6:,.0f} MB in {len(backend_parts)} part(s)")
 
-    if not args.skip_python:
-        add("python", bundle / "python", "python")
-    else:
-        print("  skip python (--skip-python)")
+    # The update bootstrapper (launch_psat.py). Its own component so a fix to the apply
+    # logic can be shipped remotely; standalone top-level dir, safe to replace wholesale.
+    if want("launcher"):
+        add("launcher", bundle / "launcher", "launcher")
+
+    if want("python"):
+        if not args.skip_python:
+            add("python", bundle / "python", "python")
+        else:
+            print("  skip python (--skip-python)")
 
     # One component per top-level shapefiles directory.
     shp_root = bundle / "backend" / "shapefiles"
     if shp_root.is_dir():
         for category in sorted(p for p in shp_root.iterdir() if p.is_dir()):
-            add(f"shp-{category.name}", category, f"backend/shapefiles/{category.name}")
+            if want(f"shp-{category.name}"):
+                add(f"shp-{category.name}", category, f"backend/shapefiles/{category.name}")
+
+    if not components:
+        print(f"ERROR: no components matched --only '{args.only}'. Nothing to package.")
+        return 1
 
     # Tree digest per component, from the bundle's own files, using the client's
     # code. This is the identity the client compares against what it has installed.
