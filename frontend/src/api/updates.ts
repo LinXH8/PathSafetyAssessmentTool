@@ -24,7 +24,9 @@ export interface UpdateStatus {
 export interface UpdateProgress {
   running: boolean;
   component: string | null;
+  /** Bytes downloaded so far across ALL components. */
   done: number;
+  /** Total bytes to download (sum of all changed components' sizes). */
   total: number;
   pending: boolean;
 }

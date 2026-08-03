@@ -288,8 +288,12 @@ def check_for_update(manifest_url: str = DEFAULT_MANIFEST_URL) -> UpdateStatus:
     return status
 
 
-def _download_part(url: str, dest: Path, expected_sha: str) -> None:
-    """Download to a .tmp then rename, so a partial file is never mistaken for done."""
+def _download_part(url: str, dest: Path, expected_sha: str, on_chunk=None) -> None:
+    """Download to a .tmp then rename, so a partial file is never mistaken for done.
+
+    on_chunk: optional callable(nbytes) invoked as each block lands, so the caller can
+    report true byte-level progress across the whole download.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".tmp")
     digest = hashlib.sha256()
@@ -301,6 +305,8 @@ def _download_part(url: str, dest: Path, expected_sha: str) -> None:
                 break
             handle.write(block)
             digest.update(block)
+            if on_chunk:
+                on_chunk(len(block))
 
     actual = digest.hexdigest()
     if actual != expected_sha:
@@ -315,7 +321,10 @@ def download_update(manifest_url: str = DEFAULT_MANIFEST_URL,
                     progress=None) -> UpdateStatus:
     """Download changed components into pending/. Does NOT apply them.
 
-    progress: optional callable(component_name, done_parts, total_parts).
+    progress: optional callable(component_name, done_bytes, total_bytes) reporting true
+    byte-level progress across ALL components — so the UI bar tracks the whole download,
+    not one part of one component (most components are a single part, which made a
+    part-count bar read ~100% almost immediately).
     """
     status = UpdateStatus(current_version=version.get_version())
     try:
@@ -339,6 +348,11 @@ def download_update(manifest_url: str = DEFAULT_MANIFEST_URL,
         "components": {},
     }
 
+    # Total is the sum of every changed component's compressed size; progress is the
+    # running count of bytes actually written, reported as each block lands.
+    total_bytes = sum(int(manifest["components"][n].get("size", 0)) for n in changed)
+    downloaded = {"bytes": 0}
+
     try:
         for name in changed:
             spec = manifest["components"][name]
@@ -348,10 +362,14 @@ def download_update(manifest_url: str = DEFAULT_MANIFEST_URL,
                 url = _asset_url(manifest, manifest_url, part["name"])
                 dest = pending / part["name"]
                 logger.info("Downloading %s (%d/%d)", part["name"], index + 1, len(parts))
-                _download_part(url, dest, part["sha256"])
+
+                def on_chunk(nbytes: int, _component: str = name) -> None:
+                    downloaded["bytes"] += nbytes
+                    if progress:
+                        progress(_component, downloaded["bytes"], total_bytes)
+
+                _download_part(url, dest, part["sha256"], on_chunk=on_chunk)
                 local_parts.append(part["name"])
-                if progress:
-                    progress(name, index + 1, len(parts))
             plan["components"][name] = {
                 "parts": local_parts,
                 "digest": spec.get("digest"),  # the manifest's tree digest

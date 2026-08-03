@@ -178,7 +178,12 @@ export default function UpdateModal() {
 
   // ── Downloading ────────────────────────────────────────────────────────────
   if (phase === "downloading") {
-    const pct = progress.total > 0 ? Math.round((progress.done / progress.total) * 100) : 0;
+    // progress.done / progress.total are BYTES across the whole download. Cap the bar at
+    // 99% while it is still running so it never reads "100% / done" before the download
+    // has actually finished — the switch to the "Update ready to install" screen is the
+    // only signal that it is safe to restart.
+    const rawPct = progress.total > 0 ? (progress.done / progress.total) * 100 : 0;
+    const pct = Math.min(99, Math.round(rawPct));
     return (
       <V2ModalShell open onClose={() => {}} title="Downloading update" width={480} busy>
         <p style={text}>
@@ -205,7 +210,9 @@ export default function UpdateModal() {
           />
         </div>
         <p style={{ ...text, fontSize: 13, color: COLOR.gray500 }}>
-          {progress.total > 0 ? `Part ${progress.done} of ${progress.total}` : "Starting…"}
+          {progress.total > 0
+            ? `${formatBytes(progress.done)} of ${formatBytes(progress.total)} (${pct}%) — please wait until PSAT says the update is ready before restarting`
+            : "Starting…"}
         </p>
       </V2ModalShell>
     );
