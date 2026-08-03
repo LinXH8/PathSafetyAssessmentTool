@@ -108,8 +108,11 @@ def prepare_directory(output_dir_name, output_path = None) -> str:
     os.makedirs(full_path)
     return full_path
 
-# Sum up the points within the dataframe to get every 10 (default) distance interval
-# Will discard points that exceeds the maximum distance (min_distance + max)
+# Sum up the points within the dataframe to keep roughly one point every
+# `min_distance` (default 10 m) of travel. A gap larger than min_distance + max
+# is NOT discarded — the point is still kept as one longer segment so no road
+# coverage is lost (this is what lets already-thinned folders, e.g. the installer
+# seed data, still produce all their segments instead of ~half).
 def get_geo_points_by_distance(original_geo_dataframe, min_distance = 10, max = 5):
 
     lat_df = original_geo_dataframe['geometry'].apply(lambda point: point.y)
@@ -131,25 +134,32 @@ def get_geo_points_by_distance(original_geo_dataframe, min_distance = 10, max = 
         # Acculumative distance traveled
         accumulated_distance += distance
         # print(f"distance to add: {distance}")
-        if accumulated_distance < min_distance: 
+        if accumulated_distance < min_distance:
+            # Too close to the last kept point to start a new ~10 m segment. Keep
+            # accumulating. On dense surveys this is what enforces the intended
+            # ~1-point-per-10 m spacing; on already-thinned folders (points spaced
+            # >= 10 m) it never triggers, so every point is used.
             last_lat, last_lon = current_lat, current_lon
-            continue
-        elif accumulated_distance >= (max + min_distance): # Discard points that exceed the maximum distance
-            if geo_dataframe.empty: initial_entry = pd.DataFrame([original_geo_dataframe.iloc[index]])
-            last_lat, last_lon = current_lat, current_lon
-            accumulated_distance = 0
             continue
 
-        if geo_dataframe.empty: 
+        # Far enough to anchor a new segment. Always KEEP the point — never discard
+        # it for being "too far". A gap beyond (min_distance + max) simply becomes
+        # one longer segment rather than a hole in the coverage.
+        if geo_dataframe.empty:
             geo_dataframe = initial_entry
 
         # Save geo point
         geo_dataframe = pd.concat([geo_dataframe, pd.DataFrame([row])], ignore_index=True)
-        
-        # Reset the accumulated distance and set last location
-        accumulated_distance -= min_distance
+
+        # Reset accumulator, then set last location. A long gap resets fully so no
+        # leftover residual cascades into dropping the next point; a normal gap
+        # keeps the sub-min_distance remainder so spacing stays ~10 m on dense input.
+        if accumulated_distance >= (max + min_distance):
+            accumulated_distance = 0
+        else:
+            accumulated_distance -= min_distance
         last_lat, last_lon = current_lat, current_lon
-    
+
     return geo_dataframe
 
 def convert_points_to_linestrings(geo_dataframe):
