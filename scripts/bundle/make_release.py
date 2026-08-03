@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import sys
 import zipfile
@@ -40,6 +41,18 @@ from pathlib import Path
 # GitHub caps a single release asset at 2 GiB. Stay under it with room to spare.
 PART_MAX_BYTES = 1_800_000_000
 CHUNK = 1024 * 1024
+
+
+def _safe_name(name: str) -> str:
+    """URL-/asset-safe form of a component name for use as a zip filename.
+
+    Replaces any character outside [A-Za-z0-9._-] with '_'. A component name may contain a
+    space (the "Land Ownership" shapefiles dir -> "shp-Land Ownership"); as a release asset
+    that space both breaks the client's download URL and gets rewritten by GitHub, so the
+    filename must be sanitised. Only the filename is affected -- the manifest component key
+    and the paths inside the zip keep the original name.
+    """
+    return re.sub(r"[^A-Za-z0-9._-]", "_", name)
 
 
 def sha256_file(path: Path) -> str:
@@ -213,7 +226,15 @@ def main() -> int:
             return
         stamp(src)
         print(f"  packing {name} ...", flush=True)
-        archive = out / f"{name}.zip"
+        # The archive FILENAME becomes the release asset name and the string the client
+        # puts in the download URL, so it must be URL-safe. A component name can contain a
+        # space (e.g. the "Land Ownership" shapefiles dir -> "shp-Land Ownership"): a raw
+        # space makes the client URL invalid (http.client rejects it) AND GitHub rewrites
+        # spaces to dots on upload, so the asset would no longer match the manifest. Sanitise
+        # the filename ONLY -- the component key (components[name]) and the paths stored
+        # inside the zip (arc_root) keep the real name so component_source still maps to, and
+        # extraction still lands in, the real directory.
+        archive = out / f"{_safe_name(name)}.zip"
         zip_dir(src, archive, arc_root)
         parts = split_file(archive, PART_MAX_BYTES)
         components[name] = describe(parts)
