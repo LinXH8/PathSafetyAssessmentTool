@@ -141,7 +141,11 @@ class LayerStore:
         store.add_path("inner", base / "area_type" / "CentralMB2025.shp")
         store.add_path("industrial", base / "area_type" / "LanduseIndustrial2025.shp")
         store.add_path("rural", base / "area_type" / "LanduseRural2025.shp")
-        store.add_path("recreation", base / "area_type" / "LanduseRecreation2025.shp")
+        # Recreation landuse was reorganised out of area_type/ into its own layer folder
+        # (LanduseRecre2026). area_type/LanduseRecreation2025.shp no longer ships, so point
+        # the recreation area-type test at the current file. get_area_type only does a
+        # point-in-polygon test (_poly), so no attribute schema dependency.
+        store.add_path("recreation", base / "LanduseRecre2026" / "LanduseRecre2026.shp")
         store.add_path("beforeCount", base / "AMGbeforeCount" / "AMGbeforeCount_export.shp")
         store.add_path("sensorCount", base / "AMGsensorCount" / "AMGsensorCount_export.shp")
         store.add_path("kerb_line", base / "kerb_line" / "kerbline.shp")
