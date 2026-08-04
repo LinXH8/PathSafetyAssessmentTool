@@ -47,7 +47,7 @@ import shutil
 import pandas as pd
 import geopy.distance
 import geopandas as gpd
-from shapely.geometry import LineString
+from shapely.geometry import LineString, Point
 import numpy as np
 import math
 from glob import glob
@@ -168,25 +168,44 @@ def convert_points_to_linestrings(geo_dataframe):
         print("Not enough points to create line segments.")
         return None
 
-    # Create line segments from consecutive points
-    lines = [
-        LineString([geo_dataframe.geometry.iloc[i], geo_dataframe.geometry.iloc[i + 1]])
-        for i in range(len(geo_dataframe) - 1)
-    ]
+    points = list(geo_dataframe.geometry)
+    n = len(points)
+
+    # Segments from consecutive points: P[i] -> P[i+1], anchored to P[i]. This alone
+    # gives N-1 segments and leaves the LAST photo owning no segment (it is only the
+    # end of the final pair). Append one more segment so every photo — including the
+    # last — is its own full segment (N photos -> N segments). Downstream sizing keys
+    # off row count (len(FILENAME)), so attributes/snapshot/scores scale automatically.
+    lines = [LineString([points[i], points[i + 1]]) for i in range(n - 1)]
+
+    # Final segment for the last photo. There is no photo after it, so continue the
+    # last travel direction one step (mirror P[N-1]-P[N-2]) to give it a real length —
+    # so gradient/curvature/width and all attributes apply to it exactly like every
+    # other segment. The extrapolated end is NEVER drawn (every map/report/export plots
+    # a segment as a point at its FIRST coordinate = the real last photo); it exists
+    # only so the segment can be measured. Degenerate guard: identical final points
+    # (zero delta) fall back to a zero-length segment at the last photo.
+    last, prev = points[n - 1], points[n - 2]
+    dx, dy = last.x - prev.x, last.y - prev.y
+    extrapolated_end = last if (dx == 0 and dy == 0) else Point(last.x + dx, last.y + dy)
+    lines.append(LineString([last, extrapolated_end]))
+
+    point_start = points                              # all N points (each segment's anchor)
+    point_end = points[1:] + [extrapolated_end]       # P[1..N-1] then the extrapolated end
 
     # Create a new GeoDataFrame with LineString geometries
     line_gdf = gpd.GeoDataFrame(
-        {'point_start': geo_dataframe.geometry.iloc[:-1].values,
-         'point_end': geo_dataframe.geometry.iloc[1:].values,
+        {'point_start': point_start,
+         'point_end': point_end,
          'geometry': lines},
         crs=geo_dataframe.crs  # Maintain the same coordinate reference system
     )
 
     if 'ELAPSED_TIME' in geo_dataframe.columns:
-        line_gdf['ELAPSED_TIME'] = geo_dataframe['ELAPSED_TIME'].iloc[:-1].values
+        line_gdf['ELAPSED_TIME'] = geo_dataframe['ELAPSED_TIME'].values
 
     if 'FILENAME' in geo_dataframe.columns:
-        line_gdf['FILENAME'] = geo_dataframe['FILENAME'].iloc[:-1].values
+        line_gdf['FILENAME'] = geo_dataframe['FILENAME'].values
 
     return line_gdf
 
