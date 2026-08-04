@@ -60,7 +60,6 @@ import app.services.global_var as global_var
 from ._helpers import df_to_records, fail, get_ctx, ok, with_project
 from .gradient import GRADIENT_STATUS_FIELD, GRADIENT_STATUS_NOT_ASSESSED, GRADIENT_STATUS_NO_LIDAR_RESULT, _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE, _PROJECT_GRADIENT_CACHE_STATE, _get_project_gradient_mapping
 from .image_utils import _get_image_date_range, _get_project_source_folders, _migrate_legacy_images, apply_image_namespaces, build_project_geo_data, make_image_namespace
-from .source_folders import prune_source_folder
 from . import _helpers
 
 
@@ -760,19 +759,12 @@ def create_project_from_folder():
         shutil.rmtree(project_path, ignore_errors=True)
         return fail(f"Failed to initialise project: {e}", 500)
 
-    # Raw survey frames are sampled down to ~1 image per 10-15m when a segment
-    # anchor is picked (see _build_project_geo_data_from_points); everything
-    # else in in/<folder>/ is now dead weight. Prune it once this project's
-    # references are on disk. Best-effort: a prune failure must not roll back
-    # the project that was just created.
-    pruned_summary = []
-    contributing_folders = [n for n in normalized_folder_names if n not in skipped_sources]
-    for selected_folder_name in contributing_folders:
-        try:
-            pruned_summary.append(prune_source_folder(selected_folder_name))
-        except Exception as exc:
-            traceback.print_exc()
-            pruned_summary.append({"folder_name": selected_folder_name, "error": str(exc)})
+    # Auto-prune of raw survey frames after create is DISABLED. Installer-seeded
+    # folders keep every photo as a segment (see _folder_is_pruned in image_utils), so
+    # pruning would only risk deleting images the user wants to keep. Left as an
+    # explicit no-op (rather than removed) so it is easy to re-enable if disk pressure
+    # ever makes it necessary.
+    pruned_summary: list = []
 
     return ok({
         "ok": True,

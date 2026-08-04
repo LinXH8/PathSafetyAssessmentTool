@@ -381,58 +381,105 @@ def get_image_folder_geo(folder_path):
         # Required GPS tags
         if {'GPS GPSLatitude', 'GPS GPSLongitude',
             'GPS GPSLatitudeRef', 'GPS GPSLongitudeRef'}.issubset(tags):
-            
+
             lat = dms_to_decimal(tags['GPS GPSLatitude'].values,
                                 tags['GPS GPSLatitudeRef'].printable)
             lon = dms_to_decimal(tags['GPS GPSLongitude'].values,
                                 tags['GPS GPSLongitudeRef'].printable)
-            
+
             records.append({
                 'latitude':  lat,
                 'longitude': lon,
-                'filename':  fname
+                'filename':  fname,
             })
+
+    if not records:
+        # No geotagged images: return an empty frame (callers raise/skip on .empty)
+        # rather than letting df.longitude below raise AttributeError.
+        return gpd.GeoDataFrame(
+            columns=['latitude', 'longitude', 'filename', 'geometry'],
+            geometry='geometry', crs="EPSG:4326",
+        )
 
     df = pd.DataFrame(records)
     df['geometry'] = [Point(xy) for xy in zip(df.longitude, df.latitude)]
     return gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:4326")
 
 
+_SEGMENT_SPACING_M = 10  # target CycleRAP segment length (metres)
+# Mirror of source_folders._SOURCE_FOLDER_METADATA_FILENAME (kept local to avoid an
+# import cycle: source_folders imports this module).
+_SOURCE_FOLDER_METADATA_FILENAME = "psat-folder-summary.json"
+
+
+def _folder_is_pruned(src_dir) -> bool:
+    """True when a source folder was shipped pre-pruned by the installer.
+
+    Every installer-seeded ``in/<road>/`` carries ``psat-folder-summary.json`` with
+    ``summary.pruned == true`` — written by the backend during the build-time
+    pre-prune and copied onto the machine intact. No uploader ever sets it, and new
+    quarterly surveys land in separate ``<ROAD>_<Quarter>`` folders (so a seeded
+    folder never has photos added and can't lose the flag). This makes it a durable,
+    deterministic "this is an installer folder" signal.
+
+    Read version-agnostically (do NOT gate on the metadata ``version``) so a future
+    schema bump can't hide it. Any error / missing file → False.
+    """
+    try:
+        meta_path = Path(src_dir) / _SOURCE_FOLDER_METADATA_FILENAME
+        if not meta_path.is_file():
+            return False
+        data = json.loads(meta_path.read_text(encoding="utf-8"))
+        summary = data.get("summary") if isinstance(data, dict) else None
+        return bool(isinstance(summary, dict) and summary.get("pruned"))
+    except Exception:
+        return False
+
+
 def _build_project_geo_data_from_points(
     geo_points: gpd.GeoDataFrame,
     source_name: str,
     selection_polygon: Polygon | None = None,
+    keep_all: bool = False,
 ):
     df = geo_points.copy()
     if df.empty:
         raise ValueError(f"No geotagged images found in folder '{source_name}'")
 
-    if selection_polygon is not None:
-        df = df[df.geometry.apply(selection_polygon.covers)].reset_index(drop=True)
-        if df.empty:
-            return gpd.GeoDataFrame(columns=["LATITUDE", "LONGITUDE", "FILENAME", "geometry"], geometry="geometry", crs="EPSG:4326")
-
-    df = df.rename(columns={"latitude": "LATITUDE", "longitude": "LONGITUDE", "filename": "FILENAME"})
-    df = cycleRAP_VA.geoCode(df)
-    df = cycleRAP_VA.get_geo_points_by_distance(df, min_distance=10)
-
-    # get_geo_points_by_distance returns a bare, geometry-less DataFrame when the
-    # input is too short/sparse to yield any 10 m sample point — e.g. a map or
-    # shapefile selection that clips only a brief slice of a road — and
-    # convert_points_to_linestrings needs >= 2 sampled points. Treat either
-    # degenerate case as "no usable segments here" and return an EMPTY
-    # GeoDataFrame (not a raise, not None) so a multi-source create SKIPS this
-    # source instead of aborting the whole request. A single clipped road must
-    # not roll back a creation whose other roads have plenty of data.
     empty = gpd.GeoDataFrame(
-        columns=["LATITUDE", "LONGITUDE", "FILENAME", "geometry"],
+        columns=["point_start", "point_end", "geometry", "FILENAME"],
         geometry="geometry",
         crs="EPSG:4326",
     )
-    if df is None or "geometry" not in df.columns or len(df) < 2:
+
+    if selection_polygon is not None:
+        df = df[df.geometry.apply(selection_polygon.covers)].reset_index(drop=True)
+        if df.empty:
+            # A map/shapefile selection that clips only a brief slice with no photos:
+            # return EMPTY (not a raise) so a multi-source create SKIPS this source
+            # instead of aborting a creation whose other roads have plenty of data.
+            return empty
+
+    df = df.rename(columns={"latitude": "LATITUDE", "longitude": "LONGITUDE", "filename": "FILENAME"})
+    df = cycleRAP_VA.geoCode(df)
+
+    if keep_all:
+        # Installer-seeded (pre-pruned) folder: use EVERY photo as a segment. The
+        # folder already holds ~one photo per segment, so downsampling could only drop
+        # photos — this is the deterministic guarantee for shipped folders.
+        sampled = df.reset_index(drop=True)
+    else:
+        # A folder the user uploaded/copied in themselves (no installer marker):
+        # downsample to ~1 point per 10 m so a dense raw survey doesn't explode into
+        # thousands of tiny segments.
+        sampled = cycleRAP_VA.get_geo_points_by_distance(df, min_distance=_SEGMENT_SPACING_M)
+
+    # get_geo_points_by_distance can return a geometry-less DataFrame when the input
+    # is too short to yield 2 sample points; convert_points_to_linestrings needs >= 2.
+    if sampled is None or "geometry" not in getattr(sampled, "columns", []) or len(sampled) < 2:
         return empty
 
-    gdf = gpd.GeoDataFrame(df, geometry="geometry", crs="EPSG:4326")
+    gdf = gpd.GeoDataFrame(sampled, geometry="geometry", crs="EPSG:4326")
     lines = cycleRAP_VA.convert_points_to_linestrings(gdf)
     if lines is None or lines.empty:
         return empty
@@ -452,7 +499,10 @@ def apply_image_namespaces(filename_df, filename_prefix=None):
 
 def build_project_geo_data(src_dir: Path, selection_polygon: Polygon | None = None):
     geo_points = get_image_folder_geo(str(src_dir))
-    return _build_project_geo_data_from_points(geo_points, src_dir.name, selection_polygon)
+    # Installer-seeded (pre-pruned) folders always use every photo as a segment; a
+    # user-uploaded raw folder (no marker) is downsampled to ~10 m.
+    keep_all = _folder_is_pruned(src_dir)
+    return _build_project_geo_data_from_points(geo_points, src_dir.name, selection_polygon, keep_all)
 
 def make_image_namespace(source_name: str) -> str:
     namespace = "".join(ch if ch.isalnum() else "_" for ch in source_name).strip("_")
