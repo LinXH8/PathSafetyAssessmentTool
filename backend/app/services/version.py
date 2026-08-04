@@ -29,18 +29,23 @@ def _version_file() -> Path:
 
 
 def get_version_info() -> dict:
-    """Return ``{"version": str, "channel": str}``. Cached after first read."""
+    """Return ``{"version": str, "channel": str, "released": str}``. Cached after first read.
+
+    ``released`` is the release date (``YYYY-MM-DD``) shown in the UI; it defaults to
+    ``""`` when an older bundle's version.json predates the field.
+    """
     global _cache
     if _cache is not None:
         return _cache
 
-    info = {"version": UNKNOWN_VERSION, "channel": "stable"}
+    info = {"version": UNKNOWN_VERSION, "channel": "stable", "released": ""}
     path = _version_file()
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(data, dict):
             info["version"] = str(data.get("version") or UNKNOWN_VERSION)
             info["channel"] = str(data.get("channel") or "stable")
+            info["released"] = str(data.get("released") or "")
     except FileNotFoundError:
         logger.warning("version.json not found at %s; reporting '%s'", path, UNKNOWN_VERSION)
     except Exception as exc:

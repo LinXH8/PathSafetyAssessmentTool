@@ -13,6 +13,7 @@ import ResetConfirmationDialog from "./components/ResetConfirmationDialog";
 import ExitConfirmationDialog from "./components/ExitConfirmationDialog";
 import SidebarV2 from "./SidebarV2";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import { useAppVersion } from "../../hooks/useAppVersion";
 import psatLogo from "../LandingPage/assets/PSAT Logo (Black).png";
 import "./sidebar.css";
 
@@ -25,6 +26,7 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { activeProfile, logout } = useProfile();
+  const appVersion = useAppVersion();
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [treatmentExitDialogOpen, setTreatmentExitDialogOpen] = useState(false);
   const hasSavedReport = useMemo(() => { try { return !!localStorage.getItem(LOCAL_KEYS.REPORT_LAYOUT); } catch { return false; } }, []);
@@ -456,6 +458,7 @@ export default function Sidebar() {
         >
           <img src={psatLogo} alt="PSAT" className="psat-brand-logo" style={{ cursor: "default" }} />
         </Tooltip>
+        <div className="psat-sidebar-version">v{appVersion.version}</div>
         <h1 className="psat-sidebar-title">Path Safety Assessment Tool</h1>
 
         {activeProfile && (

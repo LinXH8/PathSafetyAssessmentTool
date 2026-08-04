@@ -5,6 +5,7 @@ import { fetchProjectList, type ProjectListItem, type ProfileSummary } from "../
 import { openCoding, openPathAnalysis, openTreatment } from "../../features/projectNav";
 import { useProjectSelection } from "../../features/projectSelection";
 import { FONT, COLOR } from "../../features/ui/designTokens";
+import { useAppVersion } from "../../hooks/useAppVersion";
 import psatLogo from "./assets/psat-logo.png";
 import "./sidebar-v2.css";
 
@@ -86,6 +87,7 @@ export default function SidebarV2({
   children,
 }: SidebarV2Props) {
   const navigate = useNavigate();
+  const appVersion = useAppVersion();
   // Every nav button runs through the unsaved-changes guard.
   const go = (to: string) => onGuardedAction(() => navigate(to));
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
@@ -146,8 +148,21 @@ export default function SidebarV2({
         <img
           src={psatLogo}
           alt="PSAT"
-          style={{ width: "12.25rem", height: "auto", alignSelf: "center", marginBottom: "0.375rem", objectFit: "contain" }}
+          style={{ width: "12.25rem", height: "auto", alignSelf: "center", marginBottom: "0.125rem", objectFit: "contain" }}
         />
+        <span
+          style={{
+            alignSelf: "center",
+            marginBottom: "0.375rem",
+            fontFamily: FONT,
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            color: COLOR.gray500,
+            letterSpacing: "0.02em",
+          }}
+        >
+          v{appVersion.version}
+        </span>
 
         {navButton("Home", () => go("/home"))}
 

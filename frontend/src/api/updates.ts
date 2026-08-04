@@ -41,6 +41,29 @@ export async function checkForUpdate(): Promise<UpdateStatus> {
   return res.json();
 }
 
+export interface AppVersion {
+  version: string;
+  channel: string;
+  /** Release date (YYYY-MM-DD); "" on older bundles that predate the field. */
+  released: string;
+}
+
+/**
+ * Installed version + release date from the local backend (`GET /api/health`).
+ * Cheap and local — no GitHub — so it is safe to call on app start for the
+ * landing footer / sidebar label. Throws on a non-OK response like the others.
+ */
+export async function getAppVersion(): Promise<AppVersion> {
+  const res = await fetchWithTimeout("/api/health", {}, 10000);
+  if (!res.ok) throw new Error(await readError(res));
+  const data = await res.json();
+  return {
+    version: String(data.version ?? ""),
+    channel: String(data.channel ?? "stable"),
+    released: String(data.released ?? ""),
+  };
+}
+
 export async function getUpdateProgress(): Promise<UpdateProgress> {
   const res = await fetchWithTimeout("/api/updates/status", {}, 10000);
   if (!res.ok) throw new Error(await readError(res));

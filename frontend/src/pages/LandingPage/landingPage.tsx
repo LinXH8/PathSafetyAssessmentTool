@@ -4,8 +4,8 @@ import "./landingPage.css";
 
 import psatLogo2 from "./assets/PSAT Logo (Black).png";
 import cyclerapLogo from "./assets/CycleRAP-logo.png";
-import { APP_META } from "../../appMeta";
 import { toaster } from "../../components/ui/toaster";
+import { useAppVersion } from "../../hooks/useAppVersion";
 import { useProfile } from "../../features/profile/ProfileProvider";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 import LandingModal, {
@@ -20,6 +20,7 @@ import LandingModal, {
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const appVersion = useAppVersion();
   const {
     profiles,
     activeProfile,
@@ -854,7 +855,10 @@ export default function LandingPage() {
       </LandingModal>
 
       <footer className="landing-footer">
-        <span className="version-info">v{APP_META.version} ({APP_META.buildDate})</span>
+        <span className="version-info">
+          v{appVersion.version}
+          {appVersion.released ? ` (${appVersion.released})` : ""}
+        </span>
         <img
           src={cyclerapLogo}
           alt="CycleRAP logo"

@@ -27,4 +27,5 @@ def health():
         "status": "ok",
         "version": info["version"],
         "channel": info["channel"],
+        "released": info.get("released", ""),
     })
