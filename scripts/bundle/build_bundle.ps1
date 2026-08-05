@@ -159,6 +159,20 @@ cd /d "%~dp0"
 if errorlevel 1 pause
 '@ | Set-Content -Path (Join-Path $BundleRoot "PSAT.bat") -Encoding ASCII
 
+# ── 5b. Shortcut icon ────────────────────────────────────────────────────────
+# The installer sets the desktop/Start-menu shortcut icon to
+# "$InstallRoot\PSAT Logo.ico" but only "if (Test-Path $icon)". If the icon is
+# not shipped inside the bundle it never reaches the install root, and the
+# shortcut silently falls back to the default .bat icon. Copy it in here.
+Step "Shortcut icon"
+$iconSrc = Join-Path $RepoRoot "PSAT Logo.ico"
+if (Test-Path $iconSrc) {
+    Copy-Item $iconSrc (Join-Path $BundleRoot "PSAT Logo.ico") -Force
+    Info "PSAT Logo.ico"
+} else {
+    Die "missing shortcut icon: $iconSrc"
+}
+
 # ── 6. Verify ────────────────────────────────────────────────────────────────
 # A bundle that is merely "assembled" is not a bundle that works. An earlier
 # version of this script silently dropped the scoring model and the profiles
@@ -182,7 +196,8 @@ $required = @(
     "webui\index.html",
     "webui\assets",
     "launcher\launch_psat.py",
-    "PSAT.bat"
+    "PSAT.bat",
+    "PSAT Logo.ico"                                        # shortcut icon
 )
 $missing = @()
 foreach ($rel in $required) {
