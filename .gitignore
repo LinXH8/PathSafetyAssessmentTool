@@ -72,6 +72,7 @@ Generated Reports/
 
 # Data and Models
 CycleRAP - model - generation v2.13 - to suppliers.xlsm
+backend/CycleRAP - model - generation v2.14-to supliers.xlsm
 Obstacles 2/
 completed.csv
 
@@ -112,3 +113,7 @@ CycleRAP_User_Guide.pdf
 !docs/**
 # frontend/public/docs/ is populated by scripts/sync_docs.sh from docs/ — keep it tracked
 !frontend/public/docs/**
+# !docs/** re-includes everything under docs/, undoing the top-level .DS_Store
+# ignore for this subtree — re-exclude explicitly.
+docs/.DS_Store
+docs/archive/.DS_Store
