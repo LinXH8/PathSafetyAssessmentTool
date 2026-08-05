@@ -120,6 +120,78 @@ def warmup_gis() -> None:
 # return immediately (no-op 200) so they don't hold the GIL during inference.
 _INFERENCE_DEPTH = 0
 
+# Metadata PATCH payloads deferred while _INFERENCE_DEPTH > 0, keyed by
+# project name, merged and flushed to disk the moment depth returns to 0 so
+# deferred counter/tag updates are never silently dropped.
+_PENDING_METADATA_UPDATES: dict[str, dict] = {}
+
+
+def enter_inference() -> None:
+    global _INFERENCE_DEPTH
+    _INFERENCE_DEPTH += 1
+
+
+def exit_inference() -> None:
+    global _INFERENCE_DEPTH
+    _INFERENCE_DEPTH -= 1
+    if _INFERENCE_DEPTH == 0 and _PENDING_METADATA_UPDATES:
+        _flush_pending_metadata_updates()
+
+
+def apply_metadata_fields(proj, payload: dict) -> bool:
+    """Apply tags/path_key/verified/verified_segment_count/autocoded_segment_count
+    from payload onto proj.metadata. Returns True if anything changed."""
+    changed = False
+
+    new_tags = payload.get("tags")
+    if new_tags is not None and isinstance(new_tags, list):
+        proj.metadata.tags = new_tags
+        changed = True
+
+    new_path_key = payload.get("path_key")
+    if new_path_key is not None and isinstance(new_path_key, str):
+        proj.metadata.path_key = new_path_key.strip() or None
+        changed = True
+
+    new_verified = payload.get("verified")
+    if new_verified is not None:
+        proj.metadata.verified = bool(new_verified)
+        changed = True
+
+    new_verified_segment_count = payload.get("verified_segment_count")
+    if new_verified_segment_count is not None:
+        proj.metadata.verified_segment_count = int(new_verified_segment_count)
+        changed = True
+
+    new_autocoded_segment_count = payload.get("autocoded_segment_count")
+    if new_autocoded_segment_count is not None:
+        proj.metadata.autocoded_segment_count = int(new_autocoded_segment_count)
+        changed = True
+
+    return changed
+
+
+def _flush_pending_metadata_updates() -> None:
+    """Apply and persist any metadata updates deferred during inference.
+    Called automatically by exit_inference() once _INFERENCE_DEPTH hits 0."""
+    pending = _PENDING_METADATA_UPDATES.copy()
+    _PENDING_METADATA_UPDATES.clear()
+
+    try:
+        pm = get_ctx()["pm"]
+    except Exception:
+        logger.exception("[Autocode] Failed to flush pending metadata updates: could not get pm")
+        return
+
+    for project_name, payload in pending.items():
+        try:
+            proj = pm.project(project_name)
+            if apply_metadata_fields(proj, payload):
+                proj.metadata.last_updated = datetime.datetime.now()
+                proj.metadata.serialize(proj.project_path)
+        except Exception:
+            logger.exception(f"[Autocode] Failed to flush pending metadata update for project '{project_name}'")
+
 # util
 def ok(data, code: int = 200) -> tuple[Response, int]:
     return jsonify(data), code

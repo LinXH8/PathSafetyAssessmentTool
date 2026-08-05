@@ -75,11 +75,11 @@ def _cv_autocode_core(pm, project_name: str, image_ref: str, skip_obstacles: boo
     if img_path is None or not img_path.exists():
         raise FileNotFoundError(f"image not found: {image_ref}")
 
-    _helpers._INFERENCE_DEPTH += 1
+    _helpers.enter_inference()
     try:
         updates = cv_pred.CycleRAP_Coding_Helper.autocode(img_path, skip_obstacles=skip_obstacles) or {}
     finally:
-        _helpers._INFERENCE_DEPTH -= 1
+        _helpers.exit_inference()
     return {k: v for k, v in updates.items() if v is not None}
 
 
@@ -549,7 +549,7 @@ def autocode_all(project_name: str, pm, proj, ver):
 
             total_count = len(indices)
             logger.info(f"[Autocode] Bulk starting: {total_count} rows for project '{project_name}'")
-            _helpers._INFERENCE_DEPTH += 1
+            _helpers.enter_inference()
             try:
                 for idx in indices:
                     try:
@@ -628,7 +628,7 @@ def autocode_all(project_name: str, pm, proj, ver):
                         traceback.print_exc()
                         errors.append({"index": idx, "reason": str(e)})
             finally:
-                _helpers._INFERENCE_DEPTH -= 1
+                _helpers.exit_inference()
 
             # --- Area Type Smoothing (100m rule) ---
             try:

@@ -395,11 +395,10 @@ const patch: AttributeRow = {};
         setProgress(100);
         setAutoCodeMsg("Completed");
 
-        // Update autocoded segment count to total segments when autocode all completes
-        if (totalOk > 0 && totalFail === 0) {
-          // Only set to 100% if all segments were successfully autocoded
-          const totalSegments = attrs.length;
-          updateAutocodedSegmentCount(currentProjectName, totalSegments);
+        // Update autocoded segment count to reflect segments that actually
+        // succeeded in this run, so a partial failure doesn't block the whole update
+        if (totalOk > 0) {
+          updateAutocodedSegmentCount(currentProjectName, totalOk);
         }
 
         const totalProcessed = totalOk + totalFail;
@@ -685,9 +684,10 @@ const patch: AttributeRow = {};
             } catch {
             }
 
-            // Update autocoded segment count for this project if autocode was successful
-            if (projectOk > 0 && projectFail === 0) {
-              updateAutocodedSegmentCount(projectName, projectAttrsLength);
+            // Update autocoded segment count to reflect segments that actually
+            // succeeded in this run, so a partial failure doesn't block the whole update
+            if (projectOk > 0) {
+              updateAutocodedSegmentCount(projectName, projectOk);
             }
 
             totalProcessed += projectAttrsLength;

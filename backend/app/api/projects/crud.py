@@ -807,15 +807,15 @@ def update_project_metadata(project_name: str):
         new_name = payload.get("new_name")
         new_tags = payload.get("tags")
         new_path_key = payload.get("path_key")
-        new_verified = payload.get("verified")
-        new_verified_segment_count = payload.get("verified_segment_count")
-        new_autocoded_segment_count = payload.get("autocoded_segment_count")
 
         # While YOLO inference is running, skip all disk I/O to avoid holding
         # the GIL and slowing down inference (10-20x overhead observed).
         # Name renames are never batched by the frontend during autocode, so
         # it is safe to defer counter/tag updates until inference finishes.
+        # The payload is queued and flushed automatically by exit_inference()
+        # the moment _INFERENCE_DEPTH returns to 0, so the update is never lost.
         if _helpers._INFERENCE_DEPTH > 0 and new_name is None:
+            _helpers._PENDING_METADATA_UPDATES.setdefault(project_name, {}).update(payload)
             return ok({"ok": True, "deferred": True})
 
         # Get the project
@@ -824,37 +824,12 @@ def update_project_metadata(project_name: str):
         except KeyError:
             return fail("Project not found", 404)
 
-        # Check if any metadata needs updating
-        metadata_updated = False
+        if new_tags is not None and not isinstance(new_tags, list):
+            return fail("Tags must be an array", 400)
+        if new_path_key is not None and not isinstance(new_path_key, str):
+            return fail("path_key must be a string", 400)
 
-        # Update tags if provided
-        if new_tags is not None:
-            if not isinstance(new_tags, list):
-                return fail("Tags must be an array", 400)
-            proj.metadata.tags = new_tags
-            metadata_updated = True
-
-        # Update path_key override if provided. Empty string clears the override.
-        if new_path_key is not None:
-            if not isinstance(new_path_key, str):
-                return fail("path_key must be a string", 400)
-            proj.metadata.path_key = new_path_key.strip() or None
-            metadata_updated = True
-
-        # Update verified status if provided
-        if new_verified is not None:
-            proj.metadata.verified = bool(new_verified)
-            metadata_updated = True
-
-        # Update verified segment count if provided
-        if new_verified_segment_count is not None:
-            proj.metadata.verified_segment_count = int(new_verified_segment_count)
-            metadata_updated = True
-
-        # Update autocoded segment count if provided
-        if new_autocoded_segment_count is not None:
-            proj.metadata.autocoded_segment_count = int(new_autocoded_segment_count)
-            metadata_updated = True
+        metadata_updated = _helpers.apply_metadata_fields(proj, payload)
 
         # Serialize once after all metadata updates
         if metadata_updated:
