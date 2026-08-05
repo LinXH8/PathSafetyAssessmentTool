@@ -285,6 +285,13 @@ const patch: AttributeRow = {};
 
         setProgress(100);
         setAutoCodeMsg("Done");
+
+        // Bump the autocoded segment count so Projects/Coding page status reflects
+        // this segment; treated as a plain manual tally (same as verifiedSegmentCount),
+        // no per-segment double-count guard.
+        const prevCount = projectData[currentProjectName]?.autocodedSegmentCount ?? 0;
+        updateAutocodedSegmentCount(currentProjectName, prevCount + 1);
+
         toaster.create({
           title: "Auto-code (current) done",
           description: `CV + GIS updates applied. ${allChanged.length} fields changed.`,
@@ -311,7 +318,7 @@ const patch: AttributeRow = {};
   // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
   // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProjectName, imgRef, currentFeature, applyUpdatesToCurrentRow, updateAutocodeBaseline, currentIndex, attrs, scores, changedFieldsByRow, fieldSourcesByRow]);
+  }, [currentProjectName, imgRef, currentFeature, applyUpdatesToCurrentRow, updateAutocodeBaseline, currentIndex, attrs, scores, changedFieldsByRow, fieldSourcesByRow, projectData, updateAutocodedSegmentCount]);
 
   // Auto-code all segments
   useEffect(() => {
