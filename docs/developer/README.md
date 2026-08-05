@@ -15,3 +15,10 @@ Main documents:
 - [frontend.md](frontend.md)
 - [common-issues.md](common-issues.md)
 - [contributing.md](contributing.md)
+
+Deployment & remote updates:
+
+- [how-to-update-remotely.md](how-to-update-remotely.md) — **start here** to push an update to every machine (written for all levels)
+- [deployment-operations-guide.md](deployment-operations-guide.md) — full build/install/update reference
+- [deployment-updating-guide.md](deployment-updating-guide.md) — the strict "never hand-zip a release" rules
+- [deployment-decisions-and-history.md](deployment-decisions-and-history.md) — why the packaging/update system works the way it does
