@@ -28,7 +28,7 @@ import { Fragment, useEffect, useMemo, useRef, useState, useCallback } from "rea
 import { RISK_BAND_COLORS } from "../../../components/visualization/scoreband/colorConstants";
 import { MAP_MISSING_SCORE_COLOR, MAP_INTERACTION_COLORS } from "../../../constants/mapColors";
 import type { CodingFilterContext } from "../../../api";
-import { CODING_FILTER_CONTEXT_KEY } from "../../../constants/sessionKeys";
+import { CODING_FILTER_CONTEXT_KEY, gisLayerToggleKey } from "../../../constants/sessionKeys";
 import { useNavigate } from "react-router-dom";
 
 
@@ -675,6 +675,18 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
                               click: () => {
                                 // Navigate to the other project, preserving the full filter context
                                 sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
+                                // Carry the currently active GIS layer toggles over to the target
+                                // project so the toggled view persists across a cross-project
+                                // segment jump, instead of resetting to that project's
+                                // stored/default toggles.
+                                try {
+                                  localStorage.setItem(gisLayerToggleKey(proj.projectName), JSON.stringify({
+                                    ...gisToggles,
+                                    overlayEnabled: showCurvatureOverlay ?? false,
+                                  }));
+                                } catch {
+                                  // localStorage unavailable — non-fatal, falls back to normal per-project behavior
+                                }
                                 navigate(
                                   `/coding/${encodeURIComponent(proj.projectName)}?segment=${pt.idx + 1}`,
                                   { state: { returnToAnalysis: true, filterContext } }
