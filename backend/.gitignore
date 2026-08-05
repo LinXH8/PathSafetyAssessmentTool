@@ -41,6 +41,11 @@ shapefiles/*
 # ... and keep the per-road build logs, which *.log above would otherwise drop
 !shapefiles/gradient_profiles/**/*.log
 
+# Stale pre-rename duplicate of app/api/gis_layers/ (superseded, dead code —
+# see gis_layers/routes.py docstring). The !shapefiles/ re-include above
+# unintentionally un-ignores this unrelated module dir too; re-exclude it.
+app/api/shapefiles/
+
 # Temporary files
 *.tmp
 *.bak
