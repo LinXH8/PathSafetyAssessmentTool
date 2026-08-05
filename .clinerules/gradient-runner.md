@@ -84,6 +84,28 @@ Active Phase 2 bundles on the LiDAR root:
 - `D_Rochor_LTA`
 - `D_Singapore_River_LTA`
 
+## Local / Mac Environment (added 2026-07-29)
+
+The docs above assume the operator's Windows box. On the **Mac dev machine** the mapping is:
+
+- **LiDAR root:** `/Volumes/Expansion/LIDAR/` (external drive = the Mac's `E:` equivalent; same
+  "slow drive, confirm first" rules). Verify it is mounted before any LiDAR op; if absent, ask for
+  the drive. Bundles present include `D_Novena`, `D_Newton_LTA`, `D_Toa Payoh`, `D_Bishan`.
+- **`Gradient Calculation/` is gitignored** — not in the repo. If it is missing, ask the user to
+  drop it in at repo root (holds `build_path_gradient_profile.py` + `LAZ_to_Gradient_Guide.md`).
+- **Two interpreters, split by need:**
+  - Gradient builds (need `laspy`): use `backend/venv/bin/python` (3.9; the builder has
+    `from __future__ import annotations` so 3.9 is fine). One-time: `backend/venv/bin/python -m pip
+    install "laspy[lazrs]"`.
+  - Project creation (imports the `app` package, which uses 3.10+ `X | None` syntax): use
+    `/opt/homebrew/anaconda3/bin/python` (3.13; the same interpreter the running backend uses). It
+    has geopandas + exifread but **not** laspy, which project creation does not need.
+- **Shared-index batch driver (efficiency):** `build_path_gradient_profile.py::index_laz_files()`
+  re-reads every bundle LAZ header on **each** run with no cache (~707 tiles for `D_Novena`, minutes
+  on the slow drive). For a batch, drive it with a script that imports the builder's own functions
+  and hoists `index_laz_files()` out of the per-road loop (index once, pickle-cache to
+  `tmp/lidar_index_cache_<date>/<Bundle>.pkl`). The math stays identical — only the index is reused.
+
 ## Discovery Order
 
 Before asking the user about missing inputs, check in this order:
@@ -134,6 +156,33 @@ section before using it.
   is needed.
 - Guard `linemerge`: `u = unary_union(lines); merged = u if isinstance(u, LineString) else linemerge(u)`.
 - Centerline traces usually beat image-GPS traces, which only cover wherever photos were taken.
+
+## Reference Projects For Autocode (added 2026-07-29)
+
+Autocode injects Grade / Gradient % only into a **project**: `gradient.py::_inject_grade` resolves a
+project to a canonical profile via `_resolve_gradient_profile_for_project` (project
+`project_metadata.json.path_key` → catalog key, else normalized-name/dataset alias, else centerline
+geometry match). A promoted profile with **no project** for that road is therefore never consumed.
+
+So after promoting a batch, build a **reference project** per road so autocode can use the gradient:
+
+1. Build the project from `in/<SOURCE FOLDER>` imagery (real, autocode-able project with photos).
+   Do this **offline** without switching the active profile: instantiate `project_manager()`, mirror
+   `get_ctx()`'s init, then override `pm.des_path = profiles/<target profile slug>/projects` and call
+   `pm._discover_projects()`; for each road `build_project_geo_data(in/<folder>, None)` →
+   `pm.create_project(name, gdf, folder, source_folders=[folder])`. Run it under the anaconda
+   interpreter (see Local / Mac Environment). Project name must have **no underscores**.
+2. **Skip the `in/` prune** that the `/api/projects/folders` endpoint does — reference projects are
+   meant to leave the staged source intact. (Direct `pm.create_project` does not prune; only the
+   route does.)
+3. Set `project_metadata.json.path_key` to the canonical `path_key` so resolution is exact.
+4. The reference project's image-GPS geometry may differ from the promoted centerline profile — that
+   is fine: runtime maps the project's image refs to the profile's chainages by proximity, exactly as
+   pre-existing canonical roads already work.
+
+The project's geometry is **not** the gradient source — promote the fuller **centerline** build
+(gap-max tuned; `150` for split local roads) as the canonical profile, and keep the reference project
+only for autocode resolution and as geometry reference.
 
 ### Multi-bundle roads: junction directories
 

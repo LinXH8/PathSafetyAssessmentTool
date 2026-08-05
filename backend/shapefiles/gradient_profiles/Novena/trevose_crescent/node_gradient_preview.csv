@@ -1,2 +1,12 @@
 path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
-trevose_crescent,1,,TREVOSE CRESCENT,1436.77,718.385,718.0,8.987,,
+trevose_crescent,1,,TREVOSE CRESCENT,102.316,51.158,52.0,12.125,,
+trevose_crescent,2,,TREVOSE CRESCENT,113.572,159.102,160.0,11.855,,
+trevose_crescent,3,,TREVOSE CRESCENT,135.787,283.781,284.0,17.56,,
+trevose_crescent,4,,TREVOSE CRESCENT,204.196,453.773,454.0,11.319,,
+trevose_crescent,5,,TREVOSE CRESCENT,177.136,644.438,644.0,8.858,-0.625,1.0
+trevose_crescent,6,,TREVOSE CRESCENT,184.484,825.248,826.0,7.548,-3.125,1.0
+trevose_crescent,7,,TREVOSE CRESCENT,210.899,1022.939,1022.0,5.476,,
+trevose_crescent,8,,TREVOSE CRESCENT,83.865,1170.321,1170.0,5.999,,
+trevose_crescent,9,,TREVOSE CRESCENT,68.299,1246.404,1246.0,3.891,,
+trevose_crescent,10,,TREVOSE CRESCENT,83.753,1322.43,1322.0,5.307,,
+trevose_crescent,11,,TREVOSE CRESCENT,72.464,1400.538,1400.0,4.464,,
