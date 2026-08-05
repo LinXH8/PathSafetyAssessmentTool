@@ -24,12 +24,12 @@ import {
  * CLAUDE.md.
  */
 
-// Long enough that a check is never in the user's way, short enough that a
-// release published during the day is noticed the same day.
-const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6h
+// While a machine is not on the latest release we re-check (and re-surface the
+// prompt) every minute, so an update is never silently missed for a whole
+// session. "Not now" only closes it until the next check — it never sticks.
+const CHECK_INTERVAL_MS = 60 * 1000; // 1 min
 const FIRST_CHECK_DELAY_MS = 20_000; // let the app settle (GIS warmup) first
 const PROGRESS_POLL_MS = 1000;
-const DISMISSED_KEY = "psat:updateDismissedVersion";
 
 type Phase = "idle" | "offer" | "downloading" | "ready" | "failed";
 
@@ -44,27 +44,33 @@ export default function UpdateModal() {
   // Never interrupt the landing/profile screen — the user has not started work yet.
   const suppressed = location.pathname === "/";
 
-  const dismissedVersion = () => {
-    try {
-      return localStorage.getItem(DISMISSED_KEY);
-    } catch {
-      return null;
-    }
-  };
-
   const runCheck = useCallback(async () => {
     try {
       const next = await checkForUpdate();
       setStatus(next);
-      if (next.pending) {
+      setPhase((prev) => {
+        // Don't yank the user out of an in-progress download or a failed-retry
+        // screen when the 1-min tick fires.
+        if (prev === "downloading" || prev === "failed") return prev;
         // Already downloaded on a previous run — just needs a restart.
-        setPhase("ready");
-      } else if (next.updateAvailable && next.availableVersion !== dismissedVersion()) {
-        setPhase("offer");
-      }
+        if (next.pending) return "ready";
+        // Behind the latest release → offer. The version guard means a machine
+        // already on the latest version is never prompted, even if the backend
+        // ever reports an update (same-version republish / fingerprint drift).
+        if (
+          next.updateAvailable &&
+          next.availableVersion &&
+          next.availableVersion !== next.currentVersion
+        ) {
+          return "offer";
+        }
+        // Up-to-date.
+        return "idle";
+      });
     } catch {
-      // Offline or the feed does not exist yet. Stay silent: an update check is
-      // never important enough to put an error in front of the user.
+      // Offline or the feed does not exist yet. Stay silent (keep the current
+      // phase): an update check is never important enough to put an error in
+      // front of the user, and the next 1-min tick will retry.
     }
   }, []);
 
@@ -115,13 +121,9 @@ export default function UpdateModal() {
   };
 
   const onLater = () => {
-    // Remember the specific version so the same update does not nag every launch,
-    // but a NEWER one still surfaces.
-    try {
-      if (status?.availableVersion) localStorage.setItem(DISMISSED_KEY, status.availableVersion);
-    } catch {
-      /* private mode — worst case it asks again */
-    }
+    // Close for now — deliberately NOT persisted. The next 1-min check re-derives
+    // the phase and re-surfaces the offer while the machine is still behind, so
+    // the prompt keeps coming back until the user updates.
     setPhase("idle");
   };
 
