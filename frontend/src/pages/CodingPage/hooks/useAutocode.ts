@@ -529,6 +529,12 @@ const patch: AttributeRow = {};
         setProgress(100);
         setAutoCodeMsg("Completed");
 
+        // Update autocoded segment count to reflect segments that actually
+        // succeeded in this run, so a partial failure doesn't block the whole update
+        if (totalOk > 0) {
+          updateAutocodedSegmentCount(currentProjectName, totalOk);
+        }
+
         const totalProcessed = totalOk + totalFail;
         toaster.create({
           title: "Auto-code (by attribute) done",
@@ -557,7 +563,7 @@ const patch: AttributeRow = {};
   // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
   // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProjectName, attrs.length, updateAutocodeBaseline]);
+  }, [currentProjectName, attrs.length, updateAutocodeBaseline, updateAutocodedSegmentCount]);
 
   // Auto-code all segments in all loaded projects
   useEffect(() => {
