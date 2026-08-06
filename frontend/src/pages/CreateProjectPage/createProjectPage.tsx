@@ -14,6 +14,8 @@ import {
 import { type SelectedRoad } from "./SelectRoadsMap";
 import { loadFolderSummaryCache, saveFolderSummaries } from "./folderSummaryCache";
 import { useUiVersion } from "../../features/ui/useUiVersion";
+import { notifyProjectListChanged } from "../../features/projectListSync";
+import { useProjectSelection } from "../../features/projectSelection";
 import CreateProjectLayoutV1 from "./layouts/CreateProjectLayoutV1";
 import CreateProjectLayoutV2 from "./layouts/CreateProjectLayoutV2";
 import type { CreateProjectViewModel } from "./layouts/CreateProjectViewModel";
@@ -37,6 +39,7 @@ export default function CreateProjectPage() {
   const [importProjectModalOpen, setImportProjectModalOpen] = useState(false);
   const [roadAvailabilityVersion, setRoadAvailabilityVersion] = useState(0);
   const [folderPreview, setFolderPreview] = useState<SourceFolderPreview | null>(null);
+  const [, setQsSelected] = useProjectSelection();
   const [loadingFolderPreview, setLoadingFolderPreview] = useState(false);
   const [folderPreviewError, setFolderPreviewError] = useState<string | null>(null);
   const [selectedRoads, setSelectedRoads] = useState<SelectedRoad[]>([]);
@@ -286,6 +289,10 @@ export default function CreateProjectPage() {
         usingRoadSelection ? (selectedSelectionGeometry ?? undefined) : undefined
       );
       const proj = data?.name ?? name.trim();
+      // Sidebar stays mounted across navigation (see AppLayout), so it needs an
+      // explicit signal to refetch and pick up the new project.
+      notifyProjectListChanged();
+      setQsSelected((prev) => new Set(prev).add(proj));
       nav(`/coding/${encodeURIComponent(proj)}`);
     } catch (e: any) {
       setErr(e?.message ?? "Create failed");
@@ -307,6 +314,7 @@ export default function CreateProjectPage() {
   // so the newly-imported projects' source-folder counts are reflected here.
   const onProjectsImported = useCallback((_result: ImportProjectsResult) => {
     loadFolders();
+    notifyProjectListChanged();
   }, []);
 
   const onViewImportedProjects = useCallback(() => {

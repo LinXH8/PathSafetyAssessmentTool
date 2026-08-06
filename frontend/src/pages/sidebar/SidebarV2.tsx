@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LuCheck, LuChevronDown } from "react-icons/lu";
 import { fetchProjectList, type ProjectListItem, type ProfileSummary } from "../../api";
 import { openCoding, openPathAnalysis, openTreatment } from "../../features/projectNav";
+import { onProjectListChanged } from "../../features/projectListSync";
 import { useProjectSelection } from "../../features/projectSelection";
 import { FONT, COLOR } from "../../features/ui/designTokens";
 import { useAppVersion } from "../../hooks/useAppVersion";
@@ -97,15 +98,23 @@ export default function SidebarV2({
 
   useEffect(() => {
     let cancelled = false;
-    fetchProjectList()
-      .then((data) => {
-        if (!cancelled) setProjects(data.projects ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setProjects([]);
-      });
+    const refreshProjects = () => {
+      fetchProjectList()
+        .then((data) => {
+          if (!cancelled) setProjects(data.projects ?? []);
+        })
+        .catch(() => {
+          if (!cancelled) setProjects([]);
+        });
+    };
+    refreshProjects();
+    // AppLayout keeps the sidebar mounted across in-app navigation, so a
+    // project created/deleted/imported elsewhere needs an explicit signal
+    // to make Quick Select refetch (see projectListSync.ts).
+    const unsubscribe = onProjectListChanged(refreshProjects);
     return () => {
       cancelled = true;
+      unsubscribe();
     };
   }, []);
 

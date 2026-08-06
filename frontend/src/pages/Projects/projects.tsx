@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchProjectList, ping, deleteProject as apiDeleteProject, shareProjects as apiShareProjects, exportProjects as apiExportProjects, type ProjectListItem } from "../../api";
 import { invalidateAll } from "../../api/projectDataCache";
+import { notifyProjectListChanged } from "../../features/projectListSync";
 import { useProjectSelection } from "../../features/projectSelection";
 import { SESSION_KEYS } from "../../constants/sessionKeys";
 import { matchesProjectSearch } from "../../utils/projectSearch";
@@ -381,6 +382,7 @@ export default function Home() {
       );
       setSelected(new Set());
       setOpenDelete(false);
+      notifyProjectListChanged();
     } catch (e: any) {
     } finally {
       setDeleting(false);
