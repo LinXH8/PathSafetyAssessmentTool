@@ -4,6 +4,17 @@ shapefiles/
 in/
 model/
 
+# Updater runtime state (backend/app/services/updater.py). In a dev checkout,
+# paths.install_root() resolves to the repo root, so these get written here
+# instead of inside a packaged install.
+/installed.json
+/pending/
+
+# Per-machine opt-out from the update-check modal (updater.py:update_checks_disabled).
+# Presence-only marker, never committed -- create it locally to silence update
+# prompts on just this machine; every other machine is unaffected.
+/.skip_update_check
+
 # Exception: promoted road gradient profiles. These are the deliverable of the
 # gradient workflow (see .clinerules/gradient-runner.md) and are shared with the
 # team. Git will not descend into an excluded directory, so the parent has to be

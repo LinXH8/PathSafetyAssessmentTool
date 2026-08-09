@@ -255,9 +255,26 @@ def diff_components(manifest: dict, installed: dict | None = None) -> list[str]:
     return sorted(changed)
 
 
+_SKIP_CHECK_MARKER = ".skip_update_check"
+
+
+def update_checks_disabled() -> bool:
+    """Per-machine opt-out: presence of a local, gitignored marker file.
+
+    Not committed and not an env var, so it only ever affects the machine that
+    created it -- every other install keeps getting prompted normally. See
+    ``.gitignore`` for the entry.
+    """
+    if os.environ.get("PSAT_SKIP_UPDATE_CHECK") == "1":
+        return True
+    return (install_root() / _SKIP_CHECK_MARKER).is_file()
+
+
 def check_for_update(manifest_url: str = DEFAULT_MANIFEST_URL) -> UpdateStatus:
     """Non-blocking-friendly check. Never raises: offline is normal, not an error."""
     status = UpdateStatus(current_version=version.get_version())
+    if update_checks_disabled():
+        return status
     if has_pending_update():
         status.pending = True
         try:
