@@ -1,0 +1,1980 @@
+{
+  "source_workbook": "CycleRAP - model - generation v2.14-to supliers.xlsm",
+  "version": "2.14",
+  "treatments": [
+    {
+      "id": 1,
+      "name": "Upgrade existing facility to an on-road bicycle lane with light segregation",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Facility Type": 4,
+        "Light Segregation": 1,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              5
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              6
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              1
+            ],
+            "Peak pedestrian flow along or across facility": [
+              3
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "le": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "le": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              5
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 20.0,
+            "lt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              6
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 20.0,
+            "lt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              1
+            ],
+            "Peak pedestrian flow along or across facility": [
+              3
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "le": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "le": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Upgrade existing facility to an on-road bicycle lane with safety barrier (Adjacent road lane 0-1m)",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Adjacent Road Lane 0-1m": 2,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Heavy vehicle flow": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Heavy vehicle flow": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              3,
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Heavy vehicle flow": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 20.0,
+            "lt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              3,
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Upgrade existing facility to an on-road bicycle lane with safety barrier (Adjacent road lane 1-3m)",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Adjacent Road Lane 1-3m": 2,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 1-3m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 70.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Adjacent Road Lane 1-3m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 45.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Upgrade existing facility to a cycling-priority street",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Road operating speed (mean)": 20,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              5,
+              6
+            ],
+            "Property Access": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "aadt": {
+            "le": 500.0
+          },
+          "speed": {
+            "le": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Upgrade existing facility to a cycling-priority street (mph)",
+      "unit_scope": "mph",
+      "requires_manual_value": false,
+      "effects": {
+        "Road operating speed (mean)": 12,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              5,
+              6
+            ],
+            "Property Access": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "aadt": {
+            "le": 500.0
+          },
+          "speed": {
+            "le": 20.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Upgrade existing facility to a multi-use path",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Facility Type": 2,
+        "Facility Width per Direction": 3,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              1
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Peak pedestrian flow along or across facility": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              1
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              1
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Upgrade existing facility to an off-road bicycle path",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Facility Type": 3,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5,
+              6
+            ],
+            "Number of lanes \u2013 adjacent road": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Upgrade existing facility to a one-way bicycle facility",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Flow Direction": 1,
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Number of lanes \u2013 intersecting road": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Crossing Facility": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "aadt": {
+            "gt": 10000.0
+          },
+          "speed": {
+            "gt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Crossing Facility": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "aadt": {
+            "gt": 10000.0
+          },
+          "speed": {
+            "gt": 20.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Improve surface conditions",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Loose or slippery surface": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Loose or slippery surface": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Fix surface deformation or upgrade drain opening",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Major Surface Deformation or Drain Opening": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Major Surface Deformation or Drain Opening": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Install light segregation",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Light Segregation": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "ge": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Light Segregation": [
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Light Segregation": [
+              2
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "ge": 20.0,
+            "lt": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Install lighting",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Street Lighting": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Street Lighting": [
+              2
+            ],
+            "Pedestrian Crossing": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Street Lighting": [
+              2
+            ],
+            "Intersecting Bicycle Facility": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Street Lighting": [
+              2
+            ],
+            "Property Access": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Flow Direction": [
+              2
+            ],
+            "Street Lighting": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Street Lighting": [
+              2
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Tram or Train Rails": [
+              1
+            ],
+            "Street Lighting": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Clear facility \u2013 Remove fixed obstacle/s",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Fixed Obstacle on Facility": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Fixed Obstacle on Facility": [
+              1
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Fixed Obstacle on Facility": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Fixed Obstacle on Facility": [
+              1
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Clear facility \u2013 Remove non-fixed obstacle/s",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Non-Fixed Obstacle on Facility": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Non-Fixed Obstacle on Facility": [
+              1
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Non-Fixed Obstacle on Facility": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Non-Fixed Obstacle on Facility": [
+              1
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Clear facility \u2013 Remove width restriction",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Width Restriction": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Width Restriction": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Width Restriction": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Width Restriction": [
+              1
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Improve facility access",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Facility access": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility access": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Redesign the curve",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Curvature": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Curvature": [
+              1
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Grade": [
+              2
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 0-1m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 1-3m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent object or level change 0-1m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent object or level change 1-3m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Improve line of sight (sight distance)",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Line of Sight": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Line of Sight": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Widen the facility",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Facility Width per Direction": 3
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed differential": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Peak pedestrian flow along or across facility": [
+              3
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Non-Fixed Obstacle on Facility": [
+              1
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Fixed Obstacle on Facility": [
+              1
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Install protective barrier",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Adjacent Severe Hazard 0-1m": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 1-3m": [
+              1
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 1-3m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Severe Hazard 1-3m": [
+              1
+            ],
+            "Grade": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Improve delineation",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Delineation": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              4,
+              5
+            ],
+            "Delineation": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Curvature": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Delineation": [
+              2
+            ],
+            "Adjacent object or level change 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Delineation": [
+              2
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "Delineation": [
+              2
+            ],
+            "Facility Width per Direction": [
+              3
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Review intersection approach",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Intersection Approach": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ]
+          },
+          "aadt": {
+            "gt": 15000.0
+          }
+        },
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Heavy vehicle flow": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Number of lanes \u2013 intersecting road": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Flow Direction": [
+              2
+            ],
+            "Intersection Approach": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Tram or Train Rails": [
+              1
+            ],
+            "Intersection Approach": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 20.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Improve safety of crossing design",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Crossing Facility": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Crossing Facility": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Evaluate need for grade separated crossing",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Intersection or Road Crossing": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Number of lanes \u2013 intersecting road": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "aadt": {
+            "gt": 8000.0
+          },
+          "speed": {
+            "gt": 80.0
+          }
+        },
+        {
+          "attrs": {
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Number of lanes \u2013 intersecting road": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "aadt": {
+            "gt": 8000.0
+          },
+          "speed": {
+            "gt": 50.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Remove or reconfigure parking",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Adjacent Vehicle Parking 0-1m": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Light Segregation": [
+              2
+            ],
+            "Flow Direction": [
+              2
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Light Segregation": [
+              2
+            ],
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Facility Width per Direction": [
+              1,
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Adjacent Vehicle Parking 0-1m": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Review configuration of train/tram rails",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Tram or Train Rails": 2
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Tram or Train Rails": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Install traffic calming (km/h)",
+      "unit_scope": "kmh",
+      "requires_manual_value": false,
+      "effects": {
+        "Road operating speed (mean)": 30
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Facility Type": [
+              5,
+              6
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Heavy vehicle flow": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              1
+            ]
+          },
+          "speed": {
+            "gt": 30.0,
+            "lt": 50.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              5,
+              6
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 20.0,
+            "lt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Light Segregation": [
+              2
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 20.0,
+            "lt": 30.0
+          }
+        },
+        {
+          "attrs": {
+            "Facility Type": [
+              4
+            ],
+            "Adjacent Road Lane 0-1m": [
+              1
+            ],
+            "Heavy vehicle flow": [
+              2
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 20.0,
+            "lt": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Install traffic calming (mph)",
+      "unit_scope": "mph",
+      "requires_manual_value": false,
+      "effects": {
+        "Road operating speed (mean)": 20
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Intersection Approach": [
+              1
+            ],
+            "Intersection or Road Crossing": [
+              1
+            ],
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Road operating speed (unit)": [
+              2
+            ]
+          },
+          "speed": {
+            "gt": 20.0,
+            "lt": 30.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Vehicles speed control",
+      "unit_scope": null,
+      "requires_manual_value": true,
+      "effects": {},
+      "trigger_sets": [
+        {
+          "attrs": {},
+          "speed": {
+            "gt": 70.0
+          }
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Bicycles speed control",
+      "unit_scope": null,
+      "requires_manual_value": false,
+      "effects": {
+        "Bicycle/LV speed \u2013 average": 1
+      },
+      "trigger_sets": [
+        {
+          "attrs": {
+            "Pedestrian Crossing": [
+              1
+            ],
+            "Peak pedestrian flow along or across facility": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ],
+            "Bicycle/LV speed differential": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Grade": [
+              2
+            ],
+            "Curvature": [
+              1
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Peak bicycle/LV traffic flow": [
+              2,
+              3
+            ],
+            "Observed proportion of cargo bikes and mopeds": [
+              2
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Grade": [
+              2
+            ],
+            "Peak pedestrian flow along or across facility": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Curvature": [
+              1
+            ],
+            "Peak pedestrian flow along or across facility": [
+              2,
+              3
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        },
+        {
+          "attrs": {
+            "Flow Direction": [
+              2
+            ],
+            "Curvature": [
+              1
+            ],
+            "Bicycle/LV speed \u2013 average": [
+              2
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
