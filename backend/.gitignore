@@ -29,6 +29,10 @@ data/
 models/
 shapefiles/
 
+# Exception: track everything under data/ (defect reference data, custom
+# attribute options) instead of the generic data/ ignore above.
+!data/
+
 # Exception: promoted road gradient profiles are the deliverable of the gradient
 # workflow (see .clinerules/gradient-runner.md) and are shared with the team.
 # Git will not descend into an excluded directory, so re-include the parent
@@ -50,5 +54,9 @@ app/api/shapefiles/
 *.tmp
 *.bak
 *.swp
+
+# The data/ exception above should win even for the *.bak backup copy kept
+# alongside the live defect summary spreadsheet.
+!data/defects/defect_summary.xlsx.bak
 
 backend_log.txt
