@@ -19,7 +19,7 @@
 > - CM component functions renamed to the v2.14 workbook rows:
 >   CM16→CM17, CM25→CM27, CM40→CM42 (legacy aliases kept).
 
-PSAT implements the **CycleRAP v2.11** risk scoring algorithm as a pure Python module (`cyclerap_scoring.py`). No Excel, VBA macros, or Windows-only dependencies are required.
+PSAT implements the **CycleRAP v2.14** risk scoring algorithm as a pure Python module (`cyclerap_scoring.py`). No Excel, VBA macros, or Windows-only dependencies are required.
 
 ---
 
@@ -32,9 +32,9 @@ PSAT implements the **CycleRAP v2.11** risk scoring algorithm as a pure Python m
   - [6.23 Overall Risk Level Band](#6-23-overall-risk-level-band)
 - [6.3 Algorithm: Component Formulas](#6-3-algorithm-component-formulas)
   - [6.31 CM3 — Main Cycling Environment Risk](#6-31-cm3-main-cycling-environment-risk)
-  - [6.32 CM16 — Departure and Fall Scenarios](#6-32-cm16-departure-and-fall-scenarios)
-  - [6.33 CM25 — Speed-Related Incidents](#6-33-cm25-speed-related-incidents)
-  - [6.34 CM40 — Vehicle Interaction](#6-34-cm40-vehicle-interaction)
+  - [6.32 CM17 — Departure and Fall Scenarios](#6-32-cm17-departure-and-fall-scenarios)
+  - [6.33 CM27 — Speed-Related Incidents](#6-33-cm27-speed-related-incidents)
+  - [6.34 CM42 — Vehicle Interaction](#6-34-cm42-vehicle-interaction)
   - [6.35 Final Score Combination](#6-35-final-score-combination)
 - [6.4 Worked Example: CM3](#6-4-worked-example-cm3)
   - [6.41 Road Speed Risk Factor](#6-41-road-speed-risk-factor)
@@ -98,7 +98,7 @@ Equal to the **maximum** band across BB, BP, SB, and VB for that segment. This m
 
 ## 6.3 Algorithm: Component Formulas
 
-The algorithm builds four intermediate components (`CM3`, `CM16`, `CM25`, `CM40`) and then combines them into the final scores.
+The algorithm builds four intermediate components (`CM3`, `CM17`, `CM27`, `CM42`) and then combines them into the final scores.
 
 ### 6.31 CM3 — Main Cycling Environment Risk
 
@@ -123,6 +123,7 @@ CM3 = (product of CU factors) ^ (1 + CQ_sum × 0.1)
 | Speed differential | `Bicycle/LV speed differential` | 1.2 if ≥10 km/h |
 | Curvature | `Curvature` | 1.5 if Sharp Turn Present |
 | Street lighting | `Street Lighting` | 1.2 if Not Present |
+| Line of sight | `Line of Sight` | 1.2 if Inadequate |
 
 **CQ triggers** (condition flags that increase the exponent):
 
@@ -137,26 +138,26 @@ CM3 = (product of CU factors) ^ (1 + CQ_sum × 0.1)
 | Intersecting facility | `Intersecting Bicycle Facility` | Present |
 | Pedestrian crossing | `Pedestrian Crossing` | Present |
 
-### 6.32 CM16 — Departure and Fall Scenarios
+### 6.32 CM17 — Departure and Fall Scenarios
 
 Only fires if at least one of: Loose/slippery surface, Grade ≥5°, or Curvature = Sharp Turn.
 
-### 6.33 CM25 — Speed-Related Incidents
+### 6.33 CM27 — Speed-Related Incidents
 
 Only fires if at least one of: Tram/train rails present, Surface deformation present.
 
-### 6.34 CM40 — Vehicle Interaction
+### 6.34 CM42 — Vehicle Interaction
 
-Only fires if at least one of: Intersection crossing, Property access, Adjacent road 0–1m, Adjacent road 1–3m, Facility type = Mixed Traffic, Intersection approach = Shared.
+Only fires if at least one of: Intersection crossing, Property access, Adjacent road 0–1m, Adjacent road 1–3m, the segment's Facility Type carries the workbook's VB-conditional flag, Intersection approach = Shared.
 
 ### 6.35 Final Score Combination
 
 The four components combine into final scores as follows:
 
 ```
-cj3  = CM3 + CM16   # combined conflict exposure
-cj25 = CM25         # fall hazard modifier
-cj40 = CM40         # shared space conflict modifier
+cj3  = CM3 + CM17   # combined conflict exposure
+cj27 = CM27         # fall hazard modifier
+cj42 = CM42         # shared space conflict modifier
 
 BB = cj3 × (bicycle_speed × grade × speed_differential × cargo_bike factors)
 
@@ -165,17 +166,19 @@ BP = BB_component × sidewalk_condition
    (each term is 0 if the condition is absent)
 
 SB = cj3 × severity_factors                  [departure gate — 0 if no departure condition]
-   + (cj3 + cj25) × fall_severity_factors    [fall gate — 0 if no fall condition]
+   + (cj3 + cj27) × fall_severity_factors    [fall term — always added, NOT gated]
 
-VB = (cj3 + cj25) × factors   [fall/conflict — 0 if condition absent]
+VB = (cj3 + cj27) × factors   [fall/conflict — 0 if condition absent]
    + cj3 × factors             [departure — 0 if condition absent]
-   + cj40 ÷ 3                  [intersection term 1 — 0 if condition absent]
-   + cj40 ÷ 3                  [intersection term 2 — 0 if condition absent]
-   + cj40 ÷ 3                  [intersection term 3 — 0 if condition absent]
+   + cj42 ÷ 3                  [intersection term 1 — 0 if condition absent]
+   + cj42 ÷ 3                  [intersection term 2 — 0 if condition absent]
+   + cj42 ÷ 3                  [intersection term 3 — 0 if condition absent]
 ```
 *Layman's explanation: These equations combine the different risk factors calculated above into the final safety scores you see on the screen.*
 
-**Key takeaway:** BB and BP are driven entirely by CM3 + CM16. SB additionally incorporates CM25 for fall scenarios. VB is the only score that uses CM40 (shared-space and intersection conflicts).
+> **Correction:** SB's second term (the fall-severity contribution) is **unconditional** in the code — unlike every other additive term in these formulas, it is not gated behind a presence check on any attribute. It is always added, using only `bicycle_speed` and `grade` as its severity factors (see `cyclerap_scoring.py`, `cd24`/`bx24`).
+
+**Key takeaway:** BB and BP are driven entirely by CM3 + CM17. SB additionally incorporates CM27 for its (unconditional) fall term. VB is the only score that uses CM42 (shared-space and intersection conflicts).
 
 ---
 
@@ -216,7 +219,7 @@ CU = 1.0  (loose surface: Not Present → 1.0)
    × 1.0  (speed diff:   <10 km/h    → 1.0)
    × 1.5  (curvature:    Sharp Turn  → 1.5)
    × 1.0  (lighting:     Present     → 1.0)
-   = 1.8
+   = 2.7
 ```
 
 **Step 2 — Count the CQ triggers:**
@@ -227,23 +230,23 @@ All eight CQ-trigger fields (surface deformation, fixed obstacle, non-fixed obst
 
 ```
 CM3 = CU_product ^ (1 + CQ_sum × 0.1)
-    = 1.8 ^ (1 + 0 × 0.1)
-    = 1.8 ^ 1.0
-    = 1.8
+    = 2.7 ^ (1 + 0 × 0.1)
+    = 2.7 ^ 1.0
+    = 2.7
 ```
-*Layman's explanation: This example shows how the computer calculates a risk score of 1.8 for a specific road segment.*
+*Layman's explanation: This example shows how the computer calculates a risk score of 2.7 for a specific road segment.*
 
 **Now add one CQ trigger — set Intersection or Road Crossing = Present (1):**
 
 - CQ_sum = 1 (intersection_crossing fires)
 
 ```
-CM3 = 1.8 ^ (1 + 1 × 0.1)
-    = 1.8 ^ 1.1
-    ≈ 1.91
+CM3 = 2.7 ^ (1 + 1 × 0.1)
+    = 2.7 ^ 1.1
+    ≈ 2.98
 ```
 
-The exponent increases by 0.1 per active CQ trigger, compounding the base risk. Eight simultaneous triggers would raise the exponent to 1.8, producing `1.8^1.8 ≈ 2.66`.
+The exponent increases by 0.1 per active CQ trigger, compounding the base risk. Eight simultaneous triggers would raise the exponent to 1.8, producing `2.7^1.8 ≈ 5.98`.
 
 
 
@@ -286,9 +289,9 @@ saturating near 28.8 at very high speed).*
 
 ## 6.5 Attribute Fields Reference
 
-The table below documents every field stored per segment. **39 fields are actively used in the scoring algorithm**; the remaining fields (Area type, Road speed limit, operating speed, unit) are stored for reference or display but do not feed into the CycleRAP formulas.
+The table below documents the fields most relevant to scoring. **39 fields feed the CM3/CM17/CM27/CM42 `LOOKUP_TABLES` risk/condition lookups** (`_MODULE_KEY_TO_FIELD` in `cyclerap_scoring.py`); Facility Type, Road AADT, and Road Operating Speed (mean + unit) are read directly by the formulas rather than through that lookup table, so the true "used in scoring" count is 43. Road speed limit and Area type are the only fields that are purely informational/display.
 
-> The data model contains 43 fields in total. Of those: 39 are scored, 1 (Area type) is metadata only, and 3 (Road speed limit, operating speed, unit) are informational. The "41 fields" figure cited in CycleRAP v2.11 literature refers to the 41 coded attributes including Area type but excluding the three road speed fields.
+> **Correction:** The data model (`Attributes.Fields` in `backend/app/services/serializer.py`) defines **53** coded-attribute fields in total, not 43 — the table below only enumerates the ones most directly tied to a scoring formula and omits child/detail fields such as `FO Type`, `NFO Type`, `Defect Type`, `Delineation Type`, `Crossing Type`, `Facility Width Sub-category`, `Curvature Sub-category`, and `Issue Type (Slippery)`, which carry descriptive text rather than their own risk multiplier.
 
 > Fields are grouped below to match the attribute panel groupings in the PSAT UI.
 
@@ -297,10 +300,10 @@ The table below documents every field stored per segment. **39 fields are active
 | # | Field name | Type | Values | Scoring use |
 |---|---|---|---|---|
 | 1 | Area type | Enum | 1 = Urban, 2 = Suburban, 3 = Rural, 4 = Industrial, 5 = Recreation | Not scored |
-| 2 | Facility Type | Enum | 1 = Sidewalk, 2 = Multi-Use Path, 3 = Off-Road Bicycle Path, 4 = On-road Bicycle Lane, 5 = Road Shoulder, 6 = Mixed Traffic Road Lane | VB: `vb_cond` and `vb_sev` flags; BP: `bp_cond` |
+| 2 | Facility Type | Enum | 1 = Footpath, 2 = Shared Path, 3 = Cycling Path, 4 = On-road Bicycle Lane, 5 = Road Shoulder, 6 = Mixed Traffic Road Lane | VB: `vb_cond`, `vb_sev`, `vb_cf` flags; BP: `bp_cond` |
 | 3 | Adjacent Sidewalk 0–1m | Enum | 1 = Present, 2 = Not Present | BP trigger (shared sidewalk exposure) |
 | 4 | Adjacent Sidewalk 1–3m | Enum | 1 = Present, 2 = Not Present | BP trigger (shared sidewalk exposure) |
-| 5 | Adjacent Road Lane 0–1m | Enum | 1 = Present, 2 = Not Present | CM40 trigger; VB CB26/CB32 |
+| 5 | Adjacent Road Lane 0–1m | Enum | 1 = Present, 2 = Not Present | CM42 trigger; VB CB26/CB32 |
 | 6 | Adjacent Road Lane 1–3m | Enum | 1 = Present, 2 = Not Present | VB CU (0.8 — slight protective); VB CB32/CB45 |
 | 7 | Adjacent Vehicle Parking 0–1m | Enum | 1 = Present, 2 = Not Present | CM3 CQ; SB departure trigger; VB CU (1.5) |
 | 8 | Adjacent Vehicle Parking 1–3m | Enum | 1 = Present, 2 = Not Present | SB departure trigger; VB CU (1.2) |
@@ -311,7 +314,7 @@ The table below documents every field stored per segment. **39 fields are active
 
 | # | Field name | Type | Values | Scoring use |
 |---|---|---|---|---|
-| 11 | Facility access | Enum | 1 = Adequate, 2 = Inadequate | CM40 trigger; risk 1.2 if Inadequate |
+| 11 | Facility access | Enum | 1 = Adequate, 2 = Inadequate | CM42 trigger; risk 1.2 if Inadequate |
 | 12 | Light Segregation | Enum | 1 = Present, 2 = Not Present | VB CU (0.8 if Present — protective); VB CB45 trigger |
 | 13 | Fixed Obstacle on Facility | Enum | 1 = Present, 2 = Not Present | CM3 CQ trigger |
 | 14 | Non-Fixed Obstacle on Facility | Enum | 1 = Present, 2 = Not Present | CM3 CQ trigger |
@@ -319,9 +322,7 @@ The table below documents every field stored per segment. **39 fields are active
 | 16 | Width Restriction | Enum | 1 = Present, 2 = Not Present | CM3 CU (1.2 if Present) |
 | 17 | Adjacent Severe Hazard 0–1m | Enum | 1 = Present, 2 = Not Present | SB departure trigger; SB CU severity (1.8) |
 | 18 | Adjacent Severe Hazard 1–3m | Enum | 1 = Present, 2 = Not Present | SB departure trigger; SB CU severity (1.5) |
-| 19 | Line of Sight | Enum | — | — |
-
-> **Note:** Line of Sight appears in the UI but is not yet documented in the CycleRAP v2.11 scoring specification. Confirm with the team whether it contributes to scoring.
+| 19 | Line of Sight | Enum | 1 = Adequate, 2 = Inadequate | CM3, CM17, CM42 CU (1.2 if Inadequate) |
 
 ### 6.53 Facility Surface Conditions
 
@@ -329,20 +330,20 @@ The table below documents every field stored per segment. **39 fields are active
 |---|---|---|---|---|
 | 20 | Delineation | Enum | 1 = Present, 2 = Not Present | CM3 CU (1.2 if Not Present); VB CU (1.2) |
 | 21 | Major Surface Deformation or Drain Opening | Enum | 1 = Present, 2 = Not Present | CM3 CQ trigger |
-| 22 | Loose or slippery surface | Enum | 1 = Present, 2 = Not Present | CM3 CU (1.5 if Present); CM16 trigger |
-| 23 | Grade | Enum | 1 = < 5 Degrees, 2 = ≥ 5 Degrees | CM3 CU (1.2 if steep); CM16/CM25 trigger |
-| 24 | Curvature | Enum | 1 = Sharp Turn Present, 2 = No Sharp Turn | CM3 CU (1.5 if sharp); CM16 trigger |
-| 25 | Tram or Train Rails | Enum | 1 = Present, 2 = Not Present | CM25 trigger (risk 1.5 if Present) |
+| 22 | Loose or slippery surface | Enum | 1 = Present, 2 = Not Present | CM3 CU (1.5 if Present); CM17 trigger |
+| 23 | Grade | Enum | 1 = < 5 Degrees, 2 = ≥ 5 Degrees | CM3 CU (1.2 if steep); CM17/CM27 trigger |
+| 24 | Curvature | Enum | 1 = Sharp Turn Present, 2 = No Sharp Turn | CM3 CU (1.5 if sharp); CM17 trigger |
+| 25 | Tram or Train Rails | Enum | 1 = Present, 2 = Not Present | CM27 trigger (risk 1.5 if Present) |
 | 26 | Street Lighting | Enum | 1 = Present, 2 = Not Present | CM3 CU (1.2 if absent); VB CU (1.2) |
 
 ### 6.54 Intersection
 
 | # | Field name | Type | Values | Scoring use |
 |---|---|---|---|---|
-| 27 | Intersection Approach | Enum | 1 = Shared, 2 = Separate/NA | CM40 trigger; VB CB32/CB40 |
-| 28 | Intersection or Road Crossing | Enum | 1 = Present, 2 = Not Present | CM3 CQ; CM40 trigger; VB CB26/CB49 |
+| 27 | Intersection Approach | Enum | 1 = Shared, 2 = Separate/NA | CM42 trigger; VB CB32/CB40 |
+| 28 | Intersection or Road Crossing | Enum | 1 = Present, 2 = Not Present | CM3 CQ; CM42 trigger; VB CB26/CB49 |
 | 29 | Crossing Facility | Enum | 1 = Present, 2 = Not Present | VB CU (1.2 if Not Present — adverse) |
-| 30 | Property Access | Enum | 1 = Present, 2 = Not Present | CM3 CQ; CM40 trigger; VB CB40/CB49 |
+| 30 | Property Access | Enum | 1 = Present, 2 = Not Present | CM3 CQ; CM42 trigger; VB CB40/CB49 |
 | 31 | Pedestrian Crossing | Enum | 1 = Present, 2 = Not Present | CM3 CQ trigger |
 | 32 | Intersecting Bicycle Facility | Enum | 1 = Present, 2 = Not Present | CM3 CQ trigger |
 | 33 | Number of lanes – adjacent road | Enum | 1 = 1 per Direction/NA, 2 = > 1 per Direction | VB CU (1.2 if > 1) |
@@ -357,14 +358,14 @@ The table below documents every field stored per segment. **39 fields are active
 | 37 | Peak bicycle/LV traffic flow | Enum | 1 = Low, 2 = Moderate to high | CM3 CU (1.2 if moderate/high) |
 | 38 | Observed proportion of cargo bikes and mopeds | Enum | 1 = Low, 2 = Moderate to high | CM3 CU (1.2 if moderate/high); BB severity |
 | 39 | Heavy vehicle flow | Enum | 1 = Low, 2 = Moderate to high | VB CU (1.2 if moderate/high) |
-| 40 | Bicycle/LV speed – average | Enum | 1 = < 20 km/h, 2 = ≥ 20 km/h | CM16/CM25 CU; BB/SB/VB severity (1.5) |
+| 40 | Bicycle/LV speed – average | Enum | 1 = < 20 km/h, 2 = ≥ 20 km/h | CM17/CM27 CU; BB/SB/VB severity (1.5) |
 | 41 | Bicycle/LV speed differential | Enum | 1 = < 10 km/h, 2 = ≥ 10 km/h | CM3 CU (1.2 if high); BB severity |
 | 42 | Road AADT | Numeric | Annual Average Daily Traffic (vehicles/day) | VB: stepped AADT lookup table |
 | 43 | Road Operating Speed (mean) | Numeric | km/h or mph | VB: speed risk lookup table |
 | — | Road Operating Speed (unit) | Enum | 1 = km/h, 2 = mph | Unit for operating speed field |
 | — | Road Speed Limit | Enum | NA, 10–120 km/h | Informational; displayed in UI |
 
-> **Note:** Road speed limit, operating speed (mean), and the unit field are present in the data model but are not part of the 41 core CycleRAP scoring fields. Area type is also stored but not used in scoring.
+> **Correction:** Road Operating Speed (mean) and its unit field ARE used in scoring — `calculate_cyclerap_score()` reads them directly to compute the VB speed-risk factor (see [6.41](#6-41-road-speed-risk-factor)). Only **Road speed limit** and **Area type** are purely informational/display fields not read by any CM/score formula.
 
 ---
 
@@ -373,20 +374,21 @@ The table below documents every field stored per segment. **39 fields are active
 | Function | Description |
 |---|---|
 | `calculate_cm3(row)` | Returns CM3 component (main cycling environment) |
-| `calculate_cm16(row)` | Returns CM16 component (departure/fall) |
-| `calculate_cm25(row)` | Returns CM25 component (speed-related incidents) |
-| `calculate_cm40(row)` | Returns CM40 component (vehicle interaction) |
-| `calculate_cyclerap_score(row, cm3, cm16, cm25, cm40)` | Returns `(BB, BP, SB, VB, total)` tuple |
+| `calculate_cm17(row)` | Returns CM17 component (departure/fall). Legacy alias: `calculate_cm16` |
+| `calculate_cm27(row)` | Returns CM27 component (speed-related incidents). Legacy alias: `calculate_cm25` |
+| `calculate_cm42(row)` | Returns CM42 component (vehicle interaction). Legacy alias: `calculate_cm40` |
+| `calculate_cyclerap_score(row, cm3, cm17, cm27, cm42)` | Returns `(BB, BP, SB, VB, total)` tuple |
+| `calculate_top_contributing_attributes(row, base_total_score)` | Returns the top 5 attributes driving the total score, used for the `Top N Contributor`/`Top N Contribution` columns |
 | `calculate_risk_band_for_type(score, crash_type)` | Converts score to band (1–4) using type-specific thresholds |
-| `calculate_cyclerap_score_native(attributes_df)` | **Main entry point.** Scores all rows; returns DataFrame with 10 columns |
+| `calculate_cyclerap_score_native(attributes_df)` | **Main entry point.** Scores all rows; returns DataFrame with 20 columns |
 | `get_aadt_risk_factor(aadt)` | Stepped AADT → risk factor lookup |
-| `get_road_speed_risk_factor(speed)` | Sigmoid speed → risk factor |
+| `get_road_speed_risk_factor(speed, unit)` | v2.14 per-integer-speed lookup table → risk factor (not a sigmoid — see [6.41](#6-41-road-speed-risk-factor)) |
 | `get_risk(attr_key, value)` | Looks up risk multiplier from `LOOKUP_TABLES` |
 | `get_cond(attr_key, value)` | Looks up condition flag from `LOOKUP_TABLES` |
 
 ### 6.61 Output Columns
 
-`calculate_cyclerap_score_native()` returns a DataFrame with these 10 columns per row:
+`calculate_cyclerap_score_native()` returns a DataFrame with these **20** columns per row:
 
 | Column | Type | Description |
 |---|---|---|
@@ -400,58 +402,74 @@ The table below documents every field stored per segment. **39 fields are active
 | `VB Band` | int | VB risk band (1–4) |
 | `Overall Risk Level` | float | Sum of BB + BP + SB + VB |
 | `Overall Risk Level Band` | int | Maximum of the four band values |
+| `Top 1..5 Contributor` | str \| None | Name of the 1st–5th highest-contributing attribute, in descending order |
+| `Top 1..5 Contribution` | float \| None | That attribute's share of the total score |
+
+> **Correction:** The previous version of this doc listed only the first 10 columns. `calculate_top_contributing_attributes()` adds 5 `Top N Contributor`/5 `Top N Contribution` column pairs, for 20 columns total.
 
 ---
 
 ## 6.7 Treatment Logic
 
-The 25 predefined treatments (defined in `routes.py`) each have:
-- **Triggers:** one or more sets of `{field: [allowed_values]}` conditions. If any trigger set matches, the treatment is applicable.
+Each treatment in the catalog has:
+
+- **Trigger sets:** one or more sets of `{field: [allowed_values]}` conditions (optionally also bounding Road AADT and/or Road operating speed). If any trigger set matches, the treatment is applicable.
 - **Effects:** `{field: new_value}` pairs applied to the segment's attributes before re-scoring.
 
-Treatments are evaluated by `apply_treatments`, `apply_all_treatments`, and `preview_treatments` endpoints. The projected score change (before/after) is returned so the user can see the improvement.
+Treatments are evaluated by the `/treatments/preview`, `/treatments/apply`, `/treatments/apply-all`, `/treatments/apply-specific`, `/treatments/effectiveness`, and `/treatments/effectiveness/segment/<index>` endpoints (see [6.11](#6-11-implementation-details)). The projected score change (before/after) is returned so the user can see the improvement.
+
+> **Correction:** There are **30** treatments, not 25, and they are **not** a hand-written Python list in `treatments.py`. The catalog lives in `backend/app/services/treatment_catalog.py`, which loads `TREATMENTS` from the generated `backend/app/services/data/stm_v214_treatments.json` (produced by `scripts/extract_v214_model.py` from the supplier workbook's "STM" tab). The module's own docstring says explicitly: *"do not edit treatments by hand; re-run the extractor instead."* `treatments.py` only contains the Flask routes that use the catalog.
+>
+> One deliberate, hand-injected exception: treatment #17 ("Redesign the curve") has an extra trigger set — `{"Curvature": [1]}` alone — inserted at import time in `treatment_catalog.py`. This is an intentional LTA deviation from the STM spec, which otherwise only offers this treatment when a sharp turn co-occurs with a severe hazard, an object/level-change, steep grade, or high bicycle speed; LTA wants it offered on a bare sharp turn too.
 
 ### 6.71 Treatment List
 
-| ID | Name | Key trigger condition |
-|---|---|---|
-| 1 | Upgrade to on-road bicycle lane with light segregation | Road shoulder or mixed traffic, no light segregation |
-| 2 | Safety barrier (adjacent road 0–1m) | Bicycle lane/shoulder with adjacent road < 1m and intersection |
-| 3 | Safety barrier (adjacent road 1–3m) | Bicycle lane/shoulder with adjacent road 1–3m and intersection |
-| 4 | Upgrade to cycling-priority street | Sidewalk/multi-use path/shoulder/mixed traffic with property access |
-| 5 | Upgrade to multi-use path | Sidewalk/multi-use path/shoulder/mixed traffic with property access |
-| 6 | Upgrade to off-road bicycle path | Sidewalk/multi-use path/shoulder/mixed traffic with property access |
-| 7 | Convert to one-way facility | On-road lane/shoulder/mixed traffic, two-way flow |
-| 8 | Improve surface conditions | Loose or slippery surface present |
-| 9 | Install light segregation | Light segregation not present |
-| 10 | Install street lighting | Street lighting not present |
-| 11 | Remove fixed obstacles | Fixed obstacle present |
-| 12 | Remove non-fixed obstacles | Non-fixed obstacle present |
-| 13 | Remove width restriction | Width restriction present |
-| 14 | Improve facility access | Facility access inadequate |
-| 15 | Redesign sharp curves | Curvature = sharp turn |
-| 16 | Widen the facility | Facility width very narrow or narrow |
-| 17 | Install protective barrier | Adjacent severe hazard 0–1m present |
-| 18 | Improve delineation | Delineation not present |
-| 19 | Review intersection approach | Intersection approach = shared |
-| 20 | Improve crossing facility | Crossing facility not present |
-| 21 | Evaluate grade separation | Intersection/road crossing present |
-| 22 | Reconfigure/remove parking | Adjacent vehicle parking 0–1m present |
-| 23 | Review tram/train rails | Tram/train rails present |
-| 24 | Install traffic calming | On-road lane, intersection crossing, adjacent road 0–1m |
-| 25 | Bicycle speed control | Bicycle speed ≥ 20 km/h |
+| ID | Name |
+|---|---|
+| 1 | Upgrade existing facility to an on-road bicycle lane with light segregation |
+| 2 | Upgrade existing facility to an on-road bicycle lane with safety barrier (Adjacent road lane 0-1m) |
+| 3 | Upgrade existing facility to an on-road bicycle lane with safety barrier (Adjacent road lane 1-3m) |
+| 4 | Upgrade existing facility to a cycling-priority street |
+| 5 | Upgrade existing facility to a cycling-priority street (mph) |
+| 6 | Upgrade existing facility to a multi-use path |
+| 7 | Upgrade existing facility to an off-road bicycle path |
+| 8 | Upgrade existing facility to a one-way bicycle facility |
+| 9 | Improve surface conditions |
+| 10 | Fix surface deformation or upgrade drain opening |
+| 11 | Install light segregation |
+| 12 | Install lighting |
+| 13 | Clear facility – Remove fixed obstacle/s |
+| 14 | Clear facility – Remove non-fixed obstacle/s |
+| 15 | Clear facility – Remove width restriction |
+| 16 | Improve facility access |
+| 17 | Redesign the curve |
+| 18 | Improve line of sight (sight distance) |
+| 19 | Widen the facility |
+| 20 | Install protective barrier |
+| 21 | Improve delineation |
+| 22 | Review intersection approach |
+| 23 | Improve safety of crossing design |
+| 24 | Evaluate need for grade separated crossing |
+| 25 | Remove or reconfigure parking |
+| 26 | Review configuration of train/tram rails |
+| 27 | Install traffic calming (km/h) |
+| 28 | Install traffic calming (mph) |
+| 29 | Vehicles speed control |
+| 30 | Bicycles speed control |
+
+> IDs, names, and trigger conditions above are sourced directly from `stm_v214_treatments.json` — treat that file (not this table) as the source of truth if they ever drift, since it is regenerated from the supplier workbook.
 
 ---
 
 ## 6.8 Updating the CycleRAP Algorithm
 
-When CycleRAP releases an updated risk scoring model (e.g., transitioning from v2.11 to a newer version), the development team must update the scoring module. The update process involves the following steps:
+When CycleRAP releases an updated risk scoring model (e.g., the v2.13 → v2.14 update described at the top of this page), the development team must update the scoring module. The update process involves the following steps:
 
 > For administrator instructions on when to trigger an update, see the [Admin Guide → Section 5: CycleRAP Algorithm](../admin/admin-cyclerap-algorithm.md).
 
 1. **Reviewing the New Specifications**: Obtain the new CycleRAP methodology documentation or Excel reference tool.
-2. **Updating `LOOKUP_TABLES`**: Modify the attribute-to-risk-factor dictionaries in `backend/app/services/cyclerap_scoring.py` to match the new multipliers.
-3. **Adjusting Formula Equations**: If new formulas are introduced for intermediate components (e.g., `CM3`, `CM16`, `CM25`, `CM40`) or final scores (`BB`, `BP`, `SB`, `VB`), update the corresponding `calculate_cmX()` and `calculate_cyclerap_score()` functions.
+2. **Regenerating the factor tables**: Run `scripts/extract_v214_model.py` (or its successor for the new version) against the supplier workbook to regenerate `backend/app/services/data/cyclerap_v214_model.json` — do not hand-edit the `LOOKUP_TABLES`/`SPEED_RISK_TABLE` dictionaries, they are loaded from this file at import time.
+3. **Adjusting Formula Equations**: If new formulas are introduced for intermediate components (e.g., `CM3`, `CM17`, `CM27`, `CM42`) or final scores (`BB`, `BP`, `SB`, `VB`), update the corresponding `calculate_cmX()` and `calculate_cyclerap_score()` functions.
 4. **Modifying Attribute Definitions**: If the new model introduces new fields or changes the allowed values (enums) for existing fields, update the data model, including frontend forms and backend shapefile ingestion validation.
 5. **Testing**: Validate the updated Python output against the new official CycleRAP reference tool (typically using a test batch of road segments) to ensure full fidelity.
 
@@ -459,19 +477,22 @@ When CycleRAP releases an updated risk scoring model (e.g., transitioning from v
 
 ## 6.9 Treatment Configuration
 
-Treatments in PSAT simulate safety improvements on road segments. Each treatment has a set of **triggers** (conditions that must be met for the treatment to be applicable) and **effects** (attribute changes applied when the treatment is used).
+Treatments in PSAT simulate safety improvements on road segments. Each treatment has one or more **trigger sets** (conditions that must be met for the treatment to be applicable) and **effects** (attribute changes applied when the treatment is used).
 
-Treatments are defined as a list of dictionaries in the backend. Each dictionary follows this schema:
+> **Correction:** Treatments are **not** hand-written Python dictionaries — they are loaded verbatim from `backend/app/services/data/stm_v214_treatments.json`, which is generated from the supplier workbook by `scripts/extract_v214_model.py`. `treatment_catalog.py`'s own docstring: *"do not edit treatments by hand; re-run the extractor instead."* The real schema (per `treatment_catalog.py` and the JSON itself) is:
 
-```python
+```json
 {
-    "id": 1,
-    "name": "Upgrade to on-road bicycle lane with light segregation",
-    "triggers": [
-        {"Facility Type": [5], "Light Segregation": [2]},
-        {"Facility Type": [6], "Light Segregation": [2]}
+    "id": 13,
+    "name": "Clear facility – Remove fixed obstacle/s",
+    "unit_scope": null,
+    "requires_manual_value": false,
+    "trigger_sets": [
+        {"attrs": {"Facility Width per Direction": [1, 2], "Fixed Obstacle on Facility": [1]}},
+        {"attrs": {"Fixed Obstacle on Facility": [1], "Peak bicycle/LV traffic flow": [2, 3]}},
+        {"attrs": {"Fixed Obstacle on Facility": [1], "Observed proportion of cargo bikes and mopeds": [2]}}
     ],
-    "effects": {"Facility Type": 4, "Light Segregation": 1, "Facility access": 1}
+    "effects": {"Fixed Obstacle on Facility": 2}
 }
 ```
 
@@ -479,28 +500,27 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 |---|---|---|
 | `id` | Integer | A unique 1-based identifier for the treatment |
 | `name` | String | The display name shown in the Treatment Page |
-| `triggers` | List[Dict] | A list of condition sets. If **any** dictionary matches the segment's attributes, the treatment is applicable (**OR logic** between list items) |
+| `trigger_sets` | List[Dict] | A list of condition sets, each with an `attrs` dict and optionally `aadt`/`speed` range bounds (`{"ge": ..., "lt": ...}` etc.). If **any** set matches, the treatment is applicable (**OR logic** between sets) |
 | `effects` | Dict | A dictionary of field–value pairs applied when the treatment is used (**1-based indices** from the attribute dropdowns) |
+| `unit_scope` | Int \| null | Restricts the treatment to km/h- or mph-coded segments, when set |
+| `requires_manual_value` | Boolean | Whether applying the treatment requires the user to supply a value (e.g. a specific speed limit) |
 
 **Trigger Logic (AND / OR):**
 
-- **OR Logic**: The `triggers` list is a collection of alternative conditions. If a segment satisfies any one of these dictionaries, the treatment becomes a "Recommended Treatment".
-- **AND Logic**: Inside a single trigger dictionary, all specified fields must match. For example, `{"Facility Type": [5], "Light Segregation": [2]}` means the segment must be a Road Shoulder (5) **AND** have no Light Segregation (2).
+- **OR Logic**: `trigger_sets` is a collection of alternative conditions. If a segment satisfies any one set, the treatment becomes a "Recommended Treatment".
+- **AND Logic**: Inside a single set's `attrs`, all listed fields must match (each field's list is itself an OR of allowed values). If the set also carries `aadt`/`speed` bounds, those must hold too. For example, the first trigger set above means: Facility Width per Direction is Very Narrow **or** Narrow, **AND** Fixed Obstacle on Facility is Present.
 
-*Layman's explanation: Triggers decide when a treatment is relevant to a road segment. Effects decide what gets changed when the treatment is applied. The OR/AND logic ensures treatments are only offered to segments where they would actually make a difference.*
+*Layman's explanation: Trigger sets decide when a treatment is relevant to a road segment. Effects decide what gets changed when the treatment is applied. The OR/AND logic ensures treatments are only offered to segments where they would actually make a difference.*
 
 ---
 
-## 6.10 How to Add a New Treatment
+## 6.10 How to Add or Change a Treatment
 
-To add a new treatment to the system:
+Treatments are **generated, not hand-authored** — do not add a treatment by editing `stm_v214_treatments.json` or `treatment_catalog.py` directly (except the intentional single-set injection already documented in [6.7](#6-7-treatment-logic) for treatment #17).
 
-1. Open `backend/app/api/projects/routes.py`.
-2. Find the `TREATMENTS = [...]` variable near the top of the file.
-3. Append a new dictionary to the end of the list:
-   - Ensure the `id` is the next available integer.
-   - Use the correct attribute names as keys (matching the CSV headers).
-   - Use the numeric indices for values (e.g. `1` for Present, `2` for Not Present).
+1. Update the supplier workbook's "STM" tab with the new/changed treatment.
+2. Re-run `scripts/extract_v214_model.py` to regenerate `backend/app/services/data/stm_v214_treatments.json` (and `cyclerap_v214_model.json` if scoring factors also changed).
+3. If a genuinely PSAT-specific deviation from the workbook is needed (like the sharp-turn-only trigger for #17), add it as an explicit, commented injection in `treatment_catalog.py` — following the existing pattern — rather than editing the JSON.
 4. If running in Docker, rebuild or restart the backend container to pick up the changes:
    ```bash
    docker compose restart backend
@@ -510,19 +530,28 @@ To add a new treatment to the system:
 
 ## 6.11 Implementation Details
 
-The treatment logic is handled by the following endpoints:
+The treatment logic is handled by the following endpoints (`backend/app/api/projects/treatments.py`):
 
 | Endpoint | Purpose |
 |---|---|
+| `GET /api/projects/<name>/treatments/catalog` | Returns the full treatment catalog |
+| `GET /api/projects/<name>/treatments/all` | Returns every segment's applicable/applied treatments |
+| `GET /api/projects/<name>/treatments/segment/<index>` | Returns one segment's applicable/applied treatments |
 | `POST /api/projects/<name>/treatments/preview` | Calculates the score change without saving |
-| `POST /api/projects/<name>/treatments/apply` | Persists the treatment to the segment |
+| `POST /api/projects/<name>/treatments` | Requests treatment suggestions for a segment |
+| `POST /api/projects/<name>/treatments/apply` | Persists a set of treatments to one segment |
+| `POST /api/projects/<name>/treatments/apply-all` | Applies matching treatments across all segments in bulk |
+| `POST /api/projects/<name>/treatments/apply-specific` | Applies a specific treatment across selected segments |
+| `POST /api/projects/<name>/treatments/reset-all` | Clears applied treatments project-wide |
+| `POST /api/projects/<name>/treatments/save` | Persists in-progress treatment selections |
 | `POST /api/projects/<name>/treatments/effectiveness` | Ranks treatments by how much they reduce risk across the project |
+| `GET /api/projects/<name>/treatments/effectiveness/segment/<index>` | Ranks treatments by risk reduction for one segment |
 
-Internal matching logic:
+Internal matching logic (simplified — the real code also evaluates the optional `aadt`/`speed` range bounds per set):
 
 ```python
-for trigger_set in treatment["triggers"]:
-    if all(row.get(field) in allowed_values for field, allowed_values in trigger_set.items()):
+for trigger_set in treatment["trigger_sets"]:
+    if all(row.get(field) in allowed_values for field, allowed_values in trigger_set["attrs"].items()):
         is_applicable = True
         break
 ```

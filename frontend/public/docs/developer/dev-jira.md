@@ -1,4 +1,4 @@
-# 10. Jira — Bug Tracking & Task Management
+# 11. Jira — Bug Tracking & Task Management
 
 We use **Jira** to log bug fixes, feature updates, and outstanding tasks for PSAT.
 
@@ -8,18 +8,18 @@ We use **Jira** to log bug fixes, feature updates, and outstanding tasks for PSA
 
 ## Table of Contents
 
-- [10.1 How to Log In](#101-how-to-log-in)
-- [10.2 Viewing the Board & Outstanding Tasks](#102-viewing-the-board--outstanding-tasks)
-- [10.3 Viewing Bugs Specifically](#103-viewing-bugs-specifically)
-- [10.4 Creating a New Ticket](#104-creating-a-new-ticket-bug-task-or-feature)
-- [10.5 Editing an Existing Ticket](#105-editing-an-existing-ticket)
-- [10.6 Moving a Ticket Through the Workflow](#106-moving-a-ticket-through-the-workflow)
-- [10.7 Closing / Resolving a Ticket](#107-closing--resolving-a-ticket)
-- [10.8 Tips](#108-tips)
+- [11.1 How to Log In](#101-how-to-log-in)
+- [11.2 Viewing the Board & Outstanding Tasks](#102-viewing-the-board--outstanding-tasks)
+- [11.3 Viewing Bugs Specifically](#103-viewing-bugs-specifically)
+- [11.4 Creating a New Ticket](#104-creating-a-new-ticket-bug-task-or-feature)
+- [11.5 Editing an Existing Ticket](#105-editing-an-existing-ticket)
+- [11.6 Moving a Ticket Through the Workflow](#106-moving-a-ticket-through-the-workflow)
+- [11.7 Closing / Resolving a Ticket](#107-closing--resolving-a-ticket)
+- [11.8 Tips](#108-tips)
 
 ---
 
-## 10.1 How to Log In
+## 11.1 How to Log In
 
 Access to the Jira board requires the shared project Google account:
 
@@ -28,7 +28,7 @@ Access to the Jira board requires the shared project Google account:
 | **Email** | psat.dev.ai@gmail.com |
 | **Login method** | Google (Continue with Google) |
 
-### 10.11 Steps
+### 11.11 Steps
 
 1. Click the **Open Jira Board** link above.
 2. On the Atlassian login screen, click **Continue with Google**.
@@ -39,7 +39,7 @@ Access to the Jira board requires the shared project Google account:
 
 ---
 
-## 10.2 Viewing the Board & Outstanding Tasks
+## 11.2 Viewing the Board & Outstanding Tasks
 
 The **Board** view gives you an overview of all work, organised by status column.
 
@@ -58,7 +58,7 @@ The **Board** view gives you an overview of all work, organised by status column
 
 ---
 
-## 10.3 Viewing Bugs Specifically
+## 11.3 Viewing Bugs Specifically
 
 1. In the left sidebar, click **Issues** (or use the top search bar).
 2. Click **View all issues**.
@@ -67,7 +67,7 @@ The **Board** view gives you an overview of all work, organised by status column
 
 ---
 
-## 10.4 Creating a New Ticket (Bug, Task, or Feature)
+## 11.4 Creating a New Ticket (Bug, Task, or Feature)
 
 1. Click the **+ Create** button in the top navigation bar.
 2. Fill in the form:
@@ -85,7 +85,7 @@ The **Board** view gives you an overview of all work, organised by status column
 
 ---
 
-## 10.5 Editing an Existing Ticket
+## 11.5 Editing an Existing Ticket
 
 1. Open the ticket by clicking its card on the board or finding it via **Issues**.
 2. Click directly on any field to edit it inline:
@@ -99,7 +99,7 @@ The **Board** view gives you an overview of all work, organised by status column
 
 ---
 
-## 10.6 Moving a Ticket Through the Workflow
+## 11.6 Moving a Ticket Through the Workflow
 
 | Status | When to use |
 |---|---|
@@ -114,7 +114,7 @@ To move a ticket:
 
 ---
 
-## 10.7 Closing / Resolving a Ticket
+## 11.7 Closing / Resolving a Ticket
 
 1. Open the ticket.
 2. Click the status badge and select **Done**.
@@ -122,7 +122,7 @@ To move a ticket:
 
 ---
 
-## 10.8 Tips
+## 11.8 Tips
 
 - **Link related tickets** — inside a ticket, click **Link** to connect it to another issue (e.g. a bug that blocks a task).
 - **Attach files** — drag and drop screenshots or log files directly into the ticket description or comment box.

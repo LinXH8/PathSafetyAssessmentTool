@@ -24,7 +24,6 @@ The Coding page is the main review workspace. It can open one or more selected p
 - [2.10 Map Preview & Analysis](#210-map-preview--analysis)
 - [2.11 Save and Progress Tracking](#211-save-and-progress-tracking)
 - [2.12 Risk Colour Bands](#212-risk-colour-bands)
-- [2.13 Risk Score Rationale](#213-risk-score-rationale--what-drives-the-score)
 
 ---
 
@@ -456,16 +455,3 @@ PSAT calculates four independent risk scores per segment:
 | 4 | Extreme | > 60 | 🟣 Purple | `#CD1AFF` |
 
 > **Overall Risk Level Band** = the **highest** band across BB, BP, SB, and VB for that segment. A single Extreme sub-score makes the overall band Extreme regardless of the others.
-
-### 2.13 Risk Score Rationale — What Drives the Score
-
-Each crash type score is built from a mix of attribute-based risk factors, combined using the CycleRAP methodology:
-
-- **Cycling environment factors** — facility width, delineation, surface condition, lighting, grade, curvature, flow direction, and traffic mix. Poorer conditions (e.g. a very narrow, unlit, two-way facility with no delineation) compound together to raise the base risk.
-- **Departure and fall risk** — adds risk when a slippery surface, steep grade, or sharp curve could cause a cyclist to lose control and depart the facility; this feeds into the Single-Bicyclist (SB) score.
-- **Speed-related risk** — adds risk where tram/train rails or surface deformation are present, contributing to higher-speed incident scenarios.
-- **Vehicle interaction risk** — adds risk at intersections, property accesses, and where the facility runs adjacent to a road lane. This feeds primarily into the Vehicle-Bicyclist (VB) score, the only score that also accounts for motor vehicle traffic volume (AADT) and operating speed.
-
-Each factor acts as a **multiplier** on top of a base score — the more adverse conditions present on a segment, the more these multipliers compound, producing a higher score. This is also why fixing a single attribute (e.g. adding street lighting or removing a fixed obstacle) can noticeably reduce the score: it removes one of the multipliers driving the total up.
-
-> For the full formulas, exact multiplier values, and worked examples, see the **CycleRAP Reference** button (Section 2.2 above) or the Developer Guide → Scoring Logic.

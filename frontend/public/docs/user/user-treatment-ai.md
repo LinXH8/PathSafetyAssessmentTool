@@ -11,7 +11,7 @@ The comparison is visible in the **Crash Type Scores** panel on the right-hand s
 ## How the Before / After Comparison Works
 
 1. **Before score** — the original crash type scores (BB, BP, SB, VB, Risk Score) computed from the coded attributes.
-2. **Treatment selected** — ticking a treatment checkbox immediately shows the preview. *(Note: the Attributes panel's "Show Pre-Treatment" toggle is on by default; switch it off to see the post-treatment attribute values alongside the preview scores).*
+2. **Treatment selected** — ticking a treatment checkbox prepares the preview. *(Note: You must toggle "Show Post-Treatment" on in the Attributes panel header to see this preview update).*
 3. **After score** — PSAT re-runs the CycleRAP scoring formula with the updated attribute values to produce a predicted post-treatment score.
 
 The difference (reduction) is shown as a **↓ value** beneath each crash type score card. A green indicator confirms improvement; no arrow means the treatment did not affect that crash type.
@@ -31,9 +31,9 @@ When treatments are selected:
 ## Previewing Before You Apply
 
 > [!IMPORTANT]
-> Ticking any treatment checkbox automatically shows the live score preview — no toggle needed. The **Show Pre-Treatment** toggle (located in the Attributes panel header on the right, **on by default**) lets you switch back to the original pre-treatment scores and attributes at any time; switch it off to see the post-treatment attribute values alongside the preview scores.
+> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live score preview. If it is toggled off, only the original pre-treatment scores will be displayed.
 
-Tick any treatment checkbox in the Treatment Options panel to see a **live score preview** for the current segment in real time. The scores update automatically as you change your selection — you do not need to click Apply. To also see which attribute values would change, switch off **Show Pre-Treatment**.
+With the toggle enabled, tick any treatment checkbox in the Treatment Options panel to see a **live score preview** for the current segment in real time. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click **Apply**.
 
