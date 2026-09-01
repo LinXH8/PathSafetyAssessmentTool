@@ -121,21 +121,48 @@ def warmup_gis() -> None:
 _INFERENCE_DEPTH = 0
 
 # Metadata PATCH payloads deferred while _INFERENCE_DEPTH > 0, keyed by
-# project name, merged and flushed to disk the moment depth returns to 0 so
-# deferred counter/tag updates are never silently dropped.
-_PENDING_METADATA_UPDATES: dict[str, dict] = {}
+# (profile id, project name), merged and flushed to disk the moment depth
+# returns to 0 so deferred counter/tag updates are never silently dropped.
+# Keyed by profile as well as project: whichever user's inference finishes
+# last does the flush, and that is not necessarily the user who queued it.
+_PENDING_METADATA_UPDATES: dict[tuple[str | None, str], dict] = {}
+# Guards the depth counter and the pending map. `+= 1` on a module global is
+# not atomic; with several users running inference on different waitress
+# threads a lost update would leave the depth stuck > 0 and defer every
+# metadata PATCH forever.
+_PENDING_LOCK = threading.Lock()
 
 
 def enter_inference() -> None:
     global _INFERENCE_DEPTH
-    _INFERENCE_DEPTH += 1
+    with _PENDING_LOCK:
+        _INFERENCE_DEPTH += 1
 
 
 def exit_inference() -> None:
     global _INFERENCE_DEPTH
-    _INFERENCE_DEPTH -= 1
-    if _INFERENCE_DEPTH == 0 and _PENDING_METADATA_UPDATES:
+    with _PENDING_LOCK:
+        _INFERENCE_DEPTH -= 1
+        flush = _INFERENCE_DEPTH == 0 and bool(_PENDING_METADATA_UPDATES)
+    if flush:
         _flush_pending_metadata_updates()
+
+
+def queue_pending_metadata_update(project_name: str, payload: dict) -> bool:
+    """Defer a metadata PATCH from the calling session's profile until inference ends.
+
+    Returns False -- and queues nothing -- when no inference is running, in
+    which case the caller must apply the update itself. The depth check and the
+    enqueue share one lock section: checked separately, a PATCH could observe
+    depth > 0, lose the race to exit_inference()'s final flush, and then sit in
+    the map unflushed until somebody's next inference run.
+    """
+    key = (_session_profile_id(), project_name)
+    with _PENDING_LOCK:
+        if _INFERENCE_DEPTH <= 0:
+            return False
+        _PENDING_METADATA_UPDATES.setdefault(key, {}).update(payload)
+        return True
 
 
 def apply_metadata_fields(proj, payload: dict) -> bool:
@@ -174,23 +201,24 @@ def apply_metadata_fields(proj, payload: dict) -> bool:
 def _flush_pending_metadata_updates() -> None:
     """Apply and persist any metadata updates deferred during inference.
     Called automatically by exit_inference() once _INFERENCE_DEPTH hits 0."""
-    pending = _PENDING_METADATA_UPDATES.copy()
-    _PENDING_METADATA_UPDATES.clear()
+    with _PENDING_LOCK:
+        pending = dict(_PENDING_METADATA_UPDATES)
+        _PENDING_METADATA_UPDATES.clear()
 
-    try:
-        pm = get_ctx()["pm"]
-    except Exception:
-        logger.exception("[Autocode] Failed to flush pending metadata updates: could not get pm")
-        return
-
-    for project_name, payload in pending.items():
+    for (profile_id, project_name), payload in pending.items():
         try:
+            # Resolve against the profile that queued the update -- never the
+            # session of whichever request happens to be finishing inference.
+            pm = get_ctx(profile_id=profile_id)["pm"]
             proj = pm.project(project_name)
             if apply_metadata_fields(proj, payload):
                 proj.metadata.last_updated = datetime.datetime.now()
                 proj.metadata.serialize(proj.project_path)
         except Exception:
-            logger.exception(f"[Autocode] Failed to flush pending metadata update for project '{project_name}'")
+            logger.exception(
+                f"[Autocode] Failed to flush pending metadata update for project "
+                f"'{project_name}' (profile {profile_id})"
+            )
 
 # util
 def ok(data, code: int = 200) -> tuple[Response, int]:
@@ -213,75 +241,112 @@ def df_to_records(df) -> list:
         sanitized.append(clean)
     return sanitized
 
-# Process-level context (replaces Streamlit's session_state)
-_CTX = {"ready": False, "pm": None, "init_error": None}
+# Per-profile project contexts (replaces Streamlit's session_state, and the
+# single process-wide context that predates per-browser sessions).
+#
+# Key = the profile id from the request's session cookie. None = the legacy
+# data/ root, which is only ever resolved with no request context at all (the
+# model/GIS warm-up thread) and is never served to a browser: the login gate
+# in app/auth.py rejects unauthenticated /api/* requests before we get here.
+_CTXS: dict[str | None, dict] = {}
 _CTX_LOCK = threading.Lock()
+# serializer.data_loader / cycleRAP_interface are process-wide singletons:
+# initialise them once, not once per profile.
+_GLOBAL_INIT_DONE = False
+_UNSET = object()
 
 
-def invalidate_ctx() -> None:
-    """Reset the project context so the next request re-initialises for the active profile."""
+def _session_profile_id() -> str | None:
+    from app.services import profile_store as _ps
+    return _ps.get_active_profile_id()  # None outside a request context
+
+
+def invalidate_ctx(profile_id: str | None = None) -> None:
+    """Drop one profile's cached context (its next request re-discovers projects),
+    or every context when called with no argument."""
     with _CTX_LOCK:
-        _CTX["ready"] = False
-        _CTX["pm"] = None
-        _CTX["init_error"] = None
+        if profile_id is None:
+            _CTXS.clear()
+        else:
+            _CTXS.pop(profile_id, None)
 
 
-def get_ctx() -> dict:
-    """Lazy init: prepare the old-code dependencies the first time and reuse thereafter."""
+def _run_global_init_once(pm) -> None:
+    """Process-level, one-time initialisation. Caller holds _CTX_LOCK."""
+    global _GLOBAL_INIT_DONE
+    if _GLOBAL_INIT_DONE:
+        return
+
+    try:
+        serializer.data_loader.initialise()
+    except Exception:
+        pass
+
+    try:
+        CRI.cycleRAP_interface.initialise(pm.src_path / "CycleRAP")
+    except Exception as exc:
+        # NON-FATAL since scoring went native. Every live scoring/treatment
+        # path uses calculate_cyclerap_score_native() (cyclerap_scoring.py,
+        # v2.14, pure Python); cycleRAP_interface is the legacy Excel/COM
+        # route and is effectively dead code. This used to raise, which
+        # bricked the ENTIRE project context -- and therefore the whole app
+        # -- if the .xlsm was missing or Excel was not installed. On a
+        # packaged machine neither is guaranteed, so log and continue.
+        logger.warning(
+            "cycleRAP_interface.initialise() failed (non-fatal; native scoring "
+            "is used for all live paths): %s", exc
+        )
+        logger.debug(traceback.format_exc())
+
+    _GLOBAL_INIT_DONE = True
+
+
+def _build_ctx(key: str | None) -> dict:
+    """Build and cache the context for one profile (or the legacy root).
+    Caller holds _CTX_LOCK."""
+    label = key or "<legacy root>"
+    logger.info("[Context] Initialising project context for %s...", label)
+    try:
+        pm = project_manager()
+    except Exception as exc:
+        msg = f"project_manager() failed: {exc}\n{traceback.format_exc()}"
+        logger.error(f"[Context] ERROR: {msg}")
+        _CTXS[key] = {"ready": False, "pm": None, "init_error": msg, "profile_id": key}
+        raise RuntimeError(f"Project context failed to initialise: {msg}") from exc
+
+    _run_global_init_once(pm)
+
+    if key is not None:
+        # Point the project manager at this profile's project root instead of
+        # the legacy ../data directory from config.json. Unlike the single-user
+        # code this replaces, a failure here is NOT swallowed: falling back to
+        # the shared legacy root would hand one user another's projects.
+        from app.services import profile_store as _ps
+        pm.des_path = _ps.get_profile_projects_root(key)
+        pm._discover_projects()
+
+    ctx = {"pm": pm, "ready": True, "init_error": None, "profile_id": key}
+    _CTXS[key] = ctx
+    logger.info("[Context] Project context ready for %s.", label)
+    return ctx
+
+
+def get_ctx(profile_id=_UNSET) -> dict:
+    """Lazy init: prepare the old-code dependencies the first time and reuse thereafter.
+
+    Returns the context for the calling session's profile by default. Pass
+    ``profile_id`` explicitly to target another profile (the deferred-metadata
+    flush does), or ``None`` for the legacy root.
+    """
+    key = _session_profile_id() if profile_id is _UNSET else profile_id
     with _CTX_LOCK:
-        if _CTX["ready"]:
-            return _CTX
-
+        ctx = _CTXS.get(key)
+        if ctx is None:
+            return _build_ctx(key)
         # Surface a previously memoised init failure immediately.
-        if _CTX["init_error"]:
-            raise RuntimeError(f"Project context failed to initialise: {_CTX['init_error']}")
-
-        logger.info("[Context] Initialising project context...")
-        try:
-            pm = project_manager()
-        except Exception as exc:
-            msg = f"project_manager() failed: {exc}\n{traceback.format_exc()}"
-            logger.error(f"[Context] ERROR: {msg}")
-            _CTX["init_error"] = msg
-            raise RuntimeError(f"Project context failed to initialise: {msg}") from exc
-
-        try:
-            serializer.data_loader.initialise()
-        except Exception:
-            pass
-
-        try:
-            CRI.cycleRAP_interface.initialise(pm.src_path / "CycleRAP")
-        except Exception as exc:
-            # NON-FATAL since scoring went native. Every live scoring/treatment
-            # path uses calculate_cyclerap_score_native() (cyclerap_scoring.py,
-            # v2.14, pure Python); cycleRAP_interface is the legacy Excel/COM
-            # route and is effectively dead code. This used to raise, which
-            # bricked the ENTIRE project context -- and therefore the whole app
-            # -- if the .xlsm was missing or Excel was not installed. On a
-            # packaged machine neither is guaranteed, so log and continue.
-            logger.warning(
-                "cycleRAP_interface.initialise() failed (non-fatal; native scoring "
-                "is used for all live paths): %s", exc
-            )
-            logger.debug(traceback.format_exc())
-
-        # If a profile is active, redirect the project manager to that profile's project root
-        # instead of the legacy ../data directory from config.json.
-        try:
-            from app.services import profile_store as _ps
-            active_id = _ps.get_active_profile_id()
-            if active_id:
-                profile_projects_root = _ps.get_profile_projects_root(active_id)
-                if profile_projects_root.exists():
-                    pm.des_path = profile_projects_root
-                    pm._discover_projects()
-        except Exception as _exc:
-            logger.warning(f"[Context] Could not resolve profile projects root: {_exc}")
-
-        _CTX.update({"pm": pm, "ready": True, "init_error": None})
-        logger.info("[Context] Project context ready.")
-        return _CTX
+        if ctx["init_error"]:
+            raise RuntimeError(f"Project context failed to initialise: {ctx['init_error']}")
+        return ctx
 
 
 def with_project(_fn=None, *, version=False):
