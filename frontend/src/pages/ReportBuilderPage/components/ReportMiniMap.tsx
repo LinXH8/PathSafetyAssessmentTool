@@ -87,7 +87,8 @@ export function ReportMiniMap({ projects, colorMap, orderIndex }: { projects: st
           an offline machine (backend/app/api/tiles.py). Do not restore a CDN URL. */}
       <TileLayer
         url="/api/tiles/light/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        maxNativeZoom={19}
       />
       {points.map(({ key, latlng, color }) => (
         <CircleMarker
