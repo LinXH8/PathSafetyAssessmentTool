@@ -1,0 +1,31 @@
+{
+  "FO Type": [
+    "Lamp Post"
+  ],
+  "NFO Type": [
+    "Barrier",
+    "Bins",
+    "Bicycle",
+    "Cone",
+    "Others",
+    "Scuba"
+  ],
+  "Facility Width Sub-category": [
+    "≤1.5m",
+    ">1.5–1.8m",
+    ">1.8–<2m",
+    "2–<3.5m",
+    "3.5–4m",
+    ">4m"
+  ],
+  "Crossing Type": [
+    "Signalised Crossing"
+  ],
+  "Delineation Type": [
+    "In Poor Condition"
+  ],
+  "Issue Type (Slippery)": [
+    "Soil",
+    "Sand"
+  ]
+}

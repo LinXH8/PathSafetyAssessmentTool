@@ -50,6 +50,11 @@ Two external asset folders must be copied into `backend/` before CV and GIS-assi
 
 If these folders are missing, the app can still boot, but GIS and/or CV features will fail at runtime.
 
+> **Where to get them:** these folders are not in Git (they're large binary assets — see
+> `.gitignore`) and there is no public download link. Get a copy from the project lead or
+> from whoever last had a working install — same as Jira access (see
+> [dev-jira.md](dev-jira.md) §11.1).
+
 ---
 
 ## 2.2 Step 1 — Obtain the Project Files
@@ -135,9 +140,7 @@ backend/
 After populating `in/`, generate the road-reference CSV used by the polygon road-selection tool:
 
 ```bash
-cd backend
-python generate_road_reference.py
-cd ..
+python scripts/generate_road_reference.py
 ```
 
 This writes `backend/shapefiles/road_reference.csv`. The map-based road selector can still work without it, but the CSV improves matching between the selection polygon and locally available road folders.

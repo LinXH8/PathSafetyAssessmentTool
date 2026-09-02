@@ -61,11 +61,11 @@ The **Treatment Options** panel on the left has a dropdown that lets you switch 
 Tick the checkbox next to one or more treatments to select them. Selected treatments are highlighted in the panel.
 
 > [!IMPORTANT]
-> As soon as you select a treatment, the **Scores card** automatically previews the post-treatment risk scores — no toggle needed. The **Show Pre-Treatment** toggle (located in the Attributes panel header on the right, **on by default**) lets you switch back to the original pre-treatment scores and attribute values at any time; switch it off again to see the post-treatment attribute values alongside the preview scores.
+> The **Show Post-Treatment** toggle (located in the Attributes panel header on the right) must be switched **on** to see the live preview of the post-treatment risk scores and attribute changes. Switching it back to **Show Pre-Treatment** correctly restores the original (pre-treatment) scores and attributes — the score display refreshes automatically in both directions.
 
-Selecting one or more treatments immediately shows a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
+Once the **Show Post-Treatment** toggle is enabled, selecting a treatment will show a **live preview** in the **Scores card** on the right of what the risk scores would look like if you applied those treatments to the current segment. The preview updates automatically whenever you change your selection — you do not need to click anything to trigger it.
 
-To see exactly which attribute values would change, switch **off** the **Show Pre-Treatment** toggle — the Attributes panel then updates to display the post-treatment attribute values for your selected treatments, so you can understand the reasoning behind the score change.
+With the toggle on, the attributes panel also updates to display exactly which attribute values would change if the selected treatments were applied, so you can understand the reasoning behind the score change.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click Apply.
 
@@ -88,8 +88,8 @@ The **middle column** shows the street-level photograph for the current segment.
 
 The **right column** shows two panels:
 
-- **Segment Scores** — displays the four CycleRAP risk scores for the current segment: Vehicle-Bicycle (VB), Bicycle-Pedestrian (BP), Single-Bicycle (SB), and Bicycle-Bicycle (BB). When treatments are selected and applied, this panel shows the "after" scores; you can toggle the button to compare with the "before" score.
-- **Attributes panel** — lists all coded attribute values for the current segment. The **Show Pre-Treatment** toggle (on by default) switches between the original coded values and the values that would result from the selected treatments; switch it off to see the post-treatment values.
+- **Segment Scores** — displays the four CycleRAP risk scores for the current segment: Vehicle-Bicycle (VB), Bicycle-Pedestrian (BP), Single-Bicycle (SB), and Bicycle-Bicycle (BB). When treatments are selected, this panel shows the previewed scores alongside the original scores so you can compare.
+- **Attributes panel** — lists all coded attribute values for the current segment. Toggle **Show Post-Treatment** to switch between the original coded values and the values that would result from the selected treatments.
 
 ---
 
@@ -118,7 +118,7 @@ The Treatment Options panel has **two separate buttons** — one for the prompt 
 
 > Prompt and image are copied separately because pasting both simultaneously into tools like Gemini is not supported — copy the prompt first, paste it, then copy and attach the image.
 
-User can copy and paste back the AI generated picture back as Post-Treatment Artistic Impression.
+Use **Copy Selected** when you are exploring options and want to preview the AI image before committing. Use **Copy Applied** when you have already applied treatments and want to generate the final before-and-after visualisation.
 
 ---
 
@@ -170,8 +170,20 @@ When treatments are selected:
 #### Previewing Before You Apply
 
 > [!IMPORTANT]
-> Ticking any treatment checkbox automatically shows the **live score preview** for the current segment in the Scores card — no toggle needed. The **Show Pre-Treatment** toggle (in the Attributes panel header, **on by default**) lets you switch back to the original pre-treatment scores and attributes at any time; switch it off to see the post-treatment attribute values alongside the preview scores.
+> The **Show Post-Treatment** toggle must be switched **on** in the Attributes panel header to see the live score preview and attribute modifications. Switching it back to **Show Pre-Treatment** correctly restores the original pre-treatment scores — the display refreshes automatically in both directions.
 
-Tick any treatment checkbox to see the **live score preview** for the current segment. The scores update automatically as you change your selection — you do not need to click Apply. To also see which attribute values would change, switch off **Show Pre-Treatment**.
+With the toggle enabled, tick any treatment checkbox to see the **live score preview** for the current segment. The scores and attributes update automatically as you change your selection — you do not need to click Apply.
 
 > **Note:** Selecting treatments only previews the effect — nothing is saved until you click **Apply**.
+
+#### AI-Assisted Visualisation (Prompt & Image Copy)
+
+There are **two separate buttons** — one for the prompt and one for the image — because pasting both simultaneously into tools such as Gemini is not supported. Copy and paste each independently:
+
+- **Copy prompt** — copies a ready-to-use text prompt describing the selected or applied treatments. Prompt templates have been updated for clearer, more accurate visualisation instructions. Use the dropdown to choose:
+  - **Copy Applied** — prompt based on treatments already **applied and saved** for this segment.
+  - **Copy Selected** — prompt based on treatments currently **ticked/selected** in the panel.
+
+- **Copy image** — copies the current segment photograph to your clipboard as a standalone action. Attach it to the AI tool separately from the prompt.
+
+Use **Copy Selected** when exploring options before committing. Use **Copy Applied** when generating the final before-and-after visualisation.

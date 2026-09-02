@@ -1,4 +1,4 @@
-# 6.9 Treatment Configuration
+# 7. Treatment Configuration
 
 > **Updated to CycleRAP v2.14 STM (2026-07-08).** Treatments are no longer
 > hardcoded: the catalog (all **30** workbook STM treatments, IDs 1–30) lives in
@@ -21,11 +21,13 @@ Treatments in PSAT are used to simulate safety improvements on road segments. Ea
 
 ## Table of Contents
 
-- [6.9 Structure of a Treatment](#69-structure-of-a-treatment)
-- [6.10 How to Add a New Treatment](#610-how-to-add-a-new-treatment)
-- [6.11 Implementation Details](#611-implementation-details)
+- [7.1 Structure of a Treatment](#71-structure-of-a-treatment)
+- [7.2 How to Add a New Treatment](#72-how-to-add-a-new-treatment)
+- [7.3 Implementation Details](#73-implementation-details)
 
 ---
+
+## 7.1 Structure of a Treatment
 
 Treatments are defined as a list of dictionaries in the backend. Each dictionary follows this schema:
 
@@ -41,7 +43,7 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 }
 ```
 
-### 6.91 Fields Explained
+### 7.11 Fields Explained
 
 | Field | Type | Description |
 |---|---|---|
@@ -50,18 +52,18 @@ Treatments are defined as a list of dictionaries in the backend. Each dictionary
 | `triggers` | List[Dict] | A list of condition sets. If **any** dictionary in the list matches the segment's attributes, the treatment is applicable (**OR logic** between list items). |
 | `effects` | Dict | A dictionary of field-value pairs. When applied, these attributes are updated to the specified values (**1-based indices** from the attribute dropdowns). |
 
-### 6.92 Trigger Logic (AND/OR)
+### 7.12 Trigger Logic (AND/OR)
 
 - **OR Logic**: The `triggers` list is a collection of alternative conditions. If a segment satisfies any one of these dictionaries, the treatment becomes a "Recommended Treatment".
 - **AND Logic**: Inside a single trigger dictionary, all specified fields must match the segment's current values. For example, `{"Facility Type": [5], "Light Segregation": [2]}` means the segment must be a Road Shoulder (5) **AND** have no Light Segregation (2).
 
 ---
 
-## 6.10 How to Add a New Treatment
+## 7.2 How to Add a New Treatment
 
 To add a new treatment to the system, follow these steps:
 
-1.  **Locate the Definitions**: Open `backend/app/api/projects/routes.py`.
+1.  **Locate the Definitions**: Open `backend/app/api/projects/treatments.py`.
 2.  **Find the `TREATMENTS` List**: Search for the `TREATMENTS = [...]` variable near the top of the file.
 3.  **Append a New Entry**: Add a new dictionary to the end of the list.
     - Ensure the `id` is the next available integer.
@@ -71,7 +73,7 @@ To add a new treatment to the system, follow these steps:
 
 ---
 
-## 6.11 Implementation Details
+## 7.3 Implementation Details
 
 The treatment logic is handled by the following endpoints:
 - `POST /api/projects/<name>/treatments/preview`: Calculates the score change without saving.

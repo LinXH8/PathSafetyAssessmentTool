@@ -1,4 +1,4 @@
-# How to Update PSAT on Every Machine, Remotely
+# 15. How to Update PSAT on Every Machine, Remotely
 
 > **Who this is for:** anyone, at any experience level, who needs to push a change out to
 > the installed PSAT machines. Follow it top to bottom the first time. Once you've done it

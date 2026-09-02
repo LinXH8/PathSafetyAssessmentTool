@@ -1,0 +1,23 @@
+{
+  "FO Type": [
+    "Test",
+    "Lamp Post",
+    "Traffic Light",
+    "Chicken Statue"
+  ],
+  "Delineation Type": [
+    "Traffic Crossing",
+    "Zebra Crossing",
+    "Cycling Path",
+    "Signalised Crossing"
+  ],
+  "Issue Type (Slippery)": [
+    "Soil"
+  ],
+  "Crossing Type": [
+    "Signalised Crossing"
+  ],
+  "Facility Width Sub-category": [
+    "2\u2013<3.5m"
+  ]
+}

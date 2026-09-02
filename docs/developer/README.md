@@ -15,6 +15,11 @@ Main documents:
 - [frontend.md](frontend.md)
 - [common-issues.md](common-issues.md)
 - [contributing.md](contributing.md)
+- [platform-compatibility.md](platform-compatibility.md) — Windows-only (Excel/COM) features and why they're non-fatal elsewhere
+- [gradient-data.md](gradient-data.md) — the offline LiDAR → Grade/Gradient % pipeline
+- [gis/README.md](gis/README.md) — implementation notes for individual GIS-derived attributes (curvature, facility width, road speed, heavy vehicle flow)
+- [dev-jira.md](dev-jira.md) — bug/task tracking in Jira
+- [cyclerap_v213_audit.md](cyclerap_v213_audit.md) — historical, superseded by v2.14; kept for audit trail
 
 Deployment & remote updates:
 
@@ -22,3 +27,4 @@ Deployment & remote updates:
 - [deployment-operations-guide.md](deployment-operations-guide.md) — full build/install/update reference
 - [deployment-updating-guide.md](deployment-updating-guide.md) — the strict "never hand-zip a release" rules
 - [deployment-decisions-and-history.md](deployment-decisions-and-history.md) — why the packaging/update system works the way it does
+- [../google-apps-script-report-receiver.gs](../google-apps-script-report-receiver.gs) — the receiving end of the optional Report Builder remote-export feature (see `common-issues.md` §9.9)

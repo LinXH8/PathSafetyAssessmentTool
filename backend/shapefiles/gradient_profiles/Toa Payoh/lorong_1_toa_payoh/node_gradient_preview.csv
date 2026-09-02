@@ -1,0 +1,3 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+lorong_1_toa_payoh,1,,LORONG 1 TOA PAYOH,1933.135,966.567,966.0,11.263,-0.312,1.0
+lorong_1_toa_payoh,2,,LORONG 1 TOA PAYOH,641.068,2253.668,2254.0,10.512,,

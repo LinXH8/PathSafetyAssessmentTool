@@ -459,7 +459,13 @@ class ProjectMetadata:
             json.dump(self.to_dict(), f, indent=4)
             
 
-# to load APIs
+# LTA DataMall traffic-flow/speed-bands loader. Unused: getTrafficFlow_df() and
+# getTrafficSpeedBands_df() have no callers anywhere in the backend -- GIS-derived
+# attributes (road speed, heavy vehicle flow, etc.) are read from the static shapefiles
+# in backend/shapefiles/ instead (see docs/developer/gis/README.md). config.json's
+# Datamall_API_key/TrafficFlow_Url/TrafficSpeedBands_URL fields are not needed to run
+# the app -- initialise() is only called defensively (wrapped in try/except) and quietly
+# no-ops when they're absent.
 class data_loader:
     TrafficFlow_Url = None
     TrafficSpeedBands_URL = None

@@ -1,4 +1,4 @@
-# PSAT Packaging, Installation & Updates — Operations Guide (handover)
+# 16. PSAT Packaging, Installation & Updates — Operations Guide (handover)
 
 > **Purpose.** Everything you actually run to build PSAT, put it on machines, and ship
 > updates. Written to be followed by someone who did not build it. For *why* it works this

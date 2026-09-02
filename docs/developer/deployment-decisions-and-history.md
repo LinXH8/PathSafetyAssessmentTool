@@ -1,4 +1,4 @@
-# PSAT Deployment — Decisions & History (handover)
+# 18. PSAT Deployment — Decisions & History (handover)
 
 > **Purpose.** This is the *why* behind how PSAT is packaged and shipped. It exists so
 > whoever inherits this work does not re-litigate settled decisions or re-discover

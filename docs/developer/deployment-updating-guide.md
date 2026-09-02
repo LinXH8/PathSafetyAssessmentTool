@@ -1,4 +1,4 @@
-# How to Ship a PSAT Update — Step by Step
+# 17. How to Ship a PSAT Update — Step by Step
 
 > **Read this first, in full, before publishing anything.** It is written for someone who
 > did not build PSAT. Follow it exactly. If a step doesn't work, **stop and ask** — do not

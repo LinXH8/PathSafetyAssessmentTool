@@ -1,0 +1,50 @@
+{
+  "path_key": "lorong_3_toa_payoh",
+  "display_name": "Lorong 3 Toa Payoh",
+  "source_project": "lorong_3_toa_payoh",
+  "source_geo_data": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/tmp/gradient_batch_20260818/_projects/lorong_3_toa_payoh/geo_data.gpkg",
+  "lidar_bundle": "D_Toa Payoh",
+  "lidar_root": "/Volumes/Expansion/LIDAR/D_Toa Payoh",
+  "generated_at_utc": "2026-08-18T10:02:50.402319+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 394.682,
+  "profile_point_count": 198,
+  "valid_elevation_count": 198,
+  "rejected_outlier_count": 7,
+  "rejected_step_jump_count": 39,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 139,
+  "usable_gradient_completion_pct": 70.2,
+  "elevation_hit_coverage_pct": 100.0,
+  "step_jump_rejection_pct": 19.7,
+  "gradient_min_pct": -6.156,
+  "gradient_max_pct": 9.438,
+  "path_bounds_svy21": {
+    "min_x": 29455.955,
+    "min_y": 35530.422,
+    "max_x": 29834.062,
+    "max_y": 35639.738
+  },
+  "road_boundary": {
+    "target_road_name": "LORONG 3 TOA PAYOH",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/backend/shapefiles/planningareas/ROADSECTIONLINE.shp",
+    "total_points": 199,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "LORONG 2 TOA PAYOH",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  }
+}

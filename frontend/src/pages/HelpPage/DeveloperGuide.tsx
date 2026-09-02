@@ -11,10 +11,19 @@ const DOCS_LIST = [
   { id: "api",          title: "4. API Reference",      path: "/docs/developer/api-reference.md",      updatedDate: "Jun 2026" },
   { id: "cv",           title: "5. CV / ML Pipeline",   path: "/docs/developer/cv-pipeline.md",        updatedDate: "Jun 2026" },
   { id: "scoring",      title: "6. Scoring Logic",      path: "/docs/developer/scoring.md",            updatedDate: "Jun 2026" },
-  { id: "frontend",     title: "7. Frontend",           path: "/docs/developer/frontend.md",           updatedDate: "Jun 2026" },
-  { id: "issues",       title: "8. Common Issues",      path: "/docs/developer/common-issues.md",      updatedDate: "Jun 2026" },
-  { id: "contributing", title: "9. Contributing",       path: "/docs/developer/contributing.md",       updatedDate: "Jun 2026" },
-  { id: "jira",         title: "10. Jira Board",        path: "/docs/developer/dev-jira.md",           updatedDate: "Jun 2026" },
+  { id: "treatments",   title: "7. Treatment Config",   path: "/docs/developer/treatments.md",         updatedDate: "Jun 2026" },
+  { id: "frontend",     title: "8. Frontend",           path: "/docs/developer/frontend.md",           updatedDate: "Jun 2026" },
+  { id: "issues",       title: "9. Common Issues",      path: "/docs/developer/common-issues.md",      updatedDate: "Jun 2026" },
+  { id: "contributing", title: "10. Contributing",      path: "/docs/developer/contributing.md",       updatedDate: "Jun 2026" },
+  { id: "jira",         title: "11. Jira Board",        path: "/docs/developer/dev-jira.md",           updatedDate: "Jun 2026" },
+  { id: "gradient",     title: "12. Gradient Data",     path: "/docs/developer/gradient-data.md",      updatedDate: "Aug 2026" },
+  { id: "platform",     title: "13. Platform Compat.",  path: "/docs/developer/platform-compatibility.md", updatedDate: "Aug 2026" },
+  { id: "gis",          title: "14. GIS Attributes",    path: "/docs/developer/gis/README.md",         updatedDate: "Aug 2026" },
+  { id: "deploy-remote",  title: "15. Remote Updates",       path: "/docs/developer/how-to-update-remotely.md",         updatedDate: "Aug 2026" },
+  { id: "deploy-ops",     title: "16. Deployment Ops Guide",  path: "/docs/developer/deployment-operations-guide.md",    updatedDate: "Aug 2026" },
+  { id: "deploy-update",  title: "17. Shipping an Update",    path: "/docs/developer/deployment-updating-guide.md",      updatedDate: "Aug 2026" },
+  { id: "deploy-history", title: "18. Deployment Decisions",  path: "/docs/developer/deployment-decisions-and-history.md", updatedDate: "Aug 2026" },
+  { id: "cyclerap-audit", title: "Appendix: CycleRAP v2.13 Audit (superseded)", path: "/docs/developer/cyclerap_v213_audit.md", updatedDate: "Jul 2026" },
 ];
 
 export default function DeveloperGuide() {

@@ -509,7 +509,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
               <MapCursorController
                 mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
               />
-              {/* CartoDB Light basemap - same as Curvature Analysis */}
+              {/* Light basemap - same as Curvature Analysis */}
               <ThemeAwareTileLayer />
 
               {/* Auto-fit bounds to all data points (first load only) */}
