@@ -12,6 +12,20 @@ step against CARTO, which their basemap terms prohibit. Shipping a genuinely
 offline-from-first-launch basemap is a separate change (a bundled PMTiles /
 Protomaps extract) that slots in behind this same endpoint.
 
+CARTO now requires a (free, fair-use-limited) API key for basemaps.cartocdn.com
+-- without one it returns an HTTP 200 "API KEY REQUIRED" placeholder image
+instead of a real tile or an error, which a naive status-code check can't
+detect, so it gets silently cached and served as if valid. The key is
+appended as the ``key=`` query param CARTO expects -- see
+carto.com/basemaps/apikey. With no key, tiles still "work" (200 OK) but show
+that placeholder; this is a config problem, not a code bug, so there is no way
+to detect/fall back to blank for it the way we do for network errors.
+
+The key below (``_DEFAULT_API_KEY``) is committed on purpose so every
+dev/machine gets working tiles with zero setup -- it's a free CARTO basemap
+key (fair-use limited, not a project secret). ``PSAT_CARTO_API_KEY`` still
+overrides it, e.g. to swap in a different account's key without editing code.
+
 Cache lives under the user-data root, so it is writable on a packaged install and
 is never touched by the updater.
 """
@@ -34,6 +48,8 @@ bp = Blueprint("tiles", __name__)
 _THEMES = {"light": "light_all", "dark": "dark_all"}
 _UPSTREAM = "https://basemaps.cartocdn.com/{style}/{z}/{x}/{y}{r}.png"
 _MAX_ZOOM = 22
+_API_KEY_ENV = "PSAT_CARTO_API_KEY"
+_DEFAULT_API_KEY = "cb1_2tx4_1_0ac159096f62dd92b1cad1a0"
 # 1x1 transparent PNG -- served when a tile is unavailable offline so Leaflet
 # renders empty space instead of broken-image tiles and endless retries.
 _BLANK_PNG = bytes.fromhex(
@@ -103,8 +119,10 @@ def get_tile(theme: str, z: int, x: int, y: int):
         return resp
 
     url = _UPSTREAM.format(style=style, z=z, x=x, y=y, r="@2x" if retina else "")
+    api_key = os.environ.get(_API_KEY_ENV) or _DEFAULT_API_KEY
+    params = {"key": api_key} if api_key else None
     try:
-        upstream = requests.get(url, timeout=6, headers={"User-Agent": "PSAT"})
+        upstream = requests.get(url, params=params, timeout=6, headers={"User-Agent": "PSAT"})
     except requests.RequestException:
         # Offline, or upstream unreachable -- expected on a disconnected machine.
         return _blank()

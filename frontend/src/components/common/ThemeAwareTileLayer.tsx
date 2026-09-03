@@ -7,8 +7,13 @@ export default function ThemeAwareTileLayer() {
   // Tiles are served by our own backend (see backend/app/api/tiles.py) rather
   // than fetched straight from the CDN, so maps still render on machines with
   // no internet. Do not put an external tile URL back here.
-  const lightMap = "/api/tiles/light/{z}/{x}/{y}.png";
-  const darkMap = "/api/tiles/dark/{z}/{x}/{y}.png";
+  //
+  // ?v=2 cache-busts browsers that already cached the pre-API-key "API KEY
+  // REQUIRED" placeholder tiles under these same URLs (served with a 7-day
+  // Cache-Control) -- without this, real tiles from the fixed backend are
+  // masked by the browser's own stale cache. Bump if this ever recurs.
+  const lightMap = "/api/tiles/light/{z}/{x}/{y}.png?v=2";
+  const darkMap = "/api/tiles/dark/{z}/{x}/{y}.png?v=2";
 
   return (
     <TileLayer
