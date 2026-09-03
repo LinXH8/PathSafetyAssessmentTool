@@ -1785,9 +1785,8 @@ export default function AttributeAnalysisMapView({
                       (backend/app/api/tiles.py). Do not restore a CDN URL. */}
                   <TileLayer
                     url="/api/tiles/light/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; OpenStreetMap contributors & CARTO'
                     maxZoom={22}
-                    maxNativeZoom={19}
                   />
 
                   {/* Auto-fit bounds if data is available and shouldAutoFit is true */}
