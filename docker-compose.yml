@@ -3,10 +3,23 @@ services:
     build:
       context: .
       dockerfile: backend.Dockerfile
+    environment:
+      # backend/app.py binds loopback by default (single-user desktop safety);
+      # inside the container it has to listen on all interfaces for nginx.
+      PSAT_HOST: "0.0.0.0"
+      # The Dockerfile copies backend/ to /app, so paths.install_root() is "/"
+      # and the writable tree would land in /data, /in, /profiles -- not the
+      # /app/* paths mounted below. Pin the user-data root onto /app so the
+      # mounts line up (see backend/app/services/paths.py).
+      PSAT_DATA_DIR: "/app"
     volumes:
-      # Persist project data and input folders outside the container
+      # Persist the whole writable tree outside the container: legacy projects,
+      # survey images, per-profile projects (+ profiles.json and the session
+      # secret key), exported reports.
       - ./data:/app/data
       - ./in:/app/in
+      - ./profiles:/app/profiles
+      - "./Generated Reports:/app/Generated Reports"
     ports:
       - "8000:8000"
     restart: unless-stopped

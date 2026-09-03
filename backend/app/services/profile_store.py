@@ -12,11 +12,21 @@ import threading
 import unicodedata
 from pathlib import Path
 
+from flask import has_request_context, session
+
 from app.services.cycleRAP_VA import get_full_path
 import app.services.paths as paths
 
 _STATE_LOCK = threading.RLock()
-_ACTIVE_PROFILE_ID: str | None = None
+# Which profile is logged in is per browser: it lives in Flask's signed cookie
+# session under this key (see app/auth.py), never in process-wide state.
+_SESSION_KEY = "profile_id"
+# Ids of every profile in the registry, refreshed by each load/save under
+# _STATE_LOCK and read WITHOUT the lock by profile_exists() -- the per-request
+# login gate must never queue behind the long filesystem work (deleting or
+# sharing thousands of project folders) that some registry operations do while
+# holding the lock. Assigning a new frozenset is atomic; readers see old or new.
+_KNOWN_PROFILE_IDS: frozenset[str] | None = None
 _PIN_RE = re.compile(r"^\d{4,12}$")
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _LEGACY_DIVISION = "Unassigned"
@@ -39,47 +49,21 @@ def _registry_path() -> Path:
     return _profiles_root() / "profiles.json"
 
 
-def _active_state_path() -> Path:
-    return _profiles_root() / "active_profile.json"
-
-
-def _read_persisted_active_id() -> str | None:
-    """Read the persisted active profile id from disk.
-
-    The active profile must survive Flask's auto-reloader (use_reloader=True),
-    which resets all in-memory module globals on every .py change. Persisting it
-    to disk means the next request after a reload still resolves the correct
-    profile-projects root instead of falling back to the empty legacy directory.
-    """
-    path = _active_state_path()
-    if not path.exists():
-        return None
-    try:
-        with open(path, "r", encoding="utf-8") as handle:
-            data = json.load(handle)
-        active_id = str(data.get("active_profile_id") or "").strip()
-        return active_id or None
-    except Exception:
-        return None
-
-
-def _write_persisted_active_id(active_id: str | None) -> None:
-    path = _active_state_path()
-    try:
-        if not active_id:
-            if path.exists():
-                path.unlink()
-            return
-        _write_state_file(path, {"active_profile_id": active_id})
-    except Exception as exc:
-        print(f"[Profiles] Failed to persist active profile id: {exc}", flush=True)
-
-
 def _set_active_profile_id(active_id: str | None) -> None:
-    """Set the active profile both in memory and on disk."""
-    global _ACTIVE_PROFILE_ID
-    _ACTIVE_PROFILE_ID = active_id or None
-    _write_persisted_active_id(_ACTIVE_PROFILE_ID)
+    """Bind (or unbind) a profile to the calling request's session cookie.
+
+    No-op outside a request context (unit tests driving the store directly,
+    warm-up threads): there is no browser to bind to. The cookie survives
+    Flask's auto-reloader on its own, which is what the old on-disk
+    ``active_profile.json`` existed for; a leftover file is simply ignored.
+    """
+    if not has_request_context():
+        return
+    if active_id:
+        session[_SESSION_KEY] = active_id
+        session.permanent = True
+    else:
+        session.clear()
 
 
 def _registry_backups_root() -> Path:
@@ -202,10 +186,18 @@ def _profile_registry_guard_message(reason: str, profile_dirs: list[Path]) -> st
     )
 
 
+def _remember_profile_ids(state: dict) -> frozenset[str]:
+    global _KNOWN_PROFILE_IDS
+    known = frozenset(str(profile.get("id") or "") for profile in state.get("profiles", []))
+    _KNOWN_PROFILE_IDS = known
+    return known
+
+
 def _restore_registry_from_backup(state: dict, backup_path: Path, reason: str) -> dict:
     print(f"[Profiles] Restoring registry from backup '{backup_path}' ({reason}).", flush=True)
     _write_state_file(_registry_path(), state)
     _write_state_file(_registry_backups_root() / _LATEST_REGISTRY_BACKUP_FILENAME, state)
+    _remember_profile_ids(state)
     return state
 
 
@@ -283,6 +275,7 @@ def _load_state() -> dict:
             return _restore_registry_from_backup(backup_state, backup_path, "registry file empty")
         raise RuntimeError(_profile_registry_guard_message("is empty", profile_dirs))
 
+    _remember_profile_ids(state)
     return state
 
 
@@ -300,6 +293,7 @@ def _save_state(state: dict) -> None:
 
     _write_state_file(registry_path, state)
     _write_state_file(backups_root / _LATEST_REGISTRY_BACKUP_FILENAME, state)
+    _remember_profile_ids(state)
 
 
 def _slugify(name: str) -> str:
@@ -446,53 +440,47 @@ def create_profile(username: str, email: str, pin: str, division: str) -> dict:
         return _serialize_profile(profile)
 
 
-def _adopt_persisted_active_id(state: dict, persisted: str) -> str | None:
-    """Validate a disk-persisted active id against an already-loaded `state`.
-
-    Caches it in memory when it names a real profile, or clears it (memory +
-    disk) when the profile is gone. Caller must hold `_STATE_LOCK`.
-    """
-    global _ACTIVE_PROFILE_ID
-    if _find_profile(state, persisted) is None:
-        _write_persisted_active_id(None)
-        return None
-    _ACTIVE_PROFILE_ID = persisted
-    return _ACTIVE_PROFILE_ID
-
-
-def _resolve_active_id(state: dict) -> str | None:
-    """Return the active profile id, restoring from disk against `state` when the
-    in-memory global was reset (fresh process / Flask reload). Caller must hold
-    `_STATE_LOCK`."""
-    if _ACTIVE_PROFILE_ID is not None:
-        return _ACTIVE_PROFILE_ID
-    persisted = _read_persisted_active_id()
-    if not persisted:
-        return None
-    return _adopt_persisted_active_id(state, persisted)
-
-
 def get_active_profile_id() -> str | None:
-    if _ACTIVE_PROFILE_ID is not None:
-        return _ACTIVE_PROFILE_ID
+    """The profile id carried by the current request's session, or None.
 
-    # In-memory global was reset (fresh process / Flask reload). Only pay for a
-    # registry read when there is a persisted id to validate.
-    persisted = _read_persisted_active_id()
-    if not persisted:
+    Deliberately no registry read: this runs at least twice per project
+    request (blueprint warm-up + handler). app/auth.py validates the id once
+    per request with ``profile_exists`` instead.
+    """
+    if not has_request_context():
         return None
+    value = str(session.get(_SESSION_KEY) or "").strip()
+    return value or None
 
-    with _STATE_LOCK:
-        return _adopt_persisted_active_id(_load_state(), persisted)
+
+def profile_exists(profile_id: str) -> bool:
+    """Lock-free registry membership check for the per-request login gate.
+
+    Answers from ``_KNOWN_PROFILE_IDS`` (see its comment); only the very first
+    call in a process pays for a locked registry load. A profile removed by
+    ``delete_profile`` disappears from the set the moment the registry is saved,
+    before its (possibly very long) folder deletion starts.
+    """
+    known = _KNOWN_PROFILE_IDS
+    if known is None:
+        with _STATE_LOCK:
+            known = _remember_profile_ids(_load_state())
+    return str(profile_id or "") in known
 
 
 def _active_profile_from_state(state: dict) -> dict | None:
-    """Serialize the active profile from an already-loaded `state` (no extra read)."""
-    profile_id = _resolve_active_id(state)
+    """Serialize the session's profile from an already-loaded `state` (no extra read)."""
+    profile_id = get_active_profile_id()
     if profile_id is None:
         return None
     profile = _find_profile(state, profile_id)
-    return _serialize_profile(profile) if profile is not None else None
+    if profile is None:
+        # The session names a profile that no longer exists (deleted, registry
+        # restored from a backup): drop the cookie rather than keep reporting
+        # "not logged in" to a browser that thinks it is.
+        _set_active_profile_id(None)
+        return None
+    return _serialize_profile(profile)
 
 
 def get_active_profile() -> dict | None:
@@ -501,8 +489,6 @@ def get_active_profile() -> dict | None:
 
 
 def login_profile(profile_id: str, pin: str) -> dict:
-    global _ACTIVE_PROFILE_ID
-
     if not _PIN_RE.fullmatch(str(pin or "")):
         raise PermissionError("Invalid PIN")
 
@@ -732,8 +718,6 @@ def share_projects_to_profile(
 
 
 def delete_profile(profile_id: str, pin: str) -> None:
-    global _ACTIVE_PROFILE_ID
-
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
@@ -744,7 +728,7 @@ def delete_profile(profile_id: str, pin: str) -> None:
         state["profiles"] = [p for p in state.get("profiles", []) if str(p.get("id") or "") != profile_id]
         _save_state(state)
 
-        if _ACTIVE_PROFILE_ID == profile_id:
+        if get_active_profile_id() == profile_id:
             _set_active_profile_id(None)
 
         profile_dir = _profiles_root() / slug

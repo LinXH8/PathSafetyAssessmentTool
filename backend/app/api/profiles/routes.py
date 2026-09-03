@@ -13,7 +13,12 @@ logger = logging.getLogger(__name__)
 _CLIENT_ACTIVITY_EVENT_TYPES = {"page_view"}
 
 
-def _invalidate_project_context() -> None:
+def _invalidate_project_context(profile_id: str | None = None) -> None:
+    """Drop the cached project context for one profile (every profile when None).
+
+    Contexts are per profile, so a login/logout/share only needs to refresh
+    the profile whose project set changed -- never other users' contexts.
+    """
     try:
         from app.api.projects import routes as project_routes
     except Exception as exc:
@@ -23,7 +28,7 @@ def _invalidate_project_context() -> None:
     invalidate = getattr(project_routes, "invalidate_ctx", None)
     if callable(invalidate):
         try:
-            invalidate()
+            invalidate(profile_id)
         except Exception as exc:
             print(f"[Profiles] Failed to invalidate project context: {exc}", flush=True)
 
@@ -100,7 +105,7 @@ def login_profile():
     except Exception:
         logger.exception("Auto-adopt of legacy projects failed on login (non-fatal)")
 
-    _invalidate_project_context()
+    _invalidate_project_context(profile["id"])
     return jsonify({"active_profile": profile, "overview": profile_store.get_overview()})
 
 
@@ -110,7 +115,8 @@ def logout_profile():
     profile_store.logout_profile()
     if active_profile is not None:
         _record_profile_event("profile_logout", active_profile)
-    _invalidate_project_context()
+        # Free this profile's cached project set; it is rebuilt on next login.
+        _invalidate_project_context(active_profile["id"])
     return jsonify({"ok": True, "overview": profile_store.get_overview()})
 
 
@@ -203,7 +209,7 @@ def delete_profile(profile_id: str):
     except PermissionError as exc:
         return jsonify({"error": str(exc)}), 401
 
-    _invalidate_project_context()
+    _invalidate_project_context(profile_id)
     return jsonify({"ok": True, "overview": profile_store.get_overview()})
 
 
@@ -219,7 +225,9 @@ def share_projects():
     if not isinstance(raw_project_names, list) or not raw_project_names:
         return jsonify({"error": "project_names must be a non-empty array"}), 400
 
-    source_profile_id = str(data.get("source_profile_id") or "").strip() or None
+    # The source is always the calling session's profile. A client-supplied
+    # source_profile_id is ignored so nobody can copy out of someone else's area.
+    source_profile_id = profile_store.get_active_profile_id()
     include_tags = bool(data.get("include_tags", True))
 
     try:
@@ -232,13 +240,16 @@ def share_projects():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
 
+    # The recipient may be logged in right now with a cached project set.
+    _invalidate_project_context(target_profile_id)
     return jsonify({**result, "overview": profile_store.get_overview()})
 
 
 @bp.post("/migrate-legacy-projects")
 def migrate_legacy_projects():
     data = request.get_json(silent=True) or {}
-    profile_id = str(data.get("profile_id") or profile_store.get_active_profile_id() or "")
+    # Always the calling session's profile; a client-supplied profile_id is ignored.
+    profile_id = profile_store.get_active_profile_id() or ""
     if not profile_id:
         return jsonify({"error": "A profile must be active before moving legacy projects"}), 400
 
@@ -251,5 +262,5 @@ def migrate_legacy_projects():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 404
 
-    _invalidate_project_context()
+    _invalidate_project_context(profile_id)
     return jsonify({**result, "overview": profile_store.get_overview()})

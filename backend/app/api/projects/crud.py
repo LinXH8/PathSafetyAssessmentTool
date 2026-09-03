@@ -814,8 +814,9 @@ def update_project_metadata(project_name: str):
         # it is safe to defer counter/tag updates until inference finishes.
         # The payload is queued and flushed automatically by exit_inference()
         # the moment _INFERENCE_DEPTH returns to 0, so the update is never lost.
-        if _helpers._INFERENCE_DEPTH > 0 and new_name is None:
-            _helpers._PENDING_METADATA_UPDATES.setdefault(project_name, {}).update(payload)
+        # queue_pending_metadata_update() checks the depth and enqueues under one
+        # lock; it returns False (nothing queued) when no inference is running.
+        if new_name is None and _helpers.queue_pending_metadata_update(project_name, payload):
             return ok({"ok": True, "deferred": True})
 
         # Get the project

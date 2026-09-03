@@ -87,6 +87,13 @@ def create_app(config_object=Config):
     app = Flask(__name__, static_folder=None)
     app.config.from_object(config_object)
 
+    # Per-browser PIN sessions and the /api/* login gate (multi-user server
+    # mode). Must come before the blueprints so the gate runs before any
+    # blueprint-level before_request hook.
+    from .auth import configure_session, register_auth_gate
+    configure_session(app)
+    register_auth_gate(app)
+
     # Enable CORS for all routes
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 

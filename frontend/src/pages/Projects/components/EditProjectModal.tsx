@@ -11,7 +11,7 @@ import {
 import { toaster } from "../../../components/ui/toaster";
 import * as api from "../../../api";
 import { getTagColor } from "../tagColor";
-import "./editProjectModal.css";
+import "./EditProjectModal.css";
 
 interface EditProjectModalProps {
   open: boolean;
