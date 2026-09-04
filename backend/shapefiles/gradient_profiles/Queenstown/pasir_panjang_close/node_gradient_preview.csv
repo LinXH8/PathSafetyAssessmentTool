@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pasir_panjang_close,1,,PASIR PANJANG CLOSE,88.844,44.422,44.0,9.724,-2.5,1.0
+pasir_panjang_close,2,,PASIR PANJANG CLOSE,19.187,98.438,98.0,9.324,-1.25,1.0
+pasir_panjang_close,3,,PASIR PANJANG CLOSE,96.612,156.337,156.0,5.279,-6.875,1.0

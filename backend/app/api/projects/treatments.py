@@ -218,16 +218,16 @@ def apply_treatments(project_name: str, pm, proj, ver):
         # Update the row with modified attributes
         for col in modified_row.keys():
             if col in treatment_df.columns:
-                treatment_df.at[segment_index, col] = modified_row[col]
+                serializer.set_cell(treatment_df, segment_index, col, modified_row[col])
 
         # Update "Treatments Applied" column
         if "Treatments Applied" not in treatment_df.columns:
             treatment_df.insert(0, "Treatments Applied", "")
 
         if treatment_ids:
-            treatment_df.at[segment_index, "Treatments Applied"] = ",".join(str(tid) for tid in treatment_ids)
+            serializer.set_cell(treatment_df, segment_index, "Treatments Applied", ",".join(str(tid) for tid in treatment_ids))
         else:
-            treatment_df.at[segment_index, "Treatments Applied"] = ""
+            serializer.set_cell(treatment_df, segment_index, "Treatments Applied", "")
 
         # Save updated treatment.csv
         ver._treatment = serializer.Treatment()
@@ -414,11 +414,7 @@ def treatment_effectiveness(project_name: str, pm, proj, ver):
 
             modified = attrs_df.copy()
             for attr_name, new_value in treatment.get("effects", {}).items():
-                if attr_name in modified.columns:
-                    modified.loc[mask, attr_name] = new_value
-                else:
-                    modified[attr_name] = None
-                    modified.loc[mask, attr_name] = new_value
+                serializer.set_masked(modified, mask, attr_name, new_value)
 
             after_df = calculate_cyclerap_score_native(modified)
             after_band = after_df["Overall Risk Level Band"].to_numpy()
@@ -782,13 +778,13 @@ def apply_all_treatments(project_name: str, pm, proj, ver):
                 # Update the row with modified attributes
                 for col in modified_row.keys():
                     if col in treatment_df.columns:
-                        treatment_df.at[segment_index, col] = modified_row[col]
+                        serializer.set_cell(treatment_df, segment_index, col, modified_row[col])
 
                 # Update "Treatments Applied" column
                 if "Treatments Applied" not in treatment_df.columns:
                     treatment_df.insert(0, "Treatments Applied", "")
 
-                treatment_df.at[segment_index, "Treatments Applied"] = ",".join(str(tid) for tid in treatment_ids)
+                serializer.set_cell(treatment_df, segment_index, "Treatments Applied", ",".join(str(tid) for tid in treatment_ids))
 
                 # Record details
                 details.append({
@@ -914,9 +910,9 @@ def apply_specific_treatment(project_name: str, pm, proj, ver):
 
                 for col in modified_row.keys():
                     if col in treatment_df.columns:
-                        treatment_df.at[segment_index, col] = modified_row[col]
+                        serializer.set_cell(treatment_df, segment_index, col, modified_row[col])
 
-                treatment_df.at[segment_index, "Treatments Applied"] = ",".join(str(tid) for tid in treatment_ids)
+                serializer.set_cell(treatment_df, segment_index, "Treatments Applied", ",".join(str(tid) for tid in treatment_ids))
 
                 details.append({
                     "segment_index": segment_index,

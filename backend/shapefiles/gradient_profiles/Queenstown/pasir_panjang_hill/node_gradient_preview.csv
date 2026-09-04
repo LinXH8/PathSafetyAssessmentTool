@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pasir_panjang_hill,1,,PASIR PANJANG HILL,149.198,74.599,74.0,23.698,-1.875,1.0
+pasir_panjang_hill,2,,PASIR PANJANG HILL,148.883,223.64,224.0,18.648,-5.747,1.0
+pasir_panjang_hill,3,,PASIR PANJANG HILL,44.239,320.2,320.0,14.817,7.169,1.0
+pasir_panjang_hill,4,,PASIR PANJANG HILL,328.428,506.534,506.0,23.322,5.0,1.0

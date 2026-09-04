@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pasir_panjang_drive,1,,PASIR PANJANG DRIVE,74.845,37.423,38.0,5.486,1.942,1.0
+pasir_panjang_drive,2,,PASIR PANJANG DRIVE,135.043,142.367,142.0,5.679,-2.912,1.0
+pasir_panjang_drive,3,,PASIR PANJANG DRIVE,58.743,239.26,240.0,3.331,,
+pasir_panjang_drive,4,,PASIR PANJANG DRIVE,54.916,296.089,296.0,6.029,1.25,1.0
+pasir_panjang_drive,5,,PASIR PANJANG DRIVE,32.805,339.95,340.0,7.029,3.125,1.0
+pasir_panjang_drive,6,,PASIR PANJANG DRIVE,110.136,411.42,412.0,6.479,0.625,1.0

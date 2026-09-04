@@ -461,7 +461,7 @@ def autocode_all(project_name: str, pm, proj, ver):
                         changed_fields.append(field)
                         field_sources[field] = sources.get(field, "Unknown")
                     # Update the DataFrame
-                    ver.attributes.df.at[idx, field] = code
+                    serializer.set_cell(ver.attributes.df, idx, field, code)
 
                 # Save immediately for single-image autocoding
                 ver.save_all()
@@ -612,7 +612,7 @@ def autocode_all(project_name: str, pm, proj, ver):
                             if old_val != code:
                                 changed_fields.append(field)
                                 field_sources[field] = sources.get(field, "Unknown")
-                            ver.attributes.df.at[idx, field] = code
+                            serializer.set_cell(ver.attributes.df, idx, field, code)
 
                         changed_by_row[idx] = changed_fields
                         sources_by_row[idx] = field_sources
@@ -671,7 +671,7 @@ def autocode_all(project_name: str, pm, proj, ver):
                     for idx_ in range(df_len):
                         new_val = area_vals.iloc[idx_]
                         if ver.attributes.df.at[idx_, area_col] != new_val:
-                            ver.attributes.df.at[idx_, area_col] = new_val
+                            serializer.set_cell(ver.attributes.df, idx_, area_col, new_val)
                             if idx_ in changed_by_row:
                                 if area_col not in changed_by_row[idx_]:
                                     changed_by_row[idx_].append(area_col)

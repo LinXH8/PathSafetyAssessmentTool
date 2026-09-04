@@ -252,7 +252,7 @@ def get_latest_attributes(project_name: str, pm, proj, ver):
             else:
                 attrs_df[GRADIENT_STATUS_FIELD] = None
                 stale_status = pd.Series(True, index=attrs_df.index)
-            attrs_df.loc[no_grade & stale_status, GRADIENT_STATUS_FIELD] = GRADIENT_STATUS_NO_LIDAR_RESULT
+            serializer.set_masked(attrs_df, no_grade & stale_status, GRADIENT_STATUS_FIELD, GRADIENT_STATUS_NO_LIDAR_RESULT)
 
     # Migrate retired FO/NFO Type labels for all consumers.
     if "FO Type" in attrs_df.columns:
