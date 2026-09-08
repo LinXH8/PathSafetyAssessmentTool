@@ -23,6 +23,9 @@ pywin32>=306; sys_platform == 'win32'   # Provides pythoncom / win32com (Windows
 
 # --- Networking ---
 requests>=2.31
+posthog>=3.7,<8   # Optional usage analytics mirror; inert unless PSAT_POSTHOG_API_KEY is set.
+                  # Upper bound is deliberate: capture() changed shape between majors
+                  # (v7 is capture(event, **kwargs)). Verified against 7.47.1.
 
 # --- Optional: UI / caching in gis_mapping ---
 streamlit>=1.32

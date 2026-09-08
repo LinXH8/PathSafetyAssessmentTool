@@ -7,6 +7,14 @@ services:
       # Persist project data and input folders outside the container
       - ./data:/app/data
       - ./in:/app/in
+      # Profiles + telemetry.sqlite3 live here. WITHOUT this mount every
+      # redeploy wipes all user accounts and all collected usage history.
+      - ./profiles:/app/profiles
+    environment:
+      # Usage analytics mirror. Leave PSAT_POSTHOG_API_KEY unset to keep it off
+      # entirely -- local SQLite telemetry works regardless.
+      - PSAT_POSTHOG_API_KEY=${PSAT_POSTHOG_API_KEY:-}
+      - PSAT_POSTHOG_HOST=${PSAT_POSTHOG_HOST:-https://eu.i.posthog.com}
     ports:
       - "8000:8000"
     restart: unless-stopped
