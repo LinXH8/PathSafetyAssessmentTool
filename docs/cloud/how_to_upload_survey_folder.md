@@ -22,7 +22,7 @@ ignored, because the app lists only directories as source folders.
 
 ## Steps
 
-### 1. Create your AWS CLI profile (one time)
+### 1. Create your AWS CLI profile (one time, skip if you already did it)
 
 ```powershell
 aws configure --profile psat-upload
