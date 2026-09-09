@@ -1,7 +1,6 @@
 # Uploading a survey to the cloud PSAT
 
-Survey folders are not copied onto the server by hand. You upload the folder to the
-S3 bucket `path-psat-dev-uploads`, and a timer on the EC2 instance syncs the bucket
+You upload the folder to the S3 bucket `path-psat-dev-uploads`, and a timer on the EC2 instance syncs the bucket
 into the app's `in/` directory every 2 minutes. The bucket root **is** the `in/`
 directory, so `s3://path-psat-dev-uploads/<FOLDER>/` becomes `in/<FOLDER>/` on the
 server and shows up in the app's source-folder list under that name.
@@ -9,7 +8,7 @@ server and shows up in the app's source-folder list under that name.
 ## Prerequisites
 
 - [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed.
-- The `khinkhin-profile` AWS profile configured on your machine (SSO login to the PSAT account).
+- AWS profile configured on your machine.
 - The survey folder on your disk, named the way you want it to appear in the app,
   e.g. `PUNGGOL EAST_1Q2026`. Images can sit directly in the folder or in
   sub-folders (for example `Cam4/`); the app scans recursively for
@@ -56,8 +55,3 @@ server and shows up in the app's source-folder list under that name.
   (`aws configure --profile psat-uploader`) and use that profile name in the
   commands above. That user can list the bucket and add files, but cannot read
   or delete anything.
-- **Verify what landed:**
-
-  ```powershell
-  aws s3 ls "s3://path-psat-dev-uploads/PUNGGOL EAST_1Q2026/" --recursive --profile khinkhin-profile | Measure-Object -Line
-  ```

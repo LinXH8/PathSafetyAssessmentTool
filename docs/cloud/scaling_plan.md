@@ -1,6 +1,4 @@
-# PSAT Cloud Pilot: Capacity Today and the Path to Whole-of-TRO Scale
-
-_Last updated 2026-09-07. Based on the `refactor/cloud-deployment` branch and the `platform-infra` Terraform in `env/dev`._
+# PSAT Cloud Pilot: Capacity Today and Scaling Path
 
 ---
 
