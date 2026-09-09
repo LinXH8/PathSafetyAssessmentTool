@@ -1,19 +1,11 @@
 # Redeploying the cloud PSAT
 
-Nothing deploys automatically. There is no CI pipeline, and creating a GitHub
-release does not update the server. When code is merged, someone has to pull it
-onto the EC2 instance and rebuild the containers by hand, using the steps below.
+Creating a GitHub release does not update the server. When code is merged, someone has to pull it
+onto the EC2 instance and rebuild the containers, using the steps below.
 
 You connect with AWS Systems Manager Session Manager. There is no SSH key and no
 open SSH port; the instance is reachable only through SSM and, for web traffic,
 through CloudFront.
-
-| | |
-| --- | --- |
-| Instance ID | `i-0a661a01291465e39` |
-| Region | `ap-southeast-1` |
-| App directory | `/opt/psat-repo` |
-| App URL | https://d13nyc943hd6xx.cloudfront.net |
 
 ## Prerequisites
 
@@ -21,13 +13,14 @@ through CloudFront.
 - [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
   installed. This is a separate download from the AWS CLI, and `aws ssm start-session`
   fails without it.
-- The access key ID and secret access key for the deploy account, sent to you by
-  the platform team.
+- The same access key ID and secret access key used for uploading surveys. The one
+  account covers both. If you have already set up the `psat-upload` profile, skip
+  step 1.
 
-## 1. Create your AWS CLI profile (one time)
+## 1. Create your AWS CLI profile (one time, skip if you already did it)
 
 ```powershell
-aws configure --profile psat-deploy
+aws configure --profile psat-upload
 ```
 
 It will prompt for four values:
@@ -42,7 +35,7 @@ Default output format [None]: json
 ## 2. Check the instance is reachable
 
 ```powershell
-aws ssm describe-instance-information --filters "Key=InstanceIds,Values=i-0a661a01291465e39" --profile psat-deploy
+aws ssm describe-instance-information --filters "Key=InstanceIds,Values=i-0a661a01291465e39" --profile psat-upload
 ```
 
 `PingStatus` should be `Online`. If it is not, the instance is stopped or its SSM
@@ -51,7 +44,7 @@ agent is down, and connecting will not work.
 ## 3. Connect
 
 ```powershell
-aws ssm start-session --target i-0a661a01291465e39 --profile psat-deploy
+aws ssm start-session --target i-0a661a01291465e39 --profile psat-upload
 ```
 
 You land as `ssm-user`, which has passwordless `sudo`.
@@ -113,16 +106,3 @@ fails for lack of space:
 df -h /
 sudo docker image prune -f
 ```
-
-## What the deploy account can and cannot do
-
-| Action | Allowed |
-| --- | --- |
-| Open an SSM session on this one instance | Yes |
-| Full root on that instance, via `sudo` | Yes |
-| Reach any other EC2 instance | No |
-| Read or write S3, IAM, or anything else in the account | No |
-
-The account is scoped against the rest of the AWS account, not against the
-instance. Anyone holding these keys effectively has root on the server, so treat
-them accordingly.
