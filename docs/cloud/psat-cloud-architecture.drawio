@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="PSAT on AWS">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1340" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="PSAT cloud pilot &#x2013; CloudFront + WAF in front of one EC2 running Docker Compose; survey folders arrive via S3" style="text;html=1;align=left;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="260" y="0" width="1200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Actors outside the account -->
+        <mxCell id="users" value="LTA staff&#xa;(browser)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.users;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="github" value="GitHub&#xa;LinXH8/PathSafetyAssessmentTool&#xa;branch refactor/cloud-deployment" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="760" width="75" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="uploader" value="Survey uploader&#xa;(AWS CLI: aws s3 cp)&#xa;see survey_upload.md" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.authenticated_user;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="360" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Second account: ril_sandbox holds the static assets -->
+        <mxCell id="ril" value="AWS account ril_sandbox (194169602403)" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="900" width="220" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="assets" value="S3 15-psat-assets&#xa;models &#xb7; shapefiles&#xa;scoring JSONs&#xa;(bucket policy grants the&#xa;instance role read)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="ril">
+          <mxGeometry x="70" y="60" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Main account -->
+        <mxCell id="cloud" value="AWS account path-psat (profile khinkhin-profile) &#xb7; Terraform: jingjie-lta/platform-infra env/dev" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="260" y="50" width="1200" height="1090" as="geometry" />
+        </mxCell>
+
+        <!-- Global edge: CloudFront + WAF -->
+        <mxCell id="global" value="Global edge &#xb7; CloudFront distribution + WAFv2 web ACL (CLOUDFRONT scope, created in us-east-1)" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#8C4FFF;fontColor=#8C4FFF;dashed=1;dashPattern=8 4;verticalAlign=top;align=left;spacingLeft=10;fontSize=12;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;" vertex="1" parent="cloud">
+          <mxGeometry x="20" y="40" width="1160" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudfront" value="&lt;b&gt;CloudFront path-psat-dev-cdn&lt;/b&gt;&#xa;https://d13nyc943hd6xx.cloudfront.net&#xa;TLS for viewers (redirect-to-https), default *.cloudfront.net cert&#xa;Default: CachingDisabled + AllViewer (dynamic API) &#xb7; /assets/*: CachingOptimized&#xa;Origin = EIP over plain HTTP :80, read timeout 60 s &#xb7; PriceClass_200" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;spacingLeft=6;" vertex="1" parent="global">
+          <mxGeometry x="200" y="60" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="waf" value="&lt;b&gt;WAF web ACL path-psat-dev-waf&lt;/b&gt;&#xa;AWSManagedRulesCommonRuleSet&#xa;AWSManagedRulesKnownBadInputsRuleSet&#xa;Rate limit 2000 requests / 5 min per IP&#xa;CloudWatch metrics + sampled requests" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.waf;spacingLeft=6;" vertex="1" parent="global">
+          <mxGeometry x="760" y="60" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Region -->
+        <mxCell id="region" value="Region ap-southeast-1" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=1;" vertex="1" parent="cloud">
+          <mxGeometry x="20" y="270" width="1160" height="800" as="geometry" />
+        </mxCell>
+
+        <!-- VPC -->
+        <mxCell id="vpc" value="VPC 10.0.0.0/16 (path-psat-dev-ec2-vpc)" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc2;strokeColor=#8C4FFF;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#8C4FFF;dashed=0;" vertex="1" parent="region">
+          <mxGeometry x="20" y="40" width="780" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="igw" value="Internet&#xa;gateway" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;" vertex="1" parent="vpc">
+          <mxGeometry x="20" y="60" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Public subnet -->
+        <mxCell id="subnet" value="Public subnet 10.0.1.0/24 &#xb7; single AZ &#xb7; route 0.0.0.0/0 &#x2192; IGW" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;grStroke=0;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=left;spacingLeft=30;fontColor=#248814;dashed=0;" vertex="1" parent="vpc">
+          <mxGeometry x="140" y="40" width="620" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="eip" value="Elastic IP" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_ip_address;" vertex="1" parent="subnet">
+          <mxGeometry x="20" y="20" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Security group -->
+        <mxCell id="sg" value="Security group path-psat-dev-ec2-sg: TCP 80 from the CloudFront origin-facing prefix list ONLY &#xb7; no SSH &#xb7; all egress" style="fillColor=none;strokeColor=#DD3522;verticalAlign=top;fontStyle=0;fontColor=#DD3522;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeWidth=2;rounded=1;arcSize=4;align=left;spacingLeft=10;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;" vertex="1" parent="subnet">
+          <mxGeometry x="120" y="30" width="480" height="630" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 instance -->
+        <mxCell id="ec2" value="EC2 path-psat-dev-ec2 &#xb7; m6i.xlarge &#xb7; Amazon Linux 2023 &#xb7; 150 GB gp3 (encrypted) &#xb7; IMDSv2 &#xb7; Docker Compose" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_ec2_instance_contents;strokeColor=#D86613;fillColor=#FFFFFF;verticalAlign=top;align=left;spacingLeft=30;fontColor=#D86613;dashed=0;" vertex="1" parent="sg">
+          <mxGeometry x="20" y="40" width="440" height="570" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx" value="&lt;b&gt;frontend container&lt;/b&gt; &#x2013; nginx :80&#xa;React SPA &#xb7; proxies /api/* to backend &#xb7; 3600 s proxy timeout, 2 GB body" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="ec2">
+          <mxGeometry x="30" y="60" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" value="&lt;b&gt;backend container&lt;/b&gt; &#x2013; Flask + waitress :8000 (loopback only)&#xa;YOLO auto-coding (CPU) &#xb7; GIS lookups &#xb7; CycleRAP scoring&#xa;per-browser PIN session cookie &#xb7; PSAT_COOKIE_SECURE=1 &#xb7; PSAT_SKIP_UPDATE_CHECK=1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="ec2">
+          <mxGeometry x="30" y="150" width="380" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="volumes" value="&lt;b&gt;Bind mounts from /opt/psat-repo (survive rebuilds)&lt;/b&gt;&#xa;data/ &#xb7; profiles/ &#xb7; Generated Reports/ &#x2013; projects, logins, exports&#xa;in/ &#x2013; survey images (filled by the sync timer below)&#xa;backend/models &#xb7; backend/shapefiles &#xb7; scoring JSONs (from 15-psat-assets)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="ec2">
+          <mxGeometry x="30" y="260" width="380" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="sync" value="&lt;b&gt;systemd timer psat-sync-in&lt;/b&gt; &#x2013; every 2 min&#xa;aws s3 sync s3://path-psat-dev-uploads/ /opt/psat-repo/in/ (no --delete)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="ec2">
+          <mxGeometry x="30" y="410" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="role" value="Instance role path-psat-dev-ec2-role: AmazonSSMManagedInstanceCore + s3:ListBucket / s3:GetObject on both buckets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="ec2">
+          <mxGeometry x="30" y="500" width="380" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Regional services outside the VPC -->
+        <mxCell id="bucket" value="S3 path-psat-dev-uploads&#xa;bucket root = in/&#xa;versioned &#xb7; SSE-S3&#xa;TLS only &#xb7; no public access" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="region">
+          <mxGeometry x="880" y="60" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="ssm" value="Systems Manager&#xa;Session Manager&#xa;(admin shell, no SSH)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.systems_manager;" vertex="1" parent="region">
+          <mxGeometry x="880" y="300" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="iamuser" value="IAM user&#xa;path-psat-dev-uploader&#xa;PutObject + ListBucket only&#xa;(no GetObject, no Delete)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.identity_and_access_management;" vertex="1" parent="region">
+          <mxGeometry x="1040" y="300" width="78" height="78" as="geometry" />
+        </mxCell>
+
+        <!-- Operations note -->
+        <mxCell id="note" value="&lt;b&gt;How it is deployed and operated&lt;/b&gt;&#xa;&#x2022; Terraform (env/dev) provisions everything shown. The instance user-data installs Docker, the Compose plugin and the psat-sync-in timer only; the app is bootstrapped once over SSM: git clone refactor/cloud-deployment into /opt/psat-repo, sync models / shapefiles / scoring JSONs from 15-psat-assets, write docker-compose.override.yml (asset mounts, PSAT_SKIP_UPDATE_CHECK=1, PSAT_COOKIE_SECURE=1, backend port on loopback), then docker compose up --build -d.&#xa;&#x2022; Code update = git pull &amp;&amp; docker compose up --build -d. New surveys need no deploy: upload the folder to path-psat-dev-uploads (survey_upload.md) and the timer copies it into in/ within 2 minutes.&#xa;&#x2022; The Elastic IP answers only to CloudFront's origin-facing IP ranges, so the WAF cannot be bypassed. No SSH; admin access is SSM Session Manager. Login is a per-browser PIN session cookie (Secure, because viewers arrive over HTTPS)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=10;spacingRight=10;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="260" y="1160" width="1200" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: request path -->
+        <mxCell id="e_users_cf" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="users" target="cloudfront">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cf_waf" value="web ACL inspects every request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;dashed=1;" edge="1" parent="1" source="cloudfront" target="waf">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="519" y="125" />
+              <mxPoint x="1079" y="125" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cf_igw" value="HTTP :80 to origin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="cloudfront" target="igw">
+          <mxGeometry x="-0.85" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="519" y="305" />
+              <mxPoint x="270" y="305" />
+              <mxPoint x="270" y="459" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_igw_eip" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="igw" target="eip">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_eip_nginx" value="port 80" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="eip" target="nginx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_nginx_backend" value="/api/* &#x2192; :8000" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="nginx" target="backend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_backend_volumes" value="reads / writes files (no database)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="backend" target="volumes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sync_volumes" value="writes in/" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="sync" target="volumes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: survey upload path -->
+        <mxCell id="e_uploader_bucket" value="aws s3 cp &amp;lt;folder&amp;gt; --recursive" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="uploader" target="bucket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_iam_bucket" value="uploader's credentials" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontSize=11;dashed=1;" edge="1" parent="1" source="iamuser" target="bucket">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bucket_sync" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="bucket" target="sync">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1100" y="419" />
+              <mxPoint x="1100" y="915" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Edges: admin / deploy -->
+        <mxCell id="e_ssm_ec2" value="admin shell" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.9;entryDx=0;entryDy=0;fontSize=11;dashed=1;" edge="1" parent="1" source="ssm" target="ec2">
+          <mxGeometry x="0.8" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="659" />
+              <mxPoint x="1120" y="983" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_github_ec2" value="git clone / git pull, then docker compose up --build -d (run over SSM)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;fontSize=11;dashed=1;" edge="1" parent="1" source="github" target="ec2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_assets_ec2" value="aws s3 sync (one-time asset load, cross-account)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.9;entryDx=0;entryDy=0;fontSize=11;dashed=1;" edge="1" parent="1" source="assets" target="ec2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
