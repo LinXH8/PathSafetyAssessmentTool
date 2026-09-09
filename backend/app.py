@@ -17,6 +17,24 @@ runs this module's body.
 
 import os
 
+# Load <repo-root>/.env BEFORE create_app(), so config read at import time sees it.
+#
+# Why this exists: `docker compose` reads .env by itself, but `python app.py`
+# (what Run-PSAT.bat launches) does not -- so secrets like PSAT_POSTHOG_API_KEY
+# were silently missing in local runs and analytics quietly no-opped.
+#
+# override=False is deliberate: a real environment variable always wins over the
+# file, so cloud platform config / `docker compose` env take precedence and .env
+# is only a local-dev fallback. Missing file or missing package is a no-op.
+try:
+    from pathlib import Path
+
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
+except Exception:
+    pass
+
 from app import create_app
 
 app = create_app()

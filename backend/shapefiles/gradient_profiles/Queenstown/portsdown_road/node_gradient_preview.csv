@@ -1,0 +1,7 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+portsdown_road,1,,PORTSDOWN ROAD,175.063,87.531,88.0,16.121,-0.194,1.0
+portsdown_road,2,,PORTSDOWN ROAD,147.48,248.803,248.0,19.684,,
+portsdown_road,3,,PORTSDOWN ROAD,87.579,366.332,366.0,18.364,-2.5,1.0
+portsdown_road,4,,PORTSDOWN ROAD,322.871,571.558,572.0,11.94,0.0,1.0
+portsdown_road,5,,PORTSDOWN ROAD,191.221,828.604,828.0,27.087,,
+portsdown_road,6,,PORTSDOWN ROAD,720.775,1284.602,1284.0,21.885,-4.856,1.0

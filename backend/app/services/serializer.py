@@ -50,6 +50,39 @@ road_speed_limit_mapping        = {
     '120 km/h': '120',
 }
 
+def widen_column(df: pd.DataFrame, column: str) -> None:
+    """Re-type a column to object so it can hold both numeric codes and labels."""
+    df[column] = df[column].astype(object)
+
+
+def set_cell(df: pd.DataFrame, index, column: str, value) -> None:
+    """Write one cell, widening the column when the value does not fit its dtype.
+
+    pandas >= 3 raises TypeError instead of silently upcasting (pandas 2 only
+    warned).  Attribute columns hold a mix of numeric codes and label strings,
+    and an all-empty column read back from CSV is float64 — so e.g. writing
+    "<=1.5m" into "Facility Width Sub-category" raises unless we widen first.
+    """
+    if column not in df.columns:
+        df[column] = None
+    try:
+        df.at[index, column] = value
+    except (TypeError, ValueError):
+        widen_column(df, column)
+        df.at[index, column] = value
+
+
+def set_masked(df: pd.DataFrame, mask, column: str, value) -> None:
+    """Same dtype guarantee as set_cell, for a boolean-mask row selection."""
+    if column not in df.columns:
+        df[column] = None
+    try:
+        df.loc[mask, column] = value
+    except (TypeError, ValueError):
+        widen_column(df, column)
+        df.loc[mask, column] = value
+
+
 class LocWrapper:
     def __init__(self, parent):
         self._parent = parent
@@ -138,6 +171,14 @@ class BaseTable:
                         self.df.insert(count, col, None)
                     except ValueError:
                         self.df[col] = None
+
+        # All-empty columns come back from read_csv as float64, which pandas >= 3
+        # refuses to overwrite with a label string later.  They carry no data, so
+        # widen them to object now — matching a freshly constructed table, where
+        # df.insert(col, None) already yields object dtype.
+        for col in self.df.columns:
+            if self.df[col].isna().all():
+                self.df[col] = self.df[col].astype(object)
 
         self.df_dirty = False
     

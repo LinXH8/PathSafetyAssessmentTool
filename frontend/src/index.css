@@ -25,14 +25,6 @@ html, body {
   display: none !important;
 }
 
-/* Fakes a dark basemap by inverting the (only) light OSM raster tiles --
-   applied via TileLayer's className prop in ThemeAwareTileLayer.tsx. There is
-   no free/keyless dark raster tile source left (see backend/app/api/tiles.py),
-   so this is the whole dark-mode map story. */
-.map-tile-dark-filter {
-  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
-}
-
 /* Chakra UI / Zag dialog: the backdrop is purely visual (dark overlay).
    "Close on click outside" is handled by @zag-js/dismissable trackDismissableElement
    at the document level — the backdrop itself never needs pointer events.

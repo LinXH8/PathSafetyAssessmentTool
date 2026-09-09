@@ -1,0 +1,15 @@
+{
+  "mcp": {
+    "code-review-graph": {
+      "type": "local",
+      "command": [
+        "C:\\GitHub\\PathSafetyAssessmentTool\\backend\\.venv\\Scripts\\python.exe",
+        "-m",
+        "code_review_graph",
+        "serve",
+        "--repo",
+        "C:\\GitHub\\PathSafetyAssessmentTool"
+      ]
+    }
+  }
+}

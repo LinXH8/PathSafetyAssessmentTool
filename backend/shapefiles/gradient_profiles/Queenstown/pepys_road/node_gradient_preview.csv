@@ -1,0 +1,6 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+pepys_road,1,,PEPYS ROAD,211.463,105.732,106.0,2.564,0.413,1.0
+pepys_road,2,,PEPYS ROAD,232.225,327.576,328.0,12.864,5.0,1.0
+pepys_road,3,,PEPYS ROAD,135.615,511.496,512.0,25.017,,
+pepys_road,4,,PEPYS ROAD,118.465,638.536,638.0,35.712,3.362,1.0
+pepys_road,5,,PEPYS ROAD,133.131,764.334,764.0,49.443,9.375,2.0

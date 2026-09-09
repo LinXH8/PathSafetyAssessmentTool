@@ -1,0 +1,54 @@
+{
+  "path_key": "pepys_road",
+  "display_name": "Pepys Road",
+  "source_project": "pepys_road",
+  "source_geo_data": "C:\\GitHub\\PathSafetyAssessmentTool\\tmp\\gradient_batch_20260902_final\\pepys_road\\geo_data.gpkg",
+  "lidar_bundle": "D_Queenstown + D_Queenstown_LTA",
+  "lidar_root": "D:\\LIDAR",
+  "generated_at_utc": "2026-09-02T06:27:39.866359+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 830.9,
+  "profile_point_count": 416,
+  "valid_elevation_count": 411,
+  "rejected_outlier_count": 0,
+  "rejected_step_jump_count": 44,
+  "repaired_gradient_point_count": 11,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 362,
+  "usable_gradient_completion_pct": 87.02,
+  "elevation_hit_coverage_pct": 98.8,
+  "step_jump_rejection_pct": 10.58,
+  "gradient_min_pct": -9.375,
+  "gradient_max_pct": 12.656,
+  "path_bounds_svy21": {
+    "min_x": 23560.996,
+    "min_y": 28693.795,
+    "max_x": 23763.865,
+    "max_y": 29168.105
+  },
+  "road_boundary": {
+    "target_road_name": "PEPYS ROAD",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "C:\\GitHub\\PathSafetyAssessmentTool\\backend\\shapefiles\\planningareas\\ROADSECTIONLINE.shp",
+    "total_points": 417,
+    "offroad_point_count": 1,
+    "offroad_top_road_names": [
+      {
+        "road_name": "PASIR PANJANG ROAD",
+        "point_count": 1
+      }
+    ],
+    "offroad_chainage_min_m": 0.0,
+    "offroad_chainage_max_m": 0.0,
+    "trimmed_offroad_points": 1
+  },
+  "planning_area": "Queenstown",
+  "geometry_source": "centerline-trace (ROADSECTIONLINE.shp, graph diameter path)",
+  "elevation_tile_aggregation": "min",
+  "method_note": "Per-tile ground estimates aggregated with MIN across overlapping tiles, not the builder default np.mean in build_path_gradient_profile.query_profile_elevations. The mean lets one tile that only clips the search radius (roof/canopy/adjacent hillside) drag a sample off a strong consensus, fabricating metre-scale steps that the 0.3 m step-jump filter then rejects. Batch completion: mean 33.98%, median 60.85%, min 86.22%. Gradient math, filters and thresholds are unmodified. Profiles in other planning areas were built with the mean default."
+}

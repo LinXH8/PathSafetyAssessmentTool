@@ -1782,12 +1782,13 @@ export default function AttributeAnalysisMapView({
                   />
 
                   {/* Tile Layer — served by our backend so maps work offline
-                      (backend/app/api/tiles.py). Do not restore a CDN URL. */}
+                      (backend/app/api/tiles.py). Do not restore a CDN URL.
+                      ?v=2 cache-busts browsers holding the old pre-API-key
+                      placeholder tiles (see ThemeAwareTileLayer.tsx). */}
                   <TileLayer
-                    url="/api/tiles/light/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="/api/tiles/light/{z}/{x}/{y}.png?v=2"
+                    attribution='&copy; OpenStreetMap contributors & CARTO'
                     maxZoom={22}
-                    maxNativeZoom={19}
                   />
 
                   {/* Auto-fit bounds if data is available and shouldAutoFit is true */}

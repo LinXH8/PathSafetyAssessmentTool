@@ -12,12 +12,18 @@ services:
       # /app/* paths mounted below. Pin the user-data root onto /app so the
       # mounts line up (see backend/app/services/paths.py).
       PSAT_DATA_DIR: "/app"
+      # Usage analytics mirror. Leave PSAT_POSTHOG_API_KEY unset to keep it off
+      # entirely -- local SQLite telemetry works regardless.
+      PSAT_POSTHOG_API_KEY: "${PSAT_POSTHOG_API_KEY:-}"
+      PSAT_POSTHOG_HOST: "${PSAT_POSTHOG_HOST:-https://eu.i.posthog.com}"
     volumes:
       # Persist the whole writable tree outside the container: legacy projects,
-      # survey images, per-profile projects (+ profiles.json and the session
-      # secret key), exported reports.
+      # survey images, per-profile projects, exported reports.
       - ./data:/app/data
       - ./in:/app/in
+      # Profiles + telemetry.sqlite3 live here (plus profiles.json and the
+      # session secret key). WITHOUT this mount every redeploy wipes all user
+      # accounts and all collected usage history.
       - ./profiles:/app/profiles
       - "./Generated Reports:/app/Generated Reports"
     ports:

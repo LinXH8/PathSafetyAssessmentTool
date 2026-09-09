@@ -117,6 +117,129 @@ def _load_remote_export_config() -> dict:
     }
 
 
+# --- PostHog mirror ----------------------------------------------------------
+# Optional, off unless PSAT_POSTHOG_API_KEY is set. The local SQLite DB above
+# stays the source of truth; this only mirrors events out so non-technical
+# stakeholders can read DAU/WAU from PostHog's built-in insights instead of
+# someone running export_weekly_activity_report.py by hand.
+#
+# PRIVACY: we deliberately send only the opaque profile_id as the person
+# identifier, plus division. Usernames and recovery emails are NEVER sent --
+# see _posthog_capture(). Keep it that way; exporting staff identities to a
+# third party is a separate governance decision.
+
+_POSTHOG_LOCK = threading.Lock()
+_POSTHOG_CLIENT = None
+_POSTHOG_INIT_DONE = False
+_POSTHOG_DEFAULT_HOST = "https://eu.i.posthog.com"
+
+
+def _load_posthog_config() -> dict:
+    api_key = str(os.getenv("PSAT_POSTHOG_API_KEY") or "").strip()
+    host = str(os.getenv("PSAT_POSTHOG_HOST") or "").strip() or _POSTHOG_DEFAULT_HOST
+    return {"enabled": bool(api_key), "api_key": api_key or None, "host": host}
+
+
+def _get_posthog_client():
+    """Lazily build the PostHog client. Returns None when disabled/unavailable."""
+    global _POSTHOG_CLIENT, _POSTHOG_INIT_DONE
+
+    if _POSTHOG_INIT_DONE:
+        return _POSTHOG_CLIENT
+
+    with _POSTHOG_LOCK:
+        if _POSTHOG_INIT_DONE:
+            return _POSTHOG_CLIENT
+        _POSTHOG_INIT_DONE = True
+
+        config = _load_posthog_config()
+        if not config["enabled"]:
+            return None
+
+        try:
+            from posthog import Posthog
+        except Exception as exc:
+            print(f"[Telemetry] PostHog configured but the 'posthog' package is missing: {exc}", flush=True)
+            return None
+
+        try:
+            _POSTHOG_CLIENT = Posthog(
+                project_api_key=config["api_key"],
+                host=config["host"],
+                # Never let analytics take the app down or slow a request.
+                on_error=lambda exc, _batch=None: print(f"[Telemetry] PostHog send failed: {exc}", flush=True),
+            )
+        except Exception as exc:
+            print(f"[Telemetry] PostHog client init failed: {exc}", flush=True)
+            _POSTHOG_CLIENT = None
+            return None
+
+        import atexit
+        atexit.register(_posthog_shutdown)
+        print(f"[Telemetry] PostHog mirror enabled -> {config['host']}", flush=True)
+        return _POSTHOG_CLIENT
+
+
+def _posthog_shutdown() -> None:
+    """Flush buffered events so a redeploy doesn't drop the last batch."""
+    client = _POSTHOG_CLIENT
+    if client is None:
+        return
+    try:
+        client.shutdown()
+    except Exception:
+        pass
+
+
+def _posthog_capture(
+    *,
+    event_type: str,
+    profile_id: str,
+    division: str,
+    project_name: str | None,
+    install_id: str,
+    payload: dict,
+    email: str | None = None,
+    username: str | None = None,
+) -> None:
+    """Best-effort mirror of one activity event. Never raises."""
+    client = _get_posthog_client()
+    if client is None or not profile_id:
+        return
+
+    properties = {
+        **payload,
+        "division": division,
+        "project_name": project_name,
+        "install_id": install_id,
+    }
+
+    # distinct_id stays the opaque profile_id -- stable for the life of the
+    # account. The human label rides along as PostHog PERSON properties via
+    # $set, which is what the UI shows instead of the raw id.
+    #
+    # Why not use the email as distinct_id directly: identity would fracture the
+    # moment someone changes their email, and every event already recorded under
+    # the old id would be orphaned onto a separate person. $set relabels the
+    # existing person instead, so history is preserved.
+    person_properties = {}
+    if email:
+        person_properties["email"] = email
+    if username:
+        person_properties["name"] = username
+    if person_properties:
+        properties["$set"] = person_properties
+
+    try:
+        client.capture(
+            distinct_id=profile_id,
+            event=event_type,
+            properties=properties,
+        )
+    except Exception as exc:
+        print(f"[Telemetry] PostHog capture failed for '{event_type}': {exc}", flush=True)
+
+
 def _connect() -> sqlite3.Connection:
     db_path = _telemetry_db_path()
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -187,10 +310,22 @@ def record_event(
     project_name: str | None = None,
     payload: dict | None = None,
     occurred_at: dt.datetime | str | None = None,
+    email: str | None = None,
+    username: str | None = None,
 ) -> str:
+    # `email`/`username` are used ONLY as the PostHog person label. They are
+    # deliberately not written to the local activity_events table -- that stays
+    # keyed on the opaque profile_id, so the on-disk telemetry DB holds no PII.
     event_id = uuid.uuid4().hex
     occurred = _isoformat(_coerce_datetime(occurred_at))
-    payload_json = json.dumps(payload or {}, sort_keys=True)
+    payload_dict = payload or {}
+    payload_json = json.dumps(payload_dict, sort_keys=True)
+
+    # Normalised once so the SQLite row and the PostHog mirror can never disagree.
+    clean_event_type = str(event_type or "").strip()
+    clean_profile_id = str(profile_id or "").strip()
+    clean_division = str(division or "").strip() or "Unassigned"
+    clean_project_name = str(project_name or "").strip() or None
 
     with _DB_LOCK:
         conn = _connect()
@@ -206,18 +341,32 @@ def record_event(
                 (
                     event_id,
                     occurred,
-                    str(event_type or "").strip(),
-                    str(profile_id or "").strip(),
-                    str(division or "").strip() or "Unassigned",
-                    str(project_name or "").strip() or None,
+                    clean_event_type,
+                    clean_profile_id,
+                    clean_division,
+                    clean_project_name,
                     install_id,
                     payload_json,
                 ),
             )
             conn.commit()
-            return event_id
         finally:
             conn.close()
+
+    # Mirror outward AFTER the local write has committed and the DB lock is
+    # released -- SQLite stays the source of truth, and a slow/unreachable
+    # PostHog can never hold the lock or fail an event that was recorded fine.
+    _posthog_capture(
+        event_type=clean_event_type,
+        profile_id=clean_profile_id,
+        division=clean_division,
+        project_name=clean_project_name,
+        install_id=install_id,
+        payload=payload_dict,
+        email=email,
+        username=username,
+    )
+    return event_id
 
 
 def pending_batch_count() -> int:

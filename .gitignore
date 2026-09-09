@@ -128,3 +128,7 @@ CycleRAP_User_Guide.pdf
 # ignore for this subtree — re-exclude explicitly.
 docs/.DS_Store
 docs/archive/.DS_Store
+
+# Local secrets / deploy config (PostHog key etc). Never commit -- repo is public.
+.env
+.env.local
