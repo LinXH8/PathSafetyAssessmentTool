@@ -40,6 +40,11 @@ export default function UpdateModal() {
   const [progress, setProgress] = useState({ done: 0, total: 0, component: "" });
   const [error, setError] = useState<string | null>(null);
   const pollRef = useRef<number | null>(null);
+  // Version whose "ready to install" prompt the user has dismissed with OK. The
+  // 1-min tick keeps reporting the same staged update until the app restarts, so
+  // without this the acknowledged prompt reappears every minute. Session-only and
+  // version-keyed: a restart re-surfaces it, and a NEWER staged update still does.
+  const acknowledgedRef = useRef<string | null>(null);
 
   // Never interrupt the landing/profile screen — the user has not started work yet.
   const suppressed = location.pathname === "/";
@@ -52,8 +57,14 @@ export default function UpdateModal() {
         // Don't yank the user out of an in-progress download or a failed-retry
         // screen when the 1-min tick fires.
         if (prev === "downloading" || prev === "failed") return prev;
-        // Already downloaded on a previous run — just needs a restart.
-        if (next.pending) return "ready";
+        // Already downloaded on a previous run — just needs a restart. Stay quiet
+        // if the user already acknowledged this exact version with OK.
+        if (next.pending) {
+          if (next.availableVersion && acknowledgedRef.current === next.availableVersion) {
+            return "idle";
+          }
+          return "ready";
+        }
         // Behind the latest release → offer. The version guard means a machine
         // already on the latest version is never prompted, even if the backend
         // ever reports an update (same-version republish / fingerprint drift).
@@ -127,6 +138,14 @@ export default function UpdateModal() {
     setPhase("idle");
   };
 
+  // "OK" on the ready-to-install prompt: acknowledge THIS version for the rest of
+  // the session. Unlike "Not now" on the offer (which must keep nagging until the
+  // user updates), there is nothing left for them to do here but restart.
+  const onAcknowledgeReady = () => {
+    acknowledgedRef.current = status?.availableVersion ?? null;
+    setPhase("idle");
+  };
+
   const onDiscard = async () => {
     try {
       await discardUpdate();
@@ -153,7 +172,7 @@ export default function UpdateModal() {
     return (
       <V2ModalShell
         open
-        onClose={() => setPhase("idle")}
+        onClose={onAcknowledgeReady}
         title="Update ready to install"
         width={480}
         footer={
@@ -161,7 +180,7 @@ export default function UpdateModal() {
             <button type="button" style={modalGhostBtn()} onClick={onDiscard}>
               Remove update
             </button>
-            <button type="button" style={modalPrimaryBtn(false)} onClick={() => setPhase("idle")}>
+            <button type="button" style={modalPrimaryBtn(false)} onClick={onAcknowledgeReady}>
               OK
             </button>
           </>

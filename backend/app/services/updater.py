@@ -259,13 +259,20 @@ _SKIP_CHECK_MARKER = ".skip_update_check"
 
 
 def update_checks_disabled() -> bool:
-    """Per-machine opt-out: presence of a local, gitignored marker file.
+    """True when this install should never be offered a remote update.
 
-    Not committed and not an env var, so it only ever affects the machine that
-    created it -- every other install keeps getting prompted normally. See
-    ``.gitignore`` for the entry.
+    Two cases: any source checkout (see below), and a per-machine opt-out marker
+    file. The marker is not committed and not an env var, so it only ever affects
+    the machine that created it -- every other install keeps getting prompted
+    normally. See ``.gitignore`` for the entry.
     """
     if os.environ.get("PSAT_SKIP_UPDATE_CHECK") == "1":
+        return True
+    # A source checkout has no launcher to apply a staged update, so an offer here
+    # can only ever strand the download in pending/ and re-prompt forever. Devs
+    # update with `git pull`. Opt back in with PSAT_FORCE_UPDATE_CHECK=1 to test
+    # the updater itself from source.
+    if not paths.is_bundled() and os.environ.get("PSAT_FORCE_UPDATE_CHECK") != "1":
         return True
     return (install_root() / _SKIP_CHECK_MARKER).is_file()
 
