@@ -3,6 +3,7 @@ import json
 import sys
 
 import pytest
+from flask import Flask
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -15,7 +16,6 @@ def _patch_roots(monkeypatch, tmp_path):
     legacy_root = tmp_path / "data"
     monkeypatch.setattr(profile_store, "_profiles_root", lambda: profiles_root)
     monkeypatch.setattr(profile_store, "_legacy_projects_root", lambda: legacy_root)
-    monkeypatch.setattr(profile_store, "_ACTIVE_PROFILE_ID", None)
     return profiles_root, legacy_root
 
 
@@ -51,16 +51,21 @@ def test_login_and_logout_profile(monkeypatch, tmp_path):
     _patch_roots(monkeypatch, tmp_path)
     profile = profile_store.create_profile("Office A", "office.a@lta.gov.sg", "2468", "Transport Planning")
 
-    active = profile_store.login_profile(profile["id"], "2468")
+    # The logged-in profile lives in the request's session cookie, so drive the
+    # store from inside a request context.
+    app = Flask(__name__)
+    app.config["SECRET_KEY"] = "test-secret"
+    with app.test_request_context():
+        active = profile_store.login_profile(profile["id"], "2468")
 
-    assert active["id"] == profile["id"]
-    assert active["division"] == "Transport Planning"
-    assert active["last_active_at"]
-    assert profile_store.get_active_profile()["id"] == profile["id"]
+        assert active["id"] == profile["id"]
+        assert active["division"] == "Transport Planning"
+        assert active["last_active_at"]
+        assert profile_store.get_active_profile()["id"] == profile["id"]
 
-    profile_store.logout_profile()
+        profile_store.logout_profile()
 
-    assert profile_store.get_active_profile() is None
+        assert profile_store.get_active_profile() is None
 
 
 def test_move_legacy_projects_to_profile(monkeypatch, tmp_path):

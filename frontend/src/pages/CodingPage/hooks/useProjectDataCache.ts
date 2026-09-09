@@ -51,6 +51,24 @@ export const projectDataCache: Record<string, ProjectDataState> = {};
 // Snapshot of attrs as last loaded/saved from backend — used to detect real changes vs. isDirty flag
 export const savedAttrsSnapshot: Record<string, AttributeRow[]> = {};
 
+/**
+ * Empty both singletons in place (other modules hold them by reference).
+ *
+ * Both maps are keyed by project name only, so when a different profile signs
+ * in on this tab it must never inherit the previous profile's rows, unsaved
+ * edits or saved-attrs snapshot for a same-named (e.g. shared) project.
+ * ProfileProvider fires "psat:profile:changed" on login, logout and a forced
+ * logout; listening here keeps the provider free of page imports.
+ */
+export function clearProjectDataCache(): void {
+  for (const key of Object.keys(projectDataCache)) delete projectDataCache[key];
+  for (const key of Object.keys(savedAttrsSnapshot)) delete savedAttrsSnapshot[key];
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("psat:profile:changed", clearProjectDataCache);
+}
+
 export interface ProjectDataCache {
   /** All loaded projects, keyed by project name (mirrors the module cache singleton). */
   projectData: Record<string, ProjectDataState>;

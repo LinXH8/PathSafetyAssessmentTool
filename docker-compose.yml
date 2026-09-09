@@ -3,18 +3,29 @@ services:
     build:
       context: .
       dockerfile: backend.Dockerfile
-    volumes:
-      # Persist project data and input folders outside the container
-      - ./data:/app/data
-      - ./in:/app/in
-      # Profiles + telemetry.sqlite3 live here. WITHOUT this mount every
-      # redeploy wipes all user accounts and all collected usage history.
-      - ./profiles:/app/profiles
     environment:
+      # backend/app.py binds loopback by default (single-user desktop safety);
+      # inside the container it has to listen on all interfaces for nginx.
+      PSAT_HOST: "0.0.0.0"
+      # The Dockerfile copies backend/ to /app, so paths.install_root() is "/"
+      # and the writable tree would land in /data, /in, /profiles -- not the
+      # /app/* paths mounted below. Pin the user-data root onto /app so the
+      # mounts line up (see backend/app/services/paths.py).
+      PSAT_DATA_DIR: "/app"
       # Usage analytics mirror. Leave PSAT_POSTHOG_API_KEY unset to keep it off
       # entirely -- local SQLite telemetry works regardless.
-      - PSAT_POSTHOG_API_KEY=${PSAT_POSTHOG_API_KEY:-}
-      - PSAT_POSTHOG_HOST=${PSAT_POSTHOG_HOST:-https://eu.i.posthog.com}
+      PSAT_POSTHOG_API_KEY: "${PSAT_POSTHOG_API_KEY:-}"
+      PSAT_POSTHOG_HOST: "${PSAT_POSTHOG_HOST:-https://eu.i.posthog.com}"
+    volumes:
+      # Persist the whole writable tree outside the container: legacy projects,
+      # survey images, per-profile projects, exported reports.
+      - ./data:/app/data
+      - ./in:/app/in
+      # Profiles + telemetry.sqlite3 live here (plus profiles.json and the
+      # session secret key). WITHOUT this mount every redeploy wipes all user
+      # accounts and all collected usage history.
+      - ./profiles:/app/profiles
+      - "./Generated Reports:/app/Generated Reports"
     ports:
       - "8000:8000"
     restart: unless-stopped

@@ -30,6 +30,28 @@ import {
   type ResetProfilePinResult,
   type UpdateProfileResult,
 } from "../../api";
+import { invalidateAll as invalidateProjectDataCache } from "../../api/projectDataCache";
+
+/**
+ * Marker header the backend's login gate puts on its 401s (backend/app/auth.py).
+ * Lets us tell "your session is gone" apart from the wrong-PIN 401s that the
+ * profile-management routes return while a user is still logged in.
+ */
+const AUTH_HEADER = "X-PSAT-Auth";
+const AUTH_HEADER_LOGIN_REQUIRED = "login-required";
+
+/**
+ * Drop everything this tab caches per profile: the Path Analysis promise cache
+ * (direct call) and the Coding page's module singletons (via an event, so this
+ * provider never imports page code — see pages/CodingPage/hooks/useProjectDataCache.ts).
+ * Both are keyed by project name only, so a different profile signing in here
+ * must never inherit the previous profile's copy of a same-named (e.g. shared)
+ * project.
+ */
+function resetPerProfileCaches() {
+  invalidateProjectDataCache();
+  window.dispatchEvent(new Event("psat:profile:changed"));
+}
 
 type ProfileContextValue = {
   profiles: ProfileSummary[];
@@ -83,6 +105,52 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
   }, [applyOverview]);
+
+  // Mirrors `overview` for the fetch wrapper below, whose closure is created once.
+  const overviewRef = useRef(overview);
+  useEffect(() => {
+    overviewRef.current = overview;
+  }, [overview]);
+  const bouncingRef = useRef(false);
+
+  /**
+   * Sessions are per browser (a signed cookie), so "logged in" can end without
+   * this tab doing anything: the profile was deleted, the server's signing key
+   * was rotated, or the user logged out in another tab. When any API call comes
+   * back 401 with the gate's marker header while this tab still thinks it is
+   * logged in: drop the active profile at once so RequireProfile bounces to the
+   * landing page, clear the per-tab caches, and re-read the overview so the
+   * landing page lists the current profiles (the one we were using may have
+   * just been deleted) rather than the pre-bounce list.
+   *
+   * Wrapping window.fetch once covers every call site (bare fetch,
+   * fetchWithTimeout, the autocode SSE reader) without touching them. Wrong-PIN
+   * 401s carry no marker header and are left to their callers. A burst of
+   * concurrent 401s (image preloads) triggers a single bounce.
+   */
+  useEffect(() => {
+    const nativeFetch = window.fetch;
+    window.fetch = async (input, init) => {
+      const res = await nativeFetch.call(window, input, init);
+      if (
+        res.status === 401 &&
+        res.headers.get(AUTH_HEADER) === AUTH_HEADER_LOGIN_REQUIRED &&
+        overviewRef.current.active_profile &&
+        !bouncingRef.current
+      ) {
+        bouncingRef.current = true;
+        resetPerProfileCaches();
+        setOverview((prev) => (prev.active_profile ? { ...prev, active_profile: null } : prev));
+        void refreshOverview().finally(() => {
+          bouncingRef.current = false;
+        });
+      }
+      return res;
+    };
+    return () => {
+      window.fetch = nativeFetch;
+    };
+  }, [refreshOverview]);
 
   // Guards against a load loop resolving after the provider unmounts (or after a
   // newer load has superseded it, e.g. React StrictMode double-invoking effects).
@@ -163,6 +231,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (profileId: string, pin: string) => {
     const result = await apiLoginProfile(profileId, pin);
+    resetPerProfileCaches();
     applyOverview(result.overview);
     setError(null);
     return result;
@@ -170,6 +239,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     const result = await apiLogoutProfile();
+    resetPerProfileCaches();
     applyOverview(result.overview);
     setError(null);
   }, [applyOverview]);

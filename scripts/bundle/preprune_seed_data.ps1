@@ -80,6 +80,7 @@ Head "Starting backend"
 $env:PSAT_DATA_DIR = $DataRoot
 $env:PSAT_PORT     = "$Port"
 $env:PSAT_HOST     = "127.0.0.1"
+$env:PSAT_AUTH_DISABLED = "1"   # loopback-only switch (backend/app/auth.py): no browser or PIN here, keep /api open
 $proc = Start-Process -FilePath $py -ArgumentList "`"$app`"" `
         -WorkingDirectory (Join-Path $Bundle "backend") -PassThru -WindowStyle Hidden
 

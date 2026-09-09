@@ -25,3 +25,11 @@ in/
 *.xlsm
 *.pdf
 batch_output.txt
+
+# Runtime assets synced from S3 and bind-mounted at runtime (see docker-compose
+# override on the server). Keeping the 5 GB of GIS layers and the YOLO weights
+# out of the build context makes a rebuild a code-only operation. The
+# git-tracked gradient_profiles/ subtree stays in the image.
+backend/shapefiles/*
+!backend/shapefiles/gradient_profiles
+backend/models/
