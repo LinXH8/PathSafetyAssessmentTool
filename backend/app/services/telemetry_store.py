@@ -199,22 +199,42 @@ def _posthog_capture(
     project_name: str | None,
     install_id: str,
     payload: dict,
+    email: str | None = None,
+    username: str | None = None,
 ) -> None:
     """Best-effort mirror of one activity event. Never raises."""
     client = _get_posthog_client()
     if client is None or not profile_id:
         return
 
+    properties = {
+        **payload,
+        "division": division,
+        "project_name": project_name,
+        "install_id": install_id,
+    }
+
+    # distinct_id stays the opaque profile_id -- stable for the life of the
+    # account. The human label rides along as PostHog PERSON properties via
+    # $set, which is what the UI shows instead of the raw id.
+    #
+    # Why not use the email as distinct_id directly: identity would fracture the
+    # moment someone changes their email, and every event already recorded under
+    # the old id would be orphaned onto a separate person. $set relabels the
+    # existing person instead, so history is preserved.
+    person_properties = {}
+    if email:
+        person_properties["email"] = email
+    if username:
+        person_properties["name"] = username
+    if person_properties:
+        properties["$set"] = person_properties
+
     try:
         client.capture(
             distinct_id=profile_id,
             event=event_type,
-            properties={
-                **payload,
-                "division": division,
-                "project_name": project_name,
-                "install_id": install_id,
-            },
+            properties=properties,
         )
     except Exception as exc:
         print(f"[Telemetry] PostHog capture failed for '{event_type}': {exc}", flush=True)
@@ -290,7 +310,12 @@ def record_event(
     project_name: str | None = None,
     payload: dict | None = None,
     occurred_at: dt.datetime | str | None = None,
+    email: str | None = None,
+    username: str | None = None,
 ) -> str:
+    # `email`/`username` are used ONLY as the PostHog person label. They are
+    # deliberately not written to the local activity_events table -- that stays
+    # keyed on the opaque profile_id, so the on-disk telemetry DB holds no PII.
     event_id = uuid.uuid4().hex
     occurred = _isoformat(_coerce_datetime(occurred_at))
     payload_dict = payload or {}
@@ -338,6 +363,8 @@ def record_event(
         project_name=clean_project_name,
         install_id=install_id,
         payload=payload_dict,
+        email=email,
+        username=username,
     )
     return event_id
 

@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 
 _CLIENT_ACTIVITY_EVENT_TYPES = {"page_view"}
 
+# Events that refresh the PostHog person label (email/name). Deliberately only
+# the infrequent profile-lifecycle ones -- see _record_profile_event().
+_PERSON_LABEL_EVENTS = {"profile_created", "profile_login", "profile_updated"}
+
 
 def _invalidate_project_context() -> None:
     try:
@@ -36,12 +40,31 @@ def _record_profile_event(
     project_name: str | None = None,
 ) -> None:
     try:
+        # `profile` is the SERIALIZED profile, which intentionally omits the
+        # email -- look it up so PostHog can label the person by email instead
+        # of the opaque id. Local telemetry stays keyed on the id either way.
+        #
+        # Only done for _PERSON_LABEL_EVENTS: get_profile_email() -> _load_state()
+        # re-reads the registry from disk AND globs the profile dirs on every
+        # call, and page_view fires on every navigation. PostHog person
+        # properties persist once set, so refreshing the label on login/create/
+        # update is enough to keep it current -- resending it on every event
+        # would buy nothing and put a disk read in the hot path.
+        profile_id = profile["id"]
+        email = None
+        username = None
+        if event_type in _PERSON_LABEL_EVENTS:
+            email = profile_store.get_profile_email(profile_id)
+            username = profile.get("username") or profile.get("name") or None
+
         telemetry_store.record_event(
             event_type,
-            profile["id"],
+            profile_id,
             profile["division"],
             project_name=project_name,
             payload=payload,
+            email=email,
+            username=username,
         )
     except Exception as exc:
         print(f"[Telemetry] Failed to record '{event_type}': {exc}", flush=True)

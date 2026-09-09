@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "code-review-graph": {
+      "command": "C:\\GitHub\\PathSafetyAssessmentTool\\backend\\.venv\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "code_review_graph",
+        "serve"
+      ],
+      "cwd": "C:\\GitHub\\PathSafetyAssessmentTool",
+      "type": "stdio"
+    }
+  }
+}

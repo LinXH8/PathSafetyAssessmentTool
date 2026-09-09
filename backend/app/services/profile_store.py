@@ -522,6 +522,24 @@ def logout_profile() -> None:
     _set_active_profile_id(None)
 
 
+def get_profile_email(profile_id: str) -> str | None:
+    """The profile's recovery email, or None.
+
+    Deliberately NOT part of _serialize_profile() -- that keeps the email out of
+    every API response. This accessor exists for the small number of server-side
+    callers that legitimately need it (currently the telemetry mirror, which uses
+    it as the PostHog person label so usage reports name real people instead of
+    opaque ids). Never hand the result to a client response.
+    """
+    try:
+        with _STATE_LOCK:
+            state = _load_state()
+            profile = _require_profile(state, str(profile_id or ""))
+            return str(profile.get("email") or "").strip() or None
+    except Exception:
+        return None
+
+
 def get_profile_projects_root(profile_id: str) -> Path:
     with _STATE_LOCK:
         state = _load_state()
