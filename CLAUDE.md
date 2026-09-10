@@ -913,3 +913,54 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 2. Use `detect_changes` for code review.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.
+
+### Installer: PSAT Logo Missing From Shortcut + Favicon (2026-09-10)
+
+**Symptom:** After installing PSAT from the installer, the Desktop / Start-menu `PSAT.lnk`
+showed the generic `.bat` icon instead of the PSAT logo.
+
+**Root cause — the icon file was deleted from the repo.** Two commits in the wrong order:
+
+1. `4c2f9eea` (2026-08-05) made `build_bundle.ps1` copy `PSAT Logo.ico` from the **repo root**
+   into the bundle, so `install_psat.ps1` could point the shortcut at it.
+2. `3c1dd7c7` (2026-08-27) deleted `PSAT Logo.ico` from the repo root as "unused". It was not
+   unused — it was the shortcut icon.
+
+The failure is silent because `install_psat.ps1:219` guards with
+`if (Test-Path $icon) { $lnk.IconLocation = $icon }` — a missing icon just leaves the default.
+
+**Why an update alone could not fix it:** `make_release.py` packages **components**
+(`webui`, `backend`, `models`, `python`, `shp-*`, `launcher`) and **never bundle-root files**.
+So `<install root>\PSAT Logo.ico` has no remote delivery path — only a *fresh* install ever
+creates it. Machines already in the field would have stayed icon-less forever.
+
+**Fix (four parts):**
+
+- **Restored `PSAT Logo.ico`** at the repo root (recovered via `git show '3c1dd7c7^:PSAT Logo.ico'`).
+- **Both builders ship it twice** — `<bundle>/PSAT Logo.ico` (fresh install) *and*
+  `<bundle>/launcher/PSAT Logo.ico` (remote update path, since `launcher` **is** a component).
+  Both paths are in each builder's verify list. **`build_bundle.sh` must ship the launcher copy
+  too**: the launcher component is replaced **wholesale** on update
+  (`launch_psat.py::_backup_component`), so a Unix-built `--skip-python` Windows update that
+  omitted it would *delete* the icon from every machine that took the update.
+- **`launch_psat.py::ensure_shortcut_icon()`** — runs on every start-up (right after
+  `apply_pending_update()`), restores the bundle-root icon from `launcher/`, and repairs an
+  **existing** `PSAT.lnk` via WScript.Shell COM through PowerShell. Never *creates* a shortcut,
+  never fatal, and gated by a `.shortcut-icon` marker holding the icon's sha256 so the COM call
+  runs at most once per icon version. Installed machines pick it up on the first launch **after**
+  a launcher-component update lands (the update is applied by the *old* launcher; the new code
+  runs the next time).
+- **Favicon** — `frontend/index.html` pointed at `/cycle.svg`; now `/psat-logomark.ico?v=3`,
+  with the asset copied to `frontend/public/`. (`cycle.svg` is left in place — deleting
+  "unused" branding assets is what caused this bug.)
+
+**Gotcha:** anything that must reach an already-installed machine has to live inside a
+**component** directory. A file at the bundle root is fresh-install-only, by design.
+
+**Key files:**
+
+- `PSAT Logo.ico` (repo root) — the shortcut icon; do not delete, it looks stray but is not
+- `scripts/bundle/build_bundle.ps1` / `build_bundle.sh` — step "Shortcut icon" + verify lists
+- `scripts/bundle/launch_psat.py` — `ensure_shortcut_icon()`, `ICON_MARKER`, `_ICON_PS`
+- `scripts/bundle/verify_drive.ps1` — both icon paths in `$required`
+- `frontend/index.html`, `frontend/public/psat-logomark.ico` — favicon

@@ -18,6 +18,7 @@ replaced by the process using them.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -166,6 +167,92 @@ def start_server(port: int, env: dict) -> subprocess.Popen:
         cwd=str(BACKEND_DIR),
         env=env,
     )
+
+
+# ── Windows shortcut icon ────────────────────────────────────────────────────
+# install_psat.ps1 sets the Desktop/Start-menu PSAT.lnk icon to
+# "<install root>\PSAT Logo.ico", but only "if (Test-Path $icon)" -- a missing icon
+# is silent, and the shortcut keeps the generic .bat icon forever.
+#
+# That is exactly what happened to the fleet: the icon was dropped from the repo
+# (commit 3c1dd7c7, "unused"), so every bundle built after it shipped without one.
+# Updates cannot fix it on their own either -- make_release.py packages COMPONENTS
+# (webui/backend/models/python/shp-*/launcher) and never bundle-root files, so the
+# root "PSAT Logo.ico" has no remote delivery path of its own.
+#
+# So the icon rides along inside launcher/ -- which IS a component -- and this
+# function, running on every start-up, restores the bundle-root copy from it and
+# repairs any existing shortcut. Already-installed machines pick the icon up on the
+# first launch AFTER a launcher-component update lands (the update is applied by the
+# OLD launcher; the new code runs the next time).
+#
+# Constraints this deliberately respects:
+#   - Never CREATES a shortcut. Only repairs one that exists: a user who deleted
+#     their desktop shortcut should not have it silently reappear.
+#   - Never fatal. A cosmetic icon must not stop the app from starting.
+#   - Runs the PowerShell/COM repair at most once per icon version, via a marker
+#     file holding the icon's digest, so the common start-up path stays free of it.
+
+ICON_NAME = "PSAT Logo.ico"
+ICON_MARKER = BUNDLE_ROOT / ".shortcut-icon"
+
+# Repair the two shortcuts install_psat.ps1 creates. -eq comparison keeps it a no-op
+# when the icon is already correct, and each shortcut is independent so a locked or
+# missing one cannot stop the other.
+_ICON_PS = r"""
+$ErrorActionPreference = 'SilentlyContinue'
+$icon = $env:PSAT_ICON_PATH
+$shell = New-Object -ComObject WScript.Shell
+foreach ($dir in @([Environment]::GetFolderPath('Desktop'),
+                   (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"))) {
+    $lnkPath = Join-Path $dir "PSAT.lnk"
+    if (-not (Test-Path $lnkPath)) { continue }
+    try {
+        $lnk = $shell.CreateShortcut($lnkPath)
+        if ($lnk.IconLocation -ne "$icon,0") {
+            $lnk.IconLocation = "$icon,0"
+            $lnk.Save()
+        }
+    } catch { }
+}
+"""
+
+
+def _file_digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def ensure_shortcut_icon() -> None:
+    """Restore the bundle-root shortcut icon and repair existing PSAT.lnk shortcuts."""
+    if os.name != "nt":
+        return
+    try:
+        source = BUNDLE_ROOT / "launcher" / ICON_NAME
+        if not source.is_file():
+            return  # pre-icon bundle; nothing to restore from
+
+        digest = _file_digest(source)
+        target = BUNDLE_ROOT / ICON_NAME
+        if not target.is_file() or _file_digest(target) != digest:
+            shutil.copyfile(source, target)
+
+        # The marker records the icon the shortcuts were last pointed at. Matching
+        # digest => the COM repair below already ran for this icon; skip it.
+        if ICON_MARKER.is_file() and ICON_MARKER.read_text(encoding="utf-8").strip() == digest:
+            return
+
+        env = os.environ.copy()
+        env["PSAT_ICON_PATH"] = str(target)
+        # CREATE_NO_WINDOW: the launcher console is the user's window; a PowerShell
+        # one must not flash over it.
+        subprocess.run(
+            ["powershell", "-NoProfile", "-NonInteractive", "-Command", _ICON_PS],
+            env=env, timeout=60, creationflags=0x08000000,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        ICON_MARKER.write_text(digest + "\n", encoding="utf-8")
+    except Exception:
+        return  # cosmetic only -- never block start-up
 
 
 # ── Staged-update application ────────────────────────────────────────────────
@@ -427,6 +514,9 @@ def main() -> int:
     except Exception as exc:
         print(f"Could not apply the staged update ({exc}); starting current version.")
         shutil.rmtree(PENDING_DIR, ignore_errors=True)
+
+    # After the update, so a launcher component that just landed supplies the icon.
+    ensure_shortcut_icon()
 
     port = find_free_port(DEFAULT_PORT, PORT_SCAN_LIMIT)
 
