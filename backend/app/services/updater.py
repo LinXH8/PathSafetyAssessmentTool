@@ -135,15 +135,18 @@ def fetch_manifest(manifest_url: str = DEFAULT_MANIFEST_URL) -> dict:
 # build (make_release.py) imports these same functions from the bundle it packages
 # so the two sides can never compute a digest differently.
 
-_BACKEND_EXCLUDE_TOP = {"models", "shapefiles"}
+# seed_profiles/ is hundreds of MB of shipped survey data that changes far less often
+# than the code, so it is its own component -- otherwise every backend fix would make
+# every machine re-download it.
+_BACKEND_EXCLUDE_TOP = {"models", "shapefiles", "seed_profiles"}
 
 
 def component_source(name: str, base: Path) -> tuple[Path, set[str]]:
     """Map a component name to (directory, excluded top-level names) under `base`.
 
     `base` is the bundle root at build time and the install root at runtime, so the
-    same mapping serves both. The backend component excludes models/ and shapefiles/
-    because those ship as their own components.
+    same mapping serves both. The backend component excludes models/, shapefiles/ and
+    seed_profiles/ because those ship as their own components.
     """
     if name == "webui":
         return base / "webui", set()
@@ -151,6 +154,9 @@ def component_source(name: str, base: Path) -> tuple[Path, set[str]]:
         return base / "backend", set(_BACKEND_EXCLUDE_TOP)
     if name == "models":
         return base / "backend" / "models", set()
+    if name == "seed-profiles":
+        # Profiles that ship with the app (see services/seed_profiles.py).
+        return base / "backend" / "seed_profiles", set()
     if name == "python":
         return base / "python", set()
     if name == "launcher":

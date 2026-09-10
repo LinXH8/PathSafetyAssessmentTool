@@ -9,6 +9,7 @@ Component granularity is chosen so a routine change moves megabytes, not gigabyt
     webui           frontend build            ~10 MB   changes often
     backend         app code                   ~2 MB   changes often
     models          YOLO weights               ~27 MB  rare
+    seed-profiles   profiles shipped with app  ~290 MB rare
     python          frozen interpreter + deps  ~3.9 GB rare
     shp-<category>  ONE PER top-level shapefiles dir    every 2 weeks-ish
 
@@ -153,6 +154,7 @@ def main() -> int:
     parser.add_argument("--only", default="",
                         help="Comma-separated allow-list of components to package, e.g. "
                              "'launcher' or 'backend,models,shp'. Tokens: webui, backend, "
+                             "seed-profiles, "
                              "models, python, launcher, shp-<cat>, or 'shp' for ALL shapefile "
                              "categories. Empty = package everything present in the bundle.")
     parser.add_argument("--stamp", action="store_true",
@@ -245,6 +247,12 @@ def main() -> int:
         add("webui", bundle / "webui", "webui")
     if want("models"):
         add("models", bundle / "backend" / "models", "backend/models")
+    # Profiles that ship with the app and are installed into the user-data root on
+    # first launch (see backend/app/services/seed_profiles.py). Its own component
+    # because it is hundreds of MB that almost never changes.
+    seed_root = bundle / "backend" / "seed_profiles"
+    if want("seed-profiles") and seed_root.is_dir():
+        add("seed-profiles", seed_root, "backend/seed_profiles")
 
     # backend code only -- models and shapefiles are their own components so that
     # a code fix does not drag 5 GB of GIS data along with it.
@@ -259,7 +267,7 @@ def main() -> int:
                 if not path.is_file():
                     continue
                 rel = path.relative_to(backend_src)
-                if rel.parts and rel.parts[0] in ("models", "shapefiles"):
+                if rel.parts and rel.parts[0] in ("models", "shapefiles", "seed_profiles"):
                     continue
                 zf.write(path, Path("backend") / rel)
         backend_parts = split_file(backend_zip, PART_MAX_BYTES)

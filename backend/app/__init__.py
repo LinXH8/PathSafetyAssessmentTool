@@ -81,6 +81,12 @@ def create_app(config_object=Config):
         "install_root=%s user_data_root=%s (bundled=%s)",
         paths.install_root(), paths.user_data_root(), paths.is_bundled(),
     )
+
+    # Install any profile that ships with the app (backend/seed_profiles/) and that
+    # this machine has not seeded yet. Runs before the blueprints so the profile
+    # picker never sees a half-installed seed. Never raises.
+    from .services.seed_profiles import ensure_seed_profiles
+    ensure_seed_profiles()
     # static_folder=None: Flask's default /static route is unused (there is no
     # app/static dir) and would only clutter the URL space that register_webui
     # now owns.

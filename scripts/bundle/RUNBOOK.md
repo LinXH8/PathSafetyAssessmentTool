@@ -78,6 +78,42 @@ Then launch from the Desktop shortcut. First start is slow (GIS warmup).
 
 ---
 
+## 3b. Profiles that ship with the app
+
+Some datasets are produced centrally and every install must have them (currently
+**Islandwide Data**, holding the "Autocoded Singapore (Islandwide)" project). They
+live in the repo at:
+
+```
+backend/seed_profiles/<slug>/
+    profile.json                  <- id, name, email, division, pin, seed_version
+    projects/<Project Name>/...   <- copied verbatim into the user's profile
+```
+
+They are part of the **app** (install root), and the app copies them into the
+**data** root on first launch (`backend/app/services/seed_profiles.py`, called from
+`create_app`). Rules:
+
+* Seeding runs once per `(slug, seed_version)`, recorded in `<data>\profiles\.seeded.json`.
+  A user who deletes a seeded profile does not get it back on the next launch.
+* Shipping a **new version of the data**: replace the files and bump `seed_version`
+  in `profile.json`. An existing project directory of the same name is never
+  overwritten -- users keep their coding/treatments.
+* `seed-profiles` is its own update component (`backend/seed_profiles`), so a code
+  fix does not re-download it. `make_release.py --only backend` therefore does NOT
+  ship it; include `seed-profiles` explicitly when the data changed.
+* First launch after installing it copies the whole tree (~290 MB today), so that
+  launch is slower than usual.
+* `PSAT_SKIP_SEED_PROFILES=1` disables seeding -- the build scripts set it around
+  their `create_app()` smoke test.
+
+> **When adding a NEW seed component to an existing fleet, ship the `launcher`
+> component in the same release.** Old launchers do not know `backend/seed_profiles`
+> is excluded from the `backend` component and would move it into `rollback\` on the
+> next backend-only update.
+
+---
+
 ## 4. Publish an update
 
 ```powershell
