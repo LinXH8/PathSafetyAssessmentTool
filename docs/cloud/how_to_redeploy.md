@@ -57,6 +57,12 @@ sudo git pull
 sudo docker compose up -d --build
 ```
 
+If `sudo git pull` fails, run this once and retry:
+
+```bash
+sudo git config --system --add safe.directory /opt/psat-repo
+```
+
 The rebuild takes roughly 5 to 15 minutes: it reinstalls Python dependencies and
 rebuilds the frontend. The app is briefly unavailable while the containers are
 recreated at the end.
@@ -80,10 +86,28 @@ If something is wrong, `sudo docker compose logs backend` is the first place to 
 
 ## Things to know before you rebuild
 
-**`--build` discards anything written inside the containers.** Only four paths are
-mounted from the host and survive: `data/`, `in/`, `profiles/` and
-`Generated Reports/`. Notably `shapefiles/` is *not* mounted, so GIS layers uploaded
-through the app are lost on rebuild. Survey folders in `in/` are safe.
+**`--build` discards anything written inside the containers.** Only the paths
+mounted from the host survive: `data/`, `in/`, `profiles/` and
+`Generated Reports/` from `docker-compose.yml`, plus whatever the server-local
+`docker-compose.override.yml` adds. Survey folders in `in/` are safe.
+
+**GIS layers come from a server-only override file.** `backend/shapefiles/` is
+excluded from the image by `.dockerignore` (only the git-tracked
+`gradient_profiles/` subtree is baked in). The 5 GB of layers are synced from S3
+onto the host and bind-mounted into the container by a `docker-compose.override.yml`
+that exists only on the server, not in git. If the app shows no GIS layers after a
+rebuild, check that the override is present and mounts onto `/app/shapefiles`:
+
+```bash
+cd /opt/psat-repo
+sudo cat docker-compose.override.yml
+sudo ls backend/shapefiles | head
+sudo docker compose exec backend ls /app/shapefiles
+```
+
+The first should show a `backend` service with a volume ending in `:/app/shapefiles`.
+The second and third should list the same folders. If the override is missing, the
+container only has `gradient_profiles/` and the app will look empty.
 
 **`git pull` will fail if files were edited directly on the server.** If someone has
 hand-edited `docker-compose.yml` or anything else under `/opt/psat-repo`, the pull
