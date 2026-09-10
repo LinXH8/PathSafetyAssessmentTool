@@ -278,14 +278,15 @@ def _read_json(path: Path, default):
 # decide what changed, so if the two disagree, apply would back up or overwrite the
 # wrong files. It is duplicated here (not imported) so the launcher stays dependency-free.
 #
-# The critical entry is `backend`, which owns backend/ EXCEPT models/ and shapefiles/ --
-# those are their OWN components (backend/models, backend/shapefiles/<cat>). Earlier code
+# The critical entry is `backend`, which owns backend/ EXCEPT models/, shapefiles/ and
+# seed_profiles/ -- those are their OWN components (backend/models,
+# backend/shapefiles/<cat>, backend/seed_profiles). Earlier code
 # applied updates at whole-top-level-directory granularity: it moved the entire backend/
 # dir aside and extracted backend.zip (which excludes models+shapefiles) in its place, so
 # ANY release that did not also re-ship models and every shapefile category PERMANENTLY
 # deleted them. Component-scoped moves are the fix: each component only ever backs up and
 # replaces its own subtree, so a backend-only update can never touch models/ or shapefiles/.
-_BACKEND_EXCLUDE = {"models", "shapefiles"}
+_BACKEND_EXCLUDE = {"models", "shapefiles", "seed_profiles"}
 
 
 def _component_target(name: str) -> tuple[Path, set[str]]:
@@ -296,6 +297,8 @@ def _component_target(name: str) -> tuple[Path, set[str]]:
         return BUNDLE_ROOT / "backend", set(_BACKEND_EXCLUDE)
     if name == "models":
         return BUNDLE_ROOT / "backend" / "models", set()
+    if name == "seed-profiles":
+        return BUNDLE_ROOT / "backend" / "seed_profiles", set()
     if name == "python":
         return BUNDLE_ROOT / "python", set()
     if name == "launcher":

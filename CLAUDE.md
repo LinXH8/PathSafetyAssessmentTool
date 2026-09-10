@@ -852,6 +852,28 @@ pipeline creation already uses, instead of the shapefile/CSV intersection count.
 - `backend/app/api/projects/gis_queries.py` — `roads_in_polygon()`: real segment count for
   `exists: True` rows
 
+### Profiles That Ship With the App (Seed Profiles) (2026-09-10)
+
+A profile placed in `backend/seed_profiles/<slug>/` is installed into the user-data
+root on first launch, so every install gets it. Currently: **Islandwide Data**
+(PIN `1234`, holds "Autocoded Singapore (Islandwide)").
+
+* `backend/app/services/seed_profiles.py` — `ensure_seed_profiles()`, called from
+  `create_app()`. Idempotent via `<data>/profiles/.seeded.json`, keyed by
+  `(slug, seed_version)`; a deleted seed profile is NOT resurrected, and an existing
+  project directory is never overwritten. Bump `seed_version` in the descriptor to
+  ship new data.
+* `backend/app/services/profile_store.py` — `register_seeded_profile()`: fixed
+  id/slug from the shipped descriptor (so it is the same profile on every machine).
+  **Registry entry is written before the files are copied** — the reverse order
+  leaves a profile dir with no registry entry, which `_load_state()` treats as
+  corruption and refuses to start on.
+* Ships as its own update component `seed-profiles` (→ `backend/seed_profiles`),
+  excluded from the `backend` component in `updater.py` **and** in
+  `scripts/bundle/launch_psat.py` (the two mappings must stay in sync) and packaged
+  by `scripts/bundle/make_release.py`. See `scripts/bundle/RUNBOOK.md` §3b.
+* `PSAT_SKIP_SEED_PROFILES=1` disables seeding (used by the build scripts' smoke test).
+
 ## Commands
 
 - Frontend: `cd frontend && npm run dev`

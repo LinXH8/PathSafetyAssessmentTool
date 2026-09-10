@@ -197,7 +197,7 @@ step "Verify"
 required=( "backend/app.py" "backend/version.json"
     "backend/app/services/data/cyclerap_v214_model.json"
     "backend/app/services/data/stm_v214_treatments.json"
-    "backend/app/api/profiles" "backend/app/api/tiles.py"
+    "backend/app/api/profiles" "backend/app/api/tiles.py" "backend/seed_profiles"
     "backend/app/services/paths.py" "launcher/launch_psat.py" "PSAT.command"
     "PSAT Logo.ico" "launcher/PSAT Logo.ico" )
 [[ "$NO_PYTHON" -eq 0 ]] && required+=( "python/bin/python" "python/share/proj" "python/share/gdal" )
@@ -214,7 +214,9 @@ info "all required paths present"
 
 if [[ "$NO_PYTHON" -eq 0 ]]; then
     # Strongest check without a browser: import the whole app in the FROZEN interpreter.
-    if smoke="$("$BUNDLE_ROOT/python/bin/python" -c "import sys; sys.path.insert(0, r'$BUNDLE_ROOT/backend'); from app import create_app; create_app(); import os; print('SMOKE_OK', os.environ.get('GDAL_DATA') is not None)" 2>&1)" \
+    # PSAT_SKIP_SEED_PROFILES: keep create_app() from copying the shipped profiles
+    # into the BUILD machine's app-data dir. See services/seed_profiles.py.
+    if smoke="$(PSAT_SKIP_SEED_PROFILES=1 "$BUNDLE_ROOT/python/bin/python" -c "import sys; sys.path.insert(0, r'$BUNDLE_ROOT/backend'); from app import create_app; create_app(); import os; print('SMOKE_OK', os.environ.get('GDAL_DATA') is not None)" 2>&1)" \
         && grep -q "SMOKE_OK" <<<"$smoke"; then
         info "frozen interpreter imports the app cleanly"
         grep -q "SMOKE_OK True" <<<"$smoke" && info "GDAL_DATA bound from the bundled env" \
@@ -232,11 +234,12 @@ total=0
 for pair in "python (frozen env):$PYTHON_DIR" \
             "backend/shapefiles:$BACKEND_DST/shapefiles" \
             "backend/models:$BACKEND_DST/models" \
+            "backend/seed_profiles:$BACKEND_DST/seed_profiles" \
             "webui:$WEBUI_DST"; do
     label="${pair%%:*}"; path="${pair#*:}"; b="$(dir_bytes "$path")"
     printf "%-22s %8s MB\n" "$label" "$(human_mb "$b")"; total=$((total + b))
 done
-bcode=$(( $(dir_bytes "$BACKEND_DST") - $(dir_bytes "$BACKEND_DST/shapefiles") - $(dir_bytes "$BACKEND_DST/models") ))
+bcode=$(( $(dir_bytes "$BACKEND_DST") - $(dir_bytes "$BACKEND_DST/shapefiles") - $(dir_bytes "$BACKEND_DST/models") - $(dir_bytes "$BACKEND_DST/seed_profiles") ))
 printf "%-22s %8s MB\n" "backend (code)" "$(human_mb "$bcode")"; total=$((total + bcode))
 printf "${c_green}%-22s %8s MB${c_off}\n" "TOTAL" "$(human_mb "$total")"
 printf "\nBundle ready: %s\n" "$BUNDLE_ROOT"

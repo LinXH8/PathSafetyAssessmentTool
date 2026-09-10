@@ -440,6 +440,65 @@ def create_profile(username: str, email: str, pin: str, division: str) -> dict:
         return _serialize_profile(profile)
 
 
+def register_seeded_profile(
+    *,
+    profile_id: str,
+    username: str,
+    email: str,
+    pin: str,
+    division: str,
+    slug: str,
+) -> tuple[dict, bool]:
+    """Register a profile that ships WITH the app (see services/seed_profiles.py).
+
+    Unlike `create_profile` the identity is fixed by the shipped descriptor rather
+    than generated, so the same profile has the same id/slug on every machine and a
+    re-run is a no-op instead of creating "Islandwide Data 2".
+
+    Returns `(profile, created)`; `created` is False when the profile was already in
+    the registry. The registry entry is written BEFORE any project files are copied:
+    the reverse order would briefly leave a profile directory with no registry entry,
+    which `_load_state` treats as corruption and refuses to start on.
+    """
+    clean_name = _clean_profile_name(username)
+    clean_email = _clean_email(email)
+    clean_division = _clean_division(division)
+    if not _PIN_RE.fullmatch(str(pin or "")):
+        raise ValueError("PIN must be 4 to 12 digits")
+
+    with _STATE_LOCK:
+        state = _load_state()
+        profiles = state.setdefault("profiles", [])
+        for profile in profiles:
+            if str(profile.get("id") or "") == profile_id:
+                return profile, False
+            if str(profile.get("name") or "").casefold() == clean_name.casefold():
+                return profile, False
+
+        pin_hash, pin_salt = _hash_pin(pin)
+        profile = {
+            "id": profile_id,
+            "name": clean_name,
+            "username": clean_name,
+            "email": clean_email,
+            "slug": _make_unique_slug(slug or clean_name, profiles),
+            "division": clean_division,
+            "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "last_active_at": None,
+            "pin_hash": pin_hash,
+            "pin_salt": pin_salt,
+        }
+        profiles.append(profile)
+        _save_state(state)
+        _ensure_profile_project_root(profile)
+        return profile, True
+
+
+def profile_projects_root_for_slug(slug: str) -> Path:
+    """Public accessor for `<profiles>/<slug>/projects` (used by the seeder)."""
+    return _project_root_for_slug(slug)
+
+
 def get_active_profile_id() -> str | None:
     """The profile id carried by the current request's session, or None.
 

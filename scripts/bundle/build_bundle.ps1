@@ -208,6 +208,7 @@ $required = @(
     "backend\app\services\paths.py",
     "backend\models",
     "backend\shapefiles",
+    "backend\seed_profiles",                              # profiles shipped with the app
     "webui\index.html",
     "webui\assets",
     "launcher\launch_psat.py",
@@ -228,6 +229,9 @@ Info "all required paths present"
 
 # The strongest check available without a browser: import the whole app inside
 # the FROZEN interpreter. Catches any missing module or data file at once.
+# Do not let the smoke test seed the shipped profiles into the BUILD machine's
+# app-data dir (hundreds of MB copied for nothing). See services/seed_profiles.py.
+$env:PSAT_SKIP_SEED_PROFILES = "1"
 $smoke = & (Join-Path $BundleRoot "python\python.exe") -c @"
 import sys
 sys.path.insert(0, r'$BundleRoot\backend')
@@ -241,6 +245,7 @@ if ($LASTEXITCODE -ne 0 -or ($smoke -join "`n") -notmatch "SMOKE_OK") {
     Die "frozen interpreter could not import the app"
 }
 Info "frozen interpreter imports the app cleanly"
+Remove-Item Env:\PSAT_SKIP_SEED_PROFILES -ErrorAction SilentlyContinue
 if (($smoke -join "`n") -match "SMOKE_OK True") { Info "GDAL_DATA bound from the bundled env" }
 else { Write-Host "    WARNING: GDAL_DATA was not bound" -ForegroundColor Yellow }
 
@@ -250,7 +255,8 @@ $parts = [ordered]@{
     "python (frozen env)" = Get-DirSize $pythonDir
     "backend/shapefiles"  = Get-DirSize (Join-Path $backendDst "shapefiles")
     "backend/models"      = Get-DirSize (Join-Path $backendDst "models")
-    "backend (code)"      = (Get-DirSize $backendDst) - (Get-DirSize (Join-Path $backendDst "shapefiles")) - (Get-DirSize (Join-Path $backendDst "models"))
+    "backend/seed_profiles" = Get-DirSize (Join-Path $backendDst "seed_profiles")
+    "backend (code)"      = (Get-DirSize $backendDst) - (Get-DirSize (Join-Path $backendDst "shapefiles")) - (Get-DirSize (Join-Path $backendDst "models")) - (Get-DirSize (Join-Path $backendDst "seed_profiles"))
     "webui"               = Get-DirSize $webuiDst
 }
 $total = 0
