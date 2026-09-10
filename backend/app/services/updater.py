@@ -177,6 +177,25 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+# Python bytecode caches are written by the INTERPRETER as the app runs, at any
+# depth inside backend/. Both builders exclude them from the bundle (build_bundle.sh
+# --exclude='__pycache__/' --exclude='*.pyc'; build_bundle.ps1 /XD __pycache__ /XF
+# *.pyc), so they are never described by a manifest -- but they appear on disk the
+# first time the app starts. Hashing them made every installed backend digest differ
+# from the manifest forever: the update was applied, then immediately re-offered on
+# the next launch, with no way for the user to make it stop. Skipping them keeps the
+# digest a function of the SHIPPED files only, which is what the manifest describes.
+_IGNORED_DIR_NAMES = {"__pycache__"}
+_IGNORED_SUFFIXES = {".pyc", ".pyo"}
+
+
+def _is_generated(rel: Path) -> bool:
+    """True for files the interpreter creates at runtime and no bundle ever ships."""
+    if any(part in _IGNORED_DIR_NAMES for part in rel.parts):
+        return True
+    return rel.suffix in _IGNORED_SUFFIXES
+
+
 def _iter_component_files(root: Path, exclude_top: set[str]):
     if not root.is_dir():
         return
@@ -185,6 +204,8 @@ def _iter_component_files(root: Path, exclude_top: set[str]):
             continue
         rel = path.relative_to(root)
         if rel.parts and rel.parts[0] in exclude_top:
+            continue
+        if _is_generated(rel):
             continue
         yield path, rel
 

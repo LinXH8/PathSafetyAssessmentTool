@@ -986,3 +986,52 @@ creates it. Machines already in the field would have stayed icon-less forever.
 - `scripts/bundle/launch_psat.py` — `ensure_shortcut_icon()`, `ICON_MARKER`, `_ICON_PS`
 - `scripts/bundle/verify_drive.ps1` — both icon paths in `$required`
 - `frontend/index.html`, `frontend/public/psat-logomark.ico` — favicon
+
+### Updater: Same Update Offered Forever After Being Installed (2026-09-10)
+
+**Symptom:** Users were prompted to update, downloaded it, restarted — and were prompted
+for the *same* update again on the next launch, indefinitely. The update **had** applied
+correctly; only the "is an update available?" check was wrong.
+
+**Root cause — the installed-tree digest hashed files no bundle ever ships.**
+`diff_components()` compares each component's manifest digest against
+`component_tree_digest()` of the component **as installed**. Both sides use the same
+function (`make_release.py` imports it from the bundle it packages), so they can only
+disagree if the two trees genuinely differ — and they always did:
+
+* Both builders exclude Python bytecode caches from the bundle
+  (`build_bundle.sh`: `--exclude='__pycache__/' --exclude='*.pyc'`;
+  `build_bundle.ps1`: `/XD "__pycache__" /XF "*.pyc"`), so the manifest digest describes
+  a tree with **zero** `.pyc`.
+* `_iter_component_files()` walked `root.rglob("*")` and hashed **everything**. The moment
+  the app started, the interpreter wrote `backend/app/**/__pycache__/*.pyc` — files the
+  manifest could never account for.
+
+So the installed `backend` digest differed from the manifest from the first launch onward,
+`diff_components` reported `backend` as changed forever, and there was no way for a user to
+make the prompt stop. Applying the update did not help: the new files were extracted, the
+app ran, bytecode was regenerated, mismatch again.
+
+**Fix:** `_iter_component_files()` now skips any path containing a `__pycache__` segment and
+any `.pyc`/`.pyo` file (`_is_generated()` / `_IGNORED_DIR_NAMES` / `_IGNORED_SUFFIXES`), so the
+runtime digest is a function of the **shipped** files only — matching what the builders
+produce. This also stabilises `_component_fingerprint()` (the cheap `[count, bytes, newest
+mtime]` cache key that gates the expensive hash), which bytecode churn was busting on every
+launch, forcing a full re-hash of the component each time.
+
+**Self-healing, but only one release later.** A machine running the OLD updater still
+computes digests *including* `.pyc`, so it will correctly see `backend` as changed and offer
+this release. Once applied, the machine is running the fixed `updater.py` and the loop stops.
+Every fleet therefore gets prompted exactly one final time.
+
+**Gotcha:** anything written **inside a component directory** at runtime reproduces this bug.
+`installed.json` (`install_root()/installed.json`), the `pending/` and `rollback/` dirs, and
+`.shortcut-icon` are all at the **install root**, outside every component, which is why they
+never caused it. Keep it that way — a runtime file placed inside `backend/`, `webui/` or
+`launcher/` would silently resurrect the endless prompt.
+
+**Key files:**
+
+- `backend/app/services/updater.py` — `_is_generated()`, `_iter_component_files()`
+- `backend/tests/test_updater_digest.py` — regression cover: bytecode is ignored, the
+  fingerprint cache is stable, and a genuine code change is still detected

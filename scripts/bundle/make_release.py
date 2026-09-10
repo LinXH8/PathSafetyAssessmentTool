@@ -39,6 +39,12 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Loading the bundle's updater.py (see _load_updater_isolated) would otherwise leave
+# __pycache__/*.pyc inside the very tree we are about to zip, shipping build-host
+# bytecode to every machine. The digest ignores bytecode, so this is cosmetic rather
+# than the endless-update bug -- but a release should contain only what was built.
+sys.dont_write_bytecode = True
+
 # GitHub caps a single release asset at 2 GiB. Stay under it with room to spare.
 PART_MAX_BYTES = 1_800_000_000
 CHUNK = 1024 * 1024
