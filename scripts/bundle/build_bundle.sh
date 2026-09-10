@@ -176,13 +176,30 @@ if [[ -x "./python/bin/python" ]]; then PY="./python/bin/python"; else PY="pytho
 EOF
 chmod +x "$BUNDLE_ROOT/PSAT.command"
 
+# ── 5b. Shortcut icon ─────────────────────────────────────────────────────────
+# Nothing on macOS/Linux uses this .ico -- it is the WINDOWS desktop/Start-menu
+# shortcut icon. It is shipped from this builder anyway, and its absence is a hard
+# error, because of the cross-build path documented at the top of this file: a Unix
+# machine may build a --skip-python update for the Windows fleet. "launcher" is a
+# release component and is replaced WHOLESALE on update, so a Unix-built launcher
+# component that omitted this file would DELETE the icon from every Windows machine
+# that took the update. launch_psat.py reads it from launcher/ to restore the
+# bundle-root copy and repair the .lnk.
+step "Shortcut icon"
+icon_src="$REPO_ROOT/PSAT Logo.ico"
+[[ -f "$icon_src" ]] || die "missing shortcut icon: $icon_src"
+cp -f "$icon_src" "$BUNDLE_ROOT/PSAT Logo.ico"
+cp -f "$icon_src" "$LAUNCHER_DST/PSAT Logo.ico"
+info "PSAT Logo.ico (bundle root + launcher/)"
+
 # ── 6. Verify ─────────────────────────────────────────────────────────────────
 step "Verify"
 required=( "backend/app.py" "backend/version.json"
     "backend/app/services/data/cyclerap_v214_model.json"
     "backend/app/services/data/stm_v214_treatments.json"
     "backend/app/api/profiles" "backend/app/api/tiles.py"
-    "backend/app/services/paths.py" "launcher/launch_psat.py" "PSAT.command" )
+    "backend/app/services/paths.py" "launcher/launch_psat.py" "PSAT.command"
+    "PSAT Logo.ico" "launcher/PSAT Logo.ico" )
 [[ "$NO_PYTHON" -eq 0 ]] && required+=( "python/bin/python" "python/share/proj" "python/share/gdal" )
 [[ "$SKIP_GIS" -eq 0 ]]  && required+=( "backend/models" "backend/shapefiles" )
 [[ "$NO_WEBUI" -eq 0 && -f "$REPO_ROOT/frontend/dist/index.html" ]] && required+=( "webui/index.html" "webui/assets" )

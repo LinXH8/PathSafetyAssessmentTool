@@ -49,6 +49,8 @@ $required = @(
     "PSAT\backend\shapefiles",
     "PSAT\webui\index.html",
     "PSAT\launcher\launch_psat.py",
+    "PSAT\PSAT Logo.ico",            # shortcut icon: what install_psat.ps1 points the .lnk at
+    "PSAT\launcher\PSAT Logo.ico",   # same icon, in the component that can update it remotely
     "install_psat.ps1",
     "Install PSAT.bat"
 )

@@ -164,11 +164,26 @@ if errorlevel 1 pause
 # "$InstallRoot\PSAT Logo.ico" but only "if (Test-Path $icon)". If the icon is
 # not shipped inside the bundle it never reaches the install root, and the
 # shortcut silently falls back to the default .bat icon. Copy it in here.
+#
+# TWO destinations, on purpose:
+#   BundleRoot/PSAT Logo.ico    - what install_psat.ps1 points the shortcut at.
+#                                 Reaches a machine ONLY via a fresh install.
+#   BundleRoot/launcher/...     - the delivery path for machines that are ALREADY
+#                                 installed. make_release.py packages components
+#                                 (webui/backend/models/python/shp-*/launcher) and
+#                                 never bundle-root files, so the root copy above
+#                                 can never be updated remotely. "launcher" IS a
+#                                 component, and launch_psat.py restores the root
+#                                 copy + repairs the .lnk from it on start-up.
+# Keep BOTH in every build: the launcher component is replaced wholesale on
+# update, so a build that omits the launcher copy would DELETE it from installed
+# machines.
 Step "Shortcut icon"
 $iconSrc = Join-Path $RepoRoot "PSAT Logo.ico"
 if (Test-Path $iconSrc) {
     Copy-Item $iconSrc (Join-Path $BundleRoot "PSAT Logo.ico") -Force
-    Info "PSAT Logo.ico"
+    Copy-Item $iconSrc (Join-Path $launcherDst "PSAT Logo.ico") -Force
+    Info "PSAT Logo.ico (bundle root + launcher/)"
 } else {
     Die "missing shortcut icon: $iconSrc"
 }
@@ -197,7 +212,8 @@ $required = @(
     "webui\assets",
     "launcher\launch_psat.py",
     "PSAT.bat",
-    "PSAT Logo.ico"                                        # shortcut icon
+    "PSAT Logo.ico",                                       # shortcut icon (fresh install)
+    "launcher\PSAT Logo.ico"                               # shortcut icon (remote update)
 )
 $missing = @()
 foreach ($rel in $required) {
