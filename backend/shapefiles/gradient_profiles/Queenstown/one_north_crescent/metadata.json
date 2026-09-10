@@ -1,0 +1,42 @@
+{
+  "path_key": "one_north_crescent",
+  "display_name": "ONE-NORTH CRESCENT",
+  "source_project": "one_north_crescent",
+  "source_geo_data": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/tmp/gradient_batch_20260901/_geodata/one_north_crescent/geo_data.gpkg",
+  "lidar_bundle": "D_Queenstown",
+  "lidar_root": "/Volumes/Expansion/LIDAR/D_Queenstown",
+  "generated_at_utc": "2026-09-01T08:30:00.578748+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 661.108,
+  "profile_point_count": 332,
+  "valid_elevation_count": 270,
+  "rejected_outlier_count": 16,
+  "rejected_step_jump_count": 214,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 8,
+  "valid_gradient_count": 64,
+  "usable_gradient_completion_pct": 19.28,
+  "elevation_hit_coverage_pct": 81.33,
+  "step_jump_rejection_pct": 64.46,
+  "gradient_min_pct": -5.312,
+  "gradient_max_pct": 9.718,
+  "path_bounds_svy21": {
+    "min_x": 23215.708,
+    "min_y": 31071.609,
+    "max_x": 23512.154,
+    "max_y": 31443.322
+  },
+  "road_boundary": {
+    "target_road_name": "ONE-NORTH CRESCENT",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/backend/shapefiles/planningareas/ROADSECTIONLINE.shp",
+    "total_points": 332,
+    "offroad_point_count": 0,
+    "offroad_top_road_names": []
+  }
+}

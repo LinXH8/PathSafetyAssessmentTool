@@ -1,0 +1,12 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+north_buona_vista_road,1,,NORTH BUONA VISTA ROAD,186.897,93.448,94.0,25.95,,
+north_buona_vista_road,2,,NORTH BUONA VISTA ROAD,158.104,265.948,266.0,18.887,,
+north_buona_vista_road,3,,NORTH BUONA VISTA ROAD,227.177,458.589,458.0,13.529,-1.301,1.0
+north_buona_vista_road,4,,NORTH BUONA VISTA ROAD,148.339,646.347,646.0,14.974,,
+north_buona_vista_road,5,,NORTH BUONA VISTA ROAD,139.423,790.474,790.0,16.617,,
+north_buona_vista_road,6,,NORTH BUONA VISTA ROAD,160.395,940.383,940.0,11.553,,
+north_buona_vista_road,7,,NORTH BUONA VISTA ROAD,179.25,1110.206,1110.0,14.433,,
+north_buona_vista_road,8,,NORTH BUONA VISTA ROAD,170.552,1285.107,1286.0,14.846,4.506,1.0
+north_buona_vista_road,9,,NORTH BUONA VISTA ROAD,213.324,1477.045,1478.0,16.334,,
+north_buona_vista_road,10,,NORTH BUONA VISTA ROAD,304.676,1737.02,1738.0,18.412,,
+north_buona_vista_road,11,,NORTH BUONA VISTA ROAD,581.241,2179.979,2180.0,21.899,,

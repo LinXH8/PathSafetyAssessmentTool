@@ -1,0 +1,5 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+north_buona_vista_drive,1,,NORTH BUONA VISTA DRIVE,109.919,54.96,54.0,9.642,,
+north_buona_vista_drive,2,,NORTH BUONA VISTA DRIVE,50.807,135.323,136.0,11.041,,
+north_buona_vista_drive,3,,NORTH BUONA VISTA DRIVE,309.576,316.331,316.0,14.94,5.991,1.0
+north_buona_vista_drive,4,,NORTH BUONA VISTA DRIVE,6.673,571.127,572.0,22.848,0.0,1.0

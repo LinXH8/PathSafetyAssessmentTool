@@ -38,6 +38,8 @@ export type ShapefileInfo = {
   is_renamed?: boolean;
   /** True only for layers uploaded via the Add GIS Layer flow — only these may have their Required Columns / Affects edited. */
   user_created?: boolean;
+  /** True for layers built on demand from live data (e.g. Defects, Slippery Surface) rather than a shapefile on disk — not renameable/deletable. */
+  synthetic?: boolean;
 };
 
 export type ShapefileCategoryInfo = {
