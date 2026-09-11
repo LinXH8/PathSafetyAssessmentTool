@@ -1,0 +1,50 @@
+{
+  "path_key": "north_buona_vista_drive",
+  "display_name": "NORTH BUONA VISTA DRIVE",
+  "source_project": "north_buona_vista_drive",
+  "source_geo_data": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/tmp/gradient_batch_20260901/_geodata/north_buona_vista_drive/geo_data.gpkg",
+  "lidar_bundle": "D_Queenstown + D_Queenstown_LTA",
+  "lidar_root": "/Volumes/Expansion/LIDAR/D_Queenstown",
+  "generated_at_utc": "2026-09-01T08:32:47.924486+00:00",
+  "spacing_m": 2.0,
+  "baseline_m": 10.0,
+  "smooth_window_m": 8.0,
+  "search_radius_m": 5.0,
+  "max_samples": null,
+  "centerline_length_m": 574.464,
+  "profile_point_count": 241,
+  "valid_elevation_count": 76,
+  "rejected_outlier_count": 1,
+  "rejected_step_jump_count": 23,
+  "repaired_gradient_point_count": 2,
+  "removed_bad_gradient_point_count": 0,
+  "valid_gradient_count": 133,
+  "usable_gradient_completion_pct": 55.19,
+  "elevation_hit_coverage_pct": 31.54,
+  "step_jump_rejection_pct": 9.54,
+  "gradient_min_pct": -2.187,
+  "gradient_max_pct": 5.991,
+  "path_bounds_svy21": {
+    "min_x": 23175.559,
+    "min_y": 31674.441,
+    "max_x": 23495.356,
+    "max_y": 31976.781
+  },
+  "road_boundary": {
+    "target_road_name": "NORTH BUONA VISTA DRIVE",
+    "target_road_aliases": [],
+    "offroad_policy": "trim",
+    "road_sections_shp": "/Users/xh/School/Final Year/LTA/PathSafetyAssessmentTool/backend/shapefiles/planningareas/ROADSECTIONLINE.shp",
+    "total_points": 289,
+    "offroad_point_count": 48,
+    "offroad_top_road_names": [
+      {
+        "road_name": "BIOPOLIS DRIVE",
+        "point_count": 48
+      }
+    ],
+    "offroad_chainage_min_m": 472.0,
+    "offroad_chainage_max_m": 566.0,
+    "trimmed_offroad_points": 48
+  }
+}

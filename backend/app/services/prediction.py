@@ -406,7 +406,26 @@ class CycleRAP_Coding_Helper:
             attrs["Delineation"] = "Present"
             delineation_triggers.append("Red Stripe")
 
-        # Step 4 – Signalised Crossing >= 80 % of bottom 10 %
+        # Step 4 – Road >= 80 % of bottom 10 %
+        if cls._check_bottom_majority(masks["road"], img_h, img_w):
+            delineation_triggers.clear()
+            attrs.update({
+                "Facility Type":                    "Mixed Traffic Road Lane",
+                "Light Segregation":                "Not Present",
+                "Delineation":                      "Not Present",
+                "Adjacent Road Lane 0-1m":          "Present",
+                "Adjacent Road Lane 1-3m":          "Not Present",
+                "Adjacent Object/Level Change 0-1m": "Not Present",
+                "Adjacent Object/Level Change 1-3m": "Not Present",
+                "Adjacent Sidewalk 0-1m":           "Not Present",
+                "Crossing Facility":                "Not Present",
+                "Crossing Type":                    None,
+                "Peak Pedestrian Flow":             "Low",
+                "Intersection/Road Crossing":       "Present",
+                "No of Lanes on Intersecting Road": ">1 per direction",
+            })
+
+        # Step 5 – Signalised Crossing >= 80 % of bottom 10 %
         if cls._check_bottom_majority(masks["traffic_crossing"], img_h, img_w):
             delineation_triggers.append("Signalised Crossing")
             attrs.update({
@@ -426,7 +445,7 @@ class CycleRAP_Coding_Helper:
                 "Intersecting Bicycle Facility":    "Not Present",
             })
 
-        # Step 5 – Zebra Crossing >= 80 % of bottom 10 %
+        # Step 6 – Zebra Crossing >= 80 % of bottom 10 %
         if cls._check_bottom_majority(masks["zebra_crossing"], img_h, img_w):
             delineation_triggers.append("Zebra Crossing")
             attrs.update({
@@ -444,25 +463,6 @@ class CycleRAP_Coding_Helper:
                 "Intersection/Road Crossing":       "Present",
                 "No of Lanes on Intersecting Road": "1 per direction",
                 "Intersecting Bicycle Facility":    "Not Present",
-            })
-
-        # Step 6 – Road >= 80 % of bottom 10 %
-        if cls._check_bottom_majority(masks["road"], img_h, img_w):
-            delineation_triggers.clear()
-            attrs.update({
-                "Facility Type":                    "Mixed Traffic Road Lane",
-                "Light Segregation":                "Not Present",
-                "Delineation":                      "Not Present",
-                "Adjacent Road Lane 0-1m":          "Present",
-                "Adjacent Road Lane 1-3m":          "Not Present",
-                "Adjacent Object/Level Change 0-1m": "Not Present",
-                "Adjacent Object/Level Change 1-3m": "Not Present",
-                "Adjacent Sidewalk 0-1m":           "Not Present",
-                "Crossing Facility":                "Not Present",
-                "Crossing Type":                    None,
-                "Peak Pedestrian Flow":             "Low",
-                "Intersection/Road Crossing":       "Not Present",
-                "No of Lanes on Intersecting Road": ">1 per direction",
             })
 
         attrs["Fixed Obstacles"] = fixed_obstacles

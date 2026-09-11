@@ -491,13 +491,15 @@ function LayerItem({
         >
           {file.name}
         </span>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.125rem", flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
-          <RowBtn label="Edit" color={COLOR.blue} onClick={(e) => { e.stopPropagation(); onEdit(file); }} />
-          {file.is_renamed && (
-            <RowBtn label="Revert" color={COLOR.gray600} onClick={(e) => { e.stopPropagation(); onRevertClick(file); }} />
-          )}
-          <RowBtn label="Delete" color={COLOR.danger} onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }} />
-        </div>
+        {!file.synthetic && (
+          <div style={{ display: "flex", alignItems: "center", gap: "0.125rem", flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+            <RowBtn label="Edit" color={COLOR.blue} onClick={(e) => { e.stopPropagation(); onEdit(file); }} />
+            {file.is_renamed && (
+              <RowBtn label="Revert" color={COLOR.gray600} onClick={(e) => { e.stopPropagation(); onRevertClick(file); }} />
+            )}
+            <RowBtn label="Delete" color={COLOR.danger} onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }} />
+          </div>
+        )}
       </div>
 
       {/* Inline delete confirmation */}
@@ -533,6 +535,7 @@ function LayerItem({
         <div style={{ display: "flex", gap: "0.375rem", alignItems: "center", minWidth: 0, overflow: "hidden" }}>
           <Chip text={file.category} />
           {file.geom_type && <Chip text={file.geom_type} outline />}
+          {file.synthetic && <Chip text="Live" />}
         </div>
         <span style={{ ...captionStyle, flexShrink: 0 }}>{formatBytes(file.size)}</span>
       </div>

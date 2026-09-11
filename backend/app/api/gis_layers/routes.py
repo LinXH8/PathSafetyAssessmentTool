@@ -39,6 +39,7 @@ from werkzeug.utils import secure_filename
 
 from app.services.shapefile_validator import ShapefileValidator
 from app.services.gis_layer_definition import get_layer_definition
+from app.services.defects_store import get_defects_store
 import app.services.paths as paths
 
 bp = Blueprint("gis_layers", __name__)
@@ -198,6 +199,88 @@ LAYER_METADATA = {
     "LIDAR_scan":           {"year": "2024", "source": "Surveys & Lands Div"},
     "Defects":              {"year": "2024", "source": "PATH"},
 }
+
+# ── Synthetic "live" layers ──────────────────────────────────────────────
+# Defects and Slippery Surface aren't real shapefiles on disk — they're built
+# on demand from the same `DefectsStore` (generate-summary-1Q 2.xlsx) that
+# already feeds the autocoding engine for "Major Surface Deformation or Drain
+# Opening" / "Defect Type" / "Loose or slippery surface" (see
+# app/api/projects/autocode.py). They're listed here purely for GIS viewing,
+# under the "Auto-coding" filter bucket, using the same `type_of_defect`
+# classification autocode.py already applies: "algae" -> slippery surface,
+# "faded marking" -> a delineation record (not a defect at all, excluded from
+# both layers), everything else -> a surface defect.
+_SYNTHETIC_LAYERS: dict = {
+    "Defects/Defects.livedata": {
+        "name": "Defects",
+        "base_name": "Defects",
+        "category": "Defects",
+        "affects": "Major Surface Deformation, Defect Type",
+        "kind": "defects",
+    },
+    "Defects/Slippery Surface.livedata": {
+        "name": "Slippery Surface",
+        "base_name": "Slippery Surface",
+        "category": "Defects",
+        "affects": "Loose/Slippery Surface",
+        "kind": "slippery",
+    },
+}
+
+
+def _classify_defect_kind(type_of_defect: str) -> str | None:
+    dt = (type_of_defect or "").strip().lower()
+    if dt == "algae":
+        return "slippery"
+    if dt == "faded marking":
+        return None
+    return "defects"
+
+
+def _synthetic_layer_info(rel_path: str, meta: dict) -> dict:
+    layer_meta = LAYER_METADATA.get("Defects", {})
+    return {
+        "name": meta["name"],
+        "filename": meta["name"],
+        "base_name": meta["base_name"],
+        "path": rel_path,
+        "category": meta["category"],
+        "size": 0,
+        "type": "Live Data",
+        "geom_type": "Point",
+        "year": layer_meta.get("year", "2024"),
+        "source": layer_meta.get("source", "PATH"),
+        "required_columns": "None (Proximity)",
+        "affects": meta["affects"],
+        "is_custom_metadata": False,
+        "user_created": False,
+        "original_name": meta["name"],
+        "is_renamed": False,
+        "synthetic": True,
+    }
+
+
+def _synthetic_defects_geojson(kind: str):
+    try:
+        records = get_defects_store().list_all()
+    except FileNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 404
+
+    features = []
+    for d in records:
+        if _classify_defect_kind(d["type_of_defect"]) != kind:
+            continue
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [d["lon"], d["lat"]]},
+            "properties": {
+                "type_of_defect": d["type_of_defect"],
+                "location": d["location"],
+                "date_of_inspection": d["date_of_inspection"],
+            },
+        })
+    return jsonify({"type": "FeatureCollection", "features": features})
+
 
 def _extract_xml_yearStr(shp_path: Path) -> str | None:
     """Attempt to parse `<CreaDate>`, `<ModDate>`, `<SyncDate>`, or `<pubDate>` from native XML metadata."""
@@ -526,7 +609,9 @@ def list_shapefiles():
 
     roots = [r for r in _shp_roots() if r.exists()]
     if not roots:
-        return jsonify([])
+        results = [_synthetic_layer_info(rel_path, meta) for rel_path, meta in _SYNTHETIC_LAYERS.items()]
+        _LIST_CACHE = results
+        return jsonify(results)
 
     originals = _load_originals()
     overrides = _load_metadata_overrides()
@@ -566,6 +651,9 @@ def list_shapefiles():
 
     if changed:
         _save_originals(originals)
+
+    for rel_path, meta in _SYNTHETIC_LAYERS.items():
+        results.append(_synthetic_layer_info(rel_path, meta))
 
     _LIST_CACHE = results
     return jsonify(results)
@@ -654,6 +742,9 @@ def get_geojson():
 
     if not rel:
         return jsonify({"error": "path is required"}), 400
+
+    if rel in _SYNTHETIC_LAYERS:
+        return _synthetic_defects_geojson(_SYNTHETIC_LAYERS[rel]["kind"])
 
     if Path(rel).name.startswith("._"):
         return jsonify({"error": "Not a valid shapefile"}), 400

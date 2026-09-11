@@ -286,15 +286,17 @@ export default function GisLayersLayoutV1(vm: GisLayersViewModel) {
                               {file.name}
                             </Text>
                             <HStack gap="1" flexShrink={0} onClick={(e) => e.stopPropagation()}>
-                              <Button
-                                size="xs"
-                                variant="ghost"
-                                colorPalette="blue"
-                                onClick={(e) => { e.stopPropagation(); onStartEdit(file); }}
-                                title="Rename shapefile"
-                              >
-                                Edit
-                              </Button>
+                              {!file.synthetic && (
+                                <Button
+                                  size="xs"
+                                  variant="ghost"
+                                  colorPalette="blue"
+                                  onClick={(e) => { e.stopPropagation(); onStartEdit(file); }}
+                                  title="Rename shapefile"
+                                >
+                                  Edit
+                                </Button>
+                              )}
                               <Button
                                 size="xs"
                                 variant="ghost"
@@ -305,7 +307,7 @@ export default function GisLayersLayoutV1(vm: GisLayersViewModel) {
                               >
                                 Params
                               </Button>
-                              {file.is_renamed && (
+                              {!file.synthetic && file.is_renamed && (
                                 <Button
                                   size="xs"
                                   variant={confirmRevertPath === file.path ? "solid" : "ghost"}
@@ -316,15 +318,17 @@ export default function GisLayersLayoutV1(vm: GisLayersViewModel) {
                                   Revert
                                 </Button>
                               )}
-                              <Button
-                                size="xs"
-                                variant={confirmDeletePath === file.path ? "solid" : "ghost"}
-                                colorPalette="red"
-                                onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }}
-                                title="Delete shapefile"
-                              >
-                                Delete
-                              </Button>
+                              {!file.synthetic && (
+                                <Button
+                                  size="xs"
+                                  variant={confirmDeletePath === file.path ? "solid" : "ghost"}
+                                  colorPalette="red"
+                                  onClick={(e) => { e.stopPropagation(); onDeleteClick(file); }}
+                                  title="Delete shapefile"
+                                >
+                                  Delete
+                                </Button>
+                              )}
                             </HStack>
                           </>
                         )}
@@ -375,6 +379,9 @@ export default function GisLayersLayoutV1(vm: GisLayersViewModel) {
                           <Badge colorPalette="blue" variant="subtle" size="sm">{file.category}</Badge>
                           {file.geom_type && (
                             <Badge colorPalette="purple" variant="outline" size="sm">{file.geom_type}</Badge>
+                          )}
+                          {file.synthetic && (
+                            <Badge colorPalette="green" variant="subtle" size="sm">Live</Badge>
                           )}
                         </HStack>
                         <Text>{formatBytes(file.size)}</Text>

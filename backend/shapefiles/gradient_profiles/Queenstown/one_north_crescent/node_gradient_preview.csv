@@ -1,0 +1,4 @@
+path_key,fid,Image Reference,Road Name,segment_length_m,assigned_chainage_m,profile_chainage_m,elevation_m,gradient_pct,Grade
+one_north_crescent,1,,ONE-NORTH CRESCENT,154.287,77.143,78.0,17.206,,
+one_north_crescent,2,,ONE-NORTH CRESCENT,324.093,316.333,316.0,12.538,,
+one_north_crescent,3,,ONE-NORTH CRESCENT,58.014,632.101,632.0,18.436,,

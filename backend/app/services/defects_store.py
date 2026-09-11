@@ -12,7 +12,7 @@ from app.config import Config
 CRS_WGS84 = "EPSG:4326"
 CRS_METRIC = "EPSG:3414"
 
-DEFECT_FILE = Path(Config.DATA_DIR).parent / "generate-summary-1Q 2.xlsx"
+DEFECT_FILE = Path(Config.DATA_DIR) / "defects" / "defect_summary.xlsx"
 HEADER_ROW = 9  # zero-indexed; row 10 in the sheet
 
 
@@ -104,6 +104,20 @@ class DefectsStore:
                 if self._gdf is None:
                     self._gdf = self._load()
         return self._gdf
+
+    def list_all(self) -> list[dict]:
+        """Return every loaded defect record, unfiltered by location."""
+        gdf = self.ensure_loaded()
+        return [
+            {
+                "lat": float(row["lat"]),
+                "lon": float(row["lon"]),
+                "type_of_defect": row["type_of_defect"],
+                "location": row["location"],
+                "date_of_inspection": row["date_of_inspection"],
+            }
+            for _, row in gdf.iterrows()
+        ]
 
     def query_near_line(self, geom_metric, radius_m: float) -> list[dict]:
         """Return defects within radius_m metres of geom_metric (already in EPSG:3414)."""

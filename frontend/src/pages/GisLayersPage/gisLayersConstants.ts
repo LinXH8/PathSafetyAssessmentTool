@@ -85,7 +85,8 @@ export const getLayerPurpose = (file: { category: string; base_name: string }): 
     cat.startsWith("landuse") ||
     cat.startsWith("central") ||
     cat === "speed_limit" ||
-    cat === "linkid_shape_file"
+    cat === "linkid_shape_file" ||
+    cat === "defects"
   ) return "autocoding";
 
   // Analysis: everything else — all layers shown as overlays in the Analysis page
