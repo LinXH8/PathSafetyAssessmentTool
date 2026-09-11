@@ -47,6 +47,7 @@ $required = @(
     "PSAT\backend\app\api\profiles",
     "PSAT\backend\models",
     "PSAT\backend\shapefiles",
+    "PSAT\backend\posthog.json",     # usage analytics key (build_bundle step 5c)
     "PSAT\webui\index.html",
     "PSAT\launcher\launch_psat.py",
     "PSAT\PSAT Logo.ico",            # shortcut icon: what install_psat.ps1 points the .lnk at

@@ -3,8 +3,10 @@ from __future__ import annotations
 import datetime as dt
 import json
 import os
+import queue
 import sqlite3
 import threading
+import time
 import uuid
 from collections import Counter
 from pathlib import Path
@@ -134,10 +136,82 @@ _POSTHOG_INIT_DONE = False
 _POSTHOG_DEFAULT_HOST = "https://eu.i.posthog.com"
 
 
+def _shipped_posthog_config_path() -> Path:
+    # backend/posthog.json, written into the desktop bundle by build_bundle.*.
+    # The installed app has no .env and no env vars of its own; this file rides
+    # inside the `backend` update component, so updates deliver it to machines
+    # that are already installed.
+    return Path(__file__).resolve().parents[2] / "posthog.json"
+
+
 def _load_posthog_config() -> dict:
-    api_key = str(os.getenv("PSAT_POSTHOG_API_KEY") or "").strip()
-    host = str(os.getenv("PSAT_POSTHOG_HOST") or "").strip() or _POSTHOG_DEFAULT_HOST
+    file_config: dict = {}
+    config_path = _shipped_posthog_config_path()
+    if config_path.exists():
+        try:
+            # utf-8-sig: tolerate a BOM from a hand-edited file on Windows.
+            parsed = json.loads(config_path.read_text(encoding="utf-8-sig"))
+            if isinstance(parsed, dict):
+                file_config = parsed
+        except Exception as exc:
+            print(f"[Telemetry] Ignoring unreadable {config_path.name}: {exc}", flush=True)
+
+    # Environment wins (cloud: docker-compose). Note compose passes an EMPTY string
+    # when the key is unset, which correctly falls through to the file.
+    api_key = str(os.getenv("PSAT_POSTHOG_API_KEY") or file_config.get("api_key") or "").strip()
+    host = (
+        str(os.getenv("PSAT_POSTHOG_HOST") or file_config.get("host") or "").strip()
+        or _POSTHOG_DEFAULT_HOST
+    )
     return {"enabled": bool(api_key), "api_key": api_key or None, "host": host}
+
+
+class _HttpPosthogClient:
+    """Minimal stand-in for ``posthog.Posthog`` when the package is missing.
+
+    Desktop bundles frozen before ``posthog`` joined requirements.txt do not have
+    it, and re-shipping the ~1.5 GB python component just for analytics is not
+    worth it -- ``requests`` is already there. Events go to PostHog's single-event
+    capture endpoint from one daemon thread, so a slow or unreachable PostHog
+    never blocks a request.
+    """
+
+    _MAX_QUEUED = 10_000
+
+    def __init__(self, api_key: str, host: str) -> None:
+        self._api_key = api_key
+        self._url = host.rstrip("/") + "/i/v0/e/"
+        self._queue: queue.Queue = queue.Queue(maxsize=self._MAX_QUEUED)
+        threading.Thread(target=self._drain, name="posthog-http", daemon=True).start()
+
+    def capture(self, *, distinct_id: str, event: str, properties: dict | None = None) -> None:
+        body = {
+            "api_key": self._api_key,
+            "event": event,
+            "distinct_id": distinct_id,
+            "properties": {**(properties or {}), "$lib": "psat-http"},
+            "timestamp": _isoformat(_utc_now()),
+        }
+        try:
+            self._queue.put_nowait(body)
+        except queue.Full:
+            pass  # PostHog unreachable for a long time; SQLite still has the event.
+
+    def _drain(self) -> None:
+        while True:
+            body = self._queue.get()
+            try:
+                requests.post(self._url, json=body, timeout=10).raise_for_status()
+            except Exception as exc:
+                print(f"[Telemetry] PostHog send failed: {exc}", flush=True)
+            finally:
+                self._queue.task_done()
+
+    def shutdown(self) -> None:
+        # Bounded: exiting the app must never hang on the network.
+        deadline = time.monotonic() + 5
+        while self._queue.unfinished_tasks and time.monotonic() < deadline:
+            time.sleep(0.1)
 
 
 def _get_posthog_client():
@@ -159,16 +233,19 @@ def _get_posthog_client():
         try:
             from posthog import Posthog
         except Exception as exc:
-            print(f"[Telemetry] PostHog configured but the 'posthog' package is missing: {exc}", flush=True)
-            return None
+            print(f"[Telemetry] 'posthog' package unavailable ({exc}); using the HTTP fallback", flush=True)
+            Posthog = None
 
         try:
-            _POSTHOG_CLIENT = Posthog(
-                project_api_key=config["api_key"],
-                host=config["host"],
-                # Never let analytics take the app down or slow a request.
-                on_error=lambda exc, _batch=None: print(f"[Telemetry] PostHog send failed: {exc}", flush=True),
-            )
+            if Posthog is None:
+                _POSTHOG_CLIENT = _HttpPosthogClient(config["api_key"], config["host"])
+            else:
+                _POSTHOG_CLIENT = Posthog(
+                    project_api_key=config["api_key"],
+                    host=config["host"],
+                    # Never let analytics take the app down or slow a request.
+                    on_error=lambda exc, _batch=None: print(f"[Telemetry] PostHog send failed: {exc}", flush=True),
+                )
         except Exception as exc:
             print(f"[Telemetry] PostHog client init failed: {exc}", flush=True)
             _POSTHOG_CLIENT = None

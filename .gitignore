@@ -132,3 +132,5 @@ docs/archive/.DS_Store
 # Local secrets / deploy config (PostHog key etc). Never commit -- repo is public.
 .env
 .env.local
+# Written into the desktop bundle by scripts/bundle/build_bundle.* from .env.
+backend/posthog.json

@@ -188,6 +188,34 @@ if (Test-Path $iconSrc) {
     Die "missing shortcut icon: $iconSrc"
 }
 
+# ── 5c. Usage analytics key ──────────────────────────────────────────────────
+# The installed app has no .env and no environment of its own, so without this
+# file its PostHog mirror stays off (local SQLite telemetry works regardless).
+# It goes INSIDE backend/ because `backend` is an update component -- that is how
+# the key reaches machines that are already installed. The component is replaced
+# wholesale on update, so a build without the key would switch analytics off on
+# every machine that takes the update: hence a hard error, not a warning.
+# Source: $env:PSAT_POSTHOG_API_KEY, else the repo-root .env (gitignored).
+Step "Usage analytics key"
+function Get-DotEnvValue($name) {
+    $envFile = Join-Path $RepoRoot ".env"
+    if (-not (Test-Path $envFile)) { return $null }
+    $value = $null
+    foreach ($line in Get-Content $envFile) {
+        if ($line -match "^\s*$name\s*=\s*(.*?)\s*$") { $value = $Matches[1].Trim('"').Trim("'") }
+    }
+    return $value
+}
+$phKey  = if ($env:PSAT_POSTHOG_API_KEY) { $env:PSAT_POSTHOG_API_KEY } else { Get-DotEnvValue "PSAT_POSTHOG_API_KEY" }
+$phHost = if ($env:PSAT_POSTHOG_HOST)    { $env:PSAT_POSTHOG_HOST }    else { Get-DotEnvValue "PSAT_POSTHOG_HOST" }
+if (-not $phKey) { Die "no PostHog key: set PSAT_POSTHOG_API_KEY or add it to $RepoRoot\.env" }
+$phConfig = @{ api_key = $phKey }
+if ($phHost) { $phConfig.host = $phHost }
+# No BOM: Windows PowerShell's -Encoding utf8 writes one.
+[System.IO.File]::WriteAllText((Join-Path $backendDst "posthog.json"),
+    ($phConfig | ConvertTo-Json -Compress), (New-Object System.Text.UTF8Encoding $false))
+Info "backend\posthog.json"
+
 # ── 6. Verify ────────────────────────────────────────────────────────────────
 # A bundle that is merely "assembled" is not a bundle that works. An earlier
 # version of this script silently dropped the scoring model and the profiles
@@ -209,6 +237,7 @@ $required = @(
     "backend\models",
     "backend\shapefiles",
     "backend\seed_profiles",                              # profiles shipped with the app
+    "backend\posthog.json",                               # usage analytics key (step 5c)
     "webui\index.html",
     "webui\assets",
     "launcher\launch_psat.py",

@@ -192,6 +192,29 @@ cp -f "$icon_src" "$BUNDLE_ROOT/PSAT Logo.ico"
 cp -f "$icon_src" "$LAUNCHER_DST/PSAT Logo.ico"
 info "PSAT Logo.ico (bundle root + launcher/)"
 
+# ── 5c. Usage analytics key ───────────────────────────────────────────────────
+# The installed app has no .env and no environment of its own, so without this
+# file its PostHog mirror stays off. It goes INSIDE backend/ because `backend` is
+# an update component -- the only way the key reaches already-installed machines.
+# That component is replaced wholesale on update, so a build without the key would
+# switch analytics off fleet-wide: hard error. Same rule as build_bundle.ps1.
+# Source: $PSAT_POSTHOG_API_KEY, else the repo-root .env (gitignored).
+step "Usage analytics key"
+dotenv_value() {
+    [[ -f "$REPO_ROOT/.env" ]] || return 0
+    sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*//p" "$REPO_ROOT/.env" | tail -n1 \
+        | tr -d '\r' | sed -e 's/[[:space:]]*$//' -e "s/^[\"']//" -e "s/[\"']\$//"
+}
+ph_key="${PSAT_POSTHOG_API_KEY:-$(dotenv_value PSAT_POSTHOG_API_KEY)}"
+ph_host="${PSAT_POSTHOG_HOST:-$(dotenv_value PSAT_POSTHOG_HOST)}"
+[[ -n "$ph_key" ]] || die "no PostHog key: set PSAT_POSTHOG_API_KEY or add it to $REPO_ROOT/.env"
+if [[ -n "$ph_host" ]]; then
+    printf '{"api_key": "%s", "host": "%s"}\n' "$ph_key" "$ph_host" > "$BACKEND_DST/posthog.json"
+else
+    printf '{"api_key": "%s"}\n' "$ph_key" > "$BACKEND_DST/posthog.json"
+fi
+info "backend/posthog.json"
+
 # ── 6. Verify ─────────────────────────────────────────────────────────────────
 step "Verify"
 required=( "backend/app.py" "backend/version.json"
@@ -199,7 +222,7 @@ required=( "backend/app.py" "backend/version.json"
     "backend/app/services/data/stm_v214_treatments.json"
     "backend/app/api/profiles" "backend/app/api/tiles.py" "backend/seed_profiles"
     "backend/app/services/paths.py" "launcher/launch_psat.py" "PSAT.command"
-    "PSAT Logo.ico" "launcher/PSAT Logo.ico" )
+    "PSAT Logo.ico" "launcher/PSAT Logo.ico" "backend/posthog.json" )
 [[ "$NO_PYTHON" -eq 0 ]] && required+=( "python/bin/python" "python/share/proj" "python/share/gdal" )
 [[ "$SKIP_GIS" -eq 0 ]]  && required+=( "backend/models" "backend/shapefiles" )
 [[ "$NO_WEBUI" -eq 0 && -f "$REPO_ROOT/frontend/dist/index.html" ]] && required+=( "webui/index.html" "webui/assets" )

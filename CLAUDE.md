@@ -936,6 +936,38 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.
 
+### Desktop App: PostHog Tracking Silently Off On Installed Laptops (2026-09-11)
+
+**Symptom:** Users on the cloud deployment showed up in PostHog; users on the installed
+desktop app never did, whether installed before or after the key was added.
+
+**Root causes (two, both silent):**
+
+1. **No key on installed machines.** The PostHog key only ever lived in env vars / the
+   repo-root `.env` (gitignored). The installer and update components never carried it, so
+   `_load_posthog_config()` saw no key and the mirror stayed off. Local SQLite telemetry
+   kept working, so nothing looked broken.
+2. **No `posthog` package.** It joined `requirements.txt` on 2026-09-08; bundles frozen
+   before that lack it, and the old code returned `None` on `ImportError`. (Note too that
+   `python-dotenv` is not in requirements, so `app.py`'s `.env` loading is a no-op in a bundle.)
+
+**Fix:**
+
+- `build_bundle.ps1` / `.sh` step **5c** write `<bundle>/backend/posthog.json`
+  (`{"api_key", "host"}`) from `PSAT_POSTHOG_API_KEY`/`PSAT_POSTHOG_HOST` or the repo-root
+  `.env`, and **fail the build without a key**. It lives inside `backend/` because that is an
+  update component (bundle-root files never reach installed machines), and because the
+  component is replaced wholesale, one keyless release would switch analytics off
+  fleet-wide. Gitignored (`backend/posthog.json`) -- the repo is public.
+- `telemetry_store._load_posthog_config()` reads that file; env vars still win (cloud).
+- `telemetry_store._HttpPosthogClient` -- a `requests`-based fallback (queue + one daemon
+  thread, POST to `<host>/i/v0/e/`) used when `import posthog` fails, so old bundles need a
+  `backend` update only, not the ~1.5 GB `python` component.
+
+**Key files:** `backend/app/services/telemetry_store.py`, `scripts/bundle/build_bundle.ps1`
+& `.sh` (step 5c + verify lists), `scripts/bundle/verify_drive.ps1`,
+`scripts/bundle/RUNBOOK.md` §3c, `.gitignore`.
+
 ### Installer: PSAT Logo Missing From Shortcut + Favicon (2026-09-10)
 
 **Symptom:** After installing PSAT from the installer, the Desktop / Start-menu `PSAT.lnk`

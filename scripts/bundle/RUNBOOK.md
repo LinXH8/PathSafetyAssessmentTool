@@ -112,6 +112,21 @@ They are part of the **app** (install root), and the app copies them into the
 > is excluded from the `backend` component and would move it into `rollback\` on the
 > next backend-only update.
 
+## 3c. Usage analytics (PostHog) key
+
+The build writes `backend\posthog.json` (`{"api_key": ..., "host": ...}`) from
+`PSAT_POSTHOG_API_KEY` / `PSAT_POSTHOG_HOST` in the environment, else from the
+repo-root `.env`. **The build fails without a key**: the file ships inside the
+`backend` component, which is replaced wholesale on update, so one keyless release
+would silently switch analytics off on every installed machine. The file is
+gitignored -- the repo is public.
+
+* Installed machines pick the key up with the next `backend` update; no reinstall.
+* Bundles frozen before `posthog` joined `requirements.txt` lack the package. The
+  app then sends through a built-in `requests` fallback
+  (`telemetry_store._HttpPosthogClient`), so there is no need to ship `python`.
+* The laptop must reach `eu.i.posthog.com` (or the configured host) over HTTPS.
+
 ---
 
 ## 4. Publish an update
