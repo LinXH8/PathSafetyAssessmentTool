@@ -125,10 +125,10 @@ def _load_remote_export_config() -> dict:
 # stakeholders can read DAU/WAU from PostHog's built-in insights instead of
 # someone running export_weekly_activity_report.py by hand.
 #
-# PRIVACY: we deliberately send only the opaque profile_id as the person
-# identifier, plus division. Usernames and recovery emails are NEVER sent --
-# see _posthog_capture(). Keep it that way; exporting staff identities to a
-# third party is a separate governance decision.
+# PRIVACY: the person identifier is the opaque profile_id. Division, email and
+# username are sent as PostHog PERSON properties ($set) so reports name real
+# people -- see _posthog_capture(). The local SQLite DB never stores email or
+# username.
 
 _POSTHOG_LOCK = threading.Lock()
 _POSTHOG_CLIENT = None
@@ -299,7 +299,10 @@ def _posthog_capture(
     # moment someone changes their email, and every event already recorded under
     # the old id would be orphaned onto a separate person. $set relabels the
     # existing person instead, so history is preserved.
-    person_properties = {}
+    #
+    # division rides on every event (it's already in hand, no disk read), so the
+    # person's division stays current and cohorts/person filters can use it.
+    person_properties = {"division": division}
     if email:
         person_properties["email"] = email
     if username:
