@@ -79,6 +79,27 @@ def _profile_error_status(exc: ValueError) -> int:
     return 404 if str(exc) == "Profile not found" else 400
 
 
+def _permission_error_response(exc: PermissionError):
+    """401 for a wrong PIN/email; 429 + Retry-After while the profile is locked out."""
+    if isinstance(exc, profile_store.PinLockedError):
+        response = jsonify({"error": str(exc), "retry_after": exc.retry_after})
+        response.status_code = 429
+        response.headers["Retry-After"] = str(exc.retry_after)
+        return response
+    return jsonify({"error": str(exc)}), 401
+
+
+def _forbid_other_profile(profile_id: str):
+    """403 unless the session is logged in as ``profile_id``, else None.
+
+    The login gate already guarantees *a* session; this makes sure it is the
+    profile being changed. The PIN is still required on top, as confirmation.
+    """
+    if profile_store.get_active_profile_id() != profile_id:
+        return jsonify({"error": "You can only change the profile you are logged in as"}), 403
+    return None
+
+
 @bp.get("")
 def list_profiles():
     return jsonify(profile_store.get_overview())
@@ -110,7 +131,7 @@ def login_profile():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 404
     except PermissionError as exc:
-        return jsonify({"error": str(exc)}), 401
+        return _permission_error_response(exc)
 
     _record_profile_event("profile_login", profile)
 
@@ -165,6 +186,9 @@ def record_profile_activity():
 
 @bp.patch("/<profile_id>")
 def update_profile(profile_id: str):
+    if (forbidden := _forbid_other_profile(profile_id)) is not None:
+        return forbidden
+
     data = request.get_json(silent=True) or {}
     # `email` is only forwarded when the client explicitly sends the key, so an
     # omitted field leaves the recovery email untouched.
@@ -180,7 +204,7 @@ def update_profile(profile_id: str):
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
     except PermissionError as exc:
-        return jsonify({"error": str(exc)}), 401
+        return _permission_error_response(exc)
 
     _record_profile_event("profile_updated", profile)
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
@@ -188,6 +212,9 @@ def update_profile(profile_id: str):
 
 @bp.post("/<profile_id>/reset-pin")
 def reset_profile_pin(profile_id: str):
+    if (forbidden := _forbid_other_profile(profile_id)) is not None:
+        return forbidden
+
     data = request.get_json(silent=True) or {}
     try:
         profile = profile_store.reset_profile_pin(
@@ -198,7 +225,7 @@ def reset_profile_pin(profile_id: str):
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
     except PermissionError as exc:
-        return jsonify({"error": str(exc)}), 401
+        return _permission_error_response(exc)
 
     _record_profile_event("profile_pin_reset", profile)
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
@@ -216,7 +243,7 @@ def recover_profile_pin(profile_id: str):
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
     except PermissionError as exc:
-        return jsonify({"error": str(exc)}), 401
+        return _permission_error_response(exc)
 
     _record_profile_event("profile_pin_recovered", profile)
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
@@ -224,13 +251,16 @@ def recover_profile_pin(profile_id: str):
 
 @bp.delete("/<profile_id>")
 def delete_profile(profile_id: str):
+    if (forbidden := _forbid_other_profile(profile_id)) is not None:
+        return forbidden
+
     data = request.get_json(silent=True) or {}
     try:
         profile_store.delete_profile(profile_id, str(data.get("pin") or ""))
     except ValueError as exc:
         return jsonify({"error": str(exc)}), _profile_error_status(exc)
     except PermissionError as exc:
-        return jsonify({"error": str(exc)}), 401
+        return _permission_error_response(exc)
 
     _invalidate_project_context(profile_id)
     return jsonify({"ok": True, "overview": profile_store.get_overview()})

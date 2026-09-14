@@ -10,9 +10,9 @@ per browser:
   ``services/profile_store.py``), so each browser carries its own login;
 * every ``/api/*`` request must carry a session naming an existing profile,
   except the handful of routes needed *before* login: the health probes, the
-  landing page's profile list / create / login, and the PIN- or email-verified
-  profile-management routes the landing page offers ("Manage Selected",
-  "Forgot PIN?").
+  landing page's profile list / create / login, and the email-verified
+  "Forgot PIN?" recovery. Editing, re-PINning or deleting a profile needs a
+  login as that profile.
 
 The signing key comes from ``PSAT_SECRET_KEY`` or, failing that, a random key
 generated once and stored next to the profile registry so a restart does not
@@ -56,10 +56,13 @@ _PUBLIC_ENDPOINTS = frozenset(
         "profiles.create_profile",
         "profiles.login_profile",
         "profiles.logout_profile",
-        "profiles.update_profile",       # requires the current PIN
-        "profiles.reset_profile_pin",    # requires the current PIN
-        "profiles.recover_profile_pin",  # requires the recovery email
-        "profiles.delete_profile",       # requires the PIN
+        # Must stay public: someone who forgot their PIN cannot log in. Guarded
+        # by the private recovery email plus profile_store's attempt limiting.
+        "profiles.recover_profile_pin",
+        # update_profile / reset_profile_pin / delete_profile are deliberately NOT
+        # public: a PIN alone let any anonymous client guess its way into editing
+        # or wiping someone else's profile. Each requires being logged in as that
+        # profile (enforced in the routes).
     }
 )
 

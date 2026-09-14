@@ -9,6 +9,7 @@ import re
 import secrets
 import shutil
 import threading
+import time
 import unicodedata
 from pathlib import Path
 
@@ -337,6 +338,66 @@ def _verify_email(profile: dict, email: str) -> bool:
     return hmac.compare_digest(expected, actual)
 
 
+# --- Credential rate limiting -------------------------------------------------
+# A 4-digit PIN has only 10,000 values, so unlimited guesses make it worthless.
+# Failures are counted per (credential kind, profile id) -- not per client --
+# so an attacker cannot dodge the limit by rotating IPs or cookies. PIN and
+# recovery-email failures are tracked separately: a PIN lockout never blocks
+# "Forgot PIN?". In-memory by design; a backend restart forgives everything.
+_FREE_ATTEMPTS = 5
+_BASE_LOCKOUT_SECONDS = 30
+_MAX_LOCKOUT_SECONDS = 15 * 60
+_ATTEMPTS_LOCK = threading.Lock()
+# (kind, profile_id) -> [consecutive_failures, locked_until_monotonic]
+_FAILED_ATTEMPTS: dict[tuple[str, str], list[float]] = {}
+
+
+class PinLockedError(PermissionError):
+    """Too many consecutive failures; ``retry_after`` is whole seconds to wait."""
+
+    def __init__(self, retry_after: int):
+        self.retry_after = max(1, int(retry_after))
+        if self.retry_after < 60:
+            wait = f"{self.retry_after} second{'s' if self.retry_after != 1 else ''}"
+        else:
+            minutes = -(-self.retry_after // 60)
+            wait = f"{minutes} minute{'s' if minutes != 1 else ''}"
+        super().__init__(f"Too many incorrect attempts. Try again in {wait}.")
+
+
+def _clear_failed_attempts(kind: str, profile_id: str) -> None:
+    with _ATTEMPTS_LOCK:
+        _FAILED_ATTEMPTS.pop((kind, profile_id), None)
+
+
+def _verify_with_limit(kind: str, profile: dict, check) -> bool:
+    """Run ``check()`` unless the profile is locked out; record the outcome.
+
+    Raises ``PinLockedError`` while locked (without running ``check``). After
+    ``_FREE_ATTEMPTS`` consecutive failures each further failure locks the
+    profile for a doubling period, capped at ``_MAX_LOCKOUT_SECONDS``.
+    """
+    key = (kind, str(profile.get("id") or ""))
+    with _ATTEMPTS_LOCK:
+        entry = _FAILED_ATTEMPTS.get(key)
+        now = time.monotonic()
+        if entry and entry[1] > now:
+            raise PinLockedError(-(-(entry[1] - now) // 1))
+
+    ok = bool(check())
+
+    with _ATTEMPTS_LOCK:
+        if ok:
+            _FAILED_ATTEMPTS.pop(key, None)
+            return True
+        entry = _FAILED_ATTEMPTS.setdefault(key, [0, 0.0])
+        entry[0] += 1
+        if entry[0] >= _FREE_ATTEMPTS:
+            lockout = min(_BASE_LOCKOUT_SECONDS * 2 ** (entry[0] - _FREE_ATTEMPTS), _MAX_LOCKOUT_SECONDS)
+            entry[1] = time.monotonic() + lockout
+    return False
+
+
 def _project_root_for_slug(slug: str) -> Path:
     return _profiles_root() / slug / "projects"
 
@@ -554,7 +615,7 @@ def login_profile(profile_id: str, pin: str) -> dict:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
-        if not _verify_pin(profile, pin):
+        if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, pin)):
             raise PermissionError("Invalid PIN")
         _ensure_profile_project_root(profile)
         profile["last_active_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
@@ -592,6 +653,20 @@ def get_profile_projects_root(profile_id: str) -> Path:
         return _ensure_profile_project_root(profile)
 
 
+def get_profile_reports_root(profile_id: str) -> Path:
+    """``<profiles>/<slug>/generated_reports``, created on demand.
+
+    Sits beside ``projects/`` so a profile's reports are private to it and are
+    removed along with the profile directory in ``delete_profile``.
+    """
+    with _STATE_LOCK:
+        state = _load_state()
+        profile = _require_profile(state, str(profile_id or ""))
+        reports_root = _profiles_root() / str(profile.get("slug") or "") / "generated_reports"
+        reports_root.mkdir(parents=True, exist_ok=True)
+        return reports_root
+
+
 def touch_profile_activity(profile_id: str, when: dt.datetime | str | None = None) -> dict:
     with _STATE_LOCK:
         state = _load_state()
@@ -623,7 +698,7 @@ def update_profile(
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
-        if not _verify_pin(profile, current_pin):
+        if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, current_pin)):
             raise PermissionError("Invalid current PIN")
 
         _ensure_unique_profile_name(
@@ -647,7 +722,7 @@ def reset_profile_pin(profile_id: str, current_pin: str, new_pin: str) -> dict:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
-        if not _verify_pin(profile, current_pin):
+        if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, current_pin)):
             raise PermissionError("Invalid current PIN")
 
         pin_hash, pin_salt = _hash_pin(new_pin)
@@ -669,13 +744,15 @@ def recover_profile_pin(profile_id: str, email: str, new_pin: str) -> dict:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
-        if not _verify_email(profile, email):
+        if not _verify_with_limit("email", profile, lambda: _verify_email(profile, email)):
             raise PermissionError("Email does not match the one on record")
 
         pin_hash, pin_salt = _hash_pin(new_pin)
         profile["pin_hash"] = pin_hash
         profile["pin_salt"] = pin_salt
         _save_state(state)
+        # A verified recovery lifts any PIN lockout so the new PIN works at once.
+        _clear_failed_attempts("pin", str(profile.get("id") or ""))
         return _serialize_profile(profile)
 
 
@@ -798,7 +875,7 @@ def delete_profile(profile_id: str, pin: str) -> None:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
-        if not _verify_pin(profile, pin):
+        if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, pin)):
             raise PermissionError("Invalid PIN")
 
         slug = str(profile.get("slug") or "")

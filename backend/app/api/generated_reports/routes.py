@@ -5,17 +5,23 @@ from pathlib import Path
 from flask import Blueprint, jsonify, request, send_from_directory
 
 import app.services.paths as paths
+from app.services import profile_store
 
 bp = Blueprint("generated_reports", __name__)
 
 
 def _reports_dir() -> Path:
-    """Writable export dir.
+    """The calling profile's report folder: ``profiles/<slug>/generated_reports``.
 
-    Resolved lazily (not at import time) so it follows the user-data root:
-    ``<repo>/Generated Reports`` in a source checkout, the per-user data dir in
-    a packaged install. See services/paths.py.
+    Each profile lists, opens, renames and deletes only its own reports. The
+    login gate guarantees a session on these routes; the shared
+    ``Generated Reports`` root (see services/paths.py) is only used without one
+    (the PSAT_AUTH_DISABLED maintainer pipeline). Reports saved there before
+    per-profile folders existed are left on disk, unlisted.
     """
+    profile_id = profile_store.get_active_profile_id()
+    if profile_id:
+        return profile_store.get_profile_reports_root(profile_id).resolve()
     return paths.generated_reports_dir().resolve()
 
 

@@ -37,6 +37,8 @@ export default function LandingPage() {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const [loginPin, setLoginPin] = useState("");
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  // Why the PIN dialog is open: starting the app, or logging in so the profile can be managed.
+  const [pinDialogPurpose, setPinDialogPurpose] = useState<"start" | "manage">("start");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [manageDialogOpen, setManageDialogOpen] = useState(false);
   const [newProfileUsername, setNewProfileUsername] = useState("");
@@ -89,6 +91,8 @@ export default function LandingPage() {
     return Number.isNaN(parsed.getTime()) ? selectedProfile.last_active_at : parsed.toLocaleString();
   }, [selectedProfile]);
 
+  // The backend only lets a session edit, re-PIN or delete the profile it is logged in as.
+  const isSelectedProfileActive = Boolean(selectedProfile && activeProfile && selectedProfile.id === activeProfile.id);
   const canOpenFirstProfileSetup = profiles.length === 0 && busyAction === null && !loading;
   const canManageSelectedProfile = Boolean(selectedProfile && busyAction === null && !loading);
   const canUseStartButton = Boolean((selectedProfile || canOpenFirstProfileSetup) && busyAction === null && !loading);
@@ -137,11 +141,22 @@ export default function LandingPage() {
       toaster.create({ description: "Select a profile first.", type: "warning" });
       return;
     }
-    setManageProfileUsername(selectedProfile.username || selectedProfile.name);
+    if (!isSelectedProfileActive) {
+      // Managing a profile requires being logged in as it: ask for the PIN
+      // first, and handleLogin opens the manage dialog once that succeeds.
+      setPinDialogPurpose("manage");
+      openPinDialog();
+      return;
+    }
+    showManageDialog(selectedProfile);
+  };
+
+  const showManageDialog = (profile: { username: string; name: string; division: string }) => {
+    setManageProfileUsername(profile.username || profile.name);
     // The recovery email is private and never returned by the API; leave the
     // field blank so the user can optionally set a new one.
     setManageProfileEmail("");
-    setManageProfileDivision(selectedProfile.division);
+    setManageProfileDivision(profile.division);
     setManageCurrentPin("");
     setManageNewPin("");
     setManageDialogOpen(true);
@@ -157,6 +172,10 @@ export default function LandingPage() {
   const openDeleteDialog = () => {
     if (!selectedProfile) {
       toaster.create({ description: "Select a profile first.", type: "warning" });
+      return;
+    }
+    if (!isSelectedProfileActive) {
+      toaster.create({ description: "Log in as this profile to delete it.", type: "warning" });
       return;
     }
     setDeletePin("");
@@ -176,7 +195,7 @@ export default function LandingPage() {
     }
     if (!selectedProfile.has_email) {
       toaster.create({
-        description: "This profile has no recovery email on file. Reset the PIN from Manage Selected instead.",
+        description: "This profile has no recovery email on file, so its PIN cannot be recovered here.",
         type: "warning",
       });
       return;
@@ -250,6 +269,7 @@ export default function LandingPage() {
     }
 
     if (selectedProfile && busyAction === null) {
+      setPinDialogPurpose("start");
       openPinDialog();
     }
   };
@@ -261,14 +281,18 @@ export default function LandingPage() {
     }
     try {
       setBusyAction("login");
-      await login(selectedProfile.id, loginPin);
+      const result = await login(selectedProfile.id, loginPin);
       closePinDialog();
       toaster.create({
         title: "Profile ready",
         description: `Logged in as ${selectedProfileLabel}.`,
         type: "success",
       });
-      navigate("/home");
+      if (pinDialogPurpose === "manage") {
+        showManageDialog(result.active_profile);
+      } else {
+        navigate("/home");
+      }
     } catch (nextError) {
       toaster.create({
         title: "Login failed",
@@ -394,8 +418,7 @@ export default function LandingPage() {
                 type="button"
                 className="profile-manage-btn"
                 onClick={openManageDialog}
-                disabled={!canManageSelectedProfile}
-              >
+                disabled={!canManageSelectedProfile}              >
                 Manage Selected
               </button>
               <button
@@ -491,13 +514,18 @@ export default function LandingPage() {
               disabled={loginPin.trim().length === 0 || busyAction === "login"}
               style={primaryBtnStyle(loginPin.trim().length === 0 || busyAction === "login")}
             >
-              {busyAction === "login" ? "Starting…" : `Start As ${selectedProfileLabel || "Profile"}`}
+              {busyAction === "login"
+                ? (pinDialogPurpose === "manage" ? "Logging in…" : "Starting…")
+                : pinDialogPurpose === "manage"
+                  ? "Log In to Manage"
+                  : `Start As ${selectedProfileLabel || "Profile"}`}
             </button>
           </>
         }
       >
         <p style={modalCopyStyle}>
-          Enter the PIN for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong> to continue.
+          Enter the PIN for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong>{" "}
+          {pinDialogPurpose === "manage" ? "to log in and manage this profile." : "to continue."}
         </p>
         <input
           id="profilePin"
@@ -682,8 +710,7 @@ export default function LandingPage() {
       >
         <p style={modalCopyStyle}>
           Update the selected profile details or rotate the PIN. The current PIN is required for both actions.
-          Leave the recovery email blank to keep the current one.
-        </p>
+          Leave the recovery email blank to keep the current one.        </p>
         <p style={{ fontFamily: FONT, fontSize: 12, lineHeight: 1.45, color: COLOR.gray500, margin: 0 }}>
           Last active: {selectedProfileLastActive}
         </p>
