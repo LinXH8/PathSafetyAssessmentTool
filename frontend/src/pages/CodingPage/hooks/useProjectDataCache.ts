@@ -18,6 +18,17 @@ import type { AttrMappings, ProjectDataState } from "../codingConstants";
 import { migrateAttrRows } from "../codingHelpers";
 
 /**
+ * How many segment images to warm the browser cache with before showing the
+ * Coding page. Deliberately small: preloading is a convenience for the first
+ * few segments, not a correctness requirement, and an unbounded preload made
+ * large projects (216k segments) unopenable.
+ */
+const IMAGE_PRELOAD_LIMIT = 24;
+
+/** Hard ceiling on the preload wait; past this the page renders regardless. */
+const IMAGE_PRELOAD_TIMEOUT_MS = 8000;
+
+/**
  * Module-level singletons that back useProjectDataCache. They live at module scope
  * (NOT React state) so the loaded project data survives navigating away to another
  * page (e.g. Help) and back without a re-fetch, and so async handlers can read the
@@ -252,6 +263,7 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
     }
 
     let cancelled = false;
+    let preloadWatchdog: ReturnType<typeof setTimeout> | undefined;
 
     (async () => {
       try {
@@ -274,9 +286,15 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
         // This is version 0 of the baseline - created when project is first loaded
         // IMPORTANT: Only create baseline if it doesn't exist - don't overwrite on subsequent loads
         try {
-          const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
+          // Ask whether a baseline exists rather than downloading it. The old
+          // code fetched the FULL baseline (every segment, every attribute)
+          // purely to test `rows.length > 0` — on the islandwide project that
+          // is a ~345MB download awaited on every single project load, before
+          // the page can render. The server already exposes a cheap existence
+          // check; it just was not being used.
+          const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline/exists`);
           const baselineData = await res.json();
-          const baselineExists = baselineData?.rows && baselineData.rows.length > 0;
+          const baselineExists = baselineData?.exists === true;
 
           // Only save baseline if it doesn't already exist
           if (!baselineExists) {
@@ -322,21 +340,37 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
 
         const refList = Array.from(uniqueRefs);
 
-        if (refList.length === 0) {
+        // Preload only a small leading window, never the whole project.
+        //
+        // This used to create an <img> for EVERY segment. On the islandwide
+        // project that is 216,660 requests, which the browser issues ~6 at a
+        // time, so the page sat behind "Preloading Images... 0%" effectively
+        // forever — the bar needs 2,167 completed loads just to reach 1%.
+        // Images for segments the user actually opens are fetched on demand
+        // anyway, so this is purely a head start for the first few segments.
+        const toPreload = refList.slice(0, IMAGE_PRELOAD_LIMIT);
+
+        if (toPreload.length === 0) {
           setImagesLoaded(true);
         } else {
+          // Never let preloading gate the page indefinitely: if the images are
+          // slow, missing, or 404 (this project's photos live outside the
+          // project folder), show the page and let them arrive on demand.
+          preloadWatchdog = setTimeout(() => {
+            if (!cancelled) setImagesLoaded(true);
+          }, IMAGE_PRELOAD_TIMEOUT_MS);
+
           let loadedCount = 0;
-          // Cap concurrent requests if needed, but browser handles queueing.
-          // Loop and fetch
-          refList.forEach(ref => {
+          toPreload.forEach(ref => {
             const img = new Image();
             img.src = `/api/projects/${encodeURIComponent(currentProjectName)}/images/${encodeURIComponent(ref)}`;
 
             const onFinish = () => {
               loadedCount++;
-              const pct = Math.round((loadedCount / refList.length) * 100);
+              const pct = Math.round((loadedCount / toPreload.length) * 100);
               setImageLoadingProgress(pct);
-              if (loadedCount >= refList.length) {
+              if (loadedCount >= toPreload.length) {
+                if (preloadWatchdog) clearTimeout(preloadWatchdog);
                 setImagesLoaded(true);
               }
             };
@@ -370,7 +404,10 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      if (preloadWatchdog) clearTimeout(preloadWatchdog);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProjectName]);
 

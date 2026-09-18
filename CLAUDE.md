@@ -3,7 +3,7 @@
 ## Standard Protocols
 
 - **Read actions (Grep, Glob, Read, Bash reads):** Execute without asking for permission — never prompt the user before reading files or searching the codebase.
-- **Commit & push after every action:** After every action or task is completed, always prompt the user asking whether they want to commit and push the changes to the `xh_dev` branch on `origin` before doing so.
+- **Commits:** The user handles all commits and pushes themselves. Do not offer to commit or push — finish the work, say which files changed, and leave it in the working tree. Active branches are `wei-yang` and `main` (`xh_dev` is retired).
 
 ## Project Overview
 Path Safety Assessment Tool for LTA - a React + Python (Flask) application for analyzing cycling path safety using CycleRAP methodology.

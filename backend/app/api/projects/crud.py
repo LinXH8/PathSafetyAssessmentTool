@@ -40,7 +40,7 @@ import datetime
 import math
 import time
 import ipaddress
-from app.services.cyclerap_scoring import calculate_cyclerap_score_native
+from app.services.cyclerap_scoring import calculate_cyclerap_score_native, MODEL_VERSION
 # ---- init guards (thread-safe & error memo) ----
 import threading
 from werkzeug.exceptions import ServiceUnavailable
@@ -274,13 +274,15 @@ def get_latest_attributes(project_name: str, pm, proj, ver):
 @with_project
 def get_geodata(project_name: str, pm, proj):
     """Return the project's GeoData (GeoJSON FeatureCollection)."""
-    import json
     _migrate_legacy_images(pm, project_name, proj)
     gdf = proj.geo_data.df  # GeoPandas GeoDataFrame
 
-    # GeoDataFrame -> GeoJSON string, then to dict for jsonify-friendly output
-    geojson_obj = json.loads(gdf.to_json())
-    return jsonify(geojson_obj)
+    # gdf.to_json() already produces the exact GeoJSON text we want to send, so
+    # ship that string straight out. The previous json.loads(...) -> jsonify(...)
+    # round-trip parsed the whole payload back into Python dicts only to
+    # re-serialize it — two full extra passes over ~70MB on the islandwide
+    # project, for a byte-identical result.
+    return Response(gdf.to_json(), mimetype="application/json")
 
 
 @bp.get("/attribute-mappings")
@@ -521,6 +523,77 @@ def calculate_score(project_name: str, pm, proj, ver):
     # Return results to frontend
     return jsonify({"ok": True, "result_rows": df_to_records(results_df)})
 
+# ── Results freshness fingerprint ────────────────────────────────────────────
+# Sidecar written next to results.csv recording what produced it. Lets GET
+# /results serve the persisted scores instead of rescoring every segment on
+# every request. See get_results() for the full rationale.
+_RESULTS_FINGERPRINT_FILE = "results_meta.json"
+
+
+def _results_fingerprint(ver) -> dict | None:
+    """Describe the inputs that produced results.csv, or None if unavailable.
+
+    Keyed on the attributes file's CONTENT (sha256), not its mtime: seed
+    profiles are copied onto every install, which rewrites timestamps, so an
+    mtime-based fingerprint shipped with the app would miss on every machine
+    and force each user through a full rescore. Hashing 22MB costs ~0.1s
+    against an 11-minute rescore, and is also immune to spurious mtime changes
+    (backup/restore, sync tools) that would otherwise invalidate good results.
+    """
+    try:
+        attrs_path = ver.path / ver.STR_ATTRIBUTES
+        h = hashlib.sha256()
+        with open(attrs_path, "rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                h.update(chunk)
+        return {
+            "model_version": MODEL_VERSION,
+            "attributes_sha256": h.hexdigest(),
+            "rows": int(len(ver.attributes.df)),
+        }
+    except Exception:
+        return None
+
+
+def _results_fingerprint_matches(ver) -> bool:
+    """True when results.csv was produced by this model from these attributes."""
+    current = _results_fingerprint(ver)
+    if current is None:
+        return False
+    try:
+        sidecar = ver.path / _RESULTS_FINGERPRINT_FILE
+        if not sidecar.exists():
+            return False
+        if not (ver.path / ver.STR_RESULTS).exists():
+            return False
+        with open(sidecar, "r", encoding="utf-8") as f:
+            stored = json.load(f)
+    except Exception:
+        return False
+    return all(stored.get(k) == v for k, v in current.items())
+
+
+def _write_results_fingerprint(ver) -> None:
+    """Record the current scoring inputs alongside the results we just wrote."""
+    # Never vouch for attributes that are still only in memory: the fingerprint
+    # hashes attributes.csv on disk, so recording it while the in-memory frame
+    # is dirty would claim the on-disk attributes produced these scores when
+    # they did not. Skipping just means the next read recomputes.
+    try:
+        if ver.attributes is not None and ver.attributes.df_dirty:
+            return
+    except Exception:
+        return
+    current = _results_fingerprint(ver)
+    if current is None:
+        return
+    try:
+        with open(ver.path / _RESULTS_FINGERPRINT_FILE, "w", encoding="utf-8") as f:
+            json.dump(current, f)
+    except Exception as exc:
+        logger.warning("Could not write results fingerprint: %s", exc)
+
+
 @bp.get("/<project_name>/results")
 @with_project(version=True)
 def get_results(project_name: str, pm, proj, ver):
@@ -529,17 +602,44 @@ def get_results(project_name: str, pm, proj, ver):
     Returns the calculated results from the latest version.
     """
     try:
-
-        # Always recompute results on load so the v2.13 scoring formula picks up
-        # any stale per-segment scores written under earlier model versions.
+        # Recompute only when the persisted results are actually stale.
+        #
+        # This endpoint used to rescore the whole project on EVERY read so the
+        # then-new scoring formula would pick up scores written by older model
+        # versions. That migration is real, but running it per-request is
+        # ruinous on large projects: calculate_cyclerap_score_native() iterrows()
+        # over every segment, which is >6 minutes for the 216k-segment islandwide
+        # project — and the follow-up proj.save_all() would additionally mint a
+        # fresh ~48MB version folder on the first read of each calendar day.
+        #
+        # Instead we fingerprint the scoring inputs (model version + a hash of
+        # the attributes file + row count) into a sidecar next to
+        # results.csv. Matching fingerprint => the persisted results were
+        # produced by this model from these attributes, so serve them as-is.
+        # Anything else (missing sidecar, bumped MODEL_VERSION, edited
+        # attributes) falls through to a recompute exactly as before, so each
+        # project still migrates itself once, on first read.
         if ver.attributes and ver.attributes.df is not None and len(ver.attributes.df) > 0:
-            res_df = calculate_cyclerap_score_native(ver.attributes.df)
-            if ver.results is not None:
-                stale = ver.results.df is None or not res_df.equals(ver.results.df)
-                if stale:
+            res_df = None
+            if _results_fingerprint_matches(ver):
+                cached = ver.results.df if ver.results is not None else None
+                if cached is not None and len(cached) == len(ver.attributes.df):
+                    res_df = cached
+
+            if res_df is None:
+                res_df = calculate_cyclerap_score_native(ver.attributes.df)
+                if ver.results is not None:
                     ver.results.df = res_df
                     ver.results.df_dirty = True
-                    proj.save_all()
+                    # Write results in place rather than proj.save_all(): a read
+                    # must never create a new dated version directory.
+                    try:
+                        ver.results.serialize(ver.path / ver.STR_RESULTS)
+                        ver.results.df_dirty = False
+                        _write_results_fingerprint(ver)
+                    except Exception as exc:
+                        logger.warning("Could not persist recomputed results: %s", exc)
+
             return jsonify({
                 "ok": True,
                 "result_rows": df_to_records(res_df)
