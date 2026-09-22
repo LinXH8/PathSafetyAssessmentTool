@@ -279,7 +279,6 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
 
         if (cancelled) return;
 
-
         const attributes = migrateAttrRows(a?.rows ?? []);
 
         // Store original autocode values (baseline) for validation tracking
@@ -415,13 +414,24 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
   const [baselineRows, setBaselineRows] = useState<AttributeRow[]>([]);
   const baselineRowsRef = useRef<AttributeRow[]>([]);
 
-  // Fetch baseline from server when project changes
+  // Fetch baseline from server once the project's main data has loaded.
+  // The baseline is as large as the attributes table (~346MB on islandwide) and
+  // nothing on first paint needs it; fetching it alongside the initial load made
+  // the backend build both at once and delayed the page by a minute or more.
+  // useAutocode.updateAutocodeBaseline fetches it itself if autocode finishes first.
+  const projectReady =
+    !!currentProjectName && !!projectData[currentProjectName] && !projectData[currentProjectName].loading;
+  const baselineFetchedForRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!currentProjectName) return;
+    if (!currentProjectName || !projectReady) return;
+    // Already fetched for this project (e.g. loading flipped during a refresh).
+    if (baselineFetchedForRef.current === currentProjectName) return;
 
     let cancelled = false;
 
-    (async () => {
+    // Short delay so the first image request isn't competing with it either.
+    const timer = setTimeout(async () => {
       try {
         const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
         if (!res.ok) {
@@ -431,14 +441,15 @@ export function useProjectDataCache(currentProjectName: string | null): ProjectD
         const data = await res.json();
         if (!cancelled) {
           setBaselineRows(migrateAttrRows(data.rows || []));
+          baselineFetchedForRef.current = currentProjectName;
         }
       } catch (e) {
         setBaselineRows([]);
       }
-    })();
+    }, 2000);
 
-    return () => { cancelled = true; };
-  }, [currentProjectName]);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [currentProjectName, projectReady]);
 
   // Keep ref in sync so async handlers can read the current baseline without stale closures
   useEffect(() => {

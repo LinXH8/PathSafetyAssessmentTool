@@ -852,6 +852,42 @@ pipeline creation already uses, instead of the shapefile/CSV intersection count.
 - `backend/app/api/projects/gis_queries.py` — `roads_in_polygon()`: real segment count for
   `exists: True` rows
 
+### Islandwide Coding Page Load: Baseline Deferred + Results Fingerprint Shipped (2026-09-22)
+
+**Symptom:** Opening "Autocoded Singapore (Islandwide)" (216,660 segments) in the Coding page
+took ~98s to the first image, and the backend stayed pegged for 20+ minutes afterwards.
+
+**Causes (measured with browser Resource Timing + py-spy):**
+
+1. **Baseline fetched alongside the initial load.** `useProjectDataCache` downloaded the full
+   `/baseline` (~346MB JSON, same size as attributes) at the same moment as attributes and
+   geodata. The backend builds these under one GIL, so geodata/attributes waited behind it.
+2. **Results fingerprint on the wrong version folder.** The 2026-09-18 `results_meta.json`
+   sidecar was added to `versions/20260806`, but `proj.latest()` is `20260811` (newest dated
+   folder). No sidecar ⇒ `GET /results` rescored all rows on every load (~11 min alone). Every
+   page load/refresh started ANOTHER rescore thread (waitress keeps working after the browser
+   aborts, and there is no in-flight de-dup), so 3 reloads = 3 parallel rescores ≈ 70 min.
+
+**Fix (no backend logic changed):**
+
+- `useProjectDataCache.ts` — the baseline effect now waits until the project's main data has
+  loaded (`projectReady`), then fetches after a 2s delay; `baselineFetchedForRef` stops a
+  re-fetch when `loading` flips during `refreshCurrentProject`. First image went 98s → ~40s
+  (warm backend, dev build). The attributes panel's "changed from autocode" markers
+  (`originalRow`) now appear a few seconds after first paint.
+- `useAutocode.ts` — `updateAutocodeBaseline`: if a selective (by-field) autocode finishes
+  before the deferred baseline arrives, it GETs the baseline itself instead of falling through
+  to a full replacement that would bake manual edits into the reference values.
+- Shipped `results_meta.json` in the seed profile's `versions/20260811`. The recomputed
+  `results.csv` was byte-identical to the shipped one, so the sidecar is valid for fresh
+  installs. Existing installs never get seed files re-copied, so they take ONE rescore on the
+  first Islandwide open after updating — don't refresh/reopen while it runs.
+
+**Still open (backend, deliberately not changed):** `PUT /<name>/attributes` rescores ALL rows
+on every save and does not write the fingerprint, so each Islandwide save costs a full rescore
+plus another on the next `GET /results`. The scorer (`calculate_cyclerap_score_native`) is a
+per-row `iterrows()` + `Series.get` loop; py-spy shows the time is pandas row access.
+
 ### Profiles That Ship With the App (Seed Profiles) (2026-09-10)
 
 A profile placed in `backend/seed_profiles/<slug>/` is installed into the user-data

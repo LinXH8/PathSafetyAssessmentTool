@@ -146,12 +146,25 @@ export function useAutocode({
   const updateAutocodeBaseline = useCallback(
     (updatedAttrs: AttributeRow[], fieldsToUpdate?: string[]) => {
       if (!currentProjectName) return;
+      (async () => {
       try {
+        // The baseline is downloaded in the background after the page loads. If a
+        // selective autocode finishes before it arrives, fetch it here rather than
+        // falling through to a full replacement that would bake manual edits into it.
+        let baseRows = baselineRowsRef.current;
+        if (fieldsToUpdate && fieldsToUpdate.length > 0 && baseRows.length === 0) {
+          try {
+            const res = await fetch(`/api/projects/${encodeURIComponent(currentProjectName)}/baseline`);
+            if (res.ok) baseRows = migrateAttrRows((await res.json()).rows || []);
+          } catch {
+            // No baseline available — falls through to the full-replacement path below.
+          }
+        }
         let rowsToSave: AttributeRow[];
-        if (fieldsToUpdate && fieldsToUpdate.length > 0 && baselineRowsRef.current.length > 0) {
+        if (fieldsToUpdate && fieldsToUpdate.length > 0 && baseRows.length > 0) {
           // Only patch the autocoded columns into the existing baseline so that
           // manual edits to other attributes are not baked into the reference values.
-          rowsToSave = baselineRowsRef.current.map((baselineRow, i) => {
+          rowsToSave = baseRows.map((baselineRow, i) => {
             const updatedRow = updatedAttrs[i];
             if (!updatedRow) return baselineRow;
             // AttributeRow (not Record<string, unknown>): spreading an `unknown`-valued
@@ -180,6 +193,7 @@ const patch: AttributeRow = {};
         });
       } catch (e) {
       }
+      })();
     },
   // updateProjectData/setProjectData/baselineRowsRef come from useProjectDataCache and are
   // recreated per render; deliberately omitted to preserve pre-extraction effect timing.
