@@ -591,6 +591,8 @@ export default function CodingLayoutV2(vm: CodingViewModel) {
         feature={geoFeatures[currentIndex]?.geometry?.type === "LineString" ? (geoFeatures[currentIndex] as any) : null}
         index={currentIndex}
         onJump={(i) => gotoPage(i + 1)}
+        geoFeatures={geoFeatures as any}
+        startIndex={0}
         scores={scores}
         filterContext={filterContext}
         verifiedByProject={cameFromPathAnalysis ? verifiedByProject : undefined}

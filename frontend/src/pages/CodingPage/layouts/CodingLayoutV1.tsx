@@ -541,6 +541,8 @@ export default function CodingLayoutV1(vm: CodingViewModel) {
             }
             index={currentIndex}
             onJump={(i) => gotoPage(i + 1)}
+            geoFeatures={geoFeatures as any}
+            startIndex={0}
             scores={scores}
             filterContext={filterContext}
             verifiedByProject={cameFromPathAnalysis ? verifiedByProject : undefined}

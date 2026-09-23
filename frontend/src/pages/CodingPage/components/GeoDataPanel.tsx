@@ -32,7 +32,7 @@ import { CODING_FILTER_CONTEXT_KEY, gisLayerToggleKey } from "../../../constants
 import { useNavigate } from "react-router-dom";
 
 
-import { MapContainer, CircleMarker, Tooltip, useMap, Circle, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, CircleMarker, Tooltip, useMap, useMapEvents, Circle, Pane, ZoomControl } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -96,6 +96,25 @@ type ScoreRow = {
 // Map behaviour helpers (fit/pan/zoom/resize) + StatPill extracted to
 // ./GeoDataPanel/mapHelpers.tsx in S2.2. MapAutoCenter intentionally remains
 // nested inside the component body below (see its comment).
+
+/**
+ * Above this many segments the map stops drawing every dot and switches to
+ * viewport culling. The islandwide project has ~216k segments; one CircleMarker
+ * each (plus tooltip + event handlers) is what makes the page crawl.
+ */
+const CULL_THRESHOLD = 4000;
+/** Hard cap on dots drawn in one frame; beyond it the in-view set is decimated. */
+const MAX_RENDERED_POINTS = 4000;
+
+/** Reports the map's current bounds so the segment layer can cull to the viewport. */
+function ViewportTracker({ onChange }: { onChange: (b: L.LatLngBounds) => void }) {
+  const map = useMapEvents({
+    moveend: () => onChange(map.getBounds()),
+    zoomend: () => onChange(map.getBounds()),
+  });
+  useEffect(() => { onChange(map.getBounds()); }, [map, onChange]);
+  return null;
+}
 
 export default function GeoDataPanel({ projectName, index, onJump, containerHeight = 650, scores: externalScores, subtitle, geoFeatures: externalGeoFeatures, startIndex = 0, onDataChange, filterContext, verifiedByProject, panToBounds, panKey = 0, scopeRange, autoFitKey = 0, disableAutoFit = false, curvData, showCurvatureOverlay, onToggleCurvatureOverlay, widthM, grade, gradientPct, gradientStatus, variant = "v1" }: Props) {
   const navigate = useNavigate();
@@ -232,13 +251,17 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
   }, [decodedName]);
 
   // Fetch Overall Risk Levels for color coding on component mount (fallback if no external scores)
+  // `externalScores === undefined` means the parent does not manage scores at all.
+  // A parent that DOES pass the prop starts with an empty array while its own
+  // /results request is in flight — fetching here too would duplicate that
+  // download (~110MB on the islandwide project) for no benefit.
+  const hasExternalScores = externalScores !== undefined;
   useEffect(() => {
     if (!decodedName) return;
-    // Only fetch if we don't have external scores
-    if (!externalScores || externalScores.length === 0) {
+    if (!hasExternalScores) {
       fetchScores();
     }
-  }, [decodedName, fetchScores, externalScores]);
+  }, [decodedName, fetchScores, hasExternalScores]);
 
   // Listen for score update events (triggered after Calculate Score button is clicked)
   // If we have external scores (from parent), don't fetch from API - let parent updates drive the scores
@@ -246,14 +269,14 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
   useEffect(() => {
     const handleScoresUpdated = () => {
       // Only refetch from API if we don't have external scores
-      if (!externalScores || externalScores.length === 0) {
+      if (!hasExternalScores) {
         fetchScores();
       }
     };
 
     window.addEventListener("psat:scores:updated", handleScoresUpdated);
     return () => window.removeEventListener("psat:scores:updated", handleScoresUpdated);
-  }, [fetchScores, externalScores]);
+  }, [fetchScores, hasExternalScores]);
 
   // Extract the first point of each LineString (reprojected to WGS84) and keep a reference to the original feature.
   // For multi-project display, localIdx is the index within geoFeatures,
@@ -271,6 +294,37 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
   }, [fc, startIndex]);
 
   const allLatLngs = useMemo(() => points.map(p => p.latlng), [points]);
+
+  // Viewport culling for very large projects (see CULL_THRESHOLD). Small
+  // projects keep the previous behaviour exactly: every point, always drawn.
+  const [viewBounds, setViewBounds] = useState<L.LatLngBounds | null>(null);
+  const handleViewportChange = useCallback((b: L.LatLngBounds) => setViewBounds(b), []);
+
+  const renderedPoints = useMemo(() => {
+    if (points.length <= CULL_THRESHOLD) return points;
+    // Numeric bounds compare rather than viewBounds.contains(): the latter
+    // allocates a LatLng per call, which at 216k points per pan is the single
+    // most expensive thing in the frame.
+    let inView: typeof points;
+    if (viewBounds) {
+      const south = viewBounds.getSouth(), north = viewBounds.getNorth();
+      const west = viewBounds.getWest(), east = viewBounds.getEast();
+      inView = [];
+      for (const p of points) {
+        const [lat, lng] = p.latlng;
+        if (p.globalIdx === index || (lat >= south && lat <= north && lng >= west && lng <= east)) {
+          inView.push(p);
+        }
+      }
+    } else {
+      inView = points.slice(0, MAX_RENDERED_POINTS);
+    }
+    if (inView.length <= MAX_RENDERED_POINTS) return inView;
+    // Zoomed out far enough that the viewport itself holds too many segments:
+    // draw an evenly-spaced sample (the current segment is always kept).
+    const stride = Math.ceil(inView.length / MAX_RENDERED_POINTS);
+    return inView.filter((p, i) => i % stride === 0 || p.globalIdx === index);
+  }, [points, viewBounds, index]);
 
   // When a focus scope is active, the map refits to just the in-scope segments;
   // otherwise it fits all loaded segments.
@@ -503,9 +557,11 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
               style={{ width: "100%", height: "100%" }}
               scrollWheelZoom
               zoomControl={false}
+              preferCanvas={true}
             >
               {variant !== "v2" && <ZoomControl position="topright" />}
               <MapAutosize />
+              <ViewportTracker onChange={handleViewportChange} />
               <MapCursorController
                 mode={(isDeleteMode || isPolygonMode) ? 'delete' : (isPointAddMode || isPolygonAddMode) ? 'add' : 'default'}
               />
@@ -572,7 +628,7 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
 
               {/* 所有起点 — rendered in a dedicated pane above GIS overlay layers */}
               <Pane name="segmentsPane" style={{ zIndex: 610 }}>
-                {points.map(({ localIdx, globalIdx, latlng, f }) => {
+                {renderedPoints.map(({ localIdx, globalIdx, latlng, f }) => {
                   const isActive = globalIdx === index;
                   // Hide segments outside the filter set (current segment always shown)
                   if (filterIndexSet && !filterIndexSet.has(localIdx) && !isActive) return null;
@@ -587,11 +643,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
                   const isVerified = verifiedSet.has(localIdx);
                   const scoreValue = activeScores[globalIdx]?.["Overall Risk Level"] ?? activeScores[globalIdx]?.["CycleRAP score"];
                   const label = `#${globalIdx + 1} ${imgRef ?? ""} - Score: ${scoreValue?.toFixed(2) ?? "N/A"}${isVerified ? " ✓ Verified" : ""}`;
-                  // Include score + verified state in key to force re-render when either changes
-                  const keyWithScore = `${globalIdx}-${scoreValue?.toFixed(2) ?? "loading"}-${isVerified ? "v" : "u"}`;
 
                   return (
-                    <Fragment key={keyWithScore}>
+                    // Stable key: react-leaflet already pushes pathOptions/radius
+                    // changes through setStyle, so keying on the score only served
+                    // to tear down and rebuild every marker the moment scores
+                    // arrived.
+                    <Fragment key={globalIdx}>
                     {/* Verified halo — deep-emerald ring behind the dot, distinct from the
                         yellow-green LOW risk colour so it reads clearly at a glance. */}
                     {isVerified && (
@@ -628,6 +686,16 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
                           }
                         },
                         mouseover: (e) => {
+                          // Tooltips are bound lazily, on hover. A mounted <Tooltip>
+                          // per marker costs a Leaflet tooltip instance and a DOM
+                          // node each -- thousands of them, for one label that is
+                          // ever visible at a time.
+                          const layer = e.target as L.CircleMarker;
+                          const text = isDeleteMode ? "Click to Delete" : (isPointAddMode ? "Click to Copy" : label);
+                          if (layer.getTooltip()) layer.setTooltipContent(text);
+                          else layer.bindTooltip(text);
+                          layer.openTooltip();
+
                           if (isDeleteMode) {
                             e.target.setStyle({ color: MAP_INTERACTION_COLORS.deleteHover, weight: 4 });
                             const target = e.originalEvent.target as HTMLElement;
@@ -635,14 +703,13 @@ function MapAutoCenter({ center, anyLayerOn, panKey, keepZoom }: { center: [numb
                           }
                         },
                         mouseout: (e) => {
+                          (e.target as L.CircleMarker).closeTooltip();
                           if (isDeleteMode) {
                             e.target.setStyle({ color: color, weight: isActive ? 3 : 1 });
                           }
                         }
                       }}
-                    >
-                      <Tooltip>{isDeleteMode ? "Click to Delete" : (isPointAddMode ? "Click to Copy" : label)}</Tooltip>
-                    </CircleMarker>
+                    />
                     </Fragment>
                   );
                 })}
