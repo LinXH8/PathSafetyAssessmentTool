@@ -144,7 +144,9 @@ export function AggregatedTopContributorsPanel({
     const allRows: ResultRow[] = [];
     selectedProjects.forEach((name) => {
       const rows = rawResultsByProject[name];
-      if (rows) allRows.push(...filterRows(name, rows));
+      // Plain loop, not push(...): spreading a 216k-row project into one call
+      // overflows the stack and, inside a memo, takes the whole page down.
+      if (rows) for (const row of filterRows(name, rows)) allRows.push(row);
     });
     return aggregateTopContributors(allRows);
   }, [selectedProjects, rawResultsByProject, filterRows]);

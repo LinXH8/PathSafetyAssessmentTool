@@ -141,7 +141,9 @@ export function AggregatedScoreBandPanel({
         if (error) {
           errorMessages.push(`${project}: ${error}`);
         } else if (data && Array.isArray(data)) {
-          allRows.push(...data);
+          // Plain loop, not push(...data): spreading a 216k-row project into one
+          // call overflows the stack ("Maximum call stack size exceeded").
+          for (const row of data) allRows.push(row);
           successCount++;
         }
       });

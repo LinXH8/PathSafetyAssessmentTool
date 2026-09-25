@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { COLOR } from "../../../features/ui/designTokens";
 import { Box, Text, Tabs, Button, Flex, Portal, Dialog } from "@chakra-ui/react";
 import { toaster } from "../../../components/ui/toaster";
-import { MapContainer, TileLayer, CircleMarker, Tooltip, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Polygon as LeafletPolygon, Polyline as LeafletPolyline, Pane, ZoomControl } from "react-leaflet";
 import { NUMERIC_FILTER_ATTRIBUTES, ATTRIBUTE_OPTIONS, ATTRIBUTE_LABELS, getCategoryColor, CATEGORY_COLORS, SUBCATEGORY_MAP, MULTI_VALUE_ATTRS } from "./AttributesDropdown";
 import { AddSegmentsDialog } from "./AddSegmentsDialog";
 import { MapCursorController } from "../../../components/common/MapCursorController";
@@ -44,6 +44,30 @@ import { GISLayerOverlays } from "./mapView/GISLayerOverlays";
 import { MapFiltersPanel } from "./mapView/MapFiltersPanel";
 import { SegmentsTableTab } from "./mapView/SegmentsTableTab";
 import { MapViewToolbar } from "./mapView/MapViewToolbar";
+
+/** Hard cap on segment dots drawn at once; beyond it the in-view set is decimated. */
+const MAX_RENDERED_POINTS = 4000;
+
+/**
+ * Hover tooltip content for a segment dot (image + label). Built on hover rather
+ * than mounting a <Tooltip> per marker: thousands of Leaflet tooltip instances
+ * for one label that is ever visible at a time.
+ */
+function buildSegmentTooltip(imageUrl: string | null, label: string): HTMLElement {
+  const root = document.createElement("div");
+  if (imageUrl) {
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.alt = "segment";
+    img.style.cssText = "display:block;width:200px;height:133px;object-fit:cover;margin:0 auto 4px;";
+    img.onerror = () => { img.style.display = "none"; };
+    root.appendChild(img);
+  }
+  const text = document.createElement("div");
+  text.textContent = label;
+  root.appendChild(text);
+  return root;
+}
 
 /**
  * The canonical option set (across all parent-category branches) for a subcategory
@@ -696,8 +720,15 @@ export default function AttributeAnalysisMapView({
       });
       (valuesByProject[s.projectName] ??= {})[s.idx] = segVals;
     });
-    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENTS, JSON.stringify(visibleSegmentIndicesByProject));
-    sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES, JSON.stringify(valuesByProject));
+    // A broad filter over the islandwide project can exceed the ~5MB
+    // sessionStorage quota; the throw would otherwise escape this effect.
+    try {
+      sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENTS, JSON.stringify(visibleSegmentIndicesByProject));
+      sessionStorage.setItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES, JSON.stringify(valuesByProject));
+    } catch {
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENTS);
+      sessionStorage.removeItem(SESSION_KEYS.PA_FILTERED_SEGMENT_VALUES);
+    }
   }, [visibleSegments, visibleSegmentIndicesByProject, activeFilters, getFocusedAttributeValue]);
 
   const effectiveFocusAttribute = useMemo(() => {
@@ -846,17 +877,31 @@ export default function AttributeAnalysisMapView({
 
   // Cull off-screen markers before React renders them. A 20% padding around the
   // viewport keeps markers visible during small pans without mounting them all.
-  const viewportPoints = useMemo(() => {
-    if (!mapViewportBounds) return allPoints;
-    const sw = mapViewportBounds.getSouthWest();
-    const ne = mapViewportBounds.getNorthEast();
-    const latPad = (ne.lat - sw.lat) * 0.2;
-    const lngPad = (ne.lng - sw.lng) * 0.2;
-    return allPoints.filter(({ latlng }) => {
-      const [lat, lng] = latlng;
-      return lat >= sw.lat - latPad && lat <= ne.lat + latPad &&
-        lng >= sw.lng - lngPad && lng <= ne.lng + lngPad;
-    });
+  // In-view points, decimated to MAX_RENDERED_POINTS. Each point is a mounted
+  // react-leaflet <CircleMarker>; zoomed out over the islandwide project (~216k
+  // segments) the whole island is "in view" and mounting them all hangs the page.
+  // Past the cap an evenly-spaced sample is drawn; zooming in restores every dot.
+  const { viewportPoints, inViewCount } = useMemo(() => {
+    let inView = allPoints;
+    if (mapViewportBounds) {
+      const sw = mapViewportBounds.getSouthWest();
+      const ne = mapViewportBounds.getNorthEast();
+      const latPad = (ne.lat - sw.lat) * 0.2;
+      const lngPad = (ne.lng - sw.lng) * 0.2;
+      inView = allPoints.filter(({ latlng }) => {
+        const [lat, lng] = latlng;
+        return lat >= sw.lat - latPad && lat <= ne.lat + latPad &&
+          lng >= sw.lng - lngPad && lng <= ne.lng + lngPad;
+      });
+    }
+    if (inView.length <= MAX_RENDERED_POINTS) {
+      return { viewportPoints: inView, inViewCount: inView.length };
+    }
+    const stride = Math.ceil(inView.length / MAX_RENDERED_POINTS);
+    return {
+      viewportPoints: inView.filter((_, i) => i % stride === 0),
+      inViewCount: inView.length,
+    };
   }, [allPoints, mapViewportBounds]);
 
   // Filter data with global search and per-column filters
@@ -1759,6 +1804,27 @@ export default function AttributeAnalysisMapView({
                   importedShapefileName={importedBoundaryName}
                   onClearImportedShapefile={handleClearImportedShapefile}
                 />
+                {inViewCount > viewportPoints.length && (
+                  <Box
+                    position="absolute"
+                    bottom="12px"
+                    left="12px"
+                    zIndex={1000}
+                    bg="white"
+                    borderWidth="1px"
+                    borderColor={COLOR.border}
+                    borderRadius="6px"
+                    boxShadow="sm"
+                    px="2.5"
+                    py="1"
+                    pointerEvents="none"
+                  >
+                    <Text fontSize="xs" color="gray.600">
+                      Showing a sample of {viewportPoints.length.toLocaleString()} of{" "}
+                      {inViewCount.toLocaleString()} segments in view — zoom in to see all
+                    </Text>
+                  </Box>
+                )}
                 <MapContainer
                   center={initialCenter.current}
                   zoom={initialZoom.current}
@@ -1892,36 +1958,32 @@ export default function AttributeAnalysisMapView({
                             const segmentIdx = idx + 1; // 1-based index for UI
                             const filterContext = buildFilterContext();
                             if (filterContext) {
-                              sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
+                              // Can exceed the sessionStorage quota on the islandwide
+                              // project; location.state below still carries it.
+                              try {
+                                sessionStorage.setItem(CODING_FILTER_CONTEXT_KEY, JSON.stringify(filterContext));
+                              } catch {
+                                sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);
+                              }
                             } else {
                               sessionStorage.removeItem(CODING_FILTER_CONTEXT_KEY);
                             }
                             navigate(`/coding/${encodeURIComponent(projectName)}?segment=${segmentIdx}`, {
                               state: { returnToAnalysis: true, filterContext }
                             });
-                          }
+                          },
+                          mouseover: (e) => {
+                            const layer = e.target as L.CircleMarker;
+                            const content = buildSegmentTooltip(imageUrl, label);
+                            if (layer.getTooltip()) layer.setTooltipContent(content);
+                            else layer.bindTooltip(content);
+                            layer.openTooltip();
+                          },
+                          mouseout: (e) => {
+                            (e.target as L.CircleMarker).closeTooltip();
+                          },
                         }}
-                      >
-                        <Tooltip>
-                          {imageUrl && (
-                            <img
-                              src={imageUrl}
-                              alt="segment"
-                              style={{
-                                display: "block",
-                                width: "200px",
-                                height: "133px",
-                                objectFit: "cover",
-                                margin: "0 auto 4px",
-                              }}
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = "none";
-                              }}
-                            />
-                          )}
-                          <div>{label}</div>
-                        </Tooltip>
-                      </CircleMarker>
+                      />
                     );
                   })}
                   {/* Imported shapefile overlay — non-interactive so hover doesn't interfere with segment nodes */}
@@ -1953,6 +2015,7 @@ export default function AttributeAnalysisMapView({
         {/* Table Tab Content */}
         <SegmentsTableTab
           isV2={isV2}
+          isActive={activeTab === "table"}
           selectedProjects={selectedProjects}
           projectColors={projectColors}
           allPointsCount={allPoints.length}

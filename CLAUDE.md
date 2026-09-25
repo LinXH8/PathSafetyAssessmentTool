@@ -888,6 +888,30 @@ on every save and does not write the fingerprint, so each Islandwide save costs 
 plus another on the next `GET /results`. The scorer (`calculate_cyclerap_score_native`) is a
 per-row `iterrows()` + `Series.get` loop; py-spy shows the time is pandas row access.
 
+### Islandwide Path Analysis Load: Marker Cap, Lazy Table, Spread Overflow (2026-09-24)
+
+**Symptom:** Opening Path Analysis on the Islandwide project (216,660 segments) never
+finished — still "loading" after 10+ min in headless Edge. After the fix: map ready in ~16s.
+
+**Causes (frontend only; backend requests total ~37s and were left alone):**
+
+1. **One `<CircleMarker>` + `<Tooltip>` per segment.** Viewport culling does nothing when
+   zoomed out over the island, so all 216k mounted. Now capped at `MAX_RENDERED_POINTS`
+   (4000, same as the Coding page) with an even-stride sample and an on-map "Showing a sample…"
+   note; tooltips are built on hover (`buildSegmentTooltip`).
+2. **Hidden table tab rendered every row.** Chakra/Ark `Tabs` mounts every panel by default,
+   so `SegmentsTableTab` built 216k rows (× `getColumnValue` per cell) behind the map. Now
+   gated on `isActive` and paged 500 rows at a time ("Show more"; Jump-to-Project grows the page).
+3. **`allRows.push(...rows)`** in the score-band and top-contributors panels throws
+   "Maximum call stack size exceeded" above ~125k rows (in a memo → takes the page down).
+   Replaced with loops. **Never spread a per-segment array into a call.**
+4. sessionStorage writes of filtered segments / coding filter context can exceed the ~5MB
+   quota on broad filters — now try/catch.
+
+**Key files:** `PathAnalysisMapView.tsx` (`MAX_RENDERED_POINTS`, `viewportPoints`/`inViewCount`,
+`buildSegmentTooltip`), `mapView/SegmentsTableTab.tsx` (`ROW_PAGE`, `isActive`),
+`AggregatedScoreBandPanel.tsx`, `AggregatedTopContributorsPanel.tsx`.
+
 ### Profiles That Ship With the App (Seed Profiles) (2026-09-10)
 
 A profile placed in `backend/seed_profiles/<slug>/` is installed into the user-data

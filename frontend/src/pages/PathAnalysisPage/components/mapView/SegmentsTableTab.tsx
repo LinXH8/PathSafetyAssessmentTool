@@ -14,16 +14,21 @@
  * sort/filter setters. No fetching, no storage access.
  */
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
 import { Box, Button, Flex, Input, Tabs, Text } from "@chakra-ui/react";
 import { LuChevronsUpDown, LuChevronUp, LuChevronDown } from "react-icons/lu";
 import { FONT } from "../../../../features/ui/designTokens";
 import type { MapPoint, TablePoint, TableSortConfig } from "./mapViewUtils";
 
+/** Rows mounted per "Show more" step. The islandwide project has ~216k rows. */
+const ROW_PAGE = 500;
+
 interface SegmentsTableTabProps {
   /** v2 chrome flag (sticky columns, design-guide typography). */
   isV2: boolean;
+  /** True while the Table tab is selected; rows are only built when it is. */
+  isActive: boolean;
   selectedProjects: string[];
   /** Project name → pill colour for the jump buttons. */
   projectColors: Record<string, string>;
@@ -48,6 +53,7 @@ interface SegmentsTableTabProps {
  */
 export function SegmentsTableTab({
   isV2,
+  isActive,
   selectedProjects,
   projectColors,
   allPointsCount,
@@ -61,6 +67,29 @@ export function SegmentsTableTab({
   setGlobalSearch,
 }: SegmentsTableTabProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  // Tabs mount every panel up front, so without the isActive gate this table
+  // built one row per segment (216k for islandwide) while the map was showing.
+  // Rows are then mounted a page at a time.
+  const [rowLimit, setRowLimit] = useState(ROW_PAGE);
+  const [pendingJump, setPendingJump] = useState<string | null>(null);
+  useEffect(() => { setRowLimit(ROW_PAGE); }, [sortedData]);
+  const visibleRows = isActive ? sortedData.slice(0, rowLimit) : [];
+
+  const scrollToProjectRow = (projectName: string): boolean => {
+    const row = tableContainerRef.current?.querySelector<HTMLTableRowElement>(
+      `tr[data-project="${CSS.escape(projectName)}"]`
+    );
+    if (!row) return false;
+    row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    return true;
+  };
+
+  // A jump target beyond the mounted rows first grows rowLimit, then scrolls
+  // once those rows are in the DOM.
+  useEffect(() => {
+    if (pendingJump && scrollToProjectRow(pendingJump)) setPendingJump(null);
+  }, [pendingJump, rowLimit]);
 
   // Handle column header click for sorting
   const handleHeaderClick = (columnKey: string) => {
@@ -88,12 +117,11 @@ export function SegmentsTableTab({
   };
 
   const handleTableProjectJump = (projectName: string) => {
-    const container = tableContainerRef.current;
-    if (!container) return;
-    const row = container.querySelector<HTMLTableRowElement>(`tr[data-project="${CSS.escape(projectName)}"]`);
-    if (row) {
-      row.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
+    if (scrollToProjectRow(projectName)) return;
+    const firstIdx = sortedData.findIndex((p) => p.projectName === projectName);
+    if (firstIdx < 0) return;
+    setRowLimit((prev) => Math.max(prev, firstIdx + ROW_PAGE));
+    setPendingJump(projectName);
   };
 
   // v2 table: Project Name + Segment No. are frozen (sticky) while side-scrolling.
@@ -284,7 +312,7 @@ export function SegmentsTableTab({
                       </td>
                     </tr>
                   ) : (
-                    sortedData.map(({ idx, latlng, f, projectName, color, attributes }, globalIdx) => (
+                    visibleRows.map(({ idx, latlng, f, projectName, color, attributes }, globalIdx) => (
                       <tr key={`${projectName}-${idx}-${globalIdx}`} data-project={projectName}>
                         {tableColumns.map(col => {
                           const value = getColumnValue(
@@ -321,6 +349,16 @@ export function SegmentsTableTab({
                   )}
                 </tbody>
               </table>
+              {isActive && sortedData.length > rowLimit && (
+                <Flex justify="center" align="center" gap="3" p="3">
+                  <Text fontSize="sm" color="gray.600">
+                    Showing {rowLimit.toLocaleString()} of {sortedData.length.toLocaleString()} rows
+                  </Text>
+                  <Button size="xs" variant="outline" onClick={() => setRowLimit((n) => n + ROW_PAGE)}>
+                    Show {ROW_PAGE} more
+                  </Button>
+                </Flex>
+              )}
             </Box>
           </>
         )}
