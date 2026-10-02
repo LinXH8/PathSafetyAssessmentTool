@@ -23,14 +23,17 @@ export default function LandingPage() {
   const appVersion = useAppVersion();
   const {
     profiles,
+    privateProfiles,
     activeProfile,
     loading,
     error,
     retry,
     createProfile,
     login,
+    loginWithUsername,
     resetProfilePin,
     recoverProfilePin,
+    recoverProfilePinWithUsername,
     updateProfile,
     deleteProfile,
   } = useProfile();
@@ -56,6 +59,14 @@ export default function LandingPage() {
   const [recoverDialogOpen, setRecoverDialogOpen] = useState(false);
   const [recoverEmail, setRecoverEmail] = useState("");
   const [recoverNewPin, setRecoverNewPin] = useState("");
+  // Private mode (shared server): personal accounts are never listed, so they
+  // are logged in to by typing the account's email (a username works too) and
+  // recovered by typing username + recovery email.
+  const [signInDialogOpen, setSignInDialogOpen] = useState(false);
+  const [signInUsername, setSignInUsername] = useState("");
+  const [signInPin, setSignInPin] = useState("");
+  const [recoverByUsername, setRecoverByUsername] = useState(false);
+  const [recoverUsername, setRecoverUsername] = useState("");
 
   useEffect(() => {
     if (selectedProfileId && profiles.some((profile) => profile.id === selectedProfileId)) {
@@ -97,7 +108,7 @@ export default function LandingPage() {
   const canManageSelectedProfile = Boolean(selectedProfile && busyAction === null && !loading);
   const canUseStartButton = Boolean((selectedProfile || canOpenFirstProfileSetup) && busyAction === null && !loading);
   const startButtonLabel = selectedProfile
-    ? `Start as ${selectedProfileLabel}`
+    ? `${privateProfiles ? "Log in as" : "Start as"} ${selectedProfileLabel}`
     : profiles.length === 0
       ? "Create First Profile"
       : "Select a Profile";
@@ -202,8 +213,54 @@ export default function LandingPage() {
     }
     setRecoverEmail("");
     setRecoverNewPin("");
+    setRecoverByUsername(false);
     setPinDialogOpen(false);
     setRecoverDialogOpen(true);
+  };
+
+  const openSignInDialog = () => {
+    setSignInUsername("");
+    setSignInPin("");
+    setSignInDialogOpen(true);
+  };
+
+  const closeSignInDialog = () => {
+    setSignInDialogOpen(false);
+    setSignInPin("");
+  };
+
+  const openRecoverByUsernameDialog = () => {
+    // The sign-in box usually holds an email; carry it into the matching field.
+    const typed = signInUsername.trim();
+    setRecoverUsername(typed.includes("@") ? "" : typed);
+    setRecoverEmail(typed.includes("@") ? typed : "");
+    setRecoverNewPin("");
+    setRecoverByUsername(true);
+    setSignInDialogOpen(false);
+    setRecoverDialogOpen(true);
+  };
+
+  const handleSignIn = async () => {
+    try {
+      setBusyAction("login");
+      const result = await loginWithUsername(signInUsername, signInPin);
+      closeSignInDialog();
+      setSelectedProfileId(result.active_profile.id);
+      toaster.create({
+        title: "Profile ready",
+        description: `Logged in as ${result.active_profile.username || result.active_profile.name}.`,
+        type: "success",
+      });
+      navigate("/home");
+    } catch (nextError) {
+      toaster.create({
+        title: "Login failed",
+        description: nextError instanceof Error ? nextError.message : "Failed to log in.",
+        type: "error",
+      });
+    } finally {
+      setBusyAction(null);
+    }
   };
 
   const closeRecoverDialog = () => {
@@ -213,18 +270,27 @@ export default function LandingPage() {
     setRecoverNewPin("");
   };
 
+  const canSubmitRecover =
+    recoverEmail.trim().length > 0
+    && recoverNewPin.trim().length > 0
+    && (!recoverByUsername || recoverUsername.trim().length > 0);
+
   const handleRecoverPin = async () => {
-    if (!selectedProfile) {
+    if (!recoverByUsername && !selectedProfile) {
       toaster.create({ description: "Select a profile first.", type: "warning" });
       return;
     }
     try {
       setBusyAction("recover");
-      await recoverProfilePin(selectedProfile.id, recoverEmail, recoverNewPin);
+      if (recoverByUsername) {
+        await recoverProfilePinWithUsername(recoverUsername, recoverEmail, recoverNewPin);
+      } else if (selectedProfile) {
+        await recoverProfilePin(selectedProfile.id, recoverEmail, recoverNewPin);
+      }
       closeRecoverDialog();
       toaster.create({
         title: "PIN reset",
-        description: `PIN updated for ${selectedProfileLabel}. You can now start with your new PIN.`,
+        description: `PIN updated for ${recoverByUsername ? recoverUsername.trim() : selectedProfileLabel}. You can now start with your new PIN.`,
         type: "success",
       });
     } catch (nextError) {
@@ -410,17 +476,26 @@ export default function LandingPage() {
           <div className="profile-panel-header">
             <div className="profile-panel-copy">
               <h2>Profiles</h2>
-              <p>Select a local profile on this device, then start the app.</p>
+              <p>
+                {privateProfiles
+                  ? "Log in with your email and PIN. The shared Islandwide profile is listed below."
+                  : "Select a local profile on this device, then start the app."}
+              </p>
             </div>
 
             <div className="profile-panel-actions">
-              <button
-                type="button"
-                className="profile-manage-btn"
-                onClick={openManageDialog}
-                disabled={!canManageSelectedProfile}              >
-                Manage Selected
-              </button>
+              {/* Private mode lists no personal profiles to select; accounts are
+                  managed from "My Account" in the sidebar after logging in. */}
+              {!privateProfiles && (
+                <button
+                  type="button"
+                  className="profile-manage-btn"
+                  onClick={openManageDialog}
+                  disabled={!canManageSelectedProfile}
+                >
+                  Manage Selected
+                </button>
+              )}
               <button
                 type="button"
                 className="profile-create-btn"
@@ -448,6 +523,17 @@ export default function LandingPage() {
                     Try again
                   </button>
                 </div>
+              )}
+
+              {privateProfiles && (
+                <button
+                  type="button"
+                  className="profile-login-btn"
+                  onClick={openSignInDialog}
+                  disabled={busyAction !== null}
+                >
+                  Log in with email and PIN
+                </button>
               )}
 
               <div className="profile-scroll-shell">
@@ -554,6 +640,72 @@ export default function LandingPage() {
             Forgot PIN?
           </button>
         )}
+      </LandingModal>
+
+      {/* Log in by email + PIN (private mode) */}
+      <LandingModal
+        open={signInDialogOpen}
+        title="Log In"
+        onClose={closeSignInDialog}
+        busy={busyAction === "login"}
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeSignInDialog}
+              disabled={busyAction === "login"}
+              style={ghostBtnStyle(busyAction === "login")}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleSignIn()}
+              disabled={signInUsername.trim().length === 0 || signInPin.trim().length === 0 || busyAction === "login"}
+              style={primaryBtnStyle(signInUsername.trim().length === 0 || signInPin.trim().length === 0 || busyAction === "login")}
+            >
+              {busyAction === "login" ? "Logging in…" : "Log In"}
+            </button>
+          </>
+        }
+      >
+        <p style={modalCopyStyle}>
+          Enter the email and PIN of your profile.
+        </p>
+        <input
+          id="signInUsername"
+          type="text"
+          value={signInUsername}
+          onChange={(event) => setSignInUsername(event.target.value)}
+          placeholder="Email"
+          autoComplete="username"
+          autoFocus
+          style={modalInputStyle}
+        />
+        <input
+          id="signInPin"
+          type="password"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={signInPin}
+          onChange={(event) => setSignInPin(event.target.value)}
+          placeholder="PIN"
+          style={modalInputStyle}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && signInUsername.trim().length > 0 && signInPin.trim().length > 0) {
+              event.preventDefault();
+              void handleSignIn();
+            }
+          }}
+        />
+        <button
+          type="button"
+          className="landing-dialog-link"
+          onClick={openRecoverByUsernameDialog}
+          disabled={busyAction === "login"}
+        >
+          Forgot PIN?
+        </button>
       </LandingModal>
 
       {/* Create Profile */}
@@ -842,25 +994,42 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => void handleRecoverPin()}
-              disabled={recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover"}
-              style={primaryBtnStyle(recoverEmail.trim().length === 0 || recoverNewPin.trim().length === 0 || busyAction === "recover")}
+              disabled={!canSubmitRecover || busyAction === "recover"}
+              style={primaryBtnStyle(!canSubmitRecover || busyAction === "recover")}
             >
               {busyAction === "recover" ? "Resetting…" : "Reset PIN"}
             </button>
           </>
         }
       >
-        <p style={modalCopyStyle}>
-          Verify your identity for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong> by entering
-          the private recovery email on file, then choose a new PIN.
-        </p>
+        {recoverByUsername ? (
+          <>
+            <p style={modalCopyStyle}>
+              Enter your username and the private recovery email on file for it, then choose a new PIN.
+            </p>
+            <input
+              id="recoverUsername"
+              type="text"
+              value={recoverUsername}
+              onChange={(event) => setRecoverUsername(event.target.value)}
+              placeholder="Username"
+              autoFocus
+              style={modalInputStyle}
+            />
+          </>
+        ) : (
+          <p style={modalCopyStyle}>
+            Verify your identity for <strong style={{ color: COLOR.text }}>{selectedProfileLabel || "the selected profile"}</strong> by entering
+            the private recovery email on file, then choose a new PIN.
+          </p>
+        )}
         <input
           id="recoverEmail"
           type="email"
           value={recoverEmail}
           onChange={(event) => setRecoverEmail(event.target.value)}
           placeholder="Recovery email"
-          autoFocus
+          autoFocus={!recoverByUsername}
           style={modalInputStyle}
         />
         <input
@@ -873,7 +1042,7 @@ export default function LandingPage() {
           placeholder="New 4 to 12 digit PIN"
           style={modalInputStyle}
           onKeyDown={(event) => {
-            if (event.key === "Enter" && recoverEmail.trim().length > 0 && recoverNewPin.trim().length > 0) {
+            if (event.key === "Enter" && canSubmitRecover) {
               event.preventDefault();
               void handleRecoverPin();
             }

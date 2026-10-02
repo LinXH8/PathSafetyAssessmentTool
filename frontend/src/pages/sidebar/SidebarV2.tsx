@@ -12,6 +12,10 @@ import "./sidebar-v2.css";
 
 interface SidebarV2Props {
   activeProfile: ProfileSummary | null;
+  /** Shows the admin-only "Accounts" entry. */
+  isAdmin?: boolean;
+  /** Opens the "My Account" dialog; omitted for the shared profile, which cannot be managed. */
+  onManageProfile?: () => void;
   onLogout: () => void;
   isLoggingOut: boolean;
   /**
@@ -82,6 +86,8 @@ function Checkbox({ checked }: { checked: boolean }) {
 
 export default function SidebarV2({
   activeProfile,
+  isAdmin = false,
+  onManageProfile,
   onLogout,
   isLoggingOut,
   onGuardedAction,
@@ -277,6 +283,7 @@ export default function SidebarV2({
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", paddingTop: "0.875rem" }}>
+        {isAdmin && navButton("Accounts", () => go("/accounts"))}
         {navButton("GIS Layers", () => go("/gis-layers"))}
         {navButton("User Guide", () => go("/help"))}
         {activeProfile && (
@@ -293,6 +300,11 @@ export default function SidebarV2({
             <div style={{ textAlign: "center", fontFamily: FONT, fontSize: "1rem", fontWeight: 700, color: COLOR.text, lineHeight: 1.4 }}>
               {activeProfile.name}
             </div>
+            {onManageProfile && (
+              <button className="psat-v2-ghost" style={ghostBase} onClick={onManageProfile}>
+                My Account
+              </button>
+            )}
             <button
               className="psat-v2-ghost"
               style={ghostBase}

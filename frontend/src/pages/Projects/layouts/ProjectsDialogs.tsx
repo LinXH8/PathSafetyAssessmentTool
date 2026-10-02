@@ -25,6 +25,7 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
     confirmShare,
     confirmExport,
     shareTargets,
+    shareByUsername,
   } = vm;
 
   return (
@@ -69,6 +70,7 @@ export default function ProjectsDialogs(vm: ProjectsViewModel) {
         onClose={() => setOpenShare(false)}
         projectNames={Array.from(selected)}
         shareTargets={shareTargets}
+        shareByUsername={shareByUsername}
         busy={sharing || exporting}
         onShare={confirmShare}
         onExport={confirmExport}

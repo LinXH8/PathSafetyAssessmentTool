@@ -72,6 +72,9 @@ def test_seeding_is_idempotent(monkeypatch, tmp_path):
 
 def test_deleted_seed_profile_is_not_resurrected(monkeypatch, tmp_path):
     _patch_roots(monkeypatch, tmp_path)
+    # A shipped profile can only be deleted with private mode switched off
+    # (profile_store.is_protected_profile); the seeder must still not undo it.
+    monkeypatch.setenv("PSAT_PRIVATE_PROFILES", "0")
 
     seed_profiles.ensure_seed_profiles()
     profile_store.delete_profile(DESCRIPTOR["id"], "1234")
@@ -83,6 +86,7 @@ def test_deleted_seed_profile_is_not_resurrected(monkeypatch, tmp_path):
 
 def test_bumped_seed_version_reseeds(monkeypatch, tmp_path):
     profiles_root, seed_dir = _patch_roots(monkeypatch, tmp_path)
+    monkeypatch.setenv("PSAT_PRIVATE_PROFILES", "0")  # see the test above
     seed_profiles.ensure_seed_profiles()
     profile_store.delete_profile(DESCRIPTOR["id"], "1234")
 

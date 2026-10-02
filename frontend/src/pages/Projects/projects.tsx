@@ -25,7 +25,7 @@ interface FileListResponse {
 }
 
 export default function Home() {
-  const { profiles, activeProfile, legacyProjects, migrateLegacyProjects } = useProfile();
+  const { profiles, privateProfiles, activeProfile, legacyProjects, migrateLegacyProjects } = useProfile();
 
   // Status
   const [status, setStatus] = useState("checking...");
@@ -384,6 +384,15 @@ export default function Home() {
       setOpenDelete(false);
       notifyProjectListChanged();
     } catch (e: any) {
+      // The API layer throws the raw response body; show its `error` if it has one
+      // (e.g. the shared profile refusing a delete) instead of failing silently.
+      let message = e instanceof Error ? e.message : "Failed to delete the project.";
+      try {
+        message = JSON.parse(message).error ?? message;
+      } catch {
+        // not JSON -- keep the raw text
+      }
+      toaster.create({ title: "Delete failed", description: message, type: "error" });
     } finally {
       setDeleting(false);
     }
@@ -402,12 +411,15 @@ export default function Home() {
   };
 
   // Share selected projects into the chosen profile
-  const confirmShare = async (targetProfileId: string, includeTags: boolean) => {
-    if (selected.size === 0 || !targetProfileId) return;
+  // `target` is a profile id, or `{ username }` when recipients are typed (private mode).
+  const confirmShare = async (target: string | { username: string }, includeTags: boolean) => {
+    if (selected.size === 0 || !target) return;
     try {
       setSharing(true);
-      const result = await apiShareProjects(targetProfileId, Array.from(selected), { includeTags });
-      const targetName = shareTargets.find((p) => p.id === targetProfileId)?.name ?? "the selected profile";
+      const result = await apiShareProjects(target, Array.from(selected), { includeTags });
+      const targetName = typeof target === "string"
+        ? shareTargets.find((p) => p.id === target)?.name ?? "the selected profile"
+        : target.username;
       const skippedNote = result.skipped.length > 0
         ? ` ${result.skipped.length} already existed there and ${result.skipped.length === 1 ? "was" : "were"} skipped.`
         : "";
@@ -542,6 +554,7 @@ export default function Home() {
     loadTreatment,
     askShare,
     shareTargets,
+    shareByUsername: privateProfiles,
     sortConfig,
     getSortMeta,
     handleSort,

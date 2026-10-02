@@ -28,9 +28,14 @@ interface ShareProjectModalV2Props {
   projectNames: string[];
   /** Profiles the projects can be shared into (everyone but the active one). */
   shareTargets: ProfileSummary[];
+  /**
+   * Shared server: other people's profiles are not listed, so the destination is
+   * typed as the recipient's email (or username) instead of picked from `shareTargets`.
+   */
+  shareByUsername?: boolean;
   /** True while a share OR export request is in flight. */
   busy: boolean;
-  onShare: (targetProfileId: string, includeTags: boolean) => void;
+  onShare: (target: string | { username: string }, includeTags: boolean) => void;
   onExport: (includeTags: boolean, includeSourceFolder: boolean) => void;
 }
 
@@ -39,14 +44,16 @@ export default function ShareProjectModalV2({
   onClose,
   projectNames,
   shareTargets,
+  shareByUsername = false,
   busy,
   onShare,
   onExport,
 }: ShareProjectModalV2Props) {
-  const hasTargets = shareTargets.length > 0;
+  const hasTargets = shareByUsername || shareTargets.length > 0;
 
   const [mode, setMode] = useState<ShareMode>(hasTargets ? "profile" : "export");
   const [targetId, setTargetId] = useState<string>(shareTargets[0]?.id ?? "");
+  const [targetUsername, setTargetUsername] = useState("");
   const [includeTags, setIncludeTags] = useState(true);
   const [includeSourceFolder, setIncludeSourceFolder] = useState(true);
 
@@ -55,6 +62,7 @@ export default function ShareProjectModalV2({
     if (open) {
       setMode(hasTargets ? "profile" : "export");
       setTargetId(shareTargets[0]?.id ?? "");
+      setTargetUsername("");
       setIncludeTags(true);
       setIncludeSourceFolder(true);
     }
@@ -74,13 +82,14 @@ export default function ShareProjectModalV2({
   if (!open) return null;
 
   const count = projectNames.length;
-  const canShare = mode === "profile" && hasTargets && !!targetId;
+  const canShare = mode === "profile"
+    && (shareByUsername ? targetUsername.trim().length > 0 : hasTargets && !!targetId);
 
   const handlePrimary = () => {
     if (busy) return;
     if (mode === "profile") {
       if (!canShare) return;
-      onShare(targetId, includeTags);
+      onShare(shareByUsername ? { username: targetUsername.trim() } : targetId, includeTags);
     } else {
       onExport(includeTags, includeSourceFolder);
     }
@@ -204,6 +213,28 @@ export default function ShareProjectModalV2({
                 <label htmlFor="shareTargetProfile" style={labelStyle}>
                   Destination profile
                 </label>
+                {shareByUsername ? (
+                  <input
+                    id="shareTargetProfile"
+                    type="text"
+                    value={targetUsername}
+                    onChange={(e) => setTargetUsername(e.target.value)}
+                    placeholder="Recipient's email"
+                    autoComplete="off"
+                    style={{
+                      boxSizing: "border-box",
+                      width: "100%",
+                      height: 40,
+                      padding: "0 12px",
+                      border: `1px solid ${COLOR.borderInput}`,
+                      borderRadius: 6,
+                      fontFamily: FONT,
+                      fontSize: 15,
+                      background: COLOR.white,
+                      color: COLOR.text,
+                    }}
+                  />
+                ) : (
                 <select
                   id="shareTargetProfile"
                   value={targetId}
@@ -233,6 +264,7 @@ export default function ShareProjectModalV2({
                     <option value="">No other profiles available</option>
                   )}
                 </select>
+                )}
               </div>
 
               <CheckRow

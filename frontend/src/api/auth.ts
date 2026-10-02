@@ -24,6 +24,16 @@ export interface ProfileSummary {
 
 export interface ProfilesOverview {
   profiles: ProfileSummary[];
+  /**
+   * True on a shared server (PSAT_PRIVATE_PROFILES=1): `profiles` only holds the
+   * shipped profiles plus the one logged in, so every other account is logged
+   * in to by typing its email + PIN.
+   */
+  private_profiles?: boolean;
+  /** True when the logged-in profile may open the Accounts page (PSAT_ADMIN_EMAILS). */
+  is_admin?: boolean;
+  /** True when logged in as the shared (shipped) profile, which cannot be managed. */
+  active_profile_protected?: boolean;
   active_profile: ProfileSummary | null;
   legacy_projects: string[];
 }
@@ -145,6 +155,37 @@ export async function loginProfile(profileId: string, pin: string): Promise<Logi
   return (await res.json()) as LoginProfileResult;
 }
 
+/**
+ * POST /api/profiles/login — same as `loginProfile`, but names the profile by
+ * its email (a username also works; the request key is `username` either way).
+ * This is how every personal profile logs in on a shared server (private mode).
+ */
+export async function loginProfileByUsername(username: string, pin: string): Promise<LoginProfileResult> {
+  const res = await fetch("/api/profiles/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, pin }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as LoginProfileResult;
+}
+
+/** One row of the admin-only Accounts page. */
+export interface AccountListItem {
+  username: string;
+  division: string;
+}
+
+/**
+ * GET /api/profiles/accounts — username + division of every account.
+ * Admin sessions only; anyone else gets a 403.
+ */
+export async function fetchAllAccounts(): Promise<AccountListItem[]> {
+  const res = await fetchWithTimeout("/api/profiles/accounts", { cache: "no-store" });
+  if (!res.ok) throw new Error(await readError(res));
+  return ((await res.json()) as { accounts: AccountListItem[] }).accounts ?? [];
+}
+
 /** POST /api/profiles/logout — deactivate the current profile session. */
 export async function logoutProfile(): Promise<LogoutProfileResult> {
   const res = await fetch("/api/profiles/logout", {
@@ -217,6 +258,24 @@ export async function recoverProfilePin(
 }
 
 /**
+ * POST /api/profiles/recover-pin — `recoverProfilePin` for a profile named by
+ * username (one that is not in this browser's list).
+ */
+export async function recoverProfilePinByUsername(
+  username: string,
+  email: string,
+  newPin: string
+): Promise<RecoverProfilePinResult> {
+  const res = await fetch("/api/profiles/recover-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email, new_pin: newPin }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  return (await res.json()) as RecoverProfilePinResult;
+}
+
+/**
  * POST /api/profiles/activity — log a usage event for the active profile.
  * @param eventType   - Event identifier string
  * @param payload     - Optional structured data for the event
@@ -273,11 +332,13 @@ export async function migrateLegacyProjects(
 /**
  * POST /api/profiles/share-projects — copy projects from the active profile to
  * another profile's project directory.
- * @param targetProfileId - UUID of the destination profile
- * @param projectNames    - Names of projects to share
+ * @param target       - Destination profile: its UUID, or `{ username }` (the
+ *                       recipient's email or username) when it is not in this
+ *                       browser's profile list (private mode)
+ * @param projectNames - Names of projects to share
  */
 export async function shareProjects(
-  targetProfileId: string,
+  target: string | { username: string },
   projectNames: string[],
   options?: { includeTags?: boolean }
 ): Promise<ShareProjectsResult> {
@@ -285,7 +346,9 @@ export async function shareProjects(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      target_profile_id: targetProfileId,
+      ...(typeof target === "string"
+        ? { target_profile_id: target }
+        : { target_username: target.username }),
       project_names: projectNames,
       include_tags: options?.includeTags ?? true,
     }),

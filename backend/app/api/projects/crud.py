@@ -58,6 +58,7 @@ from app.services import gis_mapping as gis
 import app.services.global_var as global_var
 
 from ._helpers import df_to_records, fail, get_ctx, ok, with_project
+from app.services import profile_store
 from .gradient import GRADIENT_STATUS_FIELD, GRADIENT_STATUS_NOT_ASSESSED, GRADIENT_STATUS_NO_LIDAR_RESULT, _GRADIENT_CACHE_STATE_PROFILE_AVAILABLE, _PROJECT_GRADIENT_CACHE_STATE, _get_project_gradient_mapping
 from .image_utils import _get_image_date_range, _get_project_source_folders, _migrate_legacy_images, apply_image_namespaces, build_project_geo_data, make_image_namespace
 from . import _helpers
@@ -880,6 +881,11 @@ def delete_project(project_name: str):
     Delete an entire project (in-memory list + on-disk directory):
     DELETE /api/projects/<project_name>
     """
+    # The shared (shipped) profile's projects belong to everyone who logs in to
+    # it; one user must not be able to remove or rename them for the rest.
+    if profile_store.active_profile_is_protected():
+        return fail("Projects in the shared profile cannot be deleted", 403)
+
     ctx = get_ctx()
     pm = ctx["pm"]
 
@@ -905,6 +911,8 @@ def update_project_metadata(project_name: str):
     try:
         payload = request.get_json(force=True, silent=True) or {}
         new_name = payload.get("new_name")
+        if new_name and new_name != project_name and profile_store.active_profile_is_protected():
+            return fail("Projects in the shared profile cannot be renamed", 403)
         new_tags = payload.get("tags")
         new_path_key = payload.get("path_key")
 

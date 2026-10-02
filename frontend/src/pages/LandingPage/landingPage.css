@@ -233,6 +233,31 @@
   cursor: not-allowed;
 }
 
+/* Private mode: the email + PIN login, the primary action inside the panel. */
+.profile-login-btn {
+  width: 100%;
+  height: 44px;
+  margin-top: 14px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 6px;
+  font: 700 1rem/1 "Inter", sans-serif;
+  color: #fff;
+  background: #2aa45f;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.profile-login-btn:hover:not(:disabled) {
+  background: #23864c;
+}
+
+.profile-login-btn:disabled {
+  cursor: not-allowed;
+  background: #edf2f7;
+  color: #a0aec0;
+}
+
 .profile-scroll-shell {
   margin-top: 14px;
   /* Grows to fill the panel and scrolls internally instead of a fixed height,

@@ -15,9 +15,11 @@ import {
   deleteProfile as apiDeleteProfile,
   fetchProfilesOverview,
   loginProfile as apiLoginProfile,
+  loginProfileByUsername as apiLoginProfileByUsername,
   logoutProfile as apiLogoutProfile,
   migrateLegacyProjects as apiMigrateLegacyProjects,
   recoverProfilePin as apiRecoverProfilePin,
+  recoverProfilePinByUsername as apiRecoverProfilePinByUsername,
   resetProfilePin as apiResetProfilePin,
   updateProfile as apiUpdateProfile,
   type CreateProfileResult,
@@ -55,6 +57,12 @@ function resetPerProfileCaches() {
 
 type ProfileContextValue = {
   profiles: ProfileSummary[];
+  /** Shared server: `profiles` lists only the shipped profiles plus the one logged in. */
+  privateProfiles: boolean;
+  /** The logged-in profile may open the Accounts page. */
+  isAdmin: boolean;
+  /** Logged in as the shared (shipped) profile: no "My Account" for it. */
+  activeProfileProtected: boolean;
   activeProfile: ProfileSummary | null;
   legacyProjects: string[];
   loading: boolean;
@@ -64,10 +72,13 @@ type ProfileContextValue = {
   retry: () => Promise<void>;
   createProfile: (username: string, email: string, pin: string, division: string) => Promise<CreateProfileResult>;
   login: (profileId: string, pin: string) => Promise<LoginProfileResult>;
+  /** Log in by typing the profile's email (or username) + PIN. */
+  loginWithUsername: (username: string, pin: string) => Promise<LoginProfileResult>;
   logout: () => Promise<void>;
   updateProfile: (profileId: string, currentPin: string, username: string, division: string, email?: string) => Promise<UpdateProfileResult>;
   resetProfilePin: (profileId: string, currentPin: string, newPin: string) => Promise<ResetProfilePinResult>;
   recoverProfilePin: (profileId: string, email: string, newPin: string) => Promise<RecoverProfilePinResult>;
+  recoverProfilePinWithUsername: (username: string, email: string, newPin: string) => Promise<RecoverProfilePinResult>;
   deleteProfile: (profileId: string, pin: string) => Promise<DeleteProfileResult>;
   migrateLegacyProjects: (projectNames?: string[]) => Promise<MigrateLegacyProjectsResult>;
 };
@@ -77,6 +88,9 @@ const ProfileContext = createContext<ProfileContextValue | null>(null);
 function normalizeOverview(overview: ProfilesOverview | null | undefined): ProfilesOverview {
   return {
     profiles: overview?.profiles ?? [],
+    private_profiles: overview?.private_profiles ?? false,
+    is_admin: overview?.is_admin ?? false,
+    active_profile_protected: overview?.active_profile_protected ?? false,
     active_profile: overview?.active_profile ?? null,
     legacy_projects: overview?.legacy_projects ?? [],
   };
@@ -237,6 +251,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return result;
   }, [applyOverview]);
 
+  const loginWithUsername = useCallback(async (username: string, pin: string) => {
+    const result = await apiLoginProfileByUsername(username, pin);
+    resetPerProfileCaches();
+    applyOverview(result.overview);
+    setError(null);
+    return result;
+  }, [applyOverview]);
+
   const logout = useCallback(async () => {
     const result = await apiLogoutProfile();
     resetPerProfileCaches();
@@ -265,6 +287,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return result;
   }, [applyOverview]);
 
+  const recoverProfilePinWithUsername = useCallback(async (username: string, email: string, newPin: string) => {
+    const result = await apiRecoverProfilePinByUsername(username, email, newPin);
+    applyOverview(result.overview);
+    setError(null);
+    return result;
+  }, [applyOverview]);
+
   const deleteProfile = useCallback(async (profileId: string, pin: string) => {
     const result = await apiDeleteProfile(profileId, pin);
     applyOverview(result.overview);
@@ -281,6 +310,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ProfileContextValue>(() => ({
     profiles: overview.profiles,
+    privateProfiles: overview.private_profiles ?? false,
+    isAdmin: overview.is_admin ?? false,
+    activeProfileProtected: overview.active_profile_protected ?? false,
     activeProfile: overview.active_profile,
     legacyProjects: overview.legacy_projects,
     loading,
@@ -289,13 +321,15 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     retry: loadProfiles,
     createProfile,
     login,
+    loginWithUsername,
     logout,
     updateProfile,
     resetProfilePin,
     recoverProfilePin,
+    recoverProfilePinWithUsername,
     deleteProfile,
     migrateLegacyProjects,
-  }), [overview, loading, error, refreshOverview, loadProfiles, createProfile, login, logout, updateProfile, resetProfilePin, recoverProfilePin, deleteProfile, migrateLegacyProjects]);
+  }), [overview, loading, error, refreshOverview, loadProfiles, createProfile, login, loginWithUsername, logout, updateProfile, resetProfilePin, recoverProfilePin, recoverProfilePinWithUsername, deleteProfile, migrateLegacyProjects]);
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }

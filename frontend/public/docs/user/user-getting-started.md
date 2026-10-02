@@ -42,34 +42,36 @@ Click the **Help (?)** button at the top left corner of any page to open the in-
 
 ### 1.2 User Login & Account Management
 
-**Creating a new profile** — click **Create Profile** on the Landing Page and fill in the following:
+**Creating a new profile** — click the **+** button in the Profiles panel on the Landing Page and fill in the following:
 
-- **Username** — a display name for your profile (shown on the landing page and in session headers)
-- **LTA Employee Email** (e.g. `user@lta.gov.sg`) — this is your **private-facing email**, used only for identity verification and password/PIN recovery; it is not displayed publicly
+- **Username** — a display name for your profile (shown in the sidebar once you are logged in)
+- **LTA Employee Email** (e.g. `user@lta.gov.sg`) — what you log in with, and what is checked when you reset a forgotten PIN; it is not shown to other users
 - **Division** — your organisational division
 - **4–12 digit numeric PIN** — your login credential
 
 Then click **Create Profile** to complete setup.
 
-**Signing in** — click your profile card on the Landing Page, click **Start As \<Username\>**, enter your PIN, and you are taken to your **Projects** page.
+**Signing in** — the Landing Page does not list personal profiles. Click **Log in with email and PIN**, enter your email and PIN, and you are taken to your **Projects** page. (If your profile was created before emails were introduced, type your username in the email box.)
 
-**Switching accounts** — click **Log Out** in the left-hand sidebar at any time and select a different profile on the Landing Page.
+**The shared Islandwide profile** — the **Islandwide Data** card on the Landing Page is open to everyone: select it, click **Log in as Islandwide Data**, and enter the shared PIN from your administrator. It cannot be edited or deleted. To work on your own copy of its project, share the project from Islandwide to your own profile.
+
+**Managing your account** — once logged in, click **My Account** in the left-hand sidebar to change your username, email, division, or PIN, or to delete your profile.
+
+**Switching accounts** — click **Logout** in the left-hand sidebar, then **Log in with email and PIN** with the other profile's details.
 
 **Session Behaviour**
 
-- Sessions are **device-local**. All browser tabs open on the same device share the same active profile.
-- Logging out from one tab logs you out everywhere on that device.
-- Your projects, images, and results persist on disk — logging out does not delete any data.
+- You stay logged in on that browser until you click **Logout**, even if you close the tab. On a shared computer, log out when you are done.
+- All tabs in the same browser share the same login.
+- Your projects, images, and results are kept — logging out does not delete any data.
 
-**Forgotten PIN / Restore Password**
+**Forgotten PIN**
 
-If you have forgotten your PIN, you can restore access using your registered **private-facing email**:
+1. On the Landing Page, click **Log in with email and PIN**, then **Forgot PIN?**.
+2. Enter your **username**, the **email** on your profile, and a **new PIN**.
+3. Click **Reset PIN**, then log in with the new PIN.
 
-1. On the Landing Page, click **Forgot PIN?** (or the equivalent restore option) below the sign-in prompt.
-2. Enter the **email address** you provided when creating your profile.
-3. Follow the verification instructions sent to that email to reset your PIN.
-
-> If you no longer have access to your registered email, ask your administrator to delete and recreate the profile. Note that deleting a profile removes all projects associated with it.
+> No email is sent; the email is only checked against the one on your profile. If you do not remember your username or email, ask your administrator.
 
 ### 1.3 Open the Project List
 

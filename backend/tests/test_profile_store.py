@@ -247,3 +247,158 @@ def test_list_profiles_restores_latest_backup_when_registry_missing(monkeypatch,
 
     assert profiles[0]["name"] == "Alaster"
     assert (profiles_root / "profiles.json").exists()
+
+def _session_app():
+    app = Flask(__name__)
+    app.config["SECRET_KEY"] = "test-secret"
+    return app
+
+
+def test_overview_lists_every_profile_when_private_mode_is_switched_off(monkeypatch, tmp_path):
+    _patch_roots(monkeypatch, tmp_path)
+    monkeypatch.setenv("PSAT_PRIVATE_PROFILES", "0")
+    profile_store.create_profile("Alice", "alice@lta.gov.sg", "1234", "Road Safety")
+    profile_store.create_profile("Bob", "bob@lta.gov.sg", "5678", "Road Safety")
+
+    with _session_app().test_request_context():
+        overview = profile_store.get_overview()
+
+    assert overview["private_profiles"] is False
+    assert [p["name"] for p in overview["profiles"]] == ["Alice", "Bob"]
+
+
+def test_private_overview_only_lists_seeded_and_logged_in_profile(monkeypatch, tmp_path):
+    profiles_root, _ = _patch_roots(monkeypatch, tmp_path)
+    # Private mode is the default everywhere (desktop and cloud): no env var.
+    monkeypatch.delenv("PSAT_PRIVATE_PROFILES", raising=False)
+    alice = profile_store.create_profile("Alice", "alice@lta.gov.sg", "1234", "Road Safety")
+    profile_store.create_profile("Bob", "bob@lta.gov.sg", "5678", "Road Safety")
+    shared = profile_store.create_profile("Islandwide Data", "seed@lta.gov.sg", "1234", "LTA")
+    (profiles_root / ".seeded.json").write_text(
+        json.dumps({"islandwide-data": {"seed_version": 1, "profile_id": shared["id"]}}),
+        encoding="utf-8",
+    )
+
+    with _session_app().test_request_context():
+        # Logged out: only the shipped profile is listed.
+        overview = profile_store.get_overview()
+        assert overview["private_profiles"] is True
+        assert [p["name"] for p in overview["profiles"]] == ["Islandwide Data"]
+
+        # Logged in: plus the account itself, never anyone else's.
+        profile_store.login_profile(alice["id"], "1234")
+        assert [p["name"] for p in profile_store.get_overview()["profiles"]] == ["Alice", "Islandwide Data"]
+
+        # Nothing is remembered: after logout the browser is back to the start.
+        profile_store.logout_profile()
+        overview = profile_store.get_overview()
+        assert overview["active_profile"] is None
+        assert [p["name"] for p in overview["profiles"]] == ["Islandwide Data"]
+
+
+def test_find_profile_id_by_username_is_case_insensitive(monkeypatch, tmp_path):
+    _patch_roots(monkeypatch, tmp_path)
+    alice = profile_store.create_profile("Alice Tan", "alice@lta.gov.sg", "1234", "Road Safety")
+
+    assert profile_store.find_profile_id_by_username("  alice   TAN ") == alice["id"]
+    assert profile_store.find_profile_id_by_username("alice") is None
+    assert profile_store.find_profile_id_by_username("") is None
+
+
+def test_find_profile_ids_by_login_matches_email_or_username(monkeypatch, tmp_path):
+    _patch_roots(monkeypatch, tmp_path)
+    alice = profile_store.create_profile("Alice", "alice@lta.gov.sg", "1234", "Road Safety")
+    # One person, two profiles under the same email.
+    second = profile_store.create_profile("Alice Trial", "ALICE@lta.gov.sg", "5678", "Road Safety")
+    profile_store.create_profile("Bob", "bob@lta.gov.sg", "1111", "Road Safety")
+
+    assert profile_store.find_profile_ids_by_login(" Alice@LTA.gov.sg ") == [alice["id"], second["id"]]
+    assert profile_store.find_profile_ids_by_login("alice trial") == [second["id"]]
+    assert profile_store.find_profile_ids_by_login("nobody@lta.gov.sg") == []
+    assert profile_store.find_profile_ids_by_login("") == []
+
+
+def test_admin_flag_follows_the_logged_in_session(monkeypatch, tmp_path):
+    _patch_roots(monkeypatch, tmp_path)
+    monkeypatch.setenv("PSAT_PRIVATE_PROFILES", "1")
+    monkeypatch.setenv("PSAT_ADMIN_EMAILS", "someone@lta.gov.sg, BOSS@lta.gov.sg")
+    boss = profile_store.create_profile("Boss", "boss@lta.gov.sg", "1234", "Road Safety")
+    alice = profile_store.create_profile("Alice", "alice@lta.gov.sg", "5678", "Planning")
+
+    with _session_app().test_request_context():
+        assert profile_store.active_profile_is_admin() is False  # logged out
+
+        profile_store.login_profile(boss["id"], "1234")
+        overview = profile_store.get_overview()
+        assert overview["is_admin"] is True and profile_store.active_profile_is_admin() is True
+        # Being admin does not widen the profile list itself.
+        assert [p["name"] for p in overview["profiles"]] == ["Boss"]
+
+        profile_store.logout_profile()
+        assert profile_store.get_overview()["is_admin"] is False
+        assert profile_store.active_profile_is_admin() is False
+
+    with _session_app().test_request_context():
+        profile_store.login_profile(alice["id"], "5678")
+        assert profile_store.get_overview()["is_admin"] is False
+        assert profile_store.active_profile_is_admin() is False
+
+
+def test_list_all_accounts_is_username_and_division_only(monkeypatch, tmp_path):
+    _patch_roots(monkeypatch, tmp_path)
+    profile_store.create_profile("Boss", "boss@lta.gov.sg", "1234", "Road Safety")
+    profile_store.create_profile("alice", "alice@lta.gov.sg", "5678", "Planning")
+
+    assert profile_store.list_all_accounts() == [
+        {"username": "alice", "division": "Planning"},
+        {"username": "Boss", "division": "Road Safety"},
+    ]
+
+
+def _seed_shared_profile(profiles_root):
+    shared = profile_store.create_profile("Islandwide Data", "seed@lta.gov.sg", "1234", "LTA")
+    (profiles_root / ".seeded.json").write_text(
+        json.dumps({"islandwide-data": {"seed_version": 1, "profile_id": shared["id"]}}),
+        encoding="utf-8",
+    )
+    return shared
+
+
+def test_shared_profile_cannot_be_changed(monkeypatch, tmp_path):
+    profiles_root, _ = _patch_roots(monkeypatch, tmp_path)
+    monkeypatch.delenv("PSAT_PRIVATE_PROFILES", raising=False)
+    shared = _seed_shared_profile(profiles_root)
+    alice = profile_store.create_profile("Alice", "alice@lta.gov.sg", "5678", "Road Safety")
+    (profiles_root / "alice" / "projects" / "Road A").mkdir(parents=True)
+
+    # Even with the right PIN / recovery email, every change is refused.
+    with pytest.raises(profile_store.ProtectedProfileError):
+        profile_store.update_profile(shared["id"], "1234", "Renamed", "LTA")
+    with pytest.raises(profile_store.ProtectedProfileError):
+        profile_store.reset_profile_pin(shared["id"], "1234", "9999")
+    with pytest.raises(profile_store.ProtectedProfileError):
+        profile_store.recover_profile_pin(shared["id"], "seed@lta.gov.sg", "9999")
+    with pytest.raises(profile_store.ProtectedProfileError):
+        profile_store.delete_profile(shared["id"], "1234")
+    with pytest.raises(ValueError, match="shared profile"):
+        profile_store.share_projects_to_profile(shared["id"], ["Road A"], alice["id"])
+
+    with _session_app().test_request_context():
+        # Still usable: the shared PIN logs in, and the overview flags it.
+        assert profile_store.login_profile(shared["id"], "1234")["name"] == "Islandwide Data"
+        assert profile_store.get_overview()["active_profile_protected"] is True
+        profile_store.login_profile(alice["id"], "5678")
+        assert profile_store.get_overview()["active_profile_protected"] is False
+
+    # An ordinary profile is unaffected.
+    assert profile_store.reset_profile_pin(alice["id"], "5678", "4321")["id"] == alice["id"]
+
+
+def test_shared_profile_is_manageable_only_with_private_mode_switched_off(monkeypatch, tmp_path):
+    profiles_root, _ = _patch_roots(monkeypatch, tmp_path)
+    monkeypatch.setenv("PSAT_PRIVATE_PROFILES", "0")
+    shared = _seed_shared_profile(profiles_root)
+
+    assert profile_store.is_protected_profile(shared["id"]) is False
+    profile_store.delete_profile(shared["id"], "1234")
+    assert profile_store.list_profiles() == []

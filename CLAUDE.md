@@ -934,6 +934,80 @@ root on first launch, so every install gets it. Currently: **Islandwide Data**
   by `scripts/bundle/make_release.py`. See `scripts/bundle/RUNBOOK.md` §3b.
 * `PSAT_SKIP_SEED_PROFILES=1` disables seeding (used by the build scripts' smoke test).
 
+### Private Profile List, Email Login, Admin Accounts Page — Cloud AND Desktop (2026-10-02)
+
+**Symptom:** On the shared (cloud) server every visitor saw every user's profile on the
+login page — `GET /api/profiles` is public (needed before login) and returned the whole
+registry. The Share dialog listed everyone too.
+
+**Fix — "private mode", on by default everywhere.** It started as a cloud-only flag and
+was then made the default so the desktop app and the cloud behave identically; nothing sets
+the variable any more. `PSAT_PRIVATE_PROFILES=0` remains as an emergency switch back to the
+old "pick your profile" list (the old picker / Manage Selected / share-dropdown code is
+kept for that path only). `profile_store.get_overview()` — the one function behind
+every profile response — returns only the **seeded profiles** (ids from
+`profiles/.seeded.json`, i.e. Islandwide Data) plus the **profile logged in right now**.
+Nothing is remembered per browser: after logout the list is Islandwide only.
+
+Personal accounts are therefore reached by typing:
+
+- login — by **email + PIN** ("Log in with email and PIN" on the landing page).
+  `POST /api/profiles/login` accepts `username` instead of `profile_id`; despite the key
+  name it matches the profile's email OR username (`find_profile_ids_by_login`). Emails are
+  not unique (one person can hold several profiles), so the route tries each match and the
+  PIN picks which one. Unknown account and wrong PIN return the same "Incorrect email or PIN".
+- forgot PIN — public `POST /api/profiles/recover-pin` (`username`, `email`, `new_pin`);
+  must be listed in `auth._PUBLIC_ENDPOINTS`. Deliberately still **username + email**: the
+  email is now the login name, so email alone would let anyone who knows it reset the PIN.
+- share — `POST /api/profiles/share-projects` accepts `target_username` (email or
+  username); an email shared by several profiles is refused as ambiguous.
+
+**Admins — `PSAT_ADMIN_EMAILS`** (comma separated, set in the server's `.env`;
+`docker-compose.yml` only passes it through because the repo is public). A session logged
+in as a profile with one of those emails gets `overview.is_admin: true`, which shows an
+**Accounts** entry in the sidebar → `/accounts` (`AccountsPage`), a read-only table of every
+account's **username + division** from `GET /api/profiles/accounts` (403 for non-admins).
+That is all admin grants: it does NOT widen the login-page list and gives no access to
+other accounts or their projects. It ends at logout.
+
+**Managing an account — "My Account" in the sidebar** (`ManageProfileDialog`, both sidebars,
+all modes): edit details, change PIN, delete, for the logged-in profile only. In private
+mode the landing page's "Manage Selected" is hidden, because the only profile it could
+select there is Islandwide.
+
+**Shared profile lockdown — `is_protected_profile()`** = seeded profile AND private mode.
+Everyone knows the Islandwide PIN and its email is in the public repo, so
+`profile_store` raises `ProtectedProfileError` (→ 403) from `update_profile`,
+`reset_profile_pin`, `recover_profile_pin` (both the by-id and by-username public routes)
+and `delete_profile`, and refuses sharing projects INTO it. `crud.py` refuses deleting or
+renaming a project while logged in as it. `overview.active_profile_protected` hides
+"My Account" for it. This applies on desktop too, so a desktop user can no longer delete
+the Islandwide profile to reclaim its disk space (the seed tests that delete it set
+`PSAT_PRIVATE_PROFILES=0`). **Not locked:** the project's contents — attribute saves, treatments
+and segment deletes inside the Islandwide project still work for anyone logged in.
+
+**Design history (don't re-propose):** two earlier versions were built and rejected the
+same day — (1) remembering "accounts this browser has logged in as" in the cookie and
+listing them on the login page (confusing: looked like being logged in, and gave two login
+paths), and (2) letting an admin see the full list on the login page, sticky per browser
+(must be per session, behind verified credentials).
+
+**Gotchas:** don't put the Islandwide profile's email in `PSAT_ADMIN_EMAILS` — its PIN is
+shared, so everyone would be admin. Admin is matched on the stored (unverified) email, so
+anyone who registers with an admin's email becomes one; accepted for this small trusted
+team. `list_profiles()` is deliberately NOT filtered (internal/test use); never return it
+from a route. "A profile with that name already exists" on create still confirms a name
+is taken.
+
+**Key files:** `backend/app/services/profile_store.py` (`private_profiles_enabled`,
+`_seeded_profile_ids`, `find_profile_ids_by_login`, `active_profile_is_admin`,
+`list_all_accounts`, `get_overview`), `backend/app/api/profiles/routes.py`,
+`backend/app/auth.py`, `frontend/src/pages/LandingPage/landingPage.tsx`,
+`frontend/src/pages/AccountsPage/accountsPage.tsx`,
+`frontend/src/features/profile/ManageProfileDialog.tsx`,
+`frontend/src/pages/sidebar/SidebarV2.tsx`,
+`frontend/src/pages/Projects/components/ShareProjectModalV2.tsx`, `docker-compose.yml`.
+
 ## Commands
 
 - Frontend: `cd frontend && npm run dev`

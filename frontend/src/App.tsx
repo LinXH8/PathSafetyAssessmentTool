@@ -10,6 +10,7 @@ import PathAnalysisPage from "./pages/PathAnalysisPage/pathAnalysisPage"
 import ReportBuilderPage from "./pages/ReportBuilderPage/reportBuilderPage"
 import GisLayersPage from "./pages/GisLayersPage/GisLayersPage"
 import GeneratedReportsPage from "./pages/GeneratedReportsPage/GeneratedReportsPage"
+import AccountsPage from "./pages/AccountsPage/accountsPage"
 
 import AppLayout from "./layouts/AppLayout";
 import HelpPage from "./pages/HelpPage/helpPage";
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="/projects/create" element={<CreateProjectPage />} />
           <Route path="/gis-layers" element={<GisLayersPage />} />
           <Route path="/generated-reports" element={<GeneratedReportsPage />} />
+          <Route path="/accounts" element={<AccountsPage />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Route>
       </Routes>

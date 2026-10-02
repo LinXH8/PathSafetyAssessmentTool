@@ -362,6 +362,8 @@ Set by the launcher; useful for manual runs and debugging.
 |---|---|---|
 | `PSAT_DATA_DIR` | (see `data_dir.txt`, then `%LOCALAPPDATA%\PSAT\data`) | Writable data root. Highest priority. |
 | `PSAT_HOST` | `127.0.0.1` | Bind address. **Loopback on purpose** — `0.0.0.0` would publish every project to the LAN unauthenticated. |
+| `PSAT_PRIVATE_PROFILES` | (on) | Private profile list, on by default on desktop and cloud: the login page shows only the shipped Islandwide profile plus the one logged in; personal accounts log in by email + PIN, are shared with by email, and are recovered by username + recovery email; the Islandwide profile cannot be edited or deleted. `=0` is an emergency switch back to the old full profile list. |
+| `PSAT_ADMIN_EMAILS` | (unset) | Comma-separated emails of the accounts that get the read-only **Accounts** page (every account's username and division) while logged in. Set it in the server's `.env`, not in the repo. |
 | `PSAT_PORT` | `8000` | Port. The launcher scans upward from here for a free one. |
 | `PSAT_THREADS` | `8` | waitress worker threads. |
 | `PSAT_DEV` | (unset) | `=1` runs the Flask dev server with auto-reload instead of waitress. Dev only. |

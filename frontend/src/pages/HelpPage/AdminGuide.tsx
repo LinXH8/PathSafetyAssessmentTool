@@ -10,7 +10,7 @@ const DOCS_LIST = [
   { id: "gis-layers",   title: "3. Managing GIS Data Layers",         path: "/docs/admin/admin-gis-layers.md",          updatedDate: "Jun 2026" },
   { id: "troubleshoot", title: "4. Troubleshooting & Health",         path: "/docs/admin/admin-troubleshooting.md",     updatedDate: "Jun 2026" },
   { id: "cyclerap",     title: "5. Updating CycleRAP Algorithm",      path: "/docs/admin/admin-cyclerap-algorithm.md",  updatedDate: "Jun 2026" },
-  { id: "accounts",     title: "6. User Accounts & Sign-In",          path: "/docs/admin/admin-user-accounts.md",       updatedDate: "Jun 2026" },
+  { id: "accounts",     title: "6. User Accounts & Sign-In",          path: "/docs/admin/admin-user-accounts.md",       updatedDate: "Oct 2026" },
 ];
 
 export default function AdminGuide() {

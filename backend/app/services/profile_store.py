@@ -22,6 +22,8 @@ _STATE_LOCK = threading.RLock()
 # Which profile is logged in is per browser: it lives in Flask's signed cookie
 # session under this key (see app/auth.py), never in process-wide state.
 _SESSION_KEY = "profile_id"
+_PRIVATE_PROFILES_ENV = "PSAT_PRIVATE_PROFILES"
+_ADMIN_EMAILS_ENV = "PSAT_ADMIN_EMAILS"
 # Ids of every profile in the registry, refreshed by each load/save under
 # _STATE_LOCK and read WITHOUT the lock by profile_exists() -- the per-request
 # login gate must never queue behind the long filesystem work (deleting or
@@ -65,6 +67,85 @@ def _set_active_profile_id(active_id: str | None) -> None:
         session.permanent = True
     else:
         session.clear()
+
+
+def private_profiles_enabled() -> bool:
+    """The profile list never names personal accounts. On everywhere by default.
+
+    The list is cut down to the shipped profiles (plus the one logged in), and
+    everyone logs in by typing email + PIN. It began as a cloud-only setting --
+    there the list showed every user to every visitor -- and was then made the
+    default for the desktop app too, so both behave the same.
+    ``PSAT_PRIVATE_PROFILES=0`` is an emergency switch back to the old
+    "pick your profile" list; nothing sets it.
+    """
+    return os.environ.get(_PRIVATE_PROFILES_ENV, "").strip().lower() not in ("0", "false", "no")
+
+
+def _admin_emails() -> set[str]:
+    """Emails named in ``PSAT_ADMIN_EMAILS`` (comma/semicolon/space separated)."""
+    raw = os.environ.get(_ADMIN_EMAILS_ENV, "")
+    return {part.casefold() for part in re.split(r"[,;\s]+", raw) if part}
+
+
+def _is_admin_profile(profile: dict | None) -> bool:
+    """True when the profile's email is listed in ``PSAT_ADMIN_EMAILS``.
+
+    Set on the server only (its .env), never in the repo. An admin can open the
+    read-only list of every account (see list_all_accounts); nothing else.
+    """
+    if profile is None:
+        return False
+    email = str(profile.get("email") or "").strip().casefold()
+    return bool(email) and email in _admin_emails()
+
+
+class ProtectedProfileError(PermissionError):
+    """The profile is a shared, shipped one and may not be changed (see is_protected_profile)."""
+
+    def __init__(self) -> None:
+        super().__init__("This is a shared profile and cannot be changed or deleted")
+
+
+def is_protected_profile(profile_id: str | None) -> bool:
+    """True for a shipped (seeded) profile.
+
+    Everyone logs in to the Islandwide profile with the same PIN, so any one
+    user could otherwise rename it, change or "recover" its PIN (locking
+    everybody out) or delete it together with its data. Same on the desktop
+    app as on the shared server; only the PSAT_PRIVATE_PROFILES=0 switch
+    lifts it.
+    """
+    return private_profiles_enabled() and str(profile_id or "") in _seeded_profile_ids()
+
+
+def active_profile_is_protected() -> bool:
+    """True when the calling session is logged in as a protected profile."""
+    return is_protected_profile(get_active_profile_id())
+
+
+def _refuse_if_protected(profile: dict) -> None:
+    if is_protected_profile(str(profile.get("id") or "")):
+        raise ProtectedProfileError()
+
+
+def _seeded_profile_ids() -> set[str]:
+    """Ids of the profiles that ship with the app (see services/seed_profiles.py).
+
+    Read straight from the seeder's state file: seed_profiles imports this
+    module, so importing it back would be circular.
+    """
+    try:
+        data = json.loads((_profiles_root() / ".seeded.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    if not isinstance(data, dict):
+        return set()
+    return {
+        str(entry.get("profile_id") or "")
+        for entry in data.values()
+        if isinstance(entry, dict) and entry.get("profile_id")
+    }
 
 
 def _registry_backups_root() -> Path:
@@ -441,6 +522,45 @@ def _find_profile(state: dict, profile_id: str) -> dict | None:
     return None
 
 
+def find_profile_id_by_username(username: str | None) -> str | None:
+    """The id of the profile with this username (case-insensitive), or None.
+
+    Lets a browser that is not shown the profile (private mode) still log in to,
+    recover, or share into it by typing its name.
+    """
+    wanted = " ".join(str(username or "").split()).casefold()
+    if not wanted:
+        return None
+    with _STATE_LOCK:
+        for profile in _load_state().get("profiles", []):
+            name = str(profile.get("username") or profile.get("name") or "")
+            if name.casefold() == wanted:
+                return str(profile.get("id") or "") or None
+    return None
+
+
+def find_profile_ids_by_login(identifier: str | None) -> list[str]:
+    """Ids of the profiles whose email OR username is ``identifier`` (case-insensitive).
+
+    Emails are not unique -- one person may hold several profiles under the same
+    address -- so this can return more than one id; the caller disambiguates
+    (login by whichever PIN matches, share by refusing an ambiguous target).
+    """
+    wanted_name = " ".join(str(identifier or "").split()).casefold()
+    if not wanted_name:
+        return []
+    wanted_email = str(identifier or "").strip().casefold()
+    matches: list[str] = []
+    with _STATE_LOCK:
+        for profile in _load_state().get("profiles", []):
+            name = str(profile.get("username") or profile.get("name") or "").casefold()
+            email = str(profile.get("email") or "").strip().casefold()
+            profile_id = str(profile.get("id") or "")
+            if profile_id and (name == wanted_name or (email and email == wanted_email)):
+                matches.append(profile_id)
+    return matches
+
+
 def _require_profile(state: dict, profile_id: str) -> dict:
     profile = _find_profile(state, profile_id)
     if profile is None:
@@ -698,6 +818,7 @@ def update_profile(
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
+        _refuse_if_protected(profile)
         if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, current_pin)):
             raise PermissionError("Invalid current PIN")
 
@@ -722,6 +843,7 @@ def reset_profile_pin(profile_id: str, current_pin: str, new_pin: str) -> dict:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
+        _refuse_if_protected(profile)
         if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, current_pin)):
             raise PermissionError("Invalid current PIN")
 
@@ -744,6 +866,9 @@ def recover_profile_pin(profile_id: str, email: str, new_pin: str) -> dict:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
+        # The shipped profile's email is public (it is in the repo), so without
+        # this anyone could "recover" the shared PIN and lock everybody out.
+        _refuse_if_protected(profile)
         if not _verify_with_limit("email", profile, lambda: _verify_email(profile, email)):
             raise PermissionError("Email does not match the one on record")
 
@@ -843,6 +968,8 @@ def share_projects_to_profile(
             raise ValueError("A source profile must be active before sharing projects")
         if resolved_source_id == str(target.get("id") or ""):
             raise ValueError("Cannot share a project to the profile it already belongs to")
+        if is_protected_profile(str(target.get("id") or "")):
+            raise ValueError("Projects cannot be shared into a shared profile")
 
         source = _require_profile(state, resolved_source_id)
         source_root = _ensure_profile_project_root(source)
@@ -875,6 +1002,7 @@ def delete_profile(profile_id: str, pin: str) -> None:
     with _STATE_LOCK:
         state = _load_state()
         profile = _require_profile(state, str(profile_id or ""))
+        _refuse_if_protected(profile)
         if not _verify_with_limit("pin", profile, lambda: _verify_pin(profile, pin)):
             raise PermissionError("Invalid PIN")
 
@@ -890,6 +1018,33 @@ def delete_profile(profile_id: str, pin: str) -> None:
             shutil.rmtree(profile_dir)
 
 
+def active_profile_is_admin() -> bool:
+    """True when the calling session is logged in as a ``PSAT_ADMIN_EMAILS`` profile."""
+    profile_id = get_active_profile_id()
+    if profile_id is None:
+        return False
+    with _STATE_LOCK:
+        return _is_admin_profile(_find_profile(_load_state(), profile_id))
+
+
+def list_all_accounts() -> list[dict]:
+    """Username + division of every profile, for the admin-only Accounts page.
+
+    Deliberately minimal (no ids, emails or activity) and never part of
+    get_overview(): the route must check active_profile_is_admin() first.
+    """
+    with _STATE_LOCK:
+        profiles = _load_state().get("profiles", [])
+        accounts = [
+            {
+                "username": str(profile.get("username") or profile.get("name") or ""),
+                "division": _clean_division(profile.get("division"), allow_default=True),
+            }
+            for profile in profiles
+        ]
+    return sorted(accounts, key=lambda account: account["username"].lower())
+
+
 def get_overview() -> dict:
     # Load the registry once and derive both the profile list and the active
     # profile from it, instead of each accessor re-reading + re-parsing the file.
@@ -897,10 +1052,30 @@ def get_overview() -> dict:
         state = _load_state()
         profiles = _serialize_profiles_from_state(state)
         active_profile = _active_profile_from_state(state)
+        is_admin = active_profile is not None and _is_admin_profile(
+            _find_profile(state, active_profile["id"])
+        )
+    private = private_profiles_enabled()
+    if private:
+        # Only the shipped (shared) profiles plus the one logged in right now.
+        # Nothing is remembered per browser: after logout the list is back to
+        # the shipped profiles and every account logs in by typing email + PIN.
+        # Admins get no exemption here -- they read the full list from the
+        # dedicated admin-only endpoint instead (list_all_accounts).
+        visible = _seeded_profile_ids()
+        if active_profile is not None:
+            visible.add(active_profile["id"])
+        profiles = [profile for profile in profiles if profile["id"] in visible]
     # `list_legacy_projects` scans a different directory (no registry read), so it
     # stays outside the lock to keep the critical section small.
     return {
         "profiles": profiles,
+        "private_profiles": private,
+        # Whether the logged-in profile may open the Accounts page.
+        "is_admin": is_admin,
+        # Logged in as the shared (shipped) profile: no account or project
+        # management for it (see is_protected_profile).
+        "active_profile_protected": active_profile is not None and is_protected_profile(active_profile["id"]),
         "active_profile": active_profile,
         "legacy_projects": list_legacy_projects(),
     }

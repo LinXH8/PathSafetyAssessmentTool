@@ -59,6 +59,7 @@ _PUBLIC_ENDPOINTS = frozenset(
         # Must stay public: someone who forgot their PIN cannot log in. Guarded
         # by the private recovery email plus profile_store's attempt limiting.
         "profiles.recover_profile_pin",
+        "profiles.recover_profile_pin_by_username",
         # update_profile / reset_profile_pin / delete_profile are deliberately NOT
         # public: a PIN alone let any anonymous client guess its way into editing
         # or wiping someone else's profile. Each requires being logged in as that

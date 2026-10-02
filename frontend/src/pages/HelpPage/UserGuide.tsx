@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const DOCS_LIST = [
-  { id: "getting-started",      title: "1. Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Jun 2026" },
+  { id: "getting-started",      title: "1. Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Oct 2026" },
 { id: "coding-page",          title: "2. Coding Page",               path: "/docs/user/user-coding-page.md",            updatedDate: "Jun 2026" },
   { id: "path-analysis",        title: "3. Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
   { id: "treatment-application",title: "4. Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },

@@ -62,6 +62,8 @@ export interface ProjectsViewModel {
   loadTreatment: () => void;
   askShare: () => void;
   shareTargets: ProfileSummary[];
+  /** Shared server: the recipient is typed by username instead of picked from `shareTargets`. */
+  shareByUsername: boolean;
 
   // ── sorting ──
   sortConfig: SortCriterion[];
@@ -93,7 +95,7 @@ export interface ProjectsViewModel {
   sharing: boolean;
   exporting: boolean;
   /** Copy the selection into another profile (optionally keeping tags). */
-  confirmShare: (targetProfileId: string, includeTags: boolean) => void;
+  confirmShare: (target: string | { username: string }, includeTags: boolean) => void;
   /** Download the selection as a re-importable .psat.zip bundle. */
   confirmExport: (includeTags: boolean, includeSourceFolder: boolean) => void;
 }

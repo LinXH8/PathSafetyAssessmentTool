@@ -9,7 +9,7 @@ type DocItem = { id: string; num: number; title: string; path: string; updatedDa
 
 const DOC_LISTS: Record<HelpTab, DocItem[]> = {
   user: [
-    { id: "getting-started",       num: 1, title: "Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Jun 2026" },
+    { id: "getting-started",       num: 1, title: "Getting Started",           path: "/docs/user/user-getting-started.md",        updatedDate: "Oct 2026" },
     { id: "coding-page",           num: 2, title: "Coding Page",               path: "/docs/user/user-coding-page.md",            updatedDate: "Jun 2026" },
     { id: "path-analysis",         num: 3, title: "Path Analysis",             path: "/docs/user/user-path-analysis.md",          updatedDate: "Jun 2026" },
     { id: "treatment-application", num: 4, title: "Treatment Application",     path: "/docs/user/user-treatment-application.md",  updatedDate: "Jun 2026" },
@@ -22,7 +22,7 @@ const DOC_LISTS: Record<HelpTab, DocItem[]> = {
     { id: "gis-layers",   num: 3, title: "Managing GIS Data Layers",     path: "/docs/admin/admin-gis-layers.md",          updatedDate: "Jun 2026" },
     { id: "troubleshoot", num: 4, title: "Troubleshooting & Health",     path: "/docs/admin/admin-troubleshooting.md",     updatedDate: "Jun 2026" },
     { id: "cyclerap",     num: 5, title: "Updating CycleRAP Algorithm",  path: "/docs/admin/admin-cyclerap-algorithm.md",  updatedDate: "Jun 2026" },
-    { id: "accounts",     num: 6, title: "User Accounts & Sign-In",      path: "/docs/admin/admin-user-accounts.md",       updatedDate: "Jun 2026" },
+    { id: "accounts",     num: 6, title: "User Accounts & Sign-In",      path: "/docs/admin/admin-user-accounts.md",       updatedDate: "Oct 2026" },
   ],
   developer: [
     { id: "readme",       num: 1,  title: "Overview (README)", path: "/README.md",                            updatedDate: "Jun 2026" },

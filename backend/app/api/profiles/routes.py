@@ -16,6 +16,9 @@ _CLIENT_ACTIVITY_EVENT_TYPES = {"page_view"}
 # the infrequent profile-lifecycle ones -- see _record_profile_event().
 _PERSON_LABEL_EVENTS = {"profile_created", "profile_login", "profile_updated"}
 
+_BAD_LOGIN = "Incorrect email or PIN"
+_BAD_USERNAME_OR_EMAIL = "Username or recovery email does not match"
+
 
 def _invalidate_project_context(profile_id: str | None = None) -> None:
     """Drop the cached project context for one profile (every profile when None).
@@ -80,7 +83,10 @@ def _profile_error_status(exc: ValueError) -> int:
 
 
 def _permission_error_response(exc: PermissionError):
-    """401 for a wrong PIN/email; 429 + Retry-After while the profile is locked out."""
+    """401 for a wrong PIN/email; 429 + Retry-After while the profile is locked out;
+    403 for a protected (shared) profile."""
+    if isinstance(exc, profile_store.ProtectedProfileError):
+        return jsonify({"error": str(exc)}), 403
     if isinstance(exc, profile_store.PinLockedError):
         response = jsonify({"error": str(exc), "retry_after": exc.retry_after})
         response.status_code = 429
@@ -105,6 +111,14 @@ def list_profiles():
     return jsonify(profile_store.get_overview())
 
 
+@bp.get("/accounts")
+def list_all_accounts():
+    """Every account's username + division. Admins (PSAT_ADMIN_EMAILS) only."""
+    if not profile_store.active_profile_is_admin():
+        return jsonify({"error": "Only an admin account can view all accounts"}), 403
+    return jsonify({"accounts": profile_store.list_all_accounts()})
+
+
 @bp.post("")
 def create_profile():
     data = request.get_json(silent=True) or {}
@@ -126,12 +140,34 @@ def create_profile():
 @bp.post("/login")
 def login_profile():
     data = request.get_json(silent=True) or {}
-    try:
-        profile = profile_store.login_profile(str(data.get("profile_id") or ""), str(data.get("pin") or ""))
-    except ValueError as exc:
-        return jsonify({"error": str(exc)}), 404
-    except PermissionError as exc:
-        return _permission_error_response(exc)
+    profile_id = str(data.get("profile_id") or "")
+    pin = str(data.get("pin") or "")
+    # Private mode lists no personal profiles, so they are logged in to by
+    # typing the email (the `username` key also still matches a username). One message for "no such account" and
+    # "wrong PIN" so the form cannot be used to check which accounts exist.
+    if not profile_id and str(data.get("username") or "").strip():
+        profile = None
+        locked: profile_store.PinLockedError | None = None
+        # Several profiles may share one email: the PIN picks which one.
+        for candidate_id in profile_store.find_profile_ids_by_login(data.get("username")):
+            try:
+                profile = profile_store.login_profile(candidate_id, pin)
+                break
+            except profile_store.PinLockedError as exc:
+                locked = exc
+            except (ValueError, PermissionError):
+                continue
+        if profile is None:
+            if locked is not None:
+                return _permission_error_response(locked)
+            return jsonify({"error": _BAD_LOGIN}), 401
+    else:
+        try:
+            profile = profile_store.login_profile(profile_id, pin)
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 404
+        except PermissionError as exc:
+            return _permission_error_response(exc)
 
     _record_profile_event("profile_login", profile)
 
@@ -249,6 +285,30 @@ def recover_profile_pin(profile_id: str):
     return jsonify({"profile": profile, "overview": profile_store.get_overview()})
 
 
+@bp.post("/recover-pin")
+def recover_profile_pin_by_username():
+    """"Forgot PIN?" for an account this browser is not shown (private mode)."""
+    data = request.get_json(silent=True) or {}
+    profile_id = profile_store.find_profile_id_by_username(data.get("username"))
+    if not profile_id:
+        return jsonify({"error": _BAD_USERNAME_OR_EMAIL}), 401
+    try:
+        profile = profile_store.recover_profile_pin(
+            profile_id,
+            str(data.get("email") or ""),
+            str(data.get("new_pin") or ""),
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), _profile_error_status(exc)
+    except PermissionError as exc:
+        if isinstance(exc, (profile_store.PinLockedError, profile_store.ProtectedProfileError)):
+            return _permission_error_response(exc)
+        return jsonify({"error": _BAD_USERNAME_OR_EMAIL}), 401
+
+    _record_profile_event("profile_pin_recovered", profile)
+    return jsonify({"profile": profile, "overview": profile_store.get_overview()})
+
+
 @bp.delete("/<profile_id>")
 def delete_profile(profile_id: str):
     if (forbidden := _forbid_other_profile(profile_id)) is not None:
@@ -271,6 +331,18 @@ def share_projects():
     data = request.get_json(silent=True) or {}
 
     target_profile_id = str(data.get("target_profile_id") or "").strip()
+    target_username = str(data.get("target_username") or "").strip()
+    if not target_profile_id and target_username:
+        # Private mode: the recipient is not in the caller's profile list, so
+        # they are named by email (or exact username) instead of picked from it.
+        matches = profile_store.find_profile_ids_by_login(target_username)
+        if not matches:
+            return jsonify({"error": f"No profile found for '{target_username}'"}), 404
+        if len(matches) > 1:
+            return jsonify({
+                "error": f"More than one profile uses '{target_username}'. Enter the recipient's username instead."
+            }), 400
+        target_profile_id = matches[0]
     if not target_profile_id:
         return jsonify({"error": "A target profile is required"}), 400
 

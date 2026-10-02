@@ -5,6 +5,7 @@ import { useMemo, useCallback, useState } from "react";
 import { toaster } from "../../components/ui/toaster";
 import { applyAllTreatments, resetAllTreatments, saveTreatments } from "../../api";
 import { useProfile } from "../../features/profile/ProfileProvider";
+import ManageProfileDialog from "../../features/profile/ManageProfileDialog";
 import { SESSION_KEYS, LOCAL_KEYS } from "../../constants/sessionKeys";
 
 import CodingSidebar from "./components/CodingSidebar";
@@ -25,7 +26,7 @@ const LINKS = [
 export default function Sidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { activeProfile, logout } = useProfile();
+  const { activeProfile, isAdmin, activeProfileProtected, logout } = useProfile();
   const appVersion = useAppVersion();
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [treatmentExitDialogOpen, setTreatmentExitDialogOpen] = useState(false);
@@ -34,6 +35,7 @@ export default function Sidebar() {
   const [isResetting, setIsResetting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [manageProfileOpen, setManageProfileOpen] = useState(false);
 
   // Get the project name
   const codingMatch = useMatch("/coding/:projectName");
@@ -405,6 +407,8 @@ export default function Sidebar() {
       <>
         <SidebarV2
           activeProfile={activeProfile}
+          isAdmin={isAdmin}
+          onManageProfile={activeProfileProtected ? undefined : () => setManageProfileOpen(true)}
           onLogout={onLogout}
           isLoggingOut={isLoggingOut}
           onGuardedAction={guardedAction}
@@ -414,6 +418,7 @@ export default function Sidebar() {
               so neither the v1 CodingSidebar nor TreatmentSidebar is embedded here. */}
         </SidebarV2>
 
+        <ManageProfileDialog open={manageProfileOpen} onClose={() => setManageProfileOpen(false)} />
         <ExitConfirmationDialog
           open={exitDialogOpen}
           onSaveAndExit={handleSaveAndExit}
@@ -466,6 +471,11 @@ export default function Sidebar() {
             <div className="psat-profile-label">Current Profile</div>
             <div className="psat-profile-name">{activeProfile.name}</div>
             <div className="psat-profile-division">{activeProfile.division}</div>
+            {!activeProfileProtected && (
+              <Button onClick={() => setManageProfileOpen(true)} colorPalette="gray" variant="outline" size="sm">
+                My Account
+              </Button>
+            )}
             <Button
               onClick={onLogout}
               colorPalette="red"
@@ -479,7 +489,7 @@ export default function Sidebar() {
         )}
 
         <div className="psat-actions">
-          {LINKS.filter(({ to }) => pathname !== to).map(({ to, label }) => {
+          {[...LINKS, ...(isAdmin ? [{ to: "/accounts", label: "Accounts" }] : [])].filter(({ to }) => pathname !== to).map(({ to, label }) => {
             const active = pathname.startsWith(to);
             return (
               <Button
@@ -607,6 +617,7 @@ export default function Sidebar() {
         onCancel={() => setResetDialogOpen(false)}
         isResetting={isResetting}
       />
+      <ManageProfileDialog open={manageProfileOpen} onClose={() => setManageProfileOpen(false)} />
     </aside>
   );
 }
